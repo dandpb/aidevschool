@@ -64,3 +64,27 @@ Roteiro `verify-prototipo.js` (Playwright, Chromium headless, `file://`): 17 che
 
 ### Verificação executada
 `verify-prototipo.js` (path-portátil via `__dirname`): **43/43 ok, 0 erros de console** (30 anteriores de B1–B3 preservadas + 2×C1, 5×C2, 1×C4, 4×widths 375/320, 1 ordenação DOM). `evidence-capture.js` regenerado: 12 RAWs + 4 compares validados + `after_metrics.json` com larguras de documento. **Sem deploy; sem novo sistema visual; sem progresso canônico.**
+
+## 5. Correções P1–P4 da revisão R2 (parecer `b680fd66` + decisão `6ff54dd9`; entrega 2026-09-30)
+
+### P1 — Factual: 4 opções A–D (obrigatório) ✔
+- L.317 "Uma pergunta, **três respostas possíveis**" → "Uma pergunta, **quatro opções (A–D)**". O DOM tem exatamente 4 opções (A–D, `data-i` 1–4); o texto agora espelha a realidade.
+- **Verificação:** checagem `P1:*` no verify (contém "quatro opções" e NÃO contém "três respostas"); `options: 4` registrado em `after_metrics.json` (desktop e mobile390).
+
+### P2 — Evidência conforme spec do R3 (obrigatório) ✔
+- **(a) Capturas iniciais em scrollTop=0:** `evidence-capture.js` agora executa `window.scrollTo(0,0)` + settle de 200ms ANTES de cada captura inicial (o `reload()` do Playwright restaura a posição anterior de scroll — causa das capturas roladas). Recibo: `viewports.{320,375,390,1280}.initialScrollY = 0` em `after_metrics.json`.
+- **(b) Pós-F1 limpo:** `cleanState()` (blur + espera >4,6s p/ descartar o toast de 4,2s) agora aplicado TAMBÉM no loop 375/320 (antes só desktop/390). Recibo: `toast_clean_postF1_mobile{320,375}: true` somando-se aos já existentes.
+- **(c) Feedback completo/retry ALCANÇÁVEL:** após resposta errada, o modal ao vivo é rolado (`scrollIntoViewIfNeeded` no `#retry-btn`) e o estado capturado com o retry visível. Recibo: `lesson_feedback.*_feedback_retry.reach.in_viewport = true` com bounding box (desktop y 768–812/900; mobile390 y 639–683/844) + `retryVisible: true` + `feedbackExplains: true`.
+
+### P3 — C2 determinístico (obrigatório) ✔
+- **Causa raiz encontrada:** a janela de amostragem de Fundamentos (banda `40k` terminava 5k ACIMA da âncora do cristal) capturava apenas um filete ~2px da cunha `#324f53`; com a animação ligada, o `bob()` (±3–4px) movia o filete para dentro/fora da banda → falhas intermitentes (2/5 do revisor). Congelar sozinho NÃO bastaria: na posição-base o filete fica FORA — falharia deterministicamente.
+- **Correção dupla:** (1) cenário congelado via `#motion-btn` ANTES da amostragem (para o loop RAF; emulação CSS `prefers-reduced-motion` NÃO para o loop — ele é dirigido por JS, por isso o botão é o mecanismo correto); (2) banda de Fundamentos 40k → **52k**, cobrindo a cunha inteira e mantendo margem acima do rótulo (topo em fY−3).
+- **Verificação:** checagens `P3:*` (congelado `aria-pressed=true` + **5 amostragens consecutivas, 5/5 acertos por ilha**); suíte completa executada **5× seguidas: 46/46 ok em todas, 0 erros de console** (43 anteriores + P1 + P3×2).
+
+### P4 — Polimento (opcional "só se simples"): 2 de 3 aplicados
+- **Numeral concluído:** 14px → **15px** (mantém a linha em fY+34 sem colidir com o subtítulo; 16px não cabe na face da ilha em 320px — face termina em fY+36).
+- **Subtítulo da ilha:** contraste fortalecido (`#8ba09e` → `#3f5348`) + **shrink-to-fit** (11px→piso 9px enquanto exceder 42% da largura do canvas) — nunca corta em 320px.
+- **Overlap landmark/HUD (casa × legenda "2 JORNADAS · 4 FUNDAMENTOS"): ADIADO com números.** Em 320px (canvas H≈342), limpar a faixa do HUD (y 14–28) exigiria teto de escala `(cY−40)/165 ≈ 0,28` para a casa — 38% menor que o atual 0,45 e abaixo do piso de reconhecibilidade 0,5 assumido em C2. É um trade-off escala×overlap que pertence à revisão de pixels (mudar `cY` para H·.33 limparia o HUD mas comprime o espaço entre ilhas e põe o robô em cima da ilha Fundamentos). Sem redesenho cego: decida-se com pixels na frente.
+
+### Limites mantidos
+Sem merge/deploy/publicação; sem novo sistema visual; aceite visual ≠ certificação screenreader/contraste (frente QA no RC-5). Reconhecibilidade visual dos landmarks e signoff visual final permanecem com a **revisão de pixels**.

@@ -314,7 +314,7 @@ dialog::backdrop{background:#071422bc}
     <div class="step-dots" aria-hidden="true"><span class="active"></span><span id="dot2"></span><span id="dot3"></span></div>
     <div class="lesson-head">
       <h2 id="lesson-title">O que a IA está fazendo quando responde?</h2>
-      <p>Uma pergunta, três respostas possíveis. Primeiro veja o exemplo resolvido; depois tente você — pode tentar de novo quantas vezes quiser.</p>
+      <p>Uma pergunta, quatro opções (A–D). Primeiro veja o exemplo resolvido; depois tente você — pode tentar de novo quantas vezes quiser.</p>
     </div>
 
     <details class="lesson-primer" open>
@@ -423,7 +423,13 @@ dialog::backdrop{background:#071422bc}
   function label(text, x, y, color, sub){
     ctx.textAlign = 'center'; ctx.font = '650 15px "Avenir Next","Segoe UI",Arial,sans-serif';
     ctx.fillStyle = color; ctx.fillText(text, x, y);
-    if (sub) { ctx.font = '11px "SFMono-Regular",Consolas,monospace'; ctx.fillStyle = '#8ba09e'; ctx.fillText(sub, x, y + 17); }
+    if (sub) {
+      /* P4 (revisão 6ff54dd9): subtítulo mais legível (contraste) + shrink-to-fit para nunca cortar em 320px */
+      var subFont = 11;
+      ctx.font = subFont + 'px "SFMono-Regular",Consolas,monospace';
+      while (subFont > 9 && ctx.measureText(sub).width > canvas.width * .42) { subFont--; ctx.font = subFont + 'px "SFMono-Regular",Consolas,monospace'; }
+      ctx.fillStyle = '#3f5348'; ctx.fillText(sub, x, y + 17);
+    }
   }
   function bob(base, amp){ return animating ? base + Math.sin(t / 42 + base) * amp : base; }
   /* C2 — Landmarks ilustrados COPIADOS de engines/sdlc-quest/src/world.js (mesma tela, mesma paleta):
@@ -475,7 +481,7 @@ dialog::backdrop{background:#071422bc}
     label('Fundamentos', W2 * .24, fY + 8, '#0f231c', 'F1–F4 · COMECE AQUI');
     label('IA no cotidiano', W2 * .78, cY + 8, '#231a09', 'JORNADA 1');
     label('IA para Dev', W2 * .78, dY + 8, '#081712', 'JORNADA 2');
-    if (fDone > 0) { ctx.font = '700 14px "SFMono-Regular",Consolas,monospace'; ctx.fillStyle = '#195d4b'; ctx.textAlign = 'center'; ctx.fillText('✓ ' + fDone + ' de 4', W2 * .24, fY + 34); }
+    if (fDone > 0) { ctx.font = '700 15px "SFMono-Regular",Consolas,monospace'; ctx.fillStyle = '#195d4b'; ctx.textAlign = 'center'; ctx.fillText('✓ ' + fDone + ' de 4', W2 * .24, fY + 34); }
     if (animating) requestAnimationFrame(draw);
   }
   window.addEventListener('resize', draw);

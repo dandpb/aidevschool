@@ -27,6 +27,19 @@ function pngSize(file) {
   const M = { prefix: prefix, html: path.basename(htmlPath), viewports: {}, lesson_feedback: {}, compose: {} };
 
   const docW = () => page.evaluate(() => ({ doc: document.documentElement.scrollWidth, inner: window.innerWidth }));
+  async function scrollTop0() { // P2a (revisão 6ff54dd9): capturas iniciais SEMPRE em scrollTop=0 (reload restaura scroll)
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.waitForTimeout(200);
+    return page.evaluate(() => Math.round(window.scrollY));
+  }
+  async function retryIntoView() { // P2c (revisão 6ff54dd9): prova de feedback/retry ALCANÇÁVEL — rolar o modal ao vivo
+    await page.locator('#retry-btn').scrollIntoViewIfNeeded();
+    await page.waitForTimeout(150);
+    return page.evaluate(() => {
+      const r = document.querySelector('#retry-btn').getBoundingClientRect();
+      return { box: { x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.width), h: Math.round(r.height) }, in_viewport: r.top >= 0 && r.bottom <= window.innerHeight && r.height > 0, viewport_h: window.innerHeight };
+    });
+  }
   async function cleanState() { // foco fora do skip-link + toast descartado
     await page.evaluate(() => { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); });
     await page.waitForTimeout(TOAST_CLEAR_MS);
@@ -47,7 +60,7 @@ function pngSize(file) {
 
   // — Desktop 1280: first paint (disclosure closed)
   await page.waitForTimeout(250);
-  M.viewports['1280'] = { initial: await docW() };
+  M.viewports['1280'] = { initial: await docW(), initialScrollY: await scrollTop0() };
   await page.screenshot({ path: `${outDir}/${prefix}_initial_desktop1280.png` });
 
   // — Desktop: lição aberta (exemplo → tentativa) e feedback explicativo com retry
@@ -68,6 +81,7 @@ function pngSize(file) {
     feedbackExplains: document.querySelector('#feedback').textContent.includes('tente de novo'),
     retryVisible: !document.querySelector('#retry-btn').hidden
   }));
+  M.lesson_feedback.desktop_feedback_retry.reach = await retryIntoView(); // P2c: retry visível/alcansável no modal rolado
   await page.screenshot({ path: `${outDir}/${prefix}_feedback_retry_desktop1280.png` });
   // recupera para o fluxo pós-F1 a partir do retry (mesma sessão de lição)
   await page.locator('#retry-btn').click();
@@ -95,7 +109,7 @@ function pngSize(file) {
   // — Mobile: 390 (com lição/feedback no telefone), depois 375 e 320
   await page.setViewportSize({ width: 390, height: 844 });
   await page.reload(); await page.waitForTimeout(250);
-  M.viewports['390'] = { initial: await docW() };
+  M.viewports['390'] = { initial: await docW(), initialScrollY: await scrollTop0() }; // P2a: scrollTop=0
   M.mobile390_cta_box_initial = await page.locator('#start-f1').boundingBox();
   await page.screenshot({ path: `${outDir}/${prefix}_initial_mobile390.png` });
   // lição aberta + feedback com retry no telefone (390)
@@ -109,6 +123,7 @@ function pngSize(file) {
     feedbackExplains: document.querySelector('#feedback').textContent.includes('Tente de novo') || document.querySelector('#feedback').textContent.includes('tente de novo'),
     retryVisible: !document.querySelector('#retry-btn').hidden
   }));
+  M.lesson_feedback.mobile390_feedback_retry.reach = await retryIntoView(); // P2c: retry visível/alcansável no modal rolado
   await page.screenshot({ path: `${outDir}/${prefix}_feedback_retry_mobile390.png` });
   await page.locator('#retry-btn').click();
   await page.locator('.option[data-i="1"]').click();
@@ -128,11 +143,12 @@ function pngSize(file) {
   for (const w of [375, 320]) {
     await page.setViewportSize({ width: w, height: 844 });
     await page.reload(); await page.waitForTimeout(250);
-    M.viewports[String(w)] = { initial: await docW() };
+    M.viewports[String(w)] = { initial: await docW(), initialScrollY: await scrollTop0() }; // P2a: scrollTop=0
     await page.screenshot({ path: `${outDir}/${prefix}_initial_mobile${w}.png` });
     await runF1();
     await openAlt();
     M.viewports[String(w)].postF1open = await docW();
+    M['toast_clean_postF1_mobile' + w] = await cleanState(); // P2b: sem toast/foco residual antes de capturar
     await page.screenshot({ path: `${outDir}/${prefix}_postF1_altopen_mobile${w}.png`, fullPage: true });
   }
 

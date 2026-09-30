@@ -26,14 +26,24 @@ const HTML = process.argv[2] || path.join(__dirname, '03-prototipo-entrada.html'
     return { separated: sep, boxTop: Math.round(box.top), worldBottom: Math.round(world.bottom) };
   });
   t('C4: desktop open disclosure outside the drawing area (no intersection at 1280)', c4.separated === true);
+  // P3 (revisão 6ff54dd9) — freeze the scenario BEFORE C2 sampling: bob() moves the islands ±3–4px
+  // while the sampling window is fixed (2/5 falhas intermitentes observadas pelo revisor).
+  // #motion-btn para o loop RAF (emulação CSS prefers-reduced-motion NÃO para: o loop é JS),
+  // a paleta deixa de mutar durante a leitura do getImageData.
+  await page.locator('#motion-btn').click();
+  await page.waitForTimeout(120);
+  t('P3: scenario frozen before C2 sampling (#motion-btn paused, aria-pressed=true)', (await page.locator('#motion-btn').getAttribute('aria-pressed')) === 'true');
   // C2 — landmarks: ≥1 illustrated SDLCQuest primitive per island (color variance over the island art band)
-  const lmInfo = await page.evaluate(() => {
+  const c2Sample = () => page.evaluate(() => {
     const cv = document.querySelector('#world'), c = cv.getContext('2d');
     const W = cv.width, H = cv.height, s = W / 1040;
     const k = Math.max(s, .5), fY = H * .52, cY = H * .25, dY = H * .8;
     const hK = Math.min(k * .9, (cY - 18) / 165), tK = Math.min(k * .85, (dY - cY - 60) / 160);
     const regions = {
-      fundamentos: [W * .24 - 45, fY - 16 - 45 * k, 90, 40 * k],
+      // P3: banda de Fundamentos altura 52k (era 40k) — a janela terminava 5k ACIMA da âncora do
+      // cristal e só um filete ~2px da cunha #324f53 entrava na amostra (causa das falhas com a
+      // animação ligada); 52k cobre a cunha e continua acima do rótulo (topo em fY-3).
+      fundamentos: [W * .24 - 45, fY - 16 - 45 * k, 90, 52 * k],
       cotidiano: [W * .78 - 45, cY - 16 - 100 * hK, 90, 60],
       dev: [W * .78 - 40, dY - 20 - 95 * tK, 80, 60]
     };
@@ -50,6 +60,11 @@ const HTML = process.argv[2] || path.join(__dirname, '03-prototipo-entrada.html'
     }
     return out;
   });
+  // P3 — determinismo: 5 amostragens consecutivas após congelar; todas devem acertar a paleta
+  const c2Runs = [await c2Sample()];
+  for (let i = 0; i < 4; i++) c2Runs.push(await c2Sample());
+  const lmInfo = c2Runs[c2Runs.length - 1];
+  t('P3: C2 palette deterministic across 5 consecutive samples (5/5 hits per island)', c2Runs.every(r => r.fundamentos.paletteHit && r.cotidiano.paletteHit && r.dev.paletteHit));
   t('C2: illustrated landmark on Fundamentos (crystal+plant variance>4)', lmInfo.fundamentos.variance > 4);
   t('C2: SDLCQuest crystal palette (#324f53) present on Fundamentos', lmInfo.fundamentos.paletteHit === true);
   t('C2: illustrated landmark on cotidiano (house silhouette variance>4)', lmInfo.cotidiano.variance > 4);
@@ -59,6 +74,9 @@ const HTML = process.argv[2] || path.join(__dirname, '03-prototipo-entrada.html'
   t('arrows in F-track (3)', await page.locator('.stage-arrow').count() === 3);
   await page.locator('#start-f1').click();
   t('lesson dialog opens', await page.locator('#lesson').evaluate(d => d.open));
+  // P1 (revisão 6ff54dd9) — texto factual: 4 opções A–D, não "três respostas"
+  const introTxt = await page.locator('.lesson-head p').first().textContent();
+  t('P1: lesson intro counts four options A–D (no "três respostas")', introTxt.includes('quatro opções') && !introTxt.includes('três respostas'));
   // wrong answer -> explanatory feedback + retry
   await page.locator('.option[data-i="2"]').click();
   await page.locator('#confirm-btn').click();
