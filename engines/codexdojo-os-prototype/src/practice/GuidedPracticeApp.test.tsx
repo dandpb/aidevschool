@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import { guidedPracticeProjection } from '../data/generated/guidedPractice'
@@ -9,7 +9,9 @@ const projection = guidedPracticeProjection
 async function completeAttempt(user: ReturnType<typeof userEvent.setup>) {
   await user.click(screen.getByRole('button', { name: /li o exemplo e vou para a tentativa/i }))
   for (let index = 1; index <= projection.attemptSteps.length; index += 1) {
-    await user.type(screen.getByLabelText(`Evidência do passo ${index}`), `$ cmd ${index}{Enter}exit=0`)
+    fireEvent.change(screen.getByLabelText(`Evidência do passo ${index}`), {
+      target: { value: `$ cmd ${index}\nexit=0` },
+    })
   }
   await user.click(screen.getByRole('button', { name: /concluir a tentativa/i }))
 }
@@ -25,7 +27,9 @@ async function assess(user: ReturnType<typeof userEvent.setup>, criterionId: str
   const scope = criterionScope(criterionId)
   await user.click(scope.getByText(criterionId))
   await user.click(scope.getByLabelText(label))
-  await user.type(scope.getByLabelText(`Evidência do critério ${criterionId}`), 'comando + saída citados')
+  fireEvent.change(scope.getByLabelText(`Evidência do critério ${criterionId}`), {
+    target: { value: 'comando + saída citados' },
+  })
 }
 
 describe('GuidedPracticeApp (pg-d01)', () => {
@@ -45,13 +49,25 @@ describe('GuidedPracticeApp (pg-d01)', () => {
       await assess(user, criterion.id, 'Atendido')
     }
     await user.click(screen.getByRole('button', { name: /ir para o takeaway/i }))
-    await user.type(screen.getByLabelText(/\(a\)/), 'a fronteira 6.0 não era testada')
-    await user.type(screen.getByLabelText(/\(b\)/), 'o caso mínimo com saída real')
+    fireEvent.change(screen.getByLabelText(/\(a\)/), { target: { value: 'a fronteira 6.0 não era testada' } })
+    fireEvent.change(screen.getByLabelText(/\(b\)/), { target: { value: 'o caso mínimo com saída real' } })
     await user.click(screen.getByRole('button', { name: /concluir a prática/i }))
 
     const receipt = screen.getByText(/Recibo da prática guiada pg-d01/)
     expect(receipt.textContent).toContain(projection.contentVersion)
     expect(receipt.textContent).toContain('c-suicao-revisao: met')
+  })
+
+  it('explains why the attempt CTA is disabled while evidence is incomplete', async () => {
+    const user = userEvent.setup()
+    render(<GuidedPracticeApp onTeach={() => {}} />)
+    await user.click(screen.getByRole('button', { name: /li o exemplo e vou para a tentativa/i }))
+    const cta = screen.getByRole('button', { name: /concluir a tentativa/i })
+    expect(cta).toHaveProperty('disabled', true)
+    expect(screen.getByText(/Evidência registrada em 0\/6 passos/)).toBeTruthy()
+    fireEvent.change(screen.getByLabelText('Evidência do passo 1'), { target: { value: '$ cmd' } })
+    expect(cta).toHaveProperty('disabled', true)
+    expect(screen.getByText(/Evidência registrada em 1\/6 passos/)).toBeTruthy()
   })
 
   it('keeps the conclusion disabled until rubric, takeaway and evidence close', async () => {
@@ -89,8 +105,8 @@ describe('GuidedPracticeApp (pg-d01)', () => {
       await assess(user, criterion.id, 'Atendido')
     }
     await user.click(screen.getByRole('button', { name: /ir para o takeaway/i }))
-    await user.type(screen.getByLabelText(/\(a\)/), 'a')
-    await user.type(screen.getByLabelText(/\(b\)/), 'b')
+    fireEvent.change(screen.getByLabelText(/\(a\)/), { target: { value: 'a' } })
+    fireEvent.change(screen.getByLabelText(/\(b\)/), { target: { value: 'b' } })
     await user.click(screen.getByRole('button', { name: /concluir a prática/i }))
     await user.click(screen.getByRole('button', { name: /copiar recibo/i }))
     expect(onTeach).toHaveBeenCalledWith(expect.objectContaining({ title: 'Recibo copiado' }))

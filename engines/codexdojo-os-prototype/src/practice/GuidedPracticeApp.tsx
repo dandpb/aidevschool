@@ -105,6 +105,15 @@ export function GuidedPracticeApp({ onTeach }: GuidedPracticeAppProps) {
               </details>
             ))}
           </details>
+          {(() => {
+            const recorded = state.stepEvidence.filter((evidence) => evidence.trim() !== '').length
+            return recorded < state.stepEvidence.length ? (
+              <p className="practice-note">
+                Evidência registrada em {recorded}/{state.stepEvidence.length} passos — registre o
+                comando e a saída real de cada passo para continuar.
+              </p>
+            ) : null
+          })()}
           <button
             type="button"
             className="practice-primary"
