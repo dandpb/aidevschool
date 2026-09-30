@@ -7,6 +7,7 @@
 | **Base inspecionada** | `f36f8b9455ccf5acecf463a89190773280d6f15c` (head do draft PR #617, branch `aid3505/ratified-competency-metadata`), empilhado sobre `d853e4f77ce2a32444c730df4798c5779b03ff3f` (contrato aprovado, PR #612). `main` ainda NÃO contém nenhuma dessas fatias. |
 | **Revisor alvo** | Learner App Engineer (etapa review da issue): valida o seam real (`generatedContentRepository`) e os estados de erro/ausência. |
 | **Status** | Proposta (spec documental + testes de seam executáveis). Nenhum wiring de runtime nesta fatia. |
+| **Revisão** | r1 (2026-09-30): 3 correções doc-only do review LAE (comentário `51284f0a`, head revisto `3cd9fef2`): (1) §3/§9.5 — citação inexistente `catalog.mjs:100-124` corrigida (arquivo = 100 linhas, lista estática) e entrada estática `escola/` declarada (PR #616, fora da base); (2) invariante «propagação não bumpa `contentVersion`/`version`» adicionada (§7 gates das Fases 1–2 + §9.6); (3) §9.2 — inventário de consumidores de `lessons` confirmado pelo LAE substitui o «não conheço outro consumidor». §4/§5/§6/§8 intocados, conforme combinado. |
 
 ## 1. Proveniência
 
@@ -46,7 +47,16 @@ integração 621 ou posterior por suposição.
 | Estados de aquisição | `engines/literacyDojo/src/domain/progress.ts:9,13,18-19,341-360` | UI registra no máximo `completed` (`LessonStatus`); tentativas aprovadas incrementam `passes`; `mastered` reservado ao verificador independente. |
 | Evidência | `compiler.py:122` (tipo gerado) | `completionClaim: "lesson_completed" \| "application_reported"` — relato de aplicação ≠ pass. |
 | Corpus do verificador | `curriculum/ai-literacy/tools/compiler.py:247-267` | `literacy-corpus.mjs` = projeção mínima (version, skillIds, activities). «Do not add producer-facing fields here». |
-| Entrada estática | `engines/school-entry/server/catalog.mjs:100-124` | Lê contagens/jornada via comentário de contrato; nunca lê competência nem progresso. |
+| Entrada estática | `engines/school-entry/server/catalog.mjs` (exatas 100 linhas na base) | Lista estática de engines (`id`/`name`/`description`/`reason`/`source`); não lê contagens, jornada, competência nem progresso. *(r1: a citação anterior «:100-124» não existia — o arquivo termina na linha 100.)* |
+
+**Declaração fora da base inspecionada (r1)**: a outra entrada estática que
+existe hoje é `engines/literacyDojo/public/escola/entry-contract.js`
+(PR #616, mergeado em `main` em 2026-09-30) — **não é ancestral da base
+inspecionada** `f36f8b94`, portanto não consta da tabela acima: dados
+estáticos portados verbatim com hashes pinados por
+`tests/static-entry/escola-honesty.test.ts`. A conclusão substantiva vale nos
+dois lugares — nenhum dos dois lê competência nem progresso (verificado por
+grep pelo LAE na r1 do review, em ambos os pontos).
 
 **Conclusão da inspeção**: o único caminho legítimo de leitura é
 YAML canônico → `validate.py --compile` → `lessons.ts` → porta/adapter. Não
@@ -301,12 +311,24 @@ Documentar o novo export/flag na seção de exports (:122+) e o estado ausente.
 | Fase | Conteúdo | Owner | Gate |
 | --- | --- | --- | --- |
 | **0 (este PR)** | Spec canônica + testes de seam (fatos atuais: ausência, 8 chaves do catálogo, corpus do verificador limpo) | CPE | Review LAE nesta issue |
-| **1** | Compilador emite `competency?` **somente com `--with-competency`** (default continua byte-idêntico); testes de inércia atualizados na mesma fatia | CPE | PR pequeno; QA confere default e opt-in |
-| **2** | `gen:content` do literacyDojo adota a flag (`package.json:17`); porta + adapter `getCompetency`; testes de porta | LAE | PR engine; nada muda para o aprendiz |
+| **1** | Compilador emite `competency?` **somente com `--with-competency`** (default continua byte-idêntico); testes de inércia atualizados na mesma fatia | CPE | PR pequeno; QA confere default e opt-in; **sem bump de `catalog.contentVersion` nem de `version` de lição** |
+| **2** | `gen:content` do literacyDojo adota a flag (`package.json:17`); porta + adapter `getCompetency`; testes de porta | LAE | PR engine; nada muda para o aprendiz; **sem bump de `catalog.contentVersion` nem de `version` de lição** |
 | **3** (fora daqui) | Consumo de UI/roteiro; export de glossário; derivações de aquisição | UX/CD/produto | fatias próprias; `mastered` segue reservado |
 
 Ativar a Fase 1 **não muda nada que o aprendiz percebe**: nenhuma superfície
 lê competência hoje; o campo é opcional e invisível até a Fase 3.
+
+**Invariante de versão (Fases 1–2; adicionada na r1 do review LAE)**:
+propagar `competency` **não bumpa `catalog.contentVersion` nem `version` de
+lição**. O `contentVersion` é autorado em `catalog.yaml` (lido pelo compilador
+em `compiler.py:238-239`) — bump é uma escolha editorial, não consequência
+mecânica do diff. Divergência dispara `migrateProgress`
+(`engines/literacyDojo/src/domain/migration.ts:98-108`): toda skill praticada
+ganha `nextReviewAt: now` (tempestade de revisão devida para todo aprendiz
+ativo) e rearma a máquina de retrofit (`retrofitNotice.ts:16-20`, mapas
+keyed por `contentVersion`). Um bump acoplado à ativação das Fases 1–2
+mudaria o que o aprendiz percebe — exatamente o que este gate promete que
+não acontece.
 
 ## 8. Evidência executável deste PR (fixtures isoladas, sem suite cara)
 
@@ -347,17 +369,49 @@ vocabulário fechado; corpus do verificador intocado (teste 4).
    débito posterior.
 2. `engines/literacyDojo/package.json:17` chama `--compile` sem flag; se a
    Fase 2 adotar a flag, qualquer snapshot byte-exato de `lessons.ts` em
-   outras superfícies diverge — varredura na Fase 2 é pré-requisito do PR LAE
-   (hoje não conheço outro consumidor de `lessons.ts` além do adapter;
-   confirmação faz parte do review do LAE).
+   outras superfícies diverge. **Inventário de consumidores de valor de
+   `data/generated/lessons` — além do adapter — confirmado pelo LAE na r1 do
+   review (2026-09-30, comentário `51284f0a`); todos aditivamente seguros
+   com chave opcional:**
+   - `engines/literacyDojo/src/adapters/indexedDbProgressRepository.ts:2` —
+     importa somente `contentVersion` (inofensivo se a invariante do item 6
+     for respeitada);
+   - `engines/codexdojo-os-prototype/tests/support/literacyMission.ts:2` —
+     `lessons`, filtros por id (uso estrutural, seguro);
+   - `engines/literacyDojo/playwright/support.ts:8,312-313` — `lessons` +
+     import dinâmico de `modules` (seguro);
+   - suites vitest: `tests/app/lessonStateContract.test.tsx:5`,
+     `tests/adapters/indexedDbProgressRepository.test.ts:4`,
+     `tests/app/services.analytics.test.ts:4`,
+     `tests/screens/lessonExposureEmission.test.tsx:8`,
+     `tests/components/OutputComparisonView.test.tsx:6` — usam
+     `lessons`/`modules` como valores; nenhum faz igualdade de formato
+     exato que uma chave nova quebraria;
+   - scripts de observação arquivados em
+     `docs/product-readiness/evidence/observations/**` importam `lessons.ts`,
+     mas são evidência point-in-time, não superfícies vivas.
+
+   A «varredura na Fase 2» do PR LAE fica assim declarada contra esta lista
+   real (nenhum consumidor desconhecido pendente).
 3. `ContentRepository` é interface única com um implementador; adicionar método
    obrigatório é breaking para implementadores futuros — aceito por ser
    aditivo no único adapter existente (registrar decisão no PR da Fase 2).
 4. OS prototype (`mission-bindings.yaml`) referencia lições por id — não lê
    `LessonDefinition` inteira; sem impacto esperado, mas a verificação é do
    LAE (owner do engine), não minha.
-5. `school-entry` não lê competência (comentário de contrato em
-   `catalog.mjs:100-124`) — sem impacto.
+5. `school-entry` não lê competência: `engines/school-entry/server/catalog.mjs`
+   é lista estática de engines (100 linhas na base inspecionada; a citação
+   anterior «:100-124», inexistente, foi corrigida na r1). A entrada estática
+   `engines/literacyDojo/public/escola/` (PR #616, em `main`, fora da base
+   inspecionada — declarada em §3) também não lê: dados estáticos verbatim com
+   hashes pinados — sem impacto.
+6. **Invariante de `contentVersion` (r1)**: a propagação de `competency`
+   (Fases 1–2) **não bumpa `catalog.contentVersion` nem `version` de lição**
+   — ver §7. Um bump acidental dispara `migrateProgress` (revisão devida em
+   toda skill praticada, `migration.ts:98-108`) e rearma a máquina de retrofit
+   (`retrofitNotice.ts:16-20`): risco real de quebra perceptível na superfície
+   live. `contentVersion` é autorado, não derivado de hash — o bump não
+   acontece por acidente.
 
 ## 10. Menor implementação pronta, responsável e pré-requisitos reais
 
