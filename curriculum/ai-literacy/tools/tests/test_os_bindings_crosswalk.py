@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import sys
 import unittest
 from collections import Counter
 from pathlib import Path
@@ -7,6 +8,12 @@ from pathlib import Path
 import yaml
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from learner.substrate.mission_catalog_bindings import (  # noqa: E402
+    validate_tracks,
+)
 BINDINGS_PATH = (
     REPO_ROOT
     / "engines"
@@ -220,6 +227,54 @@ class PixelPackUnitAliasAuditTest(unittest.TestCase):
                 ":lab" in unit_id or unit_id.startswith("lab-"),
                 "{} looks like a Pixel region id, not a unit id".format(unit_id),
             )
+
+
+class RuntimeVersionEnforcementAuditTest(unittest.TestCase):
+    """AID-3457 (revisão PR #611): distingue proteção runtime de proteção de teste.
+
+    O runtime hoje só exige igualdade contentVersion<->catálogo no track
+    ``ai-pratica`` (mission_catalog_bindings.py:45); o track ``dev`` aceita
+    qualquer string não-vazia. A igualdade Dev vigente é garantida pelo pin
+    ``test_ai_pratica_content_versions_match_canonical_catalog`` (CI), não pelo
+    runtime. Este pin negativo documenta o gap: se a proteção virar runtime,
+    flipar conscientemente junto com o change conjunta do substrate.
+    """
+
+    DEV_DIVERGENT_TRACKS = [
+        {
+            "trackId": "ai-pratica",
+            "contentVersion": "2049-01-01",
+            "recommendedEntryMissionId": "l01",
+        },
+        {
+            "trackId": "dev",
+            "contentVersion": "1999-01-01-divergent",
+            "recommendedEntryMissionId": "l27",
+        },
+    ]
+
+    def test_runtime_rejects_divergent_ai_pratica_track(self):
+        tracks = [
+            track
+            for track in self.DEV_DIVERGENT_TRACKS
+            if track["trackId"] == "dev"
+        ] + [
+            {
+                "trackId": "ai-pratica",
+                "contentVersion": "1999-01-01-divergent",
+                "recommendedEntryMissionId": "l01",
+            }
+        ]
+        with self.assertRaises(Exception):
+            validate_tracks(tracks, literacy_content_version="2049-01-01")
+
+    def test_runtime_accepts_divergent_dev_track_today(self):
+        validated = validate_tracks(
+            self.DEV_DIVERGENT_TRACKS, literacy_content_version="2049-01-01"
+        )
+        self.assertEqual(
+            validated["dev"]["contentVersion"], "1999-01-01-divergent"
+        )
 
 
 if __name__ == "__main__":

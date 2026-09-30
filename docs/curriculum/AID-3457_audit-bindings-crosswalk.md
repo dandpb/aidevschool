@@ -73,14 +73,43 @@ por lição; engine obrigatoriamente `literacyDojo`. `verifierRequired: true` é
 - O filtro `ia_pratica` (o que o público cotidiano vê) continua no adaptador literacyDojo
   (`generatedContentRepository.ts`), decisão AID-3453 — não mover para o compilador.
 
-### 2.4 Acoplamento de versão (achado F-2)
+### 2.4 Acoplamento de versão (achado F-2, corrigido pela revisão do PR #611)
 
 Qualquer mudança de conteúdo/estrutura no catálogo ou lições exige bump único de
-`contentVersion` propagado em **três lugares** do `mission-bindings.yaml`: track `ai-pratica`,
-track `dev` (hoje espelha o mesmo valor) e `runtime.contentVersion` de **cada** binding de
-lição (32 ocorrências) — o substrate rejeita divergência. Exige ainda `gen:content` +
-regeneração das views (`python3 -m learner.substrate`) e, se contrato produto-facing mudar,
-`engines/codexDojo/ecosystem/MANIFEST.md` no mesmo change.
+`contentVersion` propagado em **três lugares** do `mission-bindings.yaml`. A proteção,
+porém, **não é uniforme** — distinção first-hand (`learner/substrate/mission_catalog_bindings.py`):
+
+| Lugar | Proteção runtime hoje | Proteção nesta auditoria |
+| --- | --- | --- |
+| track `ai-pratica` `contentVersion` | **rejeita** divergência do catálogo canônico (`validate_tracks`, `mission_catalog_bindings.py:45`) | — |
+| track `dev` `contentVersion` | **NÃO rejeita** — exige apenas string não-vazia (`:44`); igualdade hoje é convenção espelhada | **pin de teste** (`test_ai_pratica_content_versions_match_canonical_catalog`): divergência Dev falha em CI, não no runtime |
+| `runtime.contentVersion` dos 32 bindings de lição | **rejeita** divergência, para toda lição independente de track (`mission_catalog_bindings.py:130`) | — |
+
+Exige ainda `gen:content` + regeneração das views (`python3 -m learner.substrate`) e, se
+contrato produto-facing mudar, `engines/codexDojo/ecosystem/MANIFEST.md` no mesmo change.
+**Runtime não é ampliado nesta onda** (proteção Dev fica só no teste; ampliar runtime =
+change conjunta com o dono do substrate, fora do escopo audit-only).
+
+#### 2.4.1 Registro de defaults de schema (first-hand, antes de futuros consumidores)
+
+Não existe estado implícito/silencioso no contrato atual — tudo ausente ou inválido **rejeita**:
+
+- `lesson.schema.json`: `additionalProperties: false` (F-1) → campo desconhecido (ex. `competency`
+  hoje) é **erro**, nunca ignorado; ao introduzi-lo, a ausência deve ganhar semântica explícita
+  ("não mapeada" — crosswalk [P]) documentada no schema + validador.
+- `evidence.verifierRequired`: sem default — deve ser literalmente `true`
+  (`mission_catalog_bindings.py:75`); `false`/ausente rejeita.
+- `evidence.version`: int requerido, precisa estar em `SUPPORTED_EVIDENCE_SCHEMAS`; sem default.
+- `curriculum.kind` / `fallback.kind`: requeridos, sem default; `fallback.kind` ∈ `SUPPORTED_FALLBACKS`.
+- track `contentVersion` (dev): único campo com "default fraco" — qualquer string não-vazia passa
+  no runtime (ver tabela acima).
+
+**Testes negativos exigidos antes de consumidores usarem estados novos** (pré-requisito da
+fatia de implementação, não desta auditoria): (1) schema rejeita campo desconhecido hoje
+(prova F-1 mecanicamente); (2) `validate_tracks` rejeita `ai-pratica` divergente; (3) pin do
+comportamento atual: `validate_tracks` **aceita** `dev` divergente (gap consciente; virar
+proteção runtime é decisão futura); (4) `verifierRequired: false`/ausente rejeita;
+(5) pós-`competency`: id F/D inválido rejeita e ausência = "não mapeada" com teste dos dois lados.
 
 ### 2.5 IDs e progresso
 
@@ -231,8 +260,16 @@ as lições live:
 - conjunto dev-lição = exatamente as lições de `mod-05`;
 - contrato de evidência uniforme (`literacy-evidence` v1, `verifierRequired`, engine
   `literacyDojo`) nos bindings de lição;
-- `contentVersion` do track `ai-pratica` e dos runtimes = catálogo canônico;
-- jogos voxel: 7, todos `dev`, `project-voxel-game` (prática opcional).
+- `contentVersion` do track `ai-pratica` **e do track `dev`** e dos runtimes = catálogo canônico
+  (⚠ pin `dev` é proteção **de teste** — o runtime hoje não exige igualdade no track dev; ver §2.4);
+- jogos voxel: 7, todos `dev`, `project-voxel-game` (prática opcional);
+- aliases do pack Pixel congelados (§2.7): fixture `PIXEL_UNIT_ALIASES`, branches do fonte,
+  U0 persistido no substrate, defaults de template nunca canônicos, unit_id nunca região-shaped.
+
+Pin negativo do comportamento atual do runtime (distinção revisão PR #611):
+`validate_tracks` **aceita** track `dev` com `contentVersion` divergente (gap documentado §2.4);
+quando a proteção virar runtime, este teste deve flipar conscientemente junto com o change
+conjunta do substrate.
 
 Testes que acompanham a implementação (futuro, quando desbloqueado): parse com
 `competency` ausente/presente nos 4 níveis (lesson YAML, catalog, bindings, read model),
