@@ -1988,8 +1988,12 @@ export const literacyCorpus = {
               "text": "Valida o payload contra um schema explícito"
             },
             {
-              "id": "c-redact",
-              "text": "Remove ou omite campos sensíveis antes de logar"
+              "id": "c-redact-shape",
+              "text": "Declara no tipo a intenção de redação (campos sensíveis marcados para omição)"
+            },
+            {
+              "id": "c-redact-runtime",
+              "text": "Remove de fato os campos sensíveis em runtime antes de logar (o objeto logado não contém client_secret/api_key/token)"
             },
             {
               "id": "c-types",
@@ -2010,7 +2014,8 @@ export const literacyCorpus = {
           "expectedVerdicts": {
             "c-deps": "not_met",
             "c-erros": "not_met",
-            "c-redact": "partial",
+            "c-redact-runtime": "not_met",
+            "c-redact-shape": "met",
             "c-schema": "met",
             "c-types": "met"
           },

@@ -99,8 +99,16 @@ capstone cotidiano l14 aspira T2/T3 (§0.1). (r1.3: caso-real retirado daqui —
 | l04–l07 (mod 02) | F3 | F1 | **manter** [D] | idem |
 | l08–l11 (mod 03) | F4 | F3 | **manter** [D] | idem |
 | l12–l14 (mod 04) | P: F2; S: F4 (l14: P F4 capstone cotidiano) | F1–F4 | **manter**; l14 = capstone leve cotidiano [D] | idem |
-| l15–l17, l21–l23, l27–l29 (mod 05) | P: D1 (l15) / D3 (l16–l17, l21–l22) / D4 (l23, l27–l28) / D5 (l29); S: D3/D4 | F1–F4 (ponte macia, não pré-req duro) | **manter + melhorar**: porta de entrada da jornada dev; revisão prioritária aplicada nesta onda em l16/l27/l28 (§11) [D] | já bound na trilha `dev` como lições YAML |
-| l18–l20 (mod 06), l24–l26 (mod 07), l30–l32 (mod 08) | P: F3 (l18–l20, l30–l31, l24) / F2 (l25) / F4 (l26, l32); S: F2/F4 | F3 | **manter** [D] — bindings completos em ai-pratica | `mission-bindings.yaml` cobre l01–l14, l18–l20, l24–l26, l30–l32 |
+| l15–l17, l21–l23, l27–l29 (mod 05) | P: D1 (l15) / D3 (l16, l21–l22, **l29**) / D4 (l23, l27–l28) / D5 (**l17**); S: D3/D4 | F1–F4 (ponte macia, não pré-req duro) | **manter + melhorar**: porta de entrada da jornada dev; revisão prioritária aplicada nesta onda em l16/l27/l28 (§11) [D] | já bound na trilha `dev` como lições YAML |
+| l18–l20 (mod 06), l24–l26 (mod 07), l30–l32 (mod 08) | P: F3 (l18–l19, l30–l31, l24) / F2 (l25) / F4 (**l20**, l26, l32); S: F2/F4 | F3 | **manter** [D] — bindings completos em ai-pratica | `mission-bindings.yaml` cobre l01–l14, l18–l20, l24–l26, l30–l32 |
+
+Normalização por objetivo (r2.1, revisão dirigida 40d060ac): linhas agrupadas são
+direcionais, **não contrato mecânico pronto** — antes de serializar (campo
+`competency:`), a primária de cada lição é re-derivada do seu `objective`:
+l17 "Integre API de IA" → D5 (D5 = integra API de IA); l29 "Avalie as dependências
+sugeridas" → D3 (D3 = dependências avaliadas); l20 "Números e fatos: verifique
+antes de usar" → F4 (F4 = verificação), não F3. Remapeamentos aplicados acima;
+validação restante (outras lições) acontece na serialização pela frente CPE.
 
 ## 3. Família: aiDevschoolMvp (24 conceitos / 49 textos)
 
@@ -221,6 +229,10 @@ IDs preservados; schemas inalterados.
 | Quizzes 01/02 dos projetos | podem pressupor bugs já corrigidos | §9 última linha: versionar fixture antes do reuso (CPE) |
 | Segurança × dados reais | ordenação de pré-requisito | regra transversal ratificada em §0.1 [D] |
 | Ensaio × execução × transferência | não distinguidos por família | níveis T1/T2/T3 ratificados em §0.1, por família [D] |
+| l16 a2 `c-redact` (P1, revisão dirigida 40d060ac) | veredicto `partial` creditava redação runtime pela anotação de tipo (`Redacted`); `data` é passthrough e `safeForLogging` só espalha o payload — `data.token` não é redigido em runtime | critério **dividido**: `c-redact-shape: met` (tipo declara intenção) + `c-redact-runtime: not_met` (runtime não remove nada); perChecks reescritos sem creditar runtime por anotação de tipo |
+| l16 a1 / l27 a1 `onSuccess` (P2, 40d060ac) | "aumenta muito a chance"/"melhor chance de acertar na primeira" ainda superestimavam | linguagem neutra: "ajuda a orientar ... e verificar" |
+| l28 a1 `onSuccess` (feedback37) + a3 perCheck `c-preserva-comportamento` (feedback105) (P2, 40d060ac) | testes tratados como prova de comportamento intacto | limitado aos cenários cobertos: "suíte verde diz 'o que testei continua igual', não 'nada mudou'; fora da cobertura, revisão e testes novos" |
+| Mapeamentos agrupados §2 (40d060ac) | l17→D3, l29→D5, l20→F3 contrariavam os objetivos das lições | normalização por objetivo: **l17→D5, l29→D3, l20→F4** aplicada nas linhas §2 + nota "linhas agrupadas não são contrato mecânico" |
 
 Verificação: `curriculum/ai-literacy`: `python3 tools/validate.py` → "OK: 32 lições
 validadas" + 46 tests tools; `engines/aiDevschoolMvp`: 48 tests passed.
