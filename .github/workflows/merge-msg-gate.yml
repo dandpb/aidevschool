@@ -1,0 +1,115 @@
+name: merge-msg-gate
+
+# Mechanical POST-merge canonical-line check (AID-3447; decision on the QA
+# audit finding for PR #607/`8975ba43` — 5th occurrence of the class
+# "sem-linha-canônica", AID-2655 item 5(2)).
+#
+# The pre-merge gates (`countersign-gate`, `SDLC guardrails (diff)`) verify
+# the citation BEFORE the merge — but a merge composed OUTSIDE the single
+# door (scripts/merge_pr.sh §5 always composes the merge body with the
+# canonical `Countersign: ` line) can still land with an empty/custom body
+# whenever the required checks were green: the web UI merge button, a raw
+# API merge, or a CLI fallback push all bypass the door's message
+# composition (#481 → #491 → #495 → #514 → #607).
+#
+# This workflow is the mechanical form of the AID-2655 item 3 self-check
+# (previously a manual step for the merge-writer): on EVERY push to main it
+# checks each merge commit (>= 2 parents) in the pushed range for a
+# `^Countersign: ` line in the message BODY (scripts/merge_msg_check.py,
+# fail-closed; title-only citations fail — the #514 shape) and goes RED on
+# any violation, independently of actor, credential, or merge path.
+#
+# A red run here is an AUDIT finding, not a broken build: the violating
+# merge is already in history (never rewritten). On failure, a best-effort
+# step opens a Paperclip incident with the violating shas (dedup by sha;
+# missing secrets/transport failure only logs a warning — the red check-run
+# remains the primary signal).
+#
+# Backfill/audit: workflow_dispatch accepts an explicit base (exclusive)
+# and head sha; defaults to the latest commit on main.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      base:
+        description: "Base sha/ref (exclusive) — default: HEAD^"
+        required: false
+      head:
+        description: "Head sha/ref (inclusive) — default: HEAD"
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  merge-msg-gate:
+    name: merge-msg-gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: merge-msg check self-test (synthetic violations must fail)
+        run: python3 scripts/merge_msg_check.py --self-test
+      - name: resolve pushed range
+        run: |
+          case "${{ github.event_name }}" in
+            push)
+              BASE="${{ github.event.before }}"
+              HEAD_SHA="${{ github.sha }}"
+              ;;
+            workflow_dispatch)
+              BASE="${{ inputs.base }}"
+              HEAD_SHA="${{ inputs.head }}"
+              ;;
+            *) echo "unsupported event ${{ github.event_name }}" >&2; exit 2 ;;
+          esac
+          if [ -z "$HEAD_SHA" ]; then HEAD_SHA="HEAD"; fi
+          if [ -z "$BASE" ]; then BASE="${HEAD_SHA}^"; fi
+          # Zero-sha (initial push) or an unfetchable base (force-push rewrite):
+          # check only the head commit (if it is a merge) instead of guessing a
+          # range — same convention as CI's sdlc-guards comparison base.
+          if [ "$BASE" != "0000000000000000000000000000000000000000" ] \
+             && git rev-parse --verify -q "${BASE}^{commit}" >/dev/null 2>&1; then
+            echo "RANGE=${BASE}..${HEAD_SHA}" >> "$GITHUB_ENV"
+            echo "HEAD_ONLY=" >> "$GITHUB_ENV"
+          else
+            echo "::warning::comparison base '$BASE' not resolvable (initial push / history rewrite?) — checking head commit only"
+            echo "RANGE=" >> "$GITHUB_ENV"
+            echo "HEAD_ONLY=${HEAD_SHA}" >> "$GITHUB_ENV"
+          fi
+      - name: merge-msg canonical-line check (fail-closed)
+        run: |
+          if [ -n "$RANGE" ]; then
+            python3 scripts/merge_msg_check.py --range "$RANGE"
+          else
+            python3 scripts/merge_msg_check.py --sha "$HEAD_ONLY"
+          fi
+      - name: open Paperclip incident (best-effort, dedup by sha)
+        if: failure()
+        continue-on-error: true
+        env:
+          PAPERCLIP_API_URL: ${{ secrets.PAPERCLIP_API_URL }}
+          PAPERCLIP_API_TOKEN: ${{ secrets.PAPERCLIP_API_TOKEN }}
+          PAPERCLIP_COMPANY_ID: ${{ secrets.PAPERCLIP_COMPANY_ID }}
+        run: |
+          # List the merge commits (>= 2 parents) in the checked scope; the
+          # script re-verifies each and reports only true violators.
+          SHAS=""
+          if [ -n "${RANGE:-}" ]; then
+            SHAS="$(git log --format='%H %P' "$RANGE" | awk 'NF>=3 {print $1}')"
+          else
+            SHAS="$(git show -s --format='%H %P' "$HEAD_ONLY" | awk 'NF>=3 {print $1}')"
+          fi
+          if [ -z "$SHAS" ]; then
+            echo "no violating merge sha could be listed — incident step skipped"
+            exit 0
+          fi
+          ARGS=""
+          for s in $SHAS; do ARGS="$ARGS --sha $s"; done
+          # shellcheck disable=SC2086
+          python3 scripts/merge_msg_check.py --open-incident $ARGS \
+            --run-url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+            --repo "${{ github.repository }}"
