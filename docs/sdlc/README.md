@@ -396,6 +396,24 @@ todo writer (hoje o single-writer FPE; sob R1, quem mergar):
     verificação com o último passo executado localmente. A porta imprime
     este protocolo no stderr quando o merge via API falha
     (`scripts/merge_pr.sh` §5, AID-3433/E2).
+8. **Recibo de push-run com escopo de run/evento/PR/SHA (AID-3521 Fase1
+     v2.1 docs-only; achado AID-3278).** O tier `issue_comment` do
+     `countersign-gate` roda na cópia de main e o check-run resultante é
+     anexado ao HEAD de main — runs de PRs alheios pintam de vermelho
+     commits de merge não relacionados (18 falhas cross-PR em 7 HEADs só em
+     2026-09-28; matriz no thread AID-3278). A partir daqui, todo recibo de
+     push-run pós-merge que cite checks de um commit de merge M **enumera os
+     check-runs de M e resolve cada linha pela run de origem** (event,
+     workflow, head), classificando por proveniência — `push @ M` (pertence
+     a M; vermelho é real e permanece visível, ex.: `product readiness
+     (claims)` failed no run 36491949848 do M=a02b1833), `cross-PR (PR P @
+     H)` (veredito sobre outro PR/HEAD, rotulado com run/PR/SHA — mantido,
+     nunca descartado) ou `derived @ M` (workflow_run encadeado ao push de
+     M). **Proibido descarte global** de checks de main, ocultação de
+     vermelho real de push ou classificação sem endpoint citado; template:
+     `docs/sdlc/templates/push-run-receipt.md`. Sem mudança mecânica: o
+     gate do merge continua sendo o `countersign-gate` no head do PR + o
+     re-run live da porta (`scripts/merge_pr.sh`).
 
 ## GATE pré-merge mecânico `countersign-gate` (AID-2768 — fim da classe F)
 
