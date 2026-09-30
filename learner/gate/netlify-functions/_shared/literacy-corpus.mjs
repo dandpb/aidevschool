@@ -1997,7 +1997,7 @@ export const literacyCorpus = {
             },
             {
               "id": "c-erros",
-              "text": "Trata erros de validação de forma previsível (ex: lança ou retorna Result)"
+              "text": "Declara o contrato de erro ao chamador (retorna Result ou lança erro tipado/documentado — não exceção implícita escondida na assinatura)"
             },
             {
               "id": "c-deps",
@@ -3610,14 +3610,14 @@ export const literacyCorpus = {
           "outputs": [
             {
               "id": "out-a",
-              "text": "Passo 1: extrair a função de cálculo — rodar os testes. Passo 2: renomear as variáveis do domínio — rodar os testes. Passo 3: mover a validação para o início — rodar os testes. Suíte verde nos três passos: pronto para o merge."
+              "text": "Passo 1: extrair a função de cálculo — rodar os testes. Passo 2: renomear as variáveis do domínio — rodar os testes. Passo 3: mover a validação para o início — rodar os testes. Suíte verde nos três passos: base sólida para revisão e merge."
             },
             {
               "id": "out-b",
               "text": "Pronto! Reescrevi tudo em uma mensagem — o comportamento é o mesmo, confie."
             }
           ],
-          "scenario": "O mesmo módulo de 300 linhas passou por duas sessões de refatoração com assistente. Qual delas você colocaria no merge sem medo?"
+          "scenario": "O mesmo módulo de 300 linhas passou por duas sessões de refatoração com assistente. Qual delas você levaria ao merge com risco localizado e verificável?"
         },
         "evaluation": {
           "betterOutputId": "out-a",
