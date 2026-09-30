@@ -1,6 +1,8 @@
 # AI DevSchool — entrada independente
 
-Entrada sem login que recomenda até três engines a partir do objetivo do aluno, usando a API TypeSafe. O painel de operador controla uma liberação global persistida em SQLite. Uma engine só entra na oferta após liberação **e** checagem automática de sua entrada em Chromium.
+Entrada sem login que apresenta a escola única (AID-3484/AID-3453): fundamentos compartilhados (app de lições `literacyDojo`, sequência l01–l14) e duas jornadas — IA no cotidiano e IA para Dev (prévia, com a ponte do módulo 05: l15, l16–l17, l21–l23, l27–l29). O contrato dessa superfície é servido por `GET /api/entry` (`server/catalog.mjs`, destinos verificados first-hand; o `recommendedEntryMissionId` legado não é herdado). Todo CTA passa pelo mesmo fluxo de lançamento: liberação do operador **e** checagem automática da entrada em Chromium. A entrada é read-only por design: não lê nem escreve progresso do aluno, não sincroniza engines e não sabe onde o aluno parou — o copy declara isso e os testes (E1–E4) fixam a honestidade. Identidade visual reutilizada do SDLCQuest v1.3 (sem sistema novo).
+
+A entrada também recomenda até três engines a partir do objetivo do aluno (seção "Já conhece a escola?"), usando a API TypeSafe. O painel de operador controla uma liberação global persistida em SQLite. Uma engine só entra na oferta após liberação **e** checagem automática de sua entrada em Chromium.
 
 Não escreve em `learner/` ou `curriculum/`, não concede mastery e não sincroniza progresso. A aplicação está preparada para servir por uma origem pública; este trabalho não publica nem troca as entradas existentes.
 

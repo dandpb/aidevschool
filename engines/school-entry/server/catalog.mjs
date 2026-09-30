@@ -98,3 +98,79 @@ export const CATALOG = [
     source: `engines/${id}/`,
   }),
 );
+
+// School entry surface (AID-3484, child of AID-3453; CEO-approved single slice).
+// Verified first-hand destinations — do NOT inherit legacy recommendedEntryMissionId:
+// - Fundamentals app: literacyDojo binding l01, entrypoint
+//   http://127.0.0.1:5178/?hosted=1 (engines/codexdojo-os-prototype/config/mission-bindings.yaml:21).
+//   The app itself sequences l01→l14 (ai-pratica track, chapterOrder 1–14, contentVersion 2026-09-10.2).
+//   There is no per-lesson deep link (React state routing) — the CTA points at the app entry.
+// - Dev bridge preview: dev-track literacyDojo bindings l15 (order 4), l16–l17 (5–6),
+//   l21–l23 (11–13), l27–l29 (14–16); titles from curriculum/ai-literacy/catalog.yaml (mod-05).
+// - game-02-warehouse is NOT an entry door (optional laboratory; CEO directive).
+// Honest limits: school-entry never reads or writes learner progress (no cross-engine
+// sync, no "continue where you left off"); the operator release + Chromium entry
+// check gate every launch through /api/launch/{engineId}.
+export const SCHOOL_ENTRY = Object.freeze({
+  schemaVersion: 1,
+  fundamentals: Object.freeze({
+    engineId: "literacyDojo",
+    sequence: "l01–l14",
+    lessonsCount: 14,
+    number: "L01–L14",
+    kicker: "COMECE AQUI · FUNDAMENTOS",
+    title: "Fundamentos de IA",
+    description:
+      "Entender IA, uso seguro, prompt e contexto e verificação — 14 lições curtas (l01 a l14) no app de lições. O app apresenta a próxima lição para você.",
+    tags: Object.freeze(["14 lições · l01–l14", "Tentativa com feedback", "Sem código"]),
+    tasks: Object.freeze([
+      "Abrir o app de lições",
+      "Fazer a próxima lição",
+      "Retomar quando quiser — o progresso fica no app",
+    ]),
+    cta: "Começar pelos fundamentos",
+    note: "Jogos são prática opcional — nenhum pré-requisito depende deles.",
+  }),
+  journeys: Object.freeze([
+    Object.freeze({
+      id: "cotidiano",
+      audience: "JORNADA 1 · PARA QUEM NÃO PROGRAMA",
+      title: "IA no cotidiano",
+      description:
+        "Use IA com segurança no dia a dia: e-mails, pesquisa, decisões. Parte dos mesmos fundamentos compartilhados.",
+      engineId: "literacyDojo",
+      preview: false,
+      cta: "Começar pelos fundamentos",
+    }),
+    Object.freeze({
+      id: "dev",
+      audience: "JORNADA 2 · PARA QUEM DESENVOLVE · PRÉVIA",
+      title: "IA para Dev",
+      description:
+        "Construa software robusto com IA: intenção, plano, construção, teste e review. Comece pelos mesmos fundamentos; a ponte Dev é uma prévia.",
+      engineId: "literacyDojo",
+      preview: true,
+      cta: "Começar pelos fundamentos",
+      bridge: Object.freeze({
+        label: "Depois dos fundamentos — ponte Dev (prévia)",
+        trackId: "dev",
+        moduleId: "mod-05",
+        lessons: Object.freeze(
+          [
+            ["l15", "Quando usar IA e quando não usar"],
+            ["l16", "Seu primeiro código com um assistente de IA"],
+            ["l17", "Integre uma API de IA em um projeto real"],
+            ["l21", "Peça testes que valem a pena"],
+            ["l22", "Revise o código sugerido como engenheiro"],
+            ["l23", "O que aceitar: limites do assistente"],
+            ["l27", "Debug com assistente: reproduza antes de perguntar"],
+            ["l28", "Refatore com assistente sem quebrar comportamento"],
+            ["l29", "Avalie as dependências sugeridas"],
+          ].map(([id, title]) => Object.freeze([id, title]),
+          ),
+        ),
+        note: "Lições da trilha dev no mesmo app de lições, na sequência curada. Laboratórios 3D são prática opcional, não porta de entrada. Prévia: o restante do percurso dev ainda está em construção.",
+      }),
+    }),
+  ]),
+});

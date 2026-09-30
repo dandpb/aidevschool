@@ -201,6 +201,70 @@ test("C24 newest student request owns displayed results", async (t) => {
   assert.equal(await page.locator("[data-engine-card]").count(), 4);
 });
 
+test("E1 entry contract serves the verified two-audience destinations", async (t) => {
+  const { page, base } = await fixture(t);
+  const response = await page.request.get(base + "/api/entry");
+  assert.equal(response.status(), 200);
+  const entry = await response.json();
+  assert.equal(entry.fundamentals.engineId, "literacyDojo");
+  assert.equal(entry.fundamentals.sequence, "l01–l14");
+  assert.equal(entry.fundamentals.cta, "Começar pelos fundamentos");
+  assert.equal(entry.journeys.length, 2);
+  assert.deepEqual(
+    entry.journeys.map((j) => j.id),
+    ["cotidiano", "dev"],
+  );
+  for (const journey of entry.journeys)
+    assert.equal(journey.engineId, "literacyDojo");
+  const dev = entry.journeys.find((j) => j.id === "dev");
+  assert.equal(dev.preview, true);
+  assert.deepEqual(
+    dev.bridge.lessons.map(([id]) => id),
+    ["l15", "l16", "l17", "l21", "l22", "l23", "l27", "l28", "l29"],
+  );
+  assert.equal(dev.bridge.moduleId, "mod-05");
+});
+
+test("E2 fundamentals CTA launches the verified literacyDojo destination", async (t) => {
+  const { page, base, destination } = await fixture(t, { enabled: 5 });
+  await page.goto(base);
+  await page.locator("#start-fundamentals").waitFor();
+  await page.locator("#start-fundamentals").click();
+  await page.waitForURL(destination + "/literacyDojo");
+});
+
+test("E3 entry copy stays honest about progress and the dev preview", async (t) => {
+  const { page, base } = await fixture(t);
+  await page.goto(base);
+  await page.locator("#jornada-dev").waitFor();
+  const body = await page.locator("body").textContent();
+  assert.match(body, /não sincroniza/);
+  assert.doesNotMatch(
+    body,
+    /progresso sincronizado|sincroniza seu progresso|continuar de onde parou/i,
+  );
+  assert.doesNotMatch(body, /game-02/);
+  assert.match(body, /PRÉVIA/);
+  assert.equal(await page.locator("#jornada-dev .bridge-list li").count(), 9);
+  assert.match(body, /progresso fica no app/i);
+});
+
+test("E4 unreleased fundamentals keeps the student on the entry page", async (t) => {
+  const { page, base } = await fixture(t, { enabled: 0 });
+  await page.goto(base);
+  await page.locator("#start-fundamentals").waitFor();
+  await page.locator("#start-fundamentals").click();
+  await page.waitForFunction(() => {
+    const feedback = document.querySelector(".mission-panel .card-feedback");
+    return feedback && feedback.textContent.length > 0;
+  });
+  assert.match(
+    await page.locator(".mission-panel .card-feedback").textContent(),
+    /não estão disponíveis/,
+  );
+  assert.equal(new URL(page.url()).origin, base);
+});
+
 test("launch revocation refreshes available choices", async (t) => {
   const { page, base, store, selected } = await fixture(t);
   await ask(page, base);

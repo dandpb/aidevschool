@@ -1,10 +1,10 @@
 import { servePublic } from "./static.mjs";
 import { createServer } from "node:http";
-import { CATALOG } from "./catalog.mjs";
+import { CATALOG, SCHOOL_ENTRY } from "./catalog.mjs";
 import { createStore } from "./store.mjs";
 import { hashPassword, verifyPassword, token } from "./auth.mjs";
 import { validateJudgments } from "./model.mjs";
-export { CATALOG, createStore, hashPassword };
+export { CATALOG, SCHOOL_ENTRY, createStore, hashPassword };
 const text = {
   empty: "Nenhuma engine está disponível agora. Volte mais tarde.",
   fallback: "A recomendação está indisponível. Explore as engines disponíveis.",
@@ -284,6 +284,11 @@ export function createApp({
         } finally {
           requests--;
         }
+      }
+      if (path === "/api/entry" && req.method === "GET") {
+        // Static, verified entry contract (AID-3484); availability is checked
+        // per launch through /api/launch/{engineId} (operator release + Chromium).
+        return send(200, SCHOOL_ENTRY);
       }
       if (path.startsWith("/api/"))
         throw fail(404, "NOT_FOUND", "Não encontrado.");
