@@ -148,3 +148,20 @@ def test_unlabeled_feed_refused(tmp_path):
         capture_output=True, text=True,
     )
     assert out.returncode == 2 and "synthetic:true" in out.stderr
+
+
+# Extra (revisão r2, AID-3515): lessonVersion nas fixtures literacy é inteiro,
+# como o emissor real exige (engines/literacyDojo/src/domain/analytics.ts:
+# typeof lessonVersion !== "number" || !Number.isInteger → buildEvent lança).
+# Envelope com string "v3" não poderia sair da UI real.
+def test_literacy_lesson_version_is_integer():
+    lines = (FIXTURES / "synthetic-literacy-v2.ndjson").read_text().splitlines()
+    versions = []
+    for line in filter(None, map(str.strip, lines)):
+        props = json.loads(line).get("props", {})
+        if "lessonVersion" in props:
+            versions.append(props["lessonVersion"])
+    assert versions, "esperava ao menos um lessonVersion na fixture literacy"
+    assert all(
+        isinstance(v, int) and not isinstance(v, bool) for v in versions
+    ), versions

@@ -75,10 +75,10 @@ observables:
         event: activity_attempted
         fields: [passed=false]
       - envelope: os_v1
-        event: "structured_attempt.submitted SEM structured_attempt.passed subsequente na mesma sessão+missão"
+        event: "structured_attempt.submitted SEM structured_attempt.passed na mesma (instalação, sessão, missão)"
         fields: []
     double_count_risk: "No OS, 'submitted sem passed' é PROXY: evento de veredito negativo não existe; ausência ≠ fail confirmado (pode ser saída antes do veredito)."
-    inference_limit: "Erro do literacy é determinístico (prop passed); erro do OS é inferido por ordenamento — reportar sempre com o qualificador 'proxy'."
+    inference_limit: "Erro do literacy é determinístico (prop passed); erro do OS é inferido por co-ocorrência — submitted cuja chave (instalação, sessão, missão) não tem NENHUM passed, sem pareamento por tentativa nem uso de `sequence` — reportar sempre com o qualificador 'proxy'."
 
   feedback:
     definition: "O painel de feedback foi exibido após uma tentativa."
