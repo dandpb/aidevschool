@@ -1,13 +1,17 @@
 import { describe, expect, it } from "vitest";
 import { contentVersion, lessons } from "../../src/data/generated/lessons";
-import { buildEvidenceRecord, type LiteracyEvidenceRecord } from "../../src/domain/evidence";
+import { type LiteracyEvidenceRecord, buildEvidenceRecord } from "../../src/domain/evidence";
 import { migrateProgress } from "../../src/domain/migration";
-import { createInitialProgress, type LearnerProgress, type SkillPractice } from "../../src/domain/progress";
+import {
+  type LearnerProgress,
+  type SkillPractice,
+  createInitialProgress,
+} from "../../src/domain/progress";
 import {
   INDEPENDENT_VERIFIER_SOURCE,
+  type LiteracyVerificationReceipt,
   evidenceDigest,
   validateReceipt,
-  type LiteracyVerificationReceipt,
 } from "../../src/domain/verification";
 
 /**
@@ -30,7 +34,8 @@ import {
 const OLD_CONTENT_VERSION = "2026-09-10.2";
 const l16 = lessons.find((lesson) => lesson.id === "l16");
 if (!l16) throw new Error("l16 ausente do read model");
-if (l16.version !== 4) throw new Error(`l16 deveria estar em v4 após o bump (está v${l16.version})`);
+if (l16.version !== 4)
+  throw new Error(`l16 deveria estar em v4 após o bump (está v${l16.version})`);
 if (contentVersion !== "2026-09-30.1") {
   throw new Error(`contentVersion esperado 2026-09-30.1 (é ${contentVersion})`);
 }
