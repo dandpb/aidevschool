@@ -282,3 +282,9 @@ round-trip do read model, e update consciente dos pins de contagem.
 - Suíte nova: `python3 -m pytest curriculum/ai-literacy/tools/tests/test_os_bindings_crosswalk.py`
   (verde) + `python3 -m pytest curriculum/ai-literacy/tools/tests -q` (sem regressão).
 - Nenhum arquivo de contrato, catálogo, binding ou learner state foi modificado.
+- **CI independente (revisão 8180d1a8, 2026-09-30):** job 109882768049 testou o merge commit
+  `5c3a971` do head `d5910962` sobre main `1975e2c7` — **847 passed / 2 skipped**, zero falha
+  no pacote completo do repo. Countersign job 109882767323 falhou por ausência do trailer de
+  proveniência do produtor (AID-2493) na conversa do PR — corrigido adicionando o trailer
+  canônico ao body do PR (identidade real do agente produtor; sem trailer fabricado); novo
+  head informado para re-checagem.
