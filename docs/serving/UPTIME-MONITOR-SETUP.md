@@ -76,8 +76,9 @@ Passos (fundador):
   mudança.
 - O monitor **não substitui** o precheck de 72 checks do gate de promoção (aquele é por-onda e
   mais profundo); este vigore 24/7 entre ondas.
-- Custo marginal no Netlify: ~52k req/mês ≈ 10 créditos do pool free de 300 (ver
-  `README.md` §postura de cotas) — desprezível.
+- Custo marginal no Netlify: 8 checks @5min ≈ 70k req/mês **pelos preços de lista** (ref.
+  2026-09-07, não específico da conta — ver `README.md` §postura de cotas). **Confirmar plano e
+  uso atuais no painel do provedor antes da publicação** (diretiva founder 18:25Z).
 
 ## 6. Registro de operação (preencher pós-signup)
 

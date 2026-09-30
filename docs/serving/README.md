@@ -33,13 +33,15 @@ ADR-0009/0010). Export operacional: `GET` da mesma rota com Bearer `ANALYTICS_EX
 
 ## Postura de cotas free tier (Netlify) — resumo
 
-Netlify Free = **300 créditos/mês** (preço de lista verificado 2026-09-07): deploy de produção
+> **Nota factual (diretiva founder 18:25Z):** as cifras abaixo são **referências de preço de lista do provedor** (verificadas 2026-09-07) e estimativas de planejamento derivadas delas — **não** estado verificado da conta. **Confirmar o plano e o uso atuais no painel do provedor antes de qualquer decisão de publicação/promoção.**
+
+Netlify Free = **300 créditos/mês** (preço de lista, ref. 2026-09-07; não específico da conta): deploy de produção
 **15 créditos**, requisições web **2 créditos/10k**, banda **20 créditos/GB**, compute
-**10 créditos/GB-hora**. O tráfego do piloto é irrelevante diante do pool (monitor 8 checks @5min
-≈ 70k req/mês ≈ 14 créditos; sessões de aprendiz somam ordens de magnitude menos). **O fator
-limitante é onda de promoção:** ~2 deploys/superfície (draft + alias) + retries ⇒ **~60–90
-créditos por onda**. Gatilhos objetivos para revisar (donos: FPE monitora, founder decide gasto):
-créditos < 100 no meio do mês, ou > 4 ondas planejadas no mês, ou banda > 1 GB/mês ⇒ conversar
+**10 créditos/GB-hora**. O tráfego do piloto é irrelevante frente a esses preços de lista (monitor 8 checks @5min;
+sessões de aprendiz somam ordens de magnitude menos — **uso real a confirmar no painel**). **O fator
+limitante é onda de promoção:** ~2 deploys/superfície (draft + alias) + retries ⇒ ordem de grandeza de
+**dezenas de créditos por onda** pelos preços de lista. Gatilhos objetivos para revisar (donos: FPE monitora, founder decide gasto):
+créditos restantes < 100 no meio do mês (leitura do painel real), ou > 4 ondas planejadas no mês, ou banda > 1 GB/mês ⇒ conversar
 sobre Personal (US$9/mês, 1.000 créditos) antes de esgotar o pool. Relatório completo da revisão
 de cotas: comentário AID-989 (2026-09-07).
 
