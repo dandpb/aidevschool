@@ -54,9 +54,24 @@
       "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" }
     },
     "competency": {
-      "type": "string",
-      "pattern": "^[FD][0-9]+$",
-      "description": "Competência do framework unificado da escola (spec AID-3453 R6: F1-F4 jornada IA no cotidiano, D1-D7 jornada dev). OPCIONAL por design: ausência = 'não mapeada' (default real, registrado no doc AID-3457 §2.4.1) — o campo é scaffolding de schema, NÃO autorização de atribuição em lote; atribuição por lição é decisão da frente CCE (matriz r2) com revisão Content Designer + QA. Consumidores atuais ignoram o campo quando ausente e o compilador não o propaga para read models (propagação é fatia futura e dependente de contrato compatível)."
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["primary"],
+      "properties": {
+        "primary": {
+          "enum": ["F1", "F2", "F3", "F4", "D1", "D2", "D3", "D4", "D5", "D6", "D7"],
+          "description": "Competência primária — exatamente UMA por unidade (spec R1: primary + supporting). IDs estáveis do glossário atual (F1-F4 cotidiano, D1-D7 dev); novos ids exigem emenda de schema consciente."
+        },
+        "supporting": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": ["F1", "F2", "F3", "F4", "D1", "D2", "D3", "D4", "D5", "D6", "D7"]
+          },
+          "description": "Competências de apoio — zero ou mais (spec R1). Réplicas duplicadas são rejeitadas."
+        }
+      },
+      "description": "Mapeamento de competência do framework unificado (spec AID-3453 R1: primary + supporting[]; glossário R6). OPCIONAL por design: ausência = 'não mapeada' (default real, registrado no doc AID-3457 §2.4.1) — o campo é scaffolding de schema, NÃO autorização de atribuição em lote; atribuição por lição é decisão da frente CCE (Content Designer decide primária/apoio com rationale, FPE ratifica, CPE codifica). Consumidores atuais ignoram o campo quando ausente e o compilador não o propaga para read models (propagação é fatia futura e dependente de contrato compatível)."
     },
     "prerequisites": {
       "type": "array",

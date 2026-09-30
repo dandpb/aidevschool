@@ -17,20 +17,20 @@ from tools.semantic import validate_track
 TRACK_DIR = Path(__file__).resolve().parents[2]
 SCHEMA_PATH = TRACK_DIR / "schemas" / "lesson.schema.json"
 
-VALID_COMPETENCIES = ["F1", "F2", "F3", "F4", "D1", "D2", "D3", "D4", "D5", "D6", "D7"]
-INVALID_COMPETENCIES = ["X9", "f2", "F-2", "FD", "2F", "F", "d7", "F 4"]
+GLOSSARY_IDS = ["F1", "F2", "F3", "F4", "D1", "D2", "D3", "D4", "D5", "D6", "D7"]
+OUT_OF_GLOSSARY = ["F0", "F5", "F01", "D8", "D09", "X9", "f2", "F-2", "FD"]
 IDENTITY_FIELDS = ("id", "version", "moduleId", "title", "objective", "prerequisites", "skillIds")
 
 
 class CompetencyFieldContractTest(TrackFixtureMixin):
-    """AID-3457 (revisão do plano PR #610 @ 0481c8c0): fatia limitada autorizada.
+    """AID-3457 (spec R1: primary + supporting[]; revisão 8fdfdd75).
 
-    Emenda de schema (campo opcional `competency`, F/D ids) + defaults reais +
-    scaffolding + testes de compatibilidade produtor/consumidor antigo e novo.
-    Preservados: visibilidade, ordem, pré-requisitos, IDs e progresso — o campo
-    não muda nenhum deles e o compilador NÃO o propaga (propagação é fatia
-    futura retida). Atribuição de competência por lição (dados) continua
-    retida à frente CCE/Content Designer.
+    Fatia limitada autorizada: schema/defaults/scaffolding + testes de
+    compatibilidade. O contrato é o aditivo acordado — objeto com exatamente
+    UMA primária (enum do glossário atual) + zero ou mais apoio —, ausência =
+    'não mapeada' (default real), compilador NÃO propaga (read model
+    byte-idêntico). Preservados: visibilidade, ordem, pré-requisitos, IDs e
+    progresso. Atribuição de lições (dados) permanece retida (semântica [P]).
     """
 
     def test_live_corpus_old_producer_still_validates(self):
@@ -46,33 +46,80 @@ class CompetencyFieldContractTest(TrackFixtureMixin):
         self.assertIn(
             "não mapeada", schema["properties"]["competency"]["description"]
         )
+        self.assertEqual(
+            schema["properties"]["competency"]["required"], ["primary"]
+        )
 
-    def test_new_producer_valid_competency_passes(self):
-        for competency in VALID_COMPETENCIES:
+    def test_new_producer_all_glossary_ids_as_primary_pass(self):
+        for primary in GLOSSARY_IDS:
+            with tempfile.TemporaryDirectory() as tmp:
+                lesson = _base_lesson()
+                lesson["competency"] = {"primary": primary}
+                track = self.make_track(tmp, lessons={"l01": lesson})
+                errors, _ready, _catalog = self.validate_track(track)
+                self.assertEqual(
+                    errors, [], "primary %r deveria ser válido" % primary
+                )
+
+    def test_supporting_combinations_pass(self):
+        combinations = [
+            {"primary": "F2"},
+            {"primary": "F2", "supporting": []},
+            {"primary": "D3", "supporting": ["D5"]},
+            {"primary": "D4", "supporting": ["D1", "D3", "F4"]},
+        ]
+        for competency in combinations:
             with tempfile.TemporaryDirectory() as tmp:
                 lesson = _base_lesson()
                 lesson["competency"] = competency
                 track = self.make_track(tmp, lessons={"l01": lesson})
                 errors, _ready, _catalog = self.validate_track(track)
                 self.assertEqual(
-                    errors, [], "competency %r deveria ser válido" % competency
+                    errors, [], "combinação %r deveria ser válida" % competency
                 )
 
-    def test_invalid_competency_states_are_rejected(self):
-        for competency in INVALID_COMPETENCIES:
+    def test_out_of_glossary_ids_rejected_everywhere(self):
+        for invalid in OUT_OF_GLOSSARY:
+            for competency in (
+                {"primary": invalid},
+                {"primary": "F2", "supporting": [invalid]},
+            ):
+                with tempfile.TemporaryDirectory() as tmp:
+                    lesson = _base_lesson()
+                    lesson["competency"] = competency
+                    track = self.make_track(tmp, lessons={"l01": lesson})
+                    errors, _ready, _catalog = self.validate_track(track)
+                    joined = "\n".join(errors)
+                    self.assertTrue(
+                        errors,
+                        "competency %r deveria ser rejeitado" % (competency,),
+                    )
+                    self.assertIn("competency", joined)
+
+    def test_malformed_competency_objects_rejected(self):
+        malformed = [
+            {},
+            {"supporting": ["F4"]},
+            {"primary": "F2", "surplus": True},
+            {"primary": "F2", "supporting": ["F4", "F4"]},
+            {"primary": ["F2"]},
+        ]
+        for competency in malformed:
             with tempfile.TemporaryDirectory() as tmp:
                 lesson = _base_lesson()
                 lesson["competency"] = competency
                 track = self.make_track(tmp, lessons={"l01": lesson})
                 errors, _ready, _catalog = self.validate_track(track)
-                joined = "\n".join(errors)
                 self.assertTrue(
-                    errors, "competency %r deveria ser rejeitado" % competency
+                    errors,
+                    "competency %r deveria ser rejeitado" % (competency,),
                 )
-                self.assertIn("competency", joined)
 
     def test_compiler_output_is_byte_identical_with_and_without_field(self):
-        for label, competency in (("without", None), ("with", "F2")):
+        for label, competency in (
+            ("without", None),
+            ("with", {"primary": "F2", "supporting": ["F4"]}),
+        ):
             with tempfile.TemporaryDirectory() as tmp:
                 catalog = _base_catalog()
                 track_block = json_object(object_field(catalog, "track"))
@@ -93,7 +140,7 @@ class CompetencyFieldContractTest(TrackFixtureMixin):
         with tempfile.TemporaryDirectory() as tmp_a, tempfile.TemporaryDirectory() as tmp_b:
             plain = _base_lesson()
             tagged = _base_lesson()
-            tagged["competency"] = "D3"
+            tagged["competency"] = {"primary": "D3", "supporting": ["D5"]}
             track_a = self.make_track(tmp_a, lessons={"l01": plain})
             track_b = self.make_track(tmp_b, lessons={"l01": tagged})
             _errors_a, ready_a, _catalog_a = self.validate_track(track_a)
