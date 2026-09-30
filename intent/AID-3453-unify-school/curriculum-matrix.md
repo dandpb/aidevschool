@@ -45,7 +45,7 @@ nenhum pré-requisito aponta para jogo.
 | 11 workflows Claude | **10 dirs + 1 exemplo pratico** [D] | idem (02-corrigir-bug … 11-aprender-com-a-sessao + release_notes) |
 | SDLCQuest 18 tarefas | **18 missões tipadas** [D] (5 classify, 4 choice, 3 select, 2 order, 1 diff, 1 patch, 1 gate, 1 incident) | histograma de `type:` em `engines/sdlc-quest/src/data.js` `missions` |
 | SDLCQuest 16 TLC | **16 módulos `tlc-*`** [D] | ids `tlc-` em `engines/sdlc-quest/src/tlc-data.js` |
-| SDLCQuest 6 gates | **não verificado nesta r1** [P] | dono: CPE/UX citar arquivo:linha |
+| SDLCQuest 6 gates | **6 estágios do ciclo Harness Lab** [D, verificado r1.2]: `discover`, `plan`, `implement`, `verify`, `judge`, `package` | `engines/sdlc-quest/src/harness-core.js:73–78` (6 entradas de estágio; `package` = "gate local do Quest"); runner CLI `tools/quest-gate.cjs` executa 10 steps locais (1 contract-shape + 9 comandos) — decomposições distintas, não conflito |
 | 18 projetos | **01–18 + 00_ai_in_practice** [D] | `ls curriculum/` |
 | Labs Pixel/Voxel | **voxel: 17 jogos (game-02…game-18)** [D]; pixel: 1 app pixel-quest | `ls -d engines/voxelDojo/game-*` |
 
@@ -147,7 +147,7 @@ para competências D.**
 | --- | --- | --- | --- |
 | 18 missões tipadas | P: D2–D4 por missão (r2 da CCE atribui primária por missão) | manter; **identidade visual da escola única = SDLCQuest v1.3** (decisão da issue) [D-issue] | data.js missions |
 | 16 módulos TLC | P: D2 (discover/design/slice) / D4 (review/severity/carryover/converge) / D6 (verifier/handoff); S: conforme módulo | manter [P] | tlc-data.js |
-| gates do harness | RC-2/R7 | manter; CPE cita os "6 gates" exatos (open question) [P] | HARNESS-GUIDE |
+| gates do harness | P: D2 (discover/plan) / D3 (implement) / D4 (verify/judge) / D4 (package: "pronto localmente não é deploy") — os **6 estágios do Harness Lab** (`harness-core.js:73–78`) | manter; citação r1.2 acima; **recibos do lab são didáticos/locais** (R10: não são autoridade de produção) [D] | HARNESS-GUIDE.pt-BR.md |
 
 ## 8. Família: projetos curriculum/01–18 + 00_ai_in_practice
 
@@ -179,7 +179,11 @@ Evidência: teaching-game-contract + evidence.ndjson.
 2. Bindings dev p/ workflows, curso-simples, sdlc-quest, projetos 01–18 — CPE.
 3. Campo `competency:` canônico em catalog.yaml/mission-bindings — CPE (fatia 1).
 4. Fonte cotidiana de agentes (só ZAI esquadrao) — adiado p/ onda D6.
-5. Contagem "6 gates" sdlc-quest ainda sem citação exata — CPE/UX citarem.
+5. ~~Contagem "6 gates" sdlc-quest~~ **RESOLVIDO r1.2**: são os 6 estágios do
+   ciclo Harness Lab — `discover/plan/implement/verify/judge/package` —
+   `engines/sdlc-quest/src/harness-core.js:73–78` (runner CLI executa 10
+   steps locais: `tools/quest-gate.cjs` steps contract-shape + build/rules/
+   campaign×2/tlc×2/harness×2/i18n). Citação liberada para CPE/UX.
    (~~origem do "27 ZAI"~~ **resolvido r1.1**: issue certa, 9 módulos/27
    lições por contagem estrutural; erro era do grep da r1.)
 6. Portão mecânico (CI) p/ contrato de release RC-1..RC-6 — follow-up QA.

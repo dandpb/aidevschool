@@ -63,7 +63,10 @@ nenhuma fonte dev além dos 17 jogos voxel.
    `o-protocolo-final`/`caso-real-feature-previsivel`). O "7/19" da r1 era
    artefato de grep. Regra daí em diante: contagem de fonte TS = parse
    estrutural, nunca grep de chaves.
-2. SDLCQuest "6 gates": verificar contagem canônica na frente CPE/UX (o gate
-   do harness existe; a decomposição em 6 precisa de citação exata).
+2. ~~SDLCQuest "6 gates"~~ **RESOLVIDO r1.2:** são os 6 estágios do ciclo
+   Harness Lab — `discover`, `plan`, `implement`, `verify`, `judge`,
+   `package` — em `engines/sdlc-quest/src/harness-core.js:73–78`. (O runner
+   CLI `tools/quest-gate.cjs` executa 10 steps locais — decomposição
+   distinta, não conflito.)
 3. Competency IDs definitivos (F1–F6/D1–D7 propostos na spec) e o par
    primária/apoio de cada unidade precisam de ratificação na r2 da CCE.
