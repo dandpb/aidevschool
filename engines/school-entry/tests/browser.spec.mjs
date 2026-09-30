@@ -343,9 +343,32 @@ test("E5 enabled-but-unreachable runtime is reported, never a bare href", async 
 // second npm ci + tsc + vite build into the school-entry job (documented
 // blocker in the PR body); the first-hand real-app run is recorded as
 // evidence on AID-3484 instead.
+//
+// FSE round 2 (R2-1): the old spec accepted ANY page with a non-empty h1 —
+// including the E2 fixture stub or an error page. Hardened contract:
+// (a) only Literacy-specific data-testid markers count as proof,
+// (b) the adaptive onboarding is traversed until ONE lesson is opened,
+// (c) the activity and formative-feedback controls are actually exercised,
+// (d) stub/error pages are rejected by explicit negative asserts.
 const REAL_LITERACY_BASE = process.env.LITERACY_REAL_BASE_URL;
 
-test("E6 fundamentals CTA reaches the real literacyDojo app (opt-in)", { skip: !REAL_LITERACY_BASE }, async (t) => {
+async function assertNotAStubOrErrorPage(page) {
+  // (d) negative asserts — a generic h1 would also match "Destino de teste"
+  // (the E2 fixture stub) and browser/HTTP error pages.
+  assert.equal(
+    await page.locator('[data-testid="error-recovery-screen"]').count(),
+    0,
+    "literacyDojo error-recovery screen rendered",
+  );
+  const body = await page.locator("body").textContent();
+  assert.ok(!body.includes("Destino de teste"), "reached the E2 fixture stub, not the real app");
+  assert.ok(
+    !/HTTP-ERROR|This site can't be reached|net::ERR_/.test(body),
+    "reached a browser/HTTP error page",
+  );
+}
+
+test("E6 fundamentals CTA reaches the real literacyDojo app, onboards and runs one lesson (opt-in)", { skip: !REAL_LITERACY_BASE }, async (t) => {
   const realChecker = createChecker({ allowLocal: true });
   const { page, base } = await fixture(t, {
     enabled: 5,
@@ -353,7 +376,8 @@ test("E6 fundamentals CTA reaches the real literacyDojo app (opt-in)", { skip: !
     targetOverrides: {
       literacyDojo: {
         url: REAL_LITERACY_BASE + "/?hosted=1",
-        readySelector: "h1",
+        // (a) Literacy-specific readiness marker — never a generic h1.
+        readySelector: '[data-testid="onboarding-screen"]',
       },
     },
   });
@@ -361,11 +385,61 @@ test("E6 fundamentals CTA reaches the real literacyDojo app (opt-in)", { skip: !
   await page.locator("#start-fundamentals").waitFor();
   await page.locator("#start-fundamentals").click();
   await page.waitForURL((url) => url.origin === new URL(REAL_LITERACY_BASE).origin);
-  // The real app opens on its own onboarding heading — the adaptive journey
-  // entry (Mapa Inicial) — proving the runtime end to end, not a stub.
-  const heading = page.locator("h1");
-  await heading.waitFor({ state: "visible" });
-  assert.ok((await heading.textContent())?.length > 0);
+  await assertNotAStubOrErrorPage(page);
+
+  // (a)+(b) fresh browser profile → the adaptive onboarding runs first. Walk
+  // its 5 steps (welcome → goal → context → confidence → task), choosing the
+  // first option of each question, until the map opens.
+  const onboarding = page.locator('[data-testid="onboarding-screen"]');
+  await onboarding.waitFor();
+  for (let step = 0; step < 5; step++) {
+    const options = onboarding.locator('input[type="radio"]');
+    if ((await options.count()) > 0) await options.first().check();
+    await onboarding.locator('[data-testid="onboarding-next"]').click();
+  }
+  const map = page.locator('[data-testid="map-screen"]');
+  await map.waitFor();
+
+  // (b) ONE lesson: open the first unlocked mission on the Vila Lume map…
+  const start = map.locator('[data-testid^="map-start-"]').first();
+  await start.waitFor();
+  const lessonId = (await start.getAttribute("data-testid")).slice("map-start-".length);
+  assert.match(lessonId, /^l\d+$/, "map offers a real Literacy lesson");
+  await start.click();
+  await page.locator('[data-testid="lesson-intro"]').waitFor();
+
+  // …enter the player…
+  await page.locator('[data-testid="start-lesson"]').click();
+  const player = page.locator('[data-testid="lesson-player"]');
+  await player.waitFor();
+
+  // (c) exercise the activity controls: a hint when offered…
+  const hint = player.locator('[data-testid="hint-button"]');
+  if ((await hint.count()) > 0) await hint.click();
+
+  // …an answer to the current activity (first options until the verifier
+  // accepts the submission — single choice needs one, comparisons need
+  // output + criteria)…
+  const inputs = player.locator('input[type="radio"], input[type="checkbox"]');
+  const submit = player.locator('[data-testid="submit-attempt"]');
+  for (let i = 0; i < (await inputs.count()) && !(await submit.isEnabled()); i++)
+    await inputs.nth(i).check();
+
+  // …and the formative feedback loop: submit → the panel renders a verdict.
+  assert.equal(await submit.isEnabled(), true, "answer makes the verifier runnable");
+  await submit.click();
+  const feedback = player.locator('[data-testid="feedback-panel"]');
+  await feedback.waitFor();
+  assert.match(
+    await feedback.getAttribute("class"),
+    /feedback-(pass|fail)/,
+    "formative feedback panel renders a verdict",
+  );
+  assert.ok((await feedback.locator(".feedback-summary").textContent()).trim().length > 0);
+
+  // (d) re-assert after the interaction: still the real app, not a late
+  // stub/error swap.
+  await assertNotAStubOrErrorPage(page);
   if (process.env.ARTIFACT_DIR)
     await page.screenshot({
       path: join(process.env.ARTIFACT_DIR, "e6-real-literacy-entry.png"),
