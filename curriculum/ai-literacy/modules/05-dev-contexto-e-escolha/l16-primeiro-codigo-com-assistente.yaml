@@ -1,7 +1,7 @@
 # Lição l16 — Trilha Dev piloto: formular pedido de código com contexto técnico. — v2 ONDA C1 (spec AID-807 §1): +a3 output_comparison.
 # Validado por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
 id: l16
-version: 3
+version: 4
 moduleId: mod-05
 title: "Seu primeiro código com um assistente de IA"
 objective: "Escrever um pedido de código com contexto técnico suficiente e avaliar a resposta da IA com critérios de engenharia."

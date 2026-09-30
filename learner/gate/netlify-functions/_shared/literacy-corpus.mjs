@@ -2068,7 +2068,7 @@ export const literacyCorpus = {
     "skillIds": [
       "codificar"
     ],
-    "version": 3
+    "version": 4
   },
   "l17": {
     "activities": [
@@ -3532,7 +3532,7 @@ export const literacyCorpus = {
       "codificar",
       "avaliar"
     ],
-    "version": 2
+    "version": 3
   },
   "l28": {
     "activities": [
@@ -3639,7 +3639,7 @@ export const literacyCorpus = {
     "skillIds": [
       "codificar"
     ],
-    "version": 2
+    "version": 3
   },
   "l29": {
     "activities": [
@@ -4170,4 +4170,4 @@ export const literacyCorpus = {
   }
 }
 
-export const literacyCorpusVersion = "2026-09-10.2"
+export const literacyCorpusVersion = "2026-09-30.1"

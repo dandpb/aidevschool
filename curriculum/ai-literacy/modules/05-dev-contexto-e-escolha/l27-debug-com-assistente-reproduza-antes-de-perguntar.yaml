@@ -1,7 +1,7 @@
 # Lição l27 — Onda O1 dev l27–l29 (spec AID-610 rev 2 §2.1): debug com assistente — reproduzir antes de perguntar.
 # Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
 id: l27
-version: 2
+version: 3
 moduleId: mod-05
 title: "Debug com assistente: reproduza antes de perguntar"
 objective: "Diante de um bug, montar o pedido de diagnóstico com o erro reproduzido deterministicamente, o caso mínimo isolado e o esperado-vs-observado — e só então aplicar a correção e rodar os testes, incluindo o caso mínimo."

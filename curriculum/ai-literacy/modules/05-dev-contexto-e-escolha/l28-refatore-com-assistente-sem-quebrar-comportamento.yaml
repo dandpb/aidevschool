@@ -1,7 +1,7 @@
 # Lição l28 — Onda O1 dev l27–l29 (spec AID-610 rev 2 §2.2): refatorar com assistente sem quebrar comportamento.
 # Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
 id: l28
-version: 2
+version: 3
 moduleId: mod-05
 title: "Refatore com assistente sem quebrar comportamento"
 objective: "Diante de código funcional a melhorar, exigir testes verdes cobrindo o comportamento como pré-condição e refatorar com o assistente em passos pequenos e verificáveis — nunca reescrita de uma vez."

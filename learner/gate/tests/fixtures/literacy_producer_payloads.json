@@ -1855,7 +1855,7 @@
             "c-types": false
           },
           "lessonId": "l16",
-          "lessonVersion": 3,
+          "lessonVersion": 4,
           "pass": false,
           "schemaVersion": 1,
           "score": 0.0,
@@ -1890,7 +1890,7 @@
             "c-types": true
           },
           "lessonId": "l16",
-          "lessonVersion": 3,
+          "lessonVersion": 4,
           "pass": true,
           "schemaVersion": 1,
           "score": 1.0,
@@ -1924,7 +1924,7 @@
             "noExtraCriteria": 0
           },
           "lessonId": "l16",
-          "lessonVersion": 3,
+          "lessonVersion": 4,
           "pass": true,
           "schemaVersion": 1,
           "score": 1.0,
@@ -1954,7 +1954,7 @@
             "noExtraCriteria": 0
           },
           "lessonId": "l16",
-          "lessonVersion": 3,
+          "lessonVersion": 4,
           "pass": false,
           "schemaVersion": 1,
           "score": 0.33,

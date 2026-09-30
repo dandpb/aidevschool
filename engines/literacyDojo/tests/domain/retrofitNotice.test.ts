@@ -19,6 +19,7 @@ const LAUNCHED_WAVES: Record<string, readonly string[]> = {
   "2026-09-02.3": ["l01", "l02", "l03", "l04", "l05", "l06", "l07"],
   "2026-09-04.1": ["l15", "l16", "l17"],
   "2026-09-10.2": ["l08", "l09", "l10", "l11", "l12", "l13"],
+  "2026-09-30.1": ["l16", "l27", "l28"],
 };
 
 function statuses(completed: string[]): Record<string, LessonStatus> {
