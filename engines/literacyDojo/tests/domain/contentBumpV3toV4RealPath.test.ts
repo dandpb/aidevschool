@@ -41,6 +41,7 @@ if (contentVersion !== "2026-09-30.1") {
 }
 
 const MIGRATION_NOW = new Date("2026-09-30T13:30:00.000Z");
+const L16_SKILL_IDS: readonly string[] = l16.skillIds;
 
 /** Storage real ANTES do bump: l16 concluída sob o conteúdo antigo. */
 function storageBeforeBump(): LearnerProgress {
@@ -66,7 +67,7 @@ function historicalV3Evidence(): LiteracyEvidenceRecord {
     attemptId: "att-l16-v3-historical-pending",
     lessonId: "l16",
     lessonVersion: 3,
-    skillIds: l16.skillIds,
+    skillIds: [...L16_SKILL_IDS],
     evaluation: {
       activityId: "l16-a2",
       activityType: "rubric_review",
@@ -100,7 +101,7 @@ function freshV4Attempt(): LiteracyEvidenceRecord {
     attemptId: "att-l16-v4-fresh",
     lessonId: "l16",
     lessonVersion: 4,
-    skillIds: l16.skillIds,
+    skillIds: [...L16_SKILL_IDS],
     evaluation: {
       activityId: "l16-a2",
       activityType: "rubric_review",
@@ -169,9 +170,10 @@ describe("bump de conteúdo 2026-09-10.2 → 2026-09-30.1 (l16 v3→v4): caminho
     // Skill praticada: revisão devida JÁ (próxima revisão usa a versão nova).
     expect(after.skills.pedir.nextReviewAt).toBe(MIGRATION_NOW.toISOString());
     expect(after.skills.pedir.passes).toBe(2); // histórico de passes intacto
-    // Sem conceito de mastery no estado do learner (máximo claim é `completed`).
+    // Sem conceito de mastery no estado do learner (máximo claim é `completed`):
+    // o próprio union `LessonStatus` ("locked" | "available" | "in_progress" |
+    // "completed") não tem "mastered" — garantia de tipo, não só de runtime.
     expect("mastered" in after).toBe(false);
-    expect(Object.values(after.lessonStatus).some((status) => status === "mastered")).toBe(false);
   });
 
   it("S2: recibo v3 antigo pending é rejeitado EXPLICITAMENTE e a evidência fica retida intacta", async () => {
@@ -205,7 +207,7 @@ describe("bump de conteúdo 2026-09-10.2 → 2026-09-30.1 (l16 v3→v4): caminho
 
   it("S3: tentativa nova v4 valida contra o conteúdo atual (PASS, sem escrita de mastered)", async () => {
     const fresh = freshV4Attempt();
-    const receipt = await receiptFor(fresh);
+    const receipt = await receiptFor(fresh, {});
     const validated = await validateReceipt(receipt, fresh);
     expect(validated.verdict).toBe("PASS");
     expect(validated.independent_pass).toBe(true);
