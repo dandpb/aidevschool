@@ -156,7 +156,7 @@ async function receiptFor(
 }
 
 describe("bump de conteúdo 2026-09-10.2 → 2026-09-30.1 (l16 v3→v4): caminho real executado", () => {
-  it("S1: completed histórico sobrevive na migração forward-only do storage real (regra 4)", () => {
+  it("S1: completed histórico sobrevive na migração forward-only do estado (regra 4; persistência física coberta pelos testes IndexedDB existentes)", () => {
     const before = storageBeforeBump();
     const snapshot = JSON.parse(JSON.stringify(before)) as LearnerProgress;
 
@@ -176,7 +176,7 @@ describe("bump de conteúdo 2026-09-10.2 → 2026-09-30.1 (l16 v3→v4): caminho
     expect("mastered" in after).toBe(false);
   });
 
-  it("S2: recibo v3 antigo pending é rejeitado EXPLICITAMENTE e a evidência fica retida intacta", async () => {
+  it("S2 (binding-only): recibo v3 contra registro v4 é rejeitado com erro explícito; par (recibo,registro) v3 retido intacto", async () => {
     const historical = historicalV3Evidence();
     const retainedSnapshot = JSON.parse(JSON.stringify(historical));
     const fresh = freshV4Attempt();
@@ -205,7 +205,7 @@ describe("bump de conteúdo 2026-09-10.2 → 2026-09-30.1 (l16 v3→v4): caminho
     });
   });
 
-  it("S3: tentativa nova v4 valida contra o conteúdo atual (PASS, sem escrita de mastered)", async () => {
+  it("S3 (binding-only): tentativa nova v4 valida (PASS, sem escrita de mastered)", async () => {
     const fresh = freshV4Attempt();
     const receipt = await receiptFor(fresh, {});
     const validated = await validateReceipt(receipt, fresh);
