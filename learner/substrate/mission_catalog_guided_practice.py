@@ -78,23 +78,31 @@ def _parse_minutes(enunciado: str, practice_id: str) -> dict[str, int]:
     return {"min": minimum, "max": maximum}
 
 
+def _parse_rubric_row(line: str, practice_id: str) -> dict[str, str] | None:
+    if not line.startswith("| c-"):
+        return None
+    cells = [cell.strip() for cell in line.split("|")]
+    if len(cells) < 4:
+        raise MissionCatalogError(
+            f"guided-practice package {practice_id!r} has a malformed rubric row"
+        )
+    criterion_id, criterion, per_check = cells[1], cells[2], cells[3]
+    if not criterion_id or not criterion or not per_check:
+        raise MissionCatalogError(
+            f"guided-practice package {practice_id!r} rubric row"
+            f" {criterion_id or '?'} has empty cells"
+        )
+    return {"id": criterion_id, "criterion": criterion, "perCheck": per_check}
+
+
 def _parse_rubric_criteria(rubrica: str, practice_id: str) -> list[dict[str, str]]:
-    criteria: list[dict[str, str]] = []
-    for line in rubrica.split("\n"):
-        if not line.startswith("| c-"):
-            continue
-        cells = [cell.strip() for cell in line.split("|")]
-        if len(cells) < 4:
-            raise MissionCatalogError(
-                f"guided-practice package {practice_id!r} has a malformed rubric row"
-            )
-        criterion_id, criterion, per_check = cells[1], cells[2], cells[3]
-        if not criterion_id or not criterion or not per_check:
-            raise MissionCatalogError(
-                f"guided-practice package {practice_id!r} rubric row"
-                f" {criterion_id or '?'} has empty cells"
-            )
-        criteria.append({"id": criterion_id, "criterion": criterion, "perCheck": per_check})
+    criteria = [
+        row
+        for row in (
+            _parse_rubric_row(line, practice_id) for line in rubrica.split("\n")
+        )
+        if row is not None
+    ]
     if not criteria:
         raise MissionCatalogError(
             f"guided-practice package {practice_id!r} has no rubric criteria"
@@ -121,7 +129,7 @@ def compute_content_version(
     return f"{package_id.group(1)}@{digest[:12]}"
 
 
-def _load_practice(package_dir: Path) -> dict[str, Any]:
+def _read_learner_sources(package_dir: Path) -> dict[str, str]:
     sources: dict[str, str] = {}
     for relative in GUIDED_PRACTICE_LEARNER_FILES:
         try:
@@ -131,17 +139,20 @@ def _load_practice(package_dir: Path) -> dict[str, Any]:
                 f"guided-practice package {package_dir.name!r} is missing"
                 f" learner-facing file {relative!r}"
             ) from exc
-    enunciado = sources["enunciado.md"]
+    return sources
+
+
+def _parse_identity(enunciado: str, package_dir_name: str) -> tuple[str, str, str]:
     heading = _HEADING.search(enunciado)
     if heading is None:
         raise MissionCatalogError(
-            f"guided-practice package {package_dir.name!r} enunciado has no"
+            f"guided-practice package {package_dir_name!r} enunciado has no"
             " '# <id> — <title>' heading"
         )
     practice_id, title = heading.group(1), heading.group(2).strip()
-    if not package_dir.name.startswith(f"{practice_id}-"):
+    if not package_dir_name.startswith(f"{practice_id}-"):
         raise MissionCatalogError(
-            f"guided-practice package directory {package_dir.name!r} must start"
+            f"guided-practice package directory {package_dir_name!r} must start"
             f" with practice id {practice_id!r}"
         )
     anchor = _ANCHOR.search(enunciado)
@@ -149,11 +160,24 @@ def _load_practice(package_dir: Path) -> dict[str, Any]:
         raise MissionCatalogError(
             f"guided-practice package {practice_id!r} has no anchor lesson marker"
         )
+    return practice_id, title, anchor.group(1)
+
+
+def _require_dev_track(enunciado: str, practice_id: str) -> None:
     track = _TRACK.search(enunciado)
     if track is None or track.group(1) != "Dev":
         raise MissionCatalogError(
             f"guided-practice package {practice_id!r} must declare 'Trilha: Dev'"
         )
+
+
+def _load_practice(package_dir: Path) -> dict[str, Any]:
+    sources = _read_learner_sources(package_dir)
+    enunciado = sources["enunciado.md"]
+    practice_id, title, anchor_lesson_id = _parse_identity(
+        enunciado, package_dir.name
+    )
+    _require_dev_track(enunciado, practice_id)
     objective = _section_under(enunciado, "Objetivo observável")
     if not objective:
         raise MissionCatalogError(
@@ -166,7 +190,7 @@ def _load_practice(package_dir: Path) -> dict[str, Any]:
         "package_dir": package_dir.name,
         "title": title,
         "objective": objective,
-        "anchor_lesson_id": anchor.group(1),
+        "anchor_lesson_id": anchor_lesson_id,
         "track_id": "dev",
         "estimated_minutes": minutes["max"],
         "target_minutes": minutes,
@@ -191,17 +215,14 @@ def load_guided_practice_catalog(root: Path) -> dict[str, dict[str, Any]]:
     return practices
 
 
-def validate_guided_practice_binding(
-    binding: dict[str, Any],
+def _validate_guided_identity(
     label: str,
     mission_id: str,
     track_id: str,
     unit_id: str,
     runtime: dict[str, Any],
-    declared_prerequisites: list[str],
     practice: dict[str, Any],
-    validate_evidence: Callable[[Any, str], dict[str, Any]],
-) -> dict[str, Any]:
+) -> None:
     if track_id != "dev" or runtime["engineId"] != "codexdojo-os":
         raise MissionCatalogError(
             f"{label} guided-practice missions must use the dev track and the"
@@ -217,6 +238,14 @@ def validate_guided_practice_binding(
             f"{label}.curriculum.unitId must be"
             f" {GUIDED_PRACTICE_UNIT_PREFIX}{practice['practice_id']}"
         )
+
+
+def _validate_guided_content_pin(
+    label: str,
+    runtime: dict[str, Any],
+    declared_prerequisites: list[str],
+    practice: dict[str, Any],
+) -> None:
     if runtime["contentVersion"] != practice["content_version"]:
         raise MissionCatalogError(
             f"{label}.runtime.contentVersion must match the canonical"
@@ -228,6 +257,25 @@ def validate_guided_practice_binding(
             f"{label}.prerequisites must include the canonical anchor lesson"
             f" {practice['anchor_lesson_id']!r}"
         )
+
+
+def validate_guided_practice_binding(
+    binding: dict[str, Any],
+    label: str,
+    mission_id: str,
+    track_id: str,
+    unit_id: str,
+    runtime: dict[str, Any],
+    declared_prerequisites: list[str],
+    practice: dict[str, Any],
+    validate_evidence: Callable[[Any, str], dict[str, Any]],
+) -> dict[str, Any]:
+    _validate_guided_identity(
+        label, mission_id, track_id, unit_id, runtime, practice
+    )
+    _validate_guided_content_pin(
+        label, runtime, declared_prerequisites, practice
+    )
     version = binding.get("version")
     if not isinstance(version, int) or isinstance(version, bool) or version < 1:
         raise MissionCatalogError(f"{label}.version must be a positive integer")
