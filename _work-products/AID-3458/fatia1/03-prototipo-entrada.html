@@ -39,7 +39,8 @@ button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid #12
 .map-hud{position:absolute;z-index:2;top:18px;left:22px;right:22px;display:flex;justify-content:space-between;pointer-events:none;font:11px var(--mono);letter-spacing:1.2px;color:#cbddd2}
 .canvas-wrap{position:relative;flex:1;min-height:360px}
 #world{display:block;width:100%;height:100%;position:absolute;inset:0}
-.map-alt{position:absolute;z-index:2;bottom:14px;left:14px}
+  /* C4 — disclosure em fluxo FORA da área do desenho em TODAS as larguras (mesmo padrão aceito ≤630px): nunca cobre a arte */
+  .map-alt{padding:10px 14px 12px}
 .map-alt summary{font:11px var(--mono);color:#c4d8cf;min-height:44px;display:flex;align-items:center;cursor:pointer;list-style:none}
 .map-alt summary:before{content:"≡ ";font-size:14px}
 .map-alt[open] summary{margin-bottom:6px}
@@ -151,7 +152,7 @@ dialog::backdrop{background:#071422bc}
   /* B2 — canvas vira bloco em fluxo e a alternativa textual flui ABAIXO do mapa (nunca sobrepõe as ilhas) */
   .canvas-wrap{position:static;flex:none;min-height:0}
   #world{position:relative;inset:auto;width:100%;height:320px}
-  .map-alt{position:static;padding:0 12px 10px}
+  .map-alt{padding:0 12px 10px}
   .map-alt .alt-box{max-width:none}
   .map-hud{font-size:10px;top:14px;left:16px;right:16px}
   .map-footer{font-size:11px;padding:3px 12px}
@@ -217,7 +218,7 @@ dialog::backdrop{background:#071422bc}
       <div>
         <span>FUNDAMENTOS COMPARTILHADOS</span>
         <strong><span id="f-progress">0</span>/4</strong>
-        <small>SEU ÚNICO CONTADOR AQUI</small>
+        <small>Avance 4 fundamentos, depois escolha sua jornada</small>
       </div>
     </div>
   </section>
@@ -227,17 +228,17 @@ dialog::backdrop{background:#071422bc}
       <div class="map-hud"><span>MAPA DA ESCOLA</span><span class="map-caption">2 JORNADAS · 4 FUNDAMENTOS</span></div>
       <div class="canvas-wrap">
         <canvas id="world" width="1040" height="560" role="img" aria-label="Mapa desenhado: a ilha Fundamentos à esquerda; setas seguem para a ilha Dourada 'IA no cotidiano' (acima, à direita) e para a ilha Menta 'IA para Dev' (abaixo, à direita). A versão em texto do mapa está disponível no botão abaixo do mapa."></canvas>
-        <details class="map-alt" id="map-alt">
-          <summary>Versão em texto do mapa</summary>
-          <div class="alt-box" role="list">
-            <ol>
-              <li><a href="#etapa-atual">Ilha Fundamentos (menta, disponível) — F1 Entender IA, F2 Uso seguro, F3 Prompt e contexto, F4 Verificação.</a></li>
-              <li><a href="#jornada-cotidiano">Ilha IA no cotidiano (ouro) — para quem não programa.</a></li>
-              <li><a href="#jornada-dev">Ilha IA para Dev (menta-escura) — para quem constrói software.</a></li>
-            </ol>
-          </div>
-        </details>
       </div>
+      <details class="map-alt" id="map-alt">
+        <summary>Versão em texto do mapa</summary>
+        <div class="alt-box" role="list">
+          <ol>
+            <li><a href="#etapa-atual">Ilha Fundamentos (menta, disponível) — F1 Entender IA, F2 Uso seguro, F3 Prompt e contexto, F4 Verificação.</a></li>
+            <li><a href="#jornada-cotidiano">Ilha IA no cotidiano (ouro) — para quem não programa.</a></li>
+            <li><a href="#jornada-dev">Ilha IA para Dev (menta-escura) — para quem constrói software.</a></li>
+          </ol>
+        </div>
+      </details>
       <div class="map-footer">
         <span><i class="dot mint"></i>Disponível <i class="dot gold"></i>Jornada cotidiano <i class="dot dim"></i>Desbloqueia após F1–F4</span>
         <button id="motion-btn" class="map-btn" aria-pressed="false">Ⅱ Pausar cenário</button>
@@ -425,6 +426,24 @@ dialog::backdrop{background:#071422bc}
     if (sub) { ctx.font = '11px "SFMono-Regular",Consolas,monospace'; ctx.fillStyle = '#8ba09e'; ctx.fillText(sub, x, y + 17); }
   }
   function bob(base, amp){ return animating ? base + Math.sin(t / 42 + base) * amp : base; }
+  /* C2 — Landmarks ilustrados COPIADOS de engines/sdlc-quest/src/world.js (mesma tela, mesma paleta):
+     primitivas polygon/rect/circle/ellipse/line/box/plant/crystal/robot = cópia 1:1 das l.11–27;
+     casa = silhueta compacta da estação case 0 (l.91–96); torre+antena = estação case 1 (l.98–103).
+     Vocabulário artístico SDLCQuest reutilizado como mandado — zero identidade nova. */
+  function polygon(c, points, fill){ c.beginPath(); points.forEach(function(p, i){ i ? c.lineTo(p[0], p[1]) : c.moveTo(p[0], p[1]); }); c.closePath(); if (fill){ c.fillStyle = fill; c.fill(); } }
+  function rect(c, x, y, w, h, color){ c.fillStyle = color; c.fillRect(Math.round(x), Math.round(y), Math.round(w), Math.round(h)); }
+  function circle(c, x, y, r, color){ c.fillStyle = color; c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.fill(); }
+  function ellipse(c, x, y, rx, ry, color){ c.fillStyle = color; c.beginPath(); c.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2); c.fill(); }
+  function line(c, points, color, width){ c.beginPath(); points.forEach(function(p, i){ i ? c.lineTo(p[0], p[1]) : c.moveTo(p[0], p[1]); }); c.strokeStyle = color; c.lineWidth = width || 2; c.lineCap = 'round'; c.stroke(); }
+  function box(c, x, y, w, d, h, top, left, right){ var p = [[x, y - h - d / 2], [x + w / 2, y - h], [x, y - h + d / 2], [x - w / 2, y - h]]; polygon(c, [p[3], p[2], [x, y + d / 2], [x - w / 2, y]], left); polygon(c, [p[2], p[1], [x + w / 2, y], [x, y + d / 2]], right); polygon(c, p, top); }
+  function plant(c, x, y, scale){ scale = scale || 1; c.save(); c.translate(x, y); c.scale(scale, scale); rect(c, -2, -13, 4, 16, '#314b3c'); polygon(c, [[-1, -4], [-13, -13], [-14, -24], [-3, -20], [2, -9]], '#77a680'); polygon(c, [[0, -9], [10, -29], [20, -32], [18, -20], [6, -7]], '#a2c290'); polygon(c, [[-1, -14], [-7, -28], [0, -40], [7, -26], [4, -9]], '#b0c99b'); c.restore(); }
+  function crystal(c, x, y, color){ polygon(c, [[x, y - 25], [x + 9, y - 10], [x + 6, y + 2], [x - 6, y + 4], [x - 9, y - 8]], '#324f53'); polygon(c, [[x, y - 25], [x + 9, y - 10], [x, y + 1]], color); polygon(c, [[x, y - 25], [x, y + 1], [x - 9, y - 8]], '#5a8a7f'); }
+  function robot(c, x, y, scale, body, eye){ scale = scale || 1; body = body || '#dcdcc4'; eye = eye || '#a0eccd'; c.save(); c.translate(x, y); c.scale(scale, scale); ellipse(c, 0, 18, 19, 6, '#060f1744'); rect(c, -11, 0, 22, 19, '#79958b'); rect(c, -15, -27, 30, 28, body); rect(c, -18, -20, 4, 14, '#8caaa2'); rect(c, 15, -20, 4, 14, '#8caaa2'); rect(c, -11, -19, 22, 11, '#1b3541'); rect(c, -7, -16, 4, 4, eye); rect(c, 4, -16, 4, 4, eye); rect(c, -7, -29, 3, -8, '#d3d9b9'); rect(c, -9, -39, 7, 4, eye); rect(c, -7, 4, 14, 7, body); rect(c, -10, 17, 7, 5, '#cfddc5'); rect(c, 4, 17, 7, 5, '#cfddc5'); rect(c, -17, 4, 6, 11, body); rect(c, 11, 4, 6, 11, body); c.restore(); }
+  /* Silhueta de casa — cópia compacta da estação case 0 (world.js l.91–96), ancorada em (0,0) */
+  function houseStation(c){ box(c, 0, -21, 86, 43, 42, '#baa987', '#687b60', '#8a946b'); rect(c, -30, -98, 60, 37, '#d7ceb0'); c.fillStyle = '#d8cfae'; c.beginPath(); c.arc(0, -98, 30, Math.PI, Math.PI * 2); c.fill(); rect(c, -5, -124, 10, 45, '#789085'); rect(c, -32, -73, 64, 7, '#9ba785'); c.save(); c.translate(20, -104); c.rotate(-.48); rect(c, -3, -7, 47, 15, '#dde0c1'); rect(c, 31, -10, 14, 21, '#8caf9c'); rect(c, 43, -8, 4, 17, '#254d4c'); c.restore(); box(c, -28, -3, 23, 13, 16, '#c7c7a0', '#5e725b', '#819776'); rect(c, 9, -43, 9, 14, '#d4e3b0'); }
+  /* Silhueta de torre+antena — cópia compacta da estação case 1 (world.js l.98–103), ancorada em (0,0) */
+  function towerStation(c, color){ box(c, 0, -16, 77, 40, 60, '#8aa5a0', '#51616b', '#74777c'); box(c, 0, -76, 84, 44, 10, color, '#617182', '#838a9b'); var i; for (i = 0; i < 3; i++){ box(c, -9 + i * 6, -78 - i * 12, 74, 37, 5, i === 2 ? '#cdd5ea' : '#9cadd4', '#66778a', '#8194b0'); } line(c, [[32, -46], [32, -78]], '#d2e3cd', 2); circle(c, 32, -46, 4, '#becbe8'); }
+  function lm(x, y, k, fn){ ctx.save(); ctx.translate(x, y); ctx.scale(k, k); fn(ctx); ctx.restore(); }
   function draw(){
     canvas.width = canvas.clientWidth; canvas.height = canvas.clientHeight;
     t++;
@@ -441,6 +460,14 @@ dialog::backdrop{background:#071422bc}
     iso(W2 * .78, cY, 170 * s + 80, 42 * s + 20, '#e8c888', '#cfa969', '#b98f52');
     /* Ilha IA para Dev (menta-escura) */
     iso(W2 * .78, dY, 170 * s + 80, 42 * s + 20, '#5fbd9b', '#3f9a7c', '#2e7a61');
+    /* C2 — landmarks do vocabulário SDLCQuest (cópia de world.js): ≥1 por ilha, acima do rótulo, sem colisão.
+       Escala acompanha o canvas com piso 0.5 (reconhecível em 320px) e teto pela altura livre do canvas. */
+    var k = Math.max(s, .5);
+    var houseK = Math.min(k * .9, (cY - 18) / 165), towerK = Math.min(k * .85, (dY - cY - 60) / 160);
+    lm(W2 * .24, fY - 16, k, function(c){ crystal(c, -50, 2, '#f2d78f'); plant(c, 52, 8, .8); });
+    lm(W2 * .78, cY - 16, houseK, houseStation);
+    lm(W2 * .78, dY - 20, towerK, function(c){ towerStation(c, '#5fbd9b'); });
+    robot(ctx, W2 * .5, (fY + cY) / 2 + 30 + (animating ? Math.sin(t / 30) * 2 : 0), Math.max(k * .45, .3), '#dce4c8', '#b9f7d4');
     /* setas de progressão (antes ausentes) */
     arrow(W2 * .35, fY - 14, W2 * .66, cY + 26, 'rgba(232,200,136,0.85)');
     arrow(W2 * .35, fY + 18, W2 * .66, dY - 20, 'rgba(167,230,205,0.8)');
@@ -448,7 +475,7 @@ dialog::backdrop{background:#071422bc}
     label('Fundamentos', W2 * .24, fY + 8, '#0f231c', 'F1–F4 · COMECE AQUI');
     label('IA no cotidiano', W2 * .78, cY + 8, '#231a09', 'JORNADA 1');
     label('IA para Dev', W2 * .78, dY + 8, '#081712', 'JORNADA 2');
-    if (fDone > 0) { ctx.font = '700 13px "SFMono-Regular",Consolas,monospace'; ctx.fillStyle = '#195d4b'; ctx.textAlign = 'center'; ctx.fillText(fDone + '/4 OK', W2 * .24, fY + 34); }
+    if (fDone > 0) { ctx.font = '700 14px "SFMono-Regular",Consolas,monospace'; ctx.fillStyle = '#195d4b'; ctx.textAlign = 'center'; ctx.fillText('✓ ' + fDone + ' de 4', W2 * .24, fY + 34); }
     if (animating) requestAnimationFrame(draw);
   }
   window.addEventListener('resize', draw);

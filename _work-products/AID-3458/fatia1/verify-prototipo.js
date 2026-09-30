@@ -1,18 +1,61 @@
+const path = require('path');
 const { chromium } = require('/paperclip/instances/default/projects/f2527e0b-9532-456c-bef8-b7380cd34f9c/3cbab3d6-45a5-478c-9212-e1484aacbb04/_default/engines/codexdojo-os-prototype/node_modules/playwright-core');
+const HTML = process.argv[2] || path.join(__dirname, '03-prototipo-entrada.html');
 (async () => {
   const browser = await chromium.launch({ executablePath: '/paperclip/.cache/ms-playwright/chromium-1234/chrome-linux64/chrome' });
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   const errors = [];
   page.on('pageerror', e => errors.push('pageerror: ' + e.message));
   page.on('console', m => { if (m.type() === 'error') errors.push('console: ' + m.text()); });
-  await page.goto('file:///paperclip/instances/default/projects/f2527e0b-9532-456c-bef8-b7380cd34f9c/3cbab3d6-45a5-478c-9212-e1484aacbb04/_default/_work-products/AID-3458/fatia1/03-prototipo-entrada.html');
+  await page.goto('file://' + HTML);
   const t = (name, cond) => { if (!cond) errors.push('FAIL: ' + name); else console.log('ok -', name); };
   t('skip link present', await page.locator('a.skip').count() === 1);
   t('single primary counter 0/4', (await page.locator('#f-progress').textContent()) === '0');
+  // C1 — placeholder meta copy removed, replaced by learner-facing progress guidance
+  t('C1: no placeholder counter copy', !((await page.locator('body').innerText()).includes('CONTADOR')));
+  t('C1: progress label reads as learner guidance', (await page.locator('.player small').textContent()).includes('Avance 4 fundamentos'));
   t('cta before practice (DOM order)', await page.locator('#start-f1').evaluate((el) => { const p = document.querySelector('.practice'); return !!p && p.getBoundingClientRect().top > el.getBoundingClientRect().top; }));
   t('textual map alternative exists', await page.locator('#map-alt summary').count() === 1);
   await page.locator('#map-alt summary').click();
   t('map alt opens with 3 links', await page.locator('#map-alt a').count() === 3);
+  // C4 — desktop: open disclosure flows OUTSIDE the drawing area (no rect intersection at 1280)
+  const c4 = await page.evaluate(() => {
+    const box = document.querySelector('.map-alt .alt-box').getBoundingClientRect();
+    const world = document.querySelector('#world').getBoundingClientRect();
+    const sep = box.top >= world.bottom - 1 || box.bottom <= world.top + 1 || box.left >= world.right - 1 || box.right <= world.left + 1;
+    return { separated: sep, boxTop: Math.round(box.top), worldBottom: Math.round(world.bottom) };
+  });
+  t('C4: desktop open disclosure outside the drawing area (no intersection at 1280)', c4.separated === true);
+  // C2 — landmarks: ≥1 illustrated SDLCQuest primitive per island (color variance over the island art band)
+  const lmInfo = await page.evaluate(() => {
+    const cv = document.querySelector('#world'), c = cv.getContext('2d');
+    const W = cv.width, H = cv.height, s = W / 1040;
+    const k = Math.max(s, .5), fY = H * .52, cY = H * .25, dY = H * .8;
+    const hK = Math.min(k * .9, (cY - 18) / 165), tK = Math.min(k * .85, (dY - cY - 60) / 160);
+    const regions = {
+      fundamentos: [W * .24 - 45, fY - 16 - 45 * k, 90, 40 * k],
+      cotidiano: [W * .78 - 45, cY - 16 - 100 * hK, 90, 60],
+      dev: [W * .78 - 40, dY - 20 - 95 * tK, 80, 60]
+    };
+    const out = {};
+    const wanted = { fundamentos: ['50,79,83'], cotidiano: ['186,169,135'], dev: ['156,173,212'] };
+    for (const nm in regions) {
+      const r = regions[nm], x = Math.max(0, Math.round(r[0])), y = Math.max(0, Math.round(r[1]));
+      const w = Math.max(8, Math.round(r[2])), h = Math.max(8, Math.round(r[3]));
+      const d = c.getImageData(x, y, Math.min(w, cv.width - x), Math.min(h, cv.height - y)).data;
+      const colors = new Set();
+      for (let i = 0; i < d.length; i += 4) colors.add(d[i] + ',' + d[i + 1] + ',' + d[i + 2]);
+      out[nm] = { variance: 0, paletteHit: wanted[nm].some(cl => colors.has(cl)) };
+      out[nm].variance = colors.size;
+    }
+    return out;
+  });
+  t('C2: illustrated landmark on Fundamentos (crystal+plant variance>4)', lmInfo.fundamentos.variance > 4);
+  t('C2: SDLCQuest crystal palette (#324f53) present on Fundamentos', lmInfo.fundamentos.paletteHit === true);
+  t('C2: illustrated landmark on cotidiano (house silhouette variance>4)', lmInfo.cotidiano.variance > 4);
+  t('C2: SDLCQuest house palette (#baa987) present on cotidiano', lmInfo.cotidiano.paletteHit === true);
+  t('C2: illustrated landmark on Dev (tower+antenna variance>4)', lmInfo.dev.variance > 4);
+  t('C2: SDLCQuest tower+antenna palette (#9cadd4) present on Dev', lmInfo.dev.paletteHit === true);
   t('arrows in F-track (3)', await page.locator('.stage-arrow').count() === 3);
   await page.locator('#start-f1').click();
   t('lesson dialog opens', await page.locator('#lesson').evaluate(d => d.open));
@@ -71,6 +114,18 @@ const { chromium } = require('/paperclip/instances/default/projects/f2527e0b-953
   // topbar within viewport width (brand treatment copied)
   const topbarFits = await page.evaluate(() => document.querySelector('.topbar').getBoundingClientRect().right <= window.innerWidth + 0.5);
   t('B2: topbar/brand fit 390px (tratamento da fonte aplicado)', topbarFits);
+  // C3-support — 320/375: zero horizontal overflow in both states (build-level width sweep for the receipt)
+  for (const w of [375, 320]) {
+    await page.setViewportSize({ width: w, height: 844 });
+    await page.reload();
+    await page.waitForTimeout(150);
+    const ovA = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+    t('widths: zero horizontal overflow at ' + w + 'px (initial)', ovA <= 0);
+    if (!(await page.locator('#map-alt').evaluate(d => d.open))) await page.locator('#map-alt summary').click();
+    await page.waitForTimeout(150);
+    const ovB = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+    t('widths: zero horizontal overflow at ' + w + 'px (disclosure open)', ovB <= 0);
+  }
   await page.screenshot({ path: '/tmp/opencode/aid3458/after_mobile.png', fullPage: true });
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.screenshot({ path: '/tmp/opencode/aid3458/after_desktop.png', fullPage: true });
