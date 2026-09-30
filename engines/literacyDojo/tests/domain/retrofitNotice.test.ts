@@ -38,9 +38,12 @@ describe("retrofitNotice (ondas O3-C1 + C1 + O3-C2, specs AID-644 rev 2 §3 / AI
 
   it("isRetrofittedLesson: lição da onda no version do bump; onda vizinha ou versão outra, não", () => {
     for (const [version, waveLessons] of Object.entries(LAUNCHED_WAVES)) {
+      // l16 pertence a DUAS ondas (C1 2026-09-04.1 e r2.1 2026-09-30.1): o
+      // ex-negativo só vale para lições fora da onda corrente.
       const otherWave = Object.entries(LAUNCHED_WAVES)
         .filter(([v]) => v !== version)
-        .flatMap(([, lessons]) => lessons);
+        .flatMap(([, lessons]) => lessons)
+        .filter((id) => !waveLessons.includes(id));
       for (const lessonId of waveLessons) {
         expect(isRetrofittedLesson(lessonId, version), `${lessonId}@${version}`).toBe(true);
       }
