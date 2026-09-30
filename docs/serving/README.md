@@ -14,6 +14,8 @@ contrato). Piloto pago segue o modelo facilitado P6/O1 (cobrança out-of-band).
 | codexDojo OS | `https://aidevschool-codexdojo-os.netlify.app/` | Host mission-first do piloto (superfície contribuidor) | `npm run build:pilot` + `scripts/build-pilot-bundle.mjs`; functions staged do canônico `learner/gate/netlify-functions` |
 | LiteracyDojo avulso | `https://aidevschool-literacydojo.netlify.app/` | Entrada pública de aprendiz (23 missões IA Prática, pt-BR) | `npm run build`; functions do dir canônico `learner/gate/netlify-functions` |
 
+Caminho adicional na superfície LiteracyDojo: `/escola/` — entrada pública **estática** da escola única (AID-3453, direção founder 17:03Z, PR #616): artefatos em `engines/literacyDojo/public/escola/` andam no mesmo `npm run build` (arquivo real sombreia o catch-all do `netlify.toml`, precedente `privacidade.html`); sem backend, sem segredo, sem storage no caminho público — monitor `escola-root-200` (UPTIME-MONITOR-SETUP #7, armar pós-publicação). A superfície Node do school-entry (operador/beta, PR #615 draft) permanece separada.
+
 Coletor de telemetria same-origin: `POST /__dojo/bridge/v1/analytics` (envelopes OS v1 + literacy v2;
 backing durável Netlify Blobs, chave idempotente `dia/eventId`, retenção 90d, zero PII —
 ADR-0009/0010). Export operacional: `GET` da mesma rota com Bearer `ANALYTICS_EXPORT_TOKEN`

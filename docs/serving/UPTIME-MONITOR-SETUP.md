@@ -29,6 +29,7 @@ Intervalo: **5 min** em todos. Alerta: e-mail (destinatário = e-mail founder da
 | 4 | `literacy-export-401` | `https://aidevschool-literacydojo.netlify.app/__dojo/bridge/v1/analytics` | GET | — | — | **401** + corpo `{"error":"unauthorized"}` | Idem na literacy |
 | 5 | `os-collector-403` | `https://aidevschool-codexdojo-os.netlify.app/__dojo/bridge/v1/analytics` | POST | `sec-fetch-site: cross-site`, `content-type: application/json` | `{"schemaVersion":1,"events":[]}` | **403** + corpo `{"error":"origin-forbidden"}` | Gate same-origin do coletor no OS (ADR-0010 1b) |
 | 6 | `literacy-collector-403` | `https://aidevschool-literacydojo.netlify.app/__dojo/bridge/v1/analytics` | POST | idem #5 | `{"schemaVersion":2,"source":"literacydojo","events":[]}` | **403** + corpo `{"error":"origin-forbidden"}` | Idem na literacy |
+| 7 | `escola-root-200` | `https://aidevschool-literacydojo.netlify.app/escola/` | GET | — | — | **200** | Entrada estática `/escola/` de pé — mitigação S1 (direção 17:03Z: sem sonda por CTA no caminho público, o monitor é o detector). **Armar somente pós-publicação** (antes disso a rota não existe no alias e o check falharia) |
 
 Semântica de alerta dos checks 3–6: **qualquer desvio do status esperado** (401→200 vaza export;
 401→404/token removido; 403→202 = gate aberto) abre incidente. Esses 4 checks são dupla função:
