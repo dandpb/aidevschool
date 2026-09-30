@@ -420,6 +420,57 @@ test("E7 resize never multiplies the map animation loop", async (t) => {
   assert.equal(await page.evaluate(() => window.__stepRaf()), 1);
 });
 
+// FSE findings 6–8 (pixel review 3a21f96a, same single round): the map must
+// carry the APPROVED prototype #614 landmarks (≥1 per island + animated
+// robot — ported art, no redesign), the operator link must not sit in the
+// student header, and the dev-bridge expansion must not stretch its neighbor.
+test("E8 approved map landmarks, discreet operator link, no journey stretch", async (t) => {
+  const { page, base } = await fixture(t);
+  await page.goto(base);
+  await page.locator("#start-fundamentals").waitFor();
+  // Finding 7: the student header keeps only the help action; the operator
+  // link lives in the footer (same href/route — access untouched).
+  assert.equal(
+    await page.locator(".topbar .admin-link").count(),
+    0,
+  );
+  const footerLink = page.locator(".footer .admin-link");
+  assert.equal(await footerLink.getAttribute("href"), "/admin/engines");
+  assert.equal((await footerLink.textContent())?.trim(), "Administração");
+  // Finding 6: sample canvas pixels for the approved landmark signature
+  // colors (exact fills — no compositing on the 2D context). Wait for two
+  // real animation frames so at least one map draw has run.
+  await page.evaluate(
+    () =>
+      new Promise((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(resolve)),
+      ),
+  );
+  const present = await page.evaluate(() => {
+    const canvas = document.querySelector("#world");
+    const data = canvas
+      .getContext("2d")
+      .getImageData(0, 0, canvas.width, canvas.height).data;
+    const want = [
+      [242, 215, 143], // crystal gold (Fundamentos)
+      [220, 228, 200], // robot body (animated, between islands)
+      [216, 207, 174], // house roof (IA no cotidiano)
+      [205, 213, 234], // tower light box (IA para Dev)
+    ];
+    return want.every(([r, g, b]) => {
+      for (let i = 0; i < data.length; i += 4)
+        if (data[i] === r && data[i + 1] === g && data[i + 2] === b) return true;
+      return false;
+    });
+  });
+  assert.equal(present, true);
+  // Finding 8: journey grid rows do not stretch the shorter neighbor.
+  assert.equal(
+    await page.locator("#jornadas").evaluate((el) => getComputedStyle(el).alignItems),
+    "start",
+  );
+});
+
 test("launch revocation refreshes available choices", async (t) => {  const { page, base, store, selected } = await fixture(t);
   await ask(page, base);
   const revoked = store.list().find((engine) => engine.id === selected[0].id);

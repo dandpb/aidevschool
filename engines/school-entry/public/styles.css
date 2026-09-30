@@ -156,6 +156,20 @@ textarea:focus-visible {
 .admin-link:hover {
   background: #e6eae1;
 }
+/* FSE finding 7 (pixel review 3a21f96a): the operator link lives in the
+   footer as a discreet plain link — same href/route/access, no header chrome
+   next to the student help action. */
+.footer .admin-link {
+  display: inline;
+  padding: 0;
+  min-height: 0;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.footer .admin-link:hover {
+  background: none;
+}
 .site-header > a:last-child {
   margin-left: auto;
   font-size: 12px;
@@ -526,6 +540,8 @@ textarea:focus-visible {
 .journeys {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  align-items: start; /* FSE finding 8 (pixel review 3a21f96a): the expanded
+  dev bridge card must not stretch its shorter neighbor */
   gap: 14px;
   margin-top: 22px;
 }
