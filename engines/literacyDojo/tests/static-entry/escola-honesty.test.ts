@@ -195,26 +195,31 @@ describe("/escola/ static entry — contract integrity and drift guard", () => {
     expect(SCHOOL_ENTRY).toEqual(CANONICAL_CONTRACT_80C7ADDC);
   });
 
-  it("keeps the port in sync with the school-entry source when that source lands on main", () => {
-    const catalogUrl = new URL("server/catalog.mjs", schoolEntryDir);
-    if (!existsSync(catalogUrl)) {
-      return; // school-entry engine not present in this checkout
-    }
-    const catalogText = readFileSync(catalogUrl, "utf8");
-    if (!catalogText.includes("SCHOOL_ENTRY")) {
-      // Pre-#615-merge main: the engine exists without SCHOOL_ENTRY; the
-      // canonical pin above is the seed. Nothing to diff yet.
-      return;
-    }
-    for (const [relative, pinned] of Object.entries(SOURCE_PINS_80C7ADDC)) {
-      const fileUrl = new URL(relative, schoolEntryDir);
-      const digest = createHash("sha256").update(readFileSync(fileUrl)).digest("hex");
-      expect(
-        digest === pinned,
-        `school-entry/${relative} drifted from the ported candidate 80c7addc — re-port /escola/ (or update the pins in the same change)`,
-      ).toBe(true);
-    }
-  });
+  // R3 (AID-3453, changes-requested FSE): o guard cross-source não pode
+  // retornar cedo e em silêncio. Quando a fonte school-entry ainda não tem
+  // SCHOOL_ENTRY (pré-merge do #615), o diff é SKIP explícito — os pins
+  // 80c7addc permanecem seed e nada aqui é apresentado como verificação
+  // cross-source executada. O #615 NÃO deve ser mergado só para ativar isto.
+  const catalogUrl = new URL("server/catalog.mjs", schoolEntryDir);
+  const catalogText = existsSync(catalogUrl) ? readFileSync(catalogUrl, "utf8") : null;
+  const hasSchoolEntrySource = catalogText?.includes("SCHOOL_ENTRY") === true;
+  it.skipIf(!hasSchoolEntrySource)(
+    hasSchoolEntrySource
+      ? "keeps the port in sync with the school-entry source when that source lands on main"
+      : "keeps the port in sync with the school-entry source — SKIP EXPLÍCITO: school-entry sem SCHOOL_ENTRY nesta base (pré-merge #615; pins 80c7addc = seed, diff cross-source não executado)",
+    () => {
+      const catalog = readFileSync(catalogUrl, "utf8");
+      expect(catalog).toContain("SCHOOL_ENTRY");
+      for (const [relative, pinned] of Object.entries(SOURCE_PINS_80C7ADDC)) {
+        const fileUrl = new URL(relative, schoolEntryDir);
+        const digest = createHash("sha256").update(readFileSync(fileUrl)).digest("hex");
+        expect(
+          digest === pinned,
+          `school-entry/${relative} drifted from the ported candidate 80c7addc — re-port /escola/ (or update the pins in the same change)`,
+        ).toBe(true);
+      }
+    },
+  );
 
   it("documents its provenance header", () => {
     expect(indexHtml).toContain("80c7addc");
