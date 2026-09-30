@@ -98,6 +98,28 @@ continuam não sendo mastery — RC-4).
 - **readiness**: pré-requisitos canônicos declarados no catálogo (grafo), distintos do gating
   pedagógico real (gate AID-1222 / `learner/gate/no_code.py`, intocado).
 
+### 2.7 Aliases de unit_id do pack Pixel — contrato congelado (complemento 696dc5d3)
+
+`engines/pixelDojo/pixel-quest/src/content/curriculumPack.ts:666` (`unitId(module)`) **não segue
+um padrão uniforme** — o crosswalk de IDs precisa de aliases explícitos, não de inferência por nome:
+
+| Projeto | unit_id emitido pelo pack | Origem do alias |
+| --- | --- | --- |
+| `01_rate_limiter` | `U0-sonda-rate-limiter-robustness` | contrato de persistência congelado; U0 é a unit canônica do substrate (única em `learner/learning_state.yaml:85`) |
+| `04_concurrent_task_queue` | `U4-task-queue` | decisão CEO AID-1859 Option A (dispatch AID-1877); mesma identidade do catálogo voxelDojo — **não** é o default de template `U-04_concurrent_task_queue` (classe de drift L4) |
+| demais | `U-${project}` (template) | ex. `U-02_key_value_store` só existiria via template; o binding voxel canônico é `U2-key-value-store` |
+
+Regras decorrentes (travadas em teste, §5):
+
+- `regionId` = `lab-${project}` (ex. `lab-01_rate_limiter`) é **região**, não unit_id; nada no
+  formato `:lab…`/`lab-…` é unit_id do pack.
+- Equivalência Pixel↔Voxel↔substrate só por **alias explícito + fixture** (tabela acima /
+  constantes do teste); nunca inferir por semelhança de nome — `U4-task-queue` (canônico,
+  compartilhado) ≠ `U-04_concurrent_task_queue` (template Pixel) são ids distintos.
+- **Nenhum engine inteiro foi provado seguro para excluir** da matriz de progresso compartilhado:
+  a matriz r2 (AID-3456) não pode descartar superfície por superfície sem evidência; pixelDojo
+  emite evidência consumida pelo gate (`learner/gate/`) e o substrate já persiste U0.
+
 ## 3. Crosswalk aditivo competência ↔ lição ↔ IDs ↔ progresso [P]
 
 Proposta ([P] — ratificação item a item é da frente CCE, matriz r2/AID-3456). IDs, tracks,
@@ -155,6 +177,9 @@ D5 produto IA/evals · D6 agentes/tools/skills · D7 capstone dev.
 `game-07-checkpoint-city`, `game-08-timeline-tower`, `game-09-docking-bay` →
 **D3 (construção), prática recomendada [P]**. R2: nenhuma competência exige jogo como
 pré-requisito; jogos mantêm os próprios pré-requisitos internos de track `dev`.
+IDs: bindings voxel usam os ids canônicos compartilhados (`U2-key-value-store`,
+`U3-url-shortener`, `U5-websocket-chat`, …) — ver aliases do pack Pixel em §2.7; só `U4-task-queue`
+é hoje identidade canônica emitida simultaneamente pelo pack Pixel e pelo catálogo voxel.
 
 ### 3.4 Cobertura por competência e lacunas reais
 

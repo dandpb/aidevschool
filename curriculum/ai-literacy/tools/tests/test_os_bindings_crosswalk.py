@@ -15,10 +15,34 @@ BINDINGS_PATH = (
     / "mission-bindings.yaml"
 )
 CATALOG_PATH = REPO_ROOT / "curriculum" / "ai-literacy" / "catalog.yaml"
+PIXEL_PACK_PATH = (
+    REPO_ROOT
+    / "engines"
+    / "pixelDojo"
+    / "pixel-quest"
+    / "src"
+    / "content"
+    / "curriculumPack.ts"
+)
+LEARNING_STATE_PATH = REPO_ROOT / "learner" / "learning_state.yaml"
 
 LESSON_KIND = "ai-literacy-lesson"
 VOXEL_KIND = "project-voxel-game"
 JOURNEY_TRACKS = {"ia_pratica": "ai-pratica", "dev": "dev"}
+
+# AID-3457 (complemento 696dc5d3): aliases EXPLÍCITOS do pack Pixel. Equivalência
+# Pixel<->Voxel<->substrate nunca se infere por semelhança de nome — só por esta
+# tabela (fixture canônica do crosswalk). Atualizar conscientemente se o pack migrar.
+PIXEL_UNIT_ALIASES = {
+    "01_rate_limiter": "U0-sonda-rate-limiter-robustness",
+    "04_concurrent_task_queue": "U4-task-queue",
+}
+# Defaults de template `U-${project}` que NUNCA foram identidade canônica
+# (U4 é o caso documentado de drift L4: decisão CEO AID-1859 Option A).
+PIXEL_TEMPLATE_DEFAULTS_NEVER_CANONICAL = {
+    "U-01_rate_limiter",
+    "U-04_concurrent_task_queue",
+}
 
 
 def _load_yaml(path: Path):
@@ -136,6 +160,66 @@ class OsBindingsCrosswalkAuditTest(unittest.TestCase):
                 binding["evidence"]["schema"], "teaching-game-evidence"
             )
             self.assertIs(binding["evidence"]["verifierRequired"], True)
+
+
+class PixelPackUnitAliasAuditTest(unittest.TestCase):
+    """AID-3457 (complemento 696dc5d3): aliases de unit_id do pack Pixel congelados.
+
+    curriculumPack.ts:666 não segue padrão uniforme (dois aliases explícitos +
+    template ``U-${project}``). O crosswalk de IDs só pode usar os aliases
+    declarados em PIXEL_UNIT_ALIASES; equivalência com nomes Voxel nunca é
+    inferida por semelhança. Regiões ``lab-<project>`` não são unit_ids.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.pack_source = PIXEL_PACK_PATH.read_text(encoding="utf-8")
+        cls.learning_state = _load_yaml(LEARNING_STATE_PATH)
+
+    def test_pixel_pack_unit_id_branches_frozen(self):
+        for project, alias in PIXEL_UNIT_ALIASES.items():
+            self.assertIn(
+                'module.project === "{}"'.format(project),
+                self.pack_source,
+                "pixel pack branch for {} changed".format(project),
+            )
+            self.assertIn(
+                'return "{}"'.format(alias),
+                self.pack_source,
+                "pixel pack alias for {} changed".format(project),
+            )
+        self.assertIn(
+            "return `U-${module.project}`", self.pack_source,
+            "pixel pack template default changed",
+        )
+
+    def test_u0_alias_is_persisted_by_the_substrate(self):
+        units_log = self.learning_state.get("units_log") or []
+        unit_ids = {entry.get("unit_id") for entry in units_log}
+        self.assertIn(
+            PIXEL_UNIT_ALIASES["01_rate_limiter"], unit_ids
+        )
+
+    def test_voxel_bindings_use_canonical_ids_not_pixel_templates(self):
+        unit_ids = {
+            b["curriculum"]["unitId"]
+            for b in _load_yaml(BINDINGS_PATH)["bindings"]
+            if b["curriculum"]["kind"] == VOXEL_KIND
+        }
+        self.assertTrue(unit_ids)
+        self.assertFalse(
+            unit_ids & PIXEL_TEMPLATE_DEFAULTS_NEVER_CANONICAL,
+            "a voxel binding adopted a Pixel template default as canonical id",
+        )
+
+    def test_no_unit_id_is_region_shaped(self):
+        bindings_doc = _load_yaml(BINDINGS_PATH)
+        for binding in bindings_doc["bindings"]:
+            unit_id = binding["curriculum"]["unitId"]
+            self.assertFalse(
+                ":lab" in unit_id or unit_id.startswith("lab-"),
+                "{} looks like a Pixel region id, not a unit id".format(unit_id),
+            )
 
 
 if __name__ == "__main__":
