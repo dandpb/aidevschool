@@ -1,3 +1,39 @@
+---
+version: alpha
+name: school-entry — SDLCQuest entry
+description: No-login school entry reusing the SDLCQuest v1.3 identity 1:1 (no new visual system). Paper background, deep map panel with Canvas islands (mint/gold), mint primary actions, gold journal accent, 18/10/9px radii, 3px #12624c focus ring.
+colors:
+  primary: "#a7e6cd"
+  paper: "#f5f3ec"
+  card: "#fffef9"
+  ink: "#172935"
+  muted: "#4c6057"
+  line: "#d9ded5"
+  deep: "#101d28"
+  mint: "#a7e6cd"
+  mint-dark: "#195d4b"
+  gold: "#e8c888"
+  coral: "#b64c36"
+  primary-border: "#86bfa7"
+  primary-text: "#163b2d"
+  focus: "#12624c"
+typography:
+  body:
+    fontFamily: "'Avenir Next','Segoe UI',Arial,sans-serif"
+    fontSize: 14px
+    fontWeight: 400
+    lineHeight: 1.7
+  eyebrow:
+    fontFamily: "'SFMono-Regular',Consolas,'Liberation Mono',monospace"
+    fontSize: 11px
+    fontWeight: 600
+    letterSpacing: 1.25px
+rounded:
+  panel: 18px
+  card: 10px
+  control: 9px
+---
+
 # School entry — implementation design
 
 User delegated technical and visual decisions after approving recommendations. Reference: docs/entry-concept.png (generated concept); this is an implementation-selected reference, not a separately user-approved screenshot.
