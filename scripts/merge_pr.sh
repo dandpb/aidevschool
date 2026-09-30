@@ -261,6 +261,7 @@ fi
 rc=$?
 if [ $rc -ne 0 ]; then
   echo "== API merge FAILED (rc=$rc) — merge NOT executed." >&2
+  echo "If this was a gate/checks refusal (e.g. 405 'required status checks'), do NOT fall back: wait for CI / re-run the gates. The protocol below applies ONLY when the API itself stays unavailable (40x/5xx transport/permission)." >&2
   fallback_hint
 fi
 if [ $rc -eq 0 ]; then
