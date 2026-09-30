@@ -6,6 +6,7 @@ import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { createApp, createStore, hashPassword, CATALOG } from "../server/app.mjs";
+import { SCHOOL_ENTRY } from "../server/catalog.mjs";
 import { createRuntime } from "../server/runtime.mjs";
 
 function deferred() {
@@ -176,4 +177,23 @@ test("R5 production refuses ALLOW_LOCAL_TARGETS at startup", () => {
       }),
     /Local targets cannot be enabled in production/,
   );
+});
+
+// FSE review AID-3484 (2026-09-30, finding 1): the standalone literacyDojo
+// journey is ADAPTIVE (onboarding + Mapa Inicial l02; guided l01→l03… vs
+// intermediate l03…; PUBLIC_JOURNEY = ia_pratica only — verified first-hand in
+// engines/literacyDojo/src/domain/progress.ts and adapters/
+// generatedContentRepository.ts). The entry contract must not claim a fixed
+// l01–l14 sequence, a lesson count, or that the app serves the dev bridge.
+test("R6 entry contract matches the real adaptive journey", () => {
+  const dump = JSON.stringify(SCHOOL_ENTRY);
+  assert.doesNotMatch(dump, /l01–l14|L01–L14/i);
+  assert.doesNotMatch(dump, /14 lições/i);
+  assert.match(SCHOOL_ENTRY.fundamentals.sequence, /adaptativa/i);
+  assert.match(SCHOOL_ENTRY.fundamentals.description, /se adapta/);
+  const dev = SCHOOL_ENTRY.journeys.find((journey) => journey.id === "dev");
+  assert.equal(dev.preview, true);
+  assert.match(dev.bridge.label, /planejada/);
+  assert.match(dev.bridge.note, /ainda não faz parte/);
+  assert.doesNotMatch(dev.bridge.note, /sequência curada/);
 });

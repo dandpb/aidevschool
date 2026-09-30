@@ -20,7 +20,10 @@ before(async () => {
 after(async () => {
   await browser?.close();
 });
-async function fixture(t, { mode = "recommended", enabled = 4, checker } = {}) {
+async function fixture(
+  t,
+  { mode = "recommended", enabled = 4, checker, targetOverrides } = {},
+) {
   const store = createStore(":memory:");
   const dest = createServer((req, res) => {
     res.setHeader("Content-Type", "text/html");
@@ -37,7 +40,10 @@ async function fixture(t, { mode = "recommended", enabled = 4, checker } = {}) {
   const targets = Object.fromEntries(
     CATALOG.map((e) => [
       e.id,
-      { url: destination + "/" + e.id, readySelector: "h1" },
+      targetOverrides?.[e.id] ?? {
+        url: destination + "/" + e.id,
+        readySelector: "h1",
+      },
     ]),
   );
   const ranker = async (_description, engines) => {
@@ -209,7 +215,13 @@ test("E1 entry contract serves the verified two-audience destinations", async (t
   assert.equal(response.status(), 200);
   const entry = await response.json();
   assert.equal(entry.fundamentals.engineId, "literacyDojo");
-  assert.equal(entry.fundamentals.sequence, "l01–l14");
+  // FSE review 2026-09-30: the standalone app starts with onboarding + the
+  // Mapa Inicial (l02) and adapts the order — the contract must say so, not a
+  // fixed l01–l14 sequence.
+  assert.equal(
+    entry.fundamentals.sequence,
+    "avaliação inicial + trilha adaptativa",
+  );
   assert.equal(entry.fundamentals.cta, "Começar pelos fundamentos");
   assert.equal(entry.journeys.length, 2);
   assert.deepEqual(
@@ -225,6 +237,9 @@ test("E1 entry contract serves the verified two-audience destinations", async (t
     ["l15", "l16", "l17", "l21", "l22", "l23", "l27", "l28", "l29"],
   );
   assert.equal(dev.bridge.moduleId, "mod-05");
+  // The dev bridge is PLANNED, never "served by the app today".
+  assert.match(dev.bridge.label, /planejada/);
+  assert.match(dev.bridge.note, /ainda não faz parte/);
 });
 
 test("E2 fundamentals CTA launches the verified literacyDojo destination", async (t) => {
@@ -263,6 +278,20 @@ test("E3 entry copy stays honest about progress and the dev preview", async (t) 
   assert.match(body, /entra na jornada/i);
   assert.doesNotMatch(body, /próxima lição|apresenta a próxima/i);
   assert.doesNotMatch(body, /retomar quando quiser/i);
+  // FSE review 2026-09-30 (finding 1): the journey is adaptive (onboarding +
+  // Mapa Inicial l02, route guided/intermediate); no fixed l01–l14 sequence,
+  // no lesson count, and the dev bridge is planned — not in the app today.
+  assert.match(body, /avaliação/i);
+  assert.match(body, /se adapta/i);
+  assert.doesNotMatch(body, /l01–l14|L01–L14/);
+  assert.doesNotMatch(body, /14 lições/);
+  assert.doesNotMatch(body, /sequência curada/);
+  assert.doesNotMatch(body, /no mesmo app de lições/);
+  // FSE review 2026-09-30 (finding 3): static copy never affirms availability
+  // before the operator/health launch gate has answered.
+  assert.doesNotMatch(body, /\(menta, disponível\)/);
+  assert.doesNotMatch(body, /desafios disponíveis/);
+  assert.match(body, /confirmada no lançamento/i);
 });
 
 test("E4 unreleased fundamentals keeps the student on the entry page", async (t) => {
@@ -304,8 +333,94 @@ test("E5 enabled-but-unreachable runtime is reported, never a bare href", async 
   assert.equal(new URL(page.url()).origin, base);
 });
 
-test("launch revocation refreshes available choices", async (t) => {
-  const { page, base, store, selected } = await fixture(t);
+// FSE review 2026-09-30 (finding 4): E2 proves the launch gate against a
+// fixture destination — it does NOT prove the chosen runtime. This opt-in spec
+// drives the student CTA into a REAL built literacyDojo app. Run it locally
+// (and in QA AID-3459) with:
+//   cd engines/literacyDojo && npm ci && npm run build && npx vite preview --port 4173
+//   cd engines/school-entry && LITERACY_REAL_BASE_URL=http://127.0.0.1:4173 npm run test:browser
+// CI keeps the fixture destination: adding the real app here would pull a
+// second npm ci + tsc + vite build into the school-entry job (documented
+// blocker in the PR body); the first-hand real-app run is recorded as
+// evidence on AID-3484 instead.
+const REAL_LITERACY_BASE = process.env.LITERACY_REAL_BASE_URL;
+
+test("E6 fundamentals CTA reaches the real literacyDojo app (opt-in)", { skip: !REAL_LITERACY_BASE }, async (t) => {
+  const realChecker = createChecker({ allowLocal: true });
+  const { page, base } = await fixture(t, {
+    enabled: 5,
+    checker: realChecker,
+    targetOverrides: {
+      literacyDojo: {
+        url: REAL_LITERACY_BASE + "/?hosted=1",
+        readySelector: "h1",
+      },
+    },
+  });
+  await page.goto(base);
+  await page.locator("#start-fundamentals").waitFor();
+  await page.locator("#start-fundamentals").click();
+  await page.waitForURL((url) => url.origin === new URL(REAL_LITERACY_BASE).origin);
+  // The real app opens on its own onboarding heading — the adaptive journey
+  // entry (Mapa Inicial) — proving the runtime end to end, not a stub.
+  const heading = page.locator("h1");
+  await heading.waitFor({ state: "visible" });
+  assert.ok((await heading.textContent())?.length > 0);
+  if (process.env.ARTIFACT_DIR)
+    await page.screenshot({
+      path: join(process.env.ARTIFACT_DIR, "e6-real-literacy-entry.png"),
+      fullPage: true,
+    });
+});
+
+test("E7 resize never multiplies the map animation loop", async (t) => {
+  // FSE review 2026-09-30 (finding 2): draw() used to self-schedule while the
+  // resize handler called draw() directly, so each resize with animation on
+  // created one more permanent RAF chain (1 resize → 2 loops/step, 2 → 3…).
+  // Deterministic proof: replace requestAnimationFrame with a manually
+  // stepped queue — a healthy loop runs exactly ONE callback per step, no
+  // matter how many resize events fired.
+  const { page, base } = await fixture(t);
+  await page.addInitScript(() => {
+    let nextHandle = 1;
+    const pending = new Map();
+    window.requestAnimationFrame = (cb) => {
+      const handle = nextHandle++;
+      pending.set(handle, cb);
+      return handle;
+    };
+    window.cancelAnimationFrame = (handle) => {
+      pending.delete(handle);
+    };
+    window.__stepRaf = () => {
+      const callbacks = [...pending.values()];
+      pending.clear();
+      for (const cb of callbacks) cb(window.performance.now());
+      return callbacks.length;
+    };
+  });
+  await page.goto(base);
+  await page.locator("#start-fundamentals").waitFor();
+  assert.equal(await page.evaluate(() => window.__stepRaf()), 1);
+  assert.equal(await page.evaluate(() => window.__stepRaf()), 1);
+  for (let i = 0; i < 3; i++)
+    await page.evaluate(() => window.dispatchEvent(new Event("resize")));
+  // Old code: 1 direct draw + the running chain → 4 callbacks. Fixed: 1.
+  assert.equal(await page.evaluate(() => window.__stepRaf()), 1);
+  // Pausing cancels the scheduled handle: steps run zero callbacks, and a
+  // resize while paused draws synchronously without scheduling anything.
+  await page.getByRole("button", { name: /Pausar cenário/ }).click();
+  await page.getByRole("button", { name: /Retomar cenário/ }).waitFor();
+  assert.equal(await page.evaluate(() => window.__stepRaf()), 0);
+  await page.evaluate(() => window.dispatchEvent(new Event("resize")));
+  assert.equal(await page.evaluate(() => window.__stepRaf()), 0);
+  // Resuming restores exactly one chain — never two.
+  await page.getByRole("button", { name: /Retomar cenário/ }).click();
+  assert.equal(await page.evaluate(() => window.__stepRaf()), 1);
+  assert.equal(await page.evaluate(() => window.__stepRaf()), 1);
+});
+
+test("launch revocation refreshes available choices", async (t) => {  const { page, base, store, selected } = await fixture(t);
   await ask(page, base);
   const revoked = store.list().find((engine) => engine.id === selected[0].id);
   store.setEnabled(revoked.id, false, revoked.version);

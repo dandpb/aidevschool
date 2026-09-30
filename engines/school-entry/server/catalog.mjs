@@ -106,12 +106,20 @@ export const CATALOG = [
 //   That loopback URL is LOCAL SERVER CONFIG ONLY (FSE review 2026-09-30 14:38Z):
 //   published navigation must use per-environment public/proxy URLs from
 //   ENGINE_TARGETS_FILE; production refuses local targets (runtime guard + tests R4/R5).
-//   The app itself sequences l01→l14 (ai-pratica track, chapterOrder 1–14, contentVersion 2026-09-10.2).
+//   The standalone app journey is ADAPTIVE, not a fixed l01→l14 sequence (FSE review
+//   2026-09-30 15:0xZ, verified first-hand in engines/literacyDojo): onboarding +
+//   Mapa Inicial (l02 — recommendedEntryMissionId, mission-bindings.yaml:5) routes
+//   the learner to "guided" (l01→l03→…) or "intermediate" (l03→…) and the catalog
+//   order follows (domain/progress.ts nextLessonIdFor; PUBLIC_JOURNEY = ia_pratica
+//   in adapters/generatedContentRepository.ts — 23 public lessons today, growing).
 //   There is no per-lesson deep link (React state routing) — the CTA enters the journey,
 //   never promising an exact lesson or resumption (FSE review: copy says "entrar na
 //   jornada", tests E3 pin the honesty).
-// - Dev bridge preview: dev-track literacyDojo bindings l15 (order 4), l16–l17 (5–6),
-//   l21–l23 (11–13), l27–l29 (14–16); titles from curriculum/ai-literacy/catalog.yaml (mod-05).
+// - Dev bridge preview: mod-05 (curriculum/ai-literacy/catalog.yaml) lessons l15,
+//   l16–l17, l21–l23, l27–l29 are dev-journey lessons hosted for OS missions — they
+//   are NOT part of the standalone app's public journey (listModules filters
+//   PUBLIC_JOURNEY). Copy must frame the bridge as PLANNED (prévia planejada), never
+//   as lessons the standalone app serves today.
 // - game-02-warehouse is NOT an entry door (optional laboratory; CEO directive).
 // Honest limits: school-entry never reads or writes learner progress (no cross-engine
 // sync, no "continue where you left off"); the operator release + Chromium entry
@@ -121,17 +129,21 @@ export const SCHOOL_ENTRY = Object.freeze({
   schemaVersion: 1,
   fundamentals: Object.freeze({
     engineId: "literacyDojo",
-    sequence: "l01–l14",
-    lessonsCount: 14,
-    number: "L01–L14",
+    sequence: "avaliação inicial + trilha adaptativa",
+    number: "TRILHA ADAPTATIVA",
     kicker: "COMECE AQUI · FUNDAMENTOS",
     title: "Fundamentos de IA",
     description:
-      "Entender IA, uso seguro, prompt e contexto e verificação — 14 lições curtas (l01 a l14) no app de lições. Você entra na jornada; o app cuida da sequência, uma lição por vez.",
-    tags: Object.freeze(["14 lições · l01–l14", "Tentativa com feedback", "Sem código"]),
+      "Entender IA, uso seguro, prompt e contexto e verificação — lições curtas no app de lições. Você entra na jornada: uma avaliação curta no início define o ponto de partida, o app conduz a trilha e a ordem se adapta a você.",
+    tags: Object.freeze([
+      "Avaliação inicial · ordem adaptativa",
+      "Tentativa com feedback",
+      "Sem código",
+    ]),
     tasks: Object.freeze([
       "Entrar no app de lições",
-      "Seguir a jornada — uma lição por vez",
+      "Responder a avaliação inicial curta",
+      "Seguir a trilha — uma lição por vez",
       "Seu progresso fica no app de lições",
     ]),
     cta: "Começar pelos fundamentos",
@@ -153,12 +165,12 @@ export const SCHOOL_ENTRY = Object.freeze({
       audience: "JORNADA 2 · PARA QUEM DESENVOLVE · PRÉVIA",
       title: "IA para Dev",
       description:
-        "Construa software robusto com IA: intenção, plano, construção, teste e review. Comece pelos mesmos fundamentos; a ponte Dev é uma prévia.",
+        "Construa software robusto com IA: intenção, plano, construção, teste e review. Comece pelos mesmos fundamentos; a ponte Dev é uma prévia planejada — o destino, não um percurso pronto no app.",
       engineId: "literacyDojo",
       preview: true,
       cta: "Começar pelos fundamentos",
       bridge: Object.freeze({
-        label: "Depois dos fundamentos — ponte Dev (prévia)",
+        label: "Depois dos fundamentos — ponte Dev (prévia planejada)",
         trackId: "dev",
         moduleId: "mod-05",
         lessons: Object.freeze(
@@ -175,7 +187,7 @@ export const SCHOOL_ENTRY = Object.freeze({
           ].map(([id, title]) => Object.freeze([id, title]),
           ),
         ),
-        note: "Lições da trilha dev no mesmo app de lições, na sequência curada. Laboratórios 3D são prática opcional, não porta de entrada. Prévia: o restante do percurso dev ainda está em construção.",
+        note: "Prévia planejada: hoje o app de lições abre a trilha de fundamentos; esta ponte Dev (módulo 05 do currículo) ainda não faz parte do percurso do app — as lições acima mostram o destino planejado. Laboratórios 3D são prática opcional, não porta de entrada.",
       }),
     }),
   ]),

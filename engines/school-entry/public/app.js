@@ -295,6 +295,12 @@ if (canvas?.getContext) {
     : false;
   let animating = !reduceMotion;
   let t = 0;
+  // Single scheduled RAF handle (FSE review 2026-09-30: draw() used to
+  // self-schedule and the resize handler called draw() directly, so every
+  // resize with animation on added one permanent RAF chain — 1 resize → 2
+  // loops, 2 → 3… Now draw() renders exactly one frame and only frame()
+  // reschedules, guarded by scheduleFrame(); pausing cancels the handle.)
+  let rafHandle = 0;
   function iso(x, y, w, h, top, left, right) {
     ctx.beginPath();
     ctx.moveTo(x, y - h);
@@ -381,10 +387,17 @@ if (canvas?.getContext) {
     iso(W * 0.78, dY, 170 * s + 80, 42 * s + 20, "#5fbd9b", "#3f9a7c", "#2e7a61");
     arrow(W * 0.35, fY - 14, W * 0.66, cY + 26, "rgba(232,200,136,0.85)");
     arrow(W * 0.35, fY + 18, W * 0.66, dY - 20, "rgba(167,230,205,0.8)");
-    label("Fundamentos", W * 0.24, fY + 8, "#0f231c", "L01–L14 · COMECE AQUI");
+    label("Fundamentos", W * 0.24, fY + 8, "#0f231c", "COMECE AQUI");
     label("IA no cotidiano", W * 0.78, cY + 8, "#231a09", "JORNADA 1");
     label("IA para Dev", W * 0.78, dY + 8, "#081712", "JORNADA 2 · PRÉVIA");
-    if (animating) requestAnimationFrame(draw);
+  }
+  function frame() {
+    rafHandle = 0;
+    draw();
+    if (animating) rafHandle = requestAnimationFrame(frame);
+  }
+  function scheduleFrame() {
+    if (!rafHandle) rafHandle = requestAnimationFrame(frame);
   }
   function syncMotionButton() {
     motionButton?.setAttribute("aria-pressed", String(!animating));
@@ -396,10 +409,18 @@ if (canvas?.getContext) {
   motionButton?.addEventListener("click", () => {
     animating = !animating;
     syncMotionButton();
-    if (animating) requestAnimationFrame(draw);
+    if (animating) scheduleFrame();
+    else {
+      if (rafHandle) cancelAnimationFrame(rafHandle);
+      rafHandle = 0;
+      draw();
+    }
+  });
+  window.addEventListener("resize", () => {
+    if (animating) scheduleFrame();
     else draw();
   });
-  window.addEventListener("resize", draw);
   syncMotionButton();
-  draw();
+  if (animating) scheduleFrame();
+  else draw();
 }
