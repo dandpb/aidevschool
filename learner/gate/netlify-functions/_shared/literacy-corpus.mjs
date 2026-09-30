@@ -1988,8 +1988,12 @@ export const literacyCorpus = {
               "text": "Valida o payload contra um schema explícito"
             },
             {
-              "id": "c-redact",
-              "text": "Remove ou omite campos sensíveis antes de logar"
+              "id": "c-redact-shape",
+              "text": "Declara no tipo a intenção de redação (campos sensíveis marcados para omição)"
+            },
+            {
+              "id": "c-redact-runtime",
+              "text": "Remove de fato os campos sensíveis em runtime antes de logar (o objeto logado não contém client_secret/api_key/token)"
             },
             {
               "id": "c-types",
@@ -1997,7 +2001,7 @@ export const literacyCorpus = {
             },
             {
               "id": "c-erros",
-              "text": "Trata erros de validação de forma previsível (ex: lança ou retorna Result)"
+              "text": "Declara o contrato de erro ao chamador (retorna Result ou lança erro tipado/documentado — não exceção implícita escondida na assinatura)"
             },
             {
               "id": "c-deps",
@@ -2010,7 +2014,8 @@ export const literacyCorpus = {
           "expectedVerdicts": {
             "c-deps": "not_met",
             "c-erros": "not_met",
-            "c-redact": "partial",
+            "c-redact-runtime": "not_met",
+            "c-redact-shape": "met",
             "c-schema": "met",
             "c-types": "met"
           },
@@ -3610,14 +3615,14 @@ export const literacyCorpus = {
           "outputs": [
             {
               "id": "out-a",
-              "text": "Passo 1: extrair a função de cálculo — rodar os testes. Passo 2: renomear as variáveis do domínio — rodar os testes. Passo 3: mover a validação para o início — rodar os testes. Suíte verde nos três passos: pronto para o merge."
+              "text": "Passo 1: extrair a função de cálculo — rodar os testes. Passo 2: renomear as variáveis do domínio — rodar os testes. Passo 3: mover a validação para o início — rodar os testes. Suíte verde nos três passos: base sólida para revisão e merge."
             },
             {
               "id": "out-b",
               "text": "Pronto! Reescrevi tudo em uma mensagem — o comportamento é o mesmo, confie."
             }
           ],
-          "scenario": "O mesmo módulo de 300 linhas passou por duas sessões de refatoração com assistente. Qual delas você colocaria no merge sem medo?"
+          "scenario": "O mesmo módulo de 300 linhas passou por duas sessões de refatoração com assistente. Qual delas você levaria ao merge com risco localizado e verificável?"
         },
         "evaluation": {
           "betterOutputId": "out-a",
