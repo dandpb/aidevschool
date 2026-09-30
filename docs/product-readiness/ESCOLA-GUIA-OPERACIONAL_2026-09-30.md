@@ -1,7 +1,7 @@
 # Guia operacional curto — Escola unificada (fatia 1: entrada `/escola/`)
 
 > **Proveniência:** AID-3520 (Docs & Readiness), frente 3 do lote operacional founder (AID-3307 comentário `4e9668b1`, 2026-09-30). Este arquivo é o espelho canônico em repo (padrão `beta-guide.md`); o doc `escola-guia-operacional` na issue AID-3520 é o espelho de sessão — divergência entre os dois é bug de docs (reportar, não editar à mão).
-> **Verificado em:** 2026-09-30 (checagens ao vivo ~21:05Z; merge PR #616 20:54:18Z). Cada claim cita fonte em §Fontes.
+> **Verificado em:** 2026-09-30 (checagens ao vivo ~21:05Z; merge PR #616 20:54:18Z). Cada claim cita fonte em §Fontes. **r2 (review QA `443b8b3b`):** acrescenta §9 (troubleshooting) e corrige a contagem do gate de honestidade para 9 testes (era "10").
 > **Estado-resumo em uma linha:** a escola unificada existe como código aceito no `main` (fatia 1, entrada estática `/escola/` no literacyDojo); a **URL pública `/escola/` ainda não está publicada** — hoje o caminho devolve o shell SPA da raiz (falso-200, §7).
 
 ---
@@ -72,10 +72,18 @@ A entrada pública `/escola/` **não tem** `/admin`, API, fetch, storage ou gate
 | 5 | Superfície Node do school-entry (operador) não publicada | PR #615 draft; `docs/serving/README.md:17` | FPE + decisão founder |
 | 6 | Checks #7–8 desarmados | `UPTIME-MONITOR-SETUP.md:32-33` | FPE pós-publicação |
 
+## 9. Se der errado (troubleshooting)
+
+- **`/escola/` abre o app de lições (shell SPA), não a página da escola:** publicação pendente — usar a raiz `/` ou o preview local (§7, linha "Contornar hoje").
+- **Mapa parado, só a versão em texto:** JavaScript desabilitado — a entrada degrada por projeto (`index.html:146`).
+- **Progresso sumiu:** dados do site foram limpos — sem backup nem sync (§6.2); recomeçar é o caminho documentado (§5).
+- **Preview local falha por conteúdo ausente:** rodar `npm run gen:content` **antes** do build (§3, linha do facilitador).
+- **`/escola/escola.js` responde 200 mas a página não abre:** é o falso-200 da publicação pendente (§6.3) — mesmo contorno do primeiro item.
+
 ## Fontes (data + caminho)
 
 - Código da entrada (aceito no `main` @ `e95611da`, PR #616 merge 2026-09-30T20:54:18Z): `engines/literacyDojo/public/escola/index.html` (título l14; skip-link l19; ponte noscript l98; retomada l113-128; footer l131; noscript l146); `escola.js` (cabeçalho de porta l1-7; CTA `/` l53; reduced-motion l126-129; foco l107-118); `entry-contract.js` (contrato `SCHOOL_ENTRY` verbatim l6-71; `preview:true` l48; ponte l50-68).
-- Gate de honestidade (10 testes, allowlist de hrefs, read-only): `engines/literacyDojo/tests/static-entry/escola-honesty.test.ts` (PR #616).
+- Gate de honestidade (9 testes `it()` — `grep -cE '^\s*(it|test)\('` em `escola-honesty.test.ts` @ `main` `d9dbdd5c`; allowlist de hrefs, read-only): `engines/literacyDojo/tests/static-entry/escola-honesty.test.ts` (PR #616).
 - Serving: `docs/serving/README.md` (superfícies l12-17; fronteira invariável l50-53); `docs/serving/UPTIME-MONITOR-SETUP.md` (checks 7-8 l32-33); `docs/serving/PROMOTION-RUNBOOK.md`.
 - Operador separado: `engines/school-entry/README.md` (l1-3, l40; PR #615 draft).
 - PR #616: https://github.com/dandpb/aidevschool/pull/616 (aceite em `vite build`+`vite preview`, perfil fresco; screenshots anexados ao review).
