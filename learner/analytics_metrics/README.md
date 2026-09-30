@@ -13,7 +13,7 @@ emissores, produção ou dados reais: é o **dicionário versionado de métricas
 | `compute.py` | dedup por `eventId` → funil por sessão → retry/erro/retomada → transferência; supressão k≥5; guarda anti-mastery |
 | `fixtures/synthetic/` | NDJSON 100% sintético (recusa linha sem `synthetic:true`) |
 | `examples/report-synthetic-v1.{json,md}` | relatório exemplo regenerável byte-a-byte |
-| `tests/test_metrics.py` | 11 controles negativos (NC-1..NC-8 + extras) |
+| `tests/test_metrics.py` | 12 controles negativos (NC-1..NC-8 + extras, incl. `lessonVersion` inteiro) |
 
 ## Rodar
 

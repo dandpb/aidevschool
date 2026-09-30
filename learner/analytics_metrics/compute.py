@@ -88,7 +88,19 @@ def rate(num: int, den: int) -> dict:
     return {"value": round(num / den, 4), "n": num, "den": den}
 
 
-def compute_literacy(events: list[dict]) -> dict:
+# Estágios do funil literacy na ordem de exibição do relatório (estágio → evento).
+FUNNEL_STAGES = (
+    ("entrada", "entry_viewed"),
+    ("brief", "lesson_brief_viewed"),
+    ("licao_iniciada", "lesson_started"),
+    ("primeira_atividade_exposta", "activity_presented"),
+    ("tentativa", "activity_attempted"),
+    ("licao_concluida", "lesson_completed"),
+)
+
+
+def _literacy_sessions(events: list[dict]) -> dict[str, dict]:
+    """Agrupa eventos literacy por sessão (dedup já feito a montante)."""
     by_session: dict[str, dict] = defaultdict(lambda: {
         "days": set(), "events": [], "lessons_attempted": defaultdict(int),
     })
@@ -96,142 +108,168 @@ def compute_literacy(events: list[dict]) -> dict:
         name = ev.get("event")
         if name not in LITERACY_EVENTS:
             die(f"literacy: evento fora do vocabulário: {name}")
-        sid = ev["sessionId"]
-        s = by_session[sid]
+        s = by_session[ev["sessionId"]]
         s["days"].add(day_of(ev["occurredAt"]))
         s["events"].append(ev)
         if name == "activity_attempted":
             s["lessons_attempted"][ev["props"]["lessonId"]] += 1
+    return by_session
 
-    def sessions_with(pred) -> int:
-        return sum(1 for s in by_session.values() if pred(s))
 
-    has = lambda s, n: any(e["event"] == n for e in s["events"])
+def _sessions_with(by_session: dict[str, dict], event_name: str) -> int:
+    """Sessões que exibiram o evento ao menos uma vez (unidade: sessão)."""
+    return sum(1 for s in by_session.values()
+               if any(e["event"] == event_name for e in s["events"]))
 
-    entrada = sessions_with(lambda s: has(s, "entry_viewed"))
-    brief = sessions_with(lambda s: has(s, "lesson_brief_viewed"))
-    iniciada = sessions_with(lambda s: has(s, "lesson_started"))
-    exposta = sessions_with(lambda s: has(s, "activity_presented"))
-    tentativa = sessions_with(lambda s: has(s, "activity_attempted"))
-    concluida = sessions_with(lambda s: has(s, "lesson_completed"))
 
-    attempts = [e for s in by_session.values() for e in s["events"]
-                if e["event"] == "activity_attempted"]
-    failed = [a for a in attempts if a["props"].get("passed") is False]
+def _session_events(by_session: dict[str, dict], event_name: str) -> list[dict]:
+    return [e for s in by_session.values() for e in s["events"]
+            if e["event"] == event_name]
 
-    retry_pairs = {
+
+def _funnel_counts(by_session: dict[str, dict]) -> dict[str, int]:
+    return {stage: _sessions_with(by_session, ev) for stage, ev in FUNNEL_STAGES}
+
+
+def _retry_pairs(by_session: dict[str, dict]) -> set[tuple[str, str]]:
+    return {
         (sid, lid)
         for sid, s in by_session.items()
         for lid, n in s["lessons_attempted"].items() if n >= 2
     }
 
-    entry_with_prop = [
-        e for s in by_session.values() for e in s["events"]
-        if e["event"] == "entry_viewed" and "entry" in e.get("props", {})
-    ]
-    entry_split = defaultdict(int)
-    for e in entry_with_prop:
-        entry_split[e["props"]["entry"]] += 1
+
+def _entry_stats(by_session: dict[str, dict]) -> tuple[list[dict], dict, int]:
+    """(entry_viewed com prop entry, split por entrada, envelopes pré-v4)."""
+    with_prop = [e for e in _session_events(by_session, "entry_viewed")
+                 if "entry" in e.get("props", {})]
+    split: defaultdict[str, int] = defaultdict(int)
+    for e in with_prop:
+        split[e["props"]["entry"]] += 1
+    pre_v4 = sum(1 for e in _session_events(by_session, "entry_viewed")
+                 if "entry" not in e.get("props", {}))
+    return with_prop, dict(split), pre_v4
+
+
+def compute_literacy(events: list[dict]) -> dict:
+    by_session = _literacy_sessions(events)
+    attempts = _session_events(by_session, "activity_attempted")
+    failed = [a for a in attempts if a["props"].get("passed") is False]
+    entry_with_prop, entry_split, pre_v4 = _entry_stats(by_session)
 
     return {
         "sessions_total": len(by_session),
-        "funnel_counts": {
-            "entrada": entrada, "brief": brief, "licao_iniciada": iniciada,
-            "primeira_atividade_exposta": exposta, "tentativa": tentativa,
-            "licao_concluida": concluida,
-        },
+        "funnel_counts": _funnel_counts(by_session),
         "attempt_error_rate": rate(len(failed), len(attempts)),
         "attempts_total": len(attempts),
         "attempts_failed": len(failed),
-        "retry_sessions": len(retry_pairs),
-        "entry_split": dict(entry_split),
-        "entry_pre_v4_without_prop": sum(
-            1 for s in by_session.values() for e in s["events"]
-            if e["event"] == "entry_viewed" and "entry" not in e.get("props", {})
-        ),
+        "retry_sessions": len(_retry_pairs(by_session)),
+        "entry_split": entry_split,
+        "entry_pre_v4_without_prop": pre_v4,
         "resume_rate": rate(
-            entry_split.get("lesson-resume", 0), len(entry_with_prop)
+            # denominador = só envelopes com prop entry (pré-v4 fora)
+            entry_split.get("lesson-resume", 0), len(entry_with_prop),
         ),
         "retention_cross_day": "not_measured",
         "retention_reason": "G8: sessionId efêmero por page load; sem identificador cross-dia (ADR-0009 emenda AID-913)",
     }
 
 
-def compute_os(events: list[dict]) -> dict:
+def _os_by_install(events: list[dict]) -> dict[str, list[dict]]:
     by_install: dict[str, list[dict]] = defaultdict(list)
     for ev in events:
         name = ev.get("name")
         if name not in OS_EVENTS:
             die(f"os: evento fora do vocabulário: {name}")
         by_install[ev["dimensions"]["installationId"]].append(ev)
+    return by_install
 
-    installs = len(by_install)
-    onb_started = sum(1 for evs in by_install.values()
-                      if any(e["name"] == "onboarding.started" for e in evs))
-    onb_completed = sum(1 for evs in by_install.values()
-                        if any(e["name"] == "onboarding.completed" for e in evs))
-    cross_day = sum(
+
+def _installs_with(by_install: dict[str, list[dict]], event_name: str) -> int:
+    return sum(1 for evs in by_install.values()
+               if any(e["name"] == event_name for e in evs))
+
+
+def _cross_day_installs(by_install: dict[str, list[dict]]) -> int:
+    return sum(
         1 for evs in by_install.values()
         if len({day_of(e["occurredAt"]) for e in evs}) >= 2
     )
 
-    submitted = [e for e in events if e["name"] == "structured_attempt.submitted"]
-    passed = [e for e in events if e["name"] == "structured_attempt.passed"]
+
+def _named_events(events: list[dict], event_name: str) -> list[dict]:
+    return [e for e in events if e["name"] == event_name]
+
+
+def _attempt_key(e: dict) -> tuple:
+    return (e["dimensions"]["installationId"], e["dimensions"]["sessionId"],
+            e["dimensions"].get("missionId"))
+
+
+def _os_error_proxy(submitted: list[dict], passed: list[dict]) -> list[dict]:
     # Proxy de erro (limite documentado no dicionário §erro): submitted sem
-    # passed subsequente na mesma (instalação, sessão, missão).
-    passed_keys = {
-        (e["dimensions"]["installationId"], e["dimensions"]["sessionId"],
-         e["dimensions"].get("missionId")) for e in passed
-    }
-    proxy_error = [
-        e for e in submitted
-        if (e["dimensions"]["installationId"], e["dimensions"]["sessionId"],
-            e["dimensions"].get("missionId")) not in passed_keys
-    ]
-    retries = [e for e in events if e["name"] == "retry.requested"]
+    # passed co-ocorrente na mesma (instalação, sessão, missão) — sem
+    # ordenamento ou sequência entre os dois eventos.
+    passed_keys = {_attempt_key(e) for e in passed}
+    return [e for e in submitted if _attempt_key(e) not in passed_keys]
+
+
+def compute_os(events: list[dict]) -> dict:
+    by_install = _os_by_install(events)
+    submitted = _named_events(events, "structured_attempt.submitted")
+    passed = _named_events(events, "structured_attempt.passed")
+    retries = _named_events(events, "retry.requested")
+    onb_started = _installs_with(by_install, "onboarding.started")
+    onb_completed = _installs_with(by_install, "onboarding.completed")
+    cross_day = _cross_day_installs(by_install)
 
     return {
-        "installations": installs,
+        "installations": len(by_install),
         "onboarding_started": onb_started,
         "onboarding_completed": onb_completed,
         "onboarding_completion_rate": rate(onb_completed, onb_started),
         "attempts_submitted": len(submitted),
         "attempts_passed_observable": len(passed),
-        "attempts_error_proxy": len(proxy_error),
+        "attempts_error_proxy": len(_os_error_proxy(submitted, passed)),
         "attempts_error_proxy_note": "proxy: submitted sem passed subsequente na mesma (instalação, sessão, missão); evento de veredito negativo não existe no vocabulário OS v1",
         "retry_requested": len(retries),
         "retention_cross_day_installs": cross_day,
-        "retention_cross_day_rate": rate(cross_day, installs),
+        "retention_cross_day_rate": rate(cross_day, len(by_install)),
+    }
+
+
+def _attempt_rows(recs: list[dict], attempt: int) -> list[dict]:
+    return [r for r in recs if r["attempt"] == attempt]
+
+
+def _practice_stats(recs: list[dict]) -> dict:
+    first = _attempt_rows(recs, 1)
+    second = _attempt_rows(recs, 2)
+    first_pass = sum(1 for r in first if r["outcome"] == "suficiente")
+    second_recovered = sum(1 for r in second if r.get("recovered"))
+    return {
+        "applications": len(recs),
+        "first_attempt": len(first),
+        "first_attempt_sufficient": first_pass,
+        "first_attempt_pass_rate": rate(first_pass, len(first)),
+        "second_attempt": len(second),
+        "second_attempt_recovered": second_recovered,
+        "note": "registros SINTÉTICOS de calibração; aplicações reais = 0 (práticas PR #619 ainda sem teste com alunos)",
     }
 
 
 def compute_transfer(rows: list[dict]) -> dict:
     # NC-7: registros de exemplo autorial ficam FORA de todo numerador.
     applications = [r for r in rows if not r.get("authorial_example")]
-    excluded_examples = len(rows) - len(applications)
-
     by_practice: dict[str, list[dict]] = defaultdict(list)
     for r in applications:
         by_practice[r["practice"]].append(r)
-
-    per_practice = {}
-    for practice, recs in sorted(by_practice.items()):
-        first = [r for r in recs if r["attempt"] == 1]
-        second = [r for r in recs if r["attempt"] == 2]
-        first_pass = sum(1 for r in first if r["outcome"] == "suficiente")
-        second_recovered = sum(1 for r in second if r.get("recovered"))
-        per_practice[practice] = {
-            "applications": len(recs),
-            "first_attempt": len(first),
-            "first_attempt_sufficient": first_pass,
-            "first_attempt_pass_rate": rate(first_pass, len(first)),
-            "second_attempt": len(second),
-            "second_attempt_recovered": second_recovered,
-            "note": "registros SINTÉTICOS de calibração; aplicações reais = 0 (práticas PR #619 ainda sem teste com alunos)",
-        }
     return {
-        "per_practice": per_practice,
-        "excluded_authorial_examples": excluded_examples,
+        "per_practice": {
+            practice: _practice_stats(recs)
+            for practice, recs in sorted(by_practice.items())
+        },
+        "excluded_authorial_examples": len(rows) - len(applications),
         "real_applications": 0,
     }
 
