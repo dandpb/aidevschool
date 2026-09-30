@@ -103,14 +103,20 @@ export const CATALOG = [
 // Verified first-hand destinations — do NOT inherit legacy recommendedEntryMissionId:
 // - Fundamentals app: literacyDojo binding l01, entrypoint
 //   http://127.0.0.1:5178/?hosted=1 (engines/codexdojo-os-prototype/config/mission-bindings.yaml:21).
+//   That loopback URL is LOCAL SERVER CONFIG ONLY (FSE review 2026-09-30 14:38Z):
+//   published navigation must use per-environment public/proxy URLs from
+//   ENGINE_TARGETS_FILE; production refuses local targets (runtime guard + tests R4/R5).
 //   The app itself sequences l01→l14 (ai-pratica track, chapterOrder 1–14, contentVersion 2026-09-10.2).
-//   There is no per-lesson deep link (React state routing) — the CTA points at the app entry.
+//   There is no per-lesson deep link (React state routing) — the CTA enters the journey,
+//   never promising an exact lesson or resumption (FSE review: copy says "entrar na
+//   jornada", tests E3 pin the honesty).
 // - Dev bridge preview: dev-track literacyDojo bindings l15 (order 4), l16–l17 (5–6),
 //   l21–l23 (11–13), l27–l29 (14–16); titles from curriculum/ai-literacy/catalog.yaml (mod-05).
 // - game-02-warehouse is NOT an entry door (optional laboratory; CEO directive).
 // Honest limits: school-entry never reads or writes learner progress (no cross-engine
 // sync, no "continue where you left off"); the operator release + Chromium entry
-// check gate every launch through /api/launch/{engineId}.
+// check gate every launch through /api/launch/{engineId} — an unreleased or
+// unreachable runtime is reported as unavailable, never a bare href (test E5).
 export const SCHOOL_ENTRY = Object.freeze({
   schemaVersion: 1,
   fundamentals: Object.freeze({
@@ -121,12 +127,12 @@ export const SCHOOL_ENTRY = Object.freeze({
     kicker: "COMECE AQUI · FUNDAMENTOS",
     title: "Fundamentos de IA",
     description:
-      "Entender IA, uso seguro, prompt e contexto e verificação — 14 lições curtas (l01 a l14) no app de lições. O app apresenta a próxima lição para você.",
+      "Entender IA, uso seguro, prompt e contexto e verificação — 14 lições curtas (l01 a l14) no app de lições. Você entra na jornada; o app cuida da sequência, uma lição por vez.",
     tags: Object.freeze(["14 lições · l01–l14", "Tentativa com feedback", "Sem código"]),
     tasks: Object.freeze([
-      "Abrir o app de lições",
-      "Fazer a próxima lição",
-      "Retomar quando quiser — o progresso fica no app",
+      "Entrar no app de lições",
+      "Seguir a jornada — uma lição por vez",
+      "Seu progresso fica no app de lições",
     ]),
     cta: "Começar pelos fundamentos",
     note: "Jogos são prática opcional — nenhum pré-requisito depende deles.",

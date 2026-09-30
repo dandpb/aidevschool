@@ -2,7 +2,11 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { request } from "node:http";
 import { setImmediate } from "node:timers/promises";
+import { mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { createApp, createStore, hashPassword, CATALOG } from "../server/app.mjs";
+import { createRuntime } from "../server/runtime.mjs";
 
 function deferred() {
   let resolve;
@@ -111,4 +115,65 @@ test("R3 current release filtering refills the ranked top three", { timeout: 500
     assert.equal(response.body.mode, "recommended");
     assert.deepEqual(response.body.engines.map((engine) => engine.id), f.ids.slice(disabledCount));
   }
+});
+
+// FSE review AID-3484 (2026-09-30 14:38Z): loopback URLs may exist as local
+// server configuration, but NEVER as a published browser destination. The
+// production runtime must refuse local targets — at startup and at launch.
+test("R4 production launch never serves a loopback navigation target", { timeout: 10000 }, async (t) => {
+  const dir = mkdtempSync(join(tmpdir(), "entry-prod-"));
+  const store = createStore(":memory:");
+  store.update("literacyDojo", true, 0);
+  const app = createRuntime(
+    {
+      NODE_ENV: "production",
+      HOST: "127.0.0.1",
+      BASE_URL: "https://school.example",
+      ADMIN_PASSWORD_HASH: hashPassword("production-test-only-123"),
+      DATA_DIR: dir,
+    },
+    {
+      store,
+      targets: {
+        literacyDojo: {
+          url: "http://127.0.0.1:5178/?hosted=1",
+          readySelector: "h1",
+        },
+      },
+      ranker: async () => ({ anyFit: 1, scores: { literacyDojo: 3 } }),
+    },
+  );
+  await new Promise((resolve) => app.listen(0, "127.0.0.1", resolve));
+  t.after(async () => {
+    await new Promise((resolve) => app.close(resolve));
+    await app.closeResources();
+    rmSync(dir, { recursive: true, force: true });
+  });
+  const origin = `http://127.0.0.1:${app.address().port}`;
+  const response = await fetch(origin + "/api/launch/literacyDojo", {
+    method: "POST",
+    headers: {
+      Origin: "https://school.example",
+      "Content-Type": "application/json",
+    },
+    body: "{}",
+  });
+  assert.equal(response.status, 409);
+  const body = await response.json();
+  assert.equal(body.error.code, "UNAVAILABLE");
+  // The loopback URL must never reach the published navigation payload.
+  assert.doesNotMatch(JSON.stringify(body), /127\.0\.0\.1|localhost/);
+});
+
+test("R5 production refuses ALLOW_LOCAL_TARGETS at startup", () => {
+  assert.throws(
+    () =>
+      createRuntime({
+        NODE_ENV: "production",
+        ALLOW_LOCAL_TARGETS: "1",
+        BASE_URL: "https://school.example",
+        ADMIN_PASSWORD_HASH: "irrelevant-throws-earlier",
+      }),
+    /Local targets cannot be enabled in production/,
+  );
 });

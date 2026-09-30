@@ -8,6 +8,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { createRuntime } from "../server/runtime.mjs";
 import { createApp } from "../server/app.mjs";
+import { createChecker } from "../server/health.mjs";
 import { createStore } from "../server/store.mjs";
 import { hashPassword } from "../server/auth.mjs";
 import { CATALOG } from "../server/catalog.mjs";
@@ -19,7 +20,7 @@ before(async () => {
 after(async () => {
   await browser?.close();
 });
-async function fixture(t, { mode = "recommended", enabled = 4 } = {}) {
+async function fixture(t, { mode = "recommended", enabled = 4, checker } = {}) {
   const store = createStore(":memory:");
   const dest = createServer((req, res) => {
     res.setHeader("Content-Type", "text/html");
@@ -49,7 +50,7 @@ async function fixture(t, { mode = "recommended", enabled = 4 } = {}) {
   const app = createApp({
     store,
     targets,
-    checker: async () => true,
+    checker: checker ?? (async () => true),
     ranker,
     adminPasswordHash: hashPassword("browser-test-only-password"),
   });
@@ -62,6 +63,7 @@ async function fixture(t, { mode = "recommended", enabled = 4 } = {}) {
     await context.close();
     await new Promise((r) => app.close(r));
     await new Promise((r) => dest.close(r));
+    await checker?.close?.();
     try {
       store.close();
     } catch {}
@@ -226,11 +228,20 @@ test("E1 entry contract serves the verified two-audience destinations", async (t
 });
 
 test("E2 fundamentals CTA launches the verified literacyDojo destination", async (t) => {
-  const { page, base, destination } = await fixture(t, { enabled: 5 });
+  // FSE review 14:38Z: a generated href proves nothing — the launch gate must
+  // actually reach the chosen runtime end to end. Real Chromium checker probes
+  // the destination (readySelector visible+enabled) before the URL is issued;
+  // the student browser then navigates for real and renders the destination.
+  const realChecker = createChecker({ allowLocal: true });
+  const { page, base, destination } = await fixture(t, {
+    enabled: 5,
+    checker: realChecker,
+  });
   await page.goto(base);
   await page.locator("#start-fundamentals").waitFor();
   await page.locator("#start-fundamentals").click();
   await page.waitForURL(destination + "/literacyDojo");
+  assert.equal(await page.locator("h1").textContent(), "Destino de teste");
 });
 
 test("E3 entry copy stays honest about progress and the dev preview", async (t) => {
@@ -247,6 +258,11 @@ test("E3 entry copy stays honest about progress and the dev preview", async (t) 
   assert.match(body, /PRÉVIA/);
   assert.equal(await page.locator("#jornada-dev .bridge-list li").count(), 9);
   assert.match(body, /progresso fica no app/i);
+  // FSE review 14:38Z: no per-lesson deep link exists, so the copy must frame
+  // the CTA as entering the journey — never an exact-lesson or resumption claim.
+  assert.match(body, /entra na jornada/i);
+  assert.doesNotMatch(body, /próxima lição|apresenta a próxima/i);
+  assert.doesNotMatch(body, /retomar quando quiser/i);
 });
 
 test("E4 unreleased fundamentals keeps the student on the entry page", async (t) => {
@@ -262,6 +278,29 @@ test("E4 unreleased fundamentals keeps the student on the entry page", async (t)
     await page.locator(".mission-panel .card-feedback").textContent(),
     /não estão disponíveis/,
   );
+  assert.equal(new URL(page.url()).origin, base);
+});
+
+test("E5 enabled-but-unreachable runtime is reported, never a bare href", async (t) => {
+  // FSE review 14:38Z: the operator gate may be open, but if the runtime itself
+  // is unreachable the entry check fails — the student must see the unavailable
+  // state instead of receiving a link that does not load.
+  const { page, base } = await fixture(t, {
+    enabled: 5,
+    checker: async () => false,
+  });
+  await page.goto(base);
+  await page.locator("#start-fundamentals").waitFor();
+  await page.locator("#start-fundamentals").click();
+  await page.waitForFunction(() => {
+    const feedback = document.querySelector(".mission-panel .card-feedback");
+    return feedback && feedback.textContent.length > 0;
+  });
+  const feedback = await page
+    .locator(".mission-panel .card-feedback")
+    .textContent();
+  assert.match(feedback, /não estão disponíveis/);
+  assert.match(feedback, /liberação ou checagem/);
   assert.equal(new URL(page.url()).origin, base);
 });
 
