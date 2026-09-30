@@ -30,10 +30,7 @@ async function openMapAlt(page: import("@playwright/test").Page) {
   await expect(page.locator("#map-alt[open]")).toBeVisible();
 }
 
-async function expectFocusPersisted(
-  page: import("@playwright/test").Page,
-  id: string,
-) {
+async function expectFocusPersisted(page: import("@playwright/test").Page, id: string) {
   await expect(page.locator(`#${id}`)).toBeFocused();
   await expect(page.locator(`#${id}`)).toHaveAttribute("tabindex", "-1");
   // Um frame depois o foco continua no cartão: a perda do bug original era
@@ -62,9 +59,7 @@ test("AID-3532 mapa em texto: click no link foca #jornada-dev e o foco persiste"
   await expectFocusPersisted(page, "jornada-dev");
 });
 
-test("AID-3532 mapa em texto: ativações repetidas continuam focando o cartão", async ({
-  page,
-}) => {
+test("AID-3532 mapa em texto: ativações repetidas continuam focando o cartão", async ({ page }) => {
   await openMapAlt(page);
   const link = page.locator('.map-alt a[href="#jornada-dev"]');
   await link.click();
