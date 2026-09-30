@@ -80,7 +80,7 @@ activities:
         erro: "Cole a mensagem exata do erro: TypeError, stack, trace — 'quebra' não é mensagem, é resumo."
         reproduz: "Descreva o passo que dispara o erro toda vez: sem reprodução, o assistente corrige o bug que imaginou."
         esperado-vs-observado: "Diga o que deveria acontecer e o que acontece: esperado-vs-observado é o contraste que orienta a correção."
-      onSuccess: "Pedido completo: erro exato, passo que reproduz e esperado-vs-observado. É esse pedido que o assistente transforma em correção certa na primeira resposta."
+      onSuccess: "Pedido completo: erro exato, passo que reproduz e esperado-vs-observado. É o pedido que dá ao assistente a melhor chance de acertar na primeira — e o que permite verificar a correção contra o erro real antes de fechar."
     storage:
       policy: structured_only
     hints:

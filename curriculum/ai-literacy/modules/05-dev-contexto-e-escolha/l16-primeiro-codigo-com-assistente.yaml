@@ -50,7 +50,7 @@ activities:
       perCheck:
         linguagem: "Inclua a linguagem e versão do runtime. Ex: 'TypeScript 5.x, Node 20'"
         restricoes: "Especifique o que NÃO fazer. Ex: 'não logar campos com token ou secret no nome'"
-      onSuccess: "Excelente! Você montou um pedido com contexto técnico suficiente para a IA gerar código útil de primeira."
+      onSuccess: "Excelente! Você montou um pedido com contexto técnico que aumenta muito a chance de a IA acertar na primeira resposta — e que torna a resposta conferível contra o pedido antes de você aceitá-la."
     storage:
       policy: structured_only
     hints:
@@ -93,7 +93,7 @@ activities:
         - id: c-types
           text: "Tipos de entrada e saída são explícitos e seguros"
         - id: c-erros
-          text: "Trata erros de validação de forma previsível (ex: lança ou retorna Result)"
+          text: "Declara o contrato de erro ao chamador (retorna Result ou lança erro tipado/documentado — não exceção implícita escondida na assinatura)"
         - id: c-deps
           text: "Declara dependências externas e versão"
     evaluation:
@@ -107,8 +107,8 @@ activities:
     feedback:
       onFailure: "Revisar código gerado é tão importante quanto pedir. Compare cada critério com o código acima."
       perCheck:
-        c-redact: "O tipo Redacted declara a intenção, mas safeForLogging não aplica a omissão de fato — TypeScript não remove campos em runtime."
-        c-erros: "A função usa parse() que lança — não há try/catch nem Result type. O chamador não sabe como tratar o erro."
+        c-redact: "O tipo Redacted declara a intenção (daí o parcial), mas safeForLogging não remove nada em runtime — TypeScript apaga tipos na execução; o dado sensível continua no objeto logado."
+        c-erros: "A assinatura promete SafePayload e esconde o ZodError: a exceção existe, mas o contrato de erro não é declarado ao chamador (sem Result, sem @throws/erro tipado visível). Lançar pode ser contrato válido — desde que declarado."
         c-deps: "O código importa zod mas não declara a versão. Um bom código gerado inclui a versão exata no comentário ou no package.json sugerido."
       onSuccess: "Avaliação precisa! Você notou que o código tem intenção correta mas falhas de runtime — exatamente o que um dev sênior revisa antes de mergear."
     storage:
