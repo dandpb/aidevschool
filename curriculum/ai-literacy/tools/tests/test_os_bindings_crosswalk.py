@@ -207,26 +207,44 @@ class PixelPackUnitAliasAuditTest(unittest.TestCase):
 
     @classmethod
     def _emitted_pixel_unit_map(cls):
-        """Computa o unit_id emitido por projeto, avaliando o fonte (fail-closed).
+        """Computa o unit_id emitido por projeto, avaliando o fonte.
 
-        Parseia o corpo da função ``unitId`` (branches ordenadas + fallback de
-        template) e a lista de projetos dos módulos; qualquer mudança
-        estrutural na função que o parser não reconheça falha o teste.
+        Parseia o corpo da função ``unitId`` e REJEITA qualquer statement não
+        consumido (revisão 4d78c138): após remover as branches reconhecidas e o
+        return de fallback, o resíduo precisa ser só a assinatura, espaços e a
+        chave de fechamento — um ``return`` incondicional extra antes das
+        branches, um ``if`` não modelado ou qualquer código não reconhecido
+        falha o teste (fail-closed de verdade, não só pin de forma).
         """
         start = cls.pack_source.index("function unitId(")
         end = cls.pack_source.index("\n}", start)
         body = cls.pack_source[start:end]
-        branches = re.findall(cls.UNIT_ID_BRANCH_RE, body)
-        if not branches:
-            cls.fail_test = "unitId branches not parseable — structure changed"
-            raise AssertionError(cls.fail_test)
-        fallback = body[body.rindex("return `"):]
-        match = re.match(r"return `U-\$\{module\.project\}`", fallback)
-        if match is None:
+        branch_matches = list(re.finditer(cls.UNIT_ID_BRANCH_RE, body))
+        if not branch_matches:
+            raise AssertionError("unitId branches not parseable — structure changed")
+        fallback_match = re.search(
+            r"return `U-\$\{module\.project\}`", body
+        )
+        if fallback_match is None:
             raise AssertionError(
-                "unitId fallback template changed or not parseable: "
-                + fallback.splitlines()[0]
+                "unitId fallback template changed or not parseable"
             )
+        residue = list(body)
+        for span_start, span_end in [
+            (m.start(), m.end()) for m in branch_matches
+        ] + [(fallback_match.start(), fallback_match.end())]:
+            residue[span_start:span_end] = ["\x00"] * (span_end - span_start)
+        residue_text = "".join(
+            " " if ch == "\x00" else ch for ch in residue
+        )
+        residue_text = residue_text.split("\n", 1)[1] if "\n" in residue_text else ""
+        if re.sub(r"[\s{}]", "", residue_text):
+            raise AssertionError(
+                "unitId body contains unrecognized statements — parser is "
+                "fail-closed, update the test consciously: "
+                + repr(residue_text.strip()[:120])
+            )
+        branches = [m.groups() for m in branch_matches]
         projects = cls.MODULE_PROJECT_RE.findall(cls.pack_source)
         if len(set(projects)) != len(projects) or not projects:
             raise AssertionError("pixel pack module list not parseable")

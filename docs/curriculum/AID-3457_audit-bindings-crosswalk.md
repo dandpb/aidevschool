@@ -154,9 +154,11 @@ Regras decorrentes (travadas em teste, §5):
 Proposta ([P] — ratificação item a item é da frente CCE, matriz r2/AID-3456). IDs, tracks,
 pré-requisitos e progresso preservados; nenhuma fusão executada nesta onda (R4).
 
-Framework: F1 entender IA · F2 uso seguro · F3 prompt/contexto · F4 verificação ·
-D1 fundamentos/harness · D2 intenção/spec/plano · D3 construção · D4 teste/debug/review/manutenção ·
-D5 produto IA/evals · D6 agentes/tools/skills · D7 capstone dev.
+Framework (paráfrase local; **semântica canônica = glossário da spec R6, PR #610 @ `0481c8c0`**
+— em caso de divergência de IDs, prevalece o glossário canônico e o Content Designer decide):
+F1 entender IA · F2 uso seguro · F3 prompt/contexto · F4 verificação · D1 fundamentos/harness ·
+D2 intenção/spec/plano · D3 construção · D4 teste/debug/review/manutenção · D5 produto IA/evals ·
+D6 agentes/tools/skills · D7 capstone dev.
 
 ### 3.1 Jornada IA no cotidiano (23 bindings `ai-pratica`)
 
@@ -178,7 +180,7 @@ D5 produto IA/evals · D6 agentes/tools/skills · D7 capstone dev.
 | l14 | mod-04 | F4 | F1 | Desafio final: pedir, avaliar, melhorar e aplicar (capstone cotidiano) |
 | l18 | mod-06 | F3 | — | Biblioteca de pedidos |
 | l19 | mod-06 | F3 | — | Conversas longas: gerencie o contexto |
-| l20 | mod-06 | F2 | F4 | Números e fatos: verifique antes de usar |
+| l20 ⚠[P] | mod-06 | F2 *(prop.) | F4 *(prop.) | Números e fatos: verifique antes de usar — divergente, ver bloco abaixo |
 | l24 | mod-07 | F3 | — | Anexe, cole ou descreva |
 | l25 | mod-07 | F2 | — | Anexos seguros |
 | l26 | mod-07 | F4 | — | Confira o que a IA extraiu |
@@ -192,13 +194,13 @@ D5 produto IA/evals · D6 agentes/tools/skills · D7 capstone dev.
 | --- | --- | --- | --- |
 | l15 | D1 | — | Quando usar IA e quando não usar |
 | l16 | D3 | D1 | Seu primeiro código com um assistente de IA |
-| l17 | D3 | D5 | Integre uma API de IA em um projeto real |
+| l17 ⚠[P] | D3 *(prop.) | D5 *(prop.) | Integre uma API de IA em um projeto real — divergente, ver bloco abaixo |
 | l21 | D4 | — | Peça testes que valem a pena |
 | l22 | D4 | — | Revise o código sugerido como engenheiro |
 | l23 | D4 | D1 | O que aceitar: limites do assistente |
 | l27 | D4 | — | Debug com assistente: reproduza antes de perguntar |
 | l28 | D4 | — | Refatore com assistente sem quebrar comportamento |
-| l29 | D4 | — | Avalie as dependências sugeridas |
+| l29 ⚠[P] | D4 *(prop.) | — | Avalie as dependências sugeridas — divergente, ver bloco abaixo |
 
 ### 3.3 Jogos voxel (7 bindings `dev`) — prática opcional
 
@@ -231,19 +233,23 @@ IDs: bindings voxel usam os ids canônicos compartilhados (`U2-key-value-store`,
 curso-simples M1–M9, sdlc-quest, projetos 01–18). Any binding novo dessas fontes depende da
 decisão `manter|fundir|melhorar|adiar|remover` da matriz r2 (AID-3456).
 
-**Correções aplicadas nesta revisão (f7be7295, revisão do plano PR #610 @ `0481c8c0`):**
-o mapeamento [P] desta seção NÃO propaga os três erros apontados na matriz r2:
+**Divergências abertas [P] — NÃO decisões (revisão 770b30e5):**
+os mapeamentos de l17/l29/l20 **ficam [P], sem serialização, até resolver a semântica**.
+Os IDs usados nesta proposta **divergiram dos usados pela revisão**; nada aqui força ou vota
+labels. Decisão: **Content Designer** define primária/apoio com rationale → **FPE** ratifica o
+contrato → **CPE** codifica depois. Objetivos observáveis citados como referência (mesma base
+do glossário canônico, spec R6 do PR #610 @ `0481c8c0`):
 
-- **l17 (Integre uma API de IA em um projeto real): D5 → D3 primária** (D5 secundária).
-  Conectar endpoint, tratar erros e decidir cliente/servidor é **construção/integração**
-  (D3); D5 (produto IA/evals) é o desdobramento, não o núcleo.
-- **l29 (Avalie as dependências sugeridas): D4 confirmada** — o valor D3 apontado como erro
-  na r2 jamais esteve neste crosswalk; avaliar manutenção/licença/segurança/alternativa
-  nativa com critério é **review/manutenção** (D4), não construção.
-- **l20 (Números e fatos: verifique antes de usar): F4 → F2 primária** (F4 secundária).
-  O comportamento treinado é "verificar **antes de usar**" — disciplina de **uso seguro**
-  (F2); a técnica de verificação externa (F4, família l09–l11) é o meio, aprofundada como
-  secundária. [P] — ratificação final é da frente CCE/Content Designer.
+- **l17 — integração de API de IA** (conectar endpoint, tratar erros, decidir cliente/servidor):
+  leitura desta proposta = construção (D3), leitura divergente na r2 = produto IA (D5). Aberto.
+- **l29 — avaliação de dependências** (manutenção, licença, segurança, alternativa nativa,
+  decidir com critério): leitura desta proposta = review/manutenção (D4), leitura divergente na
+  r2 = construção (D3). Aberto.
+- **l20 — fact-checking** (marcar afirmações que exigem verificação externa e escolher a fonte):
+  leitura desta proposta = uso seguro (F2), leitura divergente na r2 = verificação (F4). Aberto.
+
+A tabela §3 mantém as células como **proposta marcada** (⚠ nas três linhas); nenhuma versão é
+promovida a glossário do learner nesta onda.
 
 ## 4. Proposta mínima (quando desbloqueada pela matriz r2 + plano corrigido)
 
@@ -280,8 +286,11 @@ as lições live:
 - aliases do pack Pixel (§2.7) avaliados como **mapeamento completo emitido por projeto**:
   o teste parseia a função `unitId` (branches ordenadas + fallback) e a lista de módulos do
   fonte, computa o unit_id de cada projeto e compara com o mapa explícito esperado
-  (`PIXEL_UNIT_ALIASES` + template) — trocar branches/strings/template muda o mapa e falha
-  (mutação executada na verificação, §6); U0 persistido no substrate; unit_id nunca região-shaped;
+  (`PIXEL_UNIT_ALIASES` + template) — trocar branches/strings/template muda o mapa e falha;
+  o parser **rejeita statements não consumidos** (resíduo do corpo != assinatura/espaços/
+  chaves → erro), cobrindo o contraexemplo da revisão 4d78c138 (`return` incondicional antes
+  das branches); mutações executadas na verificação (§6); U0 persistido no substrate;
+  unit_id nunca região-shaped;
 - **sete pares completos missão→(projeto, unit)** do track voxel pinados (`VOXEL_MISSION_UNITS`)
   — adotar default de template como id canônico (ex. `U-02_key_value_store`) falha (mutação
   executada, §6); contraexemplos estáticos da revisão d5910962 eliminados.
@@ -308,12 +317,13 @@ round-trip do read model, e update consciente dos pins de contagem.
   proveniência do produtor (AID-2493) na conversa do PR — corrigido adicionando o trailer
   canônico ao body do PR (identidade real do agente produtor; sem trailer fabricado); novo
   head informado para re-checagem.
-- **Mutações executadas (revisão final 499ec177, contraexemplos estáticos eliminados):**
+- **Mutações executadas (revisões 499ec177 e 4d78c138, contraexemplos estáticos eliminados):**
   (1) trocar o alias do branch `01_rate_limiter` em `curriculumPack.ts` →
   `test_pixel_pack_emits_the_complete_unit_id_map` **falha**; (2) `unitId: U2-key-value-store` →
   `U-02_key_value_store` em `mission-bindings.yaml` → `test_voxel_bindings_pin_all_seven_mission_unit_pairs`
-  **falha**. Ambas as mutações aplicadas e revertidas localmente na verificação (nunca commitadas;
-  worktree limpa em `engines/`).
+  **falha**; (3) `return "U-wrong"` incondicional antes das branches (contraexemplo 4d78c138) →
+  **falha** pelo resíduo não consumido. Todas aplicadas e revertidas localmente na verificação
+  (nunca commitadas; worktree limpa em `engines/`).
 
 ## 7. Candidatos r2 (consolidação AID-3462 — sem autorização de implementar)
 
