@@ -102,6 +102,18 @@ Editing branch protection remains the ONLY mechanical escape hatch
 HINT
 }
 
+# body_has_canonical_line BODY -> 0 iff some line starts with
+# 'Countersign: ' and carries content (AID-2655 item 5(2)). Used fail-closed
+# on the composed merge body (AID-3447): a merge executed by THIS door
+# always leaves the canonical audit trail — if the gate printed no citation
+# the body would lack the line and the merge is REFUSED instead of landing
+# as the next occurrence of the sem-linha-canônica class
+# (#481→#491→#495→#514→#607). Post-merge detection is mechanical via
+# .github/workflows/merge-msg-gate.yml (scripts/merge_msg_check.py).
+body_has_canonical_line() { # $1=composed body -> grep exit status
+  printf '%s\n' "$1" | grep -q '^Countersign: .'
+}
+
 PR=""
 METHOD="--merge"
 SUBJECT=""
@@ -176,6 +188,17 @@ if [ $SELF_TEST -eq 1 ]; then
       *)           st_check "fallback hint contains: $needle" "present" "MISSING" ;;
     esac
   done
+  # AID-3447: fail-closed body composition — the door never merges without
+  # the canonical line in the composed body (citations inline in a custom
+  # subject never count; the line must live in the body).
+  st_check "body canonical line accepted" "0" "$(body_has_canonical_line "intro
+
+Countersign: AID-1 verdict 123 head=$(printf 'a%.0s' $(seq 1 40))"; echo $?)"
+  st_check "body without canonical line refused" "1" "$(body_has_canonical_line "intro only"; echo $?)"
+  st_check "inline title citation never counts (#514 shape)" "1" "$(body_has_canonical_line "Merge PR #514: fix (countersign AID-2321 GO)"; echo $?)"
+  st_check "empty-content line refused" "1" "$(body_has_canonical_line "intro
+
+Countersign: "; echo $?)"
   echo "merge_pr self-test (§3 extraction): $pass passed, $fail failed"
   [ $fail -eq 0 ] || exit 1
   exit 0
@@ -251,6 +274,16 @@ $CITE"
 [ -n "$EXTRA_BODY" ] && BODY="$BODY
 
 $EXTRA_BODY"
+
+# --- 5b. fail-closed: the composed body MUST carry the canonical line -------
+# (AID-3447): §2 passed, so a citation should exist — but if --print-citation
+# returned nothing (edge), the merge would land without the canonical
+# 'Countersign: ' line and become the next sem-linha-canônica occurrence.
+# Refuse instead: the door never produces that class of merge commit.
+if ! body_has_canonical_line "$BODY"; then
+  echo "REFUSED: composed merge body lacks a canonical 'Countersign: ' line (AID-2655 item 5(2), AID-3447) — the gate printed no citation for PR #$PR; do NOT merge without it (re-run the gate / post a fresh independent countersign)." >&2
+  exit 1
+fi
 
 echo "== merging PR #$PR ($METHOD) =="
 if [ -n "$SUBJECT" ]; then

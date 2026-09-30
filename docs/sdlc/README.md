@@ -308,7 +308,29 @@ todo writer (hoje o single-writer FPE; sob R1, quem mergar):
       histórico e casa ANCESTRAL com a linha (falso PASS estrutural
       pós-#507/`13f22ef4`, reprodutivo no próprio `f680490f` — achado QA
       AID-2658).
-   Registro: `intent/AID-2655-merge-msg-canonical-line/`.
+    Registro: `intent/AID-2655-merge-msg-canonical-line/`.
+
+    **Emenda self-check mecânico (AID-3447, decisão CEO, 2026-09-30).** 5ª
+    ocorrência da classe (#607/`8975ba43`: corpo vazio, subject custom —
+    merge completado por fallback CLI fora da porta, registrado como achado
+    F-A no item 7): mitigações íntegras (citações canônicas pré-merge no PR
+    — comment `5902316209` + receipt `5902314927`, ambos < merged_at
+    07:12:26Z; `countersign-gate` + `SDLC guardrails (diff)` verdes no head
+    `2fb688ac`; producer ≠ verifier ≠ merger) — **sem ação retroativa**,
+    paridade #514. O item 3 acima (self-check manual do merge-writer APÓS o
+    merge) passa a ser **mecânico e independente do ator/caminho** (decisão
+    CEO AID-3447): (a) o workflow `merge-msg-gate`
+    (`.github/workflows/merge-msg-gate.yml`) roda em TODO push a main,
+    verifica cada merge commit (≥2 parents) do range pushed com
+    `scripts/merge_msg_check.py` (fail-closed; citação title-only/#514 e
+    corpo vazio/#607 falham) e fica VERMELHO na ausência da linha canônica
+    no corpo, abrindo incidente Paperclip best-effort (dedup por sha) com
+    os SHAs violadores; (b) a porta única ganha §5b fail-closed — recusa
+    merge cujo body composto não leve a linha canônica (caso o gate não
+    imprima citação). Run vermelha aqui é achado de auditoria, não build
+    quebrado: o merge já está no histórico (nunca reescrito) — triage no
+    incidente, mesmo critério de severidade desta emenda.
+    Registro: `intent/AID-3447-merge-msg-mechanical-check/`.
 6. **Trailer de proveniência por agente em comentários de processo
    (AID-2493, 2026-09-18).** Binding para TODO agente que posta comentário de
    processo no GitHub (veredito, citação countersign, registro de produtor,
