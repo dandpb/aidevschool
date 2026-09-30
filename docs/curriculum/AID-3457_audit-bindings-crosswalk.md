@@ -178,7 +178,7 @@ D5 produto IA/evals · D6 agentes/tools/skills · D7 capstone dev.
 | l14 | mod-04 | F4 | F1 | Desafio final: pedir, avaliar, melhorar e aplicar (capstone cotidiano) |
 | l18 | mod-06 | F3 | — | Biblioteca de pedidos |
 | l19 | mod-06 | F3 | — | Conversas longas: gerencie o contexto |
-| l20 | mod-06 | F4 | — | Números e fatos: verifique antes de usar |
+| l20 | mod-06 | F2 | F4 | Números e fatos: verifique antes de usar |
 | l24 | mod-07 | F3 | — | Anexe, cole ou descreva |
 | l25 | mod-07 | F2 | — | Anexos seguros |
 | l26 | mod-07 | F4 | — | Confira o que a IA extraiu |
@@ -192,7 +192,7 @@ D5 produto IA/evals · D6 agentes/tools/skills · D7 capstone dev.
 | --- | --- | --- | --- |
 | l15 | D1 | — | Quando usar IA e quando não usar |
 | l16 | D3 | D1 | Seu primeiro código com um assistente de IA |
-| l17 | D5 | D3 | Integre uma API de IA em um projeto real |
+| l17 | D3 | D5 | Integre uma API de IA em um projeto real |
 | l21 | D4 | — | Peça testes que valem a pena |
 | l22 | D4 | — | Revise o código sugerido como engenheiro |
 | l23 | D4 | D1 | O que aceitar: limites do assistente |
@@ -215,9 +215,9 @@ IDs: bindings voxel usam os ids canônicos compartilhados (`U2-key-value-store`,
 | Competência | Lições bound | Lacuna real |
 | --- | --- | --- |
 | F1 | 3 | — |
-| F2 | 2 | — |
+| F2 | 3 | — |
 | F3 | 7 | — |
-| F4 | 11 | — |
+| F4 | 10 | — |
 | D1 | 1 | parcial (harness amplo) |
 | D2 | **0** | intenção/spec/plano sem binding (workflows, curso-simples, sdlc-quest) |
 | D3 | 1 (+7 jogos opcionais) | parcial |
@@ -230,6 +230,20 @@ IDs: bindings voxel usam os ids canônicos compartilhados (`U2-key-value-store`,
 (D2/D6/D7 + evals) — fontes já mapeadas na matriz r1 do PR #610 (workflows 02–11,
 curso-simples M1–M9, sdlc-quest, projetos 01–18). Any binding novo dessas fontes depende da
 decisão `manter|fundir|melhorar|adiar|remover` da matriz r2 (AID-3456).
+
+**Correções aplicadas nesta revisão (f7be7295, revisão do plano PR #610 @ `0481c8c0`):**
+o mapeamento [P] desta seção NÃO propaga os três erros apontados na matriz r2:
+
+- **l17 (Integre uma API de IA em um projeto real): D5 → D3 primária** (D5 secundária).
+  Conectar endpoint, tratar erros e decidir cliente/servidor é **construção/integração**
+  (D3); D5 (produto IA/evals) é o desdobramento, não o núcleo.
+- **l29 (Avalie as dependências sugeridas): D4 confirmada** — o valor D3 apontado como erro
+  na r2 jamais esteve neste crosswalk; avaliar manutenção/licença/segurança/alternativa
+  nativa com critério é **review/manutenção** (D4), não construção.
+- **l20 (Números e fatos: verifique antes de usar): F4 → F2 primária** (F4 secundária).
+  O comportamento treinado é "verificar **antes de usar**" — disciplina de **uso seguro**
+  (F2); a técnica de verificação externa (F4, família l09–l11) é o meio, aprofundada como
+  secundária. [P] — ratificação final é da frente CCE/Content Designer.
 
 ## 4. Proposta mínima (quando desbloqueada pela matriz r2 + plano corrigido)
 
