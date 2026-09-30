@@ -27,6 +27,16 @@
 # other actor. The only escape hatch is editing branch protection itself —
 # an admin-settings action outside the merge path, recorded in the audit log.
 #
+# When the API merge step itself fails (40x/5xx transport/permission), the
+# door prints the BINDING 4-item fallback protocol (§Merge protocol item 7,
+# docs/sdlc/README.md — AID-3433, decision AID-3432/D2) to stderr before
+# exiting non-zero: a CLI fallback merge (git merge --no-ff + push) is
+# legitimate ONLY with all four requirements — gates re-verified first-hand,
+# canonical Countersign line in the merge message, immediate carrier receipt,
+# correct merge-writer git identity. That protocol does NOT weaken this
+# door: it stays the only preferred path, and editing branch protection
+# remains the only mechanical escape hatch.
+#
 # Usage:
 #   scripts/merge_pr.sh <PR#> [--merge|--squash|--rebase] [--subject <s>] [--extra-body <b>]
 #
@@ -38,7 +48,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 GATE="$SCRIPT_DIR/countersign_gate_check.py"
 SELF="$SCRIPT_DIR/merge_pr.sh"
 
-usage() { sed -n '2,35p' "$0" | sed 's/^# \{0,1\}//' >&2; exit 2; }
+usage() { sed -n '2,43p' "$0" | sed 's/^# \{0,1\}//' >&2; exit 2; }
 
 # check_state (AID-2818): gh api …/check-runs returns an OBJECT
 # {"total_count":N,"check_runs":[…]} (one object per page under --paginate).
@@ -63,6 +73,33 @@ check_state() { # $1=checks-json $2=check name -> prints conclusion or "absent"
 # fallback and what the self-test pins for BOTH remote forms.
 repo_slug() { # $1=origin remote URL -> owner/repo ('.git' stripped)
   printf '%s' "$1" | sed -E -e 's#[/ ]+$##' -e 's#\.git$##' -e 's#^.*[:/]([^/:]+/[^/]+)$#\1#'
+}
+
+# fallback_hint (AID-3433 E2; decision AID-3432/D2): the 4-item BINDING
+# fallback protocol printed when the API merge step fails (40x/5xx of
+# transport/permission). Mirrors docs/sdlc/README.md §Merge protocol item 7 —
+# keep both texts in sync. The door remains the ONLY preferred path
+# (AID-2768); this hint exists so the operator never improvises a fallback.
+fallback_hint() {
+  cat >&2 <<'HINT'
+== API merge FAILED — BINDING fallback protocol (docs/sdlc/README.md §Merge protocol item 7, AID-3433) ==
+The door stays the ONLY preferred merge path (AID-2768). If the API remains
+unavailable (40x/5xx transport/permission), a CLI fallback merge
+(git merge --no-ff + git push origin main) is legitimate ONLY with ALL four:
+  (i) gates verified first-hand in THIS session and cited in the receipt:
+      countersign-gate AND 'SDLC guardrails (diff)' present AND success on
+      the pinned head (same presence rule as §3 — absence is also failure);
+  (ii) canonical line in the merge message body (own line, never title-only):
+      Countersign: <AID|GH>-<n> verdict <commentId> head=<full-40-hex-head>
+      (AID-2655 template; the cited verdict must be posted BEFORE the merge —
+      Stage-2 ordering);
+  (iii) immediate receipt on the carrier: non-mute comment citing the
+      fallback, the authorizing verdict and the merge commit SHA;
+  (iv) correct git identity of the merge-writer: user.name/user.email of the
+      executing role (spirit of AID-2493 — no clone-inherited identity).
+Editing branch protection remains the ONLY mechanical escape hatch
+(admin-only, audited) — a transport failure is NOT permission to skip gates.
+HINT
 }
 
 PR=""
@@ -123,6 +160,22 @@ if [ $SELF_TEST -eq 1 ]; then
   st_check "slug scp remote bare"          "dandpb/aidevschool" "$(repo_slug "git@github.com:dandpb/aidevschool")"
   st_check "slug ssh remote with .git"     "dandpb/aidevschool" "$(repo_slug "ssh://git@github.com/dandpb/aidevschool.git")"
   st_check "slug trailing slash tolerated" "dandpb/aidevschool" "$(repo_slug "https://github.com/dandpb/aidevschool/")"
+  # AID-3433 E2: the API-merge failure hint must carry the full 4-item
+  # BINDING fallback protocol, mirroring docs/sdlc/README.md §Merge
+  # protocol item 7 — the four requirements, the canonical countersign
+  # template verbatim, the pointer to the docs section, and the no-weakening
+  # escape-hatch clause.
+  hint_out="$(fallback_hint 2>&1)"
+  for needle in \
+    '(i)' '(ii)' '(iii)' '(iv)' \
+    'Countersign: <AID|GH>-<n> verdict <commentId> head=<full-40-hex-head>' \
+    'docs/sdlc/README.md §Merge protocol item 7' \
+    'ONLY mechanical escape hatch'; do
+    case "$hint_out" in
+      *"$needle"*) st_check "fallback hint contains: $needle" "present" "present" ;;
+      *)           st_check "fallback hint contains: $needle" "present" "MISSING" ;;
+    esac
+  done
   echo "merge_pr self-test (§3 extraction): $pass passed, $fail failed"
   [ $fail -eq 0 ] || exit 1
   exit 0
@@ -206,6 +259,10 @@ else
   gh pr merge "$PR" "$METHOD" --body "$BODY"
 fi
 rc=$?
+if [ $rc -ne 0 ]; then
+  echo "== API merge FAILED (rc=$rc) — merge NOT executed." >&2
+  fallback_hint
+fi
 if [ $rc -eq 0 ]; then
   echo "== merged. Post-merge obligations: push-run main receipt, Paperclip receipt on the dispatch issue, close/flip the carrier issue (protocol AID-1618 §1)."
 fi

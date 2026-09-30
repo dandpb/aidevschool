@@ -339,6 +339,41 @@ todo writer (hoje o single-writer FPE; sob R1, quem mergar):
      verificador); sem despacho existente, o relay pode solicitar verificação
      **citando que é a primeira lane**. Registro:
      `intent/AID-2493-provenance-trailer/`.
+7. **Fallback CLI quando porta/API indisponíveis (AID-3433, decisão CEO
+    AID-3432/D2 — binding).** Incidente #607/`8975ba43` (07:12Z 09-30): o
+    passo final da porta (`gh pr merge` → `PUT /pulls/merge`) retornou 404 e
+    o merge foi completado por CLI (`git merge --no-ff` +
+    `git push origin main`) FORA da porta única — o required check
+    `countersign-gate` só cobre o caminho de merge via API do GitHub, então
+    o push direto contornou a garantia mecânica da classe F (achado F-B,
+    auditoria AID-3431/decisão AID-3432), e a merge msg saiu SEM a linha
+    canônica `Countersign:` (5ª ocorrência da série F-A:
+    #481→#491→#495→#514→#607). O fallback CLI é LEGÍTIMO quando a porta ou a
+    API está indisponível (40x/5xx de transporte/permissão) — mas deixa de
+    ser improvisação: TODO merge-writer que completar merge por essa via
+    DEVE cumprir os 4 requisitos:
+    1. **gates verificados 1º-mão e citados no recibo** — nesta sessão,
+       `countersign-gate` e `SDLC guardrails (diff)` presentes E success no
+       head pinado (mesmos gates e mesma exigência de presença da porta,
+       itens 2–3 acima e §GATE pré-merge), com as saídas citadas no recibo;
+    2. **linha canônica `Countersign: <AID|GH>-<n> verdict <commentId> head=<full-40-hex-head>`
+       na merge msg** — template AID-2655, idêntico ao bloco impresso pela
+       porta no REFUSED do gate (`scripts/merge_pr.sh` §2), em linha própria
+       no corpo, nunca só inline no título; veredito citado postado ANTES do
+       merge (ordenação Stage-2);
+    3. **recibo imediato no carrier** — comentário não-mudo na issue/PR
+       citando o fallback, o veredito que autorizou e o SHA do merge commit;
+    4. **identidade git correta do merge-writer** — `user.name`/`user.email`
+       do papel que executa o merge (espírito AID-2493; identidade herdada
+       por clonação é achado de atribuição — F-C da AID-3432).
+
+    O escape hatch canônico NÃO é esta via e permanece inalterado: editar a
+    branch protection/rulesets é a única saída MECÂNICA da garantia
+    (admin-only, fora do merge path, auditável — §GATE pré-merge, Modelo de
+    ameaça). O fallback CLI não dispensa nenhum gate: é a MESMA cadeia de
+    verificação com o último passo executado localmente. A porta imprime
+    este protocolo no stderr quando o merge via API falha
+    (`scripts/merge_pr.sh` §5, AID-3433/E2).
 
 ## GATE pré-merge mecânico `countersign-gate` (AID-2768 — fim da classe F)
 
