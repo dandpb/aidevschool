@@ -1,0 +1,27 @@
+{
+  "postF1_mission_panel": "ETAPA ATUAL · FUNDAMENTOS | F2/4 | 🛡 | Uso seguro |  | O que entra no prompt e o que fica com você: dados sensíveis, limites de confiança e hábitos seguros nas duas jornadas. |  | ≈ 5 min | Exemplo → tentativa | Sem código | 1 | Ver o exemplo acompanhado | 2 | responder 1 pergunta | 3 | levar o takeaway | Começar F2 — Uso seguro | → |  | Jogos são prática opcional — nenhum pré-requisito depende deles.",
+  "postF1_badge": "F2/4",
+  "mobile_scrollWidth_initial": 390,
+  "mobile_cta_box_initial": {
+    "x": 33,
+    "y": 561.28125,
+    "width": 324,
+    "height": 48
+  },
+  "mobile_scrollWidth_postF1open": 390,
+  "mobile_innerWidth": 390,
+  "mobile_altbox_rect": {
+    "x": 27,
+    "y": 449.78125,
+    "width": 336,
+    "height": 198.8125
+  },
+  "mobile_world_rect": {
+    "x": 15,
+    "y": 79.78125,
+    "width": 360,
+    "height": 320
+  },
+  "mobile_altbox_overlaps_world": false,
+  "postF1_badge_mobile": "F2/4"
+}
