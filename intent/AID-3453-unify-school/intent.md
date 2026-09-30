@@ -56,10 +56,14 @@ nenhuma fonte dev além dos 17 jogos voxel.
 
 ## Open questions
 
-1. ZAI: a issue cita "27 lições"; o fonte em main tem 7 módulos/19 lições
-   (`curriculum-data.ts`). Confirmar se 27 incluía daily-challenges/roadmap
-   antigo — resposta fica com a frente CCE (ver matrix §ZAI).
+1. ~~ZAI: a issue cita "27 lições"; o fonte em main tem 7 módulos/19 lições.~~
+   **RESOLVIDO r1.1 (P1 da revisão):** a issue estava certa — **9 módulos /
+   27 lições** (contagem estrutural: eval do array `CURRICULUM` em Node,
+   base `1975e2c7`; inclui `por-dentro-da-maquina`, `contexto-e-specs` e
+   `o-protocolo-final`/`caso-real-feature-previsivel`). O "7/19" da r1 era
+   artefato de grep. Regra daí em diante: contagem de fonte TS = parse
+   estrutural, nunca grep de chaves.
 2. SDLCQuest "6 gates": verificar contagem canônica na frente CPE/UX (o gate
    do harness existe; a decomposição em 6 precisa de citação exata).
-3. Competency IDs definitivos (F1–F6/D1–D7 propostos na spec) precisam de
-   ratificação do CEO na aprovação do plano.
+3. Competency IDs definitivos (F1–F6/D1–D7 propostos na spec) e o par
+   primária/apoio de cada unidade precisam de ratificação na r2 da CCE.
