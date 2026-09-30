@@ -168,15 +168,19 @@ class OsBindingsCrosswalkAuditTest(unittest.TestCase):
 
 
 class PixelPackUnitAliasAuditTest(unittest.TestCase):
-    """AID-3457 (complemento 696dc5d3 + revisão final 499ec177): aliases congelados.
+    """AID-3457 (complemento 696dc5d3 + revisões 499ec177/4d78c138/8fdfdd75).
 
+    **Claim deliberadamente restrito:** este é um pin da FORMA da fonte
+    (statements do corpo de ``unitId`` integralmente consumidos + ordem
+    branches→fallback), NÃO um verificador semântico TypeScript geral.
     curriculumPack.ts:666 não segue padrão uniforme (dois aliases explícitos +
-    template ``U-${project}``). O teste avalia o MAPEAMENTO COMPLETO emitido por
-    projeto: parseia a função ``unitId`` (branches ordenadas + fallback) e a lista
-    de módulos do fonte, computa o unit_id de cada projeto e compara com o mapa
-    explícito esperado — trocar branches U0/U4, editar strings ou mudar o
-    template muda o mapa emitido e falha. Regiões ``lab-<project>`` não são
-    unit_ids. Equivalência com nomes Voxel nunca é inferida por semelhança.
+    template ``U-${project}``). O teste computa o unit_id de cada projeto a
+    partir do que a forma reconhecida permite inferir e compara com o mapa
+    explícito esperado — trocar branches/strings/template, introduzir
+    statements não consumidos (ex.: ``return`` incondicional) ou mover o
+    fallback para antes das branches (aliases sombreados) falha. Regiões
+    ``lab-<project>`` não são unit_ids. Equivalência com nomes Voxel nunca é
+    inferida por semelhança.
     """
 
     # Mapa canônico voxel (missionId -> unitId); revisão 499ec177: pin dos
@@ -228,6 +232,14 @@ class PixelPackUnitAliasAuditTest(unittest.TestCase):
         if fallback_match is None:
             raise AssertionError(
                 "unitId fallback template changed or not parseable"
+            )
+        if any(
+            fallback_match.start() < m.end() for m in branch_matches
+        ):
+            raise AssertionError(
+                "unitId fallback must come AFTER all branches — an early "
+                "template return would shadow the U0/U4 aliases at runtime "
+                "while still consuming every token (revisão 8fdfdd75)"
             )
         residue = list(body)
         for span_start, span_end in [

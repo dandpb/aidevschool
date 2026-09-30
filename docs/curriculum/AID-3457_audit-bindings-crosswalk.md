@@ -289,8 +289,12 @@ as lições live:
   (`PIXEL_UNIT_ALIASES` + template) — trocar branches/strings/template muda o mapa e falha;
   o parser **rejeita statements não consumidos** (resíduo do corpo != assinatura/espaços/
   chaves → erro), cobrindo o contraexemplo da revisão 4d78c138 (`return` incondicional antes
-  das branches); mutações executadas na verificação (§6); U0 persistido no substrate;
-  unit_id nunca região-shaped;
+  das branches), e **exige fallback após todas as branches** — contraexemplo 8fdfdd75
+  (template movido para antes dos branches consumiria todos os tokens e sombrearia os
+  aliases no runtime). **Claim explícito: pin RESTRITO da forma da fonte** (statements
+  consumidos + ordem branches→fallback), não verificador semântico TypeScript geral;
+  mutações executadas na verificação (§6); U0 persistido no substrate; unit_id nunca
+  região-shaped;
 - **sete pares completos missão→(projeto, unit)** do track voxel pinados (`VOXEL_MISSION_UNITS`)
   — adotar default de template como id canônico (ex. `U-02_key_value_store`) falha (mutação
   executada, §6); contraexemplos estáticos da revisão d5910962 eliminados.
@@ -322,7 +326,9 @@ round-trip do read model, e update consciente dos pins de contagem.
   `test_pixel_pack_emits_the_complete_unit_id_map` **falha**; (2) `unitId: U2-key-value-store` →
   `U-02_key_value_store` em `mission-bindings.yaml` → `test_voxel_bindings_pin_all_seven_mission_unit_pairs`
   **falha**; (3) `return "U-wrong"` incondicional antes das branches (contraexemplo 4d78c138) →
-  **falha** pelo resíduo não consumido. Todas aplicadas e revertidas localmente na verificação
+  **falha** pelo resíduo não consumido; (4) fallback de template movido para antes das branches
+  (contraexemplo 8fdfdd75 — todos os tokens consumidos, aliases sombreados no runtime) →
+  **falha** pela checagem de ordem. Todas aplicadas e revertidas localmente na verificação
   (nunca commitadas; worktree limpa em `engines/`).
 
 ## 7. Candidatos r2 (consolidação AID-3462 — sem autorização de implementar)
