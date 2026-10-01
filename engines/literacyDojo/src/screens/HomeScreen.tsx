@@ -190,7 +190,7 @@ export function HomeScreen({
           data-testid="open-map"
           onClick={onOpenMap}
         >
-          Explorar Vila Lume
+          {activeJourney === "dev" ? "Explorar Jornada Dev" : "Explorar Vila Lume"}
         </button>
         <button
           type="button"

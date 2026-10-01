@@ -26,6 +26,8 @@ describe("jornada Dev opcional (AID-3584) — fluxo no app", () => {
     expect(card).toBeInTheDocument();
     expect(screen.getByTestId("journey-switch-ia_pratica")).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByTestId("journey-switch-dev")).toHaveAttribute("aria-pressed", "false");
+    // AID-3584 r2 (request_changes LEE): CTA da Home journey-aware — IA ativa mantém o wording da Vila.
+    expect(screen.getByTestId("open-map")).toHaveTextContent("Explorar Vila Lume");
   });
 
   it("escolher Dev leva ao mapa Dev: l15 disponível, l16 bloqueada, módulo Dev visível", async () => {
@@ -56,10 +58,13 @@ describe("jornada Dev opcional (AID-3584) — fluxo no app", () => {
     render(<App services={services} />);
 
     await screen.findByTestId("home-screen");
+    // AID-3584 r2: com Dev ativa o CTA da Home reflete a jornada Dev (não a Vila).
+    expect(screen.getByTestId("open-map")).toHaveTextContent("Explorar Vila Lume");
     await user.click(screen.getByTestId("journey-switch-dev"));
     await screen.findByTestId("map-screen");
     await user.click(screen.getByTestId("map-back"));
     await screen.findByTestId("home-screen");
+    expect(screen.getByTestId("open-map")).toHaveTextContent("Explorar Jornada Dev");
     await user.click(screen.getByTestId("journey-switch-ia_pratica"));
 
     expect(await screen.findByTestId("map-screen")).toBeInTheDocument();
