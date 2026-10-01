@@ -1,0 +1,84 @@
+{
+  "kit": "pg-d05-delegacao-controlada",
+  "sourcePin": {
+    "repo": "dandpb/aidevschool",
+    "pullRequest": 646,
+    "commit": "f7e3228a80cecc68e426e7d59d080a234d249104",
+    "sourcePath": "curriculum/sequencia-dev-guiada/pg-d05-delegacao-controlada/"
+  },
+  "note": "Hashes computados do export 'git archive f7e3228a' (18 arquivos) e conferidos 17/17 contra a tabela de inventario do MANIFEST.md do proprio pacote (drift=0); o MANIFEST.md do pacote nao ha a si mesmo e foi pinado direto do blob c9cc942ccf9e86474ad834af4b2f4f0785639155.",
+  "files": {
+    "pg-d05-delegacao-controlada/ALLOWLIST.md": {
+      "sha256": "b427ac777988c57fddbe99f5f70a8e32b08eedb2055cc9aebf2c3da9cec8a2f6",
+      "bytes": 1902
+    },
+    "pg-d05-delegacao-controlada/MANIFEST.md": {
+      "sha256": "90192e02f12eed353922ea77b5e0feef87a07540c5d68504691bc38029c69353",
+      "bytes": 5228
+    },
+    "pg-d05-delegacao-controlada/enunciado.md": {
+      "sha256": "bd8daeb03bbf82f08de5e19c49945a9362b789db9d7944b1ea7066d00db4c8db",
+      "bytes": 7195
+    },
+    "pg-d05-delegacao-controlada/exemplo-trabalhado.md": {
+      "sha256": "5044f2e153a1b7a9513590380147aac4cc8ce48f8a78b9d5917a91693d43b219",
+      "bytes": 5451
+    },
+    "pg-d05-delegacao-controlada/guia-de-correcao/exemplos/recibo-falso.md": {
+      "sha256": "61c22bbb64637fcd251289e30bc3b1cdd008752aef8ddf8a96d19e10f4b2e97c",
+      "bytes": 637
+    },
+    "pg-d05-delegacao-controlada/guia-de-correcao/recibo-exemplo/recibo-aceite-r2.md": {
+      "sha256": "0c5b986b9b4492bf7f1a33cbb1e95b1a3615ecb3cf6fbcb40f37e62a17d2995c",
+      "bytes": 1524
+    },
+    "pg-d05-delegacao-controlada/guia-de-correcao/solucao.md": {
+      "sha256": "80161b27d5ffc42a3974705e670983ee85ce892daca0ed3631e754b3b9b1ec20",
+      "bytes": 6095
+    },
+    "pg-d05-delegacao-controlada/guia-de-correcao/veredito-r1.md": {
+      "sha256": "49ce1f0353ff50f3d888a9020ef0f0350d39c1f4025b7acf62522cf74255f3b0",
+      "bytes": 2331
+    },
+    "pg-d05-delegacao-controlada/insumos/CONTRATO.md": {
+      "sha256": "048d8882c9cd89996f8fdb55f86513308bc4af481203bc2156ce599a0ca1c088",
+      "bytes": 1498
+    },
+    "pg-d05-delegacao-controlada/insumos/PLANO-APROVADO.md": {
+      "sha256": "6c28222bc272f9b7d1a1a6a04839e96fa22b25f62e854e4a820d13d7575d0cc6",
+      "bytes": 3647
+    },
+    "pg-d05-delegacao-controlada/insumos/delegacao-r1/diff-r1.patch": {
+      "sha256": "6883e5fc25c5abc7ed230663589301eb4e29fa5bf07e4c38928410836316ead7",
+      "bytes": 2948
+    },
+    "pg-d05-delegacao-controlada/insumos/delegacao-r1/resposta-produtor-r1.md": {
+      "sha256": "a82b1f3859efefc0dce165dfabaabb35e1677a90ec31fcc94616df4ecd6a6670",
+      "bytes": 1032
+    },
+    "pg-d05-delegacao-controlada/insumos/delegacao-r2/diff-r2.patch": {
+      "sha256": "5c6fe98f72f7310544c43afe9cbad15027ab8876536a510c9fc6ca5e5310b2f7",
+      "bytes": 2581
+    },
+    "pg-d05-delegacao-controlada/insumos/delegacao-r2/resposta-produtor-r2.md": {
+      "sha256": "9c997e8369b64d1058267b53b002b8eb6fef3ca8013945621d86cd37ee35522a",
+      "bytes": 837
+    },
+    "pg-d05-delegacao-controlada/insumos/fixture/biblioteca.py": {
+      "sha256": "2f628016f16f2b2463deacac7215cada0559847b1c06f4aca827b70ad472fcc3",
+      "bytes": 1070
+    },
+    "pg-d05-delegacao-controlada/insumos/fixture/testes.py": {
+      "sha256": "e1deddbf8e2f9834406d1d4d9da1f707bd06b3b8188c7dd79ca1a50819605432",
+      "bytes": 1883
+    },
+    "pg-d05-delegacao-controlada/insumos/verifica_delegacao.py": {
+      "sha256": "2522c3040003e1eeb681e4ca7cd5fdd27ff3fcd195398669b6c08507f5c92e06",
+      "bytes": 8952
+    },
+    "pg-d05-delegacao-controlada/rubrica-v1.md": {
+      "sha256": "4e204fb574058d8411ac8e0e83a68ebcbc9c694faca541c46e5652aea8136a43",
+      "bytes": 4237
+    }
+  }
+}
