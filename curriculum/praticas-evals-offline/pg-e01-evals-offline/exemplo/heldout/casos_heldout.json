@@ -1,0 +1,16 @@
+{
+  "meta": {
+    "pacote": "pg-e01-evals-offline (AID-3648) — EXEMPLO TRABALHADO",
+    "conjunto": "heldout (casos NOVOS)",
+    "aviso": "DADOS 100% SINTETICOS: issues ficticias do TrilhaFit, disjuntas do base (ids TH-*). Nenhum modelo de IA real foi executado.",
+    "rotulo_sintetico": true
+  },
+  "casos": [
+    { "id": "TH-01", "texto": "App congela ao pausar treino com fone bluetooth", "area": "bug" },
+    { "id": "TH-02", "texto": "Compartilhar percurso no stories corta a imagem", "area": "bug" },
+    { "id": "TH-03", "texto": "Os aneis de progresso resetam sozinhos toda segunda?", "area": "duvida" },
+    { "id": "TH-04", "texto": "Preciso de relogio para usar os treinos guiados?", "area": "duvida" },
+    { "id": "TH-05", "texto": "Queria historico de series por exercicio", "area": "melhoria" },
+    { "id": "TH-06", "texto": "Podem abrir API para integrar com a Garmin?", "area": "melhoria" }
+  ]
+}
