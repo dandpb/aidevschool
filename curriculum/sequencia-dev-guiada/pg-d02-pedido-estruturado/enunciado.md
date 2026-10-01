@@ -105,10 +105,12 @@ a sua entrega de virar duas entregas medíocres. Arquive junto com o recibo.
 - Nenhum passo exige rede, conta, chave ou segredo; a amostra é local e
   determinística. A amostra `insumos/meus_commits.json` deriva de
   `demo_commits.json` (blob `8a0d39ce99e1`): hashes e subjects reais, com
-  1 entrada (`35db5c8`) adaptada para exercitar breaking por `!` e por
-  footer. Opcional (não avaliado): repetir com `meus_commits.json` do
-  **seu** repositório (ROADMAP Fase 0) — o caminho avaliado não depende
-  dele.
+  2 entradas adaptadas — `35db5c8` (breaking por `!` e por footer) e
+  `96c4d9d` (tipo `ci:`→`fix(ci):`, sufixo `(#119)` removido; segundo
+  `fix` da amostra, fecha a aritmética "filtro: feat,fix — 5 commits não
+  exibidos"). Opcional (não avaliado): repetir com `meus_commits.json`
+  do **seu** repositório (ROADMAP Fase 0) — o caminho avaliado não
+  depende dele.
 - Esta prática avalia o **pedido**, não a implementação: você não precisa
   implementar o filtro; precisa escrever o pedido que o tornaria
   inequívoco.
