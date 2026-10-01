@@ -86,7 +86,10 @@ describe('GuidedPracticeApp (pg-d01)', () => {
     for (const criterion of projection.rubric.filter((entry) => entry.id !== 'c-vermelho')) {
       await assess(user, criterion.id, 'Atendido')
     }
-    await user.click(screen.getByRole('button', { name: /retry.*c-vermelho/i }))
+    // Compact retry CTA shows the count; criterion ids stay in the
+    // scrollable section content (not in the sticky bar).
+    expect(screen.getByText(/alvos do retry\): c-vermelho/)).toBeTruthy()
+    await user.click(screen.getByRole('button', { name: /retry: 1 critério reprovado/i }))
     expect(screen.getByRole('heading', { name: /retry/i })).toBeTruthy()
     expect(screen.getByText(/Alvos deste retry: c-vermelho/)).toBeTruthy()
     const locked = criterionScope('c-reproducao')
