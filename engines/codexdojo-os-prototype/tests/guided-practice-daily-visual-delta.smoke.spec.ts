@@ -1,11 +1,12 @@
-// AID-3643: visual-delta smoke evidence for the pg-c01 presentation-only
-// fixes. Pixels are captured ONLY for the changed states (chooser contrast,
-// title hierarchy, structured markdown, LearningRail context) plus the
-// COMPLETE receipt visible — closing the capture-05 gap from AID-3590
-// (the standalone session pane now scrolls inside the OS window instead of
-// being clipped). Every capture is registered in qa/aid3643/capture-log.jsonl
-// (UTC ISO, project, viewport, browser engine, computed styles where
-// relevant) so the capture manifest carries real metadata, not inferred ones.
+// AID-3643 (r1, PO HOLD 7286fcf5): visual-delta smoke evidence for the
+// pg-c01 presentation-only fixes. Pixels are captured ONLY for the changed
+// states (chooser contrast, title hierarchy, structured markdown,
+// LearningRail context) plus the COMPLETE receipt UNOBSTRUCTED — the
+// standalone surface is one scrolling column with a static action bar, so
+// the toolbar can never cover content or controls. Every capture registers
+// REAL metadata in qa/aid3643/capture-log.jsonl (UTC ISO, project,
+// viewport, browser engine, FULL userAgent, computed styles, occlusion
+// checks) — nothing inferred, nothing invented.
 import { expect, test, type Page, type TestInfo } from '@playwright/test'
 import { appendFileSync } from 'node:fs'
 
@@ -17,10 +18,12 @@ function logCapture(entry: Record<string, unknown>) {
 }
 
 async function captureMetadata(page: Page, testInfo: TestInfo) {
+  const userAgent = await page.evaluate(() => navigator.userAgent)
   return {
     project: testInfo.project.name,
     viewport: page.viewportSize(),
     engine: page.context().browser()?.browserType().name() ?? 'unknown',
+    userAgent,
   }
 }
 
@@ -30,9 +33,9 @@ async function shoot(page: Page, testInfo: TestInfo, name: string) {
   logCapture({ shot: path, ...(await captureMetadata(page, testInfo)) })
 }
 
-// The standalone session pane (the scrollable surface inside the OS window).
-function sessionPane(page: Page) {
-  return page.locator('.practice-standalone div.practice-app')
+// The standalone surface is the single scroll container (AID-3643 r1).
+function standaloneScroller(page: Page) {
+  return page.locator('.practice-standalone')
 }
 
 async function openPracticeApp(page: Page) {
@@ -46,34 +49,34 @@ async function openPracticeApp(page: Page) {
   await expect(page.getByRole('navigation', { name: 'Escolha da prática guiada' })).toBeVisible()
 }
 
-async function runDailyCycleToReceipt(page: Page) {
-  await page.getByRole('button', { name: /pg-c01 ·/i }).click()
-  await expect(page.getByRole('heading', { level: 1, name: /cotidiano: dados mínimos e verificação/i })).toBeVisible()
-  await page.getByRole('button', { name: /li o exemplo e vou para a tentativa/i }).click()
-  for (const stepId of ['A', 'B', 'C']) {
-    await page.getByLabel(`Peça da etapa ${stepId}`).fill(`peça ${stepId} com citação fonte-1 L2`)
-  }
-  await page.getByRole('button', { name: /concluir a tentativa/i }).click()
-  for (const criterion of ['c1-mínimos', 'c2-vereditos', 'c3-citações', 'c4-incerteza', 'c5-privacidade', 'c6-resposta']) {
-    const scope = page.locator('li', { hasText: criterion }).first()
-    // Position the criterion below the sticky action bar inside the session
-    // pane (on small panes it overlays the pane's top edge), then select the
-    // verdict via keyboard (focus + Space) — real interaction that cannot be
-    // intercepted by the sticky overlay.
-    await scope.evaluate((element) => {
-      const pane = element.closest('.practice-app')
-      if (pane === null) return
-      pane.scrollTop += element.getBoundingClientRect().top - pane.getBoundingClientRect().top - 84
-    })
-    await scope.getByRole('radio', { name: 'Suficiente', exact: true }).focus()
-    await page.keyboard.press('Space')
-    await expect(scope.getByRole('radio', { name: 'Suficiente', exact: true })).toBeChecked()
-    await scope.getByLabel(`Evidência do critério ${criterion}`).fill('peça + citação fonte-2 G4')
-  }
-  await page.getByRole('button', { name: /ir para o takeaway/i }).click()
-  await page.getByLabel(/\(a\)/).fill('o telefone com código do portão')
-  await page.getByLabel(/\(b\)/).fill('a frase do dia só entrou com fonte-1 L1')
-  await page.getByRole('button', { name: /concluir a prática/i }).click()
+// Geometric occlusion proof (PO: containment ≠ visibility): a target is
+// only "visible unobstructed" when its box sits fully inside the scroller's
+// clip rect AND does not intersect any action-bar box. Returns the measured
+// geometry so the evidence log carries the real numbers.
+async function occlusionCheck(page: Page, targetSelector: string) {
+  return page.evaluate((selector) => {
+    const scroller = document.querySelector('.practice-standalone')
+    const target = document.querySelector(selector)
+    if (scroller === null || target === null) return { ok: false, reason: 'missing elements' }
+    const clip = scroller.getBoundingClientRect()
+    const box = target.getBoundingClientRect()
+    const bars = [...document.querySelectorAll<HTMLElement>('.practice-action-bar')].map((bar) =>
+      bar.getBoundingClientRect(),
+    )
+    const insideClip = box.top >= clip.top - 1 && box.bottom <= clip.bottom + 1
+    const barOverlap = bars.some(
+      (rect) => box.top < rect.bottom && box.bottom > rect.top && box.left < rect.right && box.right > rect.left,
+    )
+    return {
+      ok: insideClip && !barOverlap,
+      insideClip,
+      barOverlap,
+      clipTop: clip.top,
+      clipBottom: clip.bottom,
+      boxTop: box.top,
+      boxBottom: box.bottom,
+    }
+  }, targetSelector)
 }
 
 test('chooser contrast, title hierarchy, structured example and rail context (desktop)', async ({
@@ -91,7 +94,11 @@ test('chooser contrast, title hierarchy, structured example and rail context (de
     const styles = getComputedStyle(element)
     return { color: styles.color, backgroundColor: styles.backgroundColor }
   })
-  logCapture({ check: 'chooser-inactive-computed-style', ...inactiveStyle, ...((await captureMetadata(page, testInfo)) as object) })
+  logCapture({
+    check: 'chooser-inactive-computed-style',
+    ...inactiveStyle,
+    ...((await captureMetadata(page, testInfo)) as object),
+  })
 
   await shoot(page, testInfo, '01-chooser-contraste')
 
@@ -103,36 +110,93 @@ test('chooser contrast, title hierarchy, structured example and rail context (de
   await expect(identity).toContainText('pg-c01@v1')
   await expect(identity).toContainText('ee57638361b6')
   // No literal markdown markers survive on the daily surface.
-  const literalMarkers = await sessionPane(page)
-    .evaluate((element) => element.textContent?.includes('**') ?? false)
+  const literalMarkers = await standaloneScroller(page).evaluate(
+    (element) => element.textContent?.includes('**') ?? false,
+  )
   expect(literalMarkers).toBe(false)
+  // The action bar is a static block in flow — it cannot occlude anything.
+  const barPosition = await page.evaluate(() => {
+    const bar = document.querySelector('.practice-standalone .practice-action-bar')
+    return bar === null ? null : getComputedStyle(bar).position
+  })
+  expect(barPosition).toBe('static')
+  logCapture({ check: 'action-bar-position', position: barPosition, ...((await captureMetadata(page, testInfo)) as object) })
   await shoot(page, testInfo, '02-hierarquia-titulo')
 
-  // P2 structured example: the worked example renders quote/list/bold; the
-  // session pane scrolls the example into full view.
+  // P2 structured example: the worked example renders quote/list/bold,
+  // scrolled into view and measured UNOBSTRUCTED (desktop 03 finding).
   const example = page.locator('.practice-source .practice-markdown').first()
   await expect(example).toBeVisible()
   await expect(example.locator('blockquote').first()).toBeVisible()
   await example.locator('blockquote').first().evaluate((element) => {
-    element.scrollIntoView({ block: 'start' })
+    element.scrollIntoView({ block: 'center' })
   })
+  const exampleOcclusion = await occlusionCheck(page, '.practice-source .practice-markdown blockquote')
+  expect(exampleOcclusion.ok).toBe(true)
+  logCapture({ check: 'example-unobstructed', ...exampleOcclusion, ...((await captureMetadata(page, testInfo)) as object) })
   await shoot(page, testInfo, '03-texto-estruturado')
 
   // P2 LearningRail: with pg-c01 selected the rail orients on the daily
-  // practice and no longer tells the learner to run pg-d01. Captured at the
-  // top of the practice content so the shot shows the rail beside the new
-  // header hierarchy (distinct from the scrolled example shot above).
+  // practice and no longer tells the learner to run pg-d01.
   const rail = page.locator('.learning-rail')
   await expect(rail).toContainText('Cotidiano: dados mínimos e verificação')
   await expect(rail).not.toContainText('Execute a prática pg-d01')
   await expect(rail).not.toContainText('Reproduza antes de perguntar')
-  await sessionPane(page).evaluate((element) => {
+  await standaloneScroller(page).evaluate((element) => {
     element.scrollTop = 0
   })
   await shoot(page, testInfo, '04-rail-contexto')
 })
 
-test('complete daily receipt visible in scrolled captures', async ({ page }, testInfo) => {
+test('real touch/click interactions after common scrolling, with repeated content switching', async ({
+  page,
+}) => {
+  await openPracticeApp(page)
+
+  // Repeated pg-d01 ↔ pg-c01 switching with the explicit confirm/cancel of
+  // an in-flight attempt — real clicks, common scrolling only.
+  await page.getByRole('button', { name: /pg-c01 ·/i }).click()
+  await expect(page.getByRole('heading', { level: 1, name: /cotidiano: dados mínimos e verificação/i })).toBeVisible()
+  await page.getByRole('button', { name: /li o exemplo e vou para a tentativa/i }).click()
+  await page.getByLabel('Peça da etapa A').fill('pedido mínimo com rótulos neutros')
+
+  // Switch during the active attempt: cancel keeps the daily session…
+  await page.getByRole('button', { name: /pg-d01 ·/i }).click()
+  await expect(page.getByRole('alert')).toContainText(/tentativa em curso/i)
+  await page.getByRole('button', { name: /cancelar e continuar pg-c01/i }).click()
+  await expect(page.getByLabel('Peça da etapa A')).toHaveValue(/pedido mínimo/i)
+
+  // …and confirming restarts into a fresh pg-d01 session.
+  await page.getByRole('button', { name: /pg-d01 ·/i }).click()
+  await page.getByRole('button', { name: /confirmar reinício e trocar para pg-d01/i }).click()
+  await expect(page.getByRole('button', { name: /li o exemplo e vou para a tentativa/i })).toBeVisible()
+  expect(await page.getByLabel('Peça da etapa A').count()).toBe(0)
+
+  // Back to pg-c01: a fresh daily session; every verdict radio is selected
+  // with a REAL click after Playwright's common scrolling (no keyboard).
+  await page.getByRole('button', { name: /pg-c01 ·/i }).click()
+  await expect(page.getByRole('heading', { level: 1, name: /cotidiano: dados mínimos e verificação/i })).toBeVisible()
+  await page.getByRole('button', { name: /li o exemplo e vou para a tentativa/i }).click()
+  for (const stepId of ['A', 'B', 'C']) {
+    await page.getByLabel(`Peça da etapa ${stepId}`).fill(`peça ${stepId} com citação fonte-1 L2`)
+  }
+  await page.getByRole('button', { name: /concluir a tentativa/i }).click()
+  for (const criterion of ['c1-mínimos', 'c2-vereditos', 'c3-citações', 'c4-incerteza', 'c5-privacidade', 'c6-resposta']) {
+    const scope = page.locator('li', { hasText: criterion }).first()
+    await scope.getByRole('radio', { name: 'Suficiente', exact: true }).check()
+    await expect(scope.getByRole('radio', { name: 'Suficiente', exact: true })).toBeChecked()
+    await scope.getByLabel(`Evidência do critério ${criterion}`).fill('peça + citação fonte-2 G4')
+  }
+  await page.getByRole('button', { name: /ir para o takeaway/i }).click()
+  await page.getByLabel(/\(a\)/).fill('o telefone com código do portão')
+  await page.getByLabel(/\(b\)/).fill('a frase do dia só entrou com fonte-1 L1')
+  await page.getByRole('button', { name: /concluir a prática/i }).click()
+  const receipt = page.locator('.practice-receipt').filter({ hasText: /Recibo da prática guiada pg-c01/ })
+  await expect(receipt).toBeVisible()
+  await expect(receipt).toContainText('c3-citações: sufficient')
+})
+
+test('complete daily receipt visible UNOBSTRUCTED in scrolled captures', async ({ page }, testInfo) => {
   const consoleErrors: string[] = []
   page.on('console', (message) => {
     if (message.type() === 'error') consoleErrors.push(message.text())
@@ -149,15 +213,36 @@ test('complete daily receipt visible in scrolled captures', async ({ page }, tes
       const styles = getComputedStyle(element)
       return { color: styles.color, backgroundColor: styles.backgroundColor }
     })
-    logCapture({ check: 'chooser-inactive-computed-style', ...mobileStyle, ...((await captureMetadata(page, testInfo)) as object) })
+    logCapture({
+      check: 'chooser-inactive-computed-style',
+      ...mobileStyle,
+      ...((await captureMetadata(page, testInfo)) as object),
+    })
     await shoot(page, testInfo, '07-mobile-chooser-contraste')
   }
 
-  await runDailyCycleToReceipt(page)
+  // Real learner flow to a concluded receipt, verdicts selected by REAL
+  // clicks after common scrolling (PO: keyboard-only is not touch evidence).
+  await page.getByRole('button', { name: /pg-c01 ·/i }).click()
+  await expect(page.getByRole('heading', { level: 1, name: /cotidiano: dados mínimos e verificação/i })).toBeVisible()
+  await page.getByRole('button', { name: /li o exemplo e vou para a tentativa/i }).click()
+  for (const stepId of ['A', 'B', 'C']) {
+    await page.getByLabel(`Peça da etapa ${stepId}`).fill(`peça ${stepId} com citação fonte-1 L2`)
+  }
+  await page.getByRole('button', { name: /concluir a tentativa/i }).click()
+  for (const criterion of ['c1-mínimos', 'c2-vereditos', 'c3-citações', 'c4-incerteza', 'c5-privacidade', 'c6-resposta']) {
+    const scope = page.locator('li', { hasText: criterion }).first()
+    await scope.getByRole('radio', { name: 'Suficiente', exact: true }).check()
+    await expect(scope.getByRole('radio', { name: 'Suficiente', exact: true })).toBeChecked()
+    await scope.getByLabel(`Evidência do critério ${criterion}`).fill('peça + citação fonte-2 G4')
+  }
+  await page.getByRole('button', { name: /ir para o takeaway/i }).click()
+  await page.getByLabel(/\(a\)/).fill('o telefone com código do portão')
+  await page.getByLabel(/\(b\)/).fill('a frase do dia só entrou com fonte-1 L1')
+  await page.getByRole('button', { name: /concluir a prática/i }).click()
 
   // Maximize the practice window for the receipt captures: a real user
-  // action that gives the receipt the largest honest viewport, keeping the
-  // number of overlapping captures small on narrow panes.
+  // action that gives the receipt the largest honest viewport.
   const practiceWindow = page.locator('.desktop-window', {
     has: page.getByRole('navigation', { name: 'Escolha da prática guiada' }),
   })
@@ -183,18 +268,16 @@ test('complete daily receipt visible in scrolled captures', async ({ page }, tes
   })
   expect(receiptMarkers).toEqual({ bold: false, heading: false })
 
-  // Pixel coverage of the WHOLE receipt inside the session pane, with
-  // overlapping steps so consecutive shots always overlap and the union
-  // provably covers the receipt from top to bottom. Desktop carries the
-  // full stitched series; on mobile the pane is too narrow for a sane
-  // series, so it registers top + end shots (declared partial in the
-  // capture manifest — the complete-receipt evidence is the desktop series).
-  const pane = sessionPane(page)
-  const geometry = await pane.evaluate((element) => {
+  // Pixel coverage of the WHOLE receipt UNOBSTRUCTED: overlapping steps in
+  // the single scroll column; every capture asserts (and logs) that the
+  // receipt slice in frame neither leaves the clip nor intersects the
+  // action bar, and the LAST capture proves the REAL last line visible.
+  const scroller = standaloneScroller(page)
+  const geometry = await scroller.evaluate((element) => {
     const receiptEl = document.querySelector('.practice-receipt')
     if (receiptEl === null) throw new Error('receipt not found for geometry')
-    const paneRect = element.getBoundingClientRect()
-    const receiptTop = receiptEl.getBoundingClientRect().top - paneRect.top + element.scrollTop
+    const clip = element.getBoundingClientRect()
+    const receiptTop = receiptEl.getBoundingClientRect().top - clip.top + element.scrollTop
     return {
       paneClientHeight: element.clientHeight,
       receiptTopInPane: receiptTop,
@@ -202,42 +285,38 @@ test('complete daily receipt visible in scrolled captures', async ({ page }, tes
       receiptBottomInPane: receiptTop + receiptEl.getBoundingClientRect().height,
     }
   })
-  const overlap = 120
+  const overlap = 140
   const step = Math.max(1, geometry.paneClientHeight - overlap)
-  const firstScroll = Math.max(0, geometry.receiptTopInPane - 40)
-  const lastScroll = Math.max(firstScroll, geometry.receiptBottomInPane - geometry.paneClientHeight + 40)
+  const firstScroll = Math.max(0, geometry.receiptTopInPane - 60)
+  const lastScroll = Math.max(firstScroll, geometry.receiptBottomInPane - geometry.paneClientHeight + 60)
   const scrolls: number[] = []
-  if (testInfo.project.name === 'desktop-1280') {
-    for (let position = firstScroll; position < lastScroll; position += step) scrolls.push(position)
-    if (scrolls.length === 0 || scrolls[scrolls.length - 1] !== lastScroll) scrolls.push(lastScroll)
-  } else {
-    scrolls.push(firstScroll, lastScroll)
-  }
+  for (let position = firstScroll; position < lastScroll; position += step) scrolls.push(position)
+  if (scrolls.length === 0 || scrolls[scrolls.length - 1] !== lastScroll) scrolls.push(lastScroll)
 
   let shotNumber = 1
   for (const position of scrolls) {
-    await pane.evaluate((element, scrollTop) => {
+    await scroller.evaluate((element, scrollTop) => {
       element.scrollTop = scrollTop
     }, position)
     await expect(receipt).toBeVisible()
     if (shotNumber === scrolls.length) {
-      // The last capture must show the very end of the receipt, fully inside
-      // the pane (clip) rect — the AID-3590 capture-05 gap closed.
-      // The receipt's END must be fully inside the pane (its top is covered
-      // by the previous shot: consecutive steps overlap by construction).
-      const endVisible = await pane.evaluate((element) => {
-        const receiptEl = document.querySelector('.practice-receipt')
-        const lastChild = receiptEl?.querySelector('.practice-markdown')?.lastElementChild ?? null
-        if (receiptEl === null || lastChild === null) return null
-        return { lastBottom: lastChild.getBoundingClientRect().bottom, paneBottom: element.getBoundingClientRect().bottom }
+      // The REAL last line, fully inside the clip and measured against the
+      // action bar — the mobile-06 finding cannot recur.
+      const lastLine = receipt.getByText('a frase do dia só entrou com fonte-1 L1').last()
+      await expect(lastLine).toBeVisible()
+      const lastOcclusion = await occlusionCheck(page, '.practice-receipt .practice-markdown > :last-child')
+      expect(lastOcclusion.ok).toBe(true)
+      logCapture({
+        check: 'receipt-last-line-unobstructed',
+        ...lastOcclusion,
+        ...((await captureMetadata(page, testInfo)) as object),
       })
-      expect(endVisible).not.toBeNull()
-      expect((endVisible as { lastBottom: number; paneBottom: number }).lastBottom).toBeLessThanOrEqual(
-        (endVisible as { lastBottom: number; paneBottom: number }).paneBottom + 1,
-      )
-      await expect(receipt.getByText('a frase do dia só entrou com fonte-1 L1').last()).toBeVisible()
     }
-    await shoot(page, testInfo, `${String(shotNumber + 4).padStart(2, '0')}-recibo-${String(shotNumber).padStart(2, '0')}-de-${String(scrolls.length).padStart(2, '0')}`)
+    await shoot(
+      page,
+      testInfo,
+      `${String(shotNumber + 4).padStart(2, '0')}-recibo-${String(shotNumber).padStart(2, '0')}-de-${String(scrolls.length).padStart(2, '0')}`,
+    )
     shotNumber += 1
   }
   logCapture({

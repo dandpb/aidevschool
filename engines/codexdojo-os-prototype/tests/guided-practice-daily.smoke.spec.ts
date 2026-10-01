@@ -52,17 +52,10 @@ test('runs the pg-c01 daily cycle standalone with deterministic receipt', async 
   for (const criterion of ['c1-mínimos', 'c2-vereditos', 'c4-incerteza', 'c5-privacidade', 'c6-resposta']) {
     await page.getByRole('radio', { name: 'Suficiente', exact: true }).first().waitFor()
     const scope = page.locator('li', { hasText: criterion }).first()
-    // AID-3643: the session pane now truly scrolls inside the window, so the
-    // sticky action bar can overlay a minimally-scrolled radio on small
-    // panes — position the criterion below it and select via keyboard.
-    await scope.evaluate((element) => {
-      const pane = element.closest('.practice-app')
-      if (pane === null) return
-      pane.scrollTop += element.getBoundingClientRect().top - pane.getBoundingClientRect().top - 84
-    })
-    await scope.getByRole('radio', { name: 'Suficiente', exact: true }).focus()
-    await page.keyboard.press('Space')
-    await expect(scope.getByRole('radio', { name: 'Suficiente', exact: true })).toBeChecked()
+    // AID-3643 r1: the standalone surface scrolls as one column with a
+    // static action bar — real clicks after common scrolling work again
+    // (the keyboard workaround of r0 is gone; PO 7286fcf5).
+    await scope.getByRole('radio', { name: 'Suficiente', exact: true }).check()
     await scope.getByLabel(`Evidência do critério ${criterion}`).fill('peça + citação fonte-2 G4')
   }
   const c3 = page.locator('li', { hasText: 'c3-citações' }).first()
