@@ -141,6 +141,11 @@
   backdrop-filter: blur(10px);
 }
 
+.practice-note {
+  color: var(--muted);
+  font-size: 12px;
+}
+
 .practice-action-bar .practice-note {
   margin: 0;
 }
@@ -236,7 +241,3 @@
   opacity: 0.55;
 }
 
-.practice-note {
-  color: var(--muted);
-  font-size: 12px;
-}

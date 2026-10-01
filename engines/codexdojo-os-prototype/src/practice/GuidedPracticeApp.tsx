@@ -81,7 +81,7 @@ export function GuidedPracticeApp({ onTeach, onConcluded }: GuidedPracticeAppPro
       {/* Sticky action bar (AID-3527 review item 3): the current phase's
           primary action stays reachable even when the OS "Modo Aprender"
           bottom sheet covers the lower half of the window. */}
-      <div className="practice-action-bar" role="group" aria-label="Ação da fase atual">
+      <div className="practice-action-bar">
         {state.phase === 'exemplo' && (
           <button type="button" className="practice-primary" onClick={() => dispatch({ type: 'exemplo-concluido' })}>
             Li o exemplo e vou para a tentativa
