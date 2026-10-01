@@ -16,7 +16,22 @@ export function LearningRail({ context, onClose }: { readonly context: LearningC
   }
   return (
     <aside className="learning-rail">
-      <header><span><BrainCircuit /> Modo Aprender</span><button type="button" onClick={onClose} aria-label="Fechar Modo Aprender" title="Fechar"><span aria-hidden="true"><X /></span></button></header>
+      <header><span><BrainCircuit /> Modo Aprender</span><button
+            type="button"
+            onClick={onClose}
+            onPointerDown={(event) => {
+              // AID-3564: without this, mousedown focuses the rail, the
+              // :focus-within sheet grows and moves this button mid-press,
+              // swallowing the click. Preventing the pointer focus shift
+              // keeps the button under the pointer; keyboard flow (Tab/Enter)
+              // is untouched.
+              event.preventDefault()
+            }}
+            aria-label="Fechar Modo Aprender"
+            title="Fechar"
+          >
+            <span aria-hidden="true"><X /></span>
+          </button></header>
       <div className="learning-scroll">
         <span className="context-eyebrow">{context.eyebrow}</span>
         <h2>{context.title}</h2>

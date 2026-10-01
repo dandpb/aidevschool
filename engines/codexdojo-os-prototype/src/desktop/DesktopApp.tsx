@@ -193,7 +193,21 @@ export function DesktopApp({ learner }: AppProps) {
           operatorSurface={operatorSurface}
         />
       ) : null}
-      {learnMode ? <LearningRail context={learningContext} onClose={() => setLearnMode(false)} /> : null}
+      {learnMode ? (
+        <LearningRail
+          context={learningContext}
+          onClose={() => {
+            setLearnMode(false)
+            // AID-3564 F3: return focus to the control that toggles the rail
+            // instead of dropping it to <body> after unmount. Scheduled via
+            // timeout so it also runs in non-visual test environments.
+            window.setTimeout(() => {
+              const toggle = document.querySelector('button.learn-toggle')
+              if (toggle instanceof HTMLButtonElement) toggle.focus()
+            }, 0)
+          }}
+        />
+      ) : null}
       {toast === null ? null : (
         <div className="toast" role="status">
           {toast}

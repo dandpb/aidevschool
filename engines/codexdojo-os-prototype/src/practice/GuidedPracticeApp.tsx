@@ -8,6 +8,7 @@ import {
   initialGuidedPracticeState,
   openRetryTargets,
   reduceGuidedPractice,
+  type CyclePhase,
   type RubricVerdict,
 } from './guidedPracticeCycle'
 
@@ -41,6 +42,21 @@ export function GuidedPracticeApp({ onTeach, onConcluded }: GuidedPracticeAppPro
 
   const recordedEvidence = state.stepEvidence.filter((evidence) => evidence.trim() !== '').length
   const retryTargets = openRetryTargets(state)
+
+  // AID-3564 F1: every phase transition must land focus on a meaningful
+  // element (the new phase's heading) instead of dropping it to <body>.
+  // Headings are never disabled, so focus always sticks.
+  const phaseHeadingRefs = useRef<Partial<Record<CyclePhase, HTMLHeadingElement | null>>>({})
+  const mountedRef = useRef(false)
+  useEffect(() => {
+    if (!mountedRef.current) {
+      mountedRef.current = true
+      return
+    }
+    const heading =
+      phaseHeadingRefs.current[state.phase] ?? phaseHeadingRefs.current.takeaway
+    if (heading !== undefined && heading !== null) heading.focus()
+  }, [state.phase])
 
   const copyReceipt = () => {
     void navigator.clipboard?.writeText(receipt)
@@ -81,7 +97,7 @@ export function GuidedPracticeApp({ onTeach, onConcluded }: GuidedPracticeAppPro
       {/* Sticky action bar (AID-3527 review item 3): the current phase's
           primary action stays reachable even when the OS "Modo Aprender"
           bottom sheet covers the lower half of the window. */}
-      <div className="practice-action-bar">
+      <section className="practice-action-bar" aria-label="Ação da fase atual">
         {state.phase === 'exemplo' && (
           <button type="button" className="practice-primary" onClick={() => dispatch({ type: 'exemplo-concluido' })}>
             Li o exemplo e vou para a tentativa
@@ -148,7 +164,7 @@ export function GuidedPracticeApp({ onTeach, onConcluded }: GuidedPracticeAppPro
             )}
           </>
         )}
-      </div>
+      </section>
 
       {state.phase === 'exemplo' && (
         <section aria-labelledby="practice-exemplo-title">
@@ -165,7 +181,15 @@ export function GuidedPracticeApp({ onTeach, onConcluded }: GuidedPracticeAppPro
 
       {state.phase === 'tentativa' && (
         <section aria-labelledby="practice-tentativa-title">
-          <h2 id="practice-tentativa-title">2. Tentativa — registre a evidência de cada passo</h2>
+          <h2
+            id="practice-tentativa-title"
+            tabIndex={-1}
+            ref={(node) => {
+              phaseHeadingRefs.current.tentativa = node
+            }}
+          >
+            2. Tentativa — registre a evidência de cada passo
+          </h2>
           <ol className="practice-steps">
             {projection.attemptSteps.map((step, index) => (
               <li key={step}>
@@ -201,7 +225,13 @@ export function GuidedPracticeApp({ onTeach, onConcluded }: GuidedPracticeAppPro
 
       {(state.phase === 'feedback' || state.phase === 'retry') && (
         <section aria-labelledby="practice-feedback-title">
-          <h2 id="practice-feedback-title">
+          <h2
+            id="practice-feedback-title"
+            tabIndex={-1}
+            ref={(node) => {
+              phaseHeadingRefs.current[state.phase as 'feedback' | 'retry'] = node
+            }}
+          >
             {state.phase === 'retry' ? '4. Retry — refaça apenas os critérios reprovados' : '3. Feedback pela rúbrica'}
           </h2>
           {state.phase === 'retry' ? (
@@ -293,7 +323,15 @@ export function GuidedPracticeApp({ onTeach, onConcluded }: GuidedPracticeAppPro
 
       {(state.phase === 'takeaway' || state.phase === 'concluida') && (
         <section aria-labelledby="practice-takeaway-title">
-          <h2 id="practice-takeaway-title">5. Takeaway</h2>
+          <h2
+            id="practice-takeaway-title"
+            tabIndex={-1}
+            ref={(node) => {
+              phaseHeadingRefs.current.takeaway = node
+            }}
+          >
+            5. Takeaway
+          </h2>
           <label>
             (a) {projection.takeawayPrompts.a}
             <textarea
