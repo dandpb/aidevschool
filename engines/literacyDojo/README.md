@@ -13,7 +13,7 @@ e o ADR [`docs/design/adr/0005-ai-literacy-bounded-context.md`](../../docs/desig
 
 | Parte | Estado |
 | --- | --- |
-| Conteúdo | O percurso público projeta 23 missões de `ia_pratica` em 7 módulos (`mod-01`–`mod-04`, `mod-06`–`mod-08`; contagem canônica em `curriculum/ai-literacy/catalog.yaml`). A Trilha Dev no onboarding é um CTA para o OS público (`?track=dev`); as 9 lições Dev do catálogo não entram neste app. |
+| Conteúdo | O percurso default projeta 23 missões de `ia_pratica` em 7 módulos (`mod-01`–`mod-04`, `mod-06`–`mod-08`; contagem canônica em `curriculum/ai-literacy/catalog.yaml`). AID-3584: a Jornada Dev (9 lições de `mod-05`, `l15` primeiro, sem pré-requisitos) é opt-in explícito do aprendiz no Home — nunca inferida de `onboarding.audience`; o onboarding segue entregando o CTA do OS público (`?track=dev`). Conquistas/XP/skills continuam escopados ao percurso default (separação navegação × conquistas em `domain/journeyProgress.ts`). |
 | Corredor mod-01→03 | Arco contínuo com Desafios de Módulo (cp-01..cp-03) nas fronteiras, gate locked-only entre bairros e revisão espaçada [1,7,21] medida (spec AID-915; E2E `playwright/corridor.spec.ts`). |
 | Aplicação | React/Vite local-first, com conteúdo gerado, progresso em IndexedDB e feedback determinístico. |
 | Progresso | A UI registra no máximo `completed`; `mastered` requer verificação independente. |

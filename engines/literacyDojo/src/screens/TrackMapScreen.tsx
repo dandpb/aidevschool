@@ -3,6 +3,7 @@ import { MentorGuide } from "../components/MentorGuide";
 import { VoxelWorld } from "../components/VoxelWorld";
 import type { ModuleCheckpointId } from "../domain/checkpoints";
 import { isLessonGateLocked } from "../domain/checkpoints";
+import { activeJourneyOf } from "../domain/journeyProgress";
 import { type LearnerProgress, type LessonStatus, isLessonUnlocked } from "../domain/progress";
 import { buildTrackQueries } from "../domain/trackQueries";
 
@@ -27,10 +28,14 @@ const ZONE_NAMES = [
   "Correio Seguro",
 ];
 
+const DEV_ZONE_COPY =
+  "Pratique pedidos, revisão e refatoração com assistentes de IA em contexto de código.";
+
 /**
  * Mapa da trilha: módulos e lições com status. Lições `planned` aparecem
  * bloqueadas como "em breve" — elas existem no catálogo (read model) mas
- * ainda não têm conteúdo.
+ * ainda não têm conteúdo. AID-3584: o mapa reflete a jornada ATIVA (IA na
+ * Prática por default; Dev somente pela escolha explícita do aprendiz).
  */
 export function TrackMapScreen({
   progress,
@@ -44,19 +49,23 @@ export function TrackMapScreen({
   onOpenCheckpoint: (checkpointId: ModuleCheckpointId) => void;
 }) {
   const services = useServices();
-  const queries = buildTrackQueries(progress, services.content, services.clock);
+  const activeJourney = activeJourneyOf(progress);
+  const queries = buildTrackQueries(progress, services.content, services.clock, activeJourney);
   const { trackSummary: summary, statusLabel } = queries;
-  const modules = services.content.listModules();
+  const modules = services.content.listModules(activeJourney);
 
   return (
     <section className="screen map-screen" data-testid="map-screen" aria-labelledby="map-title">
       <div className="map-hero">
         <div className="map-hero-copy">
-          <p className="eyebrow">VILA LUME</p>
-          <h1 id="map-title">Mapa da Vila Lume</h1>
+          <p className="eyebrow">{activeJourney === "dev" ? "JORNADA DEV" : "VILA LUME"}</p>
+          <h1 id="map-title">
+            {activeJourney === "dev" ? "Mapa da Jornada Dev" : "Mapa da Vila Lume"}
+          </h1>
           <p>
-            Cada pedido leva de 3 a 5 minutos. Tente primeiro, receba feedback e ilumine o próximo
-            caminho.
+            {activeJourney === "dev"
+              ? "Pedidos curtos de engenharia com assistentes de IA — tentar, receber feedback e avançar."
+              : "Cada pedido leva de 3 a 5 minutos. Tente primeiro, receba feedback e ilumine o próximo caminho."}
           </p>
           <div className="map-summary" aria-label="Resumo da trilha">
             <span>
@@ -92,11 +101,19 @@ export function TrackMapScreen({
                 {module.order}
               </div>
               <div>
-                <p className="world-kicker">BAIRRO {module.order}</p>
-                <h2 id={`module-${module.id}`}>{ZONE_NAMES[moduleIndex] ?? module.title}</h2>
+                <p className="world-kicker">
+                  {activeJourney === "dev" ? "MÓDULO" : "BAIRRO"} {module.order}
+                </p>
+                <h2 id={`module-${module.id}`}>
+                  {activeJourney === "dev"
+                    ? module.title
+                    : (ZONE_NAMES[moduleIndex] ?? module.title)}
+                </h2>
                 <p>
                   <strong>{module.title}.</strong>{" "}
-                  {ZONE_COPY[moduleIndex] ?? "Pratique uma nova habilidade com IA."}
+                  {activeJourney === "dev"
+                    ? DEV_ZONE_COPY
+                    : (ZONE_COPY[moduleIndex] ?? "Pratique uma nova habilidade com IA.")}
                 </p>
               </div>
               <span className="world-count">

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { downloadTextFile } from "../adapters/downloadText";
 import { useServices } from "../app/services";
+import { activeJourneyOf } from "../domain/journeyProgress";
 import type { LearnerProgress } from "../domain/progress";
 import { ACHIEVEMENT_DEFINITIONS, localDateKey } from "../domain/progress";
 import { readyLessonEntries } from "../domain/track";
@@ -48,7 +49,12 @@ export function ProgressScreen({
   useEffect(() => {
     headingRef.current?.focus();
   }, []);
-  const queries = buildTrackQueries(progress, services.content, services.clock);
+  const queries = buildTrackQueries(
+    progress,
+    services.content,
+    services.clock,
+    activeJourneyOf(progress),
+  );
   const { dailyGoal: goal, dueReviews: due, upcomingReviews: upcoming } = queries;
   const unlockedIds = new Set(progress.achievements.map((achievement) => achievement.id));
   const practicedSkills = Object.values(progress.skills);
@@ -89,7 +95,7 @@ export function ProgressScreen({
     }
   };
 
-  const readyLessons = readyLessonEntries(services.content.listModules());
+  const readyLessons = readyLessonEntries(services.content.listModules(activeJourneyOf(progress)));
   const lessonBySkillId = new Map<string, (typeof readyLessons)[number]>();
   for (const entry of readyLessons) {
     if (progress.lessonStatus[entry.id] !== "completed") continue;

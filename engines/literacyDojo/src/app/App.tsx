@@ -5,6 +5,7 @@ import { buildEntryViewedEvent } from "../domain/analytics";
 import type { ModuleCheckpointId } from "../domain/checkpoints";
 import type { LiteracyEvidenceRecord } from "../domain/evidence";
 import type { AttemptFeedback } from "../domain/feedback";
+import type { JourneyId } from "../domain/journeyProgress";
 import type { Achievement, LearnerProgress } from "../domain/progress";
 import { isRetrofitNoticeDue } from "../domain/retrofitNotice";
 import { LiteracyMissionAdapter, isHostedMission } from "../host/LiteracyMissionAdapter";
@@ -61,6 +62,7 @@ export function AppShell({
   const [route, setRoute] = useState<Route | null>(null);
   const [bootError, setBootError] = useState<string | null>(null);
   const [lessonOpenError, setLessonOpenError] = useState<string | null>(null);
+  const [journeySwitchError, setJourneySwitchError] = useState<string | null>(null);
   const [retrofitAcks, setRetrofitAcks] = useState(() => loadRetrofitAcks());
   const hostReady = progress !== null;
 
@@ -229,6 +231,22 @@ export function AppShell({
     [openLessonRoute, services],
   );
 
+  const handleSwitchJourney = useCallback(
+    async (journey: JourneyId) => {
+      setJourneySwitchError(null);
+      try {
+        const updated = await services.useCases.switchJourney(journey);
+        setProgress(updated);
+        setRoute({ name: "map" });
+      } catch {
+        setJourneySwitchError(
+          "Não foi possível salvar a troca de jornada. Tente novamente em instantes.",
+        );
+      }
+    },
+    [services],
+  );
+
   if (bootError) {
     return (
       <main className="app-shell">
@@ -275,6 +293,11 @@ export function AppShell({
               {lessonOpenError}
             </p>
           )}
+          {journeySwitchError && (
+            <p className="feedback feedback-fail" role="alert" data-testid="journey-switch-error">
+              {journeySwitchError}
+            </p>
+          )}
           {route.name === "onboarding" && (
             <OnboardingScreen
               onDone={(updated) => {
@@ -291,6 +314,7 @@ export function AppShell({
               onOpenCheckpoint={(checkpointId) => setRoute({ name: "checkpoint", checkpointId })}
               onOpenMap={() => setRoute({ name: "map" })}
               onOpenProgress={() => setRoute({ name: "progress" })}
+              onSwitchJourney={(journey) => void handleSwitchJourney(journey)}
               onReset={handleReset}
             />
           )}

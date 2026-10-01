@@ -21,6 +21,12 @@ import { type ActivityAnswer, type EvaluationResult, evaluateActivity } from "..
 import { type LiteracyEvidenceRecord, buildEvidenceRecord } from "../domain/evidence";
 import type { AttemptFeedback } from "../domain/feedback";
 import {
+  type JourneyId,
+  type JourneyModules,
+  reconcileJourneyCursors,
+  selectJourney,
+} from "../domain/journeyProgress";
+import {
   type AudienceChoice,
   type CompleteLessonResult,
   type LearnerProgress,
@@ -125,6 +131,21 @@ const HOSTED_OS_MISSION_LESSONS = new Set([
 export class LiteracyUseCases {
   constructor(private readonly deps: UseCaseDeps) {}
 
+  /** Módulos das duas jornadas de navegação (mapa puro sobre o read model). */
+  private journeyModules(): JourneyModules {
+    return {
+      ia_pratica: this.deps.content.listModules("ia_pratica"),
+      dev: this.deps.content.listModules("dev"),
+    };
+  }
+
+  /** Jornada de navegação à qual a lição pertence (default ia_pratica para módulo desconhecido). */
+  private journeyOfLesson(lesson: LessonDefinition): JourneyId {
+    const modules = this.journeyModules();
+    if (modules.dev.some((module) => module.id === lesson.moduleId)) return "dev";
+    return "ia_pratica";
+  }
+
   private requireLesson(lessonId: string): LessonDefinition {
     const lesson = this.deps.content.getLesson(lessonId);
     if (!lesson) throw new Error(`Lição não encontrada no read model: ${lessonId}`);
@@ -179,6 +200,19 @@ export class LiteracyUseCases {
         },
       ),
     );
+    return next;
+  }
+
+  /**
+   * Escolha explícita de jornada (AID-3584): opt-in da jornada Dev e volta à
+   * IA na Prática. Não infere nada de `onboarding.audience`, não desbloqueia
+   * lições além da primeira da jornada alvo (statuses ausentes apenas) e
+   * nunca sobrescreve status existente. Idempotente.
+   */
+  async switchJourney(journey: JourneyId): Promise<LearnerProgress> {
+    const progress = await this.requireProgress();
+    const next = selectJourney(progress, journey, this.journeyModules());
+    await this.deps.progress.save(next);
     return next;
   }
 
@@ -313,17 +347,33 @@ export class LiteracyUseCases {
   }): Promise<CompleteLessonResult> {
     const lesson = this.requireLesson(input.lessonId);
     const progress = await this.requireProgress();
+    const lessonJourney = this.journeyOfLesson(lesson);
     const result = completeLessonInDomain(
       progress,
       lesson,
       input.bestScores,
-      this.deps.content.listModules(),
+      this.deps.content.listModules(lessonJourney),
       this.deps.clock(),
+      // AID-3584 (separação navegação × conquistas): o desbloqueio segue a
+      // jornada da lição, mas o escopo das conquistas continua o percurso
+      // público default — track_complete/first_module não são redefinidos
+      // pela inclusão das 9 lições Dev.
+      this.deps.content.listModules(),
     );
     if (!result.outcome.completed) {
       return result;
     }
-    await this.deps.progress.save(result.progress);
+    const reconciled = {
+      ...result,
+      progress: reconcileJourneyCursors(
+        result.progress,
+        lessonJourney,
+        lesson.id,
+        result.nextLessonId,
+        this.journeyModules(),
+      ),
+    };
+    await this.deps.progress.save(reconciled.progress);
     // ADR-0009 (emenda AID-913): exatamente 1× `lesson_completed` por
     // conclusão, após o progresso persistir. Fire-and-forget — o contrato dos
     // sinks é nunca lançar nem adiar a resposta; analytics nunca bloqueia a
@@ -346,7 +396,7 @@ export class LiteracyUseCases {
         },
       ),
     );
-    return result;
+    return reconciled;
   }
 
   /**

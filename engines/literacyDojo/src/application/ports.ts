@@ -8,6 +8,7 @@ import type { ProductAnalyticsEvent } from "../domain/analytics";
 import type { EvaluationResult } from "../domain/evaluation";
 import type { LiteracyEvidenceRecord } from "../domain/evidence";
 import type { AttemptFeedback } from "../domain/feedback";
+import type { JourneyId } from "../domain/journeyProgress";
 import type { LearnerProgress } from "../domain/progress";
 import type { LiteracyVerificationReceipt } from "../domain/verification";
 
@@ -20,7 +21,13 @@ import type { LiteracyVerificationReceipt } from "../domain/verification";
 
 export interface ContentRepository {
   getTrack(): Track;
-  listModules(): ModuleDefinition[];
+  /**
+   * Módulos de uma jornada na ordem do catálogo. Sem argumento devolve o
+   * percurso público default (`ia_pratica`) — conquistas, checkpoints e
+   * consumidores legados dependem desse default. `"dev"` serve apenas a
+   * navegação opt-in (AID-3584).
+   */
+  listModules(journey?: JourneyId): ModuleDefinition[];
   getLesson(lessonId: string): LessonDefinition | undefined;
   getSkillTitle(skillId: string): string;
   getContentVersion(): string;
