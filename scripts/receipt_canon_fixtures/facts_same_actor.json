@@ -1,0 +1,23 @@
+{
+  "expected_head": "e4f5b71c4ec33d41ded6d2b05c6d6aa033faa9e5",
+  "producer": {
+    "agent": "platform-ci",
+    "task": "AID-3585",
+    "run": "w2999",
+    "session": "sess-7f3a2b"
+  },
+  "reviewer": {
+    "agent": "platform-ci",
+    "task": "AID-9006",
+    "run": "w3001",
+    "session": "d90c1e44-2f67-4c1e-9a33-64b9e7a0f512"
+  },
+  "citation": {
+    "task": "AID-9006",
+    "verdict_ref": "5843026877"
+  },
+  "captured_actor_ids": [
+    "1e9be0fa-c320-4309-9704-c755c53da7fd",
+    "616b5f9b-15c8-4ad1-816c-78a7317e0202"
+  ]
+}
