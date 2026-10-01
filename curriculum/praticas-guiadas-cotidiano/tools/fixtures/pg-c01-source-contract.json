@@ -1,0 +1,339 @@
+{
+  "schema": "aidevschool/praticas-guiadas-cotidiano/source-contract@1",
+  "package": {
+    "id": "pg-c01-dados-minimos-e-verificacao",
+    "version": "v1",
+    "audience": "cotidiano",
+    "journey": "ia_pratica",
+    "competencies": [
+      "P F4",
+      "S F2"
+    ]
+  },
+  "pin": {
+    "repo": "dandpb/aidevschool",
+    "pullRequest": 635,
+    "head": "88ca305e0f7cd1c9a9f543fbda69f154d1cf8aea",
+    "canonicalAttachmentSha256": "904ea56a97495a3dcbacc4e6bdf8d8df5b98b8f16df1f0ac95b835ffed4e73e5"
+  },
+  "files": [
+    {
+      "path": "../README.md",
+      "sha256": "b2f7ee85b7438f0a6bf6737fc8f7e7bfa918b53f6203020ba100b2940ddad86a",
+      "bytes": 10514
+    },
+    {
+      "path": "enunciado.md",
+      "sha256": "36dc9260d75bc0369590abbd61698b16e641021f68faf3db9af9c698f715493d",
+      "bytes": 5184
+    },
+    {
+      "path": "insumos/fonte-1-recado-tia-regina.md",
+      "sha256": "a6fa215a1de9b827e52463b2dee9d0c0dfddb8a931206c9f71d279bbdbad1a48",
+      "bytes": 955
+    },
+    {
+      "path": "insumos/fonte-2-grupo-familia.md",
+      "sha256": "693fee8a05015bd5e1e3b21fa68ba840ed582f34c4fa733d347e2dc0912da3eb",
+      "bytes": 1131
+    },
+    {
+      "path": "insumos/resposta-ia.md",
+      "sha256": "62a68eafc738f9522dbf2cec64015e746ac3bfa5c451ea2703062ec23eddb546",
+      "bytes": 893
+    },
+    {
+      "path": "exemplo-trabalhado.md",
+      "sha256": "2ec6374abb7148a823124897aabfa7d813978fe4700c93ed865e578fdd3e0cfa",
+      "bytes": 1578
+    },
+    {
+      "path": "rubrica-v1.md",
+      "sha256": "c03de75dcb3d862d98ff787eadc7500fa729c8f75b759f196a80dfa55a139e8a",
+      "bytes": 5345
+    },
+    {
+      "path": "guia-de-correcao/solucao.md",
+      "sha256": "ec74afb1b44c4706b8acf24a3b34525be5e57980a1494e1f7c1b6d8105ae9106",
+      "bytes": 6763
+    },
+    {
+      "path": "exemplos/exemplo-falha.md",
+      "sha256": "61ad7027218cf7aea2790d38aa469686f54d0fdd3bc37c18c3fc14c95df95c09",
+      "bytes": 741
+    },
+    {
+      "path": "exemplos/exemplo-sucesso.md",
+      "sha256": "5f66991393bcc5ef67f3d215cfa613ab80dd7caa13bc45f0e9d8e71919742def",
+      "bytes": 471
+    }
+  ],
+  "structure": {
+    "steps": [
+      {
+        "id": "A"
+      },
+      {
+        "id": "B"
+      },
+      {
+        "id": "C"
+      }
+    ],
+    "anchors": {
+      "insumos/fonte-1-recado-tia-regina.md": {
+        "key": "fonte-1",
+        "regex": "^\\| (L\\d+) \\| ",
+        "ids": [
+          "L1",
+          "L2",
+          "L3",
+          "L4",
+          "L5",
+          "L6"
+        ]
+      },
+      "insumos/fonte-2-grupo-familia.md": {
+        "key": "fonte-2",
+        "regex": "^\\| (G\\d+) \\| ",
+        "ids": [
+          "G1",
+          "G2",
+          "G3",
+          "G4",
+          "G5",
+          "G6",
+          "G7",
+          "G8"
+        ]
+      }
+    },
+    "statements": {
+      "first": 1,
+      "last": 5
+    },
+    "criteriaIds": [
+      "c1-mínimos",
+      "c2-vereditos",
+      "c3-citações",
+      "c4-incerteza",
+      "c5-privacidade",
+      "c6-resposta"
+    ],
+    "takeawayPrompts": 2,
+    "rulesMinCount": 5
+  },
+  "extractions": [
+    {
+      "role": "objective",
+      "file": "enunciado.md",
+      "reflow": false,
+      "selector": {
+        "kind": "section",
+        "heading": "Objetivo observável"
+      },
+      "sha256": "67bb16a1a5d7dca27c28eed37505edf6d6580c468a43486ae734d89647e8625e"
+    },
+    {
+      "role": "step:A",
+      "file": "enunciado.md",
+      "reflow": false,
+      "selector": {
+        "kind": "paragraph",
+        "section": "As três etapas da tentativa",
+        "prefix": "**Etapa A —"
+      },
+      "sha256": "3ab8685901a2da35b184bc1f896b014aa14719303c2659fee47a45db3a5ac1aa"
+    },
+    {
+      "role": "step:B",
+      "file": "enunciado.md",
+      "reflow": false,
+      "selector": {
+        "kind": "paragraph",
+        "section": "As três etapas da tentativa",
+        "prefix": "**Etapa B —"
+      },
+      "sha256": "c4611a026e4110e7deff08411583db19f89d643be0ff3c3311488d284455a7ab"
+    },
+    {
+      "role": "step:C",
+      "file": "enunciado.md",
+      "reflow": false,
+      "selector": {
+        "kind": "paragraph",
+        "section": "As três etapas da tentativa",
+        "prefix": "**Etapa C —"
+      },
+      "sha256": "7fea434d25d96db127fe4c7a14f7af10a039b7bbf9d0d8c13b8f004397ff49c7"
+    },
+    {
+      "role": "rules",
+      "file": "enunciado.md",
+      "reflow": true,
+      "selector": {
+        "kind": "bullets",
+        "section": "Regras"
+      },
+      "sha256": "9830904d0be2ff15e1eb3089ee4c841a18a8404e10eaab30a0dec0b8ba904bb9"
+    },
+    {
+      "role": "retryInstruction",
+      "file": "enunciado.md",
+      "reflow": true,
+      "selector": {
+        "kind": "paragraph",
+        "section": "Segunda tentativa (retry)",
+        "index": 0
+      },
+      "sha256": "dc7a9a5ea81872cbad40354e3cae0bf176945d534ea2334a3948b6f9adacc0b8"
+    },
+    {
+      "role": "retryStatement",
+      "file": "guia-de-correcao/solucao.md",
+      "reflow": true,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "quotedBold",
+        "anchorPrefix": "Versão revisada da resposta insiste:"
+      },
+      "sha256": "06498257f1aeba6229d9ca2785f1a2cfc4aaed86ab3d87b04548b1301f95f3e0"
+    },
+    {
+      "role": "takeawayInstruction",
+      "file": "enunciado.md",
+      "reflow": true,
+      "selector": {
+        "kind": "firstLine",
+        "section": "Takeaway (fechamento)"
+      },
+      "sha256": "09c845c69309ef2d121050f1a32a714d34dd8ac624920bdb985b783641598058"
+    },
+    {
+      "role": "takeawayPrompts",
+      "file": "enunciado.md",
+      "reflow": true,
+      "selector": {
+        "kind": "labeledLines",
+        "section": "Takeaway (fechamento)",
+        "prefixes": [
+          "(a)",
+          "(b)"
+        ]
+      },
+      "sha256": "8f9d1d9a130bfc840728a528a5633eeb872285713877917202f31804553a5fd9"
+    },
+    {
+      "role": "anchors:insumos/fonte-1-recado-tia-regina.md",
+      "file": "insumos/fonte-1-recado-tia-regina.md",
+      "reflow": false,
+      "selector": {
+        "kind": "tableRows",
+        "regex": "^\\| (L\\d+) \\| "
+      },
+      "sha256": "19c4ab6f5021ad59412771ef72baf5f65ffc511346fc0413f03680be9f611874"
+    },
+    {
+      "role": "anchors:insumos/fonte-2-grupo-familia.md",
+      "file": "insumos/fonte-2-grupo-familia.md",
+      "reflow": false,
+      "selector": {
+        "kind": "tableRows",
+        "regex": "^\\| (G\\d+) \\| "
+      },
+      "sha256": "fb5d66a9f46fb3e311d62b9eba0f35b685c4c26ed6c7b26270d158647dcaf144"
+    },
+    {
+      "role": "statements",
+      "file": "insumos/resposta-ia.md",
+      "reflow": true,
+      "selector": {
+        "kind": "numberedList",
+        "first": 1,
+        "last": 5
+      },
+      "sha256": "712849a311aae14c14ab22ddda6a221e2b7efa35f65bc01e45b3cd483f3e9620"
+    },
+    {
+      "role": "criteriaIds",
+      "file": "rubrica-v1.md",
+      "reflow": false,
+      "selector": {
+        "kind": "criteriaTable"
+      },
+      "sha256": "252e3e5581173d949eef3d87e6db9a3d6b8419a2612bae4411e715e1d0c42ad0"
+    },
+    {
+      "role": "feedback:c1-mínimos",
+      "file": "rubrica-v1.md",
+      "reflow": true,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "bulletQuote",
+        "section": "Feedback explicativo por critério (modelo para a 2ª tentativa)",
+        "prefix": "**c1:**"
+      },
+      "sha256": "aef8b6dad1776f1d292d34218585718f8e267fb4d94f659b6ba8a3ed63edaca1"
+    },
+    {
+      "role": "feedback:c2-vereditos",
+      "file": "rubrica-v1.md",
+      "reflow": true,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "bulletQuote",
+        "section": "Feedback explicativo por critério (modelo para a 2ª tentativa)",
+        "prefix": "**c2:**"
+      },
+      "sha256": "853422f7f5fc480df90c25fbc0eb550961b7e94d54af134f49a086b88a095354"
+    },
+    {
+      "role": "feedback:c3-citações",
+      "file": "rubrica-v1.md",
+      "reflow": true,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "bulletQuote",
+        "section": "Feedback explicativo por critério (modelo para a 2ª tentativa)",
+        "prefix": "**c3:**"
+      },
+      "sha256": "69b8c570b6b108108c0dd0663320e7c522b080e7f50085fde9c76156dffeed32"
+    },
+    {
+      "role": "feedback:c4-incerteza",
+      "file": "rubrica-v1.md",
+      "reflow": true,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "bulletQuote",
+        "section": "Feedback explicativo por critério (modelo para a 2ª tentativa)",
+        "prefix": "**c4:**"
+      },
+      "sha256": "43ac2ab8348677a2071c026ea79b7021cd1a35cf4b1a50c2bdc879d6bbb8513f"
+    },
+    {
+      "role": "feedback:c5-privacidade",
+      "file": "rubrica-v1.md",
+      "reflow": true,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "bulletQuote",
+        "section": "Feedback explicativo por critério (modelo para a 2ª tentativa)",
+        "prefix": "**c5:**"
+      },
+      "sha256": "4d3a86780fb04b45cae1e9e2ad02609449f8b31d7a9d4cdfca8d36bd9ed1e997"
+    },
+    {
+      "role": "feedback:c6-resposta",
+      "file": "rubrica-v1.md",
+      "reflow": true,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "bulletQuote",
+        "section": "Feedback explicativo por critério (modelo para a 2ª tentativa)",
+        "prefix": "**c6:**"
+      },
+      "sha256": "cda0c375cd4bb324c2ebbf4f36a0da7c4dcd6bf0498f930b100818439f6639ac"
+    }
+  ]
+}
