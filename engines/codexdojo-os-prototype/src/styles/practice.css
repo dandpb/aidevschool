@@ -255,3 +255,213 @@
   opacity: 0.55;
 }
 
+/* ── AID-3643 (presentation-only delta) ─────────────────────────────────
+   Standalone containment (AID-3643 r1, PO HOLD 7286fcf5): the whole
+   standalone surface (chooser + session) is ONE scrolling column, and the
+   action bar renders as a static block in flow — the toolbar can never
+   occlude content or controls, and the reading area is the full window
+   (significant at 375×667). The receipt is reachable end-to-end. The
+   EMBEDDED runtime (MissionShell/AC1) keeps the accepted AID-3527 sticky
+   containment untouched — this scope is .practice-standalone only. */
+.practice-standalone {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.practice-standalone nav.practice-app {
+  overflow: visible;
+}
+
+.practice-standalone div.practice-app {
+  height: auto;
+  overflow: visible;
+}
+
+.practice-standalone .practice-action-bar {
+  position: static;
+}
+
+/* P2 chooser legibility: the unselected choices and the switch-confirm
+   actions previously relied on the UA button surface with inherited
+   near-white text — illegible on the light UA background. Explicit OS-dark
+   surfaces, scoped to the standalone chooser only (embedded AC1 and the
+   session action bar keep their accepted styles). Selected keeps the
+   accepted .practice-primary look. */
+.practice-chooser button.practice-choice {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  border: 1px solid var(--line, rgba(255, 255, 255, 0.1));
+}
+
+.practice-chooser button.practice-choice small {
+  display: block;
+  margin-top: 3px;
+  font-weight: 500;
+}
+
+.practice-chooser button.practice-choice:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.practice-chooser button.practice-primary {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  text-align: left;
+}
+
+.practice-chooser button.practice-primary small {
+  display: block;
+  margin-top: 3px;
+  font-weight: 500;
+}
+
+/* P3 hierarchy: the technical identity (practiceId · package slug ·
+   canonical projection pins) is subordinated under the human title. */
+.practice-app .practice-identity {
+  margin: 2px 0 6px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.practice-app .practice-identity code,
+.practice-app .practice-app-header-note {
+  font-size: 11px;
+}
+
+.practice-app .practice-objective {
+  color: var(--muted);
+  font-size: 12px;
+  max-width: 64ch;
+}
+
+/* P2 structured rendering of ratified markdown texts: block styles for
+   containers (objective, worked example, daily receipt). Plain strings
+   render as a single paragraph, so untouched surfaces look the same. */
+.practice-markdown {
+  font-size: 12.5px;
+  color: inherit;
+}
+
+.practice-app .practice-markdown p {
+  margin: 0 0 8px;
+}
+
+.practice-app .practice-markdown p:last-child {
+  margin-bottom: 0;
+}
+
+.practice-markdown .practice-md-heading {
+  margin: 10px 0 6px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.practice-markdown .practice-md-h1 {
+  font-size: 14.5px;
+}
+
+.practice-markdown .practice-md-h2 {
+  font-size: 13px;
+}
+
+.practice-markdown .practice-md-h3,
+.practice-markdown .practice-md-h4,
+.practice-markdown .practice-md-h5,
+.practice-markdown .practice-md-h6 {
+  font-size: 12.5px;
+}
+
+.practice-app .practice-markdown ul,
+.practice-app .practice-markdown ol {
+  margin: 0 0 8px;
+  padding-left: 20px;
+  display: grid;
+  gap: 4px;
+}
+
+.practice-app .practice-markdown blockquote {
+  margin: 0 0 8px;
+  padding: 6px 10px;
+  border-left: 2px solid var(--line, rgba(255, 255, 255, 0.1));
+  color: var(--muted);
+}
+
+.practice-app .practice-markdown pre {
+  background: rgba(0, 0, 0, 0.28);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 11.5px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-x: auto;
+  margin: 8px 0;
+}
+
+.practice-app .practice-markdown code {
+  background: rgba(0, 0, 0, 0.28);
+  border-radius: 4px;
+  padding: 0 4px;
+  font-size: 11px;
+}
+
+/* The daily receipt keeps its archival container look while displaying
+   structure; the copied text remains the byte-identical raw string. */
+.practice-receipt .practice-markdown {
+  font-size: 11.5px;
+  background: transparent;
+  padding: 0;
+}
+
+/* AID-3643 r2 (FSE d7bfa16f, PO ae1913d1): long receipt tokens (sha256,
+   PR refs, learner pins) must not push the daily receipt past the mobile
+   width — the receipt display becomes horizontally complete at 375px.
+   Scope: the STANDALONE daily receipt DISPLAY only (`.practice-markdown`
+   descendants exist solely on the pg-c01 structured receipt; the pg-d01
+   `<pre>` receipt and the embedded AC1 runtime keep their accepted look).
+   Presentation-only: the copied/archived string stays byte-identical. */
+.practice-standalone .practice-receipt .practice-markdown li,
+.practice-standalone .practice-receipt .practice-markdown code {
+  overflow-wrap: anywhere;
+}
+
+.practice-receipt .practice-markdown pre {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* LearningRail (AID-3643): the rail summary renders structured markdown;
+   plain summaries keep the exact previous look. */
+.learning-scroll .learning-rail-summary {
+  color: #98a6ba;
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.learning-scroll .learning-rail-summary p {
+  margin: 0 0 6px;
+}
+
+.learning-scroll .learning-rail-summary .practice-md-heading {
+  font-size: 11.5px;
+}
+
+.learning-scroll .learning-rail-summary ul,
+.learning-scroll .learning-rail-summary ol {
+  margin: 0 0 6px;
+  padding-left: 16px;
+  display: grid;
+  gap: 3px;
+  color: #98a6ba;
+  font-size: 11px;
+}
+
+.learning-scroll .learning-rail-summary blockquote {
+  margin: 0 0 6px;
+  padding: 4px 8px;
+  border-left: 2px solid var(--line, rgba(255, 255, 255, 0.1));
+  color: #98a6ba;
+}

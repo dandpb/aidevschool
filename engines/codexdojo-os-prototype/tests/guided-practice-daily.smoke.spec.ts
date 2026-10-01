@@ -29,11 +29,13 @@ test('runs the pg-c01 daily cycle standalone with deterministic receipt', async 
   // Default is pg-d01; the explicit choice switches to pg-c01.
   await expect(page.getByRole('heading', { level: 1, name: /reproduza antes de perguntar/i })).toBeVisible()
   await page.getByRole('button', { name: /pg-c01 ·/i }).click()
-  const session = page.getByRole('heading', { level: 1, name: /pg-c01 ·/i })
+  // AID-3643: human title is now the h1; the technical slug is subordinated.
+  const session = page.getByRole('heading', { level: 1, name: /cotidiano: dados mínimos e verificação/i })
   await expect(session).toBeVisible()
-  // Identity pin: content version + projection sha prefix are rendered.
-  await expect(page.getByText(/pg-c01@v1/)).toBeVisible()
-  await expect(page.getByText(/ee57638361b6/)).toBeVisible()
+  // Identity pin: content version + projection sha prefix are rendered
+  // (AID-3643: also mirrored in the daily LearningRail context — .first()).
+  await expect(page.getByText(/pg-c01@v1/).first()).toBeVisible()
+  await expect(page.getByText(/ee57638361b6/).first()).toBeVisible()
   await page.screenshot({ path: `${SHOTS}/${testInfo.project.name}-01-exemplo.png`, fullPage: true })
 
   // Exemplo → tentativa: the three A/B/C pieces.
@@ -50,6 +52,9 @@ test('runs the pg-c01 daily cycle standalone with deterministic receipt', async 
   for (const criterion of ['c1-mínimos', 'c2-vereditos', 'c4-incerteza', 'c5-privacidade', 'c6-resposta']) {
     await page.getByRole('radio', { name: 'Suficiente', exact: true }).first().waitFor()
     const scope = page.locator('li', { hasText: criterion }).first()
+    // AID-3643 r1: the standalone surface scrolls as one column with a
+    // static action bar — real clicks after common scrolling work again
+    // (the keyboard workaround of r0 is gone; PO 7286fcf5).
     await scope.getByRole('radio', { name: 'Suficiente', exact: true }).check()
     await scope.getByLabel(`Evidência do critério ${criterion}`).fill('peça + citação fonte-2 G4')
   }
@@ -75,12 +80,13 @@ test('runs the pg-c01 daily cycle standalone with deterministic receipt', async 
   await page.getByLabel(/\(b\)/).fill('a frase do dia só entrou com fonte-1 L1')
   await page.getByRole('button', { name: /concluir a prática/i }).click()
 
-  const receipt = page.getByText(/Recibo da prática guiada pg-c01/)
+  // AID-3643: the receipt renders structured blocks inside one container.
+  const receipt = page.locator('.practice-receipt').filter({ hasText: /Recibo da prática guiada pg-c01/ })
   await expect(receipt).toBeVisible()
   await expect(receipt).toContainText('pg-c01@v1')
   await expect(receipt).toContainText('ee57638361b6372d57f7061d7339f23b53c88bd238985fb2deddcbf7125d7e5d')
-  await expect(receipt).toContainText('- c3-citações: sufficient')
-  await expect(receipt).toContainText('## Resposta ao retry (tentativa 2)')
+  await expect(receipt).toContainText('c3-citações: sufficient')
+  await expect(receipt).toContainText('Resposta ao retry (tentativa 2)')
   await page.screenshot({ path: `${SHOTS}/${testInfo.project.name}-05-recibo.png`, fullPage: true })
   expect(consoleErrors).toEqual([])
 })
@@ -90,7 +96,7 @@ test('standalone session is volatile across close/reopen and switch is confirmed
 }, testInfo) => {
   await openPracticeApp(page)
   await page.getByRole('button', { name: /pg-c01 ·/i }).click()
-  await expect(page.getByRole('heading', { level: 1, name: /pg-c01 ·/i })).toBeVisible()
+  await expect(page.getByRole('heading', { level: 1, name: /cotidiano: dados mínimos e verificação/i })).toBeVisible()
   await page.getByRole('button', { name: /li o exemplo e vou para a tentativa/i }).click()
   await page.getByLabel('Peça da etapa A').fill('pedido mínimo com rótulos neutros')
 
