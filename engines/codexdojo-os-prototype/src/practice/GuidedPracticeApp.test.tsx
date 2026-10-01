@@ -58,6 +58,40 @@ describe('GuidedPracticeApp (pg-d01)', () => {
     expect(receipt.textContent).toContain('c-suicao-revisao: met')
   })
 
+it('moves focus to the new phase heading on every transition (AID-3564 F1)', async () => {
+    const user = userEvent.setup()
+    render(<GuidedPracticeApp onTeach={() => {}} />)
+    const activeId = () => document.activeElement?.id ?? '<none>'
+
+    const exemploCta = screen.getByRole('button', { name: /li o exemplo e vou para a tentativa/i })
+    exemploCta.focus()
+    await user.click(exemploCta)
+    expect(activeId()).toBe('practice-tentativa-title')
+
+    for (let index = 1; index <= 6; index += 1) {
+      fireEvent.change(screen.getByLabelText(`Evidência do passo ${index}`), {
+        target: { value: `$ cmd ${index}` },
+      })
+    }
+    await user.click(screen.getByRole('button', { name: /concluir a tentativa/i }))
+    expect(activeId()).toBe('practice-feedback-title')
+
+    for (const criterion of projection.rubric) {
+      const scope = criterionScope(criterion.id)
+      fireEvent.click(scope.getByText(criterion.id))
+      fireEvent.click(scope.getByLabelText('Atendido', { exact: true }))
+    }
+    await user.click(screen.getByRole('button', { name: /ir para o takeaway/i }))
+    expect(activeId()).toBe('practice-takeaway-title')
+
+    fireEvent.change(screen.getByLabelText(/\(a\)/), { target: { value: 'a' } })
+    fireEvent.change(screen.getByLabelText(/\(b\)/), { target: { value: 'b' } })
+    await user.click(screen.getByRole('button', { name: /concluir a prática/i }))
+    // Conclusion keeps focus on a meaningful element (takeaway section).
+    expect(document.activeElement?.tagName).toBe('H2')
+    expect(activeId()).toBe('practice-takeaway-title')
+  })
+
   it('explains why the attempt CTA is disabled while evidence is incomplete', async () => {
     const user = userEvent.setup()
     render(<GuidedPracticeApp onTeach={() => {}} />)
