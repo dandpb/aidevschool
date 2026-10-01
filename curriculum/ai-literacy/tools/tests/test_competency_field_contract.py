@@ -116,6 +116,11 @@ class CompetencyFieldContractTest(TrackFixtureMixin):
                 )
 
     def test_compiler_output_is_byte_identical_with_and_without_field(self):
+        # AID-3569 (§6.6 do contrato): fixa o DEFAULT — sem `--with-competency`,
+        # o read model é byte-idêntico com ou sem o campo no YAML (strip legado).
+        # O caso opt-in (campo presente, posição preservada, catálogo com join)
+        # é coberto por test_with_competency_flag_opt_in abaixo e pela suíte
+        # dedicada test_competency_optin_flag.py.
         for label, competency in (
             ("without", None),
             ("with", {"primary": "F2", "supporting": ["F4"]}),
@@ -135,6 +140,47 @@ class CompetencyFieldContractTest(TrackFixtureMixin):
                     generated = Path(output_path).read_text(encoding="utf-8")
                 setattr(self, "compiled_%s" % label, generated)
         self.assertEqual(self.compiled_without, self.compiled_with)
+
+    def test_with_competency_flag_opt_in(self):
+        """AID-3569 (Fase 1 §6.6): com `include_competency=True`, o campo
+        mapeado aparece no payload (posição do YAML preservada) e o catálogo
+        ganha o join; o DEFAULT (teste acima) permanece byte-idêntico."""
+        import json
+
+        from tools import validate as validate_module
+
+        competency = {"primary": "F2", "supporting": ["F4"]}
+        with tempfile.TemporaryDirectory() as tmp:
+            catalog = _base_catalog()
+            track_block = json_object(object_field(catalog, "track"))
+            track_block["audience"] = "publico de teste"
+            track_block["promise"] = "promessa de teste"
+            lesson = _base_lesson()
+            lesson["competency"] = competency
+            track = self.make_track(tmp, catalog=catalog, lessons={"l01": lesson})
+            with tempfile.TemporaryDirectory() as out:
+                errors, output_path = validate_module.compile_track(
+                    track, out, include_competency=True
+                )
+                self.assertEqual(errors, [])
+                generated = Path(output_path).read_text(encoding="utf-8")
+        lessons = json.loads(
+            generated.split("export const lessons: LessonDefinition[] = ", 1)[
+                1
+            ].split("\n\nexport const", 1)[0]
+        )
+        self.assertEqual(lessons[0]["competency"], competency)
+        modules = json.loads(
+            generated.split("export const modules: ModuleDefinition[] = ", 1)[
+                1
+            ].split("\n\nexport const", 1)[0]
+        )
+        entry = modules[0]["lessons"][0]
+        entry_keys = list(entry.keys())
+        self.assertEqual(
+            entry_keys[entry_keys.index("skillIds") + 1], "competency", entry_keys
+        )
+        self.assertEqual(entry["competency"], competency)
 
     def test_lesson_identity_fields_unchanged_by_field(self):
         with tempfile.TemporaryDirectory() as tmp_a, tempfile.TemporaryDirectory() as tmp_b:

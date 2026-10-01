@@ -315,6 +315,20 @@ Documentar o novo export/flag na seção de exports (:122+) e o estado ausente.
 | **2** | `gen:content` do literacyDojo adota a flag (`package.json:17`); porta + adapter `getCompetency`; testes de porta | LAE | PR engine; nada muda para o aprendiz; **sem bump de `catalog.contentVersion` nem de `version` de lição** |
 | **3** (fora daqui) | Consumo de UI/roteiro; export de glossário; derivações de aquisição | UX/CD/produto | fatias próprias; `mastered` segue reservado |
 
+> **Status de implementação — Fase 1 (AID-3569, 2026-10-01)**: implementada
+> como flag `--with-competency` (default **OFF**) em
+> `curriculum/ai-literacy/tools/compiler.py` + `validate.py` — branch
+> `aid3569/compiler-with-competency` (stack sobre `b6e0b8fe`/PR #623, PR
+> draft). Sem a flag, saída e tipos legados byte-idênticos (diff/hash no
+> corpus real); com a flag, `competency?` opcional no payload (posição do
+> YAML preservada) e join do catálogo (9ª chave após `skillIds`, só em
+> entradas `hasContent` mapeadas); corpus do verificador (`literacy-corpus.mjs`)
+> segue **nunca** recebendo `competency`; sem bump de `contentVersion`/`version`.
+> Testes: `tools/tests/test_competency_optin_flag.py` (novo, fixtures
+> sintéticas) + casos opt-in em `test_competency_field_contract.py` e
+> `test_ratified_competency_metadata.py` (§6.6). Fase 2 (adapter/`gen:content`)
+> permanece fatia própria do LAE.
+
 Ativar a Fase 1 **não muda nada que o aprendiz percebe**: nenhuma superfície
 lê competência hoje; o campo é opcional e invisível até a Fase 3.
 

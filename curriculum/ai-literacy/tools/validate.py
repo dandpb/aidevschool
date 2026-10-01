@@ -21,6 +21,11 @@ def _parse_arguments(argv):
     parser.add_argument("--track", default=str(TRACK_DIR), help="diretório da trilha (padrão: curriculum/ai-literacy)")
     parser.add_argument("--compile", metavar="OUTDIR", default=None, help="gera OUTDIR/lessons.ts após validação bem-sucedida")
     parser.add_argument(
+        "--with-competency",
+        action="store_true",
+        help="propaga competency opcional para o read model (AID-3514 §6.2/§7 Fase 1, AID-3569; default: não propaga — saída legada byte-idêntica)",
+    )
+    parser.add_argument(
         "--compile-verifier",
         metavar="OUTDIR",
         default=None,
@@ -42,7 +47,12 @@ def main(argv=None):
     out_path = None
     corpus_path = None
     if not errors and args.compile:
-        errors, out_path = compile_track(track_dir, args.compile, validated=(errors, ready, catalog))
+        errors, out_path = compile_track(
+            track_dir,
+            args.compile,
+            validated=(errors, ready, catalog),
+            include_competency=args.with_competency,
+        )
     if not errors and args.compile_verifier:
         errors, corpus_path = compile_verifier_corpus(
             track_dir, args.compile_verifier, validated=(errors, ready, catalog)

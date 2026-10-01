@@ -160,24 +160,86 @@ export type Track = {
 """ % _generate_skill_id_union(skills)).lstrip("\n")
 
 
-def _catalog_entries(catalog, ready_lessons, module_ids):
-    ready_ids = {lesson["id"] for lesson in ready_lessons}
+# AID-3569 (Fase 1 do contrato AID-3514, §6.1): tipos de competência emitidos
+# SOMENTE no opt-in (`--with-competency`). Sem a flag o bloco de tipos legado
+# permanece byte-idêntico — nenhum identificador `competency` é declarado.
+COMPETENCY_TYPE_BLOCK = """export type CompetencyId =
+  | "F1" | "F2" | "F3" | "F4"
+  | "D1" | "D2" | "D3" | "D4" | "D5" | "D6" | "D7"
+
+export type LessonCompetency = {
+  primary: CompetencyId
+  supporting: CompetencyId[]
+}
+
+"""
+
+
+def _with_competency_types(ts_types):
+    """Injeta as declarações opcionais de competência (CompetencyId,
+    LessonCompetency, `competency?` em LessonDefinition e CatalogLessonEntry)
+    no bloco de tipos legado. Âncoras exatas; sem reordenação: o campo entra
+    após `skillIds`, como especificado no §6.1 do contrato."""
+    lesson_def_anchor = "export type LessonDefinition = {"
+    ts_types = ts_types.replace(
+        lesson_def_anchor, COMPETENCY_TYPE_BLOCK + lesson_def_anchor, 1
+    )
+    ts_types = ts_types.replace(
+        "  skillIds: SkillId[]\n  prerequisites: string[]\n",
+        '  skillIds: SkillId[]\n'
+        '  /** Opcional — ausência = "não mapeada" (default; AID-3514). */\n'
+        "  competency?: LessonCompetency\n"
+        "  prerequisites: string[]\n",
+        1,
+    )
+    ts_types = ts_types.replace(
+        "  skillIds: SkillId[]\n  status:",
+        "  skillIds: SkillId[]\n  competency?: LessonCompetency\n  status:",
+        1,
+    )
+    return ts_types
+
+
+def _lesson_payload(lesson, include_competency):
+    """AID-3569 (Fase 1, §6.1): propaga a chave opcional `competency`
+    SOMENTE no opt-in. Sem a flag o strip legado (AID-3457) permanece e o
+    read model é byte-idêntico; com a flag a posição da chave preserva a
+    ordem documental do YAML canônico (entre `prerequisites` e
+    `activities`) — o compilador não reordena."""
+    if include_competency:
+        return dict(lesson)
+    return {key: value for key, value in lesson.items() if key != "competency"}
+
+
+def _catalog_entries(catalog, ready_lessons, module_ids, include_competency=False):
+    ready_by_id = {lesson["id"]: lesson for lesson in ready_lessons}
     entries = []
     for entry in catalog.get("lessons") or []:
         if entry["moduleId"] not in module_ids:
             continue
-        entries.append(
-            {
-                "id": entry["id"],
-                "moduleId": entry["moduleId"],
-                "title": entry["title"],
-                "estimatedMinutes": entry["estimatedMinutes"],
-                "prerequisites": entry.get("prerequisites") or [],
-                "skillIds": entry.get("skillIds") or [],
-                "status": entry["status"],
-                "hasContent": entry["id"] in ready_ids,
-            }
+        has_content = entry["id"] in ready_by_id
+        # AID-3569 (Fase 1, §6.1): join do catálogo — 9ª chave opcional
+        # `competency` APENAS no opt-in, apenas em entradas hasContent cuja
+        # lição ready está mapeada; ausente, as 8 chaves legadas e a ordem
+        # permanecem exatas (entradas planned nunca ganham o campo).
+        competency = (
+            ready_by_id[entry["id"]].get("competency")
+            if include_competency and has_content
+            else None
         )
+        payload = {
+            "id": entry["id"],
+            "moduleId": entry["moduleId"],
+            "title": entry["title"],
+            "estimatedMinutes": entry["estimatedMinutes"],
+            "prerequisites": entry.get("prerequisites") or [],
+            "skillIds": entry.get("skillIds") or [],
+        }
+        if competency is not None:
+            payload["competency"] = competency
+        payload["status"] = entry["status"]
+        payload["hasContent"] = has_content
+        entries.append(payload)
     return entries
 
 
@@ -202,23 +264,27 @@ def _as_ts(payload):
     return json.dumps(payload, ensure_ascii=False, indent=2)
 
 
-def _render_content(catalog, ready_lessons):
+def _render_content(catalog, ready_lessons, include_competency=False):
     journey_module_ids = {
         module["id"] for module in catalog.get("modules") or []
     }
     ready_lessons_all = [
         lesson for lesson in ready_lessons if lesson["moduleId"] in journey_module_ids
     ]
-    # AID-3457 (scaffolding de schema, fatia limitada autorizada): o campo opcional
-    # `competency` NÃO é propagado para o read model — a saída gerada permanece
-    # byte-idêntica com ou sem o campo (testemunhado por test_compatibility em
-    # tools/tests/test_competency_field_contract.py). Propagação a consumidores é
-    # fatia futura, dependente de contrato compatível e revisão própria.
+    # AID-3457 (scaffolding de schema) + AID-3569 (Fase 1 do contrato
+    # AID-3514 §6.1/§7): o campo opcional `competency` só alcança o read
+    # model no opt-in (`--with-competency`, default OFF). Sem a flag a saída
+    # permanece byte-idêntica ao legado com ou sem o metadado no YAML
+    # (testemunhado por test_compatibility em
+    # tools/tests/test_competency_field_contract.py e pela suíte de inércia
+    # de metadados ratificados). Consumo de runtime é Fase 2 (LAE).
     lessons_payload = [
-        {key: value for key, value in lesson.items() if key != "competency"}
+        _lesson_payload(lesson, include_competency)
         for lesson in ready_lessons_all
     ]
-    entries = _catalog_entries(catalog, ready_lessons_all, journey_module_ids)
+    entries = _catalog_entries(
+        catalog, ready_lessons_all, journey_module_ids, include_competency
+    )
     modules_payload = _modules_payload(catalog.get("modules") or [], entries)
     track_payload = {key: catalog["track"][key] for key in ("id", "title", "audience", "promise", "language")}
     skills_payload = [
@@ -226,6 +292,14 @@ def _render_content(catalog, ready_lessons):
         for skill in catalog.get("skills") or []
     ]
     ts_types = _make_ts_types(skills_payload)
+    if include_competency:
+        ts_types = _with_competency_types(ts_types)
+    regen_hint = (
+        "// Regenere com: python3 curriculum/ai-literacy/tools/validate.py"
+        " --compile <outdir> --with-competency\n"
+        if include_competency
+        else "// Regenere com: python3 curriculum/ai-literacy/tools/validate.py --compile <outdir>\n"
+    )
 
     content = (
         GENERATED_HEADER
@@ -233,7 +307,8 @@ def _render_content(catalog, ready_lessons):
         + "// O percurso público do app standalone filtra por journey no adapter;\n"
         + "// missões hospedadas do OS podem servir lições dev (ver content-contract.md).\n"
         + "// Fonte canônica: curriculum/ai-literacy/.\n"
-        + "// Regenere com: python3 curriculum/ai-literacy/tools/validate.py --compile <outdir>\n\n"
+        + regen_hint
+        + "\n"
         + ts_types
         + "\nexport const contentVersion: string = "
         + json.dumps(str(catalog.get("contentVersion")), ensure_ascii=False)
@@ -297,6 +372,12 @@ def compile_verifier_corpus(track_dir, outdir, validated=None):
     """Compila o corpus do verificador hospedado. Retorna (errors, output_path).
 
     validated: tupla já computada de validate_track(track_dir), para não revalidar.
+
+    AID-449/AID-3569: fronteira de confiança — este corpus NUNCA recebe
+    `competency` (nem qualquer campo producer-facing), com ou sem a flag
+    `--with-competency` (pinado por test_competency_read_seam.py e
+    test_competency_optin_flag.py). Não existe parâmetro de propagação aqui
+    de propósito.
     """
     errors, ready_lessons, catalog = (
         validated if validated is not None else validate_track(track_dir)
@@ -310,10 +391,13 @@ def compile_verifier_corpus(track_dir, outdir, validated=None):
     return [], out_path
 
 
-def compile_track(track_dir, outdir, validated=None):
+def compile_track(track_dir, outdir, validated=None, include_competency=False):
     """Compila as lições válidas para o read model tipado. Retorna (errors, output_path).
 
     validated: tupla já computada de validate_track(track_dir), para não revalidar a trilha.
+    include_competency: AID-3569 (Fase 1 do contrato AID-3514 §7) — propaga a
+        chave opcional `competency` (tipos + payload + join do catálogo).
+        Default False: saída byte-idêntica ao legado.
     """
     errors, ready_lessons, catalog = validated if validated is not None else validate_track(track_dir)
     if errors:
@@ -321,5 +405,7 @@ def compile_track(track_dir, outdir, validated=None):
     outdir = Path(outdir)
     outdir.mkdir(parents=True, exist_ok=True)
     out_path = outdir / "lessons.ts"
-    out_path.write_text(_render_content(catalog, ready_lessons), encoding="utf-8")
+    out_path.write_text(
+        _render_content(catalog, ready_lessons, include_competency), encoding="utf-8"
+    )
     return [], out_path
