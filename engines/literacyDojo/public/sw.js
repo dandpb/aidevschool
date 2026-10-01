@@ -9,9 +9,15 @@
 // policy fix (AID-3453 rodada 18:14Z): leitura e escrita usam a MESMA chave
 // normalizada (pathname) — /escola/?utm_source=test recarrega offline a
 // partir do documento /escola/ em cache.
+// AID-3563 (defeito reproduzido em AID-3556): o host serve fallback SPA
+// (200 text/html) para qualquer path ausente sob o escopo. Sub-recursos NUNCA
+// gravam resposta HTML no cache — só conteúdo genuíno do caminho — para não
+// envenenar chaves de asset com o shell (offline passaria a servir HTML sob
+// chave de asset). Documentos de navegação legítimos seguem no branch navigate
+// (chave própria), que continua aceitando text/html.
 // ponytail: bump manual do CACHE ao mudar este arquivo — se um dia o cache
 // precisar de invalidação por deploy, gerar o nome no build.
-const CACHE = "literacydojo-v5";
+const CACHE = "literacydojo-v6";
 const SCOPE = new URL("./", self.location.href).pathname;
 const SHELL = [SCOPE, `${SCOPE}manifest.webmanifest`, `${SCOPE}icon-192.png`, `${SCOPE}icon-512.png`];
 
@@ -59,6 +65,10 @@ self.addEventListener("fetch", (event) => {
     event.waitUntil(caches.open(CACHE).then((cache) => cache.put(key, copy)));
   };
 
+  // AID-3563: fallback SPA do host (200 text/html em path ausente) nunca é
+  // gravado sob chave de asset — só conteúdo genuíno do caminho.
+  const isSpaFallback = (response) => (response.headers.get("content-type") || "").includes("text/html");
+
   if (request.mode === "navigate") {
     // F1 (AID-3453): a resposta de navegação é gravada sob a própria chave
     // (o documento do escopo continua renovando o shell da raiz sob SCOPE).
@@ -92,7 +102,7 @@ self.addEventListener("fetch", (event) => {
         (hit) =>
           hit ??
           fetch(request).then((response) => {
-            if (response.ok) keep(request, response);
+            if (response.ok && !isSpaFallback(response)) keep(request, response);
             return response;
           }),
       ),
@@ -104,7 +114,7 @@ self.addEventListener("fetch", (event) => {
   event.respondWith(
     fetch(request)
       .then((response) => {
-        if (response.ok) keep(request, response);
+        if (response.ok && !isSpaFallback(response)) keep(request, response);
         return response;
       })
       .catch(() =>
