@@ -1,0 +1,382 @@
+{
+  "schema": "aidevschool/sequencia-dev-guiada/source-contract@1",
+  "package": {
+    "id": "pg-d02-pedido-estruturado",
+    "version": "rubrica-v1"
+  },
+  "pin": {
+    "repo": "dandpb/aidevschool",
+    "pullRequest": 631,
+    "head": "4cabf984591f0d5cf4046e0264871811dd6bd18a",
+    "base": {
+      "pullRequest": 620,
+      "head": "e01d9d42b99434c10d8f155cde0cbbc57b25cf61"
+    },
+    "acceptance": {
+      "finalCommentId": "41c2b482-ffcd-4a34-a094-3204731eca18",
+      "verifiesErrataAtHead": "4cabf984591f0d5cf4046e0264871811dd6bd18a",
+      "preservedParecer": "9bfee683",
+      "priorProvenanceAddendum": "63193b8c"
+    }
+  },
+  "files": [
+    {
+      "path": "enunciado.md",
+      "sha256": "b1311e602d9066642da8d53c34cacc273f1dcc7d5c40603081acd694d09b6318",
+      "bytes": 6075
+    },
+    {
+      "path": "exemplo-trabalhado.md",
+      "sha256": "9bcda0108f5dc65b57c0d930c4bd052654b31f04c1e671f3ce0cb053a1e76085",
+      "bytes": 4031
+    },
+    {
+      "path": "rubrica-v1.md",
+      "sha256": "33992a7bb3e58c81851413db42a9f5e1d7c8cdbeadc60e4d8c1e807b5a1c1783",
+      "bytes": 3241
+    },
+    {
+      "path": "insumos/pedido-original.md",
+      "sha256": "7f8a8b59a051f5cdb7d15487ee54ebe6851765aa0e4542e3b1bcd6d2b830c905",
+      "bytes": 1222
+    },
+    {
+      "path": "insumos/meus_commits.json",
+      "sha256": "08bfb8391691170cd650a16bf0603ff8831832e9cb99c88a06376391e48475c6",
+      "bytes": 1487
+    },
+    {
+      "path": "insumos/verifica_pedido.py",
+      "sha256": "ed5b034dc0f94004f2145dd2adcd0d0727a8e35a8abc769716b4b50dd7b560e8",
+      "bytes": 3949
+    },
+    {
+      "path": "guia-de-correcao/pedido-5-campos.md",
+      "sha256": "5362c630b4c40adf6839f23bedb877cee11638cc838fb2fd08aed041ccd0bee1",
+      "bytes": 1627
+    },
+    {
+      "path": "guia-de-correcao/solucao.md",
+      "sha256": "f07185574a44f8b3fef9ac6e6bfbcc66194fd71960310042321381ff250a9334",
+      "bytes": 6651
+    }
+  ],
+  "structure": {
+    "steps": {
+      "first": 1,
+      "last": 6,
+      "count": 6
+    },
+    "edgeCaseIds": [
+      "B1",
+      "B2"
+    ],
+    "templateFields": [
+      "CONTEXTO",
+      "OBJETIVO",
+      "RESTRIÇÕES",
+      "ACEITE",
+      "NÃO-META"
+    ],
+    "criteriaIds": [
+      "c1-cinco-campos",
+      "c2-contexto-por-caminho",
+      "c3-objetivo-unico",
+      "c4-aceite-executavel",
+      "c5-resticoes-do-contrato",
+      "c6-nao-meta-explicita",
+      "c7-casos-borda-decidiveis"
+    ],
+    "objectiveTags": {
+      "c4-aceite-executavel": "a",
+      "c6-nao-meta-explicita": "b",
+      "c7-casos-borda-decidiveis": "c"
+    },
+    "takeawayPrompts": 2,
+    "verdicts": [
+      "met",
+      "partial",
+      "not_met"
+    ]
+  },
+  "extractions": [
+    {
+      "role": "metaBlock",
+      "file": "enunciado.md",
+      "reflow": true,
+      "selector": {
+        "kind": "leadParagraph"
+      },
+      "sha256": "890bbfb1340d5380259409a04c573dad7cd089d1395df78f07954d9e1c0c5534"
+    },
+    {
+      "role": "objective",
+      "file": "enunciado.md",
+      "reflow": false,
+      "selector": {
+        "kind": "section",
+        "heading": "Objetivo observável"
+      },
+      "sha256": "a701efd980df1f80cbebe277bc715c096cfdbc5753f428957d1a89ae0416f0a0"
+    },
+    {
+      "role": "edgeCases",
+      "file": "enunciado.md",
+      "reflow": true,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "labeledBullets",
+        "section": "Os dois casos de borda (fixados; decididos pelo seu pedido)",
+        "labelRegex": "^\\*\\*(B\\d+)\\*\\*\\s*—\\s*(.*)$"
+      },
+      "sha256": "152a955e09b8dcb5be527231960a4c1830f35752f28daf0d00d5f2eb16edabb0"
+    },
+    {
+      "role": "edgeCasePolicy",
+      "file": "enunciado.md",
+      "reflow": true,
+      "selector": {
+        "kind": "paragraph",
+        "section": "Os dois casos de borda (fixados; decididos pelo seu pedido)",
+        "prefix": "Um pedido que não decide"
+      },
+      "sha256": "98cae6c2f26d4d893bfbe58a0fb9f704b4a28761a0f21bbcd21984a1f2b43a00"
+    },
+    {
+      "role": "templateFields",
+      "file": "enunciado.md",
+      "reflow": false,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "codeBlock",
+        "anchorPrefix": "4. **Escreva o pedido reescrito**"
+      },
+      "sha256": "5b5c7c6cfc689d5eca9937420cadf20262f9d6be5ce240c4e6c1f217367373bf"
+    },
+    {
+      "role": "steps",
+      "file": "enunciado.md",
+      "reflow": true,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "numberedSteps",
+        "section": "2. Tentativa (≈ 20 min)",
+        "first": 1,
+        "last": 6
+      },
+      "sha256": "f4dccab528f938a064f93c52dbf8794a0246eed73eb3d954c0c1a36823180781"
+    },
+    {
+      "role": "receiptInstruction",
+      "file": "enunciado.md",
+      "reflow": true,
+      "selector": {
+        "kind": "paragraph",
+        "section": "2. Tentativa (≈ 20 min)",
+        "prefix": "Guarde:"
+      },
+      "sha256": "d7965d62985e3f74213a5961df45a46a7d5da31ff978acca763aa759dd30ca87"
+    },
+    {
+      "role": "feedbackInstruction",
+      "file": "enunciado.md",
+      "reflow": true,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "paragraph",
+        "section": "3. Feedback (rúbrica)",
+        "index": 0
+      },
+      "sha256": "240df966d4ee2768f896cdc457c40f19a757f3f489c5b77ba20ba33937d8f464"
+    },
+    {
+      "role": "retryInstruction",
+      "file": "enunciado.md",
+      "reflow": true,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "paragraph",
+        "section": "4. Retry (se algum critério não passar)",
+        "index": 0
+      },
+      "sha256": "fec8467839f449f73667e05796bcab262e91aa2c42d199ab259078622c2adcaa"
+    },
+    {
+      "role": "takeawayInstruction",
+      "file": "enunciado.md",
+      "reflow": true,
+      "selector": {
+        "kind": "paragraph",
+        "section": "5. Takeaway (≈ 5 min)",
+        "index": 0
+      },
+      "sha256": "ffa03f12f7e5175fd4d57bb46fd80f80ddbf86e61f95df27e96b07ddbc5f702e"
+    },
+    {
+      "role": "takeawayPrompts",
+      "file": "enunciado.md",
+      "reflow": true,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "labeledSubPrompts",
+        "section": "5. Takeaway (≈ 5 min)",
+        "lead": "Responda em duas frases:",
+        "labels": [
+          "(a)",
+          "(b)"
+        ]
+      },
+      "sha256": "85d8b00f604daaa54ffda795b2a3907f512ca1680604ba30f13d3afb896797f4"
+    },
+    {
+      "role": "scopeNote",
+      "file": "enunciado.md",
+      "reflow": true,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "bulletByPrefix",
+        "section": "Limites explícitos",
+        "prefix": "Esta prática avalia o"
+      },
+      "sha256": "f5ad036bc5be6da5913ebe035734887f1f1da8f10a259a86db0284d9a74f3c7c"
+    },
+    {
+      "role": "guiaGuard",
+      "file": "enunciado.md",
+      "reflow": true,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "bulletByPrefix",
+        "section": "Limites explícitos",
+        "prefix": "Solução separada em"
+      },
+      "sha256": "6647219a9e611f0fb535b229f6ad1ff7543a883fd8c559077d9f3790c07de106"
+    },
+    {
+      "role": "verdictHeader",
+      "file": "rubrica-v1.md",
+      "reflow": true,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "leadParagraph"
+      },
+      "sha256": "219fa0e827b87b2c275f110d9a701b5bd4e943eae7559dd3359ac6f49a39ea3d"
+    },
+    {
+      "role": "verdictRules",
+      "file": "rubrica-v1.md",
+      "reflow": true,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "bulletByPrefix",
+        "section": "Notas de aplicação",
+        "prefix": "`partial` exige"
+      },
+      "sha256": "2cd4dacaa16ab64091dc8d4d4b25620b24566d4e4a102ecbd3d53b9d30915e76"
+    },
+    {
+      "role": "criteriaRows",
+      "file": "rubrica-v1.md",
+      "reflow": false,
+      "selector": {
+        "kind": "criteriaRows"
+      },
+      "sha256": "4c9f63c17909659c59c4344f0e93c0bf050d91fbb74c862c1400698eecc79cd2"
+    },
+    {
+      "role": "pedidoOriginal",
+      "file": "insumos/pedido-original.md",
+      "reflow": true,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "proseParagraphs",
+        "skipBlockquote": true
+      },
+      "sha256": "e8378ffffceebab558ee92fc06a0b21ac20c118955246c417644183358d6586b"
+    },
+    {
+      "role": "perCheck:c1-cinco-campos",
+      "file": "rubrica-v1.md",
+      "reflow": false,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "rubricaCell",
+        "criterionId": "c1-cinco-campos",
+        "column": "perCheck"
+      },
+      "sha256": "e274b45e0387a6033435f4cd67507dcdddeea026f36dbe5f45011c1c53cf8f16"
+    },
+    {
+      "role": "perCheck:c2-contexto-por-caminho",
+      "file": "rubrica-v1.md",
+      "reflow": false,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "rubricaCell",
+        "criterionId": "c2-contexto-por-caminho",
+        "column": "perCheck"
+      },
+      "sha256": "2546235983f3acbc177c84575a0c34d537829c1b96f63958f66beaf6cd7168be"
+    },
+    {
+      "role": "perCheck:c3-objetivo-unico",
+      "file": "rubrica-v1.md",
+      "reflow": false,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "rubricaCell",
+        "criterionId": "c3-objetivo-unico",
+        "column": "perCheck"
+      },
+      "sha256": "55159fa69b405ed3c454d853d8e6be16e4a0616d43db961dba373ba242037a70"
+    },
+    {
+      "role": "perCheck:c4-aceite-executavel",
+      "file": "rubrica-v1.md",
+      "reflow": false,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "rubricaCell",
+        "criterionId": "c4-aceite-executavel",
+        "column": "perCheck"
+      },
+      "sha256": "32aaa5254055f51e071b3448b3305f13f061e108f4b5e18771f8aac902ff2574"
+    },
+    {
+      "role": "perCheck:c5-resticoes-do-contrato",
+      "file": "rubrica-v1.md",
+      "reflow": false,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "rubricaCell",
+        "criterionId": "c5-resticoes-do-contrato",
+        "column": "perCheck"
+      },
+      "sha256": "fe086315c6047a1f8213fb82ab82ef30b6ac7d101f832435187e9849a504ffff"
+    },
+    {
+      "role": "perCheck:c6-nao-meta-explicita",
+      "file": "rubrica-v1.md",
+      "reflow": false,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "rubricaCell",
+        "criterionId": "c6-nao-meta-explicita",
+        "column": "perCheck"
+      },
+      "sha256": "a4d3cdfad089d7b2311ce28ee085636f684abdd99ba9264e5c53e59a0a0f79bc"
+    },
+    {
+      "role": "perCheck:c7-casos-borda-decidiveis",
+      "file": "rubrica-v1.md",
+      "reflow": false,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "rubricaCell",
+        "criterionId": "c7-casos-borda-decidiveis",
+        "column": "perCheck"
+      },
+      "sha256": "934283aa99e9f6ee43286787357c3d00a2240aae100ba7da50c71cfdc041aad9"
+    }
+  ]
+}
