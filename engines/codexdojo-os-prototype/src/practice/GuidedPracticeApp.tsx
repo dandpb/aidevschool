@@ -116,8 +116,8 @@ export function GuidedPracticeApp({ onTeach, onConcluded }: GuidedPracticeAppPro
             </button>
             {retryTargets.length > 0 && (
               <button type="button" onClick={() => dispatch({ type: 'retry-pedido' })}>
-                <RotateCcw size={14} aria-hidden /> Retry: refazer apenas os critérios reprovados (
-                {retryTargets.join(', ')})
+                <RotateCcw size={14} aria-hidden /> Retry: {retryTargets.length} critério
+                {retryTargets.length === 1 ? '' : 's'} reprovado{retryTargets.length === 1 ? '' : 's'}
               </button>
             )}
           </>
@@ -204,11 +204,15 @@ export function GuidedPracticeApp({ onTeach, onConcluded }: GuidedPracticeAppPro
           <h2 id="practice-feedback-title">
             {state.phase === 'retry' ? '4. Retry — refaça apenas os critérios reprovados' : '3. Feedback pela rúbrica'}
           </h2>
-          {state.phase === 'retry' && (
+          {state.phase === 'retry' ? (
             <p className="practice-note">
               Alvos deste retry: {state.retryTargets.join(', ')}. Os demais critérios seguem travados.
             </p>
-          )}
+          ) : retryTargets.length > 0 ? (
+            <p className="practice-note">
+              Critérios ainda não aprovados (alvos do retry): {retryTargets.join(', ')}.
+            </p>
+          ) : null}
           <ul className="practice-rubric">
             {projection.rubric.map((criterion) => {
               const assessment = state.assessments[criterion.id]
