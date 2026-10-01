@@ -189,6 +189,40 @@ class CompetencyOptInFlagTest(TrackFixtureMixin):
             ],
         )
 
+    def test_with_competency_flag_opt_in(self):
+        """AID-3569 (Fase 1 §6.6): com `include_competency=True`, o campo
+        mapeado aparece no payload (posição do YAML preservada) e o catálogo
+        ganha o join; o DEFAULT permanece byte-idêntico (suíte legada
+        test_competency_field_contract.py e smoke de contenção acima).
+        Movido para cá na r1 (review LAE): guardrail protect-tests veda
+        editar suíte existente neste PR."""
+        import json
+
+        competency = self.MAPPED
+        with tempfile.TemporaryDirectory() as tmp:
+            track = self._make_mapped_track(tmp, competency=competency)
+            with tempfile.TemporaryDirectory() as out:
+                errors, output_path = validate_module.compile_track(
+                    track, out, include_competency=True
+                )
+                self.assertEqual(errors, [])
+                generated = Path(output_path).read_text(encoding="utf-8")
+        lessons = json.loads(
+            _payload_after(
+                generated, "export const lessons: LessonDefinition[] = "
+            )
+        )
+        self.assertEqual(lessons[0]["competency"], competency)
+        modules = json.loads(
+            _payload_after(generated, "export const modules: ModuleDefinition[] = ")
+        )
+        entry = modules[0]["lessons"][0]
+        entry_keys = list(entry.keys())
+        self.assertEqual(
+            entry_keys[entry_keys.index("skillIds") + 1], "competency", entry_keys
+        )
+        self.assertEqual(entry["competency"], competency)
+
     def test_flag_catalog_join_only_for_mapped_ready_entries(self):
         import json
 
