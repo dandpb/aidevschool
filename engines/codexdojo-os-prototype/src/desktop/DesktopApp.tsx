@@ -43,7 +43,12 @@ export function DesktopApp({ learner }: AppProps) {
   ])
   const [launcherOpen, setLauncherOpen] = useState(false)
   const [launcherQuery, setLauncherQuery] = useState('')
-  const [learnMode, setLearnMode] = useState(true)
+  // AID-3527 review item 3: on wide viewports the rail docks beside the
+  // windows; at ≤1040px it is a bottom sheet that covers the lower window, so
+  // it must not START open there (same rule as the openApp teach guard).
+  const [learnMode, setLearnMode] = useState(
+    () => window.matchMedia?.('(min-width: 1041px)').matches ?? true,
+  )
   const [learningContext, setLearningContext] = useState<LearningContext>(coreContexts.dojo)
   const [toast, setToast] = useState<string | null>(null)
   const maxZ = useRef(3)
@@ -68,7 +73,14 @@ export function DesktopApp({ learner }: AppProps) {
 
   const openApp = (id: CoreAppId) => {
     setLauncherOpen(false)
-    teach(coreContexts[id])
+    // AID-3527 review item 3: opening an app must not force-enable "Modo
+    // Aprender" when the learning rail renders as a bottom sheet (≤1040px) —
+    // there it covers the lower window and obstructs the activity. The rail
+    // still opens docked beside the windows on wide viewports, and the user
+    // can always toggle it explicitly.
+    if (window.matchMedia?.('(min-width: 1041px)').matches ?? true) {
+      teach(coreContexts[id])
+    }
     const existing = windows.find((window) => window.id === id)
     if (existing !== undefined) {
       focusWindow(id)
