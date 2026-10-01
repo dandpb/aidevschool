@@ -1,9 +1,13 @@
 # Proveniência das capturas — Jornada Dev opt-in (AID-3584 → AID-3588)
 
-> Manifesto declarado no ato da cópia (2026-10-01, Docs & Readiness Engineer, AID-3588).
-> Fonte primária: anexos da issue AID-3584 (registrados pela plataforma) e
-> `/paperclip/aid3584-evidence/` (piso do revisor LEE). sha256 recomputados no ato da cópia
-> e conferidos byte-a-byte com os hashes registrados no upload da plataforma.
+> Manifesto declarado no ato da cópia (2026-10-01, Docs & Readiness Engineer, AID-3588;
+> wording da âncora corrigido em r2 da revisão QA — achado A2).
+> Fonte primária: `/paperclip/aid3584-evidence/` (piso do revisor LEE), ancorada pela tabela
+> sha256 do comentário `a54b4325` na issue AID-3584. O upload dos anexos r2 retornou 403,
+> de modo que anexos registrados pela plataforma existem apenas para as capturas r1
+> (`01`–`05`); para os arquivos r2 desta pasta a âncora dos hashes é a tabela do comentário
+> `a54b4325`, não registro de upload. sha256 recomputados no ato da cópia e conferidos
+> byte-a-byte com essa tabela.
 
 ## Candidato documentado
 
