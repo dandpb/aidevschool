@@ -11,6 +11,32 @@ const ROOT = path.join(HERE, '..', '..');
 const ADAPTER = path.join(HERE, 'pg-d02-source-adapter.mjs');
 const CONTRACT = path.join(HERE, 'fixtures', 'pg-d02-source-contract.json');
 const PACKAGE_DIR = path.join(HERE, '..', 'pg-d02-pedido-estruturado');
+const PG_D01_DIR = path.join(HERE, '..', 'pg-d01-debug-reproduza');
+
+const CANONICAL_LEARNER_FILES = [
+  'enunciado.md',
+  'exemplo-trabalhado.md',
+  'insumos/pedido-original.md',
+  'insumos/meus_commits.json',
+  'insumos/verifica_pedido.py',
+  'rubrica-v1.md'
+];
+const GABARITO_PATHS = ['guia-de-correcao/pedido-5-campos.md', 'guia-de-correcao/solucao.md'];
+const PG_D01_LEARNER_FILES = [
+  'enunciado.md',
+  'exemplo-trabalhado.md',
+  'insumos/bugreport.md',
+  'insumos/REGRA.md',
+  'insumos/fixture/notas.py',
+  'insumos/fixture/testes.py',
+  'rubrica-v1.md'
+];
+// Golden calculado com o algoritmo exato de compute_content_version do PR628
+// (learner/substrate/mission_catalog_guided_practice.py @ e376d04f) sobre a
+// árvore pg-d01 aceita — prova de paridade da fórmula deste adapter.
+const PG_D01_CONTENT_VERSION = 'pg-d01@55882460a2bf';
+const CANONICAL_SHA256 = 'e8054bc6e26cec03fe92bf7dd577644b8fd88c02922150350517677692ccfe4f';
+const CANONICAL_BYTES = 18473;
 
 const A = await import(`file://${ADAPTER}`);
 const contract = A.loadContract(CONTRACT);
@@ -28,8 +54,17 @@ function verifiedFiles() {
   return A.readSourceFiles(PACKAGE_DIR, contract).files;
 }
 
-function projectFrom(dir = PACKAGE_DIR) {
-  return A.project({ sourceDir: dir, contractPath: CONTRACT });
+function projectFrom(dir = PACKAGE_DIR, contractPath = CONTRACT) {
+  return A.project({ sourceDir: dir, contractPath });
+}
+
+function contractWith(mutate) {
+  const doctored = structuredClone(contract);
+  mutate(doctored);
+  const dir = mkdtempSync(path.join(tmpdir(), 'pg-d02-cv-'));
+  const file = path.join(dir, 'contract.json');
+  writeFileSync(file, JSON.stringify(doctored));
+  return file;
 }
 
 function mustThrow(code, fn) {
@@ -326,4 +361,174 @@ test('CLI determinism: --check and --out agree with in-process projection', () =
   const inProcess = projectFrom();
   assert.equal(written, inProcess.serialized);
   assert.match(check.stderr.trim(), new RegExp(`check ok sha256=${inProcess.sha256}`));
+});
+
+test('F1 parity: contentVersion = practiceId@sha256-12 over the frozen learner allowlist (PR628/PR625 contract)', () => {
+  const { artifact } = projectFrom();
+  assert.equal(artifact.package.practiceId, 'pg-d02');
+  assert.equal(artifact.package.contentVersion, 'pg-d02@920e17baafd5');
+  assert.match(artifact.package.contentVersion, /^pg-d02@[0-9a-f]{12}$/);
+  const files = verifiedFiles();
+  assert.equal(A.computeContentVersion(files, 'pg-d02'), artifact.package.contentVersion);
+  assert.equal(A.parsePracticeId(files.get('enunciado.md').toString('utf8')), 'pg-d02');
+  // eixos independentes preservados: contentVersion ≠ package.version ≠ schema
+  assert.equal(artifact.package.version, 'rubrica-v1');
+  assert.equal(artifact.schema, 'aidevschool/sequencia-dev-guiada/projection@1');
+});
+
+test('F1 parity cross-check: the same formula reproduces the accepted pg-d01 contentVersion (byte-compatible with PR628 compute_content_version)', () => {
+  const files = new Map();
+  for (const rel of PG_D01_LEARNER_FILES) {
+    files.set(rel, readFileSync(path.join(PG_D01_DIR, rel)));
+  }
+  assert.equal(
+    A.computeContentVersion(files, 'pg-d01', {
+      packageRoot: 'curriculum/sequencia-dev-guiada/pg-d01-debug-reproduza',
+      allowlist: PG_D01_LEARNER_FILES
+    }),
+    PG_D01_CONTENT_VERSION
+  );
+});
+
+test('F1: guia-de-correcao hashes never enter learner entries; the canonical order is load-bearing', () => {
+  const files = verifiedFiles();
+  const before = A.computeContentVersion(files, 'pg-d02');
+  const tampered = new Map(files);
+  tampered.set('guia-de-correcao/solucao.md', Buffer.from(`${files.get('guia-de-correcao/solucao.md').toString('utf8')}\n# editado`));
+  assert.equal(A.computeContentVersion(tampered, 'pg-d02'), before);
+  const reordered = A.computeContentVersion(files, 'pg-d02', {
+    allowlist: [
+      'enunciado.md',
+      'exemplo-trabalhado.md',
+      'rubrica-v1.md',
+      'insumos/pedido-original.md',
+      'insumos/meus_commits.json',
+      'insumos/verifica_pedido.py'
+    ]
+  });
+  assert.notEqual(reordered, before);
+});
+
+test('F1 negatives: date.ordinal-style value, wrong digest, missing field and basis without parity are all rejected', () => {
+  mustThrow('E_CONTENT_VERSION_INVALID', () =>
+    projectFrom(PACKAGE_DIR, contractWith((c) => { c.package.contentVersion = '2026-09-30.1'; }))
+  );
+  mustThrow('E_CONTENT_VERSION_MISMATCH', () =>
+    projectFrom(PACKAGE_DIR, contractWith((c) => { c.package.contentVersion = 'pg-d02@deadbeefdead'; }))
+  );
+  mustThrow('E_CONTENT_VERSION_INVALID', () =>
+    projectFrom(PACKAGE_DIR, contractWith((c) => { delete c.package.contentVersion; }))
+  );
+  mustThrow('E_CONTENT_VERSION_INVALID', () =>
+    projectFrom(PACKAGE_DIR, contractWith((c) => { c.package.contentVersionBasis.allowlist = [...CANONICAL_LEARNER_FILES].reverse(); }))
+  );
+  mustThrow('E_CONTENT_VERSION_INVALID', () =>
+    projectFrom(PACKAGE_DIR, contractWith((c) => { c.package.contentVersionBasis.parity = []; }))
+  );
+});
+
+test('F2 anchors: structured block exactly as ratified, every value traced to the pinned anchorsMeta extraction', () => {
+  const { artifact } = projectFrom();
+  assert.deepEqual(artifact.package.anchors, {
+    unit: 'U03',
+    unitRef: 'SEQUENCIA.md §2',
+    competencyPrimary: 'D3',
+    competencySupport: ['D2'],
+    course: {
+      course: 'curso-simples',
+      module: 'M3',
+      topic: 'Prompt Engineering',
+      sections: '§3.1–3.4',
+      entry: 'docs/curso-simples/index.html',
+      blob: '2bcf99fbd831'
+    },
+    workedExample: { dir: 'docs/curso-simples/workflow-exemplo/', entry: 'release_notes.py', blob: '8bbe0fdffcf5', tests: 22 },
+    prerequisiteLesson: { id: 'l16', unit: 'U02', label: 'pedido de código com contexto', equivalence: 'ou equivalente' }
+  });
+  const anchorsMeta = A.runExtractions(verifiedFiles(), contract).get('anchorsMeta');
+  A.assertAnchorsTraced(artifact.package.anchors, anchorsMeta);
+  // rastreabilidade global: strings de anchors passam pelo guardião de textos
+  A.assertTraceableTexts(A.anchorTexts(artifact.package.anchors), verifiedFiles(), []);
+});
+
+test('F2 negatives: anchorsMeta drift and invented anchor values are rejected', () => {
+  const files = verifiedFiles();
+  const doctored = new Map(files);
+  doctored.set(
+    'enunciado.md',
+    files.get('enunciado.md').toString('utf8').replace('lição-âncora de pré-req: `l16` (U02)', 'lição-âncora de pré-req: `l17` (U02)')
+  );
+  const values = A.runExtractions(doctored, contract);
+  mustThrow('E_EXTRACTION_HASH_MISMATCH', () => A.verifyExtractions(values, contract));
+
+  const invented = structuredClone(contract.package.anchors);
+  invented.prerequisiteLesson.id = 'l21';
+  invented.prerequisiteLesson.label = 'pedido mágico sem contexto';
+  mustThrow('E_ANCHOR_UNTRACED', () => A.assertAnchorsTraced(invented, values.get('metaBlock')));
+  mustThrow('E_ANCHOR_UNTRACED', () =>
+    A.assertAnchorsTraced(
+      { ...contract.package.anchors, competencySupport: ['D9'] },
+      A.runExtractions(files, contract).get('anchorsMeta')
+    )
+  );
+});
+
+test('F3 source interface: learnerVisibleFiles (6, canonical order) and provenanceOnlyFiles (2, hash-pinned, out of the learner payload)', () => {
+  const { artifact } = projectFrom();
+  assert.deepEqual(artifact.source.learnerVisibleFiles, CANONICAL_LEARNER_FILES);
+  assert.equal(artifact.source.learnerVisibleFiles.length, 6);
+  assert.deepEqual(artifact.source.provenanceOnlyFiles.map((f) => f.path), GABARITO_PATHS);
+  for (const entry of artifact.source.provenanceOnlyFiles) {
+    assert.equal(entry.contentInLearnerPayload, false);
+    const pinned = contract.files.find((f) => f.path === entry.path);
+    assert.equal(entry.sha256, pinned.sha256);
+    assert.equal(entry.bytes, pinned.bytes);
+  }
+  assert.deepEqual(
+    artifact.source.manifest.slice(0, 6).map((m) => m.path),
+    CANONICAL_LEARNER_FILES
+  );
+  const serialized = projectFrom().serialized;
+  assert.ok(serialized.includes('"contentInLearnerPayload": false'));
+});
+
+test('F3 negatives: reordered learner list and gabarito inside learnerVisibleFiles are rejected', () => {
+  mustThrow('E_SOURCE_INTERFACE_INVALID', () =>
+    projectFrom(
+      PACKAGE_DIR,
+      contractWith((c) => {
+        c.sourceInterface.learnerVisibleFiles = [...CANONICAL_LEARNER_FILES].reverse();
+      })
+    )
+  );
+  mustThrow('E_SOURCE_INTERFACE_INVALID', () =>
+    projectFrom(
+      PACKAGE_DIR,
+      contractWith((c) => {
+        c.sourceInterface.learnerVisibleFiles = [
+          'enunciado.md',
+          'exemplo-trabalhado.md',
+          'insumos/pedido-original.md',
+          'insumos/meus_commits.json',
+          'insumos/verifica_pedido.py',
+          'guia-de-correcao/solucao.md'
+        ];
+      })
+    )
+  );
+  mustThrow('E_SOURCE_INTERFACE_INVALID', () =>
+    projectFrom(PACKAGE_DIR, contractWith((c) => { delete c.sourceInterface; }))
+  );
+});
+
+test('canonical golden: the delta artifact is pinned (new head/hash/bytes disclosure)', () => {
+  const result = projectFrom();
+  assert.equal(result.sha256, CANONICAL_SHA256);
+  assert.equal(result.bytes, CANONICAL_BYTES);
+  assert.notEqual(result.sha256, '4812076c9d47a8b21fff24a7f5f2e755ddf321f446a8af1308645881d8fa33af');
+  // leak guards cobrem os campos novos (serialização inteira é o haystack)
+  const files = verifiedFiles();
+  const values = A.runExtractions(files, contract);
+  A.assertNoGabaritoLeak(result.serialized, files, [...values.values()].flat());
+  A.assertTraceableTexts(A.anchorTexts(result.artifact.package.anchors), files, []);
 });

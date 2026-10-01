@@ -12,20 +12,34 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const TOOL = 'pg-d02-source-adapter';
-const TOOL_VERSION = '1.0.0';
+const TOOL_VERSION = '1.1.0';
 const ARTIFACT_SCHEMA = 'aidevschool/sequencia-dev-guiada/projection@1';
 const CONTRACT_SCHEMA = 'aidevschool/sequencia-dev-guiada/source-contract@1';
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const DEFAULT_SOURCE_DIR = path.join(HERE, '..', 'pg-d02-pedido-estruturado');
 const DEFAULT_CONTRACT_PATH = path.join(HERE, 'fixtures', 'pg-d02-source-contract.json');
+const PACKAGE_RELATIVE_ROOT = 'curriculum/sequencia-dev-guiada/pg-d02-pedido-estruturado';
 
+// Parity contract (AID-3534; correção técnica PO edc8299a em AID-3617): a
+// allowlist learner-facing, sua ordem canônica e a fórmula do contentVersion
+// são as mesmas do contrato de prática guiada aceito em PR628
+// (`learner/substrate/mission_catalog_guided_practice.py` @
+// e376d04f6ea7eb7a7be664eb9e6e15305ea675e9 — GUIDED_PRACTICE_LEARNER_FILES +
+// compute_content_version), em paridade com
+// `engines/codexdojo-os-prototype/scripts/gen-guided-practice.mjs`
+// (SOURCE_FILES + contentVersion, PR #625): entradas `path:sha256` (sha256 do
+// conteúdo UTF-8) na ordem canônica da allowlist (não lexicográfica), unidas
+// por newline, sha256 do conjunto; contentVersion = practiceId + '@' +
+// primeiros 12 hex. Hashes do guia-de-correcao NÃO entram nas entradas
+// learner. O date.ordinal do catalog.yaml global é outro contrato e não é
+// importado aqui (pg-d01 permanece byte a byte intocado).
 const LEARNER_VISIBLE_FILES = [
   'enunciado.md',
   'exemplo-trabalhado.md',
-  'rubrica-v1.md',
   'insumos/pedido-original.md',
   'insumos/meus_commits.json',
-  'insumos/verifica_pedido.py'
+  'insumos/verifica_pedido.py',
+  'rubrica-v1.md'
 ];
 const GABARITO_FILES = ['guia-de-correcao/pedido-5-campos.md', 'guia-de-correcao/solucao.md'];
 // Fatos que só existem no guia-de-correcao (verificados contra os arquivos
@@ -389,6 +403,136 @@ export function loadContract(contractPath) {
   return contract;
 }
 
+// Paridade com `_HEADING` do PR628: `^# (\S+) — (.+)$` — o practiceId é lido
+// do enunciado, nunca presumido.
+export function parsePracticeId(enunciadoText) {
+  const match = enunciadoText.match(/^# (\S+) — .+$/m);
+  if (!match) {
+    throw new AdapterError('E_STRUCTURE_INVALID', 'enunciado has no identity heading "# <practiceId> — <title>"');
+  }
+  return match[1];
+}
+
+// Paridade com compute_content_version (PR628) e com o contentVersion do
+// gen-guided-practice.mjs (PR #625): entradas `path:sha256` na ordem canônica
+// da allowlist, unidas por newline, sha256 do conjunto, primeiros 12 hex.
+export function computeContentVersion(
+  files,
+  practiceId,
+  { packageRoot = PACKAGE_RELATIVE_ROOT, allowlist = LEARNER_VISIBLE_FILES } = {}
+) {
+  const entries = allowlist.map((rel) => `${packageRoot}/${rel}:${sha256Hex(files.get(rel))}`);
+  const digest = sha256Hex(entries.join('\n'));
+  return `${practiceId}@${digest.slice(0, 12)}`;
+}
+
+export function assertContentVersionInterface(contract, files) {
+  const pkg = contract.package ?? {};
+  const declared = pkg.contentVersion;
+  if (typeof declared !== 'string' || declared.length === 0) {
+    throw new AdapterError('E_CONTENT_VERSION_INVALID', 'contract.package.contentVersion is required (no invented default)');
+  }
+  const practiceId = parsePracticeId(toText(files.get('enunciado.md')));
+  if (pkg.practiceId !== practiceId) {
+    throw new AdapterError('E_CONTENT_VERSION_INVALID', `contract.package.practiceId must match the enunciado identity heading (${practiceId})`);
+  }
+  if (!new RegExp(`^${practiceId}@[0-9a-f]{12}$`).test(declared)) {
+    throw new AdapterError('E_CONTENT_VERSION_INVALID', `contentVersion must follow the parity contract <practiceId>@<sha256-12> (PR628/PR625), got: ${declared}`);
+  }
+  const computed = computeContentVersion(files, practiceId);
+  if (declared !== computed) {
+    throw new AdapterError('E_CONTENT_VERSION_MISMATCH', 'contract.package.contentVersion does not match the parity formula over the pinned learner files', {
+      expected: computed,
+      declared
+    });
+  }
+  const basis = pkg.contentVersionBasis;
+  if (!basis || typeof basis !== 'object') {
+    throw new AdapterError('E_CONTENT_VERSION_INVALID', 'contract.package.contentVersionBasis is required (parity provenance, no invented default)');
+  }
+  if (basis.formula !== '<practiceId>@<sha256-12>') {
+    throw new AdapterError('E_CONTENT_VERSION_INVALID', `contentVersionBasis.formula must be "<practiceId>@<sha256-12>", got: ${basis.formula}`);
+  }
+  if (JSON.stringify(basis.allowlist) !== JSON.stringify(LEARNER_VISIBLE_FILES)) {
+    throw new AdapterError('E_CONTENT_VERSION_INVALID', 'contentVersionBasis.allowlist must equal the canonical learner allowlist (content and order)');
+  }
+  if (JSON.stringify(basis.excludes) !== JSON.stringify(GABARITO_FILES)) {
+    throw new AdapterError('E_CONTENT_VERSION_INVALID', 'contentVersionBasis.excludes must equal the guia-de-correcao files (their hashes never enter learner entries)');
+  }
+  const paritySources = (basis.parity ?? []).map((p) => p.source);
+  if (
+    !paritySources.includes('learner/substrate/mission_catalog_guided_practice.py') ||
+    !paritySources.includes('engines/codexdojo-os-prototype/scripts/gen-guided-practice.mjs')
+  ) {
+    throw new AdapterError('E_CONTENT_VERSION_INVALID', 'contentVersionBasis.parity must cite both parity sources (PR628 py + PR #625 mjs)');
+  }
+}
+
+export function assertSourceInterface(contract) {
+  const si = contract.sourceInterface;
+  if (!si || typeof si !== 'object') {
+    throw new AdapterError('E_SOURCE_INTERFACE_INVALID', 'contract.sourceInterface freeze is required (learnerVisibleFiles + provenanceOnlyFiles)');
+  }
+  if (JSON.stringify(si.learnerVisibleFiles) !== JSON.stringify(LEARNER_VISIBLE_FILES)) {
+    throw new AdapterError('E_SOURCE_INTERFACE_INVALID', 'sourceInterface.learnerVisibleFiles must equal the canonical allowlist (exact content and order)', {
+      expected: LEARNER_VISIBLE_FILES,
+      declared: si.learnerVisibleFiles
+    });
+  }
+  if (JSON.stringify(si.provenanceOnlyFiles) !== JSON.stringify(GABARITO_FILES)) {
+    throw new AdapterError('E_SOURCE_INTERFACE_INVALID', 'sourceInterface.provenanceOnlyFiles must equal the guia-de-correcao allowlist', {
+      expected: GABARITO_FILES,
+      declared: si.provenanceOnlyFiles
+    });
+  }
+  const pinnedPaths = contract.files.map((f) => f.path);
+  const declared = [...si.learnerVisibleFiles, ...si.provenanceOnlyFiles];
+  const overlap = si.learnerVisibleFiles.filter((p) => si.provenanceOnlyFiles.includes(p));
+  if (overlap.length > 0) {
+    throw new AdapterError('E_SOURCE_INTERFACE_INVALID', `learner/provenance-only lists must be disjoint: ${overlap.join(', ')}`);
+  }
+  const missing = declared.filter((p) => !pinnedPaths.includes(p));
+  if (missing.length > 0) {
+    throw new AdapterError('E_SOURCE_INTERFACE_INVALID', `source interface entries must be pinned in contract.files: ${missing.join(', ')}`);
+  }
+  const unpinned = pinnedPaths.filter((p) => !declared.includes(p));
+  if (unpinned.length > 0) {
+    throw new AdapterError('E_SOURCE_INTERFACE_INVALID', `contract.files contains paths outside the frozen interface: ${unpinned.join(', ')}`);
+  }
+}
+
+export function anchorTexts(anchors) {
+  const out = [];
+  const walk = (node) => {
+    if (typeof node === 'string') out.push(node);
+    else if (typeof node === 'number') out.push(String(node));
+    else if (Array.isArray(node)) node.forEach(walk);
+    else if (node && typeof node === 'object') {
+      for (const value of Object.values(node)) walk(value);
+    }
+  };
+  walk(anchors);
+  return out;
+}
+
+export function assertAnchorsTraced(anchors, anchorsMeta) {
+  if (!anchors || typeof anchors !== 'object') {
+    throw new AdapterError('E_STRUCTURE_INVALID', 'contract.package.anchors is required (structured anchors, F2)');
+  }
+  if (typeof anchorsMeta !== 'string' || anchorsMeta.length === 0) {
+    throw new AdapterError('E_STRUCTURE_INVALID', 'anchorsMeta extraction is required to trace package.anchors');
+  }
+  const flat = reflow(anchorsMeta);
+  const offenders = anchorTexts(anchors).filter(
+    (t) => t.length > 0 && !anchorsMeta.includes(t) && !flat.includes(reflow(t))
+  );
+  if (offenders.length > 0) {
+    throw new AdapterError('E_ANCHOR_UNTRACED', 'anchor value not traced to the pinned anchorsMeta extraction (zero invention)', {
+      offenders
+    });
+  }
+}
+
 export function readSourceFiles(sourceDir, contract) {
   const files = new Map();
   const manifest = [];
@@ -618,13 +762,22 @@ export function buildArtifact(values, contract, manifest) {
     hint: collect(f.hint)
   }));
   const identity = parseIdentity(values.get('metaBlock'));
+  const anchorStrings = anchorTexts(contract.package.anchors);
+  anchorStrings.forEach((text) => texts.push(text));
+  const provenanceOnlyFiles = manifest
+    .filter((entry) => GABARITO_FILES.includes(entry.path))
+    .map((entry) => ({ path: entry.path, sha256: entry.sha256, bytes: entry.bytes, contentInLearnerPayload: false }));
 
   const artifact = {
     schema: ARTIFACT_SCHEMA,
     kind: 'guided-practice-projection',
     package: {
       id: contract.package.id,
+      practiceId: contract.package.practiceId,
       version: contract.package.version,
+      contentVersion: contract.package.contentVersion,
+      contentVersionBasis: { ...contract.package.contentVersionBasis },
+      anchors: { ...contract.package.anchors },
       family: 'sequencia-dev-guiada',
       unit: identity.unit,
       competencies: { primary: identity.competencyPrimary, support: identity.competencySupport },
@@ -632,7 +785,9 @@ export function buildArtifact(values, contract, manifest) {
     },
     source: {
       pin: { ...contract.pin },
-      manifest
+      manifest,
+      learnerVisibleFiles: [...contract.sourceInterface.learnerVisibleFiles],
+      provenanceOnlyFiles
     },
     learnerPath: {
       objective: collect(values.get('objective')),
@@ -709,9 +864,12 @@ export function buildArtifact(values, contract, manifest) {
 
 export function project({ sourceDir = DEFAULT_SOURCE_DIR, contractPath = DEFAULT_CONTRACT_PATH } = {}) {
   const contract = loadContract(contractPath);
+  assertSourceInterface(contract);
   const { files, manifest } = readSourceFiles(sourceDir, contract);
+  assertContentVersionInterface(contract, files);
   const values = runExtractions(files, contract);
   verifyExtractions(values, contract);
+  assertAnchorsTraced(contract.package.anchors, values.get('anchorsMeta'));
   validateStructure(values, contract);
   const { artifact, texts, allowlistedValues } = buildArtifact(values, contract, manifest);
   const serialized = `${JSON.stringify(artifact, null, 2)}\n`;
