@@ -1,0 +1,53 @@
+{
+ "scope": "checkpoint AID-3666 2026-10-01 — analise ad-hoc (verificador cmp apresenta TypeError em verify_pdf.py:456)",
+ "pages": 10,
+ "mediabox_all": "595.92x842.88 (A4 retrato)",
+ "strokes_h_total": 162,
+ "expected_fields": 22,
+ "source_lines_total": 145,
+ "source_lines_missing_verbatim": 61,
+ "flags_overflow_right": [
+  {
+   "page": 1,
+   "max_x_end": 1136.2
+  },
+  {
+   "page": 2,
+   "max_x_end": 787.1
+  },
+  {
+   "page": 3,
+   "max_x_end": 1452.5
+  },
+  {
+   "page": 4,
+   "max_x_end": 1116.8
+  },
+  {
+   "page": 5,
+   "max_x_end": 953.2
+  },
+  {
+   "page": 6,
+   "max_x_end": 1316.8
+  },
+  {
+   "page": 7,
+   "max_x_end": 1046.2
+  },
+  {
+   "page": 8,
+   "max_x_end": 875.2
+  },
+  {
+   "page": 9,
+   "max_x_end": 977.4
+  },
+  {
+   "page": 10,
+   "max_x_end": 1088.5
+  }
+ ],
+ "status": "UNRELIABLE-PENDING-VISUAL-QA",
+ "limitation": "sem rasterizador PDF nesta estacao; analise geometrica/texto NAO equivale a revisao visual pagina a pagina"
+}
