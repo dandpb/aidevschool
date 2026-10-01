@@ -184,6 +184,20 @@ class TestCheckMode(unittest.TestCase):
         self.assertEqual(proc.returncode, 1)
         self.assertIn("D0015", proc.stdout)  # 'Countersign :' typo
 
+    def test_indented_canonical_line_rejected_no_prose_noise(self):
+        import tempfile
+        body = ("Countersign: AID-9006 verdict 5843026877 head=" + HEAD +
+                "\n  " + REV_LINE + "\nprosa indentada comum não é achado:\n"
+                "    - bullet markdown qualquer\n")
+        with tempfile.NamedTemporaryFile("w", suffix=".md", delete=False) as fh:
+            fh.write(body)
+            path = fh.name
+        proc = run("--check", "--facts", str(FIX / "facts_valid.json"),
+                   "--draft", path)
+        self.assertEqual(proc.returncode, 1)
+        self.assertIn("D0002", proc.stdout)      # trailer indentado falha regex
+        self.assertNotIn("D0003", proc.stdout)   # prosa indentada não é achado
+
     def test_stdin_draft(self):
         body = (FIX / "draft_valid.md").read_text(encoding="utf-8")
         proc = run("--check", "--facts", str(FIX / "facts_valid.json"),

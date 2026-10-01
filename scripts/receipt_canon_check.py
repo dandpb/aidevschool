@@ -375,10 +375,9 @@ def check_draft(text, facts):
                   "linha %d: prefixo canônico com typo/espaço antes de ':' "
                   "(gate casa apenas 'Provenance:'/'Countersign:' exatos)"
                   % (i + 1))
-        elif s and not in_fence and stripped != stripped.lstrip():
-            p.add("WARN", "D0003",
-                  "linha %d com indentação antes do conteúdo — âncora "
-                  "line-start do gate não casa (got %r)" % (i + 1, stripped[:40]))
+        # Nota: linha canônica INDENTADA cai no primeiro branch acima e falha
+        # a regex (âncora line-start do gate) → REJECT D0002; prosa indentada
+        # comum não é sinal de erro e não gera achado.
 
     if not cite_lines and not prov_lines:
         p.add("REJECT", "D0004",
