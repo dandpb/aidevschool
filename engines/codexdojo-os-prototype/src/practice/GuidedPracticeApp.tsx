@@ -2,6 +2,7 @@ import { Bug, CheckCircle2, ClipboardCopy, ListChecks, RotateCcw } from 'lucide-
 import { useEffect, useReducer, useRef, useState } from 'react'
 import { guidedPracticeDailyProjection, guidedPracticeProjection } from '../data/generated/guidedPractice'
 import type { LearningContext } from '../domain'
+import { coreContexts } from '../learning/learningContexts'
 import {
   isDailyGuidedPractice,
   type AnyGuidedPracticeProjection,
@@ -17,6 +18,8 @@ import {
   verdictPolicyOf,
   type CyclePhase,
 } from './guidedPracticeCycle'
+import { DAILY_PRACTICE_CHOICE, dailyLearningContext } from './dailyPresentation'
+import { StructuredMarkdown, renderInlineMarkdown } from './structuredMarkdown'
 
 // Single projection registry (AID-3590): pg-d01 stays the DEFAULT and the
 // only practice the embedded AC1 mission runtime ever renders; pg-c01 is the
@@ -130,13 +133,18 @@ export function GuidedPracticeApp({ practiceId = 'pg-d01', onTeach, onConcluded,
               PRÁTICA GUIADA · COTIDIANO · JORNADA {projection.package.journey.toUpperCase()} ·{' '}
               {projection.package.audience.toUpperCase()}
             </span>
-            <h1>
-              {projection.practiceId} · {projection.package.id}
-            </h1>
-            <p>
-              {projection.objective} Prática simulada — não gera nota, mastered ou certificado.
-              Projeção canônica: <code>{projection.contentVersion}</code> ·{' '}
+            {/* AID-3643 (P3): human title primary; technical identity
+                (practiceId · package slug · canonical projection pins)
+                subordinated below it — same strings, new hierarchy. */}
+            <h1>{DAILY_PRACTICE_CHOICE.title}</h1>
+            <p className="practice-identity">
+              {projection.practiceId} · {projection.package.id} {projection.package.version} · Projeção canônica:{' '}
+              <code>{projection.contentVersion}</code> ·{' '}
               <code>{projection.projectionPin.artifactSha256.slice(0, 12)}</code>.
+            </p>
+            <StructuredMarkdown className="practice-objective" text={projection.objective} />
+            <p className="practice-app-header-note">
+              Prática simulada — não gera nota, mastered ou certificado.
             </p>
           </>
         ) : (
@@ -255,7 +263,7 @@ export function GuidedPracticeApp({ practiceId = 'pg-d01', onTeach, onConcluded,
               Leia <code>{projection.workedExample.sourcePath}</code> antes de tentar — a sua tentativa usa a mesma
               disciplina num problema de natureza diferente.
             </summary>
-            <pre>{projection.workedExample.markdown}</pre>
+            <StructuredMarkdown text={projection.workedExample.markdown} />
           </details>
           <details className="practice-source">
             <summary>Insumos da prática (recado, grupo e resposta da IA — sem rede, sem conta)</summary>
@@ -266,7 +274,7 @@ export function GuidedPracticeApp({ practiceId = 'pg-d01', onTeach, onConcluded,
               <ul>
                 {projection.inputs.fonte1.lines.map((line) => (
                   <li key={line.id}>
-                    <code>{line.id}</code> {line.text}
+                    <code>{line.id}</code> {renderInlineMarkdown(line.text, `f1-${line.id}`)}
                   </li>
                 ))}
               </ul>
@@ -278,7 +286,7 @@ export function GuidedPracticeApp({ practiceId = 'pg-d01', onTeach, onConcluded,
               <ul>
                 {projection.inputs.fonte2.lines.map((line) => (
                   <li key={line.id}>
-                    <code>{line.id}</code> {line.text}
+                    <code>{line.id}</code> {renderInlineMarkdown(line.text, `f2-${line.id}`)}
                   </li>
                 ))}
               </ul>
@@ -290,7 +298,7 @@ export function GuidedPracticeApp({ practiceId = 'pg-d01', onTeach, onConcluded,
               <ul>
                 {projection.inputs.respostaIa.statements.map((statement) => (
                   <li key={statement.id}>
-                    <code>nº {statement.id}</code> {statement.text}
+                    <code>nº {statement.id}</code> {renderInlineMarkdown(statement.text, `ia-${statement.id}`)}
                   </li>
                 ))}
               </ul>
@@ -299,8 +307,8 @@ export function GuidedPracticeApp({ practiceId = 'pg-d01', onTeach, onConcluded,
           <details className="practice-source">
             <summary>Regras da prática</summary>
             <ul>
-              {projection.rules.map((rule) => (
-                <li key={rule}>{rule}</li>
+              {projection.rules.map((rule, index) => (
+                <li key={rule}>{renderInlineMarkdown(rule, `rule-${index}`)}</li>
               ))}
             </ul>
           </details>
@@ -335,7 +343,7 @@ export function GuidedPracticeApp({ practiceId = 'pg-d01', onTeach, onConcluded,
             {stepInstructions.map((step, index) => (
               <li key={step}>
                 <ListChecks size={14} aria-hidden />
-                <span>{step}</span>
+                <span>{isDaily ? renderInlineMarkdown(step, `step-${index}`) : step}</span>
                 <label>
                   {isDaily ? `Peça da etapa ${stepIds?.[index]}` : `Comando + saída real do passo ${index + 1}`}
                   <textarea
@@ -360,7 +368,7 @@ export function GuidedPracticeApp({ practiceId = 'pg-d01', onTeach, onConcluded,
                 <ul>
                   {projection.inputs.fonte1.lines.map((line) => (
                     <li key={line.id}>
-                      <code>{line.id}</code> {line.text}
+                      <code>{line.id}</code> {renderInlineMarkdown(line.text, `tf1-${line.id}`)}
                     </li>
                   ))}
                 </ul>
@@ -372,7 +380,7 @@ export function GuidedPracticeApp({ practiceId = 'pg-d01', onTeach, onConcluded,
                 <ul>
                   {projection.inputs.fonte2.lines.map((line) => (
                     <li key={line.id}>
-                      <code>{line.id}</code> {line.text}
+                      <code>{line.id}</code> {renderInlineMarkdown(line.text, `tf2-${line.id}`)}
                     </li>
                   ))}
                 </ul>
@@ -384,7 +392,7 @@ export function GuidedPracticeApp({ practiceId = 'pg-d01', onTeach, onConcluded,
                 <ul>
                   {projection.inputs.respostaIa.statements.map((statement) => (
                     <li key={statement.id}>
-                      <code>nº {statement.id}</code> {statement.text}
+                      <code>nº {statement.id}</code> {renderInlineMarkdown(statement.text, `tia-${statement.id}`)}
                     </li>
                   ))}
                 </ul>
@@ -521,7 +529,7 @@ export function GuidedPracticeApp({ practiceId = 'pg-d01', onTeach, onConcluded,
             <>
               <p className="practice-note">
                 Alvos deste retry: {state.retryTargets.join(', ')}. Os demais critérios seguem travados.{' '}
-                {projection.retry.instruction}
+                {renderInlineMarkdown(projection.retry.instruction, 'retry-note')}
               </p>
               <blockquote className="practice-note">
                 IA insiste ({projection.retry.insistedStatement.id}): {projection.retry.insistedStatement.text}
@@ -554,7 +562,7 @@ export function GuidedPracticeApp({ practiceId = 'pg-d01', onTeach, onConcluded,
                     </summary>
                     {state.phase === 'retry' && approvedFeedback !== undefined && (
                       <p className="practice-note">
-                        <Bug size={14} aria-hidden /> {approvedFeedback}
+                        <Bug size={14} aria-hidden /> {renderInlineMarkdown(approvedFeedback, `fb-${criterionId}`)}
                       </p>
                     )}
                   </details>
@@ -615,7 +623,8 @@ export function GuidedPracticeApp({ practiceId = 'pg-d01', onTeach, onConcluded,
           </h2>
           {isDaily && <p className="practice-note">{projection.takeaway.instruction}</p>}
           <label>
-            (a) {isDaily ? projection.takeaway.prompts[0] : projection.takeawayPrompts.a}
+            (a){' '}
+            {isDaily ? renderInlineMarkdown(projection.takeaway.prompts[0], 'tk-a') : projection.takeawayPrompts.a}
             <textarea
               rows={2}
               value={state.takeaway.a}
@@ -625,7 +634,8 @@ export function GuidedPracticeApp({ practiceId = 'pg-d01', onTeach, onConcluded,
             />
           </label>
           <label>
-            (b) {isDaily ? projection.takeaway.prompts[1] : projection.takeawayPrompts.b}
+            (b){' '}
+            {isDaily ? renderInlineMarkdown(projection.takeaway.prompts[1], 'tk-b') : projection.takeawayPrompts.b}
             <textarea
               rows={2}
               value={state.takeaway.b}
@@ -649,9 +659,17 @@ export function GuidedPracticeApp({ practiceId = 'pg-d01', onTeach, onConcluded,
               prática. Registro: o recibo é local e demonstrativo — não prova execução externa do aluno.
             </p>
           )}
-          {state.phase === 'concluida' && (
-            <pre className="practice-receipt">{receipt}</pre>
-          )}
+          {state.phase === 'concluida' &&
+            (isDaily ? (
+              // AID-3643 (P2): the daily receipt displays with visible
+              // structure while `receipt` (copied/archived) stays the exact
+              // byte-identical deterministic string.
+              <div className="practice-receipt">
+                <StructuredMarkdown text={receipt} />
+              </div>
+            ) : (
+              <pre className="practice-receipt">{receipt}</pre>
+            ))}
         </section>
       )}
     </div>
@@ -677,16 +695,20 @@ const PRACTICE_CHOICES: readonly {
     detail: 'Trilha Dev — rúbrica com vereditos atendido/parcial/não atendido.',
   },
   {
-    id: 'pg-c01',
-    label: 'pg-c01 · Cotidiano: dados mínimos e verificação',
-    detail: 'Jornada ia_pratica — veredito binário suficiente/insuficiente, com retry.',
+    id: DAILY_PRACTICE_CHOICE.id,
+    label: DAILY_PRACTICE_CHOICE.label,
+    detail: DAILY_PRACTICE_CHOICE.detail,
   },
 ]
 
 export function GuidedPracticeStandaloneApp({
   onTeach,
+  onRailContext,
 }: {
   readonly onTeach?: (context: LearningContext) => void
+  // AID-3643 (P2 LearningRail): updates ONLY the rail content (never forces
+  // the rail open) so the orientation reflects the content actually in play.
+  readonly onRailContext?: (context: LearningContext) => void
 }) {
   const [selected, setSelected] = useState<GuidedPracticeId>('pg-d01')
   const [pendingSwitch, setPendingSwitch] = useState<GuidedPracticeId | null>(null)
@@ -703,9 +725,21 @@ export function GuidedPracticeStandaloneApp({
     setSelected(id)
   }
 
+  // While pg-c01 is the selected content, the rail orients on the daily
+  // practice (projection-derived context); selecting pg-d01 restores the
+  // accepted default practice context. Presentation-only: no teach event is
+  // fired, so the rail's open/closed state never changes here.
+  useEffect(() => {
+    if (selected === 'pg-c01' && isDailyGuidedPractice(projection)) {
+      onRailContext?.(dailyLearningContext(projection))
+      return
+    }
+    onRailContext?.(coreContexts.practice)
+  }, [onRailContext, projection, selected])
+
   return (
     <div className="practice-standalone">
-      <nav className="practice-app" aria-label="Escolha da prática guiada">
+      <nav className="practice-app practice-chooser" aria-label="Escolha da prática guiada">
         <p className="practice-note">
           Escolha o conteúdo da prática. A troca reinicia a sessão do conteúdo escolhido; sessões são
           independentes e nada é transportado entre elas.
@@ -715,7 +749,7 @@ export function GuidedPracticeStandaloneApp({
             type="button"
             key={choice.id}
             aria-pressed={selected === choice.id}
-            className={selected === choice.id ? 'practice-primary' : undefined}
+            className={selected === choice.id ? 'practice-primary' : 'practice-choice'}
             onClick={() => choose(choice.id)}
           >
             {choice.label}
@@ -726,14 +760,14 @@ export function GuidedPracticeStandaloneApp({
           <p className="practice-note" role="alert">
             Há uma tentativa em curso em {selected}. Trocar agora reinicia explicitamente esta sessão (as
             peças e critérios atuais são descartados — o contrato cotidiano não retoma tentativa no meio).
-            <button type="button" onClick={() => {
+            <button type="button" className="practice-choice" onClick={() => {
               setSelected(pendingSwitch)
               setPendingSwitch(null)
               setAttemptActive(false)
             }}>
               Confirmar reinício e trocar para {pendingSwitch}
             </button>
-            <button type="button" onClick={() => setPendingSwitch(null)}>
+            <button type="button" className="practice-choice" onClick={() => setPendingSwitch(null)}>
               Cancelar e continuar {selected}
             </button>
           </p>
