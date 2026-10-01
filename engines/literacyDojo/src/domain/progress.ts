@@ -37,6 +37,26 @@ export type OnboardingTaskCategory = "scheduling" | "communication" | "news_rese
 export type LearningRoute = "guided" | "intermediate";
 export type AudienceChoice = "ia_pratica" | "trilha_dev";
 
+/**
+ * Jornadas navegáveis do app standalone (espelha `ModuleDefinition["journey"]`
+ * do read model). `ia_pratica` é o percurso default; `dev` é opt-in explícito
+ * (AID-3584) e NUNCA é inferido de `onboarding.audience`.
+ */
+export type JourneyId = "ia_pratica" | "dev";
+
+/**
+ * Estado OPCIONAL de navegação por jornada (AID-3584), compatível com estados
+ * antigos: ausente = legado (jornada ativa `ia_pratica`, cursor único em
+ * `currentLessonId`). Campos inválidos são normalizados defensivamente pelos
+ * helpers de `domain/journeyProgress.ts` — nunca disparam o caminho
+ * load-error que reinicia o progresso, e o schemaVersion NÃO sobe.
+ */
+export type JourneyNavigation = {
+  active?: JourneyId;
+  /** Cursor ("continuar de onde parou") por jornada; ausente = deriva de `currentLessonId`. */
+  current?: { ia_pratica?: string; dev?: string };
+};
+
 export type MapInitialState = {
   attempts: number;
   hintRequested: boolean;
@@ -144,6 +164,8 @@ export type LearnerProgress = {
   achievements: Achievement[];
   dailyGoal: DailyGoal;
   applications: ApplicationReport[];
+  /** Opcional (AID-3584): navegação por jornada. Legado sem o campo segue com cursor único. */
+  journeys?: JourneyNavigation;
 };
 
 export const XP_PER_ACTIVITY_PASS = 10;
@@ -595,6 +617,13 @@ export type CompleteLessonResult = {
  * Conclusão de lição: avalia, marca completo, aplica rota do onboarding no
  * Mapa Inicial, concede XP, agenda revisão, desbloqueia próxima lição,
  * muta currentLessonId e desbloqueia conquistas.
+ *
+ * AID-3584 (separação navegação × conquistas): `modules` orienta a CADEIA DE
+ * DESBLOQUEIO da jornada da lição concluída; `achievementModules` (default =
+ * `modules`, comportamento anterior preservado) é o escopo das conquistas —
+ * o chamador do app standalone passa o percurso público (`ia_pratica`) para
+ * que `track_complete`/`first_module` NÃO sejam redefinidos pela inclusão das
+ * 9 lições Dev na navegação.
  */
 export function completeLesson(
   progress: LearnerProgress,
@@ -602,6 +631,7 @@ export function completeLesson(
   bestScores: Record<string, number>,
   modules: ModuleDefinition[],
   now: Date,
+  achievementModules: ModuleDefinition[] = modules,
 ): CompleteLessonResult {
   const outcome = evaluateLessonCompletion(lesson, bestScores);
   if (!outcome.completed) {
@@ -623,7 +653,7 @@ export function completeLesson(
   const unlocked = unlockNextReadyLesson(next, modules, lesson.id);
   next = unlocked.progress;
   next = { ...next, currentLessonId: unlocked.unlockedLessonId ?? lesson.id };
-  const withAchievements = applyAchievements(next, modules, now);
+  const withAchievements = applyAchievements(next, achievementModules, now);
   next = withAchievements.progress;
 
   return {

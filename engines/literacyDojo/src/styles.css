@@ -1020,6 +1020,54 @@ h2 {
   border-color: rgba(102, 87, 232, 0.28);
 }
 
+/* AID-3584 — troca de jornada opt-in (Home). Botões-toggle com aria-pressed;
+   o estado ativo fica desabilitado e usa o verde-mint da identidade. */
+.journey-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.btn-journey {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 14px 16px;
+  border: 2px solid rgba(102, 87, 232, 0.38);
+  border-radius: 16px;
+  background: var(--surface-strong);
+  color: var(--text);
+  text-align: left;
+}
+
+.btn-journey span {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.btn-journey[aria-pressed="true"] {
+  border-color: rgba(73, 201, 143, 0.62);
+  background: linear-gradient(145deg, #f4fff9, #ffffff);
+}
+
+.btn-journey[aria-pressed="true"] span {
+  color: var(--mint-dark);
+  font-weight: 600;
+}
+
+.btn-journey:disabled {
+  cursor: default;
+  box-shadow: none;
+}
+
+@media (max-width: 560px) {
+  .journey-options {
+    grid-template-columns: 1fr;
+  }
+}
+
 .btn {
   min-height: 52px;
   border-radius: 14px;

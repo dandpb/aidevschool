@@ -8,6 +8,7 @@ import {
   skills,
   track,
 } from "../data/generated/lessons";
+import type { JourneyId } from "../domain/journeyProgress";
 
 /**
  * Read model de conteúdo do MVP: lê somente o read model gerado
@@ -15,21 +16,25 @@ import {
  * sem classe nem interface — a porta ContentRepository em ports.ts é
  * o tipo estrutural que os consumidores usam.
  *
- * O read model compila as duas jornadas (ia_pratica e dev) porque as
- * missões hospedadas do OS servem lições dev; o percurso público do app
- * standalone continua sendo só ia_pratica, então listModules filtra aqui.
+ * O read model compila as duas jornadas (ia_pratica e dev). O percurso
+ * público default continua `ia_pratica` (chamada sem argumento — conquistas,
+ * checkpoints e consumidores legados); a jornada Dev entra na navegação do
+ * app standalone SOMENTE pela escolha explícita do aprendiz (AID-3584),
+ * via `listModules("dev")`. Missões hospedadas do OS continuam podendo
+ * servir lições dev por `getLesson` (ver content-contract.md).
  */
 
-/** Jornada do percurso público do app standalone (public promise da vila). */
+/** Jornada do percurso público default do app standalone (public promise da vila). */
 export const PUBLIC_JOURNEY = "ia_pratica" as const;
 
 export function getTrack(): Track {
   return track;
 }
 
-export function listModules(): ModuleDefinition[] {
+export function listModules(journey?: JourneyId): ModuleDefinition[] {
+  const target = journey ?? PUBLIC_JOURNEY;
   return [...modules]
-    .filter((module) => module.journey === PUBLIC_JOURNEY)
+    .filter((module) => module.journey === target)
     .sort((a, b) => a.order - b.order);
 }
 
