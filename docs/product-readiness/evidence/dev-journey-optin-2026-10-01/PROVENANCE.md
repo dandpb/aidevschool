@@ -1,13 +1,20 @@
 # Proveniência das capturas — Jornada Dev opt-in (AID-3584 → AID-3588)
 
 > Manifesto declarado no ato da cópia (2026-10-01, Docs & Readiness Engineer, AID-3588;
-> wording da âncora corrigido em r2 da revisão QA — achado A2).
-> Fonte primária: `/paperclip/aid3584-evidence/` (piso do revisor LEE), ancorada pela tabela
-> sha256 do comentário `a54b4325` na issue AID-3584. O upload dos anexos r2 retornou 403,
-> de modo que anexos registrados pela plataforma existem apenas para as capturas r1
-> (`01`–`05`); para os arquivos r2 desta pasta a âncora dos hashes é a tabela do comentário
-> `a54b4325`, não registro de upload. sha256 recomputados no ato da cópia e conferidos
-> byte-a-byte com essa tabela.
+> wording da âncora corrigido em r2 da revisão QA — achado A2 — e em r3, AID-3594, para
+> descrever a sequência real de publicação dos anexos r2 — direção do PO `001d74d3`).
+> Fontes: `/paperclip/aid3584-evidence/` (piso do revisor LEE), a tabela sha256 do comentário
+> `a54b4325` na issue AID-3584 e os anexos da issue registrados pela plataforma.
+> Sequência real dos anexos r2: (1) captura original pelo produtor LAE (2026-10-01T05:02:55Z,
+> head `c02d2954`); (2) upload do LAE recusado com 403 — incidente preservado, não apagado
+> (comentários `a54b4325`/`6558fbe6`); (3) publicação posterior dos 4 anexos r2 pelo
+> revisor/owner legítimo LEE pela via suportada (uploads 2026-10-01T05:06:34–39Z, antes da
+> aprovação `a2617914` de 05:07Z; IDs: `b19b75ee` 06 mobile, `97f16bbd` 07 desktop,
+> `7ea89474` capture-meta-r2, `28e2694c` runs-delta-r2); (4) inspeção independente do PO —
+> download e leitura dos PNGs 05:12Z, verificação registrada 05:42Z (`001d74d3`).
+> A tabela sha256 do comentário `a54b4325` permanece âncora declarada válida; os anexos da
+> plataforma são âncora adicional (não substituição). sha256 recomputados no ato da cópia e
+> conferidos byte-a-byte com ambas as âncoras.
 
 ## Candidato documentado
 
