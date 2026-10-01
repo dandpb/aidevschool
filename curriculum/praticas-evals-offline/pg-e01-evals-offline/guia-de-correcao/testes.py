@@ -120,6 +120,39 @@ def test_todos_fixtures_rotulados_sinteticos():
         assert "SINTETIC" in aviso.upper(), "%s sem rotulo sintetico no meta.aviso" % nome
 
 
+def test_perdas_pagamento_gabarito_confere_com_fixtures():
+    # Enumera as perdas de `pagamento` (A correto -> B errado) direto dos
+    # raw fixtures e trava o gabarito docente: PD-011, PD-013, PD-014.
+    casos = {
+        c["id"]: c["area"]
+        for c in carregar(os.path.join(FIX, "casos_base.json"))["casos"]
+    }
+    pa = {
+        p["id"]: p["area"]
+        for p in carregar(os.path.join(FIX, "saidas_A_base.json"))["predicoes"]
+    }
+    pb = {
+        p["id"]: p["area"]
+        for p in carregar(os.path.join(FIX, "saidas_B_base.json"))["predicoes"]
+    }
+    perdas = {
+        cid
+        for cid, ouro in casos.items()
+        if ouro == "pagamento" and pa[cid] == ouro and pb[cid] != ouro
+    }
+    assert perdas == {"PD-011", "PD-013", "PD-014"}, (
+        "perdas de pagamento devem ser exatamente PD-011/PD-013/PD-014; obtidas=%s"
+        % sorted(perdas)
+    )
+    # negativo do ID errado: PD-012 ja era erro de A (contribui 0) e o
+    # gabarito antigo 011/012/013 nao pode voltar
+    assert "PD-012" not in perdas, "PD-012 nao e perda do delta: A ja errava"
+    assert perdas != {"PD-011", "PD-012", "PD-013"}, "gabarito antigo errado vs fixtures"
+    # causal: alvo errado de B por caso (PD-014 e desvio para conta)
+    assert pb["PD-011"] == "tecnico" and pb["PD-013"] == "tecnico"
+    assert pb["PD-014"] == "conta", "PD-014 foi desviado para conta, nao tecnico"
+
+
 TESTES = [
     test_contrato_ids_negativo,
     test_agregada_melhora_no_base,
@@ -129,6 +162,7 @@ TESTES = [
     test_heldout_agregada_igual_fatia_morre,
     test_variante_c_recupera_sem_regressao,
     test_todos_fixtures_rotulados_sinteticos,
+    test_perdas_pagamento_gabarito_confere_com_fixtures,
 ]
 
 

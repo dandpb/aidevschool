@@ -7,16 +7,21 @@
 
 - Agregado: 17/24 → 18/24 (**+0.042**) — a alegacao da proponente era
   verdadeira no agregado.
-- `pagamento`: 5/6 → 2/6 (**−0.500**) — 3 perdas: PD-011, PD-012, PD-013.
+- `pagamento`: 5/6 → 2/6 (**−0.500**) — 3 perdas: PD-011, PD-013, PD-014.
 - `tecnico`: 6/8 → 8/8 (+0.250) — os 2 acertos novos em `tecnico` pagam
   a destruicao de `pagamento`; `conta`/`uso` +0.200 cada completam a
   ilusao.
 - Mecanica: as linhas novas do v2 — "Em caso de duvida entre duas areas,
   escolha `tecnico`" + "Priorize a leitura do primeiro paragrafo" —
-  capturam tickets de pagamento que MENCIONAM erro/sistema ("Erro 500 ao
-  pagar", "cartao declinado", "fatura com valor errado"): ha "duvida"
-  aparente e o desempate empurra para `tecnico`. O v1 lia o ticket
-  inteiro sem desempate enviesado.
+  capturam tickets de pagamento de dois modos. Os que MENCIONAM
+  erro/sistema tem "duvida" aparente e o desempate empurra para
+  `tecnico`: PD-011 ("Erro 500 ao tentar pagar a fatura") e PD-013
+  ("Cartao declinado mas o plano continua ativo"). PD-014 ("Como
+  atualizo o cartao de cobranca da empresa no painel?") nao menciona
+  erro: a leitura parcial do 1o paragrafo o desvia para `conta`. O v1
+  lia o ticket inteiro sem desempate enviesado. PD-012 ("fatura com
+  valor errado") ja era erro do v1 (A=`tecnico`, B=`tecnico`): nao e
+  perda do delta, contribui 0.
 
 ## Diff proposto (minimo, na causa)
 

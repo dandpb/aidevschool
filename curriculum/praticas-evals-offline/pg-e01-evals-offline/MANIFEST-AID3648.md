@@ -3,13 +3,13 @@
 SHA256 por arquivo, computado na worktree `aid3648/u13-evals-offline`
 (base `origin/main` = `86fca7798740`) antes do push. O gate V&E independente
 deve (1) conferir estes hashes e (2) reproduzir os comandos de verificacao
-do README.md e de `guia-de-correcao/solucao.md` (scorer + 8 checks).
+do README.md e de `guia-de-correcao/solucao.md` (scorer + 9 checks).
 
 Dados 100% sinteticos; nenhum benchmark/eficacia real alegada.
 
 | Arquivo | SHA256 |
 | --- | --- |
-| `README.md` | `1d1fdaf09ebde6d83e46b6eb135c5f3d52753f7aab1c5ae9ca27f192ddfc4b0f` |
+| `README.md` | `51d05c8ae61bcdcc0148dde50db7439c18b8fc47ad64718af9b78d3ac20a6ec0` |
 | `pg-e01-evals-offline/enunciado.md` | `904328aee662748c42a8384fdbbfb8f38e715c45b296305845e02059c9254e46` |
 | `pg-e01-evals-offline/exemplo-trabalhado.md` | `a47aa21de1c4e7f2434bdec66e481a450290fe4e48454861e3b82bed9b247f3f` |
 | `pg-e01-evals-offline/rubrica-v1.md` | `b6dcf4b45dc48b3c76e822819b0747078a2b7175b86ba80bdd8428d5b715405d` |
@@ -21,9 +21,9 @@ Dados 100% sinteticos; nenhum benchmark/eficacia real alegada.
 | `pg-e01-evals-offline/exemplo/heldout/saidas_B_heldout.json` | `b7f476416dbfea034e5677f723f002485376671417284c2d12738295dcc0ca5a` |
 | `pg-e01-evals-offline/exemplo/heldout/saidas_C_heldout.json` | `0af2d1351f0f1ae62b1236b39e2881f81e9483e68722e7b6e4c167e449a50f4c` |
 | `pg-e01-evals-offline/guia-de-correcao/criterios-referencia.md` | `840e39a51274f69ad01233759ed359752811ecbeaba2fc6eb1c87f7b5cfa196e` |
-| `pg-e01-evals-offline/guia-de-correcao/proposta-referencia.md` | `274776ee0512181140207b16f15060b45e2ccb3ad2a900622bcaa29ce6136daf` |
-| `pg-e01-evals-offline/guia-de-correcao/solucao.md` | `52e58a229ba61ba75e8ab37bf39e1af42bfb8e0d9df1a7b174aae55775996267` |
-| `pg-e01-evals-offline/guia-de-correcao/testes.py` | `ed48efb9941e8cd2438a5d2af09421c2e0f3dd071dd64743d81a26b02be8400f` |
+| `pg-e01-evals-offline/guia-de-correcao/proposta-referencia.md` | `637bf64988d1d92a1d222de77658b09552b81a1e147dce52f0570fa23c359420` |
+| `pg-e01-evals-offline/guia-de-correcao/solucao.md` | `c17d732bc74b5de1bf8703dff206cd2b67fbdd0d9f247ca958c1c6e14372bf5a` |
+| `pg-e01-evals-offline/guia-de-correcao/testes.py` | `4090195ce0ab91ae0dd75e8ab598e97ef1eb961ae907decd9dcbc20e91c25716` |
 | `pg-e01-evals-offline/insumos/CENARIO.md` | `44c929332e12acc0f6b68c299deb6a69d5e4390df8c184dd95a8f4ada90861f6` |
 | `pg-e01-evals-offline/insumos/modelo-de-criterios.md` | `bda677586a3b8799fba706563291ba218ba86cb54e52904c1d7cedeefb4ef96d` |
 | `pg-e01-evals-offline/insumos/fixture/casos_base.json` | `b69a6f347031a08330a4afa74b1dbaea519349068ce481158fc4936c6c1bde18` |

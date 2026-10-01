@@ -28,7 +28,7 @@ python3 insumos/fixture/metricas.py comparar \
   --A insumos/fixture/saidas_A_base.json --B insumos/fixture/saidas_B_base.json
 # VEREDITO: agregada +0.042 COM regressao de fatia: pagamento (-0.500, n=6)
 
-python3 guia-de-correcao/testes.py   # 8 checks determinísticos (pos+neg)
+python3 guia-de-correcao/testes.py   # 9 checks determinísticos (pos+neg)
 ```
 
 ## Fontes curadas (pins resolvidos ANTES da autoria — 2026-10-01)

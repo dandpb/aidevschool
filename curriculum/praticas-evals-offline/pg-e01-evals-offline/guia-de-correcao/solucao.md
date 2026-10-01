@@ -2,7 +2,7 @@
 
 Separacao deliberada: o enunciado nao referencia este diretorio. A
 solucao tem tres gabaritos (`criterios-referencia.md`,
-`proposta-referencia.md`, `testes.py` com 8 checks determinísticos
+`proposta-referencia.md`, `testes.py` com 9 checks determinísticos
 positivos+negativos) e as saídas reais da execucao completa abaixo,
 capturadas nesta arvore (worktree `aid3648/u13-evals-offline`, base
 `86fca779` = `origin/main`, Python 3.13, sem rede; AID-3648).
@@ -35,9 +35,15 @@ exit=0
 Diagnostico gabarito: a alegacao da proponente (18 vs 17) era verdadeira
 no agregado e falsa por fatia — `tecnico` +0.250 (2 acertos) e
 `conta`/`uso` +0.200 pagam `pagamento` −0.500 (3 perdas: PD-011,
-PD-012, PD-013). Pela regra congelada (fatia com n>=3 piorando): **B
-nao sobe**. Mecanica: desempate "escolha `tecnico`" + leitura do 1o
-paragrafo capturam tickets de pagamento que mencionam erro/codigo.
+PD-013, PD-014). Pela regra congelada (fatia com n>=3 piorando): **B
+nao sobe**. Mecanica, caso a caso (conferir sempre nos fixtures): o
+desempate "escolha `tecnico`" captura PD-011 ("Erro 500 ao tentar
+pagar") e PD-013 ("Cartao declinado..."), que mencionam erro/sistema;
+PD-014 ("Como atualizo o cartao de cobranca da empresa no painel?"),
+sem mencao a erro, e desviado para `conta` pela leitura parcial do 1o
+paragrafo — nao sao 3 casos de desempate para `tecnico`. PD-012
+("fatura com valor errado") ja era erro de A (A=`tecnico`,
+B=`tecnico`): contribui 0 para o delta e fica fora da lista.
 
 ## Passo 2 — Proposta v2.1 (ver gabarito)
 
@@ -103,7 +109,8 @@ ok test_heldout_disjunto_do_base
 ok test_heldout_agregada_igual_fatia_morre
 ok test_variante_c_recupera_sem_regressao
 ok test_todos_fixtures_rotulados_sinteticos
-8 testes passaram
+ok test_perdas_pagamento_gabarito_confere_com_fixtures
+9 testes passaram
 exit=0
 ```
 
