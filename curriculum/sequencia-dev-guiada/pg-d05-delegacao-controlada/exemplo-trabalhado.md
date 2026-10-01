@@ -74,9 +74,31 @@ depois.
 
 ## Como reproduzir o exemplo (offline, sem instalar nada)
 
+O histórico do demo **não** vive nas branches do repo (o default é
+`main`): ele está congelado no `git-historico.bundle` ao lado de
+`demo/`, e é de lá que se busca. Na raiz do seu clone (base
+`e01d9d42`):
+
 ```bash
-cd dev-workflow-claude/workflows/04-revisar-mudancas/demo   # na base e01d9d42
-git checkout -q proposta
-node --test test/media.test.js   # termina 'not ok 1' — achado crítico provado
-git checkout -q master && npm test   # 8/8 pass, incluindo o teste-prova
+BUNDLE=dev-workflow-claude/workflows/04-revisar-mudancas/git-historico.bundle
+git fetch "$BUNDLE" 'refs/heads/proposta:refs/heads/demo04-proposta' \
+                     'refs/heads/master:refs/heads/demo04-master'
+git worktree add /tmp/demo04-proposta demo04-proposta
+git worktree add /tmp/demo04-master demo04-master
+
+cd /tmp/demo04-proposta && node --test test/media.test.js
+# ✖ PROVA-CRÍTICO: mediaDuracoes([]) deve lançar Error, nunca retornar "NaNm"
+# ... fail 1, exit 1 — o achado crítico provado contra a proposta
+
+cd /tmp/demo04-master && npm test
+# ✔ PROVA-CRÍTICO ... 8 pass / 0 fail, exit 0 — verde só depois da correção
+
+git worktree remove /tmp/demo04-proposta && git worktree remove /tmp/demo04-master
 ```
+
+O formato do relatório varia com a versão do Node (spec `✖`/`✔` ou
+TAP `not ok 1`/`ok 1`, como citado no RESULTADO.md); o invariante é o
+nome `PROVA-CRÍTICO`, `fail 1`/exit 1 na proposta e 8/8 verdes no
+master. O caminho do bundle na busca é relativo à raiz do repo (o
+`git fetch` resolve a partir do topo), e `npm test` é `node --test`
+puro — sem instalar dependências.

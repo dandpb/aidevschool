@@ -57,7 +57,7 @@ fixture, faça **nesta ordem**:
 
 1. **Contrato primeiro, diff depois** (M7/wf 07): leia o plano e o
    `CONTRATO.md` ANTES de abrir o diff do produtor. Registre no seu
-   recibo: allowlist da fatia 2, proibições (E1–E4) e validações
+   recibo: allowlist da fatia 2, proibições (E2.1–E2.4) e validações
    V1–V3. Verificador que começa pelo diff herda o viés do produtor.
 2. **Escopo mecanicamente**: rode
    `python3 insumos/verifica_delegacao.py escopo insumos/delegacao-r1/diff-r1.patch`

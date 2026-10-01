@@ -23,9 +23,9 @@ nesta entrega (diff restrito a este diretório). Fontes pinadas na base
 | sha256 | arquivo |
 | --- | --- |
 | b427ac777988c57fddbe99f5f70a8e32b08eedb2055cc9aebf2c3da9cec8a2f6 | ALLOWLIST.md |
-| eafb3001229ed394660e5244857829e6539eabb3721446f29cac8228fb4f09b8 | enunciado.md |
-| 67167d594ac094e45e47f7612b0a853bc62514984fa0cd676dd082ca8caa0ef9 | exemplo-trabalhado.md |
-| f063e42eed6e7d5fa36c341346b40d96ef2097535caf721df7fc310f19b2981d | rubrica-v1.md |
+| bd8daeb03bbf82f08de5e19c49945a9362b789db9d7944b1ea7066d00db4c8db | enunciado.md |
+| 5044f2e153a1b7a9513590380147aac4cc8ce48f8a78b9d5917a91693d43b219 | exemplo-trabalhado.md |
+| 4e204fb574058d8411ac8e0e83a68ebcbc9c694faca541c46e5652aea8136a43 | rubrica-v1.md |
 | 048d8882c9cd89996f8fdb55f86513308bc4af481203bc2156ce599a0ca1c088 | insumos/CONTRATO.md |
 | 6c28222bc272f9b7d1a1a6a04839e96fa22b25f62e854e4a820d13d7575d0cc6 | insumos/PLANO-APROVADO.md |
 | 2f628016f16f2b2463deacac7215cada0559847b1c06f4aca827b70ad472fcc3 | insumos/fixture/biblioteca.py |
@@ -77,4 +77,11 @@ comprovação não passa. Saídas reais de todos os comandos do aluno:
   first-hand nesta árvore (Python 3.13, git 2.x, offline).
 - Fixture fictícia (biblioteca do bairro); nenhum dado de aluno;
   nenhum gate/catálogo/binding/runtime tocado.
+- Revisão CPE (AID-3647, changes_requested sobre o head `ef8b74d6`):
+  bloco "Como reproduzir" do exemplo reescrito para buscar o
+  `git-historico.bundle` (refs `demo04-proposta`/`demo04-master`,
+  verificado first-hand na base: proposta `fail 1`/exit 1 no
+  `PROVA-CRÍTICO`; master 8/8 exit 0) e 2 nits (E2.1–E2.4 no
+  enunciado; "decomposta" na rubrica) — âncoras dos 3 arquivos
+  re-congeladas acima; demais 14 inalteradas.
 - v1 — mudanças futuras versionam (v2) sem editar este manifest.
