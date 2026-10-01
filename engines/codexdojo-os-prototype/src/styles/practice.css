@@ -417,6 +417,18 @@
   padding: 0;
 }
 
+/* AID-3643 r2 (FSE d7bfa16f, PO ae1913d1): long receipt tokens (sha256,
+   PR refs, learner pins) must not push the daily receipt past the mobile
+   width — the receipt display becomes horizontally complete at 375px.
+   Scope: the STANDALONE daily receipt DISPLAY only (`.practice-markdown`
+   descendants exist solely on the pg-c01 structured receipt; the pg-d01
+   `<pre>` receipt and the embedded AC1 runtime keep their accepted look).
+   Presentation-only: the copied/archived string stays byte-identical. */
+.practice-standalone .practice-receipt .practice-markdown li,
+.practice-standalone .practice-receipt .practice-markdown code {
+  overflow-wrap: anywhere;
+}
+
 .practice-receipt .practice-markdown pre {
   background: rgba(0, 0, 0, 0.2);
 }

@@ -123,6 +123,21 @@ test('chooser contrast, title hierarchy, structured example and rail context (de
   logCapture({ check: 'action-bar-position', position: barPosition, ...((await captureMetadata(page, testInfo)) as object) })
   await shoot(page, testInfo, '02-hierarquia-titulo')
 
+  // AID-3643 r2 (FSE d7bfa16f provenance finding): r1 desktop-02/04 were
+  // identical and did not prove the H1 hierarchy. This is the DEDICATED
+  // H1/identity frame: the h1 is scrolled INTO the scroller clip and
+  // measured (inside clip + no action-bar intersection) before capture.
+  const h1 = standaloneScroller(page).locator('h1', { hasText: /cotidiano: dados mínimos e verificação/i })
+  await h1.evaluate((element) => {
+    element.scrollIntoView({ block: 'center' })
+  })
+  const h1Occlusion = await occlusionCheck(page, '.practice-standalone h1')
+  expect(h1Occlusion.ok).toBe(true)
+  const identityOcclusion = await occlusionCheck(page, '.practice-standalone .practice-identity')
+  expect(identityOcclusion.ok).toBe(true)
+  logCapture({ check: 'h1-identity-unobstructed', ...h1Occlusion, ...((await captureMetadata(page, testInfo)) as object) })
+  await shoot(page, testInfo, '08-h1-identidade-desobstruido')
+
   // P2 structured example: the worked example renders quote/list/bold,
   // scrolled into view and measured UNOBSTRUCTED (desktop 03 finding).
   const example = page.locator('.practice-source .practice-markdown').first()
@@ -267,6 +282,22 @@ test('complete daily receipt visible UNOBSTRUCTED in scrolled captures', async (
     return { bold: text.includes('**'), heading: text.includes('##') }
   })
   expect(receiptMarkers).toEqual({ bold: false, heading: false })
+
+  // AID-3643 r2 (FSE d7bfa16f blocker): long receipt tokens (sha256, PR
+  // refs, learner pins) must not overflow the container width — the receipt
+  // display is horizontally COMPLETE (r1 measured scrollWidth 486 vs
+  // clientWidth 309 on mobile-375). Real numbers logged for both viewports.
+  const horizontalFit = await receipt.evaluate((element) => ({
+    scrollWidth: element.scrollWidth,
+    clientWidth: element.clientWidth,
+  }))
+  expect(horizontalFit.scrollWidth).toBeLessThanOrEqual(horizontalFit.clientWidth)
+  logCapture({
+    check: 'receipt-horizontal-fit',
+    ...horizontalFit,
+    fits: horizontalFit.scrollWidth <= horizontalFit.clientWidth,
+    ...((await captureMetadata(page, testInfo)) as object),
+  })
 
   // Pixel coverage of the WHOLE receipt UNOBSTRUCTED: overlapping steps in
   // the single scroll column; every capture asserts (and logs) that the
