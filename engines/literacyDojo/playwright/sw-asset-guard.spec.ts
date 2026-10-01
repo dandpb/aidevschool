@@ -17,21 +17,24 @@ import { answerRight, completeOnboarding, mapInitial, readProgress } from "./sup
  * serve o `dist/` REAL (build do webServer do projeto pwa) com o contrato do
  * host + um único caminho reservado de 404 real.
  *
- * Cobertura declarada (regressão delimitada, sem bump extra):
+ * Cobertura declarada (regressão delimitada; saneação de LEITURA r2 — decisão
+ * de revisão 58ea31f2 / precisão PO dc48816b — sem bump de cache):
  *  - novas gravações inválidas recusadas (asset ausente em fallback 200
  *    text/html não entra em NENHUM cache; `<img>` ?bust idem; 404 real idem);
- *  - leitura de contaminação PREEXISTENTE na versão efetiva: entrada
- *    semeada sob chave de asset continua no cache (o fix não sana o cache
- *    atual — declara o comportamento), não é sobrescrita por novo fallback e
- *    offline a serve como fallback de leitura;
+ *  - LEITURA de contaminação PREEXISTENTE na versão efetiva saneia: online a
+ *    rede vence e a entrada HTML semeada sob chave de asset é REMOVIDA
+ *    (somente ela); offline, com a entrada presente, o fetch REJEITA em vez
+ *    de servir o veneno — nunca normalizado como fallback de leitura;
  *  - transição de invalidação por versão: cache `literacydojo-v5` semeado
  *    contaminado ANTES da ativação é purgado pelo `activate` do candidato
  *    (v6) — a demonstração exige o próprio teste, "v5 não criado" não prova;
  *  - invariante de não-regressão: css legítimo cacheado, navegação
  *    online/offline legítima e progresso no IndexedDB preservados.
  *
- * Este spec FALHA na base a1ff9768… (CACHE v5, sem guardas): lá o fallback
- * HTML É gravado sob a chave do asset e a entrada semeada É sobrescrita.
+ * Este spec FALHA na base a1ff9768… (CACHE v5, sem guardas) E no head
+ * 1bff0d52 (guarda só de ESCRITA): lá o fallback HTML É gravado sob a chave
+ * do asset, a entrada semeada PERMANECE após a leitura online e é SERVIDA
+ * offline como fallback de leitura.
  */
 
 const DIST = resolve(process.cwd(), "dist");
@@ -251,7 +254,7 @@ test("guarda de escrita: fallback SPA do host nunca é gravado sob chave de asse
   await context.close();
 });
 
-test("v5 contaminado é invalidado na ativação v6; contaminação semeada na versão efetiva não é sobrescrita nem saneada (leitura declarada)", async ({
+test("v5 contaminado é invalidado na ativação v6; contaminação semeada na versão efetiva é saneada na leitura (online remove, offline rejeita)", async ({
   browser,
 }) => {
   const context = await browser.newContext({ baseURL: origin });
@@ -316,8 +319,9 @@ test("v5 contaminado é invalidado na ativação v6; contaminação semeada na v
   await answerRight(page);
   await expect(page.getByTestId("result-screen")).toContainText("Lição concluída");
 
-  // Contaminação PREEXISTENTE na versão EFETIVA (regressão delimitada): o
-  // fix recusa novas gravações inválidas, não sana o cache vigente.
+  // Contaminação PREEXISTENTE na versão EFETIVA (r2): a LEITURA saneia. No
+  // head 1bff0d52 (guarda só de escrita) a entrada semeada permanece e é
+  // servida offline — falhas garantidas contra ele mais abaixo.
   await page.evaluate(
     async ({ cacheName: active, key, marker }) => {
       const cache = await caches.open(active);
@@ -338,23 +342,66 @@ test("v5 contaminado é invalidado na ativação v6; contaminação semeada na v
   expect(online.ok ? online.body : "", "rede vence: corpo é o shell real").toContain("/assets/");
   expect(online.ok ? online.body : "").not.toContain(POISON_MARKER);
 
-  // …mas o fallback HTML NÃO sobrescreve a entrada semeada (gravação
-  // recusada). Na base a1ff9768… a entrada É sobrescrita — terceira falha
-  // garantida contra a base.
-  await page.waitForTimeout(300); // settle de um eventual keep() na base
-  const seeded = (await observeCache(page)).filter(
-    (e) => e.path === SEEDED_POISON_KEY && e.cache === cacheName,
-  );
-  expect(seeded).toHaveLength(1);
-  expect(seeded[0]?.body).toContain(POISON_MARKER);
-  expect(seeded[0]?.contentType ?? "").toContain("text/html");
+  // …e SANEIA o cache: a entrada HTML semeada é removida SOMENTE sob essa
+  // chave de asset. No head 1bff0d52 ela permanece — falha garantida contra
+  // o head (a gravação continuava recusada, mas a leitura não removia).
+  await expect
+    .poll(
+      async () =>
+        (await observeCache(page)).filter(
+          (e) => e.path === SEEDED_POISON_KEY && e.cache === cacheName,
+        ).length,
+      { message: "leitura online sana: entrada HTML semeada removida do cache ativo" },
+    )
+    .toBe(0);
 
-  // OFFLINE: caminho de leitura DECLARADO — o cache contaminado é servido
-  // como fallback (o fix impede veneno NOVO; não sana o existente).
+  // Delimitação da saneação: documento de navegação e assets legítimos do
+  // precache seguem no cache ativo — só a entrada envenenada sai.
+  const kept = (await observeCache(page)).filter((e) => e.cache === cacheName);
+  expect(
+    kept.filter((e) => e.path === "/").length,
+    "documento de navegação preservado pela saneação",
+  ).toBeGreaterThan(0);
+  expect(
+    kept.filter((e) => e.path.startsWith("/assets/")).length,
+    "assets legítimos preservados pela saneação",
+  ).toBeGreaterThan(0);
+
+  // OFFLINE com o veneno PRESENTE (re-semeado): o caminho de LEITURA
+  // rejeita em vez de servir — inversão exata das asserções 352–357 @
+  // 1bff0d52, que normalizavam servir o veneno offline como fallback.
+  await page.evaluate(
+    async ({ cacheName: active, key, marker }) => {
+      const cache = await caches.open(active);
+      await cache.put(
+        key,
+        new Response(`<!doctype html>${marker}`, {
+          headers: { "content-type": "text/html; charset=utf-8" },
+        }),
+      );
+    },
+    { cacheName, key: SEEDED_POISON_KEY, marker: POISON_MARKER },
+  );
   await context.setOffline(true);
   const offlineSeeded = await fetchProbe(page, SEEDED_POISON_KEY);
-  expect(offlineSeeded.ok).toBe(true);
-  expect(offlineSeeded.ok ? offlineSeeded.body : "").toContain(POISON_MARKER);
+  expect(offlineSeeded.ok, "offline: HTML sob chave de asset é rejeitado, não servido").toBe(false);
+
+  // A rejeição também remove a entrada envenenada (waitUntil do SW segura
+  // a exclusão) — e somente ela: assets legítimos seguem para o load offline.
+  await expect
+    .poll(
+      async () =>
+        (await observeCache(page)).filter(
+          (e) => e.path === SEEDED_POISON_KEY && e.cache === cacheName,
+        ).length,
+      { message: "rejeição offline remove a entrada envenenada" },
+    )
+    .toBe(0);
+  expect(
+    (await observeCache(page)).filter((e) => e.cache === cacheName && e.path.startsWith("/assets/"))
+      .length,
+    "assets legítimos preservados após a rejeição offline",
+  ).toBeGreaterThan(0);
 
   // Não-regressão offline: app vivo e progresso preservado no IndexedDB.
   await page.goto(origin);
