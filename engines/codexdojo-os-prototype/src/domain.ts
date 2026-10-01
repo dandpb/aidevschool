@@ -1,4 +1,21 @@
 export type CoreAppId = 'dojo' | 'terminal' | 'files' | 'architecture' | 'software' | 'engines' | 'practice'
+
+// AID-3527 (substrate AID-3534): OS-native missions run inside the OS bundle
+// behind an app id — no host-engine URL, no iframe handshake.
+export type NativeMissionRuntime = {
+  readonly engineId: 'codexdojo-os'
+  readonly appId: 'practice'
+  readonly protocolVersion: '1.0'
+  readonly contentVersion: string
+}
+
+export type HostedMissionRuntime = {
+  readonly engineId: 'literacyDojo' | 'voxelDojo'
+  readonly entrypoint: string
+  readonly environmentKey: string
+  readonly protocolVersion: '1.0'
+  readonly contentVersion: string
+}
 export type AppStatus = 'disponivel' | 'laboratorio'
 
 export type TrackId = 'ai-pratica' | 'dev'
@@ -18,15 +35,9 @@ export type MissionDefinition = {
   readonly chapterOrder: number
   readonly prerequisites: readonly MissionId[]
   readonly stages: readonly MissionStage[]
-  readonly runtime: {
-    readonly engineId: 'literacyDojo' | 'voxelDojo'
-    readonly entrypoint: string
-    readonly environmentKey: string
-    readonly protocolVersion: '1.0'
-    readonly contentVersion: string
-  }
+  readonly runtime: HostedMissionRuntime | NativeMissionRuntime
   readonly evidence: {
-    readonly schema: 'literacy-evidence' | 'teaching-game-evidence'
+    readonly schema: 'literacy-evidence' | 'teaching-game-evidence' | 'guided-practice-evidence'
     readonly version: 1
     readonly verifierRequired: true
   }

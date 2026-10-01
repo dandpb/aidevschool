@@ -9,7 +9,10 @@ import type {
 export const HOST_ENGINE_PROTOCOL = 'aidevschool.host-engine' as const
 export const HOST_ENGINE_PROTOCOL_VERSION = '1.0' as const
 
-export type MissionEngineId = 'literacyDojo' | 'voxelDojo'
+// AID-3527: 'codexdojo-os' identifies OS-native missions in shared mission
+// metadata; the iframe handshake protocol itself is only spoken by the two
+// hosted engines.
+export type MissionEngineId = 'literacyDojo' | 'voxelDojo' | 'codexdojo-os'
 export type MissionRunStatus = 'running' | 'completed' | 'failed'
 export type EngineCapability =
   | 'mission-state'

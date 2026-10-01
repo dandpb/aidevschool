@@ -1,4 +1,8 @@
-import type { MissionDefinition } from '../domain'
+import type { HostedMissionRuntime, MissionDefinition } from '../domain'
+
+// Hosted-engine fixtures only (AID-3527 added OS-native missions without
+// entrypoint); type-only tightening, no behavioral change.
+type HostedFixture = MissionDefinition & { runtime: HostedMissionRuntime }
 import { EvidenceIntake } from './evidenceIntake'
 import type {
   EvidenceSubmission,
@@ -12,7 +16,7 @@ import type {
 
 export const digest = 'a'.repeat(64)
 
-export const mission: MissionDefinition = {
+export const mission: HostedFixture = {
   id: 'l02',
   version: 3,
   trackId: 'ai-pratica',
@@ -35,7 +39,7 @@ export const mission: MissionDefinition = {
   fallback: { kind: 'dom', summary: 'Resumo.' },
 }
 
-export const voxelMission: MissionDefinition = {
+export const voxelMission: HostedFixture = {
   id: 'game-02-warehouse',
   version: 1,
   trackId: 'dev',
@@ -167,7 +171,7 @@ export function voxelSubmission(
   }
 }
 
-export const wormholeMission: MissionDefinition = {
+export const wormholeMission: HostedFixture = {
   ...voxelMission,
   id: 'game-03-wormhole',
   unitId: 'U3-url-shortener',

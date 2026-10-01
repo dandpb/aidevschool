@@ -1,5 +1,5 @@
 import { Bug, CheckCircle2, ClipboardCopy, ListChecks, RotateCcw } from 'lucide-react'
-import { useReducer } from 'react'
+import { useEffect, useRef, useReducer } from 'react'
 import { guidedPracticeProjection } from '../data/generated/guidedPractice'
 import type { LearningContext } from '../domain'
 import {
@@ -18,10 +18,13 @@ const VERDICT_OPTIONS: readonly { readonly value: RubricVerdict; readonly label:
 ]
 
 type GuidedPracticeAppProps = {
-  readonly onTeach: (context: LearningContext) => void
+  readonly onTeach?: (context: LearningContext) => void
+  // AID-3527: fired exactly once when the guided cycle concludes with the
+  // deterministic receipt (OS-native mission completion).
+  readonly onConcluded?: () => void
 }
 
-export function GuidedPracticeApp({ onTeach }: GuidedPracticeAppProps) {
+export function GuidedPracticeApp({ onTeach, onConcluded }: GuidedPracticeAppProps) {
   const projection = guidedPracticeProjection
   const [state, dispatch] = useReducer(
     (current, event) => reduceGuidedPractice(current, event, projection),
@@ -29,6 +32,12 @@ export function GuidedPracticeApp({ onTeach }: GuidedPracticeAppProps) {
   )
   const blockers = conclusionBlockers(state, projection)
   const receipt = buildPracticeReceipt(state, projection)
+  const concludedRef = useRef(false)
+  useEffect(() => {
+    if (state.phase !== 'concluida' || concludedRef.current) return
+    concludedRef.current = true
+    onConcluded?.()
+  }, [onConcluded, state.phase])
 
   return (
     <div className="practice-app">
@@ -279,7 +288,7 @@ export function GuidedPracticeApp({ onTeach }: GuidedPracticeAppProps) {
                 type="button"
                 onClick={() => {
                   void navigator.clipboard?.writeText(receipt)
-                  onTeach({
+                  onTeach?.({
                     eyebrow: 'Prática guiada',
                     title: 'Recibo copiado',
                     summary: 'O recibo da prática registra evidências, rúbrica e takeaway contra a versão exata do conteúdo.',
