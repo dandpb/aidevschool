@@ -39,6 +39,23 @@ export function GuidedPracticeApp({ onTeach, onConcluded }: GuidedPracticeAppPro
     onConcluded?.()
   }, [onConcluded, state.phase])
 
+  const recordedEvidence = state.stepEvidence.filter((evidence) => evidence.trim() !== '').length
+  const retryTargets = openRetryTargets(state)
+
+  const copyReceipt = () => {
+    void navigator.clipboard?.writeText(receipt)
+    onTeach?.({
+      eyebrow: 'Prática guiada',
+      title: 'Recibo copiado',
+      summary:
+        'O recibo da prática registra evidências, rúbrica e takeaway contra a versão exata do conteúdo.',
+      concepts: [
+        { name: 'Recibo determinístico', detail: 'Mesma sessão e mesmo conteúdo produzem o mesmo recibo.' },
+      ],
+      challenge: 'Compare o seu recibo com o de um colega: o que muda e o que permanece?',
+    })
+  }
+
   return (
     <div className="practice-app">
       <header>
@@ -61,6 +78,78 @@ export function GuidedPracticeApp({ onTeach, onConcluded }: GuidedPracticeAppPro
         </ol>
       </header>
 
+      {/* Sticky action bar (AID-3527 review item 3): the current phase's
+          primary action stays reachable even when the OS "Modo Aprender"
+          bottom sheet covers the lower half of the window. */}
+      <div className="practice-action-bar" role="group" aria-label="Ação da fase atual">
+        {state.phase === 'exemplo' && (
+          <button type="button" className="practice-primary" onClick={() => dispatch({ type: 'exemplo-concluido' })}>
+            Li o exemplo e vou para a tentativa
+          </button>
+        )}
+        {state.phase === 'tentativa' && (
+          <>
+            <button
+              type="button"
+              className="practice-primary"
+              disabled={recordedEvidence < state.stepEvidence.length}
+              onClick={() => dispatch({ type: 'tentativa-concluida' })}
+            >
+              Concluir a tentativa e avaliar pela rúbrica
+            </button>
+            {recordedEvidence < state.stepEvidence.length && (
+              <small className="practice-note">
+                Evidência registrada em {recordedEvidence}/{state.stepEvidence.length} passos — registre
+                o comando e a saída real de cada passo para continuar.
+              </small>
+            )}
+          </>
+        )}
+        {state.phase === 'feedback' && (
+          <>
+            <button
+              type="button"
+              className="practice-primary"
+              onClick={() => dispatch({ type: 'takeaway-registrado', a: state.takeaway.a, b: state.takeaway.b })}
+            >
+              Rúbrica registrada — ir para o takeaway
+            </button>
+            {retryTargets.length > 0 && (
+              <button type="button" onClick={() => dispatch({ type: 'retry-pedido' })}>
+                <RotateCcw size={14} aria-hidden /> Retry: refazer apenas os critérios reprovados (
+                {retryTargets.join(', ')})
+              </button>
+            )}
+          </>
+        )}
+        {state.phase === 'retry' && (
+          <button type="button" className="practice-primary" onClick={() => dispatch({ type: 'retry-concluido' })}>
+            <RotateCcw size={14} aria-hidden /> Retry concluído — voltar à rúbrica
+          </button>
+        )}
+        {(state.phase === 'takeaway' || state.phase === 'concluida') && (
+          <>
+            {state.phase === 'takeaway' ? (
+              <button
+                type="button"
+                className="practice-primary"
+                disabled={blockers.length > 0}
+                onClick={() => dispatch({ type: 'pratica-concluida' })}
+              >
+                <CheckCircle2 size={14} aria-hidden /> Concluir a prática e emitir o recibo
+              </button>
+            ) : (
+              <button type="button" className="practice-primary" onClick={copyReceipt}>
+                <ClipboardCopy size={14} aria-hidden /> Copiar recibo
+              </button>
+            )}
+            {state.phase === 'takeaway' && blockers.length > 0 && (
+              <small className="practice-note">Pendências antes de concluir: {blockers.join(', ')}</small>
+            )}
+          </>
+        )}
+      </div>
+
       {state.phase === 'exemplo' && (
         <section aria-labelledby="practice-exemplo-title">
           <h2 id="practice-exemplo-title">1. Exemplo trabalhado</h2>
@@ -71,13 +160,6 @@ export function GuidedPracticeApp({ onTeach, onConcluded }: GuidedPracticeAppPro
             </summary>
             <pre>{projection.exemplar.markdown}</pre>
           </details>
-          <button
-            type="button"
-            className="practice-primary"
-            onClick={() => dispatch({ type: 'exemplo-concluido' })}
-          >
-            Li o exemplo e vou para a tentativa
-          </button>
         </section>
       )}
 
@@ -114,23 +196,6 @@ export function GuidedPracticeApp({ onTeach, onConcluded }: GuidedPracticeAppPro
               </details>
             ))}
           </details>
-          {(() => {
-            const recorded = state.stepEvidence.filter((evidence) => evidence.trim() !== '').length
-            return recorded < state.stepEvidence.length ? (
-              <p className="practice-note">
-                Evidência registrada em {recorded}/{state.stepEvidence.length} passos — registre o
-                comando e a saída real de cada passo para continuar.
-              </p>
-            ) : null
-          })()}
-          <button
-            type="button"
-            className="practice-primary"
-            disabled={state.stepEvidence.some((evidence) => evidence.trim() === '')}
-            onClick={() => dispatch({ type: 'tentativa-concluida' })}
-          >
-            Concluir a tentativa e avaliar pela rúbrica
-          </button>
         </section>
       )}
 
@@ -219,23 +284,6 @@ export function GuidedPracticeApp({ onTeach, onConcluded }: GuidedPracticeAppPro
               )
             })}
           </ul>
-          {state.phase === 'feedback' ? (
-            <>
-              <button type="button" className="practice-primary" onClick={() => dispatch({ type: 'takeaway-registrado', a: state.takeaway.a, b: state.takeaway.b })}>
-                Rúbrica registrada — ir para o takeaway
-              </button>
-              {openRetryTargets(state).length > 0 && (
-                <button type="button" onClick={() => dispatch({ type: 'retry-pedido' })}>
-                  <RotateCcw size={14} aria-hidden /> Retry: refazer apenas os critérios reprovados (
-                  {openRetryTargets(state).join(', ')})
-                </button>
-              )}
-            </>
-          ) : (
-            <button type="button" className="practice-primary" onClick={() => dispatch({ type: 'retry-concluido' })}>
-              <RotateCcw size={14} aria-hidden /> Retry concluído — voltar à rúbrica
-            </button>
-          )}
         </section>
       )}
 
@@ -262,46 +310,15 @@ export function GuidedPracticeApp({ onTeach, onConcluded }: GuidedPracticeAppPro
               }
             />
           </label>
-          {state.phase === 'takeaway' && (
-            <button
-              type="button"
-              className="practice-primary"
-              disabled={blockers.length > 0}
-              onClick={() => dispatch({ type: 'pratica-concluida' })}
-            >
-              <CheckCircle2 size={14} aria-hidden /> Concluir a prática e emitir o recibo
-            </button>
-          )}
-          {blockers.length > 0 && state.phase === 'takeaway' && (
-            <p className="practice-note">Pendências antes de concluir: {blockers.join(', ')}</p>
+          {state.phase === 'concluida' && (
+            <p className="practice-note">
+              Prática concluída com {state.attempt} tentativa(s). O recibo abaixo é determinístico para este
+              conteúdo ({projection.contentVersion}); arquive-o junto com o seu diff — é o seu recibo da
+              prática. Registro: o recibo é local e demonstrativo — não prova execução externa do aluno.
+            </p>
           )}
           {state.phase === 'concluida' && (
-            <>
-              <p className="practice-note">
-                Prática concluída com {state.attempt} tentativa(s). O recibo abaixo é determinístico para este
-                conteúdo ({projection.contentVersion}); arquive-o junto com o seu diff — é o seu recibo da prática.
-              </p>
-              <pre className="practice-receipt">
-                {receipt}
-              </pre>
-              <button
-                type="button"
-                onClick={() => {
-                  void navigator.clipboard?.writeText(receipt)
-                  onTeach?.({
-                    eyebrow: 'Prática guiada',
-                    title: 'Recibo copiado',
-                    summary: 'O recibo da prática registra evidências, rúbrica e takeaway contra a versão exata do conteúdo.',
-                    concepts: [
-                      { name: 'Recibo determinístico', detail: 'Mesma sessão e mesmo conteúdo produzem o mesmo recibo.' },
-                    ],
-                    challenge: 'Compare o seu recibo com o de um colega: o que muda e o que permanece?',
-                  })
-                }}
-              >
-                <ClipboardCopy size={14} aria-hidden /> Copiar recibo
-              </button>
-            </>
+            <pre className="practice-receipt">{receipt}</pre>
           )}
         </section>
       )}
