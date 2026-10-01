@@ -123,6 +123,20 @@
   resize: vertical;
 }
 
+/* AID-3564 F2: the native runtime must contain the practice content exactly
+   like the hosted iframe did — without this, the practice scrolls/spills out
+   of its grid cell and the mentor panel overlaps the rubric controls on
+   mobile/tablet. */
+.mission-runtime .mission-native-runtime {
+  height: 100%;
+  min-height: 0;
+  display: block;
+}
+
+.mission-native-runtime .practice-app {
+  height: 100%;
+}
+
 /* Sticky action bar: the current phase's primary action is always reachable,
    including when the OS learning-rail bottom sheet covers the lower window. */
 .practice-action-bar {
