@@ -264,10 +264,30 @@ def _load_source_contracts(root: Path) -> dict[str, dict[str, Any]]:
     return contracts
 
 
+def _pinned_relative_path(entry: dict[str, Any], label: str) -> Path:
+    relative = _nonempty_string(entry.get("path"), f"{label}.files[].path")
+    relative_path = Path(relative)
+    if relative_path.is_absolute() or ".." in relative_path.parts:
+        raise MissionCatalogError(
+            f"{label}.files[].path must stay inside the package ({relative!r})"
+        )
+    return relative_path
+
+
+def _pinned_file_bytes(
+    package_dir: Path, relative_path: Path, label: str
+) -> bytes:
+    try:
+        return (package_dir / relative_path).read_bytes()
+    except FileNotFoundError as exc:
+        raise MissionCatalogError(
+            f"{label} is missing pinned source file {str(relative_path)!r}"
+        ) from exc
+
+
 def _verify_pinned_file(package_dir: Path, entry: Any, label: str) -> None:
     if not isinstance(entry, dict):
         raise MissionCatalogError(f"{label}.files entries must be mappings")
-    relative = _nonempty_string(entry.get("path"), f"{label}.files[].path")
     expected_sha = _nonempty_string(entry.get("sha256"), f"{label}.files[].sha256")
     expected_bytes = entry.get("bytes")
     if (
@@ -276,23 +296,15 @@ def _verify_pinned_file(package_dir: Path, entry: Any, label: str) -> None:
         or expected_bytes < 0
     ):
         raise MissionCatalogError(
-            f"{label}.files[].bytes must be a non-negative integer ({relative!r})"
+            f"{label}.files[].bytes must be a non-negative integer"
+            f" ({entry.get('path')!r})"
         )
-    relative_path = Path(relative)
-    if relative_path.is_absolute() or ".." in relative_path.parts:
-        raise MissionCatalogError(
-            f"{label}.files[].path must stay inside the package ({relative!r})"
-        )
-    try:
-        data = (package_dir / relative_path).read_bytes()
-    except FileNotFoundError as exc:
-        raise MissionCatalogError(
-            f"{label} is missing pinned source file {relative!r}"
-        ) from exc
+    relative_path = _pinned_relative_path(entry, label)
+    data = _pinned_file_bytes(package_dir, relative_path, label)
     actual_sha = hashlib.sha256(data).hexdigest()
     if actual_sha != expected_sha or len(data) != expected_bytes:
         raise MissionCatalogError(
-            f"source byte change detected in {label} file {relative!r}"
+            f"source byte change detected in {label} file {str(relative_path)!r}"
             f" (expected sha256 {expected_sha}, got {actual_sha})"
         )
 
