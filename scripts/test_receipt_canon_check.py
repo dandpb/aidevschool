@@ -213,6 +213,40 @@ class TestCheckMode(unittest.TestCase):
                 str(FIX / "facts_valid.json")).returncode, 2)
 
 
+class TestNonObjectFacts(unittest.TestCase):
+    """N1 (parecer V&E 5c74d991): facts não-objeto deve emitir F0001
+    documentado e exit 1 — jamais traceback."""
+
+    def test_check_facts_non_object_keeps_tuple_contract(self):
+        for bad in ([1, 2, 3], "apenas uma string", 42, None):
+            problems, parsed = rc.check_facts(bad)
+            self.assertIn(("REJECT", "F0001",
+                           "fatos não são um objeto JSON (tipo %s)"
+                           % type(bad).__name__), list(problems), bad)
+            self.assertEqual(parsed, {}, bad)
+
+    def test_check_draft_non_object_facts_does_not_raise(self):
+        p = rc.check_draft("Countersign: AID-9006 verdict 5843026877 "
+                           "head=" + HEAD, [1, 2, 3])
+        self.assertTrue(p.rejects)
+
+    def test_render_non_object_facts_exit1_f0001_no_traceback(self):
+        proc = run("--render", "--facts", str(FIX / "facts_non_object.json"))
+        self.assertEqual(proc.returncode, 1, proc.stdout + proc.stderr)
+        self.assertIn("REJECT F0001", proc.stdout)
+        self.assertIn("não são um objeto JSON (tipo list)", proc.stdout)
+        self.assertIn("FATOS REJEITADOS", proc.stdout)
+        self.assertNotIn("Traceback", proc.stderr)
+        self.assertNotIn("Countersign:", proc.stdout.split("---")[0])
+
+    def test_check_non_object_facts_exit1_f0001_no_traceback(self):
+        proc = run("--check", "--facts", str(FIX / "facts_non_object.json"),
+                   "--draft", str(FIX / "draft_valid.md"))
+        self.assertEqual(proc.returncode, 1, proc.stdout + proc.stderr)
+        self.assertIn("REJECT F0001", proc.stdout)
+        self.assertNotIn("Traceback", proc.stderr)
+
+
 class TestBoundary(unittest.TestCase):
     def test_no_network_apis_in_source(self):
         src = SCRIPT.read_text(encoding="utf-8")

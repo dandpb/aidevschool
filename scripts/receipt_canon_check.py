@@ -131,8 +131,9 @@ def _norm(value):
 def check_facts(facts):
     p = Problems()
     if not isinstance(facts, dict):
-        p.add("REJECT", "F0001", "fatos não são um objeto JSON")
-        return p
+        p.add("REJECT", "F0001",
+              "fatos não são um objeto JSON (tipo %s)" % type(facts).__name__)
+        return p, {}
 
     def need(container, key, label):
         val = (container or {}).get(key) if isinstance(container, dict) else None
@@ -338,6 +339,8 @@ LOOKALIKE_RE = re.compile(r"^(Provenance|Countersign)\s*:")
 
 def check_draft(text, facts):
     p = Problems()  # achados de escopo rascunho (fatos são reportados à parte)
+    if not isinstance(facts, dict):  # F0001 já reportado no escopo fatos
+        facts = {}
     _, parsed = check_facts(facts)
     expected_head = parsed.get("head") or ""
     actor_norm = {_norm(a) for a in (facts.get("captured_actor_ids") or [])
