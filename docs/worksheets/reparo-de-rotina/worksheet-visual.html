@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Corrija a rotina sem começar do zero — worksheet · AiDevSchool</title>
+<meta name="description" content="Worksheet visual de projeto: identificar o componente desatualizado de uma rotina assistida e autorar o reparo mínimo, sem reescrever tudo. Material de exercício — não é um app implementado.">
+<style>
+  :root{
+    --paper:#f5f3ec; --card:#fffef9; --ink:#172935; --muted:#4c6057;
+    --line:#d9ded5; --deep:#101d28; --mint:#a7e6cd; --mint-dark:#195d4b;
+    --gold:#e8c888; --coral:#b64c36;
+    --sans:'Avenir Next','Segoe UI',Arial,sans-serif;
+    --mono:'SFMono-Regular',Consolas,'Liberation Mono',monospace;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.75 var(--sans)}
+  :focus-visible{outline:3px solid #12624c;outline-offset:3px}
+  ::selection{background:var(--mint)}
+  .wrap{max-width:880px;margin:0 auto;padding:20px 16px 64px}
+  .skip{position:absolute;left:-9999px}
+  .skip:focus{position:fixed;top:8px;left:8px;background:var(--card);border:2px solid var(--mint-dark);padding:8px 14px;border-radius:9px;z-index:10}
+
+  header.page{padding:8px 0 4px}
+  .eyebrow{font:11px/1.5 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+  h1{font-size:clamp(28px,6vw,42px);line-height:1.15;margin:0 0 10px;font-weight:700}
+  h1 em{font-family:Georgia,serif;font-weight:400;color:#527a69}
+  .meta{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 0;padding:0;list-style:none}
+  .meta li{font:11px/1.5 var(--mono);color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:4px 10px;background:var(--card)}
+  .notice{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:10px;padding:12px 14px;margin:18px 0;font-size:14px}
+  .notice strong{color:var(--ink)}
+
+  nav.toc{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 16px;margin:18px 0}
+  nav.toc h2{font-size:14px;margin:0 0 8px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+  nav.toc ol{margin:0;padding-left:20px;font-size:15px}
+  nav.toc a{color:var(--mint-dark)}
+
+  section{margin:34px 0}
+  .step-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+  .step-n{font:11px/1 var(--mono);color:#fff;background:var(--mint-dark);border-radius:999px;padding:6px 10px;letter-spacing:.08em}
+  h2{font-size:clamp(20px,4.5vw,26px);line-height:1.25;margin:6px 0 2px}
+  .lead{color:var(--muted);margin:4px 0 14px;font-size:15px}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin:14px 0}
+  .card h3{margin:0 0 8px;font-size:16px}
+  .tag{display:inline-block;font:11px/1.4 var(--mono);letter-spacing:.06em;border-radius:999px;padding:3px 10px;margin:0 6px 6px 0;vertical-align:middle}
+  .tag.fix{background:var(--mint);color:#163b2d}
+  .tag.var{background:var(--gold);color:#4a3a14}
+  .tag.warn{background:#f3ddd6;color:var(--coral)}
+
+  .prompt-box{font:14px/1.65 var(--mono);background:#fbfaf4;border:1px dashed #b9c4b3;border-radius:10px;padding:12px;margin:10px 0;overflow-wrap:anywhere}
+  .prompt-box .var-part{background:var(--gold);border-radius:6px;padding:0 4px}
+  del{background:#f3ddd6;text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:var(--coral);border-radius:4px;padding:0 2px}
+  ins{background:var(--mint);text-decoration:none;border-radius:4px;padding:0 2px}
+
+  .flow{display:grid;gap:10px}
+  .flow .arrow{font:12px/1 var(--mono);color:var(--muted);text-align:center;padding:2px 0}
+  @media(min-width:700px){
+    .flow.two{grid-template-columns:1fr 28px 1fr;align-items:start}
+    .flow.two .arrow{align-self:center}
+  }
+  .out{border-left:4px solid var(--coral)}
+  .fixed{border-left:4px solid var(--mint-dark)}
+  .mini{font-size:13px;color:var(--muted);margin:6px 0 0}
+
+  fieldset{border:1px solid var(--line);border-radius:18px;background:var(--card);padding:14px 16px;margin:14px 0}
+  legend{font:11px/1.5 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--mint-dark);padding:0 8px;font-weight:700}
+  .field{margin:12px 0}
+  .field label,.field .lbl{display:block;font-weight:600;font-size:15px;margin-bottom:4px}
+  .field .hint{display:block;color:var(--muted);font-size:13px;margin-bottom:6px}
+  .blank{width:100%;min-height:58px;font:15px/1.6 var(--sans);color:var(--ink);background:#fbfaf4;border:1px solid #b9c4b3;border-radius:10px;padding:10px 12px;resize:vertical}
+  .blank.short{min-height:40px}
+  .blank::placeholder{color:#8a9a91}
+
+  .check{list-style:none;padding:0;margin:10px 0}
+  .check li{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line);font-size:15px}
+  .check li:last-child{border-bottom:none}
+  .check input[type=checkbox]{width:22px;height:22px;accent-color:var(--mint-dark);flex:none;margin-top:3px}
+
+  .retry{background:#fbfaf4;border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:12px 0;font-size:14px}
+  .retry h4{margin:0 0 6px;font-size:13px;font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  .retry table{width:100%;border-collapse:collapse;font-size:13.5px}
+  .retry th,.retry td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+  .retry th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+
+  .neg{display:grid;gap:10px}
+  @media(min-width:640px){.neg{grid-template-columns:repeat(3,1fr)}}
+  .neg .card{margin:0;border-top:4px solid var(--coral)}
+  .neg h3{font-size:15px}
+  .neg p{font-size:14px;margin:6px 0 0;color:var(--muted)}
+
+  footer.page{margin-top:40px;border-top:1px solid var(--line);padding-top:16px;font:12px/1.7 var(--mono);color:var(--muted);overflow-wrap:anywhere}
+  footer.page p{margin:6px 0}
+
+  @media print{
+    body{background:#fff}
+    .wrap{max-width:none;padding:0}
+    .blank{border:none;border-bottom:2px solid var(--ink);background:#fff;min-height:46px}
+    .card,fieldset,nav.toc,.notice{break-inside:avoid}
+    section{break-inside:auto}
+    .no-print{display:none}
+  }
+  @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#caso">Pular para o seu caso de exercício</a>
+<div class="wrap">
+
+<header class="page">
+  <p class="eyebrow">AiDevSchool · Worksheet de projeto (fora do currículo canônico)</p>
+  <h1>Corrija a rotina <em>sem começar do zero</em></h1>
+  <ul class="meta">
+    <li>~15 min</li>
+    <li>depois da lição “Quando a automação erra” (l32)</li>
+    <li>papel ou digital</li>
+    <li>sem dados reais · sem automação</li>
+  </ul>
+  <div class="notice" role="note">
+    <strong>Material de exercício.</strong> Aqui você treina <em>no papel</em> o gesto de reparar uma rotina assistida
+    que degradou. Nada é automatizado, nenhum dado seu é usado e o que você digitar nesta página <strong>não fica
+    salvo</strong> — imprima ou copie antes de fechar. Este arquivo é um worksheet, não um app implementado.
+  </div>
+</header>
+
+<nav class="toc" aria-label="Roteiro do exercício">
+  <h2>Roteiro</h2>
+  <ol>
+    <li><a href="#exemplo">Exemplo acompanhado (Mariana)</a></li>
+    <li><a href="#caso">Seu caso: identifique e repare</a></li>
+    <li><a href="#teste">Teste com uma nova semana sintética</a></li>
+    <li><a href="#autocheck">Autochecagem com retry</a> · <a href="#negativos">O que não fazer</a></li>
+  </ol>
+</nav>
+
+<section id="exemplo" aria-labelledby="h-exemplo">
+  <div class="step-head"><span class="step-n" aria-hidden="true">EXEMPLO</span><h2 id="h-exemplo">A rotina da Mariana, degradada e reparada</h2></div>
+  <p class="lead">Primeiro acompanhe um caso completo resolvido. No seu caso (parte 2) o cenário é outro — o gesto é o mesmo:
+  identificar o que ficou desatualizado, preservar o que funciona e fazer o <strong>reparo mínimo</strong>.</p>
+
+  <div class="flow two">
+    <div class="card out" aria-labelledby="h-antes">
+      <h3 id="h-antes">Antes — a rotina degradou</h3>
+      <p><span class="tag fix">fixo</span><span class="tag var">muda toda semana</span></p>
+      <div class="prompt-box" aria-label="Pedido-padrão salvo da Mariana">
+        “Resumo semanal de atendimento para a reunião de segunda: tópicos, 3 indicadores (tickets abertos, tickets
+        <del>resolvidos</del>, tempo médio de resposta), máximo meia página.
+        <span class="var-part">[DADOS DA SEMANA: colar aqui]</span>”
+      </div>
+      <p><strong>O que mudou por fora:</strong> o sistema de atendimento atualizou — a coluna “tickets resolvidos”
+      passou a se chamar “tickets <ins>fechados</ins>” e entrou a coluna “<ins>reabertos</ins>”.</p>
+      <p><strong>O sinal:</strong> o resumo de segunda veio no formato de sempre, com números “na média” das outras
+      semanas — plausível, mas montado como se a planilha fosse a antiga. Erro silencioso: bonito e desatualizado.</p>
+      <p class="mini">Tarefa e formato continuam bons. O que desatualizou foi o <em>mapeamento do dado</em>.</p>
+    </div>
+    <div class="arrow" aria-hidden="true">reparo mínimo ➜</div>
+    <div class="card fixed" aria-labelledby="h-depois">
+      <h3 id="h-depois">Depois — o reparo mínimo</h3>
+      <p><strong>1. O que mudou no dado:</strong></p>
+      <div class="prompt-box">“A coluna ‘tickets resolvidos’ agora se chama ‘tickets fechados’; use a coluna nova.
+      Entrou a coluna ‘reabertos’: conte à parte, sem somar aos fechados.”</div>
+      <p><strong>2. O que continua valendo:</strong></p>
+      <div class="prompt-box">“O resto segue como combinado: tópicos, os 3 indicadores, máximo meia página, para a reunião de segunda.”</div>
+      <p><strong>3. Teste com a semana:</strong> rodou com os dados de segunda → “reabertos” apareceu separado, total bateu.</p>
+      <p><strong>4. Validação humana:</strong> “Antes de enviar: fechados + reabertos somam o total do painel?”</p>
+      <p class="mini">Mariana <em>não</em> reescreveu o pedido inteiro, <em>não</em> manteve a coluna velha e
+      <em>não</em> pediu só “atualize”.</p>
+    </div>
+  </div>
+</section>
+
+<section id="caso" aria-labelledby="h-caso">
+  <div class="step-head"><span class="step-n" aria-hidden="true">SEU CASO</span><h2 id="h-caso">A rotina de pedidos da loja — agora com você</h2></div>
+  <p class="lead">Cenário sintético (inventado para o exercício — não use dados reais). Toda sexta, a rotina resume os
+  pedidos da loja para o chat da operação. Esta semana a plataforma de pedidos mudou.</p>
+
+  <div class="card out">
+    <h3>Antes — o que você tem</h3>
+    <p><span class="tag fix">fixo</span><span class="tag var">muda toda semana</span></p>
+    <div class="prompt-box" aria-label="Pedido-padrão salvo">
+      “Resumo semanal de pedidos da loja para o chat da operação: lista com 3 números (pedidos feitos, pedidos
+      entregues, pedidos devolvidos), máximo 10 linhas.
+      <span class="var-part">[DADOS DA SEMANA: colar aqui]</span>”
+    </div>
+    <p><strong>O que mudou por fora (semana 1):</strong> a plataforma dividiu “pedidos entregues” em
+      “<ins>entregues no prazo</ins>” e “<ins>entregues com atraso</ins>”; as devoluções agora incluem
+      “<ins>trocas</ins>”.</p>
+    <p><strong>O sinal:</strong> o resumo desta sexta veio com a lista de sempre e três números “no padrão das outras
+    semanas” — como se a plataforma fosse a antiga.</p>
+    <p class="mini">Dica: compare a saída com duas coisas — as semanas anteriores <em>e</em> o dado desta semana. Com qual delas ela combina?</p>
+  </div>
+
+  <form onsubmit="return false" aria-label="Campos do exercício">
+  <fieldset>
+    <legend>Campo 1 · Prompt reutilizável — separe o fixo do variável</legend>
+    <div class="field">
+      <label for="f1a">a) Tarefa (o que a rotina pede, sempre igual)</label>
+      <span class="hint">Ex. do caso: resumir os pedidos da semana da loja.</span>
+      <textarea class="blank" id="f1a" autocomplete="off" placeholder="escreva aqui…"></textarea>
+    </div>
+    <div class="field">
+      <label for="f1b">b) Formato (a forma fixa da saída)</label>
+      <span class="hint">Ex. do caso: lista, 3 números, máximo 10 linhas, para o chat da operação.</span>
+      <textarea class="blank short" id="f1b" autocomplete="off" placeholder="escreva aqui…"></textarea>
+    </div>
+    <div class="field">
+      <label for="f1c">c) Dado que muda toda semana (o único campo variável)</label>
+      <span class="hint">Ex. do caso: os números de pedidos da semana, colados no lugar marcado.</span>
+      <textarea class="blank short" id="f1c" autocomplete="off" placeholder="escreva aqui…"></textarea>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Campo 2 · Reparo mínimo de contexto (semana 1)</legend>
+    <div class="field">
+      <label for="f2a">a) O que mudou no dado desta semana</label>
+      <span class="hint">Nomeie o componente desatualizado — sem “atualize aí”. Dica: são as colunas que mudaram.</span>
+      <textarea class="blank" id="f2a" autocomplete="off" placeholder="escreva aqui…"></textarea>
+    </div>
+    <div class="field">
+      <label for="f2b">b) O que continua valendo (a regra que não mudou)</label>
+      <span class="hint">Reafirme o combinado para o reparo não desmontar o que funcionava.</span>
+      <textarea class="blank" id="f2b" autocomplete="off" placeholder="escreva aqui…"></textarea>
+    </div>
+    <div class="field">
+      <label for="f2c">c) Seu pedido de reparo em 1–2 frases (a + b juntos)</label>
+      <span class="hint">É isto que você diria à IA para a rotina voltar a ler o presente.</span>
+      <textarea class="blank" id="f2c" autocomplete="off" placeholder="escreva aqui…"></textarea>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Campo 3 · Pergunta final de validação humana</legend>
+    <div class="field">
+      <label for="f3">A pergunta que você faria ao resultado antes de usar</label>
+      <span class="hint">Uma pergunta que um erro silencioso — bonito e desatualizado — <em>não</em> passaria. Ex. de forma (não copie): “o número X bate com a fonte Y?”</span>
+      <textarea class="blank" id="f3" autocomplete="off" placeholder="escreva aqui…"></textarea>
+    </div>
+  </fieldset>
+  </form>
+</section>
+
+<section id="teste" aria-labelledby="h-teste">
+  <div class="step-head"><span class="step-n" aria-hidden="true">TESTE</span><h2 id="h-teste">Semana 2 sintética — o reparo aguenta?</h2></div>
+  <p class="lead">Reparos são testados com dado novo. Na semana seguinte, a plataforma marcou alguns pedidos com a flag
+  “<ins>urgente</ins>” e entrou a linha “<ins>cancelados</ins>”.</p>
+  <div class="card">
+    <h3>Teste no papel</h3>
+    <div class="field">
+      <label for="t1">a) Qual número você conferiria primeiro no resumo da semana 2, e por quê?</label>
+      <textarea class="blank" id="t1" autocomplete="off" placeholder="escreva aqui…"></textarea>
+    </div>
+    <div class="field">
+      <label for="t2">b) O que do seu reparo da semana 1 ainda vale?</label>
+      <textarea class="blank short" id="t2" autocomplete="off" placeholder="escreva aqui…"></textarea>
+    </div>
+    <div class="field">
+      <label for="t3">c) Seu novo reparo mínimo (1 frase — só o que mudou de novo)</label>
+      <span class="hint">Sem reescrever o pedido-padrão: ele continua bom.</span>
+      <textarea class="blank" id="t3" autocomplete="off" placeholder="escreva aqui…"></textarea>
+    </div>
+  </div>
+</section>
+
+<section id="autocheck" aria-labelledby="h-check">
+  <div class="step-head"><span class="step-n" aria-hidden="true">AUTOCHEQUE</span><h2 id="h-check">Confira antes de entregar</h2></div>
+  <ul class="check">
+    <li><input type="checkbox" id="c1"><label for="c1">Apontei <strong>o que mudou</strong> no dado (não escrevi só “atualize”)</label></li>
+    <li><input type="checkbox" id="c2"><label for="c2"><strong>Preservei o combinado</strong> (formato, números, público) — o que estava estável continuou</label></li>
+    <li><input type="checkbox" id="c3"><label for="c3"><strong>Não reescrevi tudo</strong> — o reparo coube em 1–2 frases justificáveis</label></li>
+  </ul>
+  <div class="retry">
+    <h4>Falhou em algum item? Retry direcionado (volte só ao campo indicado)</h4>
+    <table>
+      <thead><tr><th scope="col">Se seu reparo…</th><th scope="col">Volte a</th><th scope="col">Pergunta-guia</th></tr></thead>
+      <tbody>
+        <tr><td>usou a coluna antiga como se nada tivesse mudado</td><td>Campo 2a</td><td>Qual coluna a plataforma renomeou ou criou nesta semana?</td></tr>
+        <tr><td>foi vago (“atualize o resumo, por favor”)</td><td>Campo 2a → 2c</td><td>O que só eu vi na fonte nova que a IA não sabe?</td></tr>
+        <tr><td>perdeu o formato/público do combinado</td><td>Campo 2b</td><td>O que seguia valendo e não pode se perder?</td></tr>
+        <tr><td>apagou/reescreveu o pedido inteiro</td><td>Campo 1 vs 2</td><td>O que exatamente quebrou: o pedido, ou o dado que ele lê?</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="negativos" aria-labelledby="h-neg">
+  <div class="step-head"><span class="step-n" aria-hidden="true">NEGATIVOS</span><h2 id="h-neg">O que não fazer (concreto)</h2></div>
+  <div class="neg">
+    <div class="card">
+      <h3>✗ Manter o input velho</h3>
+      <p>Deixar a rotina lendo “pedidos entregues” como uma coluna só: a coluna não existe mais — a saída sai bonita
+      lendo um dado que só existe na memória da rotina.</p>
+    </div>
+    <div class="card">
+      <h3>✗ Pedido vago “atualize”</h3>
+      <p>“Atualiza aí o resumo” não diz <em>o que</em> mudou. Quem viu a plataforma nova foi você — a correção repõe
+      o contexto que só você tem.</p>
+    </div>
+    <div class="card">
+      <h3>✗ Reescrita total</h3>
+      <p>Apagar o pedido-padrão e começar do zero joga fora semanas de acerto, esconde a causa e o pedido novo nasce
+      com o mesmo buraco.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="page">
+  <p><strong>Proveniência:</strong> worksheet de projeto aprovado via AID-3649 (PO, pedido Dani 2026-10-01 18:27 UTC).
+  Artefato pedagógico <em>fora do currículo canônico</em>: não altera lições, gates, IDs, progresso ou mastery.</p>
+  <p><strong>Fidelidade às fontes (somente leitura):</strong> l30-rotinas-repetitivas.yaml · blob 595e3364 ·
+  l32-quando-a-automacao-erra.yaml · blob e6c78deb01f · l18-biblioteca-de-pedidos.yaml · blob 67d388ee39e4 ·
+  l19-conversas-longas.yaml · blob f3611e2a36e2 · pin main 86fca77987408ff85d8050cb2d87ded48a7e49b0.</p>
+  <p><strong>Autoria/execução:</strong> UX Designer de Aprendizagem (agente 0bfa47c1) · run 64d19f2e-30c8-4404-ab43-628c62c1c036 · 2026-10-01.
+  Revisão pedagógica independente: Content Designer. Exercício de papel: nada é automatizado, persistido ou publicado.</p>
+</footer>
+
+</div>
+</body>
+</html>
