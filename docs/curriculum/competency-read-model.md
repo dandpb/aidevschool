@@ -113,38 +113,63 @@ compara os `contentVersion` pinados (§5).
 
 1. **Este PR (CPE)**: projeção + flag opt-in + testes de contrato + este doc.
    Nenhuma ligação ao runtime; nenhum write de dados; nenhum seed.
-2. **Fatia do consumidor (LAE, seam real)**: importar o mapa no
-   `generatedContentRepository` quando/quando-existente UI consumir —
-   proposta de diff no §9. Geração passa a fazer parte do `gen:content` do
-   engine consumidor quando ele optar.
+2. **Fatia do consumidor (LAE, seam real — Fase 2 do contrato §7.1)**: importar
+   o mapa no `generatedContentRepository` conforme o seam **decidido na S6 e
+   integrado** (`docs/curriculum/competency-read-contract.md` §6.2–6.5, main
+   `5f71ac42`) — amostras no §9. Geração passa a fazer parte do `gen:content`
+   do engine consumidor quando ele optar.
 3. **Consumo de produto**: somente depois de revisão LAE do seam + estados
    de erro/ausência no app; merge só pela porta única com countersign.
 
-## 9. Proposta de seam consumidor (NÃO aplicada — revisão LAE)
+## 9. Seam do consumidor — contrato DECIDIDO (S6) e integrado; implementação é a Fase 2 do LAE (fatia própria)
 
-Diferença proposta por arquivo para a fatia 2 (exemplos antigo/novo):
+O seam abaixo **não está implementado neste PR** (nenhum código de engine
+aqui — Fase 2 é fatia própria do LAE). A formulação é a **decidida na S6**
+(comentário `618a37b1`) e **integrada ao main** via PR #623 (`5f71ac42`):
+`docs/curriculum/competency-read-contract.md` §6.2–6.5 (r2.1) e §7.1.
 
 ```ts
-// engines/literacyDojo/src/adapters/generatedContentRepository.ts (proposta)
+// engines/literacyDojo/src/adapters/generatedContentRepository.ts (Fase 2 — LAE)
 import {
   competencyLessons,
-  competencyMapContentVersion,
   competencyMapVersion,
 } from "../data/generated/competency-map";
 
-export function getCompetencyMapping(
-  lessonId: string,
-): CompetencyMapping | null {           // null = "não mapeada"
-  return (
-    competencyLessons.find((entry) => entry.lessonId === lessonId)?.mapping ?? null
+const SUPPORTED_MAP_VERSION = 1;
+if (competencyMapVersion !== SUPPORTED_MAP_VERSION) {
+  // §7.1(1): versão desconhecida → fail closed NO LOAD — nunca "melhor
+  // esforço", nunca fallback silencioso a undefined geral.
+  throw new Error(
+    `competency-map: mapVersion ${competencyMapVersion} não suportada ` +
+      `(suportada: ${SUPPORTED_MAP_VERSION}); regenere o read model (gen:content).`
   );
+}
+
+/** Colapsada (§7.1(2)): null ≡ "não mapeada" — cobre mapping:null do mapa
+ *  e o undefined legado (sem mapa importado / sem entrada). Estado legítimo,
+ *  nunca erro; nunca infere primary; nunca lança. */
+export function getCompetency(lessonId: string): CompetencyMapping | null {
+  const entry = competencyLessons.find((item) => item.lessonId === lessonId);
+  return entry ? entry.mapping : null; // sem entrada colapsa em null (§7.1(2))
+}
+
+/** §7.1(3): distingue "não mapeada" (entrada com mapping null) de
+ *  fora-do-universo (planned/ausente do mapa) — para decisão de render na
+ *  Fase 3 (dono UX). Não é gate de visibilidade (§4.5). */
+export function hasCompetencyEntry(lessonId: string): boolean {
+  return competencyLessons.some((item) => item.lessonId === lessonId);
 }
 ```
 
 - Antes: consumidor não tem como ler competências (campo não propagado).
 - Depois: leitura opcional, pura, sem tocar progresso; `ContentRepository`
-  ganha método **opcional** (extensão do tipo estrutural — consumidor antigo
-  que não usa o método não quebra).
+  ganha os métodos **aditivos** (consumidor antigo que não os usa não quebra).
+- **null/undefined reconciliados** (§7.1(2)): `undefined` legado ≡
+  `mapping: null` ≡ «não mapeada», tratados identicamente; **não-mapeada ≠
+  ausente/planned** — a distinção vive em `hasCompetencyEntry` (§7.1(3)).
+- **PUBLIC_JOURNEY pelo consumidor** (§7.1(4), R6): o mapa compila as duas
+  jornadas; o filtro de visibilidade pública permanece no
+  adaptador/consumidor — o mapa não pré-filtra.
 - `package.json` do engine consumidor: `gen:content` passaria a incluir
   `--compile-competency engines/literacyDojo/src/data/generated` (opt-in do
   engine, decisão LAE).
@@ -165,12 +190,13 @@ export function getCompetencyMapping(
 - Nenhum merge/deploy/publicação aqui; PR draft isolado sobre main atual.
 - Nada promove estado de learner; `mastered` permanece reservado ao gate.
 
-## 12. Alinhamento com o contrato LAE-reviewed (PR #623, Fase 1 = CPE)
+## 12. Alinhamento com o contrato canônico (PR #623 — DECIDIDO na S6 e integrado ao main `5f71ac42`)
 
 O contrato de leitura canônico da spec AID-3514 vive em
-`docs/curriculum/competency-read-contract.md` (PR #623, PCI; revisão LAE
-`51284f0a` com correções r1 aplicadas). Esta fatia implementa a **Fase 1
-(CPE)** dele sobre main atual. Mapeamento dos invariantes:
+`docs/curriculum/competency-read-contract.md` (PR #623, PCI; revisões LAE
+`51284f0a` r1 e `5394585605` r2 GO-condicional com r2.1 aplicada; **merged
+no main `5f71ac42` — S6 fechada**). Esta fatia implementa a **Fase 1 (CPE)**
+dele. Mapeamento dos invariantes:
 
 | Contrato (PR #623 §4/§9) | Aqui |
 | --- | --- |
@@ -182,14 +208,15 @@ O contrato de leitura canônico da spec AID-3514 vive em
 | `CatalogLessonEntry` pinada nas 8 chaves; corpus do verificador nunca ganha competency | `lessons.ts` e `literacy-corpus.mjs` intocados por construção (nenhum diff neles). |
 | Propagação NÃO bumpa `contentVersion` nem `version` de lição (r1) | Nenhum YAML autoral mudado nesta fatia (diff vazio em `modules/**` e `catalog.yaml`). |
 
-**Desvio declarado (mecanismo, não contrato):** o PR #623 §6 *propõe* a 9ª
-chave opcional in-band em `lessons.ts` via flag `--with-competency`; esta
-implementação entrega a projeção em **arquivo separado**
-(`competency-map.ts`). Motivação: a identidade byte de `lessons.ts` fica
-preservada **incondicionalmente** (mesmo com a projeção ligada), mantendo o
-garante de zero-regressão das lições live independente de flag — e o
-opt-in passa a ser no import do consumidor, não na geração. A porta
-proposta `getCompetency(id) → null/undefined` (§9) funciona idêntica sobre
-este artefato. A decisão final de mecanismo é do fecho de contrato
-(successor S6 do AID-3525 r2 / review AID-3457); nenhuma superfície
-compartilhada muda enquanto isso.
+**Mecanismo (decidido na S6, comentário `618a37b1`; integrado em
+`5f71ac42`):** o contrato original do #623 *propunha* a 9ª chave opcional
+in-band em `lessons.ts` (flag `--with-competency`); a **decisão S6
+selecionou a projeção em arquivo separado** (`competency-map.ts`) — exatamente
+o mecanismo deste PR — e a proposta in-band e o PR #634 que a implementava
+ficaram **superseded** (histórico preservado no contrato §6.1.h/§6.2.h).
+Motivação registrada: a identidade byte de `lessons.ts` fica preservada
+**incondicionalmente** (mesmo com a projeção ligada), mantendo o garante de
+zero-regressão das lições live independente de flag — e o opt-in é no import
+do consumidor, não na geração. O seam normativo da Fase 2 (`getCompetency`
+colapsada + `hasCompetencyEntry` + guard fail-closed de `mapVersion`) está
+no §9 acima, idêntico ao contrato integrado (§6.2–6.5/§7.1).
