@@ -14,6 +14,8 @@ contrato). Piloto pago segue o modelo facilitado P6/O1 (cobrança out-of-band).
 | codexDojo OS | `https://aidevschool-codexdojo-os.netlify.app/` | Host mission-first do piloto (superfície contribuidor) | `npm run build:pilot` + `scripts/build-pilot-bundle.mjs`; functions staged do canônico `learner/gate/netlify-functions` |
 | LiteracyDojo avulso | `https://aidevschool-literacydojo.netlify.app/` | Entrada pública de aprendiz (23 missões IA Prática, pt-BR) | `npm run build`; functions do dir canônico `learner/gate/netlify-functions` |
 
+Caminho adicional na superfície LiteracyDojo: `/escola/` — entrada pública **estática** da escola única (AID-3453, direção founder 17:03Z, PR #616): artefatos em `engines/literacyDojo/public/escola/` andam no mesmo `npm run build` (arquivo real sombreia o catch-all do `netlify.toml`, precedente `privacidade.html`); sem backend, sem segredo, sem storage no caminho público — monitor `escola-root-marker` + `escola-assets` (UPTIME-MONITOR-SETUP #7–8, com controle negativo anti-falso-verde, armar pós-publicação). A superfície Node do school-entry (operador/beta, PR #615 draft) permanece separada.
+
 Coletor de telemetria same-origin: `POST /__dojo/bridge/v1/analytics` (envelopes OS v1 + literacy v2;
 backing durável Netlify Blobs, chave idempotente `dia/eventId`, retenção 90d, zero PII —
 ADR-0009/0010). Export operacional: `GET` da mesma rota com Bearer `ANALYTICS_EXPORT_TOKEN`
@@ -31,13 +33,15 @@ ADR-0009/0010). Export operacional: `GET` da mesma rota com Bearer `ANALYTICS_EX
 
 ## Postura de cotas free tier (Netlify) — resumo
 
-Netlify Free = **300 créditos/mês** (preço de lista verificado 2026-09-07): deploy de produção
+> **Nota factual (diretiva founder 18:25Z):** as cifras abaixo são **referências de preço de lista do provedor** (verificadas 2026-09-07) e estimativas de planejamento derivadas delas — **não** estado verificado da conta. **Confirmar o plano e o uso atuais no painel do provedor antes de qualquer decisão de publicação/promoção.**
+
+Netlify Free = **300 créditos/mês** (preço de lista, ref. 2026-09-07; não específico da conta): deploy de produção
 **15 créditos**, requisições web **2 créditos/10k**, banda **20 créditos/GB**, compute
-**10 créditos/GB-hora**. O tráfego do piloto é irrelevante diante do pool (monitor 6 checks @5min
-≈ 52k req/mês ≈ 10 créditos; sessões de aprendiz somam ordens de magnitude menos). **O fator
-limitante é onda de promoção:** ~2 deploys/superfície (draft + alias) + retries ⇒ **~60–90
-créditos por onda**. Gatilhos objetivos para revisar (donos: FPE monitora, founder decide gasto):
-créditos < 100 no meio do mês, ou > 4 ondas planejadas no mês, ou banda > 1 GB/mês ⇒ conversar
+**10 créditos/GB-hora**. O tráfego do piloto é irrelevante frente a esses preços de lista (monitor 8 checks @5min;
+sessões de aprendiz somam ordens de magnitude menos — **uso real a confirmar no painel**). **O fator
+limitante é onda de promoção:** ~2 deploys/superfície (draft + alias) + retries ⇒ ordem de grandeza de
+**dezenas de créditos por onda** pelos preços de lista. Gatilhos objetivos para revisar (donos: FPE monitora, founder decide gasto):
+créditos restantes < 100 no meio do mês (leitura do painel real), ou > 4 ondas planejadas no mês, ou banda > 1 GB/mês ⇒ conversar
 sobre Personal (US$9/mês, 1.000 créditos) antes de esgotar o pool. Relatório completo da revisão
 de cotas: comentário AID-989 (2026-09-07).
 
