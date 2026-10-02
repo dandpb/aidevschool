@@ -490,12 +490,7 @@ export class LiteracyUseCases {
     const progress = await this.withProgress((current) => {
       let next = current;
       if (outcome.completed && input.intervalIndex !== undefined) {
-        next = scheduleReviewForLesson(
-          current,
-          lesson,
-          this.deps.clock(),
-          input.intervalIndex,
-        );
+        next = scheduleReviewForLesson(current, lesson, this.deps.clock(), input.intervalIndex);
       }
       return { next, value: next };
     });
