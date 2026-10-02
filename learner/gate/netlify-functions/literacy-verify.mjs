@@ -133,12 +133,16 @@ export function verify(record) {
     return receipt(null, false, ["evidence must be a JSON object"]);
   }
 
-  const contractActivityType = Object.prototype.hasOwnProperty.call(
-    CONTRACT_ACTIVITY_TYPES,
-    record.activityId,
-  )
-    ? CONTRACT_ACTIVITY_TYPES[record.activityId]
-    : undefined;
+  // The shared schema pins activityId to a string; non-string values must fail
+  // closed here too. The typeof guard must short-circuit BEFORE the contract
+  // lookup: hasOwnProperty coerces its key (["l02-a1"] would pass as "l02-a1")
+  // and {"toString": null} would throw instead of returning a FAIL receipt.
+  const activityIdIsString = typeof record.activityId === "string";
+  const contractActivityType =
+    activityIdIsString &&
+    Object.prototype.hasOwnProperty.call(CONTRACT_ACTIVITY_TYPES, record.activityId)
+      ? CONTRACT_ACTIVITY_TYPES[record.activityId]
+      : undefined;
   const expectedIdentity =
     record.schemaVersion === 1 &&
     record.source === "literacydojo" &&
