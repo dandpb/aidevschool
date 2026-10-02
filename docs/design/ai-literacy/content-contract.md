@@ -116,6 +116,7 @@ AID-1523/PR #354). O caminho inverso — lição `dev` com pré-requisito
 curriculum/ai-literacy/*
   → validação de schema + validação semântica (tools/validate.py)
   → <outdir>/lessons.ts  (read model tipado)
+  → <outdir>/competency-map.ts  (read model OPCIONAL de competências, AID-3514)
   → app consome somente o read model tipado
 ```
 
@@ -134,11 +135,39 @@ Exports do read model gerado (`lessons.ts`):
 - `skills: SkillDefinition[]` — catálogo tipado de skills das duas jornadas,
   preservado para os assets compartilhados.
 
+Exports do read model OPCIONAL de competências (`competency-map.ts`,
+gerado por `--compile-competency`; contrato canônico em
+`docs/curriculum/competency-read-contract.md` §7.1):
+
+- `competencyMapVersion: number` — versão do formato do mapa; desconhecida
+  ⇒ o adaptador falha fechado no load (nunca «melhor esforço»);
+- `competencyMapContentVersion: string` — `contentVersion` do catálogo que
+  gerou o mapa; consumidor que precisar de garantia compara com o pin de
+  `lessons.ts` e regenera ambos no mesmo comando;
+- `competencyGlossary: CompetencyGlossaryEntry[]` — glossário canônico
+  F1–F4/D1–D7 com `aliases` estáveis (não-aliasing vs `skillIds`);
+- `competencyLessons: CompetencyLessonEntry[]` — uma entrada por lição
+  `ready` (as duas jornadas — o filtro `PUBLIC_JOURNEY` permanece no
+  consumidor); `mapping: null` = «não mapeada» (default legítimo, nunca erro);
+- `carriesAttainment = false` / `producerWritesMastered = false` — o mapa
+  NÃO carrega estados de aprendiz (`completed`/`pass`/`simulação`/`mastered`
+  seguem com os donos vigentes de progresso);
+- tipos `CompetencyId`, `CompetencyMapping`, `CompetencyLessonEntry`,
+  `CompetencyGlossaryEntry`.
+
+Portas do consumidor (Fase 2, `generatedContentRepository`):
+`getCompetency(lessonId) → CompetencyMapping | null` (colapsada:
+`null` ≡ «não mapeada», cobre `mapping: null` e o `undefined` legado) e
+`hasCompetencyEntry(lessonId) → boolean` (distingue «não mapeada» de
+planned/ausente para decisão de render na Fase 3). Leitura pura — nunca
+muta progresso, nunca emite evidência/analytics, nunca infere competência.
+
 Comandos (a partir da raiz do repositório):
 
 ```bash
 python3 curriculum/ai-literacy/tools/validate.py                 # valida
 python3 curriculum/ai-literacy/tools/validate.py --compile <outdir>  # valida + gera lessons.ts
+python3 curriculum/ai-literacy/tools/validate.py --compile <outdir> --compile-competency <outdir>  # + competency-map.ts
 ```
 
 ## Regras
