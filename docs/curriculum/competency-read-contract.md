@@ -8,6 +8,7 @@
 | **Revisor alvo** | Learner App Engineer (etapa review da issue): valida o seam real (`generatedContentRepository`) e os estados de erro/ausência. |
 | **Status** | Proposta (spec documental + testes de seam executáveis). Nenhum wiring de runtime nesta fatia. |
 | **Revisão** | r1 (2026-09-30): 3 correções doc-only do review LAE (comentário `51284f0a`, head revisto `3cd9fef2`): (1) §3/§9.5 — citação inexistente `catalog.mjs:100-124` corrigida (arquivo = 100 linhas, lista estática) e entrada estática `escola/` declarada (PR #616, fora da base); (2) invariante «propagação não bumpa `contentVersion`/`version`» adicionada (§7 gates das Fases 1–2 + §9.6); (3) §9.2 — inventário de consumidores de `lessons` confirmado pelo LAE substitui o «não conheço outro consumidor». §4/§5/§6/§8 intocados, conforme combinado. |
+| | **r2 (2026-10-02): reconciliação com a decisão S6** (comentário `618a37b1`, escopo delegado pelo Dani): **mecanismo selecionado = projeção em arquivo separado `competency-map.ts`** (PR #659, review LAE no head `3f636429`/comentário `5956348434`). A proposta in-band de §6.1–6.2 (`--with-competency`) e o PR #634 que a implementava ficam **superseded** — branches, commits, provas e histórico preservados; nenhum dos dois mecanismos é integrado ao outro e nenhum teste/proteção existente foi alterado para a decisão caber. §6/§7 reescritos para o mecanismo selecionado; contrato da Fase 2 explicitado (§7.1). §3/§4/§5/§8/§9/§10 e os testes de seam permanecem válidos (não redundantes). |
 
 ## 1. Proveniência
 
@@ -23,6 +24,10 @@
   ausência = «não mapeada» (default registrado).
 - **Glossário/objetivos-fonte**: `579ce995baa7aa28084127b15a9886103ad68a44`
   (`intent/AID-3453-unify-school/spec.md:7–21`).
+- **Decisão de mecanismo (S6, r2)**: `competency-map.ts` separado — PR #659
+  (`competency_projection.py --compile-competency`; `lessons.ts` byte-idêntico
+  **incondicionalmente**; opt-in no import do consumidor). Alternativa in-band
+  (PR #634, `--with-competency`) **superseded** — preservada como histórico.
 
 ## 2. Escopo e não-escopo
 
@@ -192,9 +197,32 @@ Hoje: 8 chaves exatas por entrada (`id`, `moduleId`, `title`,
 pinned por teste. Proposto: 9ª chave opcional `competency?` nas entradas
 `hasContent` mapeadas.
 
-## 6. Diff proposto por arquivo (a implementar nas Fases 1–2; NÃO nesta fatia)
+## 6. Mecanismo selecionado (r2 — decisão S6) e seam do consumidor
 
-### 6.1 `curriculum/ai-literacy/tools/compiler.py` (owner: CPE)
+> **r2:** a proposta original de §6.1–6.2 (9ª chave in-band via `--with-competency`,
+> implementada no PR #634) está **superseded** pela decisão S6 — mantida abaixo apenas
+> como registro histórico; **não integrar**. O mecanismo selecionado é o do PR #659.
+
+### 6.1 (selecionado) Projeção em arquivo separado — owner: CPE (implementado no PR #659)
+
+- `curriculum/ai-literacy/tools/competency_projection.py`: `--compile-competency OUTDIR`
+  emite **`competency-map.ts` separado**; `lessons.ts` permanece **byte-idêntico
+  incondicionalmente** (mesmo com a projeção ligada — zero-regressão não depende de flag).
+- Entrada por lição: `lessonId`, `moduleId`, `journey`, `order`, `prerequisites`,
+  `mapping` — `mapping: null` = «não mapeada» (default real). Glossário canônico
+  F1–F4/D1–D7 com aliases estáveis e **não-aliasing** vs `skillIds`.
+- `validate.py`: flag opt-in `--compile-competency OUTDIR`; fail closed (validação
+  vermelha ⇒ nenhum arquivo escrito).
+- ~~6.1 original (in-band, superseded)~~ e ~~6.2 original (flag `--with-competency`,
+  superseded)~~ — ver PR #634 (histórico preservado).
+
+### 6.1.h Registro histórico — proposta in-band original (SUPERSEDED pela decisão S6; não integrar)
+
+*Conteúdo da r0/r1 preservado abaixo como registro; o PR #634 o implementou e está
+superseded. Nada deste bloco deve ser aplicado.*
+
+<details>
+<summary>Diff in-band original (compiler <code>--with-competency</code> + validate.py) — clique para expandir</summary>
 
 **Antigo** (types, :109-139 — trecho):
 
@@ -271,14 +299,16 @@ E `_catalog_entries` ganha o join (entrada `competency` apenas quando
 help="propaga competency opcional para o read model (AID-3514; default: não propaga)")`
 + passar `include_competency=args.with_competency` em :45.
 
-### 6.3 `engines/literacyDojo/src/application/ports.ts` (owner: Learner App Engineer)
+</details>
+
+### 6.2 `engines/literacyDojo/src/application/ports.ts` (owner: Learner App Engineer)
 
 **Antigo** (:21-27): interface com 5 métodos (§3).
 
 **Novo**: acrescenta `getCompetency(lessonId: string): LessonCompetency | undefined;`
 com import do tipo em `../data/generated/lessons`.
 
-### 6.4 `engines/literacyDojo/src/adapters/generatedContentRepository.ts` (owner: LAE)
+### 6.3 `engines/literacyDojo/src/adapters/generatedContentRepository.ts` (owner: LAE)
 
 **Novo** (implementação inteira do método):
 
@@ -290,11 +320,11 @@ export function getCompetency(lessonId: string): LessonCompetency | undefined {
 
 `undefined` para: id inexistente, lição sem o campo. Sem throw, sem fallback.
 
-### 6.5 `docs/design/ai-literacy/content-contract.md` (owner: LAE; fora do meu write)
+### 6.4 `docs/design/ai-literacy/content-contract.md` (owner: LAE; fora do meu write)
 
 Documentar o novo export/flag na seção de exports (:122+) e o estado ausente.
 
-### 6.6 Testes (junto com cada fase, mesma fatia)
+### 6.5 Testes (junto com cada fase, mesma fatia)
 
 - Fase 1 (compiler): atualizar `test_competency_field_contract.py::test_compiler_output_is_byte_identical_with_and_without_field`
   para fixar o DEFAULT (sem flag → idêntico) e adicionar o caso com flag
@@ -311,9 +341,35 @@ Documentar o novo export/flag na seção de exports (:122+) e o estado ausente.
 | Fase | Conteúdo | Owner | Gate |
 | --- | --- | --- | --- |
 | **0 (este PR)** | Spec canônica + testes de seam (fatos atuais: ausência, 8 chaves do catálogo, corpus do verificador limpo) | CPE | Review LAE nesta issue |
-| **1** | Compilador emite `competency?` **somente com `--with-competency`** (default continua byte-idêntico); testes de inércia atualizados na mesma fatia | CPE | PR pequeno; QA confere default e opt-in; **sem bump de `catalog.contentVersion` nem de `version` de lição** |
-| **2** | `gen:content` do literacyDojo adota a flag (`package.json:17`); porta + adapter `getCompetency`; testes de porta | LAE | PR engine; nada muda para o aprendiz; **sem bump de `catalog.contentVersion` nem de `version` de lição** |
+| **1 (r2: selecionada)** | **Projeção em arquivo separado `competency-map.ts`** (`--compile-competency OUTDIR`; `lessons.ts` byte-idêntico **incondicionalmente**) — implementada no PR #659 | CPE | Review LAE no head `3f636429` (comentário `5956348434`); QA confere byte-identidade e fidelidade 32/32; **sem bump de `catalog.contentVersion` nem de `version` de lição** |
+| **2** | Seam do consumidor: import opcional do mapa, porta + adapter `getCompetency`, filtro `PUBLIC_JOURNEY` aplicado **pelo consumidor** — conforme contrato explícito §7.1 | LAE | PR engine; nada muda para o aprendiz; **sem bump de `catalog.contentVersion` nem de `version` de lição** |
 | **3** (fora daqui) | Consumo de UI/roteiro; export de glossário; derivações de aquisição | UX/CD/produto | fatias próprias; `mastered` segue reservado |
+
+### 7.1 Contrato explícito da Fase 2 (r2 — decisão S6, comentário `618a37b1`)
+
+1. **Versão de mapa desconhecida falha fechado:** o consumidor que importa
+   `competency-map.ts` **rejeita** mapa com `mapVersion` não reconhecido (erro explícito
+   no load) — nunca "melhor esforço", nunca fallback silencioso a `undefined` geral.
+2. **Reconciliação `undefined` legado × `mapping: null`:** ambos significam
+   «não mapeada» e são tratados **identicamente** pelo consumidor (estado legítimo,
+   não erro). `undefined` = ausência legada (consumidor sem mapa importado / lição sem
+   entrada na versão do mapa); `mapping: null` = entrada explícita de não-mapeada no
+   mapa vigente. Nenhum código pode inferir competência a partir de nenhum dos dois.
+3. **Distinção lição não-mapeada × ausente/planned (quando necessária):** o mapa contém
+   entradas por lição `ready`; lição **presente no catálogo com status `planned`** ou
+   **ausente do mapa** não é «não mapeada» — é fora do universo daquela versão do mapa.
+   A porta distingue quando o consumidor precisa decidir (ex.: renderizar vs ocultar);
+   a UI só consome a distinção na Fase 3, com dono UX.
+4. **`PUBLIC_JOURNEY` aplicado pelo consumidor:** a projeção compila **as duas
+   jornadas** (dev incluída — missões hospedadas do OS podem servir lições dev); o
+   filtro de visibilidade pública **continua no adaptador/consumidor** (R6,
+   `generatedContentRepository`) — o mapa **não** pré-filtra.
+
+**Não-conclusões explícitas:** a escolha do mecanismo NÃO conclui automaticamente o
+crosswalk/l16 (PRs #611/#613), E2E, UI/a11y ou a conformidade integral da AID-3457 —
+cada um segue com dono e gates próprios. Sequência vigente: CPE reconcilia (esta r2) →
+LAE revisa a mudança contratual → countersign independente no head final → FPE pela
+porta única (`scripts/merge_pr.sh`) somente após os gates técnicos vigentes.
 
 Ativar a Fase 1 **não muda nada que o aprendiz percebe**: nenhuma superfície
 lê competência hoje; o campo é opcional e invisível até a Fase 3.
@@ -415,10 +471,11 @@ vocabulário fechado; corpus do verificador intocado (teste 4).
 
 ## 10. Menor implementação pronta, responsável e pré-requisitos reais
 
-- **Menor implementação**: Fase 1 (compiler flag `--with-competency` + join do
-  catálogo + testes, ~2 arquivos editados + 2 suites ajustadas) e Fase 2
-  (porta/adapter `getCompetency` + flag no `gen:content` + testes de porta,
-  ~3 arquivos). Sem UI, sem glossário, sem derivação de aquisição.
+- **Menor implementação (r2)**: Fase 1 = projeção separada `competency-map.ts`
+  (PR #659 — implementada; o texto original desta linha, com a flag in-band
+  `--with-competency`, está superseded) e Fase 2 (porta/adapter `getCompetency` +
+  import opcional do mapa + testes de porta, ~3 arquivos). Sem UI, sem glossário,
+  sem derivação de aquisição.
 - **Responsáveis**: Fase 1 — Curriculum Platform Engineer (este agente);
   Fase 2 — Learner App Engineer (arquivos do engine); merge — exclusivamente
   FPE pela porta única (política R1).
