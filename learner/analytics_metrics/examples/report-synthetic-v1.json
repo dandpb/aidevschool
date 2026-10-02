@@ -1,0 +1,109 @@
+{
+  "data_provenance": {
+    "dictionary_version": "v1",
+    "fixtures": [
+      "synthetic-literacy-v2.ndjson",
+      "synthetic-os-v1.ndjson",
+      "synthetic-transfer-outcomes.ndjson"
+    ],
+    "k_threshold": 5,
+    "label": "FIXTURES SINTÉTICAS DE CALIBRAÇÃO — nenhum aprendiz real; nenhum dado exportado de produção",
+    "synthetic": true
+  },
+  "literacy": {
+    "attempt_error_rate": {
+      "k": 5,
+      "n": 3,
+      "value": "suppressed"
+    },
+    "attempts_failed": 1,
+    "attempts_total": 3,
+    "entry_pre_v4_without_prop": 1,
+    "entry_split": {
+      "home": 3,
+      "lesson-resume": 1
+    },
+    "funnel_counts": {
+      "brief": 2,
+      "entrada": 5,
+      "licao_concluida": 2,
+      "licao_iniciada": 2,
+      "primeira_atividade_exposta": 1,
+      "tentativa": 2
+    },
+    "resume_rate": {
+      "k": 5,
+      "n": 4,
+      "value": "suppressed"
+    },
+    "retention_cross_day": "not_measured",
+    "retention_reason": "G8: sessionId efêmero por page load; sem identificador cross-dia (ADR-0009 emenda AID-913)",
+    "retry_sessions": 1,
+    "sessions_total": 5
+  },
+  "not_measured": {
+    "feedback_shown_rate": "evento feedback_shown fora dos vocabulários (TF-1)",
+    "funil_dev_deep": "dojoToday emite só daily-view-open (G3)",
+    "retention_literacy_standalone": "sem identificador cross-dia (G8)",
+    "transfer_real": "canal de evidência sem aplicações reais"
+  },
+  "os": {
+    "attempts_error_proxy": 1,
+    "attempts_error_proxy_note": "proxy: submitted sem passed subsequente na mesma (instalação, sessão, missão); evento de veredito negativo não existe no vocabulário OS v1",
+    "attempts_passed_observable": 1,
+    "attempts_submitted": 2,
+    "installations": 2,
+    "onboarding_completed": 2,
+    "onboarding_completion_rate": {
+      "k": 5,
+      "n": 2,
+      "value": "suppressed"
+    },
+    "onboarding_started": 2,
+    "retention_cross_day_installs": 1,
+    "retention_cross_day_rate": {
+      "k": 5,
+      "n": 2,
+      "value": "suppressed"
+    },
+    "retry_requested": 1
+  },
+  "pipeline": {
+    "duplicates_removed": 1,
+    "events_accepted": 31,
+    "rows_read": 32
+  },
+  "report_version": "aid3515-v1",
+  "transfer": {
+    "excluded_authorial_examples": 1,
+    "per_practice": {
+      "tp-c01-cotidiano": {
+        "applications": 2,
+        "first_attempt": 1,
+        "first_attempt_pass_rate": {
+          "k": 5,
+          "n": 1,
+          "value": "suppressed"
+        },
+        "first_attempt_sufficient": 0,
+        "note": "registros SINTÉTICOS de calibração; aplicações reais = 0 (práticas PR #619 ainda sem teste com alunos)",
+        "second_attempt": 1,
+        "second_attempt_recovered": 1
+      },
+      "tp-d01-dev": {
+        "applications": 1,
+        "first_attempt": 1,
+        "first_attempt_pass_rate": {
+          "k": 5,
+          "n": 1,
+          "value": "suppressed"
+        },
+        "first_attempt_sufficient": 1,
+        "note": "registros SINTÉTICOS de calibração; aplicações reais = 0 (práticas PR #619 ainda sem teste com alunos)",
+        "second_attempt": 0,
+        "second_attempt_recovered": 0
+      }
+    },
+    "real_applications": 0
+  }
+}
