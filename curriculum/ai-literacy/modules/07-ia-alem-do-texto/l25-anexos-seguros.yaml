@@ -8,6 +8,9 @@ objective: "Antes de anexar fotos, scans ou PDFs a um pedido, classificar o cont
 estimatedMinutes: 4
 skillIds: [proteger]
 prerequisites: [l12]
+competency:
+  primary: F2
+  supporting: []
 
 activities:
   - id: l25-a1
