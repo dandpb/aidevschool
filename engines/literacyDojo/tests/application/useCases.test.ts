@@ -321,6 +321,28 @@ describe("completeLesson", () => {
     expect(result.progress.onboarding.route).toBe("guided");
     expect(result.nextLessonId).toBe(guidedLesson.id);
   });
+
+  it("replay de lição concluída: firstCompletion false, sem 2º +25 e status intacto (AID-3731)", async () => {
+    const { services } = makeServices();
+    await completeMvpOnboarding(services);
+    await services.useCases.startLesson(lesson.id);
+    const first = await services.useCases.completeLesson({
+      lessonId: lesson.id,
+      bestScores: ALL_BEST_SCORES,
+    });
+    expect(first.outcome.completed).toBe(true);
+    expect(first.firstCompletion).toBe(true);
+
+    // Replay permitido (prática): re-concluir não re-premia nem re-conta.
+    const replay = await services.useCases.completeLesson({
+      lessonId: lesson.id,
+      bestScores: ALL_BEST_SCORES,
+    });
+    expect(replay.outcome.completed).toBe(true);
+    expect(replay.firstCompletion).toBe(false);
+    expect(replay.progress.xp).toBe(first.progress.xp);
+    expect(replay.progress.lessonStatus[lesson.id]).toBe("completed");
+  });
 });
 
 describe("resumeSession", () => {

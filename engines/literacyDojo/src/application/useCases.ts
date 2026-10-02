@@ -324,28 +324,33 @@ export class LiteracyUseCases {
       return result;
     }
     await this.deps.progress.save(result.progress);
-    // ADR-0009 (emenda AID-913): exatamente 1× `lesson_completed` por
-    // conclusão, após o progresso persistir. Fire-and-forget — o contrato dos
-    // sinks é nunca lançar nem adiar a resposta; analytics nunca bloqueia a
-    // lição.
-    this.deps.analytics.track(
-      buildLessonCompletedEvent(
-        {
-          sessionId: this.deps.analyticsIdentity.sessionId,
-          eventId: this.deps.analyticsIdentity.nextEventId(),
-        },
-        {
-          lessonId: lesson.id,
-          lessonVersion: lesson.version,
-          score: result.outcome.lessonScore,
-          durationSeconds: input.durationSeconds,
-        },
-        {
-          occurredAt: this.deps.clock().toISOString(),
-          contentVersion: this.deps.content.getContentVersion(),
-        },
-      ),
-    );
+    // ADR-0009 (emendas AID-913 e AID-3731): exatamente 1× `lesson_completed`
+    // por LIÇÃO — emitido somente na primeira conclusão (transição de status
+    // para `completed`), após o progresso persistir. Replay/prática de lição
+    // concluída continua permitido e mensurável pelos eventos de engajamento
+    // (`lesson_started`, `activity_attempted` — e `review_*` no corredor),
+    // sem re-contar conclusões. Fire-and-forget — o contrato dos sinks é
+    // nunca lançar nem adiar a resposta; analytics nunca bloqueia a lição.
+    if (result.firstCompletion) {
+      this.deps.analytics.track(
+        buildLessonCompletedEvent(
+          {
+            sessionId: this.deps.analyticsIdentity.sessionId,
+            eventId: this.deps.analyticsIdentity.nextEventId(),
+          },
+          {
+            lessonId: lesson.id,
+            lessonVersion: lesson.version,
+            score: result.outcome.lessonScore,
+            durationSeconds: input.durationSeconds,
+          },
+          {
+            occurredAt: this.deps.clock().toISOString(),
+            contentVersion: this.deps.content.getContentVersion(),
+          },
+        ),
+      );
+    }
     return result;
   }
 
@@ -428,7 +433,9 @@ export class LiteracyUseCases {
         ),
       );
     }
-    return { progress, outcome };
+    // Revisão espaçada nunca é 1ª conclusão (spec AID-915 §4.3; AID-3731):
+    // sem XP de lição, sem novo `lesson_completed`.
+    return { progress, outcome, firstCompletion: false };
   }
 
   /**

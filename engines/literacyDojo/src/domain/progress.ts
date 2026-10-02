@@ -589,12 +589,23 @@ export type CompleteLessonResult = {
   outcome: LessonOutcome;
   nextLessonId?: string;
   newlyUnlocked?: Achievement[];
+  /**
+   * True apenas quando esta conclusão é a PRIMEIRA da lição — a transição de
+   * status para `completed` (AID-3731). Replay de lição concluída continua
+   * permitido (prática), mas não é 1ª conclusão: sem +25 XP e sem novo
+   * `lesson_completed`.
+   */
+  firstCompletion: boolean;
 };
 
 /**
  * Conclusão de lição: avalia, marca completo, aplica rota do onboarding no
  * Mapa Inicial, concede XP, agenda revisão, desbloqueia próxima lição,
- * muta currentLessonId e desbloqueia conquistas.
+ * muta currentLessonId e desbloqueia conquistas. O bônus de conclusão
+ * (+25) e a contagem de 1ª conclusão vivem na TRANSIÇÃO de status, não na
+ * chamada (guarda once-per-first-completion, AID-3731): re-concluir uma
+ * lição já `completed` é replay de prática — funcional, idempotente em
+ * status e sem re-premiações.
  */
 export function completeLesson(
   progress: LearnerProgress,
@@ -605,8 +616,10 @@ export function completeLesson(
 ): CompleteLessonResult {
   const outcome = evaluateLessonCompletion(lesson, bestScores);
   if (!outcome.completed) {
-    return { progress, outcome };
+    return { progress, outcome, firstCompletion: false };
   }
+
+  const firstCompletion = progress.lessonStatus[lesson.id] !== "completed";
 
   let next: LearnerProgress = {
     ...progress,
@@ -618,7 +631,9 @@ export function completeLesson(
       onboarding: { ...next.onboarding, route: mapInitialRoute(next.onboarding.mapInitial) },
     };
   }
-  next = awardXp(next, XP_PER_LESSON_COMPLETE, now);
+  if (firstCompletion) {
+    next = awardXp(next, XP_PER_LESSON_COMPLETE, now);
+  }
   next = scheduleReviewForLesson(next, lesson, now, 0);
   const unlocked = unlockNextReadyLesson(next, modules, lesson.id);
   next = unlocked.progress;
@@ -629,6 +644,7 @@ export function completeLesson(
   return {
     progress: next,
     outcome,
+    firstCompletion,
     nextLessonId: unlocked.unlockedLessonId,
     newlyUnlocked: withAchievements.newlyUnlocked,
   };

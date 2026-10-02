@@ -26,7 +26,8 @@ class InMemoryAnalyticsSink implements AnalyticsSink {
 // por ativação O1 (AID-913, emenda ADR-0009/ADR-0010 §4) acontece SOMENTE nos
 // [build.environment] dos 2 netlify.toml (same-origin; travado por teste).
 // Missão hospedada nunca emite pelo sink literacy (o host OS já mede as
-// missões) e o piloto lesson_completed sai exatamente 1× por conclusão.
+// missões) e o piloto lesson_completed sai exatamente 1× por primeira
+// conclusão (emenda AID-3731: replay de prática não re-emite).
 
 const FIXED_NOW = new Date("2026-07-19T12:00:00.000Z");
 
@@ -134,7 +135,7 @@ describe("createServices analytics transport selection", () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
-  it("(e) lesson_completed 1× por conclusão com envelope válido — e só na conclusão", async () => {
+  it("(e) lesson_completed 1× por primeira conclusão com envelope válido — e só na conclusão", async () => {
     const analytics = new InMemoryAnalyticsSink();
     const services = makeCompletableServices(analytics);
     const lesson = lessons.find((item) => item.id === MAP_INITIAL_LESSON_ID);
@@ -161,6 +162,7 @@ describe("createServices analytics transport selection", () => {
       durationSeconds: 42,
     });
     expect(result.outcome.completed).toBe(true);
+    expect(result.firstCompletion).toBe(true);
     expect(analytics.events).toHaveLength(1);
     const [event] = analytics.events;
     expect(isValidAnalyticsEvent(event)).toBe(true);
@@ -196,14 +198,22 @@ describe("createServices analytics transport selection", () => {
     });
     expect(analytics.events.every(isValidAnalyticsEvent)).toBe(true);
 
-    // Nova conclusão (replay): 1 novo evento — sempre 1× por conclusão.
-    await services.useCases.completeLesson({ lessonId: lesson.id, bestScores: allBestScores });
-    expect(analytics.events).toHaveLength(4);
+    // Replay (re-conclusão de lição `completed`): prática PERMITIDA, mas sem
+    // novo `lesson_completed` — 1× por LIÇÃO, não por chamada (emenda
+    // AID-3731). O engajamento repetido permanece mensurável pelos eventos
+    // `lesson_started`/`activity_attempted` do próprio replay.
+    const replay = await services.useCases.completeLesson({
+      lessonId: lesson.id,
+      bestScores: allBestScores,
+    });
+    expect(replay.outcome.completed).toBe(true);
+    expect(replay.firstCompletion).toBe(false);
+    expect(analytics.events).toHaveLength(3);
     expect(JSON.stringify(analytics.events)).not.toContain("mastered");
-    expect(analytics.events.filter((item) => item.event === "lesson_completed")).toHaveLength(2);
+    expect(analytics.events.filter((item) => item.event === "lesson_completed")).toHaveLength(1);
     // Identidade anônima v2: mesma sessão ⇒ mesmo sessionId em TODOS os
     // eventos (conclusão + revisão); eventId distinto por evento.
     expect(new Set(analytics.events.map((item) => item.sessionId)).size).toBe(1);
-    expect(new Set(analytics.events.map((item) => item.eventId)).size).toBe(4);
+    expect(new Set(analytics.events.map((item) => item.eventId)).size).toBe(3);
   });
 });
