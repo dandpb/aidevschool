@@ -220,6 +220,16 @@ export function completeOnboarding(
     audience: AudienceChoice;
   },
 ): LearnerProgress {
+  // AID-3718 DELTA3 (stale-onboarding, receipt ddbd967d): re-completar o
+  // onboarding (ex.: aba atrasada na tela inicial) preserva a PRIMEIRA
+  // configuração válida e todo o progresso já commitado. O mapper inicial
+  // (l02 available / l01 locked / currentLessonId=l02) é destrutivo contra
+  // o estado commitado — reabre lição `completed`, re-tranca progressão e
+  // rebobina a lição corrente (não é TOCTOU de snapshot). Primeira
+  // conclusão válida vence: a segunda chamada é idempotente.
+  if (progress.onboarding.completed) {
+    return progress;
+  }
   return {
     ...progress,
     onboarding: {

@@ -166,7 +166,12 @@ UI (src/screens, src/components)
   `completeCheckpoint`, `completeReview`) serializam pelo mesmo `update`
   atômico via `withProgress` — um snapshot stale de start/submit não pode mais
   reverter `completed` ao persistir (stale-start/stale-submit), preservando a
-  contagem única de 1ª conclusão, `completedAt` e o agendamento de revisão). `Services` compõe um **batch sink**
+  contagem única de 1ª conclusão, `completedAt` e o agendamento de revisão;
+  §Emenda AID-3718 DELTA3 (stale-onboarding): `completeOnboarding` é
+  idempotente — re-completar o onboarding (aba atrasada) preserva a
+  PRIMEIRA configuração válida e todo o progresso commitado; o mapper
+  inicial (l02 available/l01 locked/current=l02) nunca reabre lição
+  `completed`, não re-tranca progressão nem rebobina a lição corrente). `Services` compõe um **batch sink**
   (`analyticsBatchSink.ts`: buffer 20 eventos / 15s / pagehide com beacon)
   quando `VITE_ANALYTICS_ENDPOINT` está definido — e o env é definido SOMENTE
   nos `[build.environment]` dos netlify.toml do literacy e do OS, sempre
