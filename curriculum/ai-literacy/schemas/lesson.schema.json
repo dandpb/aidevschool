@@ -71,7 +71,7 @@
           "description": "Competências de apoio — zero ou mais (spec R1). Réplicas duplicadas são rejeitadas."
         }
       },
-      "description": "Mapeamento de competência do framework unificado (spec AID-3453 R1: primary + supporting[]; glossário R6). OPCIONAL por design: ausência = 'não mapeada' (default real, registrado no doc AID-3457 §2.4.1) — o campo é scaffolding de schema, NÃO autorização de atribuição em lote; atribuição por lição é decisão da frente CCE (Content Designer decide primária/apoio com rationale, FPE ratifica, CPE codifica). Consumidores atuais ignoram o campo quando ausente e o compilador não o propaga para read models (propagação é fatia futura e dependente de contrato compatível)."
+      "description": "Mapeamento de competência do framework unificado (spec AID-3453 R1: primary + supporting[]; glossário R6). OPCIONAL por design: ausência = 'não mapeada' (default real, registrado no doc AID-3457 §2.4.1) — o campo é scaffolding de schema, NÃO autorização de atribuição em lote; atribuição por lição é decisão da frente CCE (Content Designer decide primária/apoio com rationale, FPE ratifica, CPE codifica). Consumidores atuais ignoram o campo quando ausente. lessons.ts NUNCA recebe este campo (saída byte-idêntica com ou sem ele); a projeção de competências para consumidores é o read model OPCIONAL separado competency-map.ts (spec AID-3514, flag --compile-competency; contrato em docs/curriculum/competency-read-model.md) — sem atainment e sem sincronia entre engines."
     },
     "prerequisites": {
       "type": "array",
