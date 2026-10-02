@@ -9,6 +9,7 @@
 | **Status** | Proposta (spec documental + testes de seam executáveis). Nenhum wiring de runtime nesta fatia. |
 | **Revisão** | r1 (2026-09-30): 3 correções doc-only do review LAE (comentário `51284f0a`, head revisto `3cd9fef2`): (1) §3/§9.5 — citação inexistente `catalog.mjs:100-124` corrigida (arquivo = 100 linhas, lista estática) e entrada estática `escola/` declarada (PR #616, fora da base); (2) invariante «propagação não bumpa `contentVersion`/`version`» adicionada (§7 gates das Fases 1–2 + §9.6); (3) §9.2 — inventário de consumidores de `lessons` confirmado pelo LAE substitui o «não conheço outro consumidor». §4/§5/§6/§8 intocados, conforme combinado. |
 | | **r2 (2026-10-02): reconciliação com a decisão S6** (comentário `618a37b1`, escopo delegado pelo Dani): **mecanismo selecionado = projeção em arquivo separado `competency-map.ts`** (PR #659, review LAE no head `3f636429`/comentário `5956348434`). A proposta in-band de §6.1–6.2 (`--with-competency`) e o PR #634 que a implementava ficam **superseded** — branches, commits, provas e histórico preservados; nenhum dos dois mecanismos é integrado ao outro e nenhum teste/proteção existente foi alterado para a decisão caber. §6/§7 reescritos para o mecanismo selecionado; contrato da Fase 2 explicitado (§7.1). §3/§4/§5/§8/§9/§10 e os testes de seam permanecem válidos (não redundantes). |
+| | **r2.1 (2026-10-02): condição única do review LAE r2 resolvida** (GO CONDICIONADO, review `5394585605` @ `86455d33`): §6.2–6.5 re-derivados para o mecanismo selecionado (porta `getCompetency` colapsada + `hasCompetencyEntry` §7.1(2)/(3); tipos/import de `competency-map.ts`; guard de `mapVersion` fail-closed §7.1(1); plano de testes re-ancorado no PR #659 e na Fase 2). Dupla numeração histórica resolvida (ex-«§6.2 validate.py» dentro do registro histórico renomeado §6.2.h). §5.1/§5.2 ganharam marcadores de registro superseded (samples in-band preservados como histórico, sem reescrita). Doc-only; nenhum teste/proteção alterado. |
 
 ## 1. Proveniência
 
@@ -150,6 +151,11 @@ competência (lição mapeada ≠ lição visível; lição não mapeada ≠ ocu
 
 ### 5.1 Read model (`lessons.ts`) — l01
 
+> r2.1 (registro): o sample «Após a Fase 1» abaixo é da proposta **in-band
+> original (SUPERSEDED pela decisão S6)** — preservado como histórico. Na Fase 1
+> selecionada (§6.1/PR #659), `lessons.ts` permanece **byte-idêntico para
+> sempre**; a leitura vive no mapa separado `competency-map.ts` (amostras §6.2–6.3).
+
 Hoje (base f36f8b94, com ou sem o YAML mapeado — saída idêntica):
 
 ```ts
@@ -188,20 +194,25 @@ Após a Fase 1 ativada (§7) — **mesma lição, campo opcional na posição do
 ```
 
 Lição **não mapeada** (ou planned no `CatalogLessonEntry`): idêntica ao «hoje» —
-a chave simplesmente não existe. `getCompetency("lXX") → undefined`.
+a chave simplesmente não existe. `getCompetency("lXX") → null` (colapsada,
+§7.1(2); a formulação `undefined` do r0 é histórica).
 
 ### 5.2 Catálogo (`modules[].lessons[]`)
 
 Hoje: 8 chaves exatas por entrada (`id`, `moduleId`, `title`,
 `estimatedMinutes`, `prerequisites`, `skillIds`, `status`, `hasContent`) —
-pinned por teste. Proposto: 9ª chave opcional `competency?` nas entradas
-`hasContent` mapeadas.
+pinned por teste. Proposto (in-band original, **SUPERSEDED** — registro
+histórico): 9ª chave opcional `competency?` nas entradas `hasContent`
+mapeadas; no mecanismo selecionado (§6.1) o catálogo permanece **nas 8
+chaves para sempre** e a leitura vive no mapa separado.
 
 ## 6. Mecanismo selecionado (r2 — decisão S6) e seam do consumidor
 
 > **r2:** a proposta original de §6.1–6.2 (9ª chave in-band via `--with-competency`,
 > implementada no PR #634) está **superseded** pela decisão S6 — mantida abaixo apenas
 > como registro histórico; **não integrar**. O mecanismo selecionado é o do PR #659.
+> **r2.1:** §6.2–6.5 re-derivados para o mecanismo selecionado (condição única do
+> review LAE `5394585605`); amostras in-band originais preservadas em §6.1.h/§6.2.h.
 
 ### 6.1 (selecionado) Projeção em arquivo separado — owner: CPE (implementado no PR #659)
 
@@ -214,7 +225,7 @@ pinned por teste. Proposto: 9ª chave opcional `competency?` nas entradas
 - `validate.py`: flag opt-in `--compile-competency OUTDIR`; fail closed (validação
   vermelha ⇒ nenhum arquivo escrito).
 - ~~6.1 original (in-band, superseded)~~ e ~~6.2 original (flag `--with-competency`,
-  superseded)~~ — ver PR #634 (histórico preservado).
+  superseded — renomeado §6.2.h)~~ — ver PR #634 (histórico preservado).
 
 ### 6.1.h Registro histórico — proposta in-band original (SUPERSEDED pela decisão S6; não integrar)
 
@@ -291,7 +302,7 @@ def compile_track(track_dir, outdir, validated=None, include_competency=False):
 E `_catalog_entries` ganha o join (entrada `competency` apenas quando
 `hasContent` e mapeada), preservando as 8 chaves quando ausente.
 
-### 6.2 `curriculum/ai-literacy/tools/validate.py` (owner: CPE)
+### 6.2.h (registro histórico — in-band, SUPERSEDED) `curriculum/ai-literacy/tools/validate.py` (owner: CPE)
 
 **Antigo** (:22): `parser.add_argument("--compile", ...)` — sem opção.
 
@@ -303,36 +314,108 @@ help="propaga competency opcional para o read model (AID-3514; default: não pro
 
 ### 6.2 `engines/literacyDojo/src/application/ports.ts` (owner: Learner App Engineer)
 
+> r2.1 (condição do review LAE `5394585605`): amostras re-derivadas para o
+> mecanismo selecionado (§6.1 — mapa separado do PR #659). A formulação in-band
+> original (import de `../data/generated/lessons`) está preservada em §6.1.h.
+
 **Antigo** (:21-27): interface com 5 métodos (§3).
 
-**Novo**: acrescenta `getCompetency(lessonId: string): LessonCompetency | undefined;`
-com import do tipo em `../data/generated/lessons`.
-
-### 6.3 `engines/literacyDojo/src/adapters/generatedContentRepository.ts` (owner: LAE)
-
-**Novo** (implementação inteira do método):
+**Novo** (aditivo; tipos do **mapa separado** — `../data/generated/competency-map`;
+`lessons.ts` e seus tipos permanecem intocados):
 
 ```ts
-export function getCompetency(lessonId: string): LessonCompetency | undefined {
-  return lessons.find((lesson) => lesson.id === lessonId)?.competency;
+import type { CompetencyMapping } from "../data/generated/competency-map";
+
+export interface ContentRepository {
+  // …5 métodos atuais intocados…
+  /** Colapsada (§7.1(2)): null ≡ «não mapeada» — cobre `mapping: null` do mapa
+   *  e o `undefined` legado (sem mapa importado / sem entrada). Estado legítimo,
+   *  nunca erro; nunca infere `primary`; nunca lança. */
+  getCompetency(lessonId: string): CompetencyMapping | null;
+  /** §7.1(3): distingue «não mapeada» (entrada com mapping null) de
+   *  fora-do-universo (planned/ausente do mapa) — para decisão de render na
+   *  Fase 3 (dono UX). Não é gate de visibilidade (§4.5). */
+  hasCompetencyEntry(lessonId: string): boolean;
 }
 ```
 
-`undefined` para: id inexistente, lição sem o campo. Sem throw, sem fallback.
+### 6.3 `engines/literacyDojo/src/adapters/generatedContentRepository.ts` (owner: LAE)
+
+> r2.1 (condição do review LAE `5394585605`): amostra re-derivada — a leitura
+> vem do mapa separado; o sample in-band original (`lessons.find(…)?.competency`,
+> 9ª chave inexistente no mecanismo selecionado) está em §6.1.h.
+
+**Novo** (implementação inteira dos métodos; `lessons` intocado):
+
+```ts
+import {
+  competencyLessons,
+  competencyMapVersion,
+} from "../data/generated/competency-map";
+
+const SUPPORTED_MAP_VERSION = 1;
+if (competencyMapVersion !== SUPPORTED_MAP_VERSION) {
+  // §7.1(1): fail closed no load — nunca «melhor esforço», nunca fallback
+  // silencioso a undefined geral.
+  throw new Error(
+    `competency-map: mapVersion ${competencyMapVersion} não suportada ` +
+      `(suportada: ${SUPPORTED_MAP_VERSION}); regenere o read model (gen:content).`
+  );
+}
+
+export function getCompetency(lessonId: string): CompetencyMapping | null {
+  const entry = competencyLessons.find((item) => item.lessonId === lessonId);
+  return entry ? entry.mapping : null; // sem entrada colapsa em null (§7.1(2))
+}
+
+export function hasCompetencyEntry(lessonId: string): boolean {
+  return competencyLessons.some((item) => item.lessonId === lessonId);
+}
+```
+
+Lição mapeada → objeto exato `{ primary, supporting }` (nunca mutado nem
+reordenado — a ordem ratificada é preservada); entrada com `mapping: null` →
+`null`; **sem entrada** (planned / fora do universo da versão do mapa) → `null`
+em `getCompetency` **e** `false` em `hasCompetencyEntry` — a distinção vive
+exclusivamente na segunda porta (§7.1(3)). Sem throw no caminho de leitura,
+sem fallback inventado, sem aliasing com `skillIds` (§4.3), sem mutação de
+progresso/evidência/analytics (§4.2).
 
 ### 6.4 `docs/design/ai-literacy/content-contract.md` (owner: LAE; fora do meu write)
 
-Documentar o novo export/flag na seção de exports (:122+) e o estado ausente.
+> r2.1 (condição do review LAE `5394585605`): alvo re-derivado para o mecanismo
+> selecionado (mapa separado; a flag in-band `--with-competency` é histórico).
+
+Documentar na seção de exports: o **artefato separado** `competency-map.ts`
+(exports `competencyMapVersion`, `competencyMapContentVersion`,
+`competencyGlossary`, `competencyLessons`, `carriesAttainment`,
+`producerWritesMastered`; tipos `CompetencyId`, `CompetencyMapping`,
+`CompetencyLessonEntry`, `CompetencyGlossaryEntry`), a flag opt-in
+`--compile-competency OUTDIR` (default ausente; `lessons.ts` byte-idêntico
+**incondicionalmente**) e os estados de erro/ausência do consumidor antigo (§9).
 
 ### 6.5 Testes (junto com cada fase, mesma fatia)
 
-- Fase 1 (compiler): atualizar `test_competency_field_contract.py::test_compiler_output_is_byte_identical_with_and_without_field`
-  para fixar o DEFAULT (sem flag → idêntico) e adicionar o caso com flag
-  (campo presente, posição do YAML preservada, catálogo com join).
-  `test_ratified_competency_metadata.py` (inércia do corpus real) idem.
-- Fase 2 (engine): teste de porta/adapter — lição mapeada → objeto exato;
-  lição sem campo → `undefined`; id inexistente → `undefined`; prova de que
-  progresso/evidência/analytics não mudam (snapshot de `LearnerProgress`
+> r2.1 (condição do review LAE `5394585605`): plano re-ancorado no mecanismo
+> selecionado — a âncora in-band original (caso «com flag» no
+> `test_competency_field_contract.py`) é histórico (§6.1.h).
+
+- **Fase 1 — entregue no PR #659**: `tools/tests/test_competency_read_model_contract.py`
+  (10 testes, fixtures isoladas + corpus live): fidelidade verbatim 32/32 vs
+  testemunha ratificada (`RATIFIED` de `test_ratified_competency_metadata.py`);
+  byte-identidade de `lessons.ts` com/sem geração do mapa (default
+  incondicional); `mapping: null` como default explícito; glossário
+  completo/único espelhando o enum do `lesson.schema.json` (drift falha
+  fechado); ordem documental + pré-requisitos verbatim + **duas jornadas**
+  compiladas (filtro `PUBLIC_JOURNEY` no consumidor); constantes sem
+  atainment (`carriesAttainment`/`producerWritesMastered`); fail closed em
+  ID fora do glossário; determinismo; pin de `contentVersion` (invariante r1:
+  **sem bump**). Mais os 4 seam tests deste PR (§8).
+- Fase 2 (engine, PR próprio do LAE): porta/adapter — lição mapeada → objeto
+  exato; `mapping: null` → `null`; id inexistente/planned → `null` em
+  `getCompetency` **e** `false` em `hasCompetencyEntry`;
+  `competencyMapVersion` desconhecida → load falha fechado (§7.1(1)); prova
+  de que progresso/evidência/analytics não mudam (snapshot de `LearnerProgress`
   antes/depois de ler competências).
 - Este PR já entrega: `tools/tests/test_competency_read_seam.py` (§8).
 
