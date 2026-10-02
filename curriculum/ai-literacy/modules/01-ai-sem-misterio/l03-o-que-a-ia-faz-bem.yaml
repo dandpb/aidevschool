@@ -8,6 +8,9 @@ objective: "Distinguir tarefas em que a IA costuma ajudar (rascunhos, resumos, i
 estimatedMinutes: 4
 skillIds: [entender]
 prerequisites: [l02]
+competency:
+  primary: F1
+  supporting: []
 
 activities:
   - id: l03-a1

@@ -8,6 +8,9 @@ objective: "Escrever um pedido de código com contexto técnico suficiente e ava
 estimatedMinutes: 5
 skillIds: [codificar]
 prerequisites: [l15]
+competency:
+  primary: D3
+  supporting: [D4]
 
 activities:
   - id: l16-a1
