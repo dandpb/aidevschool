@@ -159,7 +159,14 @@ UI (src/screens, src/components)
   (`ProgressRepository.update` — transação única no
   `indexedDbProgressRepository`), fechando o TOCTOU multi-tab em que duas abas
   concorrentes na mesma lição podiam emitir 2× `lesson_completed`; repositórios
-  sem `update` degradam para o fluxo load→save histórico). `Services` compõe um **batch sink**
+  sem `update` degradam para o fluxo load→save histórico; §Emenda AID-3718
+  S5V2 §2a (residual de writers mistos): TODOS os escritores de progresso
+  (`startLesson`, `submitActivityAttempt`, `requestHint`, `retryActivity`,
+  `completeOnboarding`, `prepareHostedMission`, `startCheckpoint`,
+  `completeCheckpoint`, `completeReview`) serializam pelo mesmo `update`
+  atômico via `withProgress` — um snapshot stale de start/submit não pode mais
+  reverter `completed` ao persistir (stale-start/stale-submit), preservando a
+  contagem única de 1ª conclusão, `completedAt` e o agendamento de revisão). `Services` compõe um **batch sink**
   (`analyticsBatchSink.ts`: buffer 20 eventos / 15s / pagehide com beacon)
   quando `VITE_ANALYTICS_ENDPOINT` está definido — e o env é definido SOMENTE
   nos `[build.environment]` dos netlify.toml do literacy e do OS, sempre
