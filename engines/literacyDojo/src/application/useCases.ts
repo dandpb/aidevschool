@@ -312,46 +312,80 @@ export class LiteracyUseCases {
     durationSeconds?: number;
   }): Promise<CompleteLessonResult> {
     const lesson = this.requireLesson(input.lessonId);
+    const modules = this.deps.content.listModules();
+    const now = this.deps.clock();
+    if (typeof this.deps.progress.update === "function") {
+      // AID-3740 (S5-RACE): a transição de status — e portanto o
+      // `firstCompletion`, o bônus +25 e o `lesson_completed` — é decidida
+      // DENTRO da transação atômica contra o estado commitado, não contra um
+      // snapshot pré-carga. Duas abas concorrentes serializam no commit: a
+      // 2ª vê `completed` e degrada para replay (sem 2º evento, sem 2º
+      // bônus), preservando +10 por atividade e o replay sequencial.
+      let computed: CompleteLessonResult | undefined;
+      await this.deps.progress.update((current) => {
+        if (!current) {
+          throw new Error(
+            "Progresso não inicializado — o boot do app deve semear o estado inicial",
+          );
+        }
+        computed = completeLessonInDomain(current, lesson, input.bestScores, modules, now);
+        return computed.progress;
+      });
+      if (!computed) {
+        throw new Error("Falha invariante: o update atômico não devolveu o resultado computado");
+      }
+      const result = computed;
+      if (!result.outcome.completed) {
+        return result;
+      }
+      this.trackLessonCompleted(lesson, result, input.durationSeconds);
+      return result;
+    }
     const progress = await this.requireProgress();
-    const result = completeLessonInDomain(
-      progress,
-      lesson,
-      input.bestScores,
-      this.deps.content.listModules(),
-      this.deps.clock(),
-    );
+    const result = completeLessonInDomain(progress, lesson, input.bestScores, modules, now);
     if (!result.outcome.completed) {
       return result;
     }
     await this.deps.progress.save(result.progress);
-    // ADR-0009 (emendas AID-913 e AID-3731): exatamente 1× `lesson_completed`
-    // por LIÇÃO — emitido somente na primeira conclusão (transição de status
-    // para `completed`), após o progresso persistir. Replay/prática de lição
-    // concluída continua permitido e mensurável pelos eventos de engajamento
-    // (`lesson_started`, `activity_attempted` — e `review_*` no corredor),
-    // sem re-contar conclusões. Fire-and-forget — o contrato dos sinks é
-    // nunca lançar nem adiar a resposta; analytics nunca bloqueia a lição.
-    if (result.firstCompletion) {
-      this.deps.analytics.track(
-        buildLessonCompletedEvent(
-          {
-            sessionId: this.deps.analyticsIdentity.sessionId,
-            eventId: this.deps.analyticsIdentity.nextEventId(),
-          },
-          {
-            lessonId: lesson.id,
-            lessonVersion: lesson.version,
-            score: result.outcome.lessonScore,
-            durationSeconds: input.durationSeconds,
-          },
-          {
-            occurredAt: this.deps.clock().toISOString(),
-            contentVersion: this.deps.content.getContentVersion(),
-          },
-        ),
-      );
-    }
+    this.trackLessonCompleted(lesson, result, input.durationSeconds);
     return result;
+  }
+
+  /**
+   * ADR-0009 (emendas AID-913 e AID-3731): exatamente 1× `lesson_completed`
+   * por LIÇÃO — emitido somente na primeira conclusão (transição de status
+   * para `completed`), após o progresso persistir. Replay/prática de lição
+   * concluída continua permitido e mensurável pelos eventos de engajamento
+   * (`lesson_started`, `activity_attempted` — e `review_*` no corredor),
+   * sem re-contar conclusões. Fire-and-forget — o contrato dos sinks é
+   * nunca lançar nem adiar a resposta; analytics nunca bloqueia a lição.
+   */
+  private trackLessonCompleted(
+    lesson: LessonDefinition,
+    result: CompleteLessonResult,
+    durationSeconds: number | undefined,
+  ): void {
+    if (!result.firstCompletion) {
+      return;
+    }
+    this.deps.analytics.track(
+      buildLessonCompletedEvent(
+        {
+          sessionId: this.deps.analyticsIdentity.sessionId,
+          eventId: this.deps.analyticsIdentity.nextEventId(),
+        },
+        {
+          lessonId: lesson.id,
+          lessonVersion: lesson.version,
+          score: result.outcome.lessonScore,
+          durationSeconds,
+        },
+        {
+          occurredAt: this.deps.clock().toISOString(),
+          contentVersion: this.deps.content.getContentVersion(),
+        },
+      ),
+    );
   }
 
   /**

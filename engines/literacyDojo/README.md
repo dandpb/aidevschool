@@ -154,7 +154,12 @@ UI (src/screens, src/components)
   permanece permitido e NÃO re-emite `lesson_completed` nem re-concede o bônus
   de +25 XP — engajamento repetido é medido por `lesson_started`/
   `activity_attempted`, separando 1ª conclusão de prática; +10 por atividade
-  acertada inalterado, inclusive no replay). `Services` compõe um **batch sink**
+  acertada inalterado, inclusive no replay; §Emenda AID-3740 (S5-RACE): a
+  transição de status é decidida DENTRO do read-modify-write atômico
+  (`ProgressRepository.update` — transação única no
+  `indexedDbProgressRepository`), fechando o TOCTOU multi-tab em que duas abas
+  concorrentes na mesma lição podiam emitir 2× `lesson_completed`; repositórios
+  sem `update` degradam para o fluxo load→save histórico). `Services` compõe um **batch sink**
   (`analyticsBatchSink.ts`: buffer 20 eventos / 15s / pagehide com beacon)
   quando `VITE_ANALYTICS_ENDPOINT` está definido — e o env é definido SOMENTE
   nos `[build.environment]` dos netlify.toml do literacy e do OS, sempre
