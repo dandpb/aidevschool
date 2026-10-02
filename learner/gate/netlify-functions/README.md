@@ -7,23 +7,31 @@ so every file here ships on the next deploy of those sites — keep it deliberat
 
 | Function | Surface | Role |
 | --- | --- | --- |
-| `literacy-verify.mjs` | literacyDojo standalone | Independent verifier with the **fixed l02 v3 contract** (see below). |
+| `literacy-verify.mjs` | literacyDojo standalone | Independent verifier with the **fixed l02 v4 per-activity contract** (see below). |
 | `dojo-verification-bridge.mjs` | codexdojo-os pilot | Parity projection of the Python gate (teaching-game + literacy bridge, AID-415/449). |
 | `dojo-analytics-collector.mjs` | both surfaces | Same-origin analytics ingestion (AID-470/473, AID-913 O1). Never evidence, never gates. |
 | `_shared/literacy-corpus.mjs` | (bridge input) | **Generated** projection of `curriculum/ai-literacy/` — do not hand-edit; regenerate with `python3 curriculum/ai-literacy/tools/validate.py --compile-verifier <outdir>`. |
 
-## `literacy-verify.mjs` — fixed l02 v3 contract
+## `literacy-verify.mjs` — fixed l02 v4 contract (per activity)
 
 The LiteracyDojo standalone site calls this via
 `VITE_LITERACY_VERIFIER_URL = "/.netlify/functions/literacy-verify"`. It is the
-independent verifier for exactly one activity — `l02` v3 `l02-a1`
-(`output_comparison`, skills `entender`/`avaliar`) — and fails closed for anything
-else. It recomputes the verdict from the structured answer (never trusts producer
-`pass`/`score`/`deterministicChecks`), reports `verifier_version
-1-netlify-l02-v3`, and sets `producer_writes_mastered: false` /
+independent verifier for exactly one lesson — `l02` **v4**, activities `l02-a1`
+(`output_comparison`), `l02-a2` (`choice`), `l02-a3` (`sort`), skills
+`entender`/`avaliar` — and fails closed for anything else, including legacy v3
+records. It recomputes the verdict from the structured answer with the same
+per-type semantics as the producer domain
+(`engines/literacyDojo/src/domain/evaluation.ts`): a1 weighted checks
+(`betterOutputId`×2 + criteria + `noExtraCriteria`, score `round2(earned/5)`,
+pass = all); a2 one check per option id (`selected ∋ id === correct ∋ id`, score
+`round2(passed/3)`); a3 one check per position (`orderedIds[i] === expected[i]`,
+score `round2(passed/5)`); a2/a3 pass at fraction ≥ 0.75. It never trusts
+producer `pass`/`score`/`deterministicChecks`, reports `verifier_version
+1-netlify-l02-v4`, and sets `producer_writes_mastered: false` /
 `max_producer_claim: "completed"` (producer ≠ verifier). Unlike the bridge, its
-contract is deliberately **not** corpus-driven: l02 v3 is pinned until the journey
-moves on, so drift in either direction must be a reviewed change.
+contract is deliberately **not** corpus-driven: l02 v4 is pinned until the journey
+moves on, so drift in either direction must be a reviewed change (the v3→v4
+contract widening is AID-3717/AID-3733).
 
 Contract test (also wired in CI, `ci.yml` codexdojo-os job):
 
