@@ -1,0 +1,27 @@
+IDENTICAL dojotoday-active-unit-guidance: gitSha=fcf84d3e outcome=pass executor=automated
+IDENTICAL dojotoday-returning-next-day: gitSha=fcf84d3e outcome=pass executor=automated
+IDENTICAL literacy-corridor-gate-retry: gitSha=fcf84d3e outcome=pass executor=automated
+IDENTICAL literacy-corridor-grandfathered-return: gitSha=fcf84d3e outcome=pass executor=automated
+IDENTICAL literacy-corridor-happy-path: gitSha=fcf84d3e outcome=pass executor=automated
+IDENTICAL literacy-corridor-resume-mid-module: gitSha=fcf84d3e outcome=pass executor=automated
+IDENTICAL literacy-corridor-review-window: gitSha=fcf84d3e outcome=pass executor=automated
+IDENTICAL literacy-happy-path: gitSha=fcf84d3e outcome=pass executor=automated
+IDENTICAL literacy-resume: gitSha=fcf84d3e outcome=pass executor=automated
+IDENTICAL literacy-retry: gitSha=fcf84d3e outcome=pass executor=automated
+IDENTICAL minitown-explore-only: gitSha=fcf84d3e outcome=pass executor=automated
+IDENTICAL os-literacy-hosted-mission: gitSha=fcf84d3e outcome=pass executor=automated
+IDENTICAL os-literacy-returning-device: gitSha=fcf84d3e outcome=pass executor=automated
+IDENTICAL os-onboarding-track-choice: gitSha=fcf84d3e outcome=pass executor=automated
+IDENTICAL os-renderer-accessibility-recovery: gitSha=fcf84d3e outcome=pass executor=automated
+IDENTICAL os-returning-device: gitSha=fcf84d3e outcome=pass executor=automated
+IDENTICAL os-returning-recovery: gitSha=fcf84d3e outcome=pass executor=automated
+IDENTICAL os-verification-recovery: gitSha=fcf84d3e outcome=pass executor=automated
+IDENTICAL os-voxel-hosted-missions: gitSha=fcf84d3e outcome=pass executor=automated
+IDENTICAL os-voxel-returning-device: gitSha=fcf84d3e outcome=pass executor=automated
+IDENTICAL pixelquest-encounter-evidence: gitSha=fcf84d3e outcome=pass executor=automated
+IDENTICAL pixelquest-returning-evidence-handoff: gitSha=fcf84d3e outcome=pass executor=automated
+IDENTICAL voxel-standalone-loop: gitSha=fcf84d3e outcome=pass executor=automated
+IDENTICAL voxel-standalone-return-reentry: gitSha=fcf84d3e outcome=pass executor=automated
+
+Summary: 24/24 CI receipts identical to factory snapshot; problems: none
+Extra receipts not in snapshot: []

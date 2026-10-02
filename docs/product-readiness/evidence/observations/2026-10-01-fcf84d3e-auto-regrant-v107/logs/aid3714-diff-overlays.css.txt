@@ -1,0 +1,34 @@
+commit 419d44bcefba7132e0fb6de587eb7f5ddac6a3e2
+Author: dandpb <dandpb@users.noreply.github.com>
+Date:   Thu Oct 1 18:55:17 2026 -0400
+
+    fix(codexdojo-os): AID-3714 — anel :focus-visible explicito no input do mentor (S3-1 da lente L08/AID-3682)
+    
+    .mentor-box input { outline: 0 } empata em especificidade com input:focus-visible
+    da foundation e vence por ordem de @import, anulando o anel global. Regra explicita
+    .mentor-box input:focus-visible devolve o padrao dos botoes vizinhos (var(--cyan)
+    2px, offset 2px). Escopo minimo CSS-only; arquivos identicos entre main e rc/qa-c0-r2
+    (zero diff em overlays.css/foundation.css), merge limpo na linha RC futura.
+    
+    Reteste pontual FO-01 autorizado (so o afetado): dev server local do branch,
+    Chromium real 1280x800, Tab real ate o input (passo 7 do trail, mesmo passo da lente):
+    outline solid 2px rgb(77,216,208) offset 2px, borda inalterada, 0 page errors;
+    pixel check PIL confirma anel renderizado nas 4 bordas (454/470 h, 50/64 v).
+    Evidencia: aid3714-evidence/ (capture-log.jsonl, os-input-focused-fixed.png sha
+    ce34cf36, input-rect.json). Lint biome 162 files ok; build tsc+vite ok.
+
+diff --git a/engines/codexdojo-os-prototype/src/styles/overlays.css b/engines/codexdojo-os-prototype/src/styles/overlays.css
+index 58b20e90..c329eff6 100644
+--- a/engines/codexdojo-os-prototype/src/styles/overlays.css
++++ b/engines/codexdojo-os-prototype/src/styles/overlays.css
+@@ -67,6 +67,10 @@
+ .prompt-chips button:hover { background: #172238; color: #fff; }
+ .mentor-box form { display: grid; grid-template-columns: 1fr 32px; gap: 6px; margin-top: 8px; }
+ .mentor-box input { min-width: 0; height: 32px; padding: 0 9px; border: 1px solid var(--line); border-radius: 7px; outline: 0; background: #0b1220; color: #fff; font-size: 9px; }
++/* AID-3714 (S3-1 da lente L08/AID-3682): o outline:0 acima empata em especificidade
++   com input:focus-visible da foundation e vence por ordem de @import — anel explícito
++   devolvido aqui (mesmo padrão cyan 2px dos botões vizinhos). */
++.mentor-box input:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+ .mentor-box form button { width: 32px; height: 32px; border: 0; border-radius: 7px; display: grid; place-items: center; background: var(--violet); color: #130f22; cursor: pointer; }
+ .mentor-box form svg { width: 14px; }
+ 

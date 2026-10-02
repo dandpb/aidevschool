@@ -1,0 +1,582 @@
+{
+  "assessmentId": "2026-10-01-fcf84d3e-candidate",
+  "assessorContext": "independent-readiness-review",
+  "gitSha": "fcf84d3e0e623aaa010fa8081e3781809736ed81",
+  "results": [
+    {
+      "artifacts": [
+        {
+          "path": "engines/dojoToday/playwright/readiness.spec.ts",
+          "sha256": "290f8a375e47eaee54240dfe343552b81be0b4f14ed3dfeeceb257b85127bb7b"
+        },
+        {
+          "path": "engines/dojoToday/tools/selfcheck.py",
+          "sha256": "5bd135cb3042ac8e3837d3e8e7bebac30a3351a3bb478cfb8be5df69d8a94b32"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-10-01-fcf84d3e-candidate/dojotoday-active-unit-guidance.json",
+          "sha256": "5ff1b91560e26242c74db6e10bfbb6d55e086eab3c306680f4c4a5fcc727b3f4"
+        }
+      ],
+      "executedAt": "2026-10-01T23:50:07Z",
+      "executor": "automated",
+      "gaps": [],
+      "gitSha": "fcf84d3e0e623aaa010fa8081e3781809736ed81",
+      "manualFingerprint": "029ce8f5006bfc657b7b635342ed4d59255061defeea510f48a55a107f3eba78",
+      "outcome": "pass",
+      "runId": "2026-10-01T23:50:07Z-dojotoday-active-unit-guidance-fcf84d3e",
+      "scenarioId": "dojotoday-active-unit-guidance",
+      "schemaVersion": 1,
+      "sourceFingerprint": "74adf30a7921c0ee65a8ba864d976d8ccbcd1e3d967280f6cf8b707234a28e61"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/dojoToday/playwright/continuity.spec.ts",
+          "sha256": "972d5ab321bdaed35d42743ea7602048759a9f98f0e7158393c3921a854a2100"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-10-01-fcf84d3e-candidate/dojotoday-returning-next-day.json",
+          "sha256": "26a6cc48a0b5d1bb088e63eefdd1cc647c415ae23f7c431c55d2a8342904ebc5"
+        }
+      ],
+      "executedAt": "2026-10-01T23:50:07Z",
+      "executor": "automated",
+      "gaps": [],
+      "gitSha": "fcf84d3e0e623aaa010fa8081e3781809736ed81",
+      "manualFingerprint": "029ce8f5006bfc657b7b635342ed4d59255061defeea510f48a55a107f3eba78",
+      "outcome": "pass",
+      "runId": "2026-10-01T23:50:07Z-dojotoday-returning-next-day-fcf84d3e",
+      "scenarioId": "dojotoday-returning-next-day",
+      "schemaVersion": 1,
+      "sourceFingerprint": "74adf30a7921c0ee65a8ba864d976d8ccbcd1e3d967280f6cf8b707234a28e61"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/literacyDojo/playwright/corridor.spec.ts",
+          "sha256": "5c8e70a100cfbe76b15163d14643808c7870b61c5c062873d324f29a9e797439"
+        },
+        {
+          "path": "engines/literacyDojo/src/screens/CheckpointScreen.tsx",
+          "sha256": "7a810fd213d7cfef28a3e58eba5d5ebf01959cf3b7cb6ff9b57067159b0563f1"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-10-01-fcf84d3e-candidate/literacy-corridor-gate-retry.json",
+          "sha256": "a74b974784f211fc7852d210e6f1256574e9d14979218ac40de8aabd6abc1c9d"
+        }
+      ],
+      "executedAt": "2026-10-01T23:51:02Z",
+      "executor": "automated",
+      "gaps": [],
+      "gitSha": "fcf84d3e0e623aaa010fa8081e3781809736ed81",
+      "manualFingerprint": "571bff9702625be2e9b4f03bd0b2cc9dde09f13819cde60272ac80ed8279274d",
+      "outcome": "pass",
+      "runId": "2026-10-01T23:51:02Z-literacy-corridor-gate-retry-fcf84d3e",
+      "scenarioId": "literacy-corridor-gate-retry",
+      "schemaVersion": 1,
+      "sourceFingerprint": "41248b79765a69bf206913bbf56bc617137155a0c5968a8ca031098228c72055"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/literacyDojo/playwright/corridor.spec.ts",
+          "sha256": "5c8e70a100cfbe76b15163d14643808c7870b61c5c062873d324f29a9e797439"
+        },
+        {
+          "path": "engines/literacyDojo/src/domain/migration.ts",
+          "sha256": "70ef0724782f9dad7340311c5f9d16eda6e70c74a6d480e0592d2b2510aa5c63"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-10-01-fcf84d3e-candidate/literacy-corridor-grandfathered-return.json",
+          "sha256": "c06f48b020b37a7b45c26d58443466f748267cdf090649bd1a3470caaf27e083"
+        }
+      ],
+      "executedAt": "2026-10-01T23:51:02Z",
+      "executor": "automated",
+      "gaps": [],
+      "gitSha": "fcf84d3e0e623aaa010fa8081e3781809736ed81",
+      "manualFingerprint": "571bff9702625be2e9b4f03bd0b2cc9dde09f13819cde60272ac80ed8279274d",
+      "outcome": "pass",
+      "runId": "2026-10-01T23:51:02Z-literacy-corridor-grandfathered-return-fcf84d3e",
+      "scenarioId": "literacy-corridor-grandfathered-return",
+      "schemaVersion": 1,
+      "sourceFingerprint": "41248b79765a69bf206913bbf56bc617137155a0c5968a8ca031098228c72055"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/literacyDojo/playwright/corridor.spec.ts",
+          "sha256": "5c8e70a100cfbe76b15163d14643808c7870b61c5c062873d324f29a9e797439"
+        },
+        {
+          "path": "engines/literacyDojo/src/domain/checkpoints.ts",
+          "sha256": "2888b64c69013ca957e0adb211c893b7fb7f44f3e5289aa60bb7d9fe745ba7f1"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-10-01-fcf84d3e-candidate/literacy-corridor-happy-path.json",
+          "sha256": "15128a4601a966a9e8e0c96628577182c0b505dffb05f6a660686fee8fc208a2"
+        }
+      ],
+      "executedAt": "2026-10-01T23:51:02Z",
+      "executor": "automated",
+      "gaps": [],
+      "gitSha": "fcf84d3e0e623aaa010fa8081e3781809736ed81",
+      "manualFingerprint": "571bff9702625be2e9b4f03bd0b2cc9dde09f13819cde60272ac80ed8279274d",
+      "outcome": "pass",
+      "runId": "2026-10-01T23:51:02Z-literacy-corridor-happy-path-fcf84d3e",
+      "scenarioId": "literacy-corridor-happy-path",
+      "schemaVersion": 1,
+      "sourceFingerprint": "41248b79765a69bf206913bbf56bc617137155a0c5968a8ca031098228c72055"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/literacyDojo/playwright/corridor.spec.ts",
+          "sha256": "5c8e70a100cfbe76b15163d14643808c7870b61c5c062873d324f29a9e797439"
+        },
+        {
+          "path": "engines/literacyDojo/src/domain/trackQueries.ts",
+          "sha256": "141d1091c6af4a0c5e03ebc81acaa3e24598ffaaae78017f849e6773e941b67e"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-10-01-fcf84d3e-candidate/literacy-corridor-resume-mid-module.json",
+          "sha256": "7f918a073bb470041713af36a5ae2ac034604e59da2e4522f38ee20622ac8f75"
+        }
+      ],
+      "executedAt": "2026-10-01T23:51:02Z",
+      "executor": "automated",
+      "gaps": [],
+      "gitSha": "fcf84d3e0e623aaa010fa8081e3781809736ed81",
+      "manualFingerprint": "571bff9702625be2e9b4f03bd0b2cc9dde09f13819cde60272ac80ed8279274d",
+      "outcome": "pass",
+      "runId": "2026-10-01T23:51:02Z-literacy-corridor-resume-mid-module-fcf84d3e",
+      "scenarioId": "literacy-corridor-resume-mid-module",
+      "schemaVersion": 1,
+      "sourceFingerprint": "41248b79765a69bf206913bbf56bc617137155a0c5968a8ca031098228c72055"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/literacyDojo/playwright/corridor.spec.ts",
+          "sha256": "5c8e70a100cfbe76b15163d14643808c7870b61c5c062873d324f29a9e797439"
+        },
+        {
+          "path": "engines/literacyDojo/src/domain/progress.ts",
+          "sha256": "9a745e0a94f5dd1bae11f2337eca143f0cc3f6fa57b83fe3e421c2a5b7087954"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-10-01-fcf84d3e-candidate/literacy-corridor-review-window.json",
+          "sha256": "fbf83247cafccbc8da930fd1cf1eb759fc32613656c0a5a95faf713afc0f3bc1"
+        }
+      ],
+      "executedAt": "2026-10-01T23:51:02Z",
+      "executor": "automated",
+      "gaps": [],
+      "gitSha": "fcf84d3e0e623aaa010fa8081e3781809736ed81",
+      "manualFingerprint": "571bff9702625be2e9b4f03bd0b2cc9dde09f13819cde60272ac80ed8279274d",
+      "outcome": "pass",
+      "runId": "2026-10-01T23:51:02Z-literacy-corridor-review-window-fcf84d3e",
+      "scenarioId": "literacy-corridor-review-window",
+      "schemaVersion": 1,
+      "sourceFingerprint": "41248b79765a69bf206913bbf56bc617137155a0c5968a8ca031098228c72055"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/literacyDojo/playwright/vertical-slice.spec.ts",
+          "sha256": "45e53c9d3c0d9b36ca44b5b1e69c2bcbeba1a5ea4c51c766359b112b6e4bf73c"
+        },
+        {
+          "path": "engines/literacyDojo/src/domain/progress.ts",
+          "sha256": "9a745e0a94f5dd1bae11f2337eca143f0cc3f6fa57b83fe3e421c2a5b7087954"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-10-01-fcf84d3e-candidate/literacy-happy-path.json",
+          "sha256": "a6958fb83a3b76e60984fc9a93029564619aa0c3f3d762c0252e018cb0a8ecd3"
+        }
+      ],
+      "executedAt": "2026-10-01T23:51:02Z",
+      "executor": "automated",
+      "gaps": [],
+      "gitSha": "fcf84d3e0e623aaa010fa8081e3781809736ed81",
+      "manualFingerprint": "63d81c0960c54ed315306959bf663a689c1713854d95f9dcbeec5c5297c831ad",
+      "outcome": "pass",
+      "runId": "2026-10-01T23:51:02Z-literacy-happy-path-fcf84d3e",
+      "scenarioId": "literacy-happy-path",
+      "schemaVersion": 1,
+      "sourceFingerprint": "84d63caaafaaa9c1a1d40eb61bd1f8d426c5d122d359db1ef76684abcb1eb0b6"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/literacyDojo/playwright/vertical-slice.spec.ts",
+          "sha256": "45e53c9d3c0d9b36ca44b5b1e69c2bcbeba1a5ea4c51c766359b112b6e4bf73c"
+        },
+        {
+          "path": "engines/literacyDojo/src/adapters/indexedDbProgressRepository.ts",
+          "sha256": "44fd0ee8ff33b518edbdb4ea52e9465fdd94b590576b635deec7082b63c0bbc9"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-10-01-fcf84d3e-candidate/literacy-resume.json",
+          "sha256": "8c2bcd2e1317ecda1d33b53df4cd0e3c1b8aff95c535c85adadfc9f79640e991"
+        }
+      ],
+      "executedAt": "2026-10-01T23:51:02Z",
+      "executor": "automated",
+      "gaps": [],
+      "gitSha": "fcf84d3e0e623aaa010fa8081e3781809736ed81",
+      "manualFingerprint": "63d81c0960c54ed315306959bf663a689c1713854d95f9dcbeec5c5297c831ad",
+      "outcome": "pass",
+      "runId": "2026-10-01T23:51:02Z-literacy-resume-fcf84d3e",
+      "scenarioId": "literacy-resume",
+      "schemaVersion": 1,
+      "sourceFingerprint": "84d63caaafaaa9c1a1d40eb61bd1f8d426c5d122d359db1ef76684abcb1eb0b6"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/literacyDojo/playwright/vertical-slice.spec.ts",
+          "sha256": "45e53c9d3c0d9b36ca44b5b1e69c2bcbeba1a5ea4c51c766359b112b6e4bf73c"
+        },
+        {
+          "path": "engines/literacyDojo/src/domain/lessonSession.ts",
+          "sha256": "51276032a7547d9da2fc4c83e25e8f46968e50a95f87dfdb3afdca56fb0a59c3"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-10-01-fcf84d3e-candidate/literacy-retry.json",
+          "sha256": "a469012a7814fd121496a0a90377bc326964c45b76a1e0b9497f050958dcc8bb"
+        }
+      ],
+      "executedAt": "2026-10-01T23:51:02Z",
+      "executor": "automated",
+      "gaps": [],
+      "gitSha": "fcf84d3e0e623aaa010fa8081e3781809736ed81",
+      "manualFingerprint": "63d81c0960c54ed315306959bf663a689c1713854d95f9dcbeec5c5297c831ad",
+      "outcome": "pass",
+      "runId": "2026-10-01T23:51:02Z-literacy-retry-fcf84d3e",
+      "scenarioId": "literacy-retry",
+      "schemaVersion": 1,
+      "sourceFingerprint": "84d63caaafaaa9c1a1d40eb61bd1f8d426c5d122d359db1ef76684abcb1eb0b6"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/miniTown/README.md",
+          "sha256": "889415e108b28bd7160961387970e6f2535f3c88b54baf37ae2f53c30f612645"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-10-01-fcf84d3e-candidate/minitown-explore-only.json",
+          "sha256": "bc2bdb344553f71c609739e828670a58bd88000a1a57943b3f24ac36767ddb1d"
+        }
+      ],
+      "executedAt": "2026-10-01T23:50:01Z",
+      "executor": "automated",
+      "gaps": [],
+      "gitSha": "fcf84d3e0e623aaa010fa8081e3781809736ed81",
+      "manualFingerprint": "3bcbd6c38ceea61bb999c9d395e381aca7d42446d216b36982bf056a7910d37b",
+      "outcome": "pass",
+      "runId": "2026-10-01T23:50:01Z-minitown-explore-only-fcf84d3e",
+      "scenarioId": "minitown-explore-only",
+      "schemaVersion": 1,
+      "sourceFingerprint": "436c149cc984456351e0d9f300b25a95cbbd907086ee8ae22f44da5c3ae6f77b"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/codexdojo-os-prototype/tests-pilot/pilot-build.smoke.spec.ts",
+          "sha256": "18c931e0f3a91818abb8e1339fb7b19baaccd862ba78d46b05db2671dfe236dd"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-10-01-fcf84d3e-candidate/os-literacy-hosted-mission.json",
+          "sha256": "aeb179d729a097f9e0b1d8006214dd163f5c733a2f444a1a9ce87bb43dd07a71"
+        }
+      ],
+      "executedAt": "2026-10-01T23:54:15Z",
+      "executor": "automated",
+      "gaps": [],
+      "gitSha": "fcf84d3e0e623aaa010fa8081e3781809736ed81",
+      "manualFingerprint": "a064c2e45011c6ed9aee11bd9f4e4e8e2404a38c798303389c9431801f68cd4c",
+      "outcome": "pass",
+      "runId": "2026-10-01T23:54:15Z-os-literacy-hosted-mission-fcf84d3e",
+      "scenarioId": "os-literacy-hosted-mission",
+      "schemaVersion": 1,
+      "sourceFingerprint": "3177f4d87ce45337bfbe9cddefcfbf191c5aca9a8a533db84c06ff4959921c54"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/codexdojo-os-prototype/tests/chapter-continuity.smoke.spec.ts",
+          "sha256": "a0495300b8afee5829d05d6bafc7065a83f03ca5c2a1de8a016e40d2684b146c"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-10-01-fcf84d3e-candidate/os-literacy-returning-device.json",
+          "sha256": "4de9524d9e61a90ad3dd01c70b3bcb97afb579f093afbf21f6df8b0705df373e"
+        }
+      ],
+      "executedAt": "2026-10-01T23:54:15Z",
+      "executor": "automated",
+      "gaps": [],
+      "gitSha": "fcf84d3e0e623aaa010fa8081e3781809736ed81",
+      "manualFingerprint": "a064c2e45011c6ed9aee11bd9f4e4e8e2404a38c798303389c9431801f68cd4c",
+      "outcome": "pass",
+      "runId": "2026-10-01T23:54:15Z-os-literacy-returning-device-fcf84d3e",
+      "scenarioId": "os-literacy-returning-device",
+      "schemaVersion": 1,
+      "sourceFingerprint": "3177f4d87ce45337bfbe9cddefcfbf191c5aca9a8a533db84c06ff4959921c54"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/codexdojo-os-prototype/tests-pilot/pilot-build.smoke.spec.ts",
+          "sha256": "18c931e0f3a91818abb8e1339fb7b19baaccd862ba78d46b05db2671dfe236dd"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-10-01-fcf84d3e-candidate/os-onboarding-track-choice.json",
+          "sha256": "fb386106700a31bd75b31bc1c25704344f7d078d652bbfd6115f002edfa3f38c"
+        }
+      ],
+      "executedAt": "2026-10-01T23:54:15Z",
+      "executor": "automated",
+      "gaps": [],
+      "gitSha": "fcf84d3e0e623aaa010fa8081e3781809736ed81",
+      "manualFingerprint": "a064c2e45011c6ed9aee11bd9f4e4e8e2404a38c798303389c9431801f68cd4c",
+      "outcome": "pass",
+      "runId": "2026-10-01T23:54:15Z-os-onboarding-track-choice-fcf84d3e",
+      "scenarioId": "os-onboarding-track-choice",
+      "schemaVersion": 1,
+      "sourceFingerprint": "ee0ca9194d3f5acdb5a6c217f40ce475d66e37e13d0e3559f1967285fcd2e00b"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/codexdojo-os-prototype/tests/renderer-fallback.smoke.spec.ts",
+          "sha256": "234d41ef0ec2f5bdb564b4353bb10d91dfe692c27efa75d12e4d51e12c170f70"
+        },
+        {
+          "path": "engines/codexdojo-os-prototype/tests/accessibility.smoke.spec.ts",
+          "sha256": "f17717ce8d76b39e45d92b4c920252cd655525d19d15250a447087309a29253e"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-10-01-fcf84d3e-candidate/os-renderer-accessibility-recovery.json",
+          "sha256": "98de1b745d119334c194d1aaf2607e5c6d8625f7434371210c46d8106b91859a"
+        }
+      ],
+      "executedAt": "2026-10-01T23:54:15Z",
+      "executor": "automated",
+      "gaps": [],
+      "gitSha": "fcf84d3e0e623aaa010fa8081e3781809736ed81",
+      "manualFingerprint": "a064c2e45011c6ed9aee11bd9f4e4e8e2404a38c798303389c9431801f68cd4c",
+      "outcome": "pass",
+      "runId": "2026-10-01T23:54:15Z-os-renderer-accessibility-recovery-fcf84d3e",
+      "scenarioId": "os-renderer-accessibility-recovery",
+      "schemaVersion": 1,
+      "sourceFingerprint": "2b1456b0ff9ff0f4ce2c04e5f70258310168a741480691d7276f8bfaaa9bbca9"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/codexdojo-os-prototype/tests/chapter-continuity.smoke.spec.ts",
+          "sha256": "a0495300b8afee5829d05d6bafc7065a83f03ca5c2a1de8a016e40d2684b146c"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-10-01-fcf84d3e-candidate/os-returning-device.json",
+          "sha256": "d55992b35be991638083ebaf42eb0892899110949b516b761e09169c83fdd62c"
+        }
+      ],
+      "executedAt": "2026-10-01T23:54:15Z",
+      "executor": "automated",
+      "gaps": [],
+      "gitSha": "fcf84d3e0e623aaa010fa8081e3781809736ed81",
+      "manualFingerprint": "a064c2e45011c6ed9aee11bd9f4e4e8e2404a38c798303389c9431801f68cd4c",
+      "outcome": "pass",
+      "runId": "2026-10-01T23:54:15Z-os-returning-device-fcf84d3e",
+      "scenarioId": "os-returning-device",
+      "schemaVersion": 1,
+      "sourceFingerprint": "ee0ca9194d3f5acdb5a6c217f40ce475d66e37e13d0e3559f1967285fcd2e00b"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/codexdojo-os-prototype/tests/readiness-recovery.smoke.spec.ts",
+          "sha256": "6a5f97a178d969f1c239be3c80dcb4a06f5c34f27abcc1a8a94da009a86881ec"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-10-01-fcf84d3e-candidate/os-returning-recovery.json",
+          "sha256": "d8b16ea86f67df033488fb68993edcb174a2d1ba0ae5aa8125a8eec95a191acc"
+        }
+      ],
+      "executedAt": "2026-10-01T23:54:15Z",
+      "executor": "automated",
+      "gaps": [],
+      "gitSha": "fcf84d3e0e623aaa010fa8081e3781809736ed81",
+      "manualFingerprint": "a064c2e45011c6ed9aee11bd9f4e4e8e2404a38c798303389c9431801f68cd4c",
+      "outcome": "pass",
+      "runId": "2026-10-01T23:54:15Z-os-returning-recovery-fcf84d3e",
+      "scenarioId": "os-returning-recovery",
+      "schemaVersion": 1,
+      "sourceFingerprint": "ee0ca9194d3f5acdb5a6c217f40ce475d66e37e13d0e3559f1967285fcd2e00b"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/codexdojo-os-prototype/tests-pilot/pilot-build.smoke.spec.ts",
+          "sha256": "18c931e0f3a91818abb8e1339fb7b19baaccd862ba78d46b05db2671dfe236dd"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-10-01-fcf84d3e-candidate/os-verification-recovery.json",
+          "sha256": "ad466a30b7c66920ba22b844f8c89109694ec0b5add4c737e2ab7d86237c04bb"
+        }
+      ],
+      "executedAt": "2026-10-01T23:54:15Z",
+      "executor": "automated",
+      "gaps": [],
+      "gitSha": "fcf84d3e0e623aaa010fa8081e3781809736ed81",
+      "manualFingerprint": "a064c2e45011c6ed9aee11bd9f4e4e8e2404a38c798303389c9431801f68cd4c",
+      "outcome": "pass",
+      "runId": "2026-10-01T23:54:15Z-os-verification-recovery-fcf84d3e",
+      "scenarioId": "os-verification-recovery",
+      "schemaVersion": 1,
+      "sourceFingerprint": "3177f4d87ce45337bfbe9cddefcfbf191c5aca9a8a533db84c06ff4959921c54"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/codexdojo-os-prototype/tests-pilot/pilot-build.smoke.spec.ts",
+          "sha256": "18c931e0f3a91818abb8e1339fb7b19baaccd862ba78d46b05db2671dfe236dd"
+        },
+        {
+          "path": "engines/codexdojo-os-prototype/tests/dev-learning-slice.smoke.spec.ts",
+          "sha256": "88bc1ff50166f3e4474a2b75f3170ec482aacc54e025b8d754ef5aa3006595d0"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-10-01-fcf84d3e-candidate/os-voxel-hosted-missions.json",
+          "sha256": "7ae53a5a7935916461129a4e3b9bd740eb6fb48979672d0be6cc6e9758b73fe7"
+        }
+      ],
+      "executedAt": "2026-10-01T23:54:15Z",
+      "executor": "automated",
+      "gaps": [],
+      "gitSha": "fcf84d3e0e623aaa010fa8081e3781809736ed81",
+      "manualFingerprint": "a064c2e45011c6ed9aee11bd9f4e4e8e2404a38c798303389c9431801f68cd4c",
+      "outcome": "pass",
+      "runId": "2026-10-01T23:54:15Z-os-voxel-hosted-missions-fcf84d3e",
+      "scenarioId": "os-voxel-hosted-missions",
+      "schemaVersion": 1,
+      "sourceFingerprint": "2b1456b0ff9ff0f4ce2c04e5f70258310168a741480691d7276f8bfaaa9bbca9"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/codexdojo-os-prototype/tests/chapter-continuity.smoke.spec.ts",
+          "sha256": "a0495300b8afee5829d05d6bafc7065a83f03ca5c2a1de8a016e40d2684b146c"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-10-01-fcf84d3e-candidate/os-voxel-returning-device.json",
+          "sha256": "cced40fbea5ef6fa95aac6212338083b308362764d945670974baece3496463e"
+        }
+      ],
+      "executedAt": "2026-10-01T23:54:15Z",
+      "executor": "automated",
+      "gaps": [],
+      "gitSha": "fcf84d3e0e623aaa010fa8081e3781809736ed81",
+      "manualFingerprint": "a064c2e45011c6ed9aee11bd9f4e4e8e2404a38c798303389c9431801f68cd4c",
+      "outcome": "pass",
+      "runId": "2026-10-01T23:54:15Z-os-voxel-returning-device-fcf84d3e",
+      "scenarioId": "os-voxel-returning-device",
+      "schemaVersion": 1,
+      "sourceFingerprint": "2b1456b0ff9ff0f4ce2c04e5f70258310168a741480691d7276f8bfaaa9bbca9"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/pixelDojo/pixel-quest/playwright/pixel-quest.spec.ts",
+          "sha256": "6ca95cb53f241bea00f375d2bfb319fcf062c0486812389f7c14bd4033ba0cee"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-10-01-fcf84d3e-candidate/pixelquest-encounter-evidence.json",
+          "sha256": "e8c30f1d6cb018102fc6d51cf50dc3911136f0c95f16837f2aa56ff326068214"
+        }
+      ],
+      "executedAt": "2026-10-01T23:49:58Z",
+      "executor": "automated",
+      "gaps": [],
+      "gitSha": "fcf84d3e0e623aaa010fa8081e3781809736ed81",
+      "manualFingerprint": "029ce8f5006bfc657b7b635342ed4d59255061defeea510f48a55a107f3eba78",
+      "outcome": "pass",
+      "runId": "2026-10-01T23:49:58Z-pixelquest-encounter-evidence-fcf84d3e",
+      "scenarioId": "pixelquest-encounter-evidence",
+      "schemaVersion": 1,
+      "sourceFingerprint": "12e16e92619498e2c496c17ad2f7562533ee0b62c0bdcc4a5f86d7b2d487d39e"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/pixelDojo/pixel-quest/playwright/returning.spec.ts",
+          "sha256": "2caa9695d0d75958849fbe146512fdcb65ccf5e6067d2f03b38b5bdce31a153b"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-10-01-fcf84d3e-candidate/pixelquest-returning-evidence-handoff.json",
+          "sha256": "fc0a029d06dad6ec06bf08039737e38fe1a8b6be78408a7a59545e53ac9c7c2d"
+        }
+      ],
+      "executedAt": "2026-10-01T23:49:58Z",
+      "executor": "automated",
+      "gaps": [],
+      "gitSha": "fcf84d3e0e623aaa010fa8081e3781809736ed81",
+      "manualFingerprint": "029ce8f5006bfc657b7b635342ed4d59255061defeea510f48a55a107f3eba78",
+      "outcome": "pass",
+      "runId": "2026-10-01T23:49:58Z-pixelquest-returning-evidence-handoff-fcf84d3e",
+      "scenarioId": "pixelquest-returning-evidence-handoff",
+      "schemaVersion": 1,
+      "sourceFingerprint": "12e16e92619498e2c496c17ad2f7562533ee0b62c0bdcc4a5f86d7b2d487d39e"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/voxelDojo/catalog.json",
+          "sha256": "c255e9bcc25c01b03900092cd80b19334cade999d5f0b95fe7dce1f0d0500df4"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-10-01-fcf84d3e-candidate/voxel-standalone-loop.json",
+          "sha256": "6c949fe91af22eb87dcbd868d3c07603c5164d8e69a2a6d8e9ec5df5ffdec94b"
+        }
+      ],
+      "executedAt": "2026-10-01T23:53:12Z",
+      "executor": "automated",
+      "gaps": [],
+      "gitSha": "fcf84d3e0e623aaa010fa8081e3781809736ed81",
+      "manualFingerprint": "029ce8f5006bfc657b7b635342ed4d59255061defeea510f48a55a107f3eba78",
+      "outcome": "pass",
+      "runId": "2026-10-01T23:53:12Z-voxel-standalone-loop-fcf84d3e",
+      "scenarioId": "voxel-standalone-loop",
+      "schemaVersion": 1,
+      "sourceFingerprint": "ba8c8554255fe938a8a97babde0a03b71f9f3743f7031d7e89abb693caebd01a"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/voxelDojo/game-02-warehouse/playwright/warehouse.spec.ts",
+          "sha256": "c8161969f71428092ff0f4fd6b32bc10670d542a981857b7ef122444ce328c25"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-10-01-fcf84d3e-candidate/voxel-standalone-return-reentry.json",
+          "sha256": "fe60a986d0587737acc2f0d72179ca5213eb2402a17466111a208ff5fb3858c6"
+        }
+      ],
+      "executedAt": "2026-10-01T23:53:12Z",
+      "executor": "automated",
+      "gaps": [],
+      "gitSha": "fcf84d3e0e623aaa010fa8081e3781809736ed81",
+      "manualFingerprint": "029ce8f5006bfc657b7b635342ed4d59255061defeea510f48a55a107f3eba78",
+      "outcome": "pass",
+      "runId": "2026-10-01T23:53:12Z-voxel-standalone-return-reentry-fcf84d3e",
+      "scenarioId": "voxel-standalone-return-reentry",
+      "schemaVersion": 1,
+      "sourceFingerprint": "ba8c8554255fe938a8a97babde0a03b71f9f3743f7031d7e89abb693caebd01a"
+    }
+  ],
+  "revalidateBy": "2026-10-31",
+  "schemaVersion": 1,
+  "verifiedAt": "2026-10-01T23:54:47Z"
+}

@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 4,
+  "contentVersion": "2026-09-10.2",
+  "currentLessonId": "l03",
+  "lessonStatus": {
+    "l01": "locked",
+    "l02": "completed",
+    "l03": "available",
+    "l04": "locked",
+    "l05": "locked",
+    "l06": "locked",
+    "l07": "locked",
+    "l08": "locked",
+    "l09": "locked",
+    "l10": "locked",
+    "l11": "locked",
+    "l12": "locked",
+    "l13": "locked",
+    "l14": "locked",
+    "l18": "locked",
+    "l19": "locked",
+    "l20": "locked",
+    "l24": "locked",
+    "l25": "locked",
+    "l26": "locked",
+    "l30": "locked",
+    "l31": "locked",
+    "l32": "locked"
+  },
+  "moduleCheckpoints": {},
+  "skills": {
+    "entender": {
+      "skillId": "entender",
+      "attempts": 3,
+      "passes": 3,
+      "lastScore": 1,
+      "lastPracticedAt": "2026-10-01T23:50:32.940Z",
+      "nextReviewAt": "2026-10-02T23:50:33.007Z",
+      "reviewStage": 0
+    },
+    "avaliar": {
+      "skillId": "avaliar",
+      "attempts": 3,
+      "passes": 3,
+      "lastScore": 1,
+      "lastPracticedAt": "2026-10-01T23:50:32.940Z",
+      "nextReviewAt": "2026-10-02T23:50:33.007Z",
+      "reviewStage": 0
+    }
+  },
+  "xp": 55,
+  "streak": {
+    "current": 1,
+    "longest": 1,
+    "lastActivityDate": "2026-10-01"
+  },
+  "onboarding": {
+    "completed": true,
+    "goal": "save_time",
+    "context": "work",
+    "confidence": "medium",
+    "taskCategory": "scheduling",
+    "audience": "ia_pratica",
+    "mapInitial": {
+      "attempts": 3,
+      "hintRequested": false,
+      "retried": false,
+      "firstAttemptPassed": true
+    },
+    "route": "intermediate"
+  },
+  "counters": {
+    "attempts": 3
+  },
+  "achievements": [
+    {
+      "id": "first_lesson",
+      "unlockedAt": "2026-10-01T23:50:33.007Z"
+    }
+  ],
+  "dailyGoal": {
+    "date": "2026-10-01",
+    "xpEarned": 55
+  },
+  "applications": []
+}
