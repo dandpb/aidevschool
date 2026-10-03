@@ -195,6 +195,28 @@ describe("submitActivityAttempt", () => {
     expect(services.evidence.records[1].answer).toEqual(RIGHT_ANSWER);
   });
 
+  it("AID-3888: re-resposta pós-reload no mesmo dia não reconcede XP; evidência segue por tentativa", async () => {
+    const first = await services.useCases.submitActivityAttempt({
+      lessonId: lesson.id,
+      activityId,
+      answer: RIGHT_ANSWER,
+    });
+    expect(first.progress.xp).toBe(XP_PER_ACTIVITY_PASS);
+    // Reload (QA L20/AID-3694): lição volta à intro e a atividade é re-respondida
+    // ainda hoje — o progresso persistido atravessa o reload.
+    const reloaded = await services.useCases.submitActivityAttempt({
+      lessonId: lesson.id,
+      activityId,
+      answer: RIGHT_ANSWER,
+    });
+    expect(reloaded.evaluation.pass).toBe(true);
+    expect(reloaded.progress.xp).toBe(XP_PER_ACTIVITY_PASS);
+    expect(reloaded.progress.dailyGoal.xpEarned).toBe(XP_PER_ACTIVITY_PASS);
+    // Contrato de evidência intacto: 1 registro por tentativa avaliada.
+    expect(services.evidence.records).toHaveLength(2);
+    expect(reloaded.progress.counters.attempts).toBe(2);
+  });
+
   it("prompt builder persiste os valores por campo para verificação independente", async () => {
     // Transporte (RFC aceito 2026-09-17 / task C2): o texto livre viaja
     // limitado (1-2000/campo) para o verificador julgar contra a rubric —

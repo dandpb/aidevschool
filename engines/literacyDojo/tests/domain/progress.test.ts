@@ -3,14 +3,17 @@ import { modules } from "../../src/data/generated/lessons";
 import { lessons } from "../../src/data/generated/lessons";
 import {
   MAP_INITIAL_LESSON_ID,
+  XP_PER_ACTIVITY_PASS,
   XP_PER_LESSON_COMPLETE,
   applyAttemptToSkills,
   applyStreak,
   awardXp,
+  completeLesson,
   createInitialProgress,
   evaluateLessonCompletion,
   isLessonUnlocked,
   localDateKey,
+  recordActivityAttempt,
   reviewsDue,
   unlockNextReadyLesson,
 } from "../../src/domain/progress";
@@ -224,5 +227,102 @@ describe("xp", () => {
       date: localDateKey(NOW),
       xpEarned: XP_PER_LESSON_COMPLETE,
     });
+  });
+});
+
+describe("xp idempotente por alvo e data local (AID-3888, obs. QA L20/AID-3694)", () => {
+  const lesson = lessons.find((item) => item.id === "l01");
+  if (!lesson) throw new Error("l01 ausente");
+  const [a1, a2, a3] = lesson.activities;
+  const intervals = lesson.review.intervalsDays;
+  const pass = { pass: true, score: 1 };
+  const attempt = (
+    progress: ReturnType<typeof createInitialProgress>,
+    activityId: string,
+    now: Date,
+  ) =>
+    recordActivityAttempt(progress, {
+      lessonId: lesson.id,
+      activityId,
+      evaluation: pass,
+      skillIds: lesson.skillIds,
+      intervalsDays: intervals,
+      now,
+    });
+
+  it("mesma atividade aprovada 2× no mesmo dia paga XP 1× (reload não reconcede)", () => {
+    let progress = createInitialProgress(modules, "v1");
+    progress = attempt(progress, a1.id, NOW);
+    expect(progress.xp).toBe(XP_PER_ACTIVITY_PASS);
+    // Reload no meio da lição: a mesma atividade é re-respondida no mesmo dia.
+    progress = attempt(progress, a1.id, NOW);
+    expect(progress.xp).toBe(XP_PER_ACTIVITY_PASS);
+    expect(progress.xpAwards[`activity:${lesson.id}:${a1.id}`]).toBe(localDateKey(NOW));
+  });
+
+  it("atividades distintas no mesmo dia pagam cada uma 1×", () => {
+    let progress = createInitialProgress(modules, "v1");
+    progress = attempt(progress, a1.id, NOW);
+    progress = attempt(progress, a2.id, NOW);
+    expect(progress.xp).toBe(2 * XP_PER_ACTIVITY_PASS);
+  });
+
+  it("tentativa reprovada não paga; aprovação posterior no mesmo dia paga 1×", () => {
+    let progress = createInitialProgress(modules, "v1");
+    progress = recordActivityAttempt(progress, {
+      lessonId: lesson.id,
+      activityId: a1.id,
+      evaluation: { pass: false, score: 0.2 },
+      skillIds: lesson.skillIds,
+      intervalsDays: intervals,
+      now: NOW,
+    });
+    expect(progress.xp).toBe(0);
+    progress = attempt(progress, a1.id, NOW);
+    expect(progress.xp).toBe(XP_PER_ACTIVITY_PASS);
+  });
+
+  it("revisão espaçada em dia posterior paga novamente (meta diária permanece viva)", () => {
+    let progress = createInitialProgress(modules, "v1");
+    progress = attempt(progress, a1.id, NOW);
+    const nextDay = new Date(NOW.getTime() + DAY_MS);
+    progress = attempt(progress, a1.id, nextDay);
+    expect(progress.xp).toBe(2 * XP_PER_ACTIVITY_PASS);
+    expect(progress.xpAwards[`activity:${lesson.id}:${a1.id}`]).toBe(localDateKey(nextDay));
+  });
+
+  it("cenário QA L20: reload no meio da lição deixa de inflar XP (55, não 65)", () => {
+    let progress = createInitialProgress(modules, "v1");
+    // Pré-reload: a1 aprovada (10 XP).
+    progress = attempt(progress, a1.id, NOW);
+    // Pós-reload: lição reapresentada da intro; as 3 atividades re-executadas.
+    progress = attempt(progress, a1.id, NOW);
+    progress = attempt(progress, a2.id, NOW);
+    progress = attempt(progress, a3.id, NOW);
+    const allPassed = Object.fromEntries(
+      lesson.completion.requiredActivityIds.map((id) => [id, 1]),
+    );
+    const result = completeLesson(progress, lesson, allPassed, modules, NOW);
+    // 10 (a1, 1×) + 10 (a2) + 10 (a3) + 25 (conclusão) = 55 — sem re-concessão.
+    expect(result.progress.xp).toBe(3 * XP_PER_ACTIVITY_PASS + XP_PER_LESSON_COMPLETE);
+  });
+
+  it("bônus de conclusão é idempotente por lição e dia; replay em dia posterior paga", () => {
+    let progress = createInitialProgress(modules, "v1");
+    progress = attempt(progress, a1.id, NOW);
+    progress = attempt(progress, a2.id, NOW);
+    progress = attempt(progress, a3.id, NOW);
+    const allPassed = Object.fromEntries(
+      lesson.completion.requiredActivityIds.map((id) => [id, 1]),
+    );
+    const first = completeLesson(progress, lesson, allPassed, modules, NOW);
+    expect(first.progress.xp).toBe(3 * XP_PER_ACTIVITY_PASS + XP_PER_LESSON_COMPLETE);
+    // Replay da lição concluída no MESMO dia: atividades e bônus não reconcedem.
+    const sameDay = completeLesson(first.progress, lesson, allPassed, modules, NOW);
+    expect(sameDay.progress.xp).toBe(first.progress.xp);
+    // Replay no dia seguinte (revisita/revisão): bônus paga de novo.
+    const nextDay = new Date(NOW.getTime() + DAY_MS);
+    const replay = completeLesson(first.progress, lesson, allPassed, modules, nextDay);
+    expect(replay.progress.xp).toBe(first.progress.xp + XP_PER_LESSON_COMPLETE);
   });
 });

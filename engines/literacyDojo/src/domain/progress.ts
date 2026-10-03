@@ -2,7 +2,7 @@ import type { LessonDefinition, ModuleDefinition } from "../data/generated/lesso
 import { isLessonGateLocked } from "./checkpoints";
 import { nextReadyLessonId, readyLessonEntries } from "./track";
 
-export const PROGRESS_SCHEMA_VERSION = 4;
+export const PROGRESS_SCHEMA_VERSION = 5;
 export const MAP_INITIAL_LESSON_ID = "l02";
 
 /**
@@ -138,6 +138,14 @@ export type LearnerProgress = {
   moduleCheckpoints: Record<string, ModuleCheckpoint>;
   skills: Record<string, SkillPractice>;
   xp: number;
+  /**
+   * Razão de XP por atividade/lição (decisão AID-3888, obs. QA L20/AID-3694):
+   * `xpAwards[chave] = data local` do último dia em que a chave pagou XP.
+   * Mesma chave no mesmo dia local não paga de novo (reload/retry/replay não
+   * reconcedem); dia seguinte paga novamente (revisão espaçada mantém a meta
+   * diária alcançável). Só ids + data — sem respostas (storage.policy).
+   */
+  xpAwards: Record<string, string>;
   streak: { current: number; longest: number; lastActivityDate?: string };
   onboarding: OnboardingState;
   counters: { attempts: number };
@@ -184,6 +192,7 @@ export function createInitialProgress(
     moduleCheckpoints: {},
     skills: {},
     xp: 0,
+    xpAwards: {},
     streak: { current: 0, longest: 0 },
     onboarding: { completed: false },
     counters: { attempts: 0 },
@@ -315,6 +324,24 @@ export function awardXp(progress: LearnerProgress, amount: number, now: Date): L
     xpEarned: (progress.dailyGoal.date === today ? progress.dailyGoal.xpEarned : 0) + amount,
   };
   return { ...progress, xp: progress.xp + amount, dailyGoal };
+}
+
+/**
+ * XP idempotente por alvo e data local (decisão AID-3888): a mesma chave
+ * (`activity:<lessonId>:<activityId>` | `lesson:<lessonId>`) paga no máximo
+ * 1× por dia local. Fecha o vetor de re-concessão por reload/replay observado
+ * na QA L20 (AID-3694) sem tirar o XP das revisões espaçadas dos dias
+ * seguintes — granularidade alinhada à meta diária (DAILY_GOAL_XP).
+ */
+export function awardXpOncePerDay(
+  progress: LearnerProgress,
+  key: string,
+  amount: number,
+  now: Date,
+): LearnerProgress {
+  const today = localDateKey(now);
+  if (progress.xpAwards[key] === today) return progress;
+  return { ...awardXp(progress, amount, now), xpAwards: { ...progress.xpAwards, [key]: today } };
 }
 
 export type DailyGoalStatus = {
@@ -523,13 +550,15 @@ export function recordMapInitialRetry(progress: LearnerProgress): LearnerProgres
 
 /**
  * Registra uma tentativa de atividade: contador, metadados do Mapa Inicial,
- * prática de skills, sequência e XP. Não emite evidência/analytics — isso
- * continua nos casos de uso (produtor ≠ verificador; side effects isolados).
+ * prática de skills, sequência e XP. O XP da atividade é idempotente por
+ * (lição, atividade, data local) — AID-3888. Não emite evidência/analytics —
+ * isso continua nos casos de uso (produtor ≠ verificador; side effects isolados).
  */
 export function recordActivityAttempt(
   progress: LearnerProgress,
   input: {
     lessonId: string;
+    activityId: string;
     evaluation: { pass: boolean; score: number };
     skillIds: string[];
     intervalsDays: number[];
@@ -552,7 +581,14 @@ export function recordActivityAttempt(
     input.intervalsDays,
   );
   next = applyStreak(next, input.now);
-  if (input.evaluation.pass) next = awardXp(next, XP_PER_ACTIVITY_PASS, input.now);
+  if (input.evaluation.pass) {
+    next = awardXpOncePerDay(
+      next,
+      `activity:${input.lessonId}:${input.activityId}`,
+      XP_PER_ACTIVITY_PASS,
+      input.now,
+    );
+  }
   return next;
 }
 
@@ -594,7 +630,10 @@ export type CompleteLessonResult = {
 /**
  * Conclusão de lição: avalia, marca completo, aplica rota do onboarding no
  * Mapa Inicial, concede XP, agenda revisão, desbloqueia próxima lição,
- * muta currentLessonId e desbloqueia conquistas.
+ * muta currentLessonId e desbloqueia conquistas. O bônus de conclusão é
+ * idempotente por (lição, data local) — AID-3888: replay no mesmo dia não
+ * reconcede; replay em dia posterior paga de novo (revisita é comportamento
+ * de revisão legítimo).
  */
 export function completeLesson(
   progress: LearnerProgress,
@@ -618,7 +657,7 @@ export function completeLesson(
       onboarding: { ...next.onboarding, route: mapInitialRoute(next.onboarding.mapInitial) },
     };
   }
-  next = awardXp(next, XP_PER_LESSON_COMPLETE, now);
+  next = awardXpOncePerDay(next, `lesson:${lesson.id}`, XP_PER_LESSON_COMPLETE, now);
   next = scheduleReviewForLesson(next, lesson, now, 0);
   const unlocked = unlockNextReadyLesson(next, modules, lesson.id);
   next = unlocked.progress;

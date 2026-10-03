@@ -227,6 +227,7 @@ export class LiteracyUseCases {
     const now = this.deps.clock();
     const next = recordActivityAttempt(progress, {
       lessonId: lesson.id,
+      activityId: input.activityId,
       evaluation,
       skillIds: lesson.skillIds,
       intervalsDays: lesson.review.intervalsDays,
