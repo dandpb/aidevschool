@@ -122,6 +122,18 @@ describe("migrateProgress (forward-only)", () => {
     expect(migrated.lessonStatus.l03).toBe("completed");
   });
 
+  it("AID-3888: schema 4 → 5 acrescenta xpAwards vazio e preserva o XP acumulado", () => {
+    const progress = createInitialProgress(modules, contentVersion);
+    const { xpAwards: _omitted, ...v4Shape } = progress;
+    const preBump = { ...v4Shape, schemaVersion: 4, xp: 65 } as Record<string, unknown>;
+    const migrated = migrateProgress(preBump, contentVersion);
+    expect(migrated.schemaVersion).toBe(PROGRESS_SCHEMA_VERSION);
+    expect(migrated.xpAwards).toEqual({});
+    expect(migrated.xp).toBe(65);
+    // Registro vazio = nada pago hoje: a 1ª aprovação pós-migração paga normalmente.
+    expect(migrated.xpAwards["activity:l01:l01-a1"]).toBeUndefined();
+  });
+
   it("build antigo lê schema 4 → UnmigratableProgressError (forward-only, risco R2)", () => {
     const progress = createInitialProgress(modules, contentVersion);
     expect(() => migrateProgress({ ...progress, schemaVersion: 3 }, contentVersion)).not.toThrow();

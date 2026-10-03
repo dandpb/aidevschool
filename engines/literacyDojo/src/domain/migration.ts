@@ -9,6 +9,10 @@ import { type LearnerProgress, PROGRESS_SCHEMA_VERSION } from "./progress";
  *   predicado derivado (última lição do módulo concluída) — módulos fechados
  *   pré-bump ganham o desafio como OPCIONAL, e `completed` nunca é derivado
  *   sem tentativa avaliada.
+ * - schemaVersion 4 → 5: acrescenta `xpAwards` (idempotência de XP por alvo
+ *   e data local, decisão AID-3888/obs. QA L20 AID-3694). Registro vazio =
+ *   nenhum XP já pago hoje: o histórico granular não existia, e a primeira
+ *   aprovação/conclusão pós-migração paga normalmente no dia corrente.
  * - schemaVersion atual passa direto; versões desconhecidas lançam
  *   UnmigratableProgressError — o chamador decide (no boot do app: descarta e
  *   recomeça do estado inicial, nunca migra parcialmente em silêncio).
@@ -70,6 +74,11 @@ function migrateV3toV4(raw: Record<string, unknown>): Record<string, unknown> {
   return { ...raw, schemaVersion: 4, moduleCheckpoints: {} };
 }
 
+function migrateV4toV5(raw: Record<string, unknown>): Record<string, unknown> {
+  if (isRecord(raw.xpAwards)) return { ...raw, schemaVersion: 5 };
+  return { ...raw, schemaVersion: 5, xpAwards: {} };
+}
+
 export function migrateProgress(
   raw: unknown,
   contentVersion: string,
@@ -79,9 +88,15 @@ export function migrateProgress(
     throw new UnmigratableProgressError("estado salvo não é um objeto");
   }
   const version = raw.schemaVersion;
-  if (version !== PROGRESS_SCHEMA_VERSION && version !== 1 && version !== 2 && version !== 3) {
+  if (
+    version !== PROGRESS_SCHEMA_VERSION &&
+    version !== 1 &&
+    version !== 2 &&
+    version !== 3 &&
+    version !== 4
+  ) {
     throw new UnmigratableProgressError(
-      `schemaVersion ${String(version)} (esperado ${PROGRESS_SCHEMA_VERSION}, 1, 2 ou 3 migrável)`,
+      `schemaVersion ${String(version)} (esperado ${PROGRESS_SCHEMA_VERSION}, 1, 2, 3 ou 4 migrável)`,
     );
   }
   checkBaseShape(raw);
@@ -92,6 +107,7 @@ export function migrateProgress(
   }
   if (record.schemaVersion === 2) record = migrateV2toV3(record);
   if (record.schemaVersion === 3) record = migrateV3toV4(record);
+  if (record.schemaVersion === 4) record = migrateV4toV5(record);
 
   let progress = record as unknown as LearnerProgress;
 

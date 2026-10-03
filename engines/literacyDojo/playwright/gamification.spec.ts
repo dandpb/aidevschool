@@ -1,6 +1,11 @@
 import { expect, test } from "@playwright/test";
 import { isValidEvidenceRecord } from "../src/domain/evidence";
-import { DAILY_GOAL_XP, MAP_INITIAL_LESSON_ID } from "../src/domain/progress";
+import {
+  DAILY_GOAL_XP,
+  MAP_INITIAL_LESSON_ID,
+  XP_PER_ACTIVITY_PASS,
+  XP_PER_LESSON_COMPLETE,
+} from "../src/domain/progress";
 import {
   answerRight,
   backdateReviews,
@@ -75,6 +80,12 @@ test("revisão espaçada vencida: refaz a lição, emite evidência de revisão 
   expect(progress).toMatchObject({
     lessonStatus: { [MAP_INITIAL_LESSON_ID]: "completed" },
   });
-  // A revisão concede XP de atividade (3 passes), mas não XP de conclusão de lição (25).
-  expect(progress?.xp).toBe(85);
+  // AID-3888 (XP idempotente por alvo e dia local): a revisão vencida roda no
+  // MESMO dia real da execução inicial (backdateReviews só atrasa nextReviewAt),
+  // então os 3 re-passes não reconcedem XP de atividade e o bônus de conclusão
+  // tampouco se repete — o total permanece o da primeira execução. A evidência
+  // de revisão (context:"review") continua emitida por tentativa.
+  const firstRunXp = 3 * XP_PER_ACTIVITY_PASS + XP_PER_LESSON_COMPLETE;
+  expect(progress?.xp).toBe(firstRunXp);
+  expect(Object.keys(progress?.xpAwards ?? {})).toHaveLength(4);
 });

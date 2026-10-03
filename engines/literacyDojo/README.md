@@ -137,6 +137,16 @@ UI (src/screens, src/components)
 - **Respostas são transitórias:** reload no meio de uma atividade retoma no
   início da lição (granularidade da lição, não da resposta) — coerente com
   `storage.policy` e com a regra de não persistir respostas.
+- **XP é idempotente por alvo e dia local (decisão AID-3888, obs. QA
+  L20/AID-3694):** cada atividade aprovada paga `XP_PER_ACTIVITY_PASS` no
+  máximo 1× por (`lessonId`,`activityId`, data local); o bônus de conclusão
+  paga `XP_PER_LESSON_COMPLETE` no máximo 1× por (`lessonId`, data local).
+  Re-responder pós-reload, retry aprovado, replay e revisão no MESMO dia não
+  reconcedem XP (fecha o vetor de inflação por reload intencional); em dia
+  posterior a mesma atividade/lição paga de novo — revisitas alimentam a meta
+  diária (`DAILY_GOAL_XP`). O registro é só `chave → data` em
+  `progress.xpAwards` (schema 5): sem respostas, sem texto livre. Evidência e
+  analytics seguem por tentativa avaliada, inalterados.
 - **Ponte dev-only de evidência:** em `vite dev`, cada registro também vai para
   `window.__literacydojo.evidence` e `sessionStorage["literacydojo:evidence"]`
   (o spec Playwright valida o envelope a partir daí). Em build de produção só o

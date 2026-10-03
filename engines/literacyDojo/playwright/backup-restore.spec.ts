@@ -1,7 +1,11 @@
 import { createHash } from "node:crypto";
 import { copyFile, readFile } from "node:fs/promises";
 import { expect, test } from "@playwright/test";
-import { XP_PER_ACTIVITY_PASS, XP_PER_LESSON_COMPLETE } from "../src/domain/progress";
+import {
+  PROGRESS_SCHEMA_VERSION,
+  XP_PER_ACTIVITY_PASS,
+  XP_PER_LESSON_COMPLETE,
+} from "../src/domain/progress";
 import { answerRight, completeOnboarding, deleteProgress, readProgress } from "./support";
 
 /**
@@ -49,7 +53,7 @@ test("export→wipe→import é lossless: backup com sha256 restaura o progresso
   const exported = JSON.parse(exportedJson);
   const sha256 = createHash("sha256").update(exportedJson).digest("hex");
   expect(sha256).toMatch(/^[0-9a-f]{64}$/);
-  expect(exported.schemaVersion).toBe(4);
+  expect(exported.schemaVersion).toBe(PROGRESS_SCHEMA_VERSION);
   expect(exported.xp).toBe(EXPECTED_XP);
 
   // Export lossless: o JSON baixado equivale ao documento persistido no
