@@ -268,7 +268,12 @@
   overflow-y: auto;
 }
 
+/* AID-3849 (L23 DEFECT-1): the chooser nav must also size to its content —
+   keeping the base height:100% here made the 320×568 content overflow the
+   nav box and slide UNDER the session div (paint order), leaving the
+   switch-alert Cancel button without a pointer hit target. */
 .practice-standalone nav.practice-app {
+  height: auto;
   overflow: visible;
 }
 
