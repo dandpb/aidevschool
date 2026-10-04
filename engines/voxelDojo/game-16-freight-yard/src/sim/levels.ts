@@ -292,7 +292,12 @@ export function evaluateReplay(args: {
     .map((m) => m.offset)
     .sort((a, b) => a - b)
   const predicted = [...args.predictedOffsets].sort((a, b) => a - b)
-  const correctCount = predicted.filter((o) => truth.includes(o)).length
+  // Optimization: avoid array allocation from .filter().length
+  let correctCount = 0
+  for (let i = 0; i < predicted.length; i++) {
+    const o = predicted[i]
+    if (o !== undefined && truth.includes(o)) correctCount++
+  }
   const accuracy = truth.length === 0 ? 1 : correctCount / truth.length
   const exact = predicted.length === truth.length && predicted.every((o, i) => o === truth[i])
   return {

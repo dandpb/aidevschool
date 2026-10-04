@@ -283,7 +283,12 @@ export function evaluatePredictions(
     if (predictions[i] === wave[i]?.answer) correct++
   }
   const accuracy = wave.length === 0 ? 0 : correct / wave.length
-  const reachedHandlerCount = wave.filter((w) => w.answer === "reaches-handler").length
+  // Optimization: avoid array allocation from .filter().length
+  let reachedHandlerCount = 0
+  for (let i = 0; i < wave.length; i++) {
+    const w = wave[i]
+    if (w && w.answer === "reaches-handler") reachedHandlerCount++
+  }
   const lastAnswer = wave[wave.length - 1]?.answer ?? ""
   return {
     pass: accuracy >= 0.8,

@@ -109,7 +109,12 @@ function renderGauges(node: HTMLElement, state: GameState): void {
     node.innerHTML = ""
     return
   }
-  const waiting = state.queue.filter((t) => t.scheduledFor > state.now).length
+  // Optimization: avoid array allocation from .filter().length
+  let waiting = 0
+  for (let i = 0; i < state.queue.length; i++) {
+    const t = state.queue[i]
+    if (t && t.scheduledFor > state.now) waiting++
+  }
   node.innerHTML = `
     <p data-testid="gauge-queue">funil: ${escapeHtml(state.queue.length)}/${escapeHtml(state.level.capacity)}${escapeHtml(
       state.queue.length >= state.level.capacity ? " (CHEIO — 429 na próxima)" : "",
