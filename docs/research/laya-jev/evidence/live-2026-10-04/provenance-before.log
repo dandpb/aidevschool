@@ -1,0 +1,113 @@
+FFFFFFFFF.
+======================================================================
+FAIL: test_rejects_http_timing_on_laya (__main__.Provenance.test_rejects_http_timing_on_laya)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/aidevschool/docs/research/laya-jev/test_provenance.py", line 40, in test_rejects_http_timing_on_laya
+    row = copy.deepcopy(V2); row['http_roundtrip_ms'] = 0.1; self.rejected(row)
+                                                             ^^^^^^^^^^^^^^^^^^
+  File "/workspace/aidevschool/docs/research/laya-jev/test_provenance.py", line 21, in rejected
+    with self.assertRaises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_rejects_inconsistent_timing (__main__.Provenance.test_rejects_inconsistent_timing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/aidevschool/docs/research/laya-jev/test_provenance.py", line 49, in test_rejects_inconsistent_timing
+    row = copy.deepcopy(V2); row['warm_inference_ms'] = 100; self.rejected(row)
+                                                             ^^^^^^^^^^^^^^^^^^
+  File "/workspace/aidevschool/docs/research/laya-jev/test_provenance.py", line 21, in rejected
+    with self.assertRaises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_rejects_wrong_revision (__main__.Provenance.test_rejects_wrong_revision)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/aidevschool/docs/research/laya-jev/test_provenance.py", line 37, in test_rejects_wrong_revision
+    row = copy.deepcopy(V2); row['weights_revision'] = 'bogus'; self.rejected(row)
+                                                                ^^^^^^^^^^^^^^^^^^
+  File "/workspace/aidevschool/docs/research/laya-jev/test_provenance.py", line 21, in rejected
+    with self.assertRaises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_rejects_wrong_source (__main__.Provenance.test_rejects_wrong_source)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/aidevschool/docs/research/laya-jev/test_provenance.py", line 34, in test_rejects_wrong_source
+    row = copy.deepcopy(V2); row['source_commit'] = 'bogus'; self.rejected(row)
+                                                             ^^^^^^^^^^^^^^^^^^
+  File "/workspace/aidevschool/docs/research/laya-jev/test_provenance.py", line 21, in rejected
+    with self.assertRaises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_rejects_wrong_weights (__main__.Provenance.test_rejects_wrong_weights)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/aidevschool/docs/research/laya-jev/test_provenance.py", line 31, in test_rejects_wrong_weights
+    row = copy.deepcopy(V2); row['weights_sha256'] = '0'*64; self.rejected(row)
+                                                             ^^^^^^^^^^^^^^^^^^
+  File "/workspace/aidevschool/docs/research/laya-jev/test_provenance.py", line 21, in rejected
+    with self.assertRaises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_requires_corpus_digest (__main__.Provenance.test_requires_corpus_digest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/aidevschool/docs/research/laya-jev/test_provenance.py", line 28, in test_requires_corpus_digest
+    row = copy.deepcopy(V2); del row['corpus_sha256']; self.rejected(row)
+                                                       ^^^^^^^^^^^^^^^^^^
+  File "/workspace/aidevschool/docs/research/laya-jev/test_provenance.py", line 21, in rejected
+    with self.assertRaises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_requires_first_load_and_warmup (__main__.Provenance.test_requires_first_load_and_warmup)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/aidevschool/docs/research/laya-jev/test_provenance.py", line 46, in test_requires_first_load_and_warmup
+    row = copy.deepcopy(V2); row['load_ms'] = None; row['warmup_ms'] = None; self.rejected(row)
+                                                                             ^^^^^^^^^^^^^^^^^^
+  File "/workspace/aidevschool/docs/research/laya-jev/test_provenance.py", line 21, in rejected
+    with self.assertRaises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_requires_jev_http_timing (__main__.Provenance.test_requires_jev_http_timing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/aidevschool/docs/research/laya-jev/test_provenance.py", line 52, in test_requires_jev_http_timing
+    row = copy.deepcopy(V2); row['backend'] = 'jev'; self.rejected(row)
+                                                     ^^^^^^^^^^^^^^^^^^
+  File "/workspace/aidevschool/docs/research/laya-jev/test_provenance.py", line 21, in rejected
+    with self.assertRaises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_requires_local_warm_timing (__main__.Provenance.test_requires_local_warm_timing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/aidevschool/docs/research/laya-jev/test_provenance.py", line 43, in test_requires_local_warm_timing
+    row = copy.deepcopy(V2); row['warm_inference_ms'] = None; self.rejected(row)
+                                                              ^^^^^^^^^^^^^^^^^^
+  File "/workspace/aidevschool/docs/research/laya-jev/test_provenance.py", line 21, in rejected
+    with self.assertRaises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.002s
+
+FAILED (failures=9)

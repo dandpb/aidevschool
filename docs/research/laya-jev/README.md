@@ -1,8 +1,8 @@
 # Laya × Jev — pacote de retomada
 
-Este diretório preserva o experimento de 4 de outubro de 2026. O relatório e os logs são evidência histórica; os scripts abaixo são a interface portátil para continuar em outro checkout.
+Este diretório preserva o experimento de 4 de outubro de 2026, incluindo evidências históricas e as novas rodadas live. Os scripts abaixo permitem reproduzir em outro checkout.
 
-**Estado:** código instalado e testes locais passaram; nenhum checkpoint neural foi baixado ou executado. As chamadas reais a Hugging Face/TypeSafe falharam com HTTP 403 do proxy da instância anterior. A configuração exibida pelo usuário permitia todos os domínios, mas a política efetiva daquela execução continuava restrita. Verificar acesso efetivo na nova execução.
+**Estado atual:** os três checkpoints foram baixados nesta sessão, verificados e executados offline. A rodada do repositório concluiu 62 casos Laya e 62 Jev, com 142 respostas pareadas por digest; métricas em [REPORT.md](REPORT.md) e [evidence/live-2026-10-04/](evidence/live-2026-10-04/). O bloqueio 403 e os testes anteriores permanecem como histórico em [REPORT-historical.md](REPORT-historical.md).
 
 Leia [RESUME.md](RESUME.md) primeiro para continuar na conversa indicada pelo usuário. Leia [REPORT.md](REPORT.md) para a análise e [evidence/](evidence/) para os logs. Não confundir testes offline com resultados de qualidade dos modelos.
 
@@ -25,7 +25,7 @@ O download usa o manifesto upstream [checkpoint-manifest.json](checkpoint-manife
 
 ## Comparar com Jev
 
-Usar a credencial já configurada no processo ou em `.env` na raiz, ignorado pelo Git. A chave não foi incluída neste pacote. Nenhum comando abaixo exibe seu valor.
+Usar a credencial já configurada no processo ou em `.env` na raiz, ignorado pelo Git. `LAYA_JEV_ENV_FILE` permite carregar um arquivo externo autorizado sem mudar configuração de produção. A chave não foi incluída neste pacote. Nenhum comando abaixo exibe seu valor.
 
 ```sh
 .scratch/laya-jev/laya/.venv/bin/python docs/research/laya-jev/run_comparison.py --backend laya
@@ -38,7 +38,7 @@ Os defaults gravam novos resultados em `.scratch/laya-jev/output/`, fora do Git.
 
 O corpus congelado contém 62 casos, 220 perguntas, 142 respostas rotuladas e seis referências de engine preferida. Dados sintéticos e traduções correlacionadas limitam alegações de qualidade. O corpus não inclui labels independentes de perfil Dreyfus/Bloom ou recorrência no diário. Não regenerar `dataset.jsonl` durante uma rodada; o builder é a origem auditável do conjunto, não um passo obrigatório de execução.
 
-O script de análise padrão lê as duas tentativas históricas e retorna zero pares comparáveis. Para dados novos, passe `--files` explicitamente. A primeira chamada da comparação pode incluir carga do modelo; fazer uma rodada aquecida separada antes de declarar speedup. Não alterar gates, learner state, recibos canônicos ou limiares de produção com base neste piloto.
+O script de análise padrão lê as duas tentativas históricas e retorna zero pares comparáveis. Para dados novos, passe `--files` explicitamente. O runner v2 carrega e aquece cada checkpoint antes da medição: `load_ms`, `warmup_ms` e `warm_inference_ms` são separados; `elapsed_ms` inclui todas essas etapas quando ocorrem. Jev registra `http_roundtrip_ms`, incluindo inferência remota e transporte, que não são isoláveis sem telemetria do provedor. Não comparar esse valor como se fosse inferência no mesmo hardware. Não alterar gates, learner state, recibos canônicos ou limiares de produção com base neste piloto.
 
 ## Integridade
 
@@ -48,3 +48,14 @@ sha256sum -c SHA256SUMS.txt
 ```
 
 Em macOS, usar `shasum -a 256 -c SHA256SUMS.txt`. O manifesto cobre os artefatos versionados, sem incluir o próprio manifesto. Pesos, cache, venv e secrets ficam fora do commit.
+
+## Validação antes da análise
+
+O analyzer valida o corpus congelado e cada digest de entrada, IDs únicos, identidade do modelo retornado e respostas (chaves, tipos, valores finitos, opções e distribuições). Registros v2 exigem ainda corpus SHA, manifesto/revisão/source do checkpoint, routing e contrato de tempos. Evidência legada recebe `validation_scope=legacy_input_and_schema_only`, sem afirmar proveniência de pesos ou inferência aquecida. `paired_labelled_answers` conta somente respostas disponíveis tanto em Laya quanto em Jev; a cobertura de rodadas de subconjunto continua relativa aos 62 casos totais.
+
+```sh
+python3 docs/research/laya-jev/test_validation.py
+python3 docs/research/laya-jev/test_provenance.py
+```
+
+O analyzer também recusa sobrescrever summaries existentes. Os hashes são verificações de integridade e consistência dos arquivos, não assinaturas que provam autoria de um produtor externo.

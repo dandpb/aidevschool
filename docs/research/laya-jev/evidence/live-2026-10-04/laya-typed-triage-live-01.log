@@ -1,0 +1,14 @@
+/workspace/laya/laya/router.py:774: RuntimeWarning: laya: this checkpoint ships invalid temperatures or values outside [0.5, 5]; using choice:11+=0.10058280825614929 -> 0.5. Treat confidence from the affected entries as uncalibrated.
+  return Agent(repo, **kwargs)
+triage-00-en ok 4853.0
+triage-01-en ok 762.5
+triage-02-en ok 723.0
+triage-03-en ok 799.3
+triage-04-en ok 715.8
+triage-05-en ok 770.3
+triage-06-en ok 775.2
+triage-07-en ok 699.3
+triage-08-en ok 698.5
+triage-09-en ok 816.8
+triage-10-en ok 772.1
+triage-11-en ok 752.6

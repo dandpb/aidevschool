@@ -1,0 +1,61 @@
+FFFFFFF.
+======================================================================
+FAIL: test_reject_duplicate_id (__main__.EvidenceValidation.test_reject_duplicate_id)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/aidevschool/docs/research/laya-jev/test_validation.py", line 40, in test_reject_duplicate_id
+    self.assertNotEqual(self.analyze([RECORD, RECORD])[0], 0)
+AssertionError: 0 == 0
+
+======================================================================
+FAIL: test_reject_nonfinite_answer (__main__.EvidenceValidation.test_reject_nonfinite_answer)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/aidevschool/docs/research/laya-jev/test_validation.py", line 44, in test_reject_nonfinite_answer
+    self.assertEqual(self.analyze([row])[1], False)
+AssertionError: True != False
+
+======================================================================
+FAIL: test_reject_nonfinite_timing (__main__.EvidenceValidation.test_reject_nonfinite_timing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/aidevschool/docs/research/laya-jev/test_validation.py", line 60, in test_reject_nonfinite_timing
+    self.assertNotEqual(self.analyze([row])[0], 0)
+AssertionError: 0 == 0
+
+======================================================================
+FAIL: test_reject_tampered_digest (__main__.EvidenceValidation.test_reject_tampered_digest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/aidevschool/docs/research/laya-jev/test_validation.py", line 37, in test_reject_tampered_digest
+    self.assertEqual(self.analyze([row])[1], False)
+AssertionError: True != False
+
+======================================================================
+FAIL: test_reject_wrong_choice (__main__.EvidenceValidation.test_reject_wrong_choice)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/aidevschool/docs/research/laya-jev/test_validation.py", line 52, in test_reject_wrong_choice
+    self.assertEqual(self.analyze([row])[1], False)
+AssertionError: True != False
+
+======================================================================
+FAIL: test_reject_wrong_distribution (__main__.EvidenceValidation.test_reject_wrong_distribution)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/aidevschool/docs/research/laya-jev/test_validation.py", line 48, in test_reject_wrong_distribution
+    self.assertEqual(self.analyze([row])[1], False)
+AssertionError: True != False
+
+======================================================================
+FAIL: test_reject_wrong_type (__main__.EvidenceValidation.test_reject_wrong_type)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/aidevschool/docs/research/laya-jev/test_validation.py", line 56, in test_reject_wrong_type
+    self.assertEqual(self.analyze([row])[1], False)
+AssertionError: True != False
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.290s
+
+FAILED (failures=7)

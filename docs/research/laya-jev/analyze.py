@@ -5,6 +5,7 @@ import math
 import statistics
 from pathlib import Path
 from paths import ROOT, OUTPUT_ROOT
+from validation import load_corpus, validate_records
 
 
 def quantile(values,p):
@@ -30,11 +31,14 @@ def score_answer(question,answer,expected):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('--files',nargs='+');p.add_argument('--output',default=str(OUTPUT_ROOT/'summary.json'));args=p.parse_args()
-    cases={c['id']:c for c in map(json.loads,(ROOT/'dataset.jsonl').read_text().splitlines())}
+    cases, corpus_digest = load_corpus()
+    target=Path(args.output)
+    if target.exists(): raise SystemExit(f'Refusing to overwrite evidence: {target}')
     files=[Path(f) for f in args.files] if args.files else sorted((ROOT/'evidence').glob('*-*.jsonl'))
     reports={};paired={}
     for path in files:
         records=[json.loads(s) for s in path.read_text().splitlines() if s.strip()]
+        validate_records(records, cases, corpus_digest)
         successful=[r for r in records if r['status']=='ok'];details=[];groups={};score_errors=[];top_engine=[]
         for record in successful:
             c=cases[record['id']];answers=record['result']['answers']
@@ -44,7 +48,7 @@ def main():
                 if correct is not None:
                     for label in ['all',f'kind:{q["type"]}',f'language:{c["language"]}',f'suite:{c["suite"]}']:
                         groups.setdefault(label,[]).append(correct)
-                    paired.setdefault((c['id'],qid),{})[path.stem]=correct
+                    paired.setdefault((c['id'],qid),set()).add(record['backend'])
                 if q['type']=='score':score_errors.append(abs(a['score']-expected))
             if 'expected_top_engine' in c:
                 engine_scores={e['id']:answers[f'e{i}']['score'] for i,e in enumerate(c['state']['engines'])}
@@ -52,14 +56,19 @@ def main():
                 top_engine.append({'case':c['id'],'expected':c['expected_top_engine'],'ranked':ranked,'top1_correct':ranked[0]==c['expected_top_engine'],'top3_correct':c['expected_top_engine'] in ranked[:3]})
         latency=[r['elapsed_ms'] for r in successful]
         reports[path.stem]={'attempted_requests':len(records),'successful_requests':len(successful),'planned_requests':len(cases),'coverage':len(successful)/len(cases),'quality_measured':bool(successful),
+            'validation_scope':'v2_input_schema_checkpoint_timing' if successful and all(r.get('format_version') == 2 for r in successful) else 'legacy_input_and_schema_only',
             'accuracy':{k:{'n':len(v),'correct':sum(v),'accuracy':sum(v)/len(v),'wilson95':wilson(sum(v),len(v))} for k,v in groups.items()},
-            'score_mae':statistics.mean(score_errors) if score_errors else None,'latency_including_first_load_ms':{'p50':quantile(latency,.5),'p95':quantile(latency,.95)},
+            'score_mae':statistics.mean(score_errors) if score_errors else None,'elapsed_ms':{'p50':quantile(latency,.5),'p95':quantile(latency,.95)},
+            'timing':{field:{'n':len(values),'p50':quantile(values,.5),'p95':quantile(values,.95)} for field in ['load_ms','warmup_ms','warm_inference_ms','http_roundtrip_ms'] for values in [[r[field] for r in successful if r.get(field) is not None]]},
+            'responded_models':sorted({r['result']['model'] for r in successful}),
+            'selected_checkpoints':sorted({r['checkpoint'] for r in successful if r.get('checkpoint')}),
+            'truncated_cases':[r['id'] for r in successful if r['result'].get('usage',{}).get('truncated')],
             'errors':[{'id':r['id'],'error_class':r['error_class'],'error':r['error']} for r in records if r['status']!='ok'], 'details':details,'engine_rankings':top_engine}
-    paired_count=sum(len(v)>=2 for v in paired.values())
-    summary={'planned_requests':len(cases),'planned_questions':sum(len(c['questions']) for c in cases.values()),'labelled_answers':sum(len(c['expected']) for c in cases.values()),'paired_labelled_answers':paired_count,'results':reports,
-        'limitations':['Hand-authored diagnostic corpus; labels were not independently adjudicated.','Translated pairs are correlated; per-answer Wilson intervals are descriptive, not population claims.','First-call latency includes model loading for Laya and HTTP latency for Jev; cannot claim hardware-equivalent speedup.','No result means missing measurement; zero coverage is not zero model accuracy.']}
-    target=Path(args.output);target.parent.mkdir(parents=True,exist_ok=True)
-    target.write_text(json.dumps(summary,ensure_ascii=False,indent=2))
+    paired_count=sum(v == {'laya', 'jev'} for v in paired.values())
+    summary={'corpus_sha256':corpus_digest,'evidence_validated':True,'planned_requests':len(cases),'planned_questions':sum(len(c['questions']) for c in cases.values()),'labelled_answers':sum(len(c['expected']) for c in cases.values()),'paired_labelled_answers':paired_count,'results':reports,
+        'limitations':['Hand-authored diagnostic corpus; labels were not independently adjudicated.','Translated pairs are correlated; per-answer Wilson intervals are descriptive, not population claims.','HTTP roundtrip includes provider inference and transport; they cannot be decomposed without provider telemetry. Legacy elapsed-only records do not establish warm inference timing.','No result means missing measurement; zero coverage is not zero model accuracy.']}
+    target.parent.mkdir(parents=True,exist_ok=True)
+    with target.open('x') as handle: handle.write(json.dumps(summary,ensure_ascii=False,indent=2))
     print(json.dumps({'paired_labelled_answers':paired_count,'successful_requests':{k:v['successful_requests'] for k,v in reports.items()}},indent=2))
 
 if __name__=='__main__':main()

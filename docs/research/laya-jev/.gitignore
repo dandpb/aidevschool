@@ -2,3 +2,4 @@ __pycache__/
 hf-cache/
 # Curated historical logs are part of the reproducible handoff.
 !evidence/*.log
+!evidence/live-2026-10-04/*.log

@@ -6,6 +6,12 @@ Destino indicado pelo usuário: `codex://threads/01a1089e-eb9d-731a-8584-f166a10
 
 O usuário pediu baixar e rodar os três modelos do Laya localmente, compará-los com Jev nas tarefas do AI DevSchool e entregar relatório completo. Autorizou salvar/usar sua chave TypeSafe, instalar dependências e executar os modelos; pediu agora commit para continuar nessa outra conversa. Não pedir novamente essas autorizações. A credencial foi salva apenas no `.env` ignorado da instância anterior e não está no Git. Utilizar a credencial do processo/gerenciador de secrets do novo executor; não imprimir ou versionar valores.
 
+## Atualização live desta retomada
+
+A branch foi retomada a partir de `574805d395478e98e5f9a09ca67fdc7b9765a94e`. A rede efetiva permitiu Hugging Face e TypeSafe. Os três pesos já baixados nesta sessão foram reaproveitados com `LAYA_ROOT=/workspace/laya`, conferidos pelo manifesto, e o script do repositório executou todos offline. A comparação principal concluiu 62/62 requisições por backend: Laya 119/142, Jev 142/142; rankings 1/6 e 6/6. Veja `REPORT.md` e `evidence/live-2026-10-04/` para proveniência, timing e variantes. O relatório do handoff sem inferência foi preservado em `REPORT-historical.md`.
+
+Os próximos passos abaixo descrevem a retomada original e continuam úteis para reprodução. Corpus e hashes dos pesos permanecem fixados. As evidências v2 passam por validação independente do status declarado antes de análise. Esta execução não integra Laya em produção nem corrige os recibos canônicos.
+
 ## O que está preservado
 
 - Laya upstream: commit `8a6e1328cce2460a0e5aa348ad465bb1b5821cd2`, versão 0.3.27.
@@ -20,7 +26,7 @@ O usuário pediu baixar e rodar os três modelos do Laya localmente, compará-lo
 1. Conferir se o checkout contém este diretório e se a nova execução consegue acessar Hugging Face e TypeSafe mantendo o proxy/configuração próprios do ambiente. A instância anterior tinha política restrita apesar do editor mostrar todos os domínios. Não repetir pedidos de autorização nem confundir um 403 do proxy com erro da chave.
 2. Executar `bootstrap.sh` e `download_and_run_local.sh` conforme README. Baixar todos os pesos e verificar os hashes antes de declarar execução neural.
 3. Executar o corpus contra Laya local e Jev live. Preservar cada rodada com nomes novos em `.scratch/laya-jev/output/`; identificar a versão real respondida por Jev e separar os checkpoints Laya.
-4. Antes de analisar dados live, conferir os digests de entrada e o esquema de respostas contra o corpus congelado: o analyzer atual confia em `status=ok` produzido pelo runner, sem validar essa proveniência novamente. Depois avaliar acurácia/MAE/ranking por tarefa e idioma. Os 78 scores do catálogo não têm notas esperadas inventadas; as seis referências de engine servem para top-1/top-3.
+4. Antes de analisar dados live, conferir os digests de entrada e o esquema de respostas contra o corpus congelado: o analyzer do handoff confiava em `status=ok`; a versão atual valida novamente digests, esquema e proveniência v2 antes das métricas. Depois avaliar acurácia/MAE/ranking por tarefa e idioma. Os 78 scores do catálogo não têm notas esperadas inventadas; as seis referências de engine servem para top-1/top-3.
 5. Medir latência aquecida separadamente da carga de pesos e do transporte HTTP. Complementar com exemplos de perfil/diário revisados independentemente antes de inferir equivalência desses fluxos.
 6. Atualizar o relatório com resultados reais. Não afirmar vencedor ou qualidade medida até existirem respostas válidas dos dois lados. Não alterar estados/gates ou trocar o backend em produção como efeito deste experimento.
 
