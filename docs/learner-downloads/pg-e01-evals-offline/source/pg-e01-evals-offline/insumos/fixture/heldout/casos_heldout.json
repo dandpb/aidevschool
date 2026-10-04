@@ -1,0 +1,22 @@
+{
+  "meta": {
+    "pacote": "pg-e01-evals-offline (AID-3648)",
+    "conjunto": "heldout (casos NOVOS — abrir so DEPOIS de registrar a proposta de correcao)",
+    "aviso": "DADOS 100% SINTETICOS: tickets ficticios do PrismaDesk (SaaS inexistente), disjuntos do conjunto base (ids PD-H*). Nenhum modelo de IA real foi executado. Nao medem eficacia real.",
+    "rotulo_sintetico": true
+  },
+  "casos": [
+    { "id": "PD-H01", "texto": "Exportar fatura em PDF gera arquivo corrompido no Windows", "area": "tecnico" },
+    { "id": "PD-H02", "texto": "App nao abre no Linux depois da v4.3", "area": "tecnico" },
+    { "id": "PD-H03", "texto": "Notificacoes duplicadas no cliente desktop", "area": "tecnico" },
+    { "id": "PD-H04", "texto": "Backup manual falha no meio e nao retoma de onde parou", "area": "tecnico" },
+    { "id": "PD-H05", "texto": "Reembolso parcial da fatura de agosto nao apareceu no cartao", "area": "pagamento" },
+    { "id": "PD-H06", "texto": "Upgrade do plano cobrou 2x no Pix no mesmo dia", "area": "pagamento" },
+    { "id": "PD-H07", "texto": "Cancelamento feito mesmo assim gerou cobranca anual nova", "area": "pagamento" },
+    { "id": "PD-H08", "texto": "Transferir projetos para outra conta da holding — como proceder?", "area": "conta" },
+    { "id": "PD-H09", "texto": "Limitar permissoes de convidados no workspace", "area": "conta" },
+    { "id": "PD-H10", "texto": "2FA por SMS nao chega no novo numero de telefone", "area": "conta" },
+    { "id": "PD-H11", "texto": "Da para usar o app offline no celular?", "area": "uso" },
+    { "id": "PD-H12", "texto": "Como ativo o modo escuro nos relatorios?", "area": "uso" }
+  ]
+}

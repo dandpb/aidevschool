@@ -1,0 +1,23 @@
+{
+  "meta": {
+    "pacote": "pg-e01-evals-offline (AID-3648)",
+    "conjunto": "heldout",
+    "variante": "A = prompt v1 (em producao)",
+    "aviso": "SAIDAS 100% SINTETICAS: classificacoes autoralmente fixadas para simular o prompt v1 em casos novos. Nenhum modelo de IA real foi executado.",
+    "rotulo_sintetico": true
+  },
+  "predicoes": [
+    { "id": "PD-H01", "area": "tecnico" },
+    { "id": "PD-H02", "area": "uso" },
+    { "id": "PD-H03", "area": "tecnico" },
+    { "id": "PD-H04", "area": "tecnico" },
+    { "id": "PD-H05", "area": "tecnico" },
+    { "id": "PD-H06", "area": "pagamento" },
+    { "id": "PD-H07", "area": "pagamento" },
+    { "id": "PD-H08", "area": "tecnico" },
+    { "id": "PD-H09", "area": "conta" },
+    { "id": "PD-H10", "area": "conta" },
+    { "id": "PD-H11", "area": "conta" },
+    { "id": "PD-H12", "area": "uso" }
+  ]
+}
