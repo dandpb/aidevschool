@@ -1,0 +1,23 @@
+{
+  "spec_revision": "12",
+  "observed_spec_revision": "12",
+  "observations_current": true,
+  "provider": "cloud",
+  "desired_phase": "running",
+  "observed_phase": "running",
+  "failure": null,
+  "connectivity": "connected",
+  "network_policy": {
+    "mode": "restricted",
+    "state": "enforced",
+    "allowed_hosts": [],
+    "presets": [
+      "package_managers"
+    ]
+  },
+  "capabilities": [],
+  "secrets": [],
+  "runtime_variables": [],
+  "outbound_identities": [],
+  "redaction_note": "Account/instance identifiers omitted from the versioned handoff."
+}

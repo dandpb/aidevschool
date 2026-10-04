@@ -1,0 +1,4 @@
+No neural inference performed: local checkpoint files are missing.
+/workspace/laya/models/laya/model.safetensors
+/workspace/laya/models/laya-multilingual/model.safetensors
+/workspace/laya/models/laya-typed-decisions/model.safetensors

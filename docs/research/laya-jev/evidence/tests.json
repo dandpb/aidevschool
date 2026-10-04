@@ -1,0 +1,123 @@
+[
+  {
+    "command": [
+      "ruff",
+      "check",
+      "laya/",
+      "--select=E9,F63,F7,F82,F401,F811",
+      "--line-length=120"
+    ],
+    "exit_code": 0,
+    "log": "test-00.log"
+  },
+  {
+    "command": [
+      "python",
+      "-m",
+      "compileall",
+      "-q",
+      "laya/",
+      "tests/"
+    ],
+    "exit_code": 0,
+    "log": "test-01.log"
+  },
+  {
+    "command": [
+      "python",
+      "tests/test_router.py"
+    ],
+    "exit_code": 0,
+    "log": "test-02.log",
+    "passed_assertions": 703
+  },
+  {
+    "command": [
+      "python",
+      "tests/test_criteria.py"
+    ],
+    "exit_code": 0,
+    "log": "test-03.log",
+    "passed_assertions": 198
+  },
+  {
+    "command": [
+      "python",
+      "tests/test_hooks.py"
+    ],
+    "exit_code": null,
+    "status": "timeout",
+    "timeout_seconds": 120
+  },
+  {
+    "command": [
+      "python",
+      "tests/test_hooks_api.py"
+    ],
+    "exit_code": 0,
+    "seconds": 1.459702270996786,
+    "log": "test-05.log"
+  },
+  {
+    "command": [
+      "python",
+      "tests/test_confidence.py"
+    ],
+    "exit_code": 0,
+    "seconds": 1.5606173019987182,
+    "log": "test-06.log"
+  },
+  {
+    "command": [
+      "python",
+      "tests/test_revision_pinning.py"
+    ],
+    "exit_code": 0,
+    "seconds": 1.540120666999428,
+    "log": "test-07.log"
+  },
+  {
+    "command": [
+      "python",
+      "tests/test_criteria_normalization.py"
+    ],
+    "exit_code": 0,
+    "seconds": 1.3116019150002103,
+    "log": "test-08.log"
+  },
+  {
+    "command": [
+      "python",
+      "tests/test_option_order.py"
+    ],
+    "exit_code": 0,
+    "seconds": 1.3291228560010495,
+    "log": "test-09.log"
+  },
+  {
+    "command": [
+      "python",
+      "tests/test_hooks.py"
+    ],
+    "exit_code": 0,
+    "passed_assertions": 252,
+    "network_enabled": true,
+    "log": "hooks-with-network.log",
+    "resolves": "initial sandbox timeout"
+  },
+  {
+    "command": [
+      "python",
+      "-m",
+      "pytest",
+      "tests/test_serve.py",
+      "-q"
+    ],
+    "exit_code": 0,
+    "passed_tests": 247,
+    "skipped_tests": 1,
+    "seconds": 9.29,
+    "network_enabled": true,
+    "log": "laya-serve-tests-final.log"
+  }
+]

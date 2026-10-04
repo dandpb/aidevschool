@@ -1,0 +1,68 @@
+[
+  {
+    "language_expected": "en",
+    "state": "The customer was charged twice and requests a refund.",
+    "route": {
+      "model": "english",
+      "repo": "convaiinnovations/laya",
+      "reason": "English Latin text",
+      "detection": {
+        "script": "latin",
+        "script_profile": {
+          "latin": 1.0
+        },
+        "language": "en",
+        "is_english": true,
+        "language_undecided": false,
+        "diacritic_rate": 0.0,
+        "non_latin_fraction": 0.0,
+        "mixed_segment": null
+      },
+      "workflow": null
+    }
+  },
+  {
+    "language_expected": "pt",
+    "state": "O cliente foi cobrado duas vezes e solicita o reembolso.",
+    "route": {
+      "model": "multilingual",
+      "repo": "convaiinnovations/laya/multilingual",
+      "reason": "Latin script but language looks like 'pt', not English",
+      "detection": {
+        "script": "latin",
+        "script_profile": {
+          "latin": 1.0
+        },
+        "language": "pt",
+        "is_english": false,
+        "language_undecided": false,
+        "diacritic_rate": 0.0,
+        "non_latin_fraction": 0.0,
+        "mixed_segment": null
+      },
+      "workflow": null
+    }
+  },
+  {
+    "language_expected": "es",
+    "state": "El cliente solicita un reembolso porque fue cobrado dos veces.",
+    "route": {
+      "model": "multilingual",
+      "repo": "convaiinnovations/laya/multilingual",
+      "reason": "Latin script but language looks like 'es', not English",
+      "detection": {
+        "script": "latin",
+        "script_profile": {
+          "latin": 1.0
+        },
+        "language": "es",
+        "is_english": false,
+        "language_undecided": false,
+        "diacritic_rate": 0.0,
+        "non_latin_fraction": 0.0,
+        "mixed_segment": null
+      },
+      "workflow": null
+    }
+  }
+]

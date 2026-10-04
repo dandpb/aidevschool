@@ -1,0 +1,58 @@
+{
+  "planned_requests": 62,
+  "planned_questions": 220,
+  "labelled_answers": 142,
+  "paired_labelled_answers": 0,
+  "results": {
+    "jev-jev-latest": {
+      "attempted_requests": 1,
+      "successful_requests": 0,
+      "planned_requests": 62,
+      "coverage": 0.0,
+      "quality_measured": false,
+      "accuracy": {},
+      "score_mae": null,
+      "latency_including_first_load_ms": {
+        "p50": null,
+        "p95": null
+      },
+      "errors": [
+        {
+          "id": "triage-00-en",
+          "error_class": "URLError",
+          "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+        }
+      ],
+      "details": [],
+      "engine_rankings": []
+    },
+    "laya-auto": {
+      "attempted_requests": 1,
+      "successful_requests": 0,
+      "planned_requests": 62,
+      "coverage": 0.0,
+      "quality_measured": false,
+      "accuracy": {},
+      "score_mae": null,
+      "latency_including_first_load_ms": {
+        "p50": null,
+        "p95": null
+      },
+      "errors": [
+        {
+          "id": "triage-00-en",
+          "error_class": "ProxyError",
+          "error": "(MaxRetryError(\"HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /api/models/convaiinnovations/laya/revision/55cf4c4ebb4ebe31b2550e8bdf3bd21b99753851 (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel connection failed: 403 Forbidden')))\"), '(Request ID: 91f9f329-4d15-4c4f-aed8-cbc21256a501)')"
+        }
+      ],
+      "details": [],
+      "engine_rankings": []
+    }
+  },
+  "limitations": [
+    "Hand-authored diagnostic corpus; labels were not independently adjudicated.",
+    "Translated pairs are correlated; per-answer Wilson intervals are descriptive, not population claims.",
+    "First-call latency includes model loading for Laya and HTTP latency for Jev; cannot claim hardware-equivalent speedup.",
+    "No result means missing measurement; zero coverage is not zero model accuracy."
+  ]
+}

@@ -1,0 +1,4 @@
+__pycache__/
+hf-cache/
+# Curated historical logs are part of the reproducible handoff.
+!evidence/*.log

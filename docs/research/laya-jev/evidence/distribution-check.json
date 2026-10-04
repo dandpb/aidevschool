@@ -1,0 +1,13 @@
+{
+  "cloud_network_revision": 16,
+  "huggingface": "Denied by proxy: HTTP 403",
+  "modelscope": "Official upstream alternative; denied by proxy: HTTP 403",
+  "github": {
+    "releases_inspected": 30,
+    "assets_inspected": 56,
+    "checkpoint_assets_found": 0
+  },
+  "local_weights_found": false,
+  "neural_inference_performed": false,
+  "authorization": "User authorization already recorded; no additional approval requested"
+}

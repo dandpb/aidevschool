@@ -1,0 +1,13 @@
+{
+  "requested": [
+    "english",
+    "multilingual",
+    "typed-decisions"
+  ],
+  "execution_device": "cpu",
+  "neural_inference_successful": false,
+  "blocked_at": "checkpoint download",
+  "error": "Proxy tunnel HTTP 403 Forbidden",
+  "cloud_network_revision": 15,
+  "offline_runner": "run_local_models.py"
+}

@@ -1,0 +1,12 @@
+{
+  "http_status": 200,
+  "response": {
+    "status": "ok",
+    "loaded": [],
+    "revisions": {},
+    "device": "cpu",
+    "device_is_preference": true,
+    "checkpoint_devices": {},
+    "cpu_fallbacks": {}
+  }
+}
