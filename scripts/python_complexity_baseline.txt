@@ -18,7 +18,7 @@ engines/aiDevschoolMvp/aidevschool/scripts/ledger_verify.py:main
 engines/aiDevschoolMvp/aidevschool/scripts/next_step.py:main
 engines/aiDevschoolMvp/aidevschool/scripts/plan_recompute.py:_diff_summary
 engines/aiDevschoolMvp/aidevschool/scripts/progress_card.py:render_card
-engines/aiDevschoolMvp/aidevschool/scripts/replay.py:replay
+engines/aiDevschoolMvp/aidevschool/scripts/replay_fold.py:fold_ledger
 engines/aiDevschoolMvp/aidevschool/scripts/schedule.py:main
 engines/miniMaxEvolutionEngine/supervisor/__main__.py:main
 engines/miniMaxEvolutionEngine/supervisor/autonomous.py:_charged
