@@ -29,3 +29,7 @@
 ## 2024-05-18 - Announcing Emoji-Based Visual Indicators
 **Learning:** Emojis used purely as visual indicators (like ❄️ for freezes or 🔥 for streaks) create highly repetitive and noisy announcements for screen readers (e.g. 'floco de neve floco de neve').
 **Action:** Wrap the emoji sequences in an `aria-hidden="true"` span to silence them, and provide a clear, semantic sentence summarizing their meaning in an adjacent `.sr-only` span.
+
+## 2026-10-04 - Dynamic Aria-labels for Togglable Emoji Buttons
+**Learning:** When using visual indicators (like ▽ or ▶) in togglable buttons in environments without predefined .sr-only classes, relying solely on textContent updates loses screen reader context and introduces noise.
+**Action:** Use innerHTML to wrap the visible text (including the emoji) in a span with aria-hidden='true', and apply an explicit, dynamically updated aria-label on the parent element alongside aria-expanded.
