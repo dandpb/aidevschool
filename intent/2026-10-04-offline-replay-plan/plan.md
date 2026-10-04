@@ -101,3 +101,34 @@ scripts/python_complexity_baseline.txt, preservando max8 e demais entradas.
 Esse quarto arquivo não foi autorizado; não editar nesta fatia nem contornar
 o gate. Provas funcionais podem concluir, mas CI/publicação continuam bloqueadas
 até decisão do responsável sobre essa atualização. Ver evidence-r3b.md.
+
+## Recuperação delimitada da CI do PR rascunho #667
+
+Registro posterior à publicação autorizada pelo Dani. Head inicial:
+42345a823acaf1c5734d33a0a55b41a4d5200014; run CI 37240094147,
+job MVP 111546919070: 65 passed, 2 failed. Os dois casos congelados de CLI
+falharam somente na lista de writes: imports locais criam pyc em bundle frio.
+As provas locais anteriores usavam PYTHONDONTWRITEBYTECODE; seus resultados
+permanecem históricos e não demonstram execução nativa sem essa variável.
+
+Autorização aplicada: corrigir falhas recuperáveis de CI dentro dos mesmos
+41 arquivos, sem modificar testes, gates, workflows ou fabricar proveniência.
+O contrato scratch-only já está na spec; preservar main byte-identical.
+
+Plano: em replay.py, somente no entrypoint CLI (__name__ == "__main__"),
+salvar a política de bytecode do intérprete, impedir cache durante os imports
+locais e restaurar a política em finally, inclusive em erro de importação.
+Importação como biblioteca conserva a política recebida; não usar flag global
+permanente, variável de ambiente, -B, shim ou cache semeado. Não alterar fold,
+runtime compartilhado, limiares, testes congelados ou os demais espelhos.
+
+Prova: cópias frias hash-conferidas, rede bloqueada pelo mesmo seccomp, sem
+PYTHONDONTWRITEBYTECODE. Casos CLI congelados passam; suite MVP completa passa
+uma vez após a correção. Conferir main byte-identical, restauração de política,
+testes e demais arquivos preservados; revisão independente antes de novo
+commit/push. Anexar evidência e revisão aos registros existentes, preservando
+seu conteúdo anterior. Guard do range commitado continua obrigatório.
+
+O countersign-gate do head inicial falhou por produtor sem trailer canônico
+genuíno; esse bloqueio é separado e não será corrigido com identificadores
+inventados nem mudança de gate.

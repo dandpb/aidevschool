@@ -13,13 +13,24 @@ primary. Teach-back passes set teach_back_passed and never touch the primary
 G3 streak."""
 from __future__ import annotations
 
-import json
 import sys
-from pathlib import Path
-from typing import Any
 
-from _runtime import core as _core
-from replay_fold import _blank, fold_ledger, required_rubric_ids
+# The installed CLI writes only its scratch file, including in a cold bundle.
+# Keep interpreter cache policy unchanged for imports as a library and after
+# bootstrap; restore it even if loading a dependency fails.
+if __name__ == "__main__":
+    _cli_bytecode_policy = sys.dont_write_bytecode
+    sys.dont_write_bytecode = True
+try:
+    import json
+    from pathlib import Path
+    from typing import Any
+
+    from _runtime import core as _core
+    from replay_fold import _blank, fold_ledger, required_rubric_ids
+finally:
+    if __name__ == "__main__":
+        sys.dont_write_bytecode = _cli_bytecode_policy
 
 FIELDS = ("status", "scaffold_level", "attempts", "gate_progress", "target_days_effective", "next_review_ts")
 

@@ -161,3 +161,40 @@ Check/--check do substrate seguem legados e não são certificados offline por
 esta revisão. R3A aditiva é futura. R3B fica como resultado local testado, com
 o gate de review pendente pela CI de complexidade. Qualquer publicação
 continua fora da autorização.
+
+## Revisão independente posterior: recuperação da CI MVP
+
+2026-10-04, revisor separado /root/review_replay_fold_diff. Escopo autorizado:
+replay.py e apêndices nos três recibos já incluídos entre os 41 caminhos do
+PR draft #667. Conteúdo anterior deste review permanece byte a byte intacto.
+
+Resultado: **correção local conforme, nenhum finding substantivo novo**.
+Revisei diff, plano/evidência, verify-recovery.py, comandos e outputs reais;
+não executei ou repeti testes/probes. O CLI salva a política de bytecode antes
+de imports stdlib/locais e a restaura em finally. Importação como biblioteca
+não altera a política. Confrontei todos os corpos de função por AST com o
+head inicial: iguais; main byte-identical. Sem alteração de fold, teste ou gate.
+
+Provas nativas examinadas em /tmp/aidevschool-publication-evidence:
+recovery-cli.log registra **2 passed in 0.12s**; recovery-full-suite.log,
+**67 passed in 2.69s**, uma execução em cópia fria independente. Comandos
+não usam PYTHONDONTWRITEBYTECODE, -B, shim ou cache semeado. Probes confirmam
+bytecode nativo habilitado e socket EPERM no pai/filho. recovery-api.log
+confirma políticas de biblioteca False/True e restauração em falha de import;
+a injeção de erro ocorre só nesse probe separado, sem substituir testes.
+
+Verifiquei 144 inputs de cada cópia iguais à origem/cópia e snapshot41:
+todos fora dos quatro caminhos autorizados permanecem iguais, sem untracked.
+Plan/evidence/review preservam o prefixo integral do head inicial. Testes,
+R5/R7/R9, core, install, hooks, workflows e baseline não mudaram. SHA replay:
+`1e3c20cd595ec755c9203d74fed7168fc76f0eb79a07385e8a1912d5f7381c01`;
+teste congelado: `0b8366d4d39c647ad559864261f30aad31ef5c0c1df58e0be77b66eb5d856d61`.
+
+Limites: head inicial 42345a823acaf1c5734d33a0a55b41a4d5200014 teve 44 jobs
+terminais (42 success, MVP failure, um skipped); countersign separado failure
+por produtor sem trailer genuíno. A prova nova resolve a falha runtime local,
+mas não declara CI do próximo head verde nem resolve countersign. Recomendo
+continuar a recuperação autorizada, mantendo draft/sem merge-deploy e gates
+reais; não inventar task/run/session/verdict. HTTP/precheck, Library e CI global
+futura não foram certificados ou contornados. Nenhum runtime/teste/gate editado
+pelo revisor; única escrita no repo é este apêndice autorizado.
