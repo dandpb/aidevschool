@@ -1,0 +1,12 @@
+DRIFT  os-literacy-hosted-mission: c38fd07224d6 -> 3177f4d87ce4 (promoted@2b571a55 2026-09-30T01:21:00Z)
+DRIFT  os-literacy-returning-device: c38fd07224d6 -> 3177f4d87ce4 (promoted@2b571a55 2026-09-30T01:21:00Z)
+DRIFT  os-onboarding-track-choice: 72d582d7e68d -> ee0ca9194d3f (promoted@2b571a55 2026-09-30T01:21:00Z)
+DRIFT  os-renderer-accessibility-recovery: 86d2e8488805 -> 2b1456b0ff9f (promoted@2b571a55 2026-09-30T01:21:00Z)
+DRIFT  os-returning-device: 72d582d7e68d -> ee0ca9194d3f (promoted@2b571a55 2026-09-30T01:21:00Z)
+DRIFT  os-returning-recovery: 72d582d7e68d -> ee0ca9194d3f (promoted@2b571a55 2026-09-30T01:21:00Z)
+DRIFT  os-verification-recovery: c38fd07224d6 -> 3177f4d87ce4 (promoted@2b571a55 2026-09-30T01:21:00Z)
+DRIFT  os-voxel-hosted-missions: 86d2e8488805 -> 2b1456b0ff9f (promoted@2b571a55 2026-09-30T01:21:00Z)
+DRIFT  os-voxel-returning-device: 86d2e8488805 -> 2b1456b0ff9f (promoted@2b571a55 2026-09-30T01:21:00Z)
+
+Total snapshot scenarios: 24 | drifted: 9 | unchanged: 15
+All drifted are os-*: True

@@ -1,0 +1,66 @@
+{
+  "bundleId": "2026-10-01-fcf84d3e-auto-regrant-v107-observation-bundle-r1",
+  "task": "AID-3723",
+  "observer": "qa-lead-ca6a3f95",
+  "observerContext": "independent-readiness-observer",
+  "authorization": [
+    "PO1965099e",
+    "CEO15aa1999 (hub3307)",
+    "comentário AID-3723 169974a6 2026-10-02T01:45:42Z"
+  ],
+  "observationsSha256": "11139e1243669f4153398e974813789a3fb3acdf2a5ca75fa503df0940cb98e7",
+  "geometry": {
+    "prHead": "c819d4a215bcfacdcc80cd37d1f0ac1ef5ce096e",
+    "mergeRef": "refs/pull/654/merge = 191b53192061629c2b2f6b01b8c01a04634022d5",
+    "treeBoth": "c6c546b8df54ea013632ff60b6d6c11c2d93ed25",
+    "note": "PR head e merge ref são SHAs distintos com árvore idêntica (verificado 2026-10-02T01:52Z); correção do r1: c819d4a2 é PR head, não merge-ref."
+  },
+  "window": {
+    "from": "2b571a555c7825e9c8af69f37210d6f2596e3b09 (anchor v105, PR #607)",
+    "to": "c819d4a215bcfacdcc80cd37d1f0ac1ef5ce096e (PR #654 head = main fcf84d3e + snapshot)",
+    "onlyCoveredFileChanged": "engines/codexdojo-os-prototype/src/styles/overlays.css (+4 linhas CSS-only, commit 419d44bc, merge #653/AID-3714)"
+  },
+  "fingerprintDrift": {
+    "os-literacy-guided-mission": "c38fd07224d6… -> 3177f4d87ce4…",
+    "os-returning-learner": "72d582d7e68d… -> ee0ca9194d3f…",
+    "os-voxel-guided-missions": "86d2e8488805… -> 2b1456b0ff9f…",
+    "drifted": 9,
+    "unchanged": 15
+  },
+  "newObservations": [
+    "os-literacy-hosted-mission",
+    "os-literacy-returning-device",
+    "os-onboarding-track-choice",
+    "os-renderer-accessibility-recovery",
+    "os-returning-device",
+    "os-returning-recovery",
+    "os-verification-recovery",
+    "os-voxel-hosted-missions",
+    "os-voxel-returning-device"
+  ],
+  "newObservationsCount": 9,
+  "carryoverReverifications": [
+    "dojotoday-active-unit-guidance",
+    "dojotoday-read-only-boundary",
+    "dojotoday-returning-next-day",
+    "literacy-corridor-gate-retry",
+    "literacy-corridor-happy-path",
+    "literacy-corridor-review-window",
+    "literacy-happy-path",
+    "literacy-resume",
+    "literacy-retry",
+    "minitown-explore-only",
+    "pixelquest-encounter-evidence",
+    "pixelquest-evidence-recovery",
+    "pixelquest-returning-evidence-handoff",
+    "voxel-accessible-renderer",
+    "voxel-standalone-loop",
+    "voxel-standalone-return-reentry"
+  ],
+  "carryoverCount": 16,
+  "producerEvidenceDisclaimer": "Recibos CI do produtor (run 36942785036 @fcf84d3e) e reports regenerados são fatos playwright de producer — NÃO observação independente; não fundamentam asserção de observação.",
+  "dryRunProof": {
+    "aggregate": "exit 0 — 27 resultados (aggregate-dryrun.log)",
+    "assessDryRun": "exit 0 — 9/9 use cases pass, severe-gap blockers: none (assess-dryrun.log)"
+  }
+}
