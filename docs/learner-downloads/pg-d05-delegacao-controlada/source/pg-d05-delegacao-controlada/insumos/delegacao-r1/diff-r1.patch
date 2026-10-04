@@ -1,0 +1,78 @@
+diff --git a/insumos/fixture/biblioteca.py b/insumos/fixture/biblioteca.py
+index de1f75d..a1fe282 100644
+--- a/insumos/fixture/biblioteca.py
++++ b/insumos/fixture/biblioteca.py
+@@ -8,6 +8,8 @@ desta prática, o CONTRATO é a autoridade.
+ Sem dependências, sem rede, sem relógio: tudo determinístico.
+ """
+ 
++from util_texto import formatar_recibo
++
+ CATEGORIAS = {
+     "geral": 3,
+     "reserva": 7,
+@@ -20,13 +22,17 @@ DIAS_POR_RENOVACAO = 7
+ EMPRESTIMOS = []
+ 
+ 
+-def emprestar(isbn, categoria="geral", renovacoes=0):
++def validar_emprestimo(isbn, categoria, renovacoes):
+     if categoria not in CATEGORIAS:
+-        raise ValueError("categoria desconhecida: %s" % categoria)
++        raise ValueError("categoria invalida: %s" % categoria)
+     if not isbn:
+-        raise ValueError("isbn vazio")
++        raise ValueError("isbn obrigatorio")
+     if renovacoes < 0 or renovacoes > MAX_RENOVACOES:
+-        raise ValueError("renovacoes invalidas: %d" % renovacoes)
++        raise ValueError("renovacoes fora do limite: %d" % renovacoes)
++
++
++def emprestar(isbn, categoria="geral", renovacoes=0):
++    validar_emprestimo(isbn, categoria, renovacoes)
+     dias = CATEGORIAS[categoria] + renovacoes * DIAS_POR_RENOVACAO
+     EMPRESTIMOS.append(("aberto", isbn, categoria, dias))
+-    return "EMPRESTIMO %s %s %dd" % (isbn, categoria, dias)
++    return formatar_recibo(isbn, categoria, dias)
+diff --git a/insumos/fixture/testes.py b/insumos/fixture/testes.py
+index d3ba76c..a6755d6 100644
+--- a/insumos/fixture/testes.py
++++ b/insumos/fixture/testes.py
+@@ -26,7 +26,7 @@ def test_categoria_desconhecida_sozinha():
+         emprestar("978-85", "rabisco")
+         raise AssertionError("devia ter lancado ValueError")
+     except ValueError as erro:
+-        assert "categoria desconhecida: rabisco" in str(erro)
++        assert "categoria invalida: rabisco" in str(erro)
+ 
+ 
+ def test_isbn_vazio_sozinho():
+@@ -34,7 +34,7 @@ def test_isbn_vazio_sozinho():
+         emprestar("", "geral")
+         raise AssertionError("devia ter lancado ValueError")
+     except ValueError as erro:
+-        assert "isbn vazio" in str(erro)
++        assert "isbn obrigatorio" in str(erro)
+ 
+ 
+ def test_renovacoes_invalidas_sozinha():
+@@ -42,7 +42,7 @@ def test_renovacoes_invalidas_sozinha():
+         emprestar("978-85", "geral", 3)
+         raise AssertionError("devia ter lancado ValueError")
+     except ValueError as erro:
+-        assert "renovacoes invalidas: 3" in str(erro)
++        assert "renovacoes fora do limite: 3" in str(erro)
+ 
+ 
+ def test_trilha_registra_apenas_sucesso():
+diff --git a/insumos/fixture/util_texto.py b/insumos/fixture/util_texto.py
+new file mode 100644
+index 0000000..4afd791
+--- /dev/null
++++ b/insumos/fixture/util_texto.py
+@@ -0,0 +1,5 @@
++"""Formatação centralizada de recibos (novo utilitário da fatia 2)."""
++
++
++def formatar_recibo(isbn, categoria, dias):
++    return "EMPRESTIMO %s %s %dd" % (isbn, categoria, dias)
