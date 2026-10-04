@@ -1,0 +1,35 @@
+{
+  "meta": {
+    "pacote": "pg-e01-evals-offline (AID-3648)",
+    "conjunto": "base (desenvolvimento)",
+    "variante": "B = prompt v2 (proposta do autor do v2)",
+    "aviso": "SAIDAS 100% SINTETICAS: classificacoes autoralmente fixadas para simular o prompt v2. Nenhum modelo de IA real foi executado. Nao constituem medicao de eficacia.",
+    "rotulo_sintetico": true
+  },
+  "predicoes": [
+    { "id": "PD-001", "area": "tecnico" },
+    { "id": "PD-002", "area": "tecnico" },
+    { "id": "PD-003", "area": "tecnico" },
+    { "id": "PD-004", "area": "tecnico" },
+    { "id": "PD-005", "area": "tecnico" },
+    { "id": "PD-006", "area": "tecnico" },
+    { "id": "PD-007", "area": "tecnico" },
+    { "id": "PD-008", "area": "tecnico" },
+    { "id": "PD-009", "area": "pagamento" },
+    { "id": "PD-010", "area": "pagamento" },
+    { "id": "PD-011", "area": "tecnico" },
+    { "id": "PD-012", "area": "tecnico" },
+    { "id": "PD-013", "area": "tecnico" },
+    { "id": "PD-014", "area": "conta" },
+    { "id": "PD-015", "area": "conta" },
+    { "id": "PD-016", "area": "conta" },
+    { "id": "PD-017", "area": "conta" },
+    { "id": "PD-018", "area": "tecnico" },
+    { "id": "PD-019", "area": "conta" },
+    { "id": "PD-020", "area": "uso" },
+    { "id": "PD-021", "area": "uso" },
+    { "id": "PD-022", "area": "uso" },
+    { "id": "PD-023", "area": "uso" },
+    { "id": "PD-024", "area": "conta" }
+  ]
+}
