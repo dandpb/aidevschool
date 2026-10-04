@@ -197,7 +197,41 @@ class TestCheckEvidence:
         assert errors == []
 
     def test_valid_evidence_is_eligible(self, root: Path):
-        assert _check_evidence(make_evidence(), make_state()["active_unit"], root) == []
+        evidence = make_evidence()
+        assert (
+            _check_evidence(
+                evidence,
+                make_state()["active_unit"],
+                root,
+                verifier_receipt=make_verifier_receipt(evidence),
+            )
+            == []
+        )
+
+    @pytest.mark.parametrize(
+        "evidence",
+        [
+            make_evidence(),  # legacy GATEKEEPER top-level shape
+            make_evidence(  # pixelquest metrics shape
+                game="PixelDojo Quest",
+                metrics={
+                    "kind": "pixelquest-token-bucket",
+                    "good_admits": 8,
+                    "abusive_admitted": 0,
+                    "overheated": False,
+                },
+            ),
+        ],
+        ids=["gatekeeper", "pixelquest"],
+    )
+    def test_game_pass_without_verifier_receipt_is_not_eligible(
+        self, root: Path, evidence: dict[str, Any]
+    ):
+        # AID-3710 F1 (CP-01): producer-declared pass + self-consistent rubric
+        # metrics prove nothing about execution — the gate fail-closes until a
+        # digest-bound receipt under learner/verifier_receipts is presented.
+        errors = _check_evidence(evidence, make_state()["active_unit"], root)
+        assert any("digest-bound verifier receipt" in error for error in errors)
 
     def test_missing_required_field_rejected(self, root: Path):
         evidence = make_evidence()
@@ -212,22 +246,32 @@ class TestCheckEvidence:
         assert any("does not match" in e for e in errors)
 
     def test_missing_attempt_file_rejected(self, root: Path):
+        evidence = make_evidence()
         errors = _check_evidence(
-            make_evidence(),
+            evidence,
             make_state(attempt_file="learner/attempts/nope.md")["active_unit"],
             root,
+            verifier_receipt=make_verifier_receipt(evidence),
         )
         assert any("attempt file not found" in e for e in errors)
 
     def test_no_attempt_declared_rejected(self, root: Path):
+        evidence = make_evidence()
         errors = _check_evidence(
-            make_evidence(), make_state(attempt_file=None)["active_unit"], root
+            evidence,
+            make_state(attempt_file=None)["active_unit"],
+            root,
+            verifier_receipt=make_verifier_receipt(evidence),
         )
         assert any("attempt-before-solution" in e for e in errors)
 
     def test_wrong_state_rejected(self, root: Path):
+        evidence = make_evidence()
         errors = _check_evidence(
-            make_evidence(), make_state(state="presenting")["active_unit"], root
+            evidence,
+            make_state(state="presenting")["active_unit"],
+            root,
+            verifier_receipt=make_verifier_receipt(evidence),
         )
         assert any("evaluating" in e for e in errors)
 
@@ -480,10 +524,12 @@ class TestCheckEvidence:
     def test_attempt_outside_learner_attempts_is_rejected(self, root: Path):
         outside = root / "outside.md"
         outside.write_text("attempt", encoding="utf-8")
+        evidence = make_evidence(attempt_id="outside.md")
         errors = _check_evidence(
-            make_evidence(attempt_id="outside.md"),
+            evidence,
             make_state(attempt_file="outside.md")["active_unit"],
             root,
+            verifier_receipt=make_verifier_receipt(evidence),
         )
         assert any("learner/attempts" in error for error in errors)
 
@@ -492,38 +538,61 @@ class TestCheckEvidence:
         outside.write_text("attempt", encoding="utf-8")
         link = root / "learner" / "attempts" / "escape.md"
         link.symlink_to(outside)
+        evidence = make_evidence(attempt_id="learner/attempts/escape.md")
         errors = _check_evidence(
-            make_evidence(attempt_id="learner/attempts/escape.md"),
+            evidence,
             make_state(attempt_file="learner/attempts/escape.md")["active_unit"],
             root,
+            verifier_receipt=make_verifier_receipt(evidence),
         )
         assert any("symlink" in error for error in errors)
 
     def test_attempt_directory_is_rejected(self, root: Path):
         directory = root / "learner" / "attempts" / "not-a-file"
         directory.mkdir()
+        evidence = make_evidence(attempt_id="learner/attempts/not-a-file")
         errors = _check_evidence(
-            make_evidence(attempt_id="learner/attempts/not-a-file"),
+            evidence,
             make_state(attempt_file="learner/attempts/not-a-file")["active_unit"],
             root,
+            verifier_receipt=make_verifier_receipt(evidence),
         )
         assert any("regular file" in error for error in errors)
 
 
 class TestDecide:
     def test_pass_first_try(self, root: Path):
-        d = _decide(make_evidence(), make_state()["active_unit"], root)
+        evidence = make_evidence()
+        d = _decide(
+            evidence,
+            make_state()["active_unit"],
+            root,
+            verifier_receipt=make_verifier_receipt(evidence),
+        )
         assert d.ok and d.passed
         assert d.gate_outcome == "pass_first_try" and d.rating == "good"
 
     def test_pass_after_retry(self, root: Path):
-        d = _decide(make_evidence(), make_state(retry_count=1)["active_unit"], root)
+        evidence = make_evidence()
+        d = _decide(
+            evidence,
+            make_state(retry_count=1)["active_unit"],
+            root,
+            verifier_receipt=make_verifier_receipt(evidence),
+        )
         assert d.gate_outcome == "pass_retried" and d.rating == "hard"
 
     def test_failed_run_gates_to_fail(self, root: Path):
         d = _decide(make_evidence(**{"pass": False}), make_state()["active_unit"], root)
         assert d.ok and not d.passed
         assert d.gate_outcome == "fail" and d.rating == "again"
+
+    def test_forged_pass_without_receipt_never_decides_passed(self, root: Path):
+        # AID-3710 F1: the decision seam itself cannot master from producer
+        # claims — with no receipt the only reachable pass is receipt-carried.
+        d = _decide(make_evidence(), make_state()["active_unit"], root)
+        assert not d.ok and not d.passed
+        assert d.receipt is None
 
     def test_separate_verifier_receipt_controls_outcome(self, root: Path):
         evidence = make_evidence(
@@ -542,7 +611,13 @@ class TestApplyGate:
     def test_pass_updates_existing_unit_log_and_masters_unit(self, root: Path):
         # Given: the active unit is already registered in the canonical history
         state = make_state(root)
-        decision = _decide(make_evidence(), state["active_unit"], root)
+        evidence = make_evidence()
+        decision = _decide(
+            evidence,
+            state["active_unit"],
+            root,
+            verifier_receipt=make_verifier_receipt(evidence),
+        )
         assert decision.receipt is not None
 
         # When: its eligible evidence is gated
@@ -607,10 +682,14 @@ class TestEndToEnd:
     def test_verify_and_gate_persists_state(self, root: Path):
         state_path = root / "learner" / "learning_state.yaml"
         state_path.write_text(yaml.safe_dump(make_state(root), sort_keys=False), encoding="utf-8")
+        evidence = make_evidence()
         evidence_path = root / "evidence.json"
-        evidence_path.write_text(json.dumps(make_evidence()), encoding="utf-8")
+        evidence_path.write_text(json.dumps(evidence), encoding="utf-8")
+        receipt_path = write_verifier_receipt(root, evidence)
 
-        decision = verify_and_gate(root, evidence_path, today=TODAY)
+        decision = verify_and_gate(
+            root, evidence_path, today=TODAY, verifier_receipt_path=receipt_path
+        )
         assert decision is not None
         assert decision.ok and decision.passed
 
@@ -618,14 +697,98 @@ class TestEndToEnd:
         assert persisted["active_unit"]["state"] == "mastered"
         assert len(persisted["units_log"]) == 1
 
-    def test_dry_run_writes_nothing(self, root: Path):
+    def test_forged_game_pass_without_receipt_writes_no_mastery(self, root: Path):
+        # AID-3710 F1 (CP-01): RC2 e7071035 mastered a hand-typed record on
+        # self-declared metrics alone. With the binding, the same record is
+        # NOT ELIGIBLE: no transition, no gate review, state stays evaluating.
         state_path = root / "learner" / "learning_state.yaml"
         original = yaml.safe_dump(make_state(root), sort_keys=False)
         state_path.write_text(original, encoding="utf-8")
         evidence_path = root / "evidence.json"
         evidence_path.write_text(json.dumps(make_evidence()), encoding="utf-8")
 
-        decision = verify_and_gate(root, evidence_path, today=TODAY, dry_run=True)
+        decision = verify_and_gate(root, evidence_path, today=TODAY)
+
+        assert decision is not None and not decision.ok
+        assert any("digest-bound verifier receipt" in e for e in decision.errors)
+        persisted = yaml.safe_load(state_path.read_text(encoding="utf-8"))
+        assert persisted["active_unit"]["state"] == "evaluating"
+        assert persisted["units_log"][0]["mastered"] is False
+        assert persisted["units_log"][0]["reviews"] == []
+
+    def test_pixelquest_pass_with_digest_bound_receipt_masters(self, root: Path):
+        # AID-3710 P4: the existing receipt contract carries mastery for the
+        # pixelquest rubric class (same as voxeldojo before it).
+        evidence = make_evidence(
+            game="PixelDojo Quest",
+            metrics={
+                "kind": "pixelquest-token-bucket",
+                "good_admits": 8,
+                "abusive_admitted": 0,
+                "overheated": False,
+            },
+        )
+        state_path = root / "learner" / "learning_state.yaml"
+        state_path.write_text(
+            yaml.safe_dump(
+                make_state(
+                    root,
+                    evidence_file=str(root / "evidence.json"),
+                ),
+                sort_keys=False,
+            ),
+            encoding="utf-8",
+        )
+        evidence_path = root / "evidence.json"
+        evidence_path.write_text(json.dumps(evidence), encoding="utf-8")
+        receipt_path = write_verifier_receipt(root, evidence)
+
+        decision = verify_and_gate(
+            root, evidence_path, today=TODAY, verifier_receipt_path=receipt_path
+        )
+
+        assert decision is not None and decision.ok and decision.passed
+        assert decision.gate_outcome == "pass_first_try"
+        persisted = yaml.safe_load(state_path.read_text(encoding="utf-8"))
+        assert persisted["active_unit"]["state"] == "mastered"
+        review = persisted["units_log"][0]["reviews"][-1]
+        assert review["evidence_verifier_source"] == "independent-voxel-verifier"
+
+    def test_historical_mastered_without_receipt_still_validates(self, root: Path):
+        # AID-3710 P2 guard: gate-time binding must never re-adjudicate the
+        # canonical history. U0-sonda mastered on 2026-07-05 via a rubric gate
+        # review without evidence_verifier_source keeps validating after the
+        # fix (the naive rubric-flag patch invalidated the whole state and
+        # produced CANNOT GATE for every subsequent run).
+        state = make_state(root, state="mastered")
+        state["units_log"][0]["reviews"] = [
+            {
+                "date": date(2026, 7, 5),
+                "event": "gate",
+                "rating": "good",
+                "gate_outcome": "pass_first_try",
+                "evidence_ts": "2026-06-09T01:24:09.038Z",
+            }
+        ]
+
+        assert validate(state, root) == []
+
+    def test_dry_run_writes_nothing(self, root: Path):
+        state_path = root / "learner" / "learning_state.yaml"
+        original = yaml.safe_dump(make_state(root), sort_keys=False)
+        state_path.write_text(original, encoding="utf-8")
+        evidence = make_evidence()
+        evidence_path = root / "evidence.json"
+        evidence_path.write_text(json.dumps(evidence), encoding="utf-8")
+        receipt_path = write_verifier_receipt(root, evidence)
+
+        decision = verify_and_gate(
+            root,
+            evidence_path,
+            today=TODAY,
+            dry_run=True,
+            verifier_receipt_path=receipt_path,
+        )
         assert decision is not None
         assert decision.ok
         assert state_path.read_text(encoding="utf-8") == original
@@ -787,7 +950,13 @@ class TestSelectEvidence:
 class TestGateIntegrity:
     def test_stub_attempt_rejected(self, root: Path):
         (root / "learner" / "attempts" / "attempt-1.md").write_text("  \n", encoding="utf-8")
-        errors = _check_evidence(make_evidence(), make_state()["active_unit"], root)
+        evidence = make_evidence()
+        errors = _check_evidence(
+            evidence,
+            make_state()["active_unit"],
+            root,
+            verifier_receipt=make_verifier_receipt(evidence),
+        )
         assert any("stub" in e for e in errors)
 
     def test_metrics_flat_without_kind_allowed(self, root: Path):
@@ -808,8 +977,12 @@ class TestGateIntegrity:
         assert any("kind" in e for e in errors)
 
     def test_invalid_ts_rejected(self, root: Path):
+        evidence = make_evidence(ts="not-a-timestamp")
         errors = _check_evidence(
-            make_evidence(ts="not-a-timestamp"), make_state()["active_unit"], root
+            evidence,
+            make_state()["active_unit"],
+            root,
+            verifier_receipt=make_verifier_receipt(evidence),
         )
         assert any("ISO-8601" in e for e in errors)
 
@@ -831,7 +1004,13 @@ class TestGateIntegrity:
                 ],
             }
         ]
-        errors = _check_evidence(evidence, make_state()["active_unit"], root, gated_log)
+        errors = _check_evidence(
+            evidence,
+            make_state()["active_unit"],
+            root,
+            gated_log,
+            verifier_receipt=make_verifier_receipt(evidence),
+        )
         assert any("stale or duplicate" in e for e in errors)
 
     def test_stale_evidence_rejected(self, root: Path):
@@ -842,11 +1021,13 @@ class TestGateIntegrity:
                 "reviews": [{"event": "gate", "evidence_ts": "2026-07-01T00:00:00.000Z"}],
             }
         ]
+        evidence = make_evidence(ts="2026-06-30T00:00:00.000Z")
         errors = _check_evidence(
-            make_evidence(ts="2026-06-30T00:00:00.000Z"),
+            evidence,
             make_state()["active_unit"],
             root,
             gated_log,
+            verifier_receipt=make_verifier_receipt(evidence),
         )
         assert any("stale or duplicate" in e for e in errors)
 
@@ -858,17 +1039,24 @@ class TestGateIntegrity:
                 "reviews": [{"event": "gate", "evidence_ts": "2026-06-09T01:24:09.038Z"}],
             }
         ]
+        evidence = make_evidence(ts="2026-07-05T09:00:00.000Z")
         errors = _check_evidence(
-            make_evidence(ts="2026-07-05T09:00:00.000Z"),
+            evidence,
             make_state()["active_unit"],
             root,
             gated_log,
+            verifier_receipt=make_verifier_receipt(evidence),
         )
         assert errors == []
 
     def test_same_payload_with_bumped_timestamp_is_rejected_by_digest(self, root: Path):
         evidence = make_evidence(ts="2026-07-06T09:00:00.000Z")
-        first = _decide(evidence, make_state()["active_unit"], root)
+        first = _decide(
+            evidence,
+            make_state()["active_unit"],
+            root,
+            verifier_receipt=make_verifier_receipt(evidence),
+        )
         assert first.receipt is not None
         gated_log = [
             {
@@ -885,13 +1073,24 @@ class TestGateIntegrity:
             }
         ]
         replay = make_evidence(ts="2026-07-07T09:00:00.000Z")
-        errors = _check_evidence(replay, make_state()["active_unit"], root, gated_log)
+        errors = _check_evidence(
+            replay,
+            make_state()["active_unit"],
+            root,
+            gated_log,
+            verifier_receipt=make_verifier_receipt(replay),
+        )
         assert any("digest" in error and "replay" in error for error in errors)
 
     def test_ignored_producer_nonce_cannot_bypass_consumed_evidence(self, root: Path):
         consumed = make_evidence(ts="2026-07-06T09:00:00.000Z")
         consumed.pop("run_id")
-        first = _decide(consumed, make_state()["active_unit"], root)
+        first = _decide(
+            consumed,
+            make_state()["active_unit"],
+            root,
+            verifier_receipt=make_verifier_receipt(consumed),
+        )
         assert first.receipt is not None
         gated_log = [
             {
@@ -917,16 +1116,32 @@ class TestGateIntegrity:
             "nonce": "producer-controlled-but-verifier-ignored",
             "metrics": {"nonce": "nested-and-verifier-ignored"},
         }
-        replay_without_history = _decide(replay, make_state()["active_unit"], root)
+        replay_without_history = _decide(
+            replay,
+            make_state()["active_unit"],
+            root,
+            verifier_receipt=make_verifier_receipt(replay),
+        )
         assert replay_without_history.receipt is not None
         assert replay_without_history.receipt.digest != first.receipt.digest
         assert replay_without_history.receipt.run_id != first.receipt.run_id
 
-        errors = _check_evidence(replay, make_state()["active_unit"], root, gated_log)
+        errors = _check_evidence(
+            replay,
+            make_state()["active_unit"],
+            root,
+            gated_log,
+            verifier_receipt=make_verifier_receipt(replay),
+        )
         assert any("attempt/scenario replay" in error for error in errors)
 
     def test_same_run_id_with_changed_payload_is_rejected(self, root: Path):
-        first = _decide(make_evidence(), make_state()["active_unit"], root)
+        first = _decide(
+            make_evidence(),
+            make_state()["active_unit"],
+            root,
+            verifier_receipt=make_verifier_receipt(make_evidence()),
+        )
         assert first.receipt is not None
         gated_log = [
             {
@@ -943,7 +1158,13 @@ class TestGateIntegrity:
             }
         ]
         changed = make_evidence(ts="2026-07-08T00:00:00Z", good_admits=19)
-        errors = _check_evidence(changed, make_state()["active_unit"], root, gated_log)
+        errors = _check_evidence(
+            changed,
+            make_state()["active_unit"],
+            root,
+            gated_log,
+            verifier_receipt=make_verifier_receipt(changed),
+        )
         assert any("run_id" in error and "immutable" in error for error in errors)
 
 
@@ -956,21 +1177,35 @@ class TestNdjsonEndToEnd:
         return state_path
 
     def test_gates_latest_matching_record(self, root: Path):
-        state_path = self._write_state(root)
-        path = write_ndjson(
-            root / "evidence.ndjson",
-            [
-                make_ndjson_record(unit_id="U-02_key_value_store", project="02_key_value_store"),
-                make_ndjson_record(),
-            ],
+        # Single-record NDJSON: the substrate's receipt-bound recheck
+        # (bound_evidence_violations) parses evidence_file as one JSON
+        # object, so a multi-record file cannot back a receipt-bound review
+        # (pre-existing contract; latest-record selection itself is covered
+        # by TestSelectEvidence).
+        ndjson_path = root / "evidence.ndjson"
+        state_path = self._write_state(root, evidence_file=str(ndjson_path))
+        path = write_ndjson(ndjson_path, [make_ndjson_record()])
+        receipt_path = write_verifier_receipt(root, make_ndjson_record())
+        decision = verify_and_gate(
+            root, path, today=TODAY, verifier_receipt_path=receipt_path
         )
-        decision = verify_and_gate(root, path, today=TODAY)
         assert decision is not None and decision.ok and decision.passed
 
         persisted = yaml.safe_load(state_path.read_text(encoding="utf-8"))
         assert persisted["active_unit"]["state"] == "mastered"
         gate_review = persisted["units_log"][-1]["reviews"][-1]
         assert gate_review["evidence_ts"] == make_ndjson_record()["ts"]
+
+    def test_forged_latest_record_without_receipt_is_not_eligible(self, root: Path):
+        # AID-3710 F1: the NDJSON pixelquest contract is game-shaped too —
+        # self-declared metrics in the latest record never gate to mastery.
+        state_path = self._write_state(root)
+        original = state_path.read_text(encoding="utf-8")
+        path = write_ndjson(root / "evidence.ndjson", [make_ndjson_record()])
+        decision = verify_and_gate(root, path, today=TODAY)
+        assert decision is not None and not decision.ok
+        assert any("digest-bound verifier receipt" in e for e in decision.errors)
+        assert state_path.read_text(encoding="utf-8") == original
 
     def test_nothing_to_grade_when_no_record_for_unit(self, root: Path):
         state_path = self._write_state(root)
@@ -986,7 +1221,10 @@ class TestNdjsonEndToEnd:
         state_path = self._write_state(root, attempt_file="learner/attempts/nope.md")
         original = state_path.read_text(encoding="utf-8")
         path = write_ndjson(root / "evidence.ndjson", [make_ndjson_record()])
-        decision = verify_and_gate(root, path, today=TODAY)
+        receipt_path = write_verifier_receipt(root, make_ndjson_record())
+        decision = verify_and_gate(
+            root, path, today=TODAY, verifier_receipt_path=receipt_path
+        )
         assert decision is not None and not decision.ok
         assert any("attempt file not found" in e for e in decision.errors)
         assert state_path.read_text(encoding="utf-8") == original
@@ -1031,8 +1269,20 @@ class TestCli:
         declared.parent.mkdir(parents=True, exist_ok=True)
         declared.write_text(json.dumps(make_evidence()) + "\n", encoding="utf-8")
         self._setup_root(root, evidence_file=str(declared))
+        receipt_path = write_verifier_receipt(root, make_evidence())
 
-        assert cli_main(["--root", str(root), "--dry-run"]) == 0
+        assert (
+            cli_main(
+                [
+                    "--root",
+                    str(root),
+                    "--dry-run",
+                    "--verifier-receipt",
+                    str(receipt_path),
+                ]
+            )
+            == 0
+        )
         out = capsys.readouterr().out
         assert "NOTHING TO GRADE" not in out
         assert "GATE PASS" in out and str(declared) in out
@@ -1068,9 +1318,18 @@ class TestCli:
         original = state_path.read_text(encoding="utf-8")
         evidence_path = root / "valid.json"
         evidence_path.write_text(json.dumps(make_evidence()), encoding="utf-8")
+        receipt_path = write_verifier_receipt(root, make_evidence())
 
         exit_code = cli_main(
-            ["--root", str(root), "--dry-run", "--evidence", str(evidence_path)]
+            [
+                "--root",
+                str(root),
+                "--dry-run",
+                "--evidence",
+                str(evidence_path),
+                "--verifier-receipt",
+                str(receipt_path),
+            ]
         )
 
         output = capsys.readouterr().out
@@ -1108,12 +1367,18 @@ class TestCli:
         assert state_path.read_text(encoding="utf-8") == original
 
     def test_gates_from_default_ndjson_location(self, root: Path, capsys):
-        state_path = self._setup_root(root)
-        write_ndjson(
-            root / "engines" / "pixelDojo" / "pixel-quest" / ".logs" / "evidence.ndjson",
-            [make_ndjson_record()],
+        default = root / "engines" / "pixelDojo" / "pixel-quest" / ".logs" / "evidence.ndjson"
+        # declare the default contract path so the unit genuinely grades the
+        # NDJSON record (an existing evidence_file would win resolution)
+        state_path = self._setup_root(root, evidence_file=str(default))
+        write_ndjson(default, [make_ndjson_record()])
+        receipt_path = write_verifier_receipt(root, make_ndjson_record())
+        assert (
+            cli_main(
+                ["--root", str(root), "--verifier-receipt", str(receipt_path)]
+            )
+            == 0
         )
-        assert cli_main(["--root", str(root)]) == 0
         assert "GATE PASS_FIRST_TRY" in capsys.readouterr().out
         persisted = yaml.safe_load(state_path.read_text(encoding="utf-8"))
         assert persisted["active_unit"]["state"] == "mastered"
@@ -1140,7 +1405,21 @@ class TestCli:
             root / "engines" / "pixelDojo" / "pixel-quest" / ".logs" / "evidence.ndjson",
             [make_ndjson_record()],
         )
-        assert cli_main(["--root", str(root), "--dry-run"]) == 0
+        # the unit's declared artifact wins evidence resolution — bind the
+        # receipt to what is actually graded
+        receipt_path = write_verifier_receipt(root, make_evidence())
+        assert (
+            cli_main(
+                [
+                    "--root",
+                    str(root),
+                    "--dry-run",
+                    "--verifier-receipt",
+                    str(receipt_path),
+                ]
+            )
+            == 0
+        )
         assert "would be" in capsys.readouterr().out
         assert state_path.read_text(encoding="utf-8") == original
 
