@@ -44,6 +44,16 @@ export interface ProgressRepository {
   load(): Promise<LearnerProgress | null>;
   save(progress: LearnerProgress): Promise<void>;
   reset(): Promise<void>;
+  /**
+   * Read-modify-write atômico (AID-3740, S5-RACE): executa `mutate` contra o
+   * estado persistido dentro de UMA transação e devolve o estado commitado.
+   * O callback é síncrono e deve ser puro em relação ao estado passado —
+   * decisões de transição (ex.: firstCompletion de AID-3731) ficam corretas
+   * sob escritores concorrentes (multi-tab) porque leem o estado commitado,
+   * não um snapshot pré-carga. Opcional: repositórios sem atomicidade não
+   * implementam e os casos de uso degradam para o fluxo load→save.
+   */
+  update?(mutate: (current: LearnerProgress | null) => LearnerProgress): Promise<LearnerProgress>;
 }
 
 export type EvidenceSink = {
