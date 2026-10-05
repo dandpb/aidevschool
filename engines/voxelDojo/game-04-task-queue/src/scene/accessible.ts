@@ -11,18 +11,24 @@ export function createTaskForgeAccessibleProjection(
   return new AccessibleProjection({
     label: "Projeção acessível da forja de tarefas",
     controlsTarget: controlsRoot,
-    summarize: (state) => ({
-      title: `${state.level.id} — TASK FORGE: ${state.level.title}`,
-      status: statusFor(state),
-      description: state.level.lesson,
-      details: [
-        `Funil: ${state.queue.length}/${state.level.capacity} · braços: ${state.running.length}/${state.level.workerCount}${state.paused ? " (estacionados)" : ""}`,
-        `Sucesso: ${state.succeededIds.length} · DLQ: ${state.dlqIds.length} · rack: ${state.queue.filter((t) => t.scheduledFor > state.now).length}`,
-        state.inbound
-          ? `Empilhadeira ${state.inbound.id} ancorando (prio ${state.inbound.priority}).`
-          : "Doca livre.",
-      ],
-    }),
+    summarize: (state) => {
+      let rackWaiting = 0
+      for (const t of state.queue) {
+        if (t.scheduledFor > state.now) rackWaiting++
+      }
+      return {
+        title: `${state.level.id} — TASK FORGE: ${state.level.title}`,
+        status: statusFor(state),
+        description: state.level.lesson,
+        details: [
+          `Funil: ${state.queue.length}/${state.level.capacity} · braços: ${state.running.length}/${state.level.workerCount}${state.paused ? " (estacionados)" : ""}`,
+          `Sucesso: ${state.succeededIds.length} · DLQ: ${state.dlqIds.length} · rack: ${rackWaiting}`,
+          state.inbound
+            ? `Empilhadeira ${state.inbound.id} ancorando (prio ${state.inbound.priority}).`
+            : "Doca livre.",
+        ],
+      }
+    },
     actions: (state) => actionsFor(state, game),
   })
 }

@@ -243,7 +243,10 @@ export class TaskForgeScene implements MissionProjection<GameState> {
 
     // ── annealing rack: queued retries rest here until their beat
     const rackMat = this.rack.material as THREE.MeshStandardMaterial
-    const waiting = state.queue.filter((t) => t.scheduledFor > state.now && t.retries > 0).length
+    let waiting = 0
+    for (const t of state.queue) {
+      if (t.scheduledFor > state.now && t.retries > 0) waiting++
+    }
     rackMat.emissive = new THREE.Color(waiting > 0 ? 0xffd54f : 0x000000)
     rackMat.emissiveIntensity = waiting > 0 ? 0.5 : 0
 

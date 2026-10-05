@@ -279,11 +279,15 @@ export function evaluatePredictions(
   predictions: PredictionTarget[],
 ): WaveOutcome {
   let correct = 0
+  let reachedHandlerCount = 0
   for (let i = 0; i < wave.length; i++) {
-    if (predictions[i] === wave[i]?.answer) correct++
+    const w = wave[i]
+    if (w) {
+      if (predictions[i] === w.answer) correct++
+      if (w.answer === "reaches-handler") reachedHandlerCount++
+    }
   }
   const accuracy = wave.length === 0 ? 0 : correct / wave.length
-  const reachedHandlerCount = wave.filter((w) => w.answer === "reaches-handler").length
   const lastAnswer = wave[wave.length - 1]?.answer ?? ""
   return {
     pass: accuracy >= 0.8,

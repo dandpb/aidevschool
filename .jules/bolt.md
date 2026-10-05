@@ -57,3 +57,6 @@
 ## 2025-02-19 - Avoid GC pressure from .filter().length
 **Learning:** In simulation code like `engines/voxelDojo/game-04-task-queue`, calculating active counts with `.filter(...).length` creates unnecessary intermediate array allocations, increasing garbage collection (GC) overhead during frequent calls.
 **Action:** Replace `.filter(...).length` with standard indexed `for` loops and a counter variable to prevent intermediate array creation and reduce GC pressure.
+## 2026-10-05 - Optimize `.filter(...).length` to reduce GC pressure
+**Learning:** Using `.filter(...).length` to count matching elements allocates unnecessary intermediate arrays, creating garbage collection pressure, particularly in simulation hot loops and render updates.
+**Action:** Replace `.filter(...).length` with a simple `for...of` loop and a counter variable to count elements without allocation.
