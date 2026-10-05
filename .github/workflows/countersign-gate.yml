@@ -55,7 +55,7 @@ on:
 jobs:
   countersign-gate:
     name: countersign-gate
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     # issue_comment also fires on plain issues; only PR conversations count.
     if: github.event_name != 'issue_comment' || github.event.issue.pull_request != null
     permissions:

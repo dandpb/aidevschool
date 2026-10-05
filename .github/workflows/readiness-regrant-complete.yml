@@ -68,7 +68,7 @@ jobs:
     if: >-
       github.event_name == 'workflow_dispatch' ||
       startsWith(github.event.pull_request.head.ref, 'regrant/auto-')
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     env:
       GH_TOKEN: ${{ github.token }}
       GH_REPO: ${{ github.repository }}

@@ -35,7 +35,7 @@ jobs:
   # citations there fail closed — the API exposes no body-edit time).
   sdlc-guards:
     name: SDLC guardrails (diff)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     # AID-2318: explicit least-privilege token scopes so the countersign gate
     # can read the PR conversation (gh pr view) and resolve GH-<n> citations
     # (gh api) regardless of the repo-default workflow permissions.
@@ -105,7 +105,7 @@ jobs:
   # scripts/precheck/ beyond the frozen receipt baseline fails here.
   precheck-baseline:
     name: Promotion precheck baseline (self-test + dry-run)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -122,7 +122,7 @@ jobs:
 
   codexdojo:
     name: codexDojo (TS)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     defaults:
       run:
         working-directory: engines/codexDojo
@@ -165,7 +165,7 @@ jobs:
 
   pixeldojo:
     name: pixelDojo (TS)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     defaults:
       run:
         working-directory: engines/pixelDojo
@@ -213,7 +213,7 @@ jobs:
 
   voxeldojo:
     name: voxelDojo (TS)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     defaults:
       run:
         working-directory: engines/voxelDojo
@@ -263,7 +263,7 @@ jobs:
 
   codexdojo-os:
     name: codexdojo-os (TS)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     defaults:
       run:
         working-directory: engines/codexdojo-os-prototype
@@ -314,7 +314,7 @@ jobs:
   # shared learner/curriculum remainder, so no suite runs twice.
   learner:
     name: Python (learner + curriculum shared)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -357,7 +357,7 @@ jobs:
 
   literacydojo:
     name: literacyDojo (TS + content)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     defaults:
       run:
         working-directory: engines/literacyDojo
@@ -397,7 +397,7 @@ jobs:
 
   minitown:
     name: miniTown (TS)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     defaults:
       run:
         working-directory: engines/miniTown
@@ -439,7 +439,7 @@ jobs:
 
   dojotoday:
     name: dojoToday (TS + substrate)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     defaults:
       run:
         working-directory: engines/dojoToday
@@ -476,7 +476,7 @@ jobs:
     name: product readiness (claims)
     needs: [literacydojo, codexdojo-os, dojotoday, pixeldojo, voxeldojo, minitown]
     if: ${{ always() }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -566,7 +566,7 @@ jobs:
 
   curriculum-node:
     name: curriculum Node (18 projects)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -597,7 +597,7 @@ jobs:
 
   curriculum-go:
     name: curriculum Go
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
@@ -613,7 +613,7 @@ jobs:
 
   curriculum-rust:
     name: curriculum Rust
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
@@ -633,7 +633,7 @@ jobs:
   # per game so a single regressing game fails the PR with a clear pointer.
   voxeldojo-games-discover:
     name: voxelDojo games (discover)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       matrix: ${{ steps.set.outputs.matrix }}
     steps:
@@ -645,7 +645,7 @@ jobs:
   voxeldojo-games:
     name: voxelDojo games/${{ matrix.game }} (TS)
     needs: voxeldojo-games-discover
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
@@ -706,7 +706,7 @@ jobs:
   # annotation as the visible signal that the gap is open, without failing CI.
   pixeldojo-games-discover:
     name: pixelDojo games/* (discover)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       matrix: ${{ steps.set.outputs.matrix }}
     steps:
@@ -738,7 +738,7 @@ jobs:
     # invisible in the jobs list — so gate on the discover output to make the
     # no-games case a clean skip.
     if: ${{ needs.pixeldojo-games-discover.outputs.matrix != '[]' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
@@ -787,7 +787,7 @@ jobs:
   # the canonical learner source against accidental writes during smoke runs.
   openclaw:
     name: openclaw (checklist runner)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -806,7 +806,7 @@ jobs:
   # monolithic `python` job above; this isolates the failure signal.
   aiDevschoolMvp:
     name: aiDevschoolMvp (installer + acceptance)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -820,7 +820,7 @@ jobs:
   # without forcing the reviewer to re-run everything.
   minimaxDojo:
     name: minimaxDojo (tutor core)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -831,7 +831,7 @@ jobs:
 
   miniMaxEvolutionEngine:
     name: miniMaxEvolutionEngine (supervisor)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -850,7 +850,7 @@ jobs:
   # registry fails the PR instead of the first real freeze.
   factory:
     name: factory (contract+registry)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -866,7 +866,7 @@ jobs:
   # without evidence" spine.
   sdlc-quest:
     name: sdlc-quest (TS)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     defaults:
       run:
         working-directory: engines/sdlc-quest
@@ -883,7 +883,7 @@ jobs:
 
   zai-duolingo-like:
     name: zai-duolingo-like (Next.js + Prisma)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     defaults:
       run:
         working-directory: engines/zai-duolingo-like
@@ -946,7 +946,7 @@ jobs:
   # production major), Playwright Chromium for the browser checker suites.
   school-entry:
     name: school-entry (TS)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     defaults:
       run:
         working-directory: engines/school-entry
@@ -983,7 +983,7 @@ jobs:
   # (orphaned tokens are expected in reference analyses), errors fail the job.
   design-md-lint:
     name: DESIGN.md lint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
         with:
@@ -1035,7 +1035,7 @@ jobs:
   # the pin in the same PR: python3 scripts/skill_vendored_guard.py --update-pins
   skill-vendored-guard:
     name: Vendored skills guard (skill-lock overwrite canary)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
