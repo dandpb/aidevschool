@@ -1,0 +1,35 @@
+{"train_questions": 316, "calibration_questions": 138, "device": "cpu", "config": {"epochs": 4, "micro_batch": 2, "grad_accum": 8, "encoder_lr": 2.5e-05, "head_lr": 5e-05, "min_lr": 1e-06, "weight_decay": 0.01, "grad_clip": 1.0, "loss": "soft-ce", "rl_samples": 4, "sigma_start": 0.4, "sigma_end": 0.1, "w_sph": 0.75, "w_rps": 1.0, "shuffle_options": ["choice", "noul"], "freeze_encoder": true, "calib_max": 400, "calib_frac": 0.1, "calib_seed": 20260922, "seed": 20261004, "max_len": 512, "head_max_len": 256, "amp": null, "gradient_checkpointing": false, "log_every": 25}}
+epoch 1/4 step 25 loss 0.2421
+epoch 1/4 step 50 loss 1.5133
+epoch 1/4 step 75 loss 1.1075
+epoch 1/4 step 100 loss 1.4785
+epoch 1/4 step 125 loss 0.8516
+epoch 1/4 step 150 loss 1.4889
+epoch 1/4 mean loss 1.0658
+completed epoch 1 loss 1.0658124653221686
+epoch 2/4 step 25 loss 0.4126
+epoch 2/4 step 50 loss 2.1198
+epoch 2/4 step 75 loss 1.1959
+epoch 2/4 step 100 loss 1.6941
+epoch 2/4 step 125 loss 1.0403
+epoch 2/4 step 150 loss 1.3440
+epoch 2/4 mean loss 1.0292
+completed epoch 2 loss 1.02918233736595
+epoch 3/4 step 25 loss 1.0984
+epoch 3/4 step 50 loss 0.2284
+epoch 3/4 step 75 loss 1.3472
+epoch 3/4 step 100 loss 1.5876
+epoch 3/4 step 125 loss 0.8563
+epoch 3/4 step 150 loss 1.2562
+epoch 3/4 mean loss 1.0174
+completed epoch 3 loss 1.017446945268142
+epoch 4/4 step 25 loss 1.4842
+epoch 4/4 step 50 loss 0.3089
+epoch 4/4 step 75 loss 1.4269
+epoch 4/4 step 100 loss 0.7711
+epoch 4/4 step 125 loss 1.5948
+epoch 4/4 step 150 loss 1.3170
+epoch 4/4 mean loss 1.0154
+completed epoch 4 loss 1.015428735108315
+Calibrating only on separate calibration split
+Checkpoint exported: .scratch/laya-jev/finetune/typed-head-01 SHA256: e16f0aa70287f37f3d945c7b4fe7581a5fa996af9fe306ccbc3db43ffec8be97

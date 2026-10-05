@@ -1,0 +1,93 @@
+[
+  {
+    "id": "aiDevschoolMvp",
+    "name": "AI DevSchool MVP",
+    "description": "Tutor por conversa com trilha de conceitos e verificação por scripts.",
+    "reason": "Você pratica conceitos de IA em uma conversa guiada.",
+    "source": "engines/aiDevschoolMvp/"
+  },
+  {
+    "id": "codexDojo",
+    "name": "CodexDojo",
+    "description": "Dashboard de aprendizagem para acompanhar unidades e evidências.",
+    "reason": "Você encontra uma visão organizada das unidades e evidências.",
+    "source": "engines/codexDojo/"
+  },
+  {
+    "id": "codexdojo-os-prototype",
+    "name": "CodexDojo OS",
+    "description": "Ambiente de aprendizagem com missões, terminal e mentor.",
+    "reason": "Você explora missões e ferramentas em um ambiente de aprendizagem.",
+    "source": "engines/codexdojo-os-prototype/"
+  },
+  {
+    "id": "dojoToday",
+    "name": "Dojo Today",
+    "description": "Orientação diária para programadores, com revisões e unidade ativa.",
+    "reason": "Você encontra orientação sobre a próxima prática de programação.",
+    "source": "engines/dojoToday/"
+  },
+  {
+    "id": "literacyDojo",
+    "name": "Literacy Dojo",
+    "description": "Microlições de inteligência artificial para pessoas não técnicas.",
+    "reason": "Você pratica o uso de IA em pequenas lições, sem precisar programar.",
+    "source": "engines/literacyDojo/"
+  },
+  {
+    "id": "miniMaxEvolutionEngine",
+    "name": "MiniMax Evolution Engine",
+    "description": "Orquestração do ciclo de desenvolvimento com agentes no Claude Code.",
+    "reason": "Você acompanha um ciclo de desenvolvimento supervisionado por agentes.",
+    "source": "engines/miniMaxEvolutionEngine/"
+  },
+  {
+    "id": "miniTown",
+    "name": "Mini Town",
+    "description": "Exploração acolhedora de uma cidade, como orientação inicial sem atividade avaliada.",
+    "reason": "Você pode explorar uma entrada acolhedora, sem atividade avaliada.",
+    "source": "engines/miniTown/"
+  },
+  {
+    "id": "minimaxDojo",
+    "name": "Minimax Dojo",
+    "description": "Núcleo de tutoria com agentes e quadro de aprendizagem.",
+    "reason": "Você encontra protocolos de tutoria e acompanhamento por agentes.",
+    "source": "engines/minimaxDojo/"
+  },
+  {
+    "id": "openclaw",
+    "name": "OpenClaw",
+    "description": "Execução de checklists de um ciclo de desenvolvimento simulado.",
+    "reason": "Você acompanha as etapas de um checklist de desenvolvimento.",
+    "source": "engines/openclaw/"
+  },
+  {
+    "id": "pixelDojo",
+    "name": "Pixel Dojo",
+    "description": "Aprendizagem por jogos bidimensionais com desafios e evidências.",
+    "reason": "Você explora conceitos de programação por mecânicas de jogos 2D.",
+    "source": "engines/pixelDojo/"
+  },
+  {
+    "id": "sdlc-quest",
+    "name": "SDLC Quest",
+    "description": "Jogo para explorar etapas do ciclo de desenvolvimento de software.",
+    "reason": "Você pratica decisões de intenção, planejamento e verificação.",
+    "source": "engines/sdlc-quest/"
+  },
+  {
+    "id": "voxelDojo",
+    "name": "Voxel Dojo",
+    "description": "Simulações tridimensionais de conceitos de programação e sistemas.",
+    "reason": "Você explora estruturas e dinâmicas de sistemas em simulações 3D.",
+    "source": "engines/voxelDojo/"
+  },
+  {
+    "id": "zai-duolingo-like",
+    "name": "Zai Duolingo Like",
+    "description": "Aplicação experimental; capacidades pedagógicas ainda não verificadas.",
+    "reason": "As capacidades desta experiência ainda precisam ser verificadas.",
+    "source": "engines/zai-duolingo-like/"
+  }
+]

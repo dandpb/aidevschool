@@ -1,0 +1,87 @@
+{
+  "base_sha256": "4fa56de72383a9d3efa9cfa78955733c81b9fc8067a587ca4beb82c78107a24e",
+  "base_config_sha256": "ebf0cd524d92342a6be5e48e9fca3d7c2babfb5a56ccd79d2171ef5d8c7f7be8",
+  "output_sha256": "760d6479aef421be52656431caea0a5a79099888027c92886f21d588e10393cf",
+  "output_config_sha256": "4d6a62266839cebe2cc2f749f4b9762a5548ae87c2ebc175a04be7095498903e",
+  "config": {
+    "epochs": 4,
+    "micro_batch": 2,
+    "grad_accum": 8,
+    "encoder_lr": 2.5e-05,
+    "head_lr": 0.0005,
+    "min_lr": 1e-06,
+    "weight_decay": 0.01,
+    "grad_clip": 1.0,
+    "loss": "soft-ce",
+    "rl_samples": 4,
+    "sigma_start": 0.4,
+    "sigma_end": 0.1,
+    "w_sph": 0.75,
+    "w_rps": 1.0,
+    "shuffle_options": [
+      "choice",
+      "noul"
+    ],
+    "freeze_encoder": true,
+    "calib_max": 400,
+    "calib_frac": 0.1,
+    "calib_seed": 20260922,
+    "seed": 20261004,
+    "max_len": 512,
+    "head_max_len": 256,
+    "amp": null,
+    "gradient_checkpointing": false,
+    "log_every": 25
+  },
+  "train_questions": 316,
+  "calibration_questions": 138,
+  "epoch_losses": [
+    1.0142000951344454,
+    0.9513531416283236,
+    0.9501343510626473,
+    0.9177578454601425
+  ],
+  "training_seconds": 566.206969310002,
+  "encoder_digest_before": "fae9564bb1f563e0ecc328108a739bb7637d03b10683488cba825eb28327550b",
+  "encoder_digest_after": "fae9564bb1f563e0ecc328108a739bb7637d03b10683488cba825eb28327550b",
+  "trainable_parameters": 26512131,
+  "total_parameters": 421293827,
+  "calibration": {
+    "temperature": [
+      1.7074161767959595,
+      1.063750982284546,
+      1.1965596675872803
+    ],
+    "temperature_by_options": {},
+    "n_by_bucket": {
+      "score:3-5": 98,
+      "choice:3-5": 20,
+      "noul:2": 20
+    }
+  },
+  "teacher_model": "jev-1.13.0",
+  "data_manifest": {
+    "source": "hand-authored synthetic templates and repository catalog",
+    "limitations": [
+      "Split wording families differ, but underlying intents and many component sentences are shared. This is a correlated synthetic test, not real-world generalization.",
+      "Recommendation top-1 reference expresses a intended engine; suitability scores will be teacher distributions, not independently adjudicated labels."
+    ],
+    "splits": {
+      "train": {
+        "rows": 244,
+        "questions": 316,
+        "sha256": "04d71f7544970d1f42624775361b883b7745e0be000c730ed5daf894fb9922a8"
+      },
+      "calibration": {
+        "rows": 98,
+        "questions": 138,
+        "sha256": "04bf092c4dd2a5d0dfd64b8c59340f634a5781baafa9cab5ff7b7e0bbc72ddfe"
+      },
+      "test": {
+        "rows": 362,
+        "questions": 410,
+        "sha256": "5874e4601467b2302ec40b0852c74fdb0aacef062a840e38e5702088132ee047"
+      }
+    }
+  }
+}

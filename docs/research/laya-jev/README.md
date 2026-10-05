@@ -6,6 +6,8 @@ Este diretório preserva o experimento de 4 de outubro de 2026, incluindo evidê
 
 Leia [RESUME.md](RESUME.md) primeiro para continuar na conversa indicada pelo usuário. Leia [REPORT.md](REPORT.md) para a análise e [evidence/](evidence/) para os logs. Não confundir testes offline com resultados de qualidade dos modelos.
 
+O [fine-tuning typed-decisions](finetune/REPORT.md) foi executado em duas receitas, com [reprodução](finetune/README.md), splits congelados e targets Jev versionados. A v2 selecionada melhorou a concordância no teste exploratório, mas teve regressões no corpus original; permanece um checkpoint experimental fora da produção. Pesos em scratch, hashes e instruções de restauração no relatório.
+
 ## Instalar e executar os três modelos localmente
 
 A partir da raiz deste repositório:

@@ -1,0 +1,9 @@
+{
+  "archive_path_at_execution": "/workspace/aidevschool/.scratch/laya-jev/finetune/laya-typed-decisions-aidevschool-head-v1.zip",
+  "archive_bytes": 56642652,
+  "archive_sha256": "45913118992461bc2a7db966ae677220e489be3e346caf7271a071a7a8b96bd9",
+  "checkpoint_path_at_execution": "/workspace/aidevschool/.scratch/laya-jev/finetune/typed-head-01",
+  "restored_checkpoint_path_at_execution": "/workspace/aidevschool/.scratch/laya-jev/finetune/typed-head-restored-01",
+  "restored_weights_sha256": "e16f0aa70287f37f3d945c7b4fe7581a5fa996af9fe306ccbc3db43ffec8be97",
+  "binary_policy": "Experimental binaries remain outside Git. Rebuild with recipe or preserve this archive separately."
+}

@@ -1,0 +1,18 @@
+{
+  "recorded_before_round_2_utc": "2026-10-05T01:50:45.262659+00:00",
+  "candidates": [
+    "typed-head-01",
+    "typed-head-02"
+  ],
+  "selection": "Minimum mean KL(Jev-1.13.0 || model) on calibration split, including fitted temperatures. Ties choose v1. Calibration is tuning data, not independent evaluation.",
+  "round_2": {
+    "base": "official typed-decisions",
+    "epochs": 4,
+    "head_lr": 0.0005,
+    "loss": "soft-ce",
+    "encoder_frozen": true
+  },
+  "test_status": "Test was inspected after round1. Round2 results are exploratory, not a blind held-out claim. Historical corpus is known regression data, never model selection.",
+  "budget": "Two training runs; no selection by test or original corpus",
+  "script_sha256": "1b3a80c5b593c2db365ac18736de8c6c3861dae07182ed4fe4f81ab28d7d6985"
+}

@@ -1,0 +1,24 @@
+{
+  "source": "hand-authored synthetic templates and repository catalog",
+  "limitations": [
+    "Split wording families differ, but underlying intents and many component sentences are shared. This is a correlated synthetic test, not real-world generalization.",
+    "Recommendation top-1 reference expresses a intended engine; suitability scores will be teacher distributions, not independently adjudicated labels."
+  ],
+  "splits": {
+    "train": {
+      "rows": 244,
+      "questions": 316,
+      "sha256": "04d71f7544970d1f42624775361b883b7745e0be000c730ed5daf894fb9922a8"
+    },
+    "calibration": {
+      "rows": 98,
+      "questions": 138,
+      "sha256": "04bf092c4dd2a5d0dfd64b8c59340f634a5781baafa9cab5ff7b7e0bbc72ddfe"
+    },
+    "test": {
+      "rows": 362,
+      "questions": 410,
+      "sha256": "5874e4601467b2302ec40b0852c74fdb0aacef062a840e38e5702088132ee047"
+    }
+  }
+}

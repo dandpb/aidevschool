@@ -1,0 +1,38 @@
+{
+  "calibration_sha256": "04bf092c4dd2a5d0dfd64b8c59340f634a5781baafa9cab5ff7b7e0bbc72ddfe",
+  "selected": "v2",
+  "metrics": {
+    "v1": {
+      "mean_kl_teacher_to_model": 0.5037663039414519,
+      "teacher_map_agreement": 74,
+      "questions": 138,
+      "weights_sha256": "e16f0aa70287f37f3d945c7b4fe7581a5fa996af9fe306ccbc3db43ffec8be97"
+    },
+    "v2": {
+      "mean_kl_teacher_to_model": 0.4387604054454099,
+      "teacher_map_agreement": 82,
+      "questions": 138,
+      "weights_sha256": "760d6479aef421be52656431caea0a5a79099888027c92886f21d588e10393cf"
+    }
+  },
+  "policy_sha256": "20f5d30d930f690f0f5878eea5a06bc38a88f5360f55a0bcd88e62f0c461a665",
+  "policy": {
+    "recorded_before_round_2_utc": "2026-10-05T01:50:45.262659+00:00",
+    "candidates": [
+      "typed-head-01",
+      "typed-head-02"
+    ],
+    "selection": "Minimum mean KL(Jev-1.13.0 || model) on calibration split, including fitted temperatures. Ties choose v1. Calibration is tuning data, not independent evaluation.",
+    "round_2": {
+      "base": "official typed-decisions",
+      "epochs": 4,
+      "head_lr": 0.0005,
+      "loss": "soft-ce",
+      "encoder_frozen": true
+    },
+    "test_status": "Test was inspected after round1. Round2 results are exploratory, not a blind held-out claim. Historical corpus is known regression data, never model selection.",
+    "budget": "Two training runs; no selection by test or original corpus",
+    "script_sha256": "1b3a80c5b593c2db365ac18736de8c6c3861dae07182ed4fe4f81ab28d7d6985"
+  },
+  "limitation": "Calibration labels also fitted temperatures. This is tuning fit, not independent quality; round2 test was already inspected after round1."
+}

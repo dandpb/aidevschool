@@ -1,0 +1,15 @@
+{
+  "base_config_sha256": "ebf0cd524d92342a6be5e48e9fca3d7c2babfb5a56ccd79d2171ef5d8c7f7be8",
+  "base_sha256": "4fa56de72383a9d3efa9cfa78955733c81b9fc8067a587ca4beb82c78107a24e",
+  "teacher_model": "jev-1.13.0",
+  "script_sha256": {
+    "train_adapter.py": "f72667d0c584cfcab73ba41ff32abdc3c28c0f73b5527d5969ca2aafb984cecb",
+    "test_data.py": "450294e3f2826334801f1d9b4cebf7c906ec1631b4af42f79dc860be0f59f90d",
+    "collect_teacher.py": "e4753344b698b10b4f54dd8cbc0ebe5f84fdb1f4afeb54ba07c3e0997a758508",
+    "build_data.py": "da8b38217476f374f906cb025cd166c57f4a20043e282c9676ffafab384b5629",
+    "restore_adapter.py": "251933f1f1296a971f96af13046f679157647bfd3b173e4b2f9d41d9e7277498",
+    "test_targets.py": "f1be245b87486577fc887ce5f09672c6e689fda19be14c0c5fc90632b16488f7",
+    "analyze_training.py": "5a5a3636462b7bcf9fad626ab17c0aa9fd95aeabdb48b1b220ff4312d64ddb80",
+    "evaluate.py": "29cbb1219104eafc78fa738328cc234f988173dfdefefb9eb2dd7dd0e290c4d7"
+  }
+}

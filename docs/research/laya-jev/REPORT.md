@@ -2,6 +2,8 @@
 
 **Data:** 4 de outubro de 2026, America/Sao_Paulo. **Branch:** `research/laya-jev-handoff-2026-10-04`. **Baseline:** `574805d395478e98e5f9a09ca67fdc7b9765a94e`.
 
+**Continuação com treino:** o [relatório de fine-tuning typed-decisions](finetune/REPORT.md) registra duas receitas reais em CPU. A v2 aproximou as decisões do Jev no novo teste exploratório (26,1% → 44,6% de concordância), mas regrediu no corpus original (122/142 → 121/142) e manteve ranking top1 em 0/6. A recomendação de manter Jev permanece. Os números abaixo descrevem a comparação anterior ao treino, com outra configuração Laya.
+
 ## 1. Conclusão executiva
 
 **A comparação live foi concluída.** Laya acertou **119/142 respostas rotuladas (83,8%)**, enquanto Jev acertou **142/142 (100%)**, nas mesmas 62 entradas congeladas. Nas seis recomendações sobre o catálogo real, a engine de referência ficou no primeiro lugar em **1/6** para Laya e **6/6** para Jev. A rodada fixada de Jev também acertou 6/6 rankings.
@@ -97,7 +99,7 @@ Nas seis entradas, a referência esteve no top-3 em **1/6** para Laya e **6/6** 
 
 ### Modelo especializado
 
-No mesmo subconjunto de triagem inglesa, english acertou **29/36**, typed-decisions **32/36** e Jev **36/36**. O ganho de 3 acertos não se estende automaticamente à recomendação, ao português ou à avaliação pedagógica. Não fizemos fine-tuning.
+No mesmo subconjunto de triagem inglesa, english acertou **29/36**, typed-decisions **32/36** e Jev **36/36**. O ganho de 3 acertos não se estende automaticamente à recomendação, ao português ou à avaliação pedagógica. Nesta rodada não fizemos fine-tuning; a continuação está no relatório específico acima.
 
 ### Erros ilustrativos
 

@@ -6,7 +6,13 @@ Destino indicado pelo usuário: `codex://threads/01a1089e-eb9d-731a-8584-f166a10
 
 O usuário pediu baixar e rodar os três modelos do Laya localmente, compará-los com Jev nas tarefas do AI DevSchool e entregar relatório completo. Autorizou salvar/usar sua chave TypeSafe, instalar dependências e executar os modelos; pediu agora commit para continuar nessa outra conversa. Não pedir novamente essas autorizações. A credencial foi salva apenas no `.env` ignorado da instância anterior e não está no Git. Utilizar a credencial do processo/gerenciador de secrets do novo executor; não imprimir ou versionar valores.
 
-## Atualização live desta retomada
+## Continuação com fine-tuning concluída
+
+O pedido posterior de treinar mais typed-decisions foi executado em CPU: duas receitas de quatro épocas, encoder congelado, 316 perguntas de treino com distribuições reais Jev-1.13.0 e 138 para calibração. A v2 foi escolhida por KL menor na calibração antes de sua avaliação no teste. No teste exploratório, concordância 26,1% → 44,6%; no corpus original, acertos 122/142 → 121/142 e ranking top1 0/6. Não trocar produção por esse resultado.
+
+Leia [finetune/REPORT.md](finetune/REPORT.md) e [finetune/README.md](finetune/README.md). Scripts, datasets, targets, previsões, políticas e hashes são versionados; pesos/ZIP ficam em scratch. O pacote selecionado usa a base oficial para reconstruir o peso SHA `760d6479aef421be52656431caea0a5a79099888027c92886f21d588e10393cf`. Restaurar/verificar o pacote ou reexecutar o treino com os targets versionados; não pressupor que scratch/secrets sobrevivem a outro executor. O corpus histórico permaneceu intocado, e o teste novo visto após v1 deve continuar identificado como exploratório.
+
+## Comparação live anterior ao fine-tuning
 
 A branch foi retomada a partir de `574805d395478e98e5f9a09ca67fdc7b9765a94e`. A rede efetiva permitiu Hugging Face e TypeSafe. Os três pesos já baixados nesta sessão foram reaproveitados com `LAYA_ROOT=/workspace/laya`, conferidos pelo manifesto, e o script do repositório executou todos offline. A comparação principal concluiu 62/62 requisições por backend: Laya 119/142, Jev 142/142; rankings 1/6 e 6/6. Veja `REPORT.md` e `evidence/live-2026-10-04/` para proveniência, timing e variantes. O relatório do handoff sem inferência foi preservado em `REPORT-historical.md`.
 
@@ -19,7 +25,7 @@ Os próximos passos abaixo descrevem a retomada original e continuam úteis para
 - Corpus e SHA-256: `dataset.jsonl`, `dataset.sha256`.
 - Scripts portáveis de instalação, download, inferência local e comparação.
 - Relatório e logs anteriores em `REPORT.md` e `evidence/`.
-- Testes históricos: 1.789 verificações assertivas, 84 unit tests, 247 testes HTTP Laya; 24 Python e 1 Node da integração Jev. Testes live ficaram sem resultados.
+- Testes históricos: 1.789 verificações assertivas, 84 unit tests, 247 testes HTTP Laya; 24 Python e 1 Node da integração Jev. No handoff inicial não havia resultados live; as retomadas descritas acima concluíram inferência e medição.
 
 ## Próximas ações
 

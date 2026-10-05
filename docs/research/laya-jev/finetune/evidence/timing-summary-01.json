@@ -1,0 +1,215 @@
+{
+  "method": "One sequential warmed local call per row, includes SDK/validation/corpus hash bookkeeping; one discarded warmup, its duration not recorded. Load is loader time incl integrity verification/construct/deserialize; HTTP teacher combines remote inference and transport, not separable. CPU4 threads, one model process at a time; no repeated controlled microbenchmark.",
+  "base-test-02": {
+    "n": 362,
+    "mean_ms": 519.1527027127047,
+    "median_ms": 495.5168140004389,
+    "p95_ms": 703.631896399929,
+    "timing_field": "warm_inference_ms",
+    "load_ms": 3207.2240490015247,
+    "by_suite": {
+      "recommendation": {
+        "n": 338,
+        "mean_ms": 496.95334985500324,
+        "median_ms": 490.5985570003395,
+        "p95_ms": 575.7068639513818
+      },
+      "sentiment": {
+        "n": 12,
+        "mean_ms": 688.0937134164924,
+        "median_ms": 686.7182744990714,
+        "p95_ms": 779.4851786005893
+      },
+      "triage": {
+        "n": 12,
+        "mean_ms": 975.4934641675087,
+        "median_ms": 982.2460519990273,
+        "p95_ms": 1139.203308602555
+      }
+    }
+  },
+  "trained-test-01": {
+    "n": 362,
+    "mean_ms": 513.68560232043,
+    "median_ms": 489.26587300047686,
+    "p95_ms": 700.213563847501,
+    "timing_field": "warm_inference_ms",
+    "load_ms": 3143.956733001687,
+    "by_suite": {
+      "recommendation": {
+        "n": 338,
+        "mean_ms": 491.3892478136361,
+        "median_ms": 486.50893199919665,
+        "p95_ms": 566.0885543011317
+      },
+      "sentiment": {
+        "n": 12,
+        "mean_ms": 689.3439269994511,
+        "median_ms": 696.0820674976276,
+        "p95_ms": 807.6830841004265
+      },
+      "triage": {
+        "n": 12,
+        "mean_ms": 966.0412629161025,
+        "median_ms": 943.6684159991273,
+        "p95_ms": 1100.287708749238
+      }
+    }
+  },
+  "trained-test-02": {
+    "n": 362,
+    "mean_ms": 525.1809249613609,
+    "median_ms": 499.32316549893585,
+    "p95_ms": 740.1379850993179,
+    "timing_field": "warm_inference_ms",
+    "load_ms": 3219.7934920004627,
+    "by_suite": {
+      "recommendation": {
+        "n": 338,
+        "mean_ms": 503.56476416569564,
+        "median_ms": 492.18412000118406,
+        "p95_ms": 615.9454457518223
+      },
+      "sentiment": {
+        "n": 12,
+        "mean_ms": 682.3113997500817,
+        "median_ms": 672.4415240005328,
+        "p95_ms": 762.2940106006354
+      },
+      "triage": {
+        "n": 12,
+        "mean_ms": 976.9056459172134,
+        "median_ms": 972.261957000228,
+        "p95_ms": 1145.200424048744
+      }
+    }
+  },
+  "base-original-01": {
+    "n": 62,
+    "mean_ms": 3797.278416919653,
+    "median_ms": 613.7594030024047,
+    "p95_ms": 33380.731745050616,
+    "timing_field": "warm_inference_ms",
+    "load_ms": 3210.5362939983024,
+    "by_suite": {
+      "metric-lint": {
+        "n": 12,
+        "mean_ms": 403.67915841670765,
+        "median_ms": 398.974381001608,
+        "p95_ms": 448.1232266012739
+      },
+      "prompt-builder": {
+        "n": 4,
+        "mean_ms": 398.01361999980145,
+        "median_ms": 396.5019850002136,
+        "p95_ms": 432.5708167983976
+      },
+      "school-entry": {
+        "n": 6,
+        "mean_ms": 33397.591374833304,
+        "median_ms": 33490.14134299978,
+        "p95_ms": 33777.00081449893
+      },
+      "sentiment": {
+        "n": 16,
+        "mean_ms": 546.9524037507654,
+        "median_ms": 541.2590199975966,
+        "p95_ms": 613.4808020024138
+      },
+      "triage": {
+        "n": 24,
+        "mean_ms": 827.4279482919459,
+        "median_ms": 829.363741000634,
+        "p95_ms": 952.7491552487844
+      }
+    }
+  },
+  "trained-original-01": {
+    "n": 62,
+    "mean_ms": 3814.5100987253354,
+    "median_ms": 649.0238155001862,
+    "p95_ms": 33228.56604179924,
+    "timing_field": "warm_inference_ms",
+    "load_ms": 3216.835049002839,
+    "by_suite": {
+      "metric-lint": {
+        "n": 12,
+        "mean_ms": 410.62429824917973,
+        "median_ms": 399.08384249974915,
+        "p95_ms": 482.73595539812953
+      },
+      "prompt-builder": {
+        "n": 4,
+        "mean_ms": 436.11151999994036,
+        "median_ms": 441.07522149897704,
+        "p95_ms": 473.3552726494963
+      },
+      "school-entry": {
+        "n": 6,
+        "mean_ms": 33640.99082933232,
+        "median_ms": 33312.17745649883,
+        "p95_ms": 34771.69408449845
+      },
+      "sentiment": {
+        "n": 16,
+        "mean_ms": 563.6125246248866,
+        "median_ms": 563.3002219983609,
+        "p95_ms": 647.978808249718
+      },
+      "triage": {
+        "n": 24,
+        "mean_ms": 790.1642954995319,
+        "median_ms": 799.7753629988438,
+        "p95_ms": 891.6380124992429
+      }
+    }
+  },
+  "trained-original-02": {
+    "n": 62,
+    "mean_ms": 3811.1149881448996,
+    "median_ms": 632.1390954999515,
+    "p95_ms": 33442.36896704806,
+    "timing_field": "warm_inference_ms",
+    "load_ms": 3156.9838330033235,
+    "by_suite": {
+      "metric-lint": {
+        "n": 12,
+        "mean_ms": 412.3257383340994,
+        "median_ms": 410.7733130003908,
+        "p95_ms": 443.9988933503628
+      },
+      "prompt-builder": {
+        "n": 4,
+        "mean_ms": 413.4025559988004,
+        "median_ms": 413.6098924991529,
+        "p95_ms": 458.15431219816674
+      },
+      "school-entry": {
+        "n": 6,
+        "mean_ms": 33623.389618833244,
+        "median_ms": 33660.60203199959,
+        "p95_ms": 34434.31154300106
+      },
+      "sentiment": {
+        "n": 16,
+        "mean_ms": 550.7818246869647,
+        "median_ms": 544.1645894989051,
+        "p95_ms": 629.9151302491737
+      },
+      "triage": {
+        "n": 24,
+        "mean_ms": 797.2818030411872,
+        "median_ms": 788.4236049994797,
+        "p95_ms": 957.4721916473208
+      }
+    }
+  },
+  "teacher-test-01": {
+    "n": 362,
+    "mean_ms": 125.80798569612566,
+    "median_ms": 119.85563300004287,
+    "p95_ms": 167.6809254993713,
+    "timing_field": "http_roundtrip_ms",
+    "load_ms": null
+  }
+}

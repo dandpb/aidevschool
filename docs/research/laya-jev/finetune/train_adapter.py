@@ -1,0 +1,87 @@
+"""Continue typed-decisions head training with explicitly separate calibration rows."""
+import argparse
+import dataclasses
+import hashlib
+import json
+import os
+import sys
+import time
+from pathlib import Path
+
+ROOT=Path(__file__).resolve().parent
+sys.path.insert(0,str(ROOT.parent))
+from validation import input_digest, validate_result
+
+def sha(path):
+ h=hashlib.sha256()
+ with Path(path).open('rb') as f:
+  for part in iter(lambda:f.read(1<<20),b''):h.update(part)
+ return h.hexdigest()
+
+def digest_encoder(model):
+ h=hashlib.sha256()
+ for name,tensor in model.encoder.state_dict().items():
+  h.update(name.encode());h.update(tensor.detach().cpu().contiguous().numpy().tobytes())
+ return h.hexdigest()
+
+def read_gold(split,path):
+ rows=[json.loads(l) for l in (ROOT/(split+'.jsonl')).read_text().splitlines()]
+ targets=[json.loads(l) for l in Path(path).read_text().splitlines()]
+ if len(rows)!=len(targets):raise ValueError('Incomplete teacher coverage')
+ result=[]
+ for row,record in zip(rows,targets):
+  if row['id']!=record['id'] or input_digest(row)!=record['input_sha256'] or record['status']!='ok' or record.get('split')!=split or record.get('result',{}).get('model')!='jev-1.13.0':raise ValueError('Invalid teacher provenance')
+  answers=validate_result(row,record['result'])['answers']
+  gold={}
+  for qid,q in row['questions'].items():
+   if q['type']=='noul':p=answers[qid]['noul'];probs={'false':1-p,'true':p}
+   else:probs=answers[qid]['probabilities']
+   gold[qid]={'probabilities':probs}
+  result.append({'state':row['state'],'questions':row['questions'],'gold':gold})
+ return result
+
+def main():
+ p=argparse.ArgumentParser();p.add_argument('--base',required=True);p.add_argument('--teacher-train',required=True);p.add_argument('--teacher-calibration',required=True);p.add_argument('--output',required=True);p.add_argument('--epochs',type=int,default=4);p.add_argument('--head-lr',type=float,default=5e-5);p.add_argument('--model-name',default='laya-typed-decisions-aidevschool-head-v1');a=p.parse_args()
+ out=Path(a.output)
+ if out.exists():raise SystemExit('Refusing existing training output')
+ manifest=json.loads((ROOT.parent/'checkpoint-manifest.json').read_text());entry=next(e for e in manifest['checkpoints'] if e['name']=='typed-decisions')
+ if sha(Path(a.base)/'model.safetensors')!=entry['sha256']:raise ValueError('Base weights do not match pinned typed-decisions')
+ data_manifest=json.loads((ROOT/'data-manifest.json').read_text())
+ for split in ['train','calibration','test']:
+  if sha(ROOT/(split+'.jsonl'))!=data_manifest['splits'][split]['sha256']:raise ValueError('Frozen training dataset mismatch')
+ os.environ['HF_HUB_OFFLINE']='1';os.environ['TRANSFORMERS_OFFLINE']='1'
+ import torch
+ from laya.train import TrainConfig,load_checkpoint,items_from_rows,train_model,calibration_records,save_checkpoint
+ from laya.calibrate import fit_temperature_map
+ torch.set_num_threads(4);torch.manual_seed(20261004)
+ model,tok,cfg=load_checkpoint(a.base)
+ config=TrainConfig(epochs=a.epochs,micro_batch=2,grad_accum=8,head_lr=a.head_lr,freeze_encoder=True,loss='soft-ce',shuffle_options=('choice','noul'),max_len=512,head_max_len=256,gradient_checkpointing=False,seed=20261004,log_every=25)
+ config.validate()
+ if not __import__('math').isfinite(a.head_lr) or a.head_lr<=0:raise ValueError('head_lr must be positive and finite')
+ train,skipped=items_from_rows(tok,read_gold('train',a.teacher_train),512,256)
+ calib,calib_skipped=items_from_rows(tok,read_gold('calibration',a.teacher_calibration),512,256)
+ if skipped or calib_skipped:raise ValueError('Dropped training or calibration items')
+ before=digest_encoder(model)
+ print(json.dumps({'train_questions':len(train),'calibration_questions':len(calib),'device':'cpu','config':dataclasses.asdict(config)}),flush=True)
+ out.mkdir(parents=True)
+ def epoch_end(epoch,loss):
+  if not __import__('math').isfinite(loss):raise ValueError('Nonfinite training loss')
+  print('completed epoch',epoch+1,'loss',loss,flush=True)
+ start=time.perf_counter()
+ history=train_model(model,tok,train,config,torch.device('cpu'),512,256,on_epoch_end=epoch_end)
+ training_seconds=time.perf_counter()-start
+ if before!=digest_encoder(model):raise ValueError('Frozen encoder changed during training')
+ print('Calibrating only on separate calibration split',flush=True)
+ fitted=fit_temperature_map(calibration_records(model,tok,calib,torch.device('cpu'),512,256,batch_size=2))
+ cfg=dict(cfg,max_len=512,head_max_len=256,model_name=a.model_name,fine_tuned=True,temperature=fitted['temperature'])
+ cfg.pop('temperature_by_options',None)
+ if fitted['temperature_by_options']:cfg['temperature_by_options']=fitted['temperature_by_options']
+ cfg['training']={'recipe':dataclasses.asdict(config),'base_sha256':entry['sha256'],'synthetic_domain_distillation':True,'train_sha256':data_manifest['splits']['train']['sha256'],'calibration_sha256':data_manifest['splits']['calibration']['sha256']}
+ save_checkpoint(model,tok,cfg,str(out))
+ digest=sha(out/'model.safetensors')
+ if digest==entry['sha256']:raise ValueError('Fine-tuning did not produce changed weights')
+ metadata={'base_sha256':entry['sha256'],'base_config_sha256':sha(Path(a.base)/'rl_agent_config.json'),'output_sha256':digest,'output_config_sha256':sha(out/'rl_agent_config.json'),'config':dataclasses.asdict(config),'train_questions':len(train),'calibration_questions':len(calib),'epoch_losses':history,'training_seconds':training_seconds,'encoder_digest_before':before,'encoder_digest_after':digest_encoder(model),'trainable_parameters':sum(p.numel() for p in model.parameters() if p.requires_grad),'total_parameters':sum(p.numel() for p in model.parameters()),'calibration':fitted,'teacher_model':'jev-1.13.0','data_manifest':data_manifest}
+ (out/'training-report.json').write_text(json.dumps(metadata,ensure_ascii=False,indent=2)+'\n')
+ print('Checkpoint exported:',out,'SHA256:',digest,flush=True)
+
+if __name__=='__main__':main()
