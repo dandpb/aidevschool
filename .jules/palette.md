@@ -29,3 +29,6 @@
 ## 2024-05-18 - Announcing Emoji-Based Visual Indicators
 **Learning:** Emojis used purely as visual indicators (like ❄️ for freezes or 🔥 for streaks) create highly repetitive and noisy announcements for screen readers (e.g. 'floco de neve floco de neve').
 **Action:** Wrap the emoji sequences in an `aria-hidden="true"` span to silence them, and provide a clear, semantic sentence summarizing their meaning in an adjacent `.sr-only` span.
+## 2026-10-06 - Accessible dynamic symbols in dojoToday
+**Learning:** When dynamically updating togglable UI buttons containing visual symbols in environments lacking `.sr-only` classes, `innerHTML` must be used instead of `textContent` to preserve the `<span aria-hidden="true">`, wrapper around the visual content. The parent element's `aria-label` and `aria-expanded` must be updated simultaneously.
+**Action:** Use `aria-label` on the button and `<span aria-hidden="true">`, for visual symbols, updating with `innerHTML` for dynamic text.
