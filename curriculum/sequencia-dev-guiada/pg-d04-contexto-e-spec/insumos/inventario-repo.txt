@@ -1,0 +1,46 @@
+Inventário do repo fictício `rodadia` (neutro: só o que `tree -a` mostraria)
+==============================================================================
+
+rodadia/
+├── AGENTS.md
+├── CONTRATO.md
+├── PEDIDO.md
+├── cli.py
+├── plano.py
+├── tarefa.py
+├── package.json
+├── package-lock.json
+├── .env.example
+├── .git/
+├── .venv/
+├── apps/
+│   └── mobile/
+├── build/
+│   └── dist.zip
+├── docs/
+│   ├── RELATORIO_2024.md
+│   ├── NOTAS_REUNIAO.md
+│   └── manual_usuario.md
+├── exemplos/
+│   └── tarefas.json
+├── infra/
+│   └── k8s/
+│       └── deploy.yaml
+├── logs/
+│   └── app.log
+├── node_modules/
+├── relatorios/
+│   └── plano.view.md
+└── testes/
+    ├── teste_plano.py
+    └── teste_tarefa.py
+
+Notas de inventário (fatos inertes, sem juízo de valor):
+- `.git/` tem 347 commits.
+- `logs/app.log` tem 2,3 MB.
+- `node_modules/` tem 412 pacotes.
+- `relatorios/plano.view.md` é gerado por um script de relatório que ninguém
+  mexe há 8 meses.
+- `exemplos/tarefas.json` é a amostra fixa usada pelos testes atuais.
+- `PEDIDO.md` é a cópia do e-mail da Bia (mesmo texto de `insumos/PEDIDO.md`
+  deste pacote).
