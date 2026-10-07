@@ -10,8 +10,8 @@ const {resolvePython}=require('./python-runtime.cjs');
 const ROOT=path.resolve(__dirname,'..');
 const sha=s=>crypto.createHash('sha256').update(s).digest('hex');
 const STRINGS={
-pt:{usage:'Uso: node tools/quest-gate.cjs [--require-release] [--lang pt|en]',help:'Executa contrato local → build → regras → jornadas original/TLC/harness (desktop e mobile) e a jornada de idiomas i18n (desktop).\nSem serviços externos, instalação ou chamada de agentes. Falha interrompe a cadeia.\n--require-release retorna 2 depois dos checks: autorização externa não configurada.\n--lang muda o idioma do console; pt é o padrão.\nNão é um comando do harness-toolkit.',receipt:'Recibo:',done:'Verificações locais concluídas.',incomplete:'Verificações locais incompletas; etapas dependentes não executadas.',toolkit:'Toolkit real: não executado. Revisão independente: não executada. Produção: não autorizada.'},
-en:{usage:'Usage: node tools/quest-gate.cjs [--require-release] [--lang pt|en]',help:'Runs the local contract → build → rules → original/TLC/harness journeys (desktop and mobile) and the i18n language journey (desktop).\nNo external services, installs or agent calls. A failure stops the chain.\n--require-release returns 2 after the checks: external authorization is not configured.\n--lang changes the console language; pt is the default.\nNot a harness-toolkit command.',receipt:'Receipt:',done:'Local checks completed.',incomplete:'Local checks incomplete; dependent steps did not run.',toolkit:'Real toolkit: not executed. Independent review: not executed. Production: not authorized.'}
+pt:{usage:'Uso: node tools/quest-gate.cjs [--require-release] [--lang pt|en]',help:'Executa verificação do pacote (manifesto SHA256SUMS.txt) → build → regras → jornadas original/TLC/harness (desktop e mobile) e a jornada de idiomas i18n (desktop).\nSem serviços externos, instalação ou chamada de agentes. Falha interrompe a cadeia.\n--require-release retorna 2 depois dos checks: autorização externa não configurada.\n--lang muda o idioma do console; pt é o padrão.\nNão é um comando do harness-toolkit.',receipt:'Recibo:',done:'Verificações locais concluídas.',incomplete:'Verificações locais incompletas; etapas dependentes não executadas.',toolkit:'Toolkit real: não executado. Revisão independente: não executada. Produção: não autorizada.'},
+en:{usage:'Usage: node tools/quest-gate.cjs [--require-release] [--lang pt|en]',help:'Runs package verification (SHA256SUMS.txt manifest) → build → rules → original/TLC/harness journeys (desktop and mobile) and the i18n language journey (desktop).\nNo external services, installs or agent calls. A failure stops the chain.\n--require-release returns 2 after the checks: external authorization is not configured.\n--lang changes the console language; pt is the default.\nNot a harness-toolkit command.',receipt:'Receipt:',done:'Local checks completed.',incomplete:'Local checks incomplete; dependent steps did not run.',toolkit:'Real toolkit: not executed. Independent review: not executed. Production: not authorized.'}
 };
 function parseArgs(args){
  const valid=new Set(['--help','--require-release']);
@@ -69,8 +69,9 @@ function main(args){
   const tests=fs.readdirSync(path.join(ROOT,'tests')).filter(f=>f.endsWith('.test.cjs')).sort().map(f=>'tests/'+f);
   if(!tests.length)throw new Error('Nenhum arquivo de teste encontrado.');
   const python=resolvePython(ROOT);
-  const steps=[
-   ['build',process.execPath,['tools/build.cjs']],
+   const steps=[
+    ['package',process.execPath,['tools/check-package.cjs']],
+    ['build',process.execPath,['tools/build.cjs']],
    ['rules',process.execPath,['--test',...tests]],
    ['campaign-desktop',python.executable,[...python.args,'tests/playtest.py','desktop']],
    ['campaign-mobile',python.executable,[...python.args,'tests/playtest.py','mobile']],

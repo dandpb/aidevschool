@@ -8,6 +8,9 @@ objective: "Diante de uma função pronta, montar o pedido de testes com framewo
 estimatedMinutes: 4
 skillIds: [codificar]
 prerequisites: [l16]
+competency:
+  primary: D4
+  supporting: [D3]
 
 activities:
   - id: l21-a1

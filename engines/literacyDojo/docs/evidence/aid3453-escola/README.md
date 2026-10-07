@@ -1,0 +1,1 @@
+Evidência de review AID-3453 (PR #616): screenshots da entrada /escola/ no build real (vite preview), desktop 1280x800 e mobile 360x740, página completa e fold. Gerados em 2026-09-30 pelo spec de aceitação playwright/escola-entry.spec.ts. Remover antes do merge se os revisores preferirem (são artefatos de inspeção, não runtime).
