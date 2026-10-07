@@ -1,0 +1,31 @@
+{
+  "kit": "pg-d04-contexto-e-spec",
+  "unidade": "U09",
+  "boardIssue": "AID-3665",
+  "source": {
+    "repo": "dandpb/aidevschool",
+    "pullRequest": 643,
+    "commit": "32888d9f03006f3dbcdaa57811b29c54a2c09146",
+    "sourcePath": "curriculum/sequencia-dev-guiada/pg-d04-contexto-e-spec",
+    "nota": "PR #643 aberto, stacked na base aid3510/sequencia-dev-guiada @ e01d9d42; head nao-ancestral de main. Em clone fresco, obter o pin via: git fetch origin refs/pull/643/head"
+  },
+  "allowlist": [
+    {"path": "enunciado.md", "sha256": "4bf60840eb3207a2dbfc80533303b609a3d6d92c1d67c5c6a40d8ab498ef60de", "bytes": 7297},
+    {"path": "exemplo-trabalhado.md", "sha256": "68aca19acc9323164138b6616aeeef0f716c597363782c06752767354da39f72", "bytes": 6494},
+    {"path": "insumos/PEDIDO.md", "sha256": "47b7a8f9cda91ab18a1ee2b730953d99c0dc99600b393874f36c72f97a2039bd", "bytes": 2029},
+    {"path": "insumos/inventario-repo.txt", "sha256": "dec5a4e14f26e06231385950e5b2b0a4e6e279fa0c0e19f39449ce62f19dae67", "bytes": 1323},
+    {"path": "insumos/verifica_contexto_spec.py", "sha256": "c44829430540a07c75cecd8bc889d4360362c40ad5d275da1a24f2a627094614", "bytes": 13101},
+    {"path": "rubrica-v1.md", "sha256": "377210d54e11afd8902fc19ff2f5ba2b8fa2c74ded25c3327df4385c790baee1", "bytes": 4589}
+  ],
+  "excluded": [
+    {"path": "MANIFEST.md", "motivo": "manifest docente do pacote-fonte; fora do escopo learner"},
+    {"path": "guia-de-correcao/**", "motivo": "conteudo exclusivamente docente (solucao, contraexemplos, testes); nunca projetado no kit"}
+  ],
+  "zip": {
+    "path": "zips/pg-d04-contexto-e-spec.zip",
+    "conteudo": "exatamente os 6 arquivos da allowlist, caminhos relativos preservados",
+    "determinismo": "entradas ordenadas, timestamp fixo 1980-01-01, modo 0644, create_system 0, deflate nivel 9, stdlib"
+  },
+  "preRequisito": "U03/pg-d02 (pratica guiada anterior) ou equivalente",
+  "saidaDoAprendiz": ["CONTEXTO.md", "PRD.md", "SPEC.md"]
+}
