@@ -1177,15 +1177,23 @@ class TestNdjsonEndToEnd:
         return state_path
 
     def test_gates_latest_matching_record(self, root: Path):
-        # Single-record NDJSON: the substrate's receipt-bound recheck
-        # (bound_evidence_violations) parses evidence_file as one JSON
-        # object, so a multi-record file cannot back a receipt-bound review
-        # (pre-existing contract; latest-record selection itself is covered
-        # by TestSelectEvidence).
+        # Pixel EVIDENCE_CONTRACT: one record per attempt line; records for
+        # other units are ignored and the gate grades the active unit's
+        # latest record (AID-3710 F1 HOLD: multi-record coverage restored
+        # WITH receipt binding — not the old no-binding behavior).
         ndjson_path = root / "evidence.ndjson"
         state_path = self._write_state(root, evidence_file=str(ndjson_path))
-        path = write_ndjson(ndjson_path, [make_ndjson_record()])
-        receipt_path = write_verifier_receipt(root, make_ndjson_record())
+        active = make_ndjson_record()
+        path = write_ndjson(
+            ndjson_path,
+            [
+                make_ndjson_record(
+                    unit_id="U-02_key_value_store", project="02_key_value_store"
+                ),
+                active,
+            ],
+        )
+        receipt_path = write_verifier_receipt(root, active)
         decision = verify_and_gate(
             root, path, today=TODAY, verifier_receipt_path=receipt_path
         )
@@ -1194,7 +1202,7 @@ class TestNdjsonEndToEnd:
         persisted = yaml.safe_load(state_path.read_text(encoding="utf-8"))
         assert persisted["active_unit"]["state"] == "mastered"
         gate_review = persisted["units_log"][-1]["reviews"][-1]
-        assert gate_review["evidence_ts"] == make_ndjson_record()["ts"]
+        assert gate_review["evidence_ts"] == active["ts"]
 
     def test_forged_latest_record_without_receipt_is_not_eligible(self, root: Path):
         # AID-3710 F1: the NDJSON pixelquest contract is game-shaped too —
