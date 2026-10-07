@@ -41,8 +41,10 @@ export function ResultScreen({
     .map((result) => result.feedback.summary);
 
   useEffect(() => {
-    void services.progressRepo.load().then((savedProgress) => {
-      setTaskCategory(savedProgress?.onboarding.taskCategory);
+    void services.stateStore.readState().then((read) => {
+      if (read.status === "present-valid") {
+        setTaskCategory(read.value.progress.onboarding.taskCategory);
+      }
     });
   }, [services]);
 

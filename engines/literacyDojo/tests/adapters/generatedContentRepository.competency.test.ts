@@ -64,12 +64,12 @@ describe("getCompetency/hasCompetencyEntry — corpus live (§7.1)", () => {
   });
 
   it("ler competências não muta progresso nem emite evidência (leitura pura)", async () => {
-    const { services, progressRepo, initial } = makeServices();
+    const { services, stateStore, initial } = makeServices();
     for (const entry of competencyLessons) {
       services.content.getCompetency(entry.lessonId);
       services.content.hasCompetencyEntry(entry.lessonId);
     }
-    expect(await progressRepo.load()).toEqual(initial);
+    expect(await stateStore.loadProgress()).toEqual(initial);
     expect(services.evidence.records).toHaveLength(0);
   });
 });

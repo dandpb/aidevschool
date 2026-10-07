@@ -8,13 +8,13 @@ import { makeServices } from "../helpers";
 describe("abertura de lição", () => {
   it("mantém a tela atual e informa quando o progresso não pode ser salvo", async () => {
     const user = userEvent.setup();
-    const { services, progressRepo, initial } = makeServices();
+    const { services, stateStore, initial } = makeServices();
     initial.onboarding = { completed: true, taskCategory: "scheduling" };
     initial.lessonStatus.l01 = "locked";
     initial.lessonStatus[MAP_INITIAL_LESSON_ID] = "available";
     initial.currentLessonId = MAP_INITIAL_LESSON_ID;
-    progressRepo.seed(initial);
-    vi.spyOn(progressRepo, "save").mockRejectedValueOnce(new Error("quota indisponível"));
+    stateStore.seedProgress(initial);
+    vi.spyOn(stateStore, "saveState").mockRejectedValueOnce(new Error("quota indisponível"));
     render(<App services={services} />);
 
     await screen.findByTestId("home-screen");
@@ -29,7 +29,7 @@ describe("abertura de lição", () => {
 
   it("mantém Progresso aberto quando a revisão é rejeitada", async () => {
     const user = userEvent.setup();
-    const { services, progressRepo, initial } = makeServices();
+    const { services, stateStore, initial } = makeServices();
     initial.onboarding = { completed: true, taskCategory: "scheduling" };
     initial.lessonStatus[MAP_INITIAL_LESSON_ID] = "completed";
     initial.skills.entender = {
@@ -40,7 +40,7 @@ describe("abertura de lição", () => {
       lastPracticedAt: "2026-07-18T12:00:00.000Z",
       nextReviewAt: "2026-07-19T11:59:59.000Z",
     };
-    progressRepo.seed(initial);
+    stateStore.seedProgress(initial);
     vi.spyOn(services.useCases, "startReview").mockRejectedValueOnce(
       new Error("revisão bloqueada"),
     );

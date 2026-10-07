@@ -1,6 +1,20 @@
 import type { LessonDefinition, ModuleDefinition } from "../data/generated/lessons";
 import { isLessonGateLocked } from "./checkpoints";
 import { nextReadyLessonId, readyLessonEntries } from "./track";
+import {
+  type XpLedgerV1,
+  activityLedgerKey,
+  awardEvaluationToLedger,
+  isEligibleForEvaluationAward,
+  isFirstCompletionAwarded,
+  lessonLedgerKey,
+  localDateKey,
+  markFirstCompletionAwarded,
+} from "./xpLedger";
+
+// Data local canônica (AID-3888): fonte única passa a ser xpLedger.ts;
+// re-export mantém os importadores históricos (streak/meta diária/testes).
+export { localDateKey } from "./xpLedger";
 
 export const PROGRESS_SCHEMA_VERSION = 4;
 export const MAP_INITIAL_LESSON_ID = "l02";
@@ -283,13 +297,6 @@ function nextLessonIdFor(
   return nextReadyLessonId(modules, completedLessonId);
 }
 
-export function localDateKey(date: Date): string {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
-
 /** Sequência por data local: mesma data não repete; dia seguinte incrementa; lacuna recomeça em 1 (sem punição além disso). */
 export function applyStreak(progress: LearnerProgress, now: Date): LearnerProgress {
   const today = localDateKey(now);
@@ -525,17 +532,24 @@ export function recordMapInitialRetry(progress: LearnerProgress): LearnerProgres
  * Registra uma tentativa de atividade: contador, metadados do Mapa Inicial,
  * prática de skills, sequência e XP. Não emite evidência/analytics — isso
  * continua nos casos de uso (produtor ≠ verificador; side effects isolados).
+ *
+ * XP idempotente (AID-3888, contrato `a0bf3e8a`): 10 XP somente na primeira
+ * avaliação bem-sucedida por (lessonId, activityId, dia local) — elegibilidade
+ * exige data local ESTRITAMENTE posterior à última premiada; falha não
+ * consome elegibilidade; prática/evidência não tocam o ledger.
  */
 export function recordActivityAttempt(
   progress: LearnerProgress,
+  ledger: XpLedgerV1,
   input: {
     lessonId: string;
+    activityId: string;
     evaluation: { pass: boolean; score: number };
     skillIds: string[];
     intervalsDays: number[];
     now: Date;
   },
-): LearnerProgress {
+): { progress: LearnerProgress; ledger: XpLedgerV1 } {
   let next: LearnerProgress = {
     ...progress,
     counters: { attempts: progress.counters.attempts + 1 },
@@ -552,8 +566,16 @@ export function recordActivityAttempt(
     input.intervalsDays,
   );
   next = applyStreak(next, input.now);
-  if (input.evaluation.pass) next = awardXp(next, XP_PER_ACTIVITY_PASS, input.now);
-  return next;
+  let nextLedger = ledger;
+  if (input.evaluation.pass) {
+    const key = activityLedgerKey(input.lessonId, input.activityId);
+    const today = localDateKey(input.now);
+    if (isEligibleForEvaluationAward(ledger, key, today)) {
+      next = awardXp(next, XP_PER_ACTIVITY_PASS, input.now);
+      nextLedger = awardEvaluationToLedger(ledger, key, today);
+    }
+  }
+  return { progress: next, ledger: nextLedger };
 }
 
 /**
@@ -586,6 +608,7 @@ export function scheduleReviewForLesson(
 
 export type CompleteLessonResult = {
   progress: LearnerProgress;
+  ledger: XpLedgerV1;
   outcome: LessonOutcome;
   nextLessonId?: string;
   newlyUnlocked?: Achievement[];
@@ -595,9 +618,13 @@ export type CompleteLessonResult = {
  * Conclusão de lição: avalia, marca completo, aplica rota do onboarding no
  * Mapa Inicial, concede XP, agenda revisão, desbloqueia próxima lição,
  * muta currentLessonId e desbloqueia conquistas.
+ *
+ * XP idempotente (AID-3888): 25 XP somente na PRIMEIRA conclusão — marcador
+ * permanente no ledger; review/replay não re-paga (contrato `a0bf3e8a` §1).
  */
 export function completeLesson(
   progress: LearnerProgress,
+  ledger: XpLedgerV1,
   lesson: LessonDefinition,
   bestScores: Record<string, number>,
   modules: ModuleDefinition[],
@@ -605,7 +632,7 @@ export function completeLesson(
 ): CompleteLessonResult {
   const outcome = evaluateLessonCompletion(lesson, bestScores);
   if (!outcome.completed) {
-    return { progress, outcome };
+    return { progress, ledger, outcome };
   }
 
   let next: LearnerProgress = {
@@ -618,7 +645,12 @@ export function completeLesson(
       onboarding: { ...next.onboarding, route: mapInitialRoute(next.onboarding.mapInitial) },
     };
   }
-  next = awardXp(next, XP_PER_LESSON_COMPLETE, now);
+  let nextLedger = ledger;
+  const lessonKey = lessonLedgerKey(lesson.id);
+  if (!isFirstCompletionAwarded(ledger, lessonKey)) {
+    next = awardXp(next, XP_PER_LESSON_COMPLETE, now);
+    nextLedger = markFirstCompletionAwarded(ledger, lessonKey, localDateKey(now));
+  }
   next = scheduleReviewForLesson(next, lesson, now, 0);
   const unlocked = unlockNextReadyLesson(next, modules, lesson.id);
   next = unlocked.progress;
@@ -628,6 +660,7 @@ export function completeLesson(
 
   return {
     progress: next,
+    ledger: nextLedger,
     outcome,
     nextLessonId: unlocked.unlockedLessonId,
     newlyUnlocked: withAchievements.newlyUnlocked,

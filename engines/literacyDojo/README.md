@@ -137,6 +137,27 @@ UI (src/screens, src/components)
 - **Respostas são transitórias:** reload no meio de uma atividade retoma no
   início da lição (granularidade da lição, não da resposta) — coerente com
   `storage.policy` e com a regra de não persistir respostas.
+- **XP idempotente (AID-3888, contrato `a0bf3e8a` + errata `25b51990`):** 10 XP
+  somente na primeira avaliação bem-sucedida por
+  (lessonId, activityId, **dia local**) — a re-concessão exige data local
+  estritamente posterior à última premiada daquele alvo; 25 XP somente na
+  **primeira conclusão** da lição (marcador permanente, sem repetição por
+  review/replay). Falha, prática e evidência não consomem elegibilidade. O
+  reload no mesmo dia não reconcede (cenário QA L20 = 55 XP, não 65).
+  Proteção declarada **não-cheatproof** (best-effort local).
+- **Estado autoritativo completo + preservação de dados (AID-3888):** o
+  progresso + XP + ledger vivem no namespace próprio `learner-state-v2`
+  (`src/domain/xpLedger.ts`, `src/adapters/learnerStateStore.ts`); o ramo
+  legado (`learner-progress`) é somente leitura após o corte one-shot (snapshot
+  `cutover-snapshot-v1` persistido ANTES da ativação; completed legado bloqueia
+  novo 25 XP; o ledger diário nasce vazio — janela única declarada). Boot
+  bloqueia preservando o dado bruto em erro de leitura, corrupção, schema
+  futuro e forma do protótipo B (schema 5 in-record); nunca descarta/reseta.
+  Reset explícito usa marker-first (`reset-intent-v1`) — o boot seguinte semeia
+  do zero sem restaurar do snapshot (histórico preservado). Export/import em
+  envelope `literacydojo-backup` v2 (progresso + ledger) com rejeição integral
+  antes de persistir. Concorrência entre abas (sem CAS) é lacuna declarada:
+  last-write-wins por chave.
 - **Ponte dev-only de evidência:** em `vite dev`, cada registro também vai para
   `window.__literacydojo.evidence` e `sessionStorage["literacydojo:evidence"]`
   (o spec Playwright valida o envelope a partir daí). Em build de produção só o

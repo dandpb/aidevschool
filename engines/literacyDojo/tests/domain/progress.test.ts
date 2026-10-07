@@ -3,17 +3,25 @@ import { modules } from "../../src/data/generated/lessons";
 import { lessons } from "../../src/data/generated/lessons";
 import {
   MAP_INITIAL_LESSON_ID,
+  XP_PER_ACTIVITY_PASS,
   XP_PER_LESSON_COMPLETE,
   applyAttemptToSkills,
   applyStreak,
   awardXp,
+  completeLesson,
   createInitialProgress,
   evaluateLessonCompletion,
   isLessonUnlocked,
   localDateKey,
+  recordActivityAttempt,
   reviewsDue,
   unlockNextReadyLesson,
 } from "../../src/domain/progress";
+import {
+  activityLedgerKey,
+  emptyXpLedger,
+  lessonLedgerKey,
+} from "../../src/domain/xpLedger";
 import { readyLessonEntries } from "../../src/domain/track";
 import { FIXED_NOW } from "../helpers";
 
@@ -224,5 +232,72 @@ describe("xp", () => {
       date: localDateKey(NOW),
       xpEarned: XP_PER_LESSON_COMPLETE,
     });
+  });
+});
+
+describe("xp idempotente (AID-3888 — contrato a0bf3e8a; adaptação C1)", () => {
+  const lesson = lessons.find((item) => item.id === MAP_INITIAL_LESSON_ID);
+  if (!lesson) throw new Error("Mapa Inicial ausente");
+  const activityId = lesson.activities[0]?.id ?? "a1";
+  const input = (now: Date, pass = true) => ({
+    lessonId: lesson.id,
+    activityId,
+    evaluation: { pass, score: pass ? 1 : 0 },
+    skillIds: lesson.skillIds,
+    intervalsDays: lesson.review.intervalsDays,
+    now,
+  });
+
+  it("tentativa aprovada paga 10 XP 1× por (alvo, dia local): re-tentativa no MESMO dia não reconcede", () => {
+    const progress = createInitialProgress(modules, "v1");
+    const first = recordActivityAttempt(progress, emptyXpLedger(), input(NOW));
+    expect(first.progress.xp).toBe(XP_PER_ACTIVITY_PASS);
+    const second = recordActivityAttempt(first.progress, first.ledger, input(NOW));
+    expect(second.progress.xp).toBe(XP_PER_ACTIVITY_PASS);
+    expect(second.ledger.lastAwardedDate[activityLedgerKey(lesson.id, activityId)]).toBe(localDateKey(NOW));
+  });
+
+  it("dia local estritamente posterior reconcede 1× (prática diária vale)", () => {
+    const first = recordActivityAttempt(createInitialProgress(modules, "v1"), emptyXpLedger(), input(NOW));
+    const nextDay = recordActivityAttempt(
+      first.progress,
+      first.ledger,
+      input(new Date(NOW.getTime() + DAY_MS)),
+    );
+    expect(nextDay.progress.xp).toBe(2 * XP_PER_ACTIVITY_PASS);
+  });
+
+  it("tentativa falha não consome elegibilidade: falha→pass no mesmo dia paga", () => {
+    const failed = recordActivityAttempt(createInitialProgress(modules, "v1"), emptyXpLedger(), input(NOW, false));
+    expect(failed.progress.xp).toBe(0);
+    expect(failed.ledger.lastAwardedDate).toEqual({});
+    const passed = recordActivityAttempt(failed.progress, failed.ledger, input(NOW));
+    expect(passed.progress.xp).toBe(XP_PER_ACTIVITY_PASS);
+  });
+
+  it("conclusão paga 25 XP 1× PARA SEMPRE: replay não re-paga (marcador permanente)", () => {
+    const bestScores = Object.fromEntries(lesson.completion.requiredActivityIds.map((id) => [id, 1]));
+    const done = completeLesson(
+      createInitialProgress(modules, "v1"),
+      emptyXpLedger(),
+      lesson,
+      bestScores,
+      modules,
+      NOW,
+    );
+    expect(done.progress.xp).toBe(XP_PER_LESSON_COMPLETE);
+    expect(done.ledger.firstCompletionAwarded[lessonLedgerKey(lesson.id)]).toBe(localDateKey(NOW));
+    const replay = completeLesson(done.progress, done.ledger, lesson, bestScores, modules, NOW);
+    expect(replay.progress.xp).toBe(XP_PER_LESSON_COMPLETE);
+    // E no dia seguinte também não: o marcador é permanente, não diário.
+    const replayNextDay = completeLesson(
+      replay.progress,
+      replay.ledger,
+      lesson,
+      bestScores,
+      modules,
+      new Date(NOW.getTime() + DAY_MS),
+    );
+    expect(replayNextDay.progress.xp).toBe(XP_PER_LESSON_COMPLETE);
   });
 });

@@ -1,15 +1,19 @@
 import { type Frame, type Locator, type Page, expect } from "@playwright/test";
 import {
+  CUTOVER_SNAPSHOT_KEY,
   DB_NAME,
   EVIDENCE_SESSION_KEY,
+  LEARNER_STATE_KEY,
   PROGRESS_KEY,
+  RESET_INTENT_KEY,
   STORE_NAME,
 } from "../src/adapters/storageKeys";
 import { type ActivityDefinition, lessons } from "../src/data/generated/lessons";
 import type { LiteracyEvidenceRecord } from "../src/domain/evidence";
 import { MAP_INITIAL_LESSON_ID } from "../src/domain/progress";
+import { buildCutoverLedger, localDateKey } from "../src/domain/xpLedger";
 
-const IDB = { name: DB_NAME, store: STORE_NAME, key: PROGRESS_KEY };
+const IDB = { name: DB_NAME, store: STORE_NAME, key: LEARNER_STATE_KEY };
 
 type ProgressDoc = Record<string, unknown> & {
   skills: Record<string, { nextReviewAt?: string }>;
@@ -140,22 +144,52 @@ function idbProgress<T>(page: Page, op: "get" | "put", doc?: ProgressDoc): Promi
   ) as Promise<T>;
 }
 
-/** Lê o LearnerProgress persistido no IndexedDB do navegador. */
-export function readProgress(page: Page): Promise<ProgressDoc | undefined> {
-  return idbProgress(page, "get");
+type LearnerStateDoc = {
+  stateVersion: number;
+  origin?: string;
+  progress: ProgressDoc;
+  xpLedger?: Record<string, unknown>;
+};
+
+/**
+ * Lê o registro de estado AUTORITATIVO (learner-state-v2) do IndexedDB.
+ * Pós-AID-3888 o progresso vive dentro do envelope de estado.
+ */
+export function readLearnerState(page: Page): Promise<LearnerStateDoc | undefined> {
+  return idbProgress<LearnerStateDoc>(page, "get");
+}
+
+/** Lê o LearnerProgress (desembrulhado do estado autoritativo). */
+export async function readProgress(page: Page): Promise<ProgressDoc | undefined> {
+  const state = await readLearnerState(page);
+  return state?.progress;
 }
 
 /**
- * Escreve o LearnerProgress no IndexedDB (harness de teste do corredor,
+ * Escreve um LearnerProgress no IndexedDB (harness de teste do corredor,
  * spec AID-915 §5.2): seeding de estados de retorno sem dirigir a UI toda.
- * Manipulação de storage SOMENTE aqui — nunca em código de produção.
+ * Pós-AID-3888, é STATE-FIEL: se já existe estado autoritativo, troca só o
+ * progresso e PRESERVA o ledger corrente; senão semeia o envelope com o
+ * ledger derivado da semântica de corte do progresso dado (completed →
+ * marcador permanente; diário vazio). Manipulação de storage SOMENTE aqui —
+ * nunca em código de produção.
  */
-export function writeProgressDoc(page: Page, progress: ProgressDoc): Promise<void> {
-  return idbProgress(page, "put", progress);
+export async function writeProgressDoc(page: Page, progress: ProgressDoc): Promise<void> {
+  await writeProgress(page, progress);
 }
 
-function writeProgress(page: Page, progress: ProgressDoc): Promise<void> {
-  return idbProgress(page, "put", progress);
+async function writeProgress(page: Page, progress: ProgressDoc): Promise<void> {
+  const current = await idbProgress<LearnerStateDoc | undefined>(page, "get");
+  const state: LearnerStateDoc =
+    current !== undefined
+      ? { ...current, progress }
+      : {
+          stateVersion: 1,
+          origin: "cutover",
+          progress,
+          xpLedger: buildCutoverLedger(progress as never, localDateKey(new Date())),
+        };
+  await idbProgress(page, "put", state);
 }
 
 /**
@@ -164,21 +198,31 @@ function writeProgress(page: Page, progress: ProgressDoc): Promise<void> {
  * Manipulação de storage SOMENTE aqui — nunca em código de produção.
  */
 export function deleteProgress(page: Page): Promise<void> {
+  // "Limpar dados do site" (perda total): apaga TODAS as chaves do app —
+  // estado novo, snapshot, marker de reset e ramo legado. Apagar só uma
+  // delas não simula perda: o boot trata cada ausência de forma distinta.
   return page.evaluate(
-    ({ name, store, key }) =>
+    ({ name, store }) =>
       new Promise<void>((resolve, reject) => {
         const open = indexedDB.open(name);
         open.onerror = () => reject(open.error);
         open.onsuccess = () => {
-          const request = open.result
-            .transaction(store, "readwrite")
-            .objectStore(store)
-            .delete(key);
-          request.onerror = () => reject(request.error);
-          request.onsuccess = () => resolve();
+          const tx = open.result.transaction(store, "readwrite");
+          const objectStore = tx.objectStore(store);
+          for (const key of [
+            "learner-state-v2",
+            "cutover-snapshot-v1",
+            "reset-intent-v1",
+            "learner-progress",
+          ]) {
+            objectStore.delete(key);
+          }
+          tx.oncomplete = () => resolve();
+          tx.onerror = () => reject(tx.error);
+          tx.onabort = () => reject(tx.error);
         };
       }),
-    IDB,
+    { name: DB_NAME, store: STORE_NAME },
   );
 }
 
