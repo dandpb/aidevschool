@@ -17,12 +17,8 @@ import {
   reviewsDue,
   unlockNextReadyLesson,
 } from "../../src/domain/progress";
-import {
-  activityLedgerKey,
-  emptyXpLedger,
-  lessonLedgerKey,
-} from "../../src/domain/xpLedger";
 import { readyLessonEntries } from "../../src/domain/track";
+import { activityLedgerKey, emptyXpLedger, lessonLedgerKey } from "../../src/domain/xpLedger";
 import { FIXED_NOW } from "../helpers";
 
 const DAY_MS = 86_400_000;
@@ -254,11 +250,17 @@ describe("xp idempotente (AID-3888 — contrato a0bf3e8a; adaptação C1)", () =
     expect(first.progress.xp).toBe(XP_PER_ACTIVITY_PASS);
     const second = recordActivityAttempt(first.progress, first.ledger, input(NOW));
     expect(second.progress.xp).toBe(XP_PER_ACTIVITY_PASS);
-    expect(second.ledger.lastAwardedDate[activityLedgerKey(lesson.id, activityId)]).toBe(localDateKey(NOW));
+    expect(second.ledger.lastAwardedDate[activityLedgerKey(lesson.id, activityId)]).toBe(
+      localDateKey(NOW),
+    );
   });
 
   it("dia local estritamente posterior reconcede 1× (prática diária vale)", () => {
-    const first = recordActivityAttempt(createInitialProgress(modules, "v1"), emptyXpLedger(), input(NOW));
+    const first = recordActivityAttempt(
+      createInitialProgress(modules, "v1"),
+      emptyXpLedger(),
+      input(NOW),
+    );
     const nextDay = recordActivityAttempt(
       first.progress,
       first.ledger,
@@ -268,7 +270,11 @@ describe("xp idempotente (AID-3888 — contrato a0bf3e8a; adaptação C1)", () =
   });
 
   it("tentativa falha não consome elegibilidade: falha→pass no mesmo dia paga", () => {
-    const failed = recordActivityAttempt(createInitialProgress(modules, "v1"), emptyXpLedger(), input(NOW, false));
+    const failed = recordActivityAttempt(
+      createInitialProgress(modules, "v1"),
+      emptyXpLedger(),
+      input(NOW, false),
+    );
     expect(failed.progress.xp).toBe(0);
     expect(failed.ledger.lastAwardedDate).toEqual({});
     const passed = recordActivityAttempt(failed.progress, failed.ledger, input(NOW));
@@ -276,7 +282,9 @@ describe("xp idempotente (AID-3888 — contrato a0bf3e8a; adaptação C1)", () =
   });
 
   it("conclusão paga 25 XP 1× PARA SEMPRE: replay não re-paga (marcador permanente)", () => {
-    const bestScores = Object.fromEntries(lesson.completion.requiredActivityIds.map((id) => [id, 1]));
+    const bestScores = Object.fromEntries(
+      lesson.completion.requiredActivityIds.map((id) => [id, 1]),
+    );
     const done = completeLesson(
       createInitialProgress(modules, "v1"),
       emptyXpLedger(),
