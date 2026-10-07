@@ -1,7 +1,7 @@
 # Lição l27 — Onda O1 dev l27–l29 (spec AID-610 rev 2 §2.1): debug com assistente — reproduzir antes de perguntar.
 # Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
 id: l27
-version: 2
+version: 3
 moduleId: mod-05
 title: "Debug com assistente: reproduza antes de perguntar"
 objective: "Diante de um bug, montar o pedido de diagnóstico com o erro reproduzido deterministicamente, o caso mínimo isolado e o esperado-vs-observado — e só então aplicar a correção e rodar os testes, incluindo o caso mínimo."
@@ -83,7 +83,7 @@ activities:
         erro: "Cole a mensagem exata do erro: TypeError, stack, trace — 'quebra' não é mensagem, é resumo."
         reproduz: "Descreva o passo que dispara o erro toda vez: sem reprodução, o assistente corrige o bug que imaginou."
         esperado-vs-observado: "Diga o que deveria acontecer e o que acontece: esperado-vs-observado é o contraste que orienta a correção."
-      onSuccess: "Pedido completo: erro exato, passo que reproduz e esperado-vs-observado. É esse pedido que o assistente transforma em correção certa na primeira resposta."
+      onSuccess: "Pedido completo: erro exato, passo que reproduz e esperado-vs-observado. É o pedido que ajuda a orientar a correção pelo assistente — e o que permite verificar a correção contra o erro real antes de fechar."
     storage:
       policy: structured_only
     hints:
