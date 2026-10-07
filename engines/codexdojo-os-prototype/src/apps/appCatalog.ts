@@ -9,6 +9,7 @@ export const appCatalog = [
   { name: 'Mapa da Arquitetura', category: 'Desenvolver', concepts: ['camadas', 'contratos'], status: 'disponivel', appId: 'architecture' },
   { name: 'Central de Apps', category: 'Sistema', concepts: ['pacotes', 'dependências'], status: 'disponivel', appId: 'software' },
   { name: 'Engine Hub', category: 'Sistema', concepts: ['motores', 'adapters'], status: 'disponivel', appId: 'engines' },
+  { name: 'Prática Guiada', category: 'Aprender', concepts: ['reprodução mínima', 'diagnóstico com assistente'], status: 'disponivel', appId: 'practice' },
   { name: 'Fundamentos', category: 'Aprender', concepts: ['computação', 'modelos mentais'], status: 'laboratorio' },
   { name: 'Mentor IA', category: 'Aprender', concepts: ['tutoria contextual', 'feedback'], status: 'laboratorio' },
   { name: 'Projetos', category: 'Aprender', concepts: ['aprendizagem ativa', 'portfólio'], status: 'laboratorio' },
@@ -23,4 +24,5 @@ export const appTitles: Readonly<Record<CoreAppId, string>> = {
   architecture: 'Mapa da Arquitetura',
   software: 'Central de Apps',
   engines: 'Engine Hub',
+  practice: 'Prática Guiada',
 }

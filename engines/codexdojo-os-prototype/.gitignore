@@ -4,3 +4,6 @@ qa/
 test-results/
 *.tsbuildinfo
 .DS_Store
+
+# Read model gerado por `npm run gen:guided-practice` (nunca editar à mão; regenerar sempre)
+src/data/generated/

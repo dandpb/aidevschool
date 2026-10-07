@@ -8,6 +8,7 @@ import {
   GraduationCap,
   Layers3,
   LayoutGrid,
+  ListChecks,
   Maximize2,
   Minimize2,
   PackageCheck,
@@ -71,6 +72,7 @@ const shortcutIcons: Readonly<Record<CoreAppId, ReactNode>> = {
   architecture: <Layers3 />,
   software: <PackageCheck />,
   engines: <Boxes />,
+  practice: <ListChecks />,
 }
 
 const shortcutLabels: Readonly<Partial<Record<CoreAppId, string>>> = {
@@ -84,6 +86,7 @@ const dockIcons: Readonly<Record<CoreAppId, ReactNode>> = {
   architecture: <Layers3 />,
   software: <PackageCheck />,
   engines: <Boxes />,
+  practice: <ListChecks />,
 }
 
 export function DesktopShortcuts({
