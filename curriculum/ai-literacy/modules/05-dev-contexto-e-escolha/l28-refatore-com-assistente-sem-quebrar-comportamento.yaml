@@ -8,6 +8,9 @@ objective: "Diante de código funcional a melhorar, exigir testes verdes cobrind
 estimatedMinutes: 5
 skillIds: [codificar]
 prerequisites: [l21]
+competency:
+  primary: D4
+  supporting: [D3]
 
 activities:
   - id: l28-a1

@@ -14,10 +14,13 @@ name: merge-msg-gate
 #
 # This workflow is the mechanical form of the AID-2655 item 3 self-check
 # (previously a manual step for the merge-writer): on EVERY push to main it
-# checks each merge commit (>= 2 parents) in the pushed range for a
-# `^Countersign: ` line in the message BODY (scripts/merge_msg_check.py,
-# fail-closed; title-only citations fail — the #514 shape) and goes RED on
-# any violation, independently of actor, credential, or merge path.
+# checks each merge commit (>= 2 parents) on the FIRST-PARENT path of main
+# in the pushed range (AID-3795: PR-side merges — update-branch etc. —
+# live on second-parent ancestry and are out of scope; the obligation
+# binds the merge that lands on main) for a `^Countersign: ` line in the
+# message BODY (scripts/merge_msg_check.py, fail-closed; title-only
+# citations fail — the #514 shape) and goes RED on any violation,
+# independently of actor, credential, or merge path.
 #
 # A red run here is an AUDIT finding, not a broken build: the violating
 # merge is already in history (never rewritten). On failure, a best-effort
@@ -95,11 +98,13 @@ jobs:
           PAPERCLIP_API_TOKEN: ${{ secrets.PAPERCLIP_API_TOKEN }}
           PAPERCLIP_COMPANY_ID: ${{ secrets.PAPERCLIP_COMPANY_ID }}
         run: |
-          # List the merge commits (>= 2 parents) in the checked scope; the
+          # List the merge commits (>= 2 parents) on the FIRST-PARENT path
+          # in the checked scope (same scope as the check step — AID-3795:
+          # PR-side update-branch merges must not reach the incident); the
           # script re-verifies each and reports only true violators.
           SHAS=""
           if [ -n "${RANGE:-}" ]; then
-            SHAS="$(git log --format='%H %P' "$RANGE" | awk 'NF>=3 {print $1}')"
+            SHAS="$(git log --first-parent --format='%H %P' "$RANGE" | awk 'NF>=3 {print $1}')"
           else
             SHAS="$(git show -s --format='%H %P' "$HEAD_ONLY" | awk 'NF>=3 {print $1}')"
           fi

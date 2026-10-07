@@ -8,6 +8,9 @@ objective: "Iterar sobre uma resposta da IA com pedidos de ajuste específicos e
 estimatedMinutes: 4
 skillIds: [pedir, avaliar]
 prerequisites: [l06]
+competency:
+  primary: F3
+  supporting: []
 
 activities:
   - id: l07-a1
