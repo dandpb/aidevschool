@@ -83,11 +83,10 @@ def bound_evidence_violations(
         return [f"{prefix} escapes root: {evidence_path!r}"]
     try:
         raw = json.loads(resolved.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as exc:
-        return [
-            f"{prefix} is not parseable JSON ({evidence_path!r}): "
-            f"{exc.msg} at line {exc.lineno}"
-        ]
+    except json.JSONDecodeError:
+        # Pixel EVIDENCE_CONTRACT: NDJSON keeps one record per attempt line
+        # (AID-3710 F1) — delegate to the multi-record binding check.
+        return _bound_ndjson_record_violations(resolved, expected_digest, evidence_path)
     if not isinstance(raw, dict):
         return [
             f"{prefix} is valid JSON but not an object: {evidence_path!r}"
@@ -103,6 +102,40 @@ def bound_evidence_violations(
             f"{prefix} does not match the canonical digest recorded by the verifier"
         )
     return errors
+
+
+def _bound_ndjson_record_violations(
+    resolved: Path, expected_digest: str, evidence_path: str | Path
+) -> list[str]:
+    """Multi-record NDJSON binding (Pixel EVIDENCE_CONTRACT: one record per
+    attempt; records for other units may share the file). The gate graded the
+    active unit's latest record and the receipt binds that record's canonical
+    digest, so the file keeps backing the review while it still contains a
+    record matching the verifier-recorded digest (AID-3710 F1: requiring
+    receipts must not block legitimate multi-record evidence)."""
+    prefix = "evidence_file"
+    try:
+        records = load_evidence_ndjson(resolved)
+    except EvidenceParseError as exc:
+        return [
+            f"{prefix} is not parseable JSON or NDJSON "
+            f"({evidence_path!r}): {exc}"
+        ]
+    matching = [
+        record
+        for record in records
+        if canonical_evidence_digest(record) == expected_digest
+    ]
+    if not matching:
+        return [
+            f"{prefix} does not match the canonical digest recorded by the verifier"
+        ]
+    if any("verifier" in record for record in matching):
+        return [
+            f"{prefix} embeds a producer-controlled 'verifier' block; "
+            "use a separate verifier receipt"
+        ]
+    return []
 
 
 def bound_literacy_evidence_violations(
