@@ -3,6 +3,7 @@ import { ArchitectureApp, SoftwareApp } from './SystemApps'
 import { DojoApp } from './DojoApp'
 import { FilesApp, TerminalApp } from './TerminalFilesApps'
 import { EngineHubApp } from '../engines/EngineHubApp'
+import { GuidedPracticeApp } from '../practice/GuidedPracticeApp'
 
 type AppContentProps = {
   readonly appId: CoreAppId
@@ -25,5 +26,7 @@ export function AppContent({ appId, learner, onTeach, onOpenApp }: AppContentPro
       return <SoftwareApp onTeach={onTeach} />
     case 'engines':
       return <EngineHubApp />
+    case 'practice':
+      return <GuidedPracticeApp onTeach={onTeach} />
   }
 }

@@ -1,4 +1,4 @@
-export type CoreAppId = 'dojo' | 'terminal' | 'files' | 'architecture' | 'software' | 'engines'
+export type CoreAppId = 'dojo' | 'terminal' | 'files' | 'architecture' | 'software' | 'engines' | 'practice'
 export type AppStatus = 'disponivel' | 'laboratorio'
 
 export type TrackId = 'ai-pratica' | 'dev'
