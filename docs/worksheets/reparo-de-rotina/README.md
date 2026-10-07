@@ -13,6 +13,7 @@ altera lições, gates, bindings, IDs, progresso, dominância, engines ou runtim
 | `worksheet-visual.html` | Folha de exercício visual antes/depois (arquivo único, offline, mobile-first ≥360 px). **Material do aprendiz.** |
 | `worksheet-texto.md` | Equivalente em texto puro (leitores de tela, baixa banda, P&B). Mesmos campos/numeração. |
 | `guia-docente.md` | Guia de correção **separado**: números de referência das semanas 1–2 com valores, rubrica por campo, feedback direcionado + nova tentativa, fronteiras. Não distribuir com a folha. |
+| `print/` | Folha imprimível (AID-3666): `worksheet-reparo-rotina-A4.pdf` (A4, 10 pp., derivado do HTML do aprendiz sem alterá-lo), `generate_pdf.py`/`verify_pdf.py` e `MANIFEST.md` (fonte/bytes/hash/comando/config reais + evidências). |
 | `README.md` | Este arquivo: uso, decisões, **nota técnica** (procedência/pins/fronteiras migrada do rodapé do material do aprendiz). |
 
 ## Como usar

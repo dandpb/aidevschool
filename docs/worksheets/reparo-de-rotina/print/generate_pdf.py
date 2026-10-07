@@ -34,13 +34,36 @@ PRINT_BACKGROUND = True
 DISPLAY_HEADER_FOOTER = False
 SCALE = 1.0
 
+# ---- correção de pipeline (impressão), aplicada só em tempo de geração ----
+# Defeito empírico do printToPDF do Chromium local (151.0.7922.34, probe em
+# evidence/probe-letterspacing.txt): letter-spacing em unidades em é inflado
+# para ~2x avanço + tracking, estourando a largura imprimível (banners/legendas/
+# cabeçalhos de tabela cortados à direita). A fonte HTML permanece intacta; a
+# regra abaixo só entra no DOM durante a geração do PDF e neutraliza o defeito.
+PRINT_FIT_CSS = "@media print{*{letter-spacing:normal!important}}"
+
 # ---- constantes de normalização (mesmo comprimento das originais) ----
 # padrão casado: D: + 14 dígitos + [+-]HH'II  → 22 bytes exatos
 FIXED_PDF_DATE = b"D:20261001000000+00'00"
 FIXED_ID_HEX = b"0" * 32
 
-# Binário local já presente no ambiente (sem download/instalação):
-CHROMIUM_EXE = "/paperclip/.cache/ms-playwright/chromium_headless_shell-1228/chrome-headless-shell-linux64/chrome-headless-shell"
+# Binário local já presente no ambiente (sem download/instalação);
+# descobre a versão presente (a estação pode ter atualizado o build):
+def _chromium_exe() -> str:
+    import glob
+    import os
+    env = os.environ.get("CHROMIUM_EXE")
+    if env:
+        return env
+    cands = sorted(glob.glob(
+        "/paperclip/.cache/ms-playwright/chromium_headless_shell-*/"
+        "chrome-headless-shell-linux64/chrome-headless-shell"))
+    if not cands:
+        raise SystemExit("chromium headless shell não encontrado em .cache/ms-playwright")
+    return cands[-1]
+
+
+CHROMIUM_EXE = _chromium_exe()
 
 
 def sha256(data: bytes) -> str:
@@ -85,6 +108,7 @@ def main() -> None:
             page.goto(SOURCE.as_uri())
             page.wait_for_load_state("networkidle")
             chromium_ver = browser.version
+            page.add_style_tag(content=PRINT_FIT_CSS)
             pdf_bytes = page.pdf(
                 format=PAGE_FORMAT,
                 margin={k: f"{v}mm" for k, v in MARGIN_MM.items()},

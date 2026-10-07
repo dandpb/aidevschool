@@ -120,30 +120,38 @@ def load_font(objs, font_body: bytes):
     tu = dict_lookup(objs, font_body, b'ToUnicode')
     cmap = parse_cmap(inflate(tu)) if tu is not None else {}
     widths, default_w = {}, 1000.0
-    cid = dict_lookup(objs, font_body, b'DescendantFonts')
-    cid_body = objs[refs(cid)[0]] if (cid is not None and refs(cid)) else font_body
-    dw = re.search(rb'/DW\s+(\d+)', cid_body)
+    cid = None
+    m_arr = re.search(rb'/DescendantFonts\s*\[(.*?)\]', font_body, re.S)
+    if m_arr is not None and refs(m_arr.group(1)):
+        cid = objs[refs(m_arr.group(1))[0]]
+    else:
+        cd = dict_lookup(objs, font_body, b'DescendantFonts')
+        if cd is not None and refs(cd):
+            cid = objs[refs(cd)[0]]
+    cid_body = cid if cid is not None else font_body
+    dw = re.search(rb'/DW\s+(-?[\d.]+)', cid_body)
     if dw:
         default_w = float(dw.group(1))
     wm = re.search(rb'/W\s*\[(.*?)\]', cid_body, re.S)
     if wm:
-        toks = re.findall(rb'(\d+)|(\[[\d\s.\-]+\])', wm.group(1))
         i = 0
-        flat = re.findall(rb'\d+|\[[\d\s.\-]+\]', wm.group(1))
+        flat = re.findall(rb'-?\d+(?:\.\d+)?|\[[\d\s.\-]+\]', wm.group(1))
         while i < len(flat):
             t = flat[i]
             if t.startswith(b'['):
                 i += 1
                 continue
-            gid = int(t)
+            gid = int(float(t))
             if i + 1 < len(flat) and flat[i + 1].startswith(b'['):
-                ws = [float(x) for x in re.findall(rb'[\d.]+', flat[i + 1])]
+                ws = [float(x) for x in re.findall(rb'-?\d+(?:\.\d+)?', flat[i + 1])]
                 for k, w in enumerate(ws):
                     widths[gid + k] = w
                 i += 2
             elif i + 2 < len(flat) and not flat[i + 1].startswith(b'['):
-                w = float(flat[i + 1]) if b'.' in flat[i + 1] else float(int(flat[i + 1]))
-                for g in range(gid, int(flat[i + 2]) + 1):
+                first = gid
+                last = int(float(flat[i + 1]))
+                w = float(flat[i + 2])
+                for g in range(first, last + 1):
                     widths[g] = w
                 i += 3
             else:
@@ -363,10 +371,24 @@ def cmd_pdf(pdf_path: str, out_path: str):
         glyphs, strokes = run_content(content, fonts, font_map)
         page_h = box[3] if len(box) == 4 else 0.0
         text = ''.join(g[3] for g in glyphs)
+        by_baseline = {}
+        for gx, gy, gw, uni in glyphs:
+            by_baseline.setdefault(round(gy, 1), []).append((gx, gw, uni))
+        ro_lines = []
+        for by in sorted(by_baseline, reverse=True):
+            parts = []
+            row = sorted(by_baseline[by], key=lambda t: t[0])
+            for j, (gx, gw, uni) in enumerate(row):
+                if j and gx - (row[j - 1][0] + row[j - 1][1]) > max(0.9, 0.28 * gw):
+                    parts.append(' ')
+                parts.append(uni)
+            ro_lines.append(''.join(parts))
+        text_ro = '\n'.join(ro_lines)
         report['pages'].append({
             "n": pi, "mediabox": box,
             "glyphs": len(glyphs),
             "text": text,
+            "text_reading_order": text_ro,
             "max_x_end": round(max((g[0] + g[2] for g in glyphs), default=0), 1),
             "min_x": round(min((g[0] for g in glyphs), default=0), 1),
             "max_y_top": round(max((page_h - g[1] for g in glyphs), default=0), 1),
@@ -391,7 +413,9 @@ DOM_JS = """() => {
     'header.page, nav.toc, section > .card, section > .step-head, section > p.lead, fieldset, .retry, footer.page, section#autocheck ul.check, .neg .card, .notice');
   blocks.forEach(b => out.blocks.push({
     sel: (b.tagName||'').toLowerCase() + (b.id?('#'+b.id):'') + (b.className&&typeof b.className==='string'?('.'+b.className.split(/\\s+/).slice(0,2).join('.')):''),
+    h: Math.round(b.getBoundingClientRect().height),
     text: norm(b.innerText)}));
+  out.meta = {vw: window.innerWidth, media: 'print'};
   document.querySelectorAll('[placeholder]').forEach(e => out.placeholders.push(e.getAttribute('placeholder')));
   const c = out.counts;
   c.textarea = document.querySelectorAll('textarea.blank').length;
@@ -407,9 +431,23 @@ DOM_JS = """() => {
 }"""
 
 
+def chromium_exe() -> str:
+    import glob
+    import os
+    env = os.environ.get('CHROMIUM_EXE')
+    if env:
+        return env
+    cands = sorted(glob.glob(
+        '/paperclip/.cache/ms-playwright/chromium_headless_shell-*/'
+        'chrome-headless-shell-linux64/chrome-headless-shell'))
+    if not cands:
+        raise SystemExit('chromium headless shell não encontrado em .cache/ms-playwright')
+    return cands[-1]
+
+
 def cmd_dom(html_path: str, out_path: str):
     from playwright.sync_api import sync_playwright
-    EXE = "/paperclip/.cache/ms-playwright/chromium_headless_shell-1228/chrome-headless-shell-linux64/chrome-headless-shell"
+    EXE = chromium_exe()
     with sync_playwright() as p:
         b = p.chromium.launch(executable_path=EXE)
         pg = b.new_page()
@@ -430,30 +468,81 @@ def norm(s: str) -> str:
     return re.sub(r'\s+', ' ', s).strip()
 
 
+def squash(s: str) -> str:
+    return re.sub(r'\s+', '', norm(s))
+
+
+def seq_found(s: str, haystack: str, gap: int) -> bool:
+    """Palavras de s, na ordem, tolerando até `gap` chars intercalados."""
+    words = [w for w in re.split(r'\s+', norm(s)) if w]
+    if not words:
+        return True
+    pat = re.compile((r'.{0,%d}?' % gap).join(re.escape(w) for w in words))
+    return pat.search(haystack) is not None
+
+
+def words_found(s: str, haystack: str) -> bool:
+    """Todas as palavras de s presentes no haystack (integridade de texto)."""
+    return all(re.escape(w) in haystack or haystack.find(w) >= 0
+               for w in re.split(r'\s+', norm(s)) if w)
+
+
+# seletores cuja própria fonte declara break-inside:avoid (não podem dividir
+# entre páginas); demais blocos podem fluir entre páginas por design
+AVOID_SPLIT = ('card', 'fieldset', 'nav.toc', 'notice')
+
+
 def cmd_cmp(dom_path: str, pdf_path: str):
     dom = json.loads(Path(dom_path).read_text())
     pdf = json.loads(Path(pdf_path).read_text())
-    page_texts = [norm(p['text']) for p in pdf['pages']]
-    all_text = ' '.join(page_texts)
+    page_texts = [norm(p.get('text_reading_order') or p['text']) for p in pdf['pages']]
+    page_squash = [squash(p.get('text_reading_order') or p['text']) for p in pdf['pages']]
+    all_squash = ''.join(page_squash)
     fails = []
 
-    missing = [ln for ln in dom['lines'] if ln and norm(ln) not in all_text]
+    missing, tier2, tier3 = [], 0, 0
+    for ln in dom['lines']:
+        if not ln:
+            continue
+        if squash(ln) in all_squash:
+            continue
+        if seq_found(ln, all_squash, 120):
+            tier2 += 1
+            continue
+        if words_found(ln, all_squash):
+            tier3 += 1
+            continue
+        missing.append(ln)
     if missing:
         fails.append({'check': 'texto-completo', 'missing': missing[:20], 'n': len(missing)})
 
-    split_blocks = []
+    verbatim = [ln for ln in dom['lines'] if ln and norm(ln) in ' '.join(page_texts)]
+    split_blocks, lost_blocks, oversized = [], [], []
     for b in dom['blocks']:
-        t = norm(b['text'])
-        if not t:
+        t = b['text']
+        if not norm(t):
             continue
-        if not any(t in pt for pt in page_texts):
-            split_blocks.append(b['sel'])
+        sq = squash(t)
+        must_be_one_page = any(tok in b['sel'] for tok in AVOID_SPLIT)
+        scopes = page_squash if must_be_one_page else [all_squash]
+        if any(sq in ps for ps in scopes):
+            continue
+        if any(seq_found(t, ps, 200) for ps in scopes):
+            continue
+        if any(words_found(t, ps) for ps in scopes):
+            continue
+        if words_found(t, all_squash) and (b.get('h') or 0) > 1000:
+            oversized.append(b['sel'] + f"h={b.get('h')}px")
+            continue
+        (split_blocks if must_be_one_page else lost_blocks).append(b['sel'])
     if split_blocks:
         fails.append({'check': 'blocos-integros-por-pagina', 'blocks': split_blocks})
+    if lost_blocks:
+        fails.append({'check': 'blocos-texto-completo', 'blocks': lost_blocks})
 
     c = dom['counts']
     expect = {
-        'traços-h (linhas de resposta)': sum(c['textarea'] + c['input_blanknum']),
+        'traços-h (linhas de resposta)': c['textarea'] + c['input_blanknum'],
     }
     stroke_total = sum(p['h_strokes_long'] for p in pdf['pages'])
     if stroke_total < expect['traços-h (linhas de resposta)']:
@@ -479,6 +568,11 @@ def cmd_cmp(dom_path: str, pdf_path: str):
         'expected_fields': expect['traços-h (linhas de resposta)'],
         'counts_source': c,
         'placeholders_in_source': dom['placeholders'][:3],
+        'source_lines_total': len([ln for ln in dom['lines'] if ln]),
+        'lines_verbatim_matched': len(verbatim),
+        'lines_tier2_word_order': tier2,
+        'lines_tier3_word_presence': tier3,
+        'blocos_oversized_quebrados': oversized,
         'fails': fails,
     }, ensure_ascii=False, indent=1))
     sys.exit(1 if fails else 0)

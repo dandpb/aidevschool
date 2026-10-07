@@ -1,0 +1,26 @@
+{
+ "pages": 10,
+ "strokes_h_total": 162,
+ "expected_fields": 22,
+ "counts_source": {
+  "textarea": 12,
+  "input_blanknum": 10,
+  "radio": 3,
+  "checkbox": 4,
+  "table_data_rows": 18,
+  "retry_rows": 6
+ },
+ "placeholders_in_source": [
+  "escreva aqui…",
+  "escreva aqui…",
+  "escreva aqui…"
+ ],
+ "source_lines_total": 145,
+ "lines_verbatim_matched": 112,
+ "lines_tier2_word_order": 16,
+ "lines_tier3_word_presence": 6,
+ "blocos_oversized_quebrados": [
+  "div.cardh=1206px"
+ ],
+ "fails": []
+}

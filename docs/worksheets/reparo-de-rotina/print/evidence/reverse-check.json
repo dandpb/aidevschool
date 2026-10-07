@@ -1,0 +1,6 @@
+{
+ "check": "reverso-pdf-para-fonte",
+ "palavras_ausentes_na_fonte": 0,
+ "amostra": [],
+ "metodo": "toda palavra (len>=3) do texto em ordem de leitura do PDF deve existir no texto da fonte (linhas+placeholders+blocos do DOM)"
+}

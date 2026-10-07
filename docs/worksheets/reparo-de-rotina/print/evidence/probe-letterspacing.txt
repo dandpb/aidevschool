@@ -1,0 +1,29 @@
+Probe: letter-spacing em unidades "em" no printToPDF do Chromium local
+======================================================================
+Data: 2026-10-07 · chromium_headless_shell-1234 (Chrome/151.0.7922.34)
+Método: HTML mínimo com duas <legend> idênticas (700 11px mono,
+text-transform uppercase), uma com letter-spacing:.1em e outra com
+letter-spacing:0; page.pdf(format=A4, margin=12mm, scale=1.0); posições
+dos glifos lidas do content stream (Tm por glifo).
+
+Resultado (posição x do primeiro glifo de cada linha, passo por caractere):
+  com letter-spacing:.1em  → passo 10.73 pt = 14.31 px/char (1.30 em)
+  com letter-spacing:0     → passo  4.90 pt =  6.53 px/char (0.59 em)
+
+Conclusão: o pipeline de impressão deste build infla letter-spacing em em
+para ~2x avanço + tracking (14.31 ≈ 2x6.53 + 1.1 + arredondamento). Na
+tela (layout normal) o mesmo CSS produz 7.7 px/char (medição
+getBoundingClientRect: 455px/57 chars com ls; 392px/57 sem ls).
+
+Efeito na folha sem correção: legendas "CAMPO 1/2/3/4", badges
+(EXEMPLO/SEU CASO/TESTE/AUTOCHEQUE/NEGATIVOS), cabeçalhos de tabela
+(TICKET STATUS / PEDIDO STATUS URGENTE?) e o banner "FALHOU EM ALGUM
+ITEM? ..." estouravam a largura imprimível e eram cortados à direita
+(max_x_end 658.1 pt na p5 e 751.2 pt na p9; limite 564.4 pt).
+
+Correção aplicada SOMENTE em tempo de geração (fonte HTML intocada):
+  PRINT_FIT_CSS = "@media print{*{letter-spacing:normal!important}}"
+  (generate_pdf.py, page.add_style_tag antes de page.pdf)
+
+Pós-correção: 10/10 páginas com max_x_end <= 547.6 pt (margem 12 mm
+respeitada em todas as páginas; ver evidence/pdf-structure.json).
