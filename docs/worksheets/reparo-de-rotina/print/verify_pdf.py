@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
 """AID-3666 — verificação da folha imprimível (PDF A4) contra a fonte learner.
+F1 (AID-4240): política de paginação atualizada — .card/fieldset podem fluir
+entre páginas (quebra em fronteira de campo, via PRINT_FIT_CSS do gerador);
+átomos (campo, numrow, prompt-box, tabela, rádio, sumline…) continuam
+indivisíveis por página.
 
 Subcomandos:
   dom  <html> <out.json>   — inventário do DOM em mídia print (playwright, read-only)
   pdf  <pdf>  <out.json>   — estrutura, texto extraído (ToUnicode), geometria por página
-  cmp  <dom.json> <pdf.json> — compara fonte↔PDF: texto completo, blocos íntegros,
-                               tabelas, campos, margens/overflow; saída PASS/FAIL
+  cmp  <dom.json> <pdf.json> — compara fonte↔PDF: texto completo, átomos íntegros,
+                                tabelas, campos, margens/overflow; saída PASS/FAIL
 
 Sem rede, sem instalação. Não altera a fonte. Evidências citam arquivo/linha.
 """
@@ -410,7 +414,7 @@ DOM_JS = """() => {
   const out = {blocks: [], placeholders: [], counts: {}, lines: []};
   document.querySelectorAll('.wrap *').forEach(()=>{});
   const blocks = document.querySelectorAll(
-    'header.page, nav.toc, section > .card, section > .step-head, section > p.lead, fieldset, .retry, footer.page, section#autocheck ul.check, .neg .card, .notice');
+    'header.page, nav.toc, section > .card, section > .step-head, section > p.lead, fieldset, .retry, footer.page, section#autocheck ul.check, .neg .card, .notice, .field, .numrow, .prompt-box, p.sumline, p.mini, .radio, .check li, table, .card h3, legend');
   blocks.forEach(b => out.blocks.push({
     sel: (b.tagName||'').toLowerCase() + (b.id?('#'+b.id):'') + (b.className&&typeof b.className==='string'?('.'+b.className.split(/\\s+/).slice(0,2).join('.')):''),
     h: Math.round(b.getBoundingClientRect().height),
@@ -487,9 +491,32 @@ def words_found(s: str, haystack: str) -> bool:
                for w in re.split(r'\s+', norm(s)) if w)
 
 
-# seletores cuja própria fonte declara break-inside:avoid (não podem dividir
-# entre páginas); demais blocos podem fluir entre páginas por design
-AVOID_SPLIT = ('card', 'fieldset', 'nav.toc', 'notice')
+# Política de paginação F1 (AID-4240): desde o achado UX da aprovação
+# @3a5d188f, o `generate_pdf.py` injeta em tempo de geração
+# `break-inside:auto` para .card/fieldset — blocos grandes podem fluir entre
+# páginas desde que a quebra caia em fronteira de campo. O que NÃO pode
+# dividir entre páginas são os ÁTOMOS abaixo (campo com rótulo+dica+linha de
+# resposta, numrow, prompt-box, tabela, grupo de rádio, sumline, notice, toc,
+# retry, rodapé, cabeçalhos). Os átomos acompanham o PRINT_FIT_CSS do
+# gerador; qualquer divergência aqui é defeito deste verificador.
+ATOM_TOKENS = ('.field', '.numrow', '.prompt-box', '.sumline', '.mini',
+               '.radio', 'table', 'nav.toc', '.notice', '.retry',
+               'footer.page', 'h3', 'h4', 'legend', 'header.page',
+               '.step-head', 'li', '.arrow', '.tag', '.flow', '.neg')
+
+
+def is_atom(sel: str) -> bool:
+    s = sel.lower()
+    if s.startswith('ul.check'):
+        return False  # container da checklist: divide ENTRE itens (li = átomo)
+    if any(t in s for t in ('.field', '.numrow', '.prompt-box', '.sumline',
+                            '.mini', '.radio', 'table', 'nav.toc', '.notice',
+                            '.retry', 'footer.page', '.step-head', '.arrow',
+                            '.tag', '.flow', '.neg', '.check')):
+        return True
+    if s.startswith(('h3', 'h4', 'legend', 'li', 'header')):
+        return True
+    return False
 
 
 def cmd_cmp(dom_path: str, pdf_path: str):
@@ -517,14 +544,15 @@ def cmd_cmp(dom_path: str, pdf_path: str):
         fails.append({'check': 'texto-completo', 'missing': missing[:20], 'n': len(missing)})
 
     verbatim = [ln for ln in dom['lines'] if ln and norm(ln) in ' '.join(page_texts)]
-    split_blocks, lost_blocks, oversized = [], [], []
+    atom_split, lost_blocks, oversized = [], [], []
+    split_blocks = []   # informativo: blocos grandes que fluíram entre páginas
     for b in dom['blocks']:
         t = b['text']
         if not norm(t):
             continue
         sq = squash(t)
-        must_be_one_page = any(tok in b['sel'] for tok in AVOID_SPLIT)
-        scopes = page_squash if must_be_one_page else [all_squash]
+        atom = is_atom(b['sel'])
+        scopes = page_squash if atom else [all_squash]
         if any(sq in ps for ps in scopes):
             continue
         if any(seq_found(t, ps, 200) for ps in scopes):
@@ -534,9 +562,20 @@ def cmd_cmp(dom_path: str, pdf_path: str):
         if words_found(t, all_squash) and (b.get('h') or 0) > 1000:
             oversized.append(b['sel'] + f"h={b.get('h')}px")
             continue
-        (split_blocks if must_be_one_page else lost_blocks).append(b['sel'])
-    if split_blocks:
-        fails.append({'check': 'blocos-integros-por-pagina', 'blocks': split_blocks})
+        if not atom and words_found(t, all_squash):
+            # texto completo no documento, mas não contíguo em página única
+            # → bloco grande que fluiu entre páginas (política F1): registrar
+            # em quais páginas o bloco começa/termina para revisão QA/UX.
+            spans = [i + 1 for i, ps in enumerate(page_squash)
+                     if seq_found(t, ps, 400) or words_found(t, ps)]
+            split_blocks.append(f"{b['sel']}@p{spans[0] if spans else '?'}"
+                                + (f"-p{spans[-1]}" if len(spans) > 1 else ""))
+            continue
+        (atom_split if atom else lost_blocks).append(b['sel'])
+    if atom_split:
+        fails.append({'check': 'atomos-integros-por-pagina'
+                                   ' (campo/tabela/prompt-box/…) divididos',
+                      'blocks': atom_split})
     if lost_blocks:
         fails.append({'check': 'blocos-texto-completo', 'blocks': lost_blocks})
 
@@ -573,6 +612,7 @@ def cmd_cmp(dom_path: str, pdf_path: str):
         'lines_tier2_word_order': tier2,
         'lines_tier3_word_presence': tier3,
         'blocos_oversized_quebrados': oversized,
+        'blocos_grandes_fluindo_entre_paginas (informativo, política F1)': split_blocks,
         'fails': fails,
     }, ensure_ascii=False, indent=1))
     sys.exit(1 if fails else 0)

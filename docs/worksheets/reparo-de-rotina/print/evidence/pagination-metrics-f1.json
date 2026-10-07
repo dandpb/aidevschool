@@ -1,0 +1,159 @@
+{
+ "scale": "120dpi",
+ "margin_declared_mm": 12,
+ "pages": [
+  {
+   "page": 1,
+   "px": [
+    994,
+    1405
+   ],
+   "ink_bbox_mm": {
+    "L": 11.6,
+    "R": 11.9,
+    "T": 14.4,
+    "B": 47.0
+   },
+   "content_height_mm": 236.0,
+   "fill_pct_of_printable": 86.3,
+   "dark_text_pixels_pct": 3.47,
+   "ink_at_trim_edge": false
+  },
+  {
+   "page": 2,
+   "px": [
+    994,
+    1405
+   ],
+   "ink_bbox_mm": {
+    "L": 11.9,
+    "R": 12.1,
+    "T": 15.7,
+    "B": 11.9
+   },
+   "content_height_mm": 269.9,
+   "fill_pct_of_printable": 98.7,
+   "dark_text_pixels_pct": 4.33,
+   "ink_at_trim_edge": false
+  },
+  {
+   "page": 3,
+   "px": [
+    994,
+    1405
+   ],
+   "ink_bbox_mm": {
+    "L": 11.9,
+    "R": 12.1,
+    "T": 11.9,
+    "B": 11.9
+   },
+   "content_height_mm": 273.7,
+   "fill_pct_of_printable": 100.1,
+   "dark_text_pixels_pct": 3.23,
+   "ink_at_trim_edge": false
+  },
+  {
+   "page": 4,
+   "px": [
+    994,
+    1405
+   ],
+   "ink_bbox_mm": {
+    "L": 11.9,
+    "R": 12.1,
+    "T": 11.9,
+    "B": 12.1
+   },
+   "content_height_mm": 273.5,
+   "fill_pct_of_printable": 100.0,
+   "dark_text_pixels_pct": 2.01,
+   "ink_at_trim_edge": false
+  },
+  {
+   "page": 5,
+   "px": [
+    994,
+    1405
+   ],
+   "ink_bbox_mm": {
+    "L": 11.9,
+    "R": 12.1,
+    "T": 12.1,
+    "B": 58.2
+   },
+   "content_height_mm": 227.1,
+   "fill_pct_of_printable": 83.1,
+   "dark_text_pixels_pct": 1.93,
+   "ink_at_trim_edge": false
+  },
+  {
+   "page": 6,
+   "px": [
+    994,
+    1405
+   ],
+   "ink_bbox_mm": {
+    "L": 11.9,
+    "R": 12.1,
+    "T": 12.3,
+    "B": 12.1
+   },
+   "content_height_mm": 273.0,
+   "fill_pct_of_printable": 99.9,
+   "dark_text_pixels_pct": 1.95,
+   "ink_at_trim_edge": false
+  },
+  {
+   "page": 7,
+   "px": [
+    994,
+    1405
+   ],
+   "ink_bbox_mm": {
+    "L": 11.9,
+    "R": 11.9,
+    "T": 12.1,
+    "B": 12.5
+   },
+   "content_height_mm": 272.8,
+   "fill_pct_of_printable": 99.8,
+   "dark_text_pixels_pct": 2.76,
+   "ink_at_trim_edge": false
+  },
+  {
+   "page": 8,
+   "px": [
+    994,
+    1405
+   ],
+   "ink_bbox_mm": {
+    "L": 11.9,
+    "R": 11.9,
+    "T": 14.8,
+    "B": 49.1
+   },
+   "content_height_mm": 233.5,
+   "fill_pct_of_printable": 85.4,
+   "dark_text_pixels_pct": 3.07,
+   "ink_at_trim_edge": false
+  },
+  {
+   "page": 9,
+   "px": [
+    994,
+    1405
+   ],
+   "ink_bbox_mm": {
+    "L": 11.9,
+    "R": 11.9,
+    "T": 11.9,
+    "B": 255.3
+   },
+   "content_height_mm": 30.3,
+   "fill_pct_of_printable": 11.1,
+   "dark_text_pixels_pct": 0.43,
+   "ink_at_trim_edge": false
+  }
+ ]
+}

@@ -1,6 +1,6 @@
 {
- "pages": 10,
- "strokes_h_total": 162,
+ "pages": 9,
+ "strokes_h_total": 193,
  "expected_fields": 22,
  "counts_source": {
   "textarea": 12,
@@ -19,8 +19,7 @@
  "lines_verbatim_matched": 112,
  "lines_tier2_word_order": 16,
  "lines_tier3_word_presence": 6,
- "blocos_oversized_quebrados": [
-  "div.cardh=1206px"
- ],
+ "blocos_oversized_quebrados": [],
+ "blocos_grandes_fluindo_entre_paginas (informativo, política F1)": [],
  "fails": []
 }

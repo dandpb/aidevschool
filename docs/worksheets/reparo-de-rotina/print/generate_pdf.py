@@ -34,13 +34,36 @@ PRINT_BACKGROUND = True
 DISPLAY_HEADER_FOOTER = False
 SCALE = 1.0
 
-# ---- correção de pipeline (impressão), aplicada só em tempo de geração ----
-# Defeito empírico do printToPDF do Chromium local (151.0.7922.34, probe em
+# ---- correções de pipeline (impressão), aplicadas só em tempo de geração ----
+# (1) Defeito empírico do printToPDF do Chromium local (151.0.7922.34, probe em
 # evidence/probe-letterspacing.txt): letter-spacing em unidades em é inflado
 # para ~2x avanço + tracking, estourando a largura imprimível (banners/legendas/
 # cabeçalhos de tabela cortados à direita). A fonte HTML permanece intacta; a
 # regra abaixo só entra no DOM durante a geração do PDF e neutraliza o defeito.
-PRINT_FIT_CSS = "@media print{*{letter-spacing:normal!important}}"
+#
+# (2) F1 (AID-4240, achado UX da aprovação @3a5d188f): a fonte declara
+# `.card,fieldset,nav.toc,.notice{break-inside:avoid}`; blocos grandes que não
+# cabem inteiros no espaço restante eram empurrados inteiros para a página
+# seguinte, criando páginas quase vazias (p07 fill 3,7% — parágrafo órfão antes
+# do cartão oversize SEMANA 2; p03 fill 22,9% — cartão SEU CASO empurrado).
+# Relaxamos `break-inside` de .card/fieldset para permitir que esses blocos
+# fluam entre páginas QUEBRANDO SOMENTE EM FRONTEIRA DE CAMPO — a fronteira
+# segura que o próprio PDF @3a5d188f já demonstrava na quebra p8→p9. Átomos
+# indivisíveis (campo com rótulo+dica+linha de resposta, numrow, prompt-box,
+# tabela, grupo de rádio, sumline, notice, toc, rodapé) continuam com
+# break-inside:avoid, e cabeçalhos de cartão/legend/step-head ganham
+# break-after:avoid para não ficarem órfãos no pé de página. A fonte HTML
+# permanece byte-idêntica; estas regras só entram no DOM na geração.
+PRINT_FIT_CSS = (
+    "@media print{*{letter-spacing:normal!important}}"
+    "@media print{"
+    ".card,fieldset{break-inside:auto}"
+    ".card h3,legend,.step-head{break-after:avoid}"
+    ".field,.numrow,.prompt-box,.sumline,.mini,.radio,.check li,"
+    "table,nav.toc,.notice,.retry,.arrow,.tag,.flow,.neg,footer.page"
+    "{break-inside:avoid}"
+    "}"
+)
 
 # ---- constantes de normalização (mesmo comprimento das originais) ----
 # padrão casado: D: + 14 dígitos + [+-]HH'II  → 22 bytes exatos
