@@ -1,0 +1,151 @@
+{
+  "prefix": "after",
+  "html": "03-prototipo-entrada.html",
+  "viewports": {
+    "320": {
+      "initial": {
+        "doc": 320,
+        "inner": 320
+      },
+      "initialScrollY": 0,
+      "postF1open": {
+        "doc": 320,
+        "inner": 320
+      }
+    },
+    "375": {
+      "initial": {
+        "doc": 375,
+        "inner": 375
+      },
+      "initialScrollY": 0,
+      "postF1open": {
+        "doc": 375,
+        "inner": 375
+      }
+    },
+    "390": {
+      "initial": {
+        "doc": 390,
+        "inner": 390
+      },
+      "initialScrollY": 0,
+      "postF1open": {
+        "doc": 390,
+        "inner": 390
+      }
+    },
+    "1280": {
+      "initial": {
+        "doc": 1280,
+        "inner": 1280
+      },
+      "initialScrollY": 0,
+      "postF1open": {
+        "doc": 1280,
+        "inner": 1280
+      }
+    }
+  },
+  "lesson_feedback": {
+    "desktop_lesson_open": {
+      "dialogOpen": true,
+      "primerVisible": true,
+      "options": 4
+    },
+    "desktop_feedback_retry": {
+      "feedbackShown": true,
+      "feedbackClass": "feedback no",
+      "feedbackExplains": true,
+      "retryVisible": true,
+      "reach": {
+        "box": {
+          "x": 287,
+          "y": 768,
+          "w": 109,
+          "h": 44
+        },
+        "in_viewport": true,
+        "viewport_h": 900
+      }
+    },
+    "mobile390_lesson_open": {
+      "dialogOpen": true,
+      "options": 4
+    },
+    "mobile390_feedback_retry": {
+      "feedbackShown": true,
+      "feedbackExplains": true,
+      "retryVisible": true,
+      "reach": {
+        "box": {
+          "x": 37,
+          "y": 639,
+          "w": 316,
+          "h": 44
+        },
+        "in_viewport": true,
+        "viewport_h": 844
+      }
+    }
+  },
+  "compose": {
+    "initial_desktop1280": {
+      "validated": {
+        "before": "1280x900",
+        "after": "1280x900"
+      },
+      "composed": "2576x1016"
+    },
+    "postF1_altopen_desktop1280": {
+      "validated": {
+        "before": "1280x1345",
+        "after": "1280x1432"
+      },
+      "composed": "2231x1316"
+    },
+    "initial_mobile390": {
+      "validated": {
+        "before": "390x844",
+        "after": "390x844"
+      },
+      "composed": "796x960"
+    },
+    "postF1_altopen_mobile390": {
+      "validated": {
+        "before": "495x2462",
+        "after": "390x2219"
+      },
+      "composed": "468x1316"
+    }
+  },
+  "postF1_badge": "F2/4",
+  "postF1_mission_panel": "ETAPA ATUAL · FUNDAMENTOS | F2/4 | 🛡 | Uso seguro |  | O que entra no prompt e o que fica com você: dados sensíveis, limites de confiança e hábitos seguros nas duas jornadas. |  | ≈ 5 min | Exemplo → tentativa | Sem código | 1 | Ver o exemplo acompanhado | 2 | responder 1 pergunta | 3 | levar o takeaway | Começar F2 — Uso seguro | → |  | Jogos são prática opcional — nenhum pré-requisito depende deles.",
+  "toast_clean_postF1_desktop": true,
+  "desktop_c4_altbox_vs_world": {
+    "altBox": {
+      "top": 710,
+      "bottom": 860,
+      "left": 97,
+      "right": 517
+    },
+    "world": {
+      "top": 290,
+      "bottom": 650,
+      "left": 83,
+      "right": 867
+    },
+    "intersect": false
+  },
+  "mobile390_cta_box_initial": {
+    "x": 33,
+    "y": 561.28125,
+    "width": 324,
+    "height": 48
+  },
+  "postF1_badge_mobile": "F2/4",
+  "toast_clean_postF1_mobile390": true,
+  "mobile390_altbox_overlaps_world": false,
+  "toast_clean_postF1_mobile375": true,
+  "toast_clean_postF1_mobile320": true
+}

@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101d28">
+<title>AiDevSchool — Uma escola, duas jornadas (protótipo AID-3458 fatia 1)</title>
+<style>
+/* Tokens copiados 1:1 de engines/sdlc-quest/src/style.css (contrato 01-tokens-e-identidade.md) */
+:root{--paper:#f5f3ec;--card:#fffef9;--ink:#172935;--muted:#4c6057;--line:#d9ded5;--deep:#101d28;--mint:#a7e6cd;--mint-dark:#195d4b;--gold:#e8c888;--coral:#b64c36;--radius:18px;--mono:'SFMono-Regular',Consolas,'Liberation Mono',monospace;--sans:'Avenir Next','Segoe UI',Arial,sans-serif}
+*{box-sizing:border-box}body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--paper);font-synthesis:none}
+button{font:inherit;cursor:pointer;color:inherit}button:disabled{cursor:default;opacity:.55}
+a{color:inherit}
+button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid #12624c;outline-offset:3px}
+::selection{background:var(--mint)}
+.skip{position:fixed;top:-60px;left:15px;z-index:100;background:#fff;padding:12px;border-radius:9px;transition:top .15s}
+.skip:focus{top:10px}
+.shell{max-width:1200px;margin:auto;padding:0 42px}
+.topbar{height:88px;display:flex;align-items:center;border-bottom:1px solid var(--line);gap:24px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;font-size:22px;font-weight:900;letter-spacing:-1px;white-space:nowrap}
+.brand small{font:9px var(--mono);letter-spacing:2.8px;display:block;margin-top:3px;color:#4b6053}
+.brand-short{display:none}
+.brand-mark{width:33px;height:33px;display:grid;grid-template-columns:1fr 1fr;gap:4px;transform:rotate(-8deg)}
+.brand-mark i{background:var(--ink);border-radius:3px}.brand-mark i:nth-child(2){background:#72b69b}.brand-mark i:nth-child(3){background:#d9a768}
+.top-actions{margin-left:auto;display:flex;gap:8px}
+.quiet{border:1px solid transparent;background:transparent;padding:10px 12px;border-radius:9px;font-size:12px;font-weight:600;min-height:44px}
+.quiet:hover{background:#e6eae1}
+.heading{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:30px 0 22px}
+.eyebrow{font:11px var(--mono);font-weight:600;letter-spacing:1.25px;color:#617166}
+.heading h1{font-size:clamp(28px,3.2vw,44px);font-weight:650;line-height:1.14;letter-spacing:-1.8px;margin:11px 0 8px}
+.heading h1 em{font-family:Georgia,serif;font-weight:400;color:#527a69}
+.heading p{margin:0;color:var(--muted);font-size:14px;line-height:1.7;max-width:560px}
+.player{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.player span{font:11px var(--mono);letter-spacing:.7px;color:#495f50}
+.player strong{font-size:27px;font-weight:600;display:block;margin-top:5px}
+.player small{font:11px var(--mono);color:#4c6057}
+.game-layout{display:grid;grid-template-columns:minmax(0,1fr) 312px;gap:18px;align-items:stretch}
+.world-panel{background:var(--deep);border-radius:var(--radius);position:relative;overflow:hidden;min-height:430px;border:1px solid #23343d;display:flex;flex-direction:column}
+.map-hud{position:absolute;z-index:2;top:18px;left:22px;right:22px;display:flex;justify-content:space-between;pointer-events:none;font:11px var(--mono);letter-spacing:1.2px;color:#cbddd2}
+.canvas-wrap{position:relative;flex:1;min-height:360px}
+#world{display:block;width:100%;height:100%;position:absolute;inset:0}
+  /* C4 — disclosure em fluxo FORA da área do desenho em TODAS as larguras (mesmo padrão aceito ≤630px): nunca cobre a arte */
+  .map-alt{padding:10px 14px 12px}
+.map-alt summary{font:11px var(--mono);color:#c4d8cf;min-height:44px;display:flex;align-items:center;cursor:pointer;list-style:none}
+.map-alt summary:before{content:"≡ ";font-size:14px}
+.map-alt[open] summary{margin-bottom:6px}
+.map-alt .alt-box{background:#0b1926ee;border:1px solid #2c4450;border-radius:10px;padding:12px 16px;max-width:420px}
+.map-alt ol{margin:0;padding-left:18px;color:#d5e4d6;font-size:13px;line-height:1.9}
+.map-alt a{color:var(--mint)}
+.map-footer{display:flex;justify-content:space-between;align-items:center;padding:12px 22px;border-top:1px solid #273b44;font-size:11px;color:#8ba09e}
+.dot{display:inline-block;width:5px;height:5px;border-radius:50%;vertical-align:middle;margin-right:5px}
+.dot.mint{background:var(--mint)}.dot.dim{background:#52616a;margin-left:14px}.dot.gold{background:var(--gold)}
+.map-btn{border:0;background:none;color:#c4d8cf;font:11px var(--mono);min-height:44px}
+.mission-panel{border:1px solid var(--line);background:#fbfaf4;border-radius:var(--radius);display:flex;flex-direction:column;padding:24px 23px}
+.mission-kicker{display:flex;justify-content:space-between;font:11px var(--mono);letter-spacing:1.3px;color:#495f50}
+.mission-number{font:11px var(--mono);background:#e9ede3;padding:5px 8px;border-radius:4px;color:#557260}
+.mission-icon{margin-top:18px;width:48px;height:48px;border:1px solid #bbcfbf;border-radius:14px;display:grid;place-items:center;font-size:26px;background:#edf2e7;color:#426e58}
+.mission-panel h2{font-size:26px;line-height:1.12;letter-spacing:-.8px;margin:14px 0 10px;font-weight:650}
+.mission-panel>p{font-size:14px;line-height:1.7;color:#4b6055;margin:0}
+.mission-meta{margin:16px 0 14px;display:flex;gap:8px;flex-wrap:wrap}
+.tag{font:10px var(--mono);padding:5px 7px;border:1px solid #d8dfd2;border-radius:5px;color:#586b5b;background:#f1f4eb}
+.task-preview{border-top:1px solid var(--line);padding:12px 0 4px;display:grid;gap:9px;list-style:none;margin:0 0 12px;font-size:12px;color:#4c6250}
+.task-preview li{display:flex;gap:8px;align-items:flex-start;line-height:1.5}
+.task-preview li span{font:10px var(--mono);display:grid;place-items:center;width:16px;min-width:16px;height:16px;border:1px solid #bbc9bc;border-radius:50%;color:#6d8774;margin-top:2px}
+.task-preview li.finished{color:#34624b}.task-preview li.finished span{background:#c7e6cf;border-color:#91b9a2}
+.primary{background:var(--mint);border:1px solid #86bfa7;padding:13px 19px;border-radius:9px;color:#163b2d;font-weight:750;font-size:14px;min-height:46px;box-shadow:0 2px 0 #82b49e;transition:background .15s}
+.primary:hover{background:#baeeda}
+.mission-panel .primary{margin-top:auto;width:100%;text-align:left;display:flex;justify-content:space-between;align-items:center}
+.mission-note{font:11px var(--mono);text-align:center;margin-top:12px;color:#495f50}
+.stage-nav{margin:18px 0 0;display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;gap:6px;align-items:center}
+.stage-node{position:relative;flex:1;border:1px solid var(--line);background:#fbfaf5;border-radius:10px;text-align:left;min-height:74px;padding:12px;display:flex;gap:10px;align-items:center;transition:border .2s,background .2s}
+.stage-node[aria-current="true"]{border:1px solid #79a58e;background:#e9f0e3;box-shadow:inset 0 0 0 1px #a2bba8}
+.stage-node:hover{border-color:#749980}
+.node-icon{width:28px;height:28px;border:1px solid #d3dccf;display:grid;place-items:center;border-radius:7px;color:#5d7965;font:15px var(--mono);flex-shrink:0}
+.stage-node[data-locked="true"]{background:transparent;color:#485e51}
+.stage-node[data-locked="true"] .node-icon{color:#526951;background:#ecefe6}
+.node-label{display:flex;flex-direction:column;gap:3px}
+.node-label strong{font-size:12px;font-weight:650}
+.node-label small{font:10px var(--mono);letter-spacing:1px;color:#495f50}
+.stage-arrow{color:#749980;font-size:16px;flex-shrink:0}
+.stage-node .status-tick{position:absolute;right:7px;top:8px;color:#47715a;font-size:10px}
+.journeys{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:22px}
+.journey-card{border:1px solid var(--line);background:var(--card);border-radius:var(--radius);padding:20px}
+.journey-card h3{font-size:19px;margin:0 0 6px;letter-spacing:-.4px}
+.journey-card .kicker{font:11px var(--mono);letter-spacing:1.2px;display:block;margin-bottom:8px}
+.journey-card p{font-size:14px;line-height:1.7;color:#4b6055;margin:0 0 14px}
+.secondary{background:#fffef8;border:1px solid #9db9a4;border-radius:9px;padding:11px 16px;font-size:13px;font-weight:650;color:#244e39;min-height:46px}
+.secondary:hover{background:#f0f5e9}
+.practice{margin:22px 0 8px;border:1px dashed #c3cec0;border-radius:14px;padding:14px 18px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:#f3f5ec}
+.practice .eyebrow{margin-right:8px}
+.practice details{font-size:12px;color:#4c6057}
+.practice summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-weight:650}
+.practice ul{margin:6px 0 0;padding-left:18px;line-height:1.8;font-size:12px}
+.footer{padding:18px 0 22px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:15px;color:#495f50;font:10px var(--mono);line-height:1.6;margin-top:26px}
+dialog{border:1px solid #c7d3c7;padding:0;background:var(--paper);color:var(--ink);border-radius:18px;width:min(760px,calc(100% - 32px));max-height:90dvh;box-shadow:0 24px 100px #030d2970;overflow:auto}
+dialog::backdrop{background:#071422bc}
+.dialog-top{position:sticky;top:0;z-index:3;display:flex;align-items:center;justify-content:space-between;padding:14px 22px;border-bottom:1px solid var(--line);gap:12px;background:#eeefe5}
+.close-btn{background:#e4e8db;border:1px solid #d0dacb;color:#36523b;border-radius:8px;min-width:44px;min-height:44px;font-size:20px;line-height:1}
+.dialog-main{padding:24px 26px}
+.step-dots{display:flex;gap:4px;margin:0 0 6px}
+.step-dots span{height:4px;width:29px;background:#d7dfd0;border-radius:4px}
+.step-dots span.active{background:#41785e}
+.lesson-head h2{font-size:26px;line-height:1.18;letter-spacing:-.8px;margin:8px 0 10px}
+.lesson-head p{font-size:14px;line-height:1.75;max-width:640px;color:#4a6150;margin:0}
+.lesson-primer{margin:16px 0 8px;border:1px solid #9db9a4;background:#e9f1e7;border-radius:10px;padding:0 15px}
+.lesson-primer summary{cursor:pointer;min-height:46px;padding:13px 0;font-size:14px;font-weight:650;color:#244e39}
+.lesson-primer p{font-size:14px;line-height:1.85;color:#294c38;margin:0 0 14px}
+.lesson-primer p+p{border-top:1px solid #bfd1be;padding-top:12px}
+.instruction{margin:18px 0 10px;font:12px var(--mono);color:#495f50;line-height:1.6}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.option{padding:15px 16px;border-radius:10px;border:1px solid #ced9c7;background:#fffef8;text-align:left;display:flex;gap:12px;align-items:flex-start;min-height:66px}
+.option:hover{border-color:#8da895;background:#f7faef}
+.option[aria-pressed="true"]{border-color:#579579;background:#e7f3e7;box-shadow:inset 0 0 0 1px #73a98c}
+.option strong{font-size:14px;line-height:1.5}
+.option small{display:block;font-size:13px;line-height:1.65;color:#4a6150;margin-top:3px}
+.option-index{color:#4d6653;font-size:12px;font:12px var(--mono);margin-top:2px}
+.dialog-actions{display:flex;gap:12px;align-items:center;margin-top:18px;flex-wrap:wrap}
+.hint-button{font-size:12px;min-height:44px;color:#43623f;background:none;border:1px dashed #9db9a4;border-radius:8px;padding:8px 14px}
+.feedback{margin-top:16px;font-size:14px;line-height:1.75;border-radius:10px;padding:13px 16px}
+.feedback.ok{background:#e7f3e7;border:1px solid #8cb196;color:#1f4a33}
+.feedback.no{background:#fff0e8;border:1px solid #c58770;color:#77452f}
+.feedback b{display:block;margin-bottom:4px}
+.takeaway{margin-top:16px;background:#f6edda;border:1px solid #cab995;border-radius:10px;padding:14px 16px;font-size:14px;line-height:1.8;color:#644e30}
+.takeaway b{font:11px var(--mono);letter-spacing:1px;display:block;margin-bottom:6px;color:#76591b}
+.local-note{font:11px var(--mono);color:#495f50;line-height:1.7;margin-top:16px;border-top:1px solid var(--line);padding-top:12px}
+.toast{position:fixed;bottom:25px;left:50%;transform:translate(-50%,20px);background:#173f31;color:#ecfff4;border:1px solid #569579;box-shadow:0 10px 40px #102a3520;padding:13px 22px;border-radius:10px;max-width:90vw;font-size:13px;z-index:20;opacity:0;pointer-events:none;transition:.2s}
+.toast.visible{opacity:1;transform:translate(-50%,0)}
+.noscript{padding:25px;color:#8c2f1b}
+@media(max-width:900px){.game-layout{grid-template-columns:1fr}.journeys{grid-template-columns:1fr}.heading{flex-direction:column;align-items:flex-start;gap:12px}.player{padding-top:6px}}
+@media(max-width:630px){
+  /* B2 — Tratamento 630px COPIADO de engines/sdlc-quest/src/style.css (bloco base l.7 + overrides v1.1 l.55–66; valores efetivos da fonte) */
+  .shell{padding:0 14px}
+  .topbar{height:68px;gap:7px}
+  .brand{font-size:19px;gap:7px}
+  .brand-mark{width:25px;height:25px;gap:3px}
+  .brand small{font-size:6px;letter-spacing:2px}
+  .brand-full{display:none}.brand-short{display:inline}
+  .top-actions{gap:0}
+  .quiet{padding:8px;min-height:44px}
+  .quiet>span:first-child{font-size:17px;margin-right:0}
+  .quiet>span:nth-child(2){display:none}
+  .heading{padding:22px 0 17px}
+  .heading h1{font-size:30px;letter-spacing:-1.3px;margin-top:9px}
+  .heading .eyebrow{font-size:9px;letter-spacing:.8px;line-height:1.7}
+  .heading p{font-size:13px;line-height:1.6}
+  .player{flex-shrink:0}
+  .player small{font-size:11px}
+  /* B3 — etapa ANTES do mapa: CTA no primeiro viewport útil em 390px */
+  .game-layout{display:flex;flex-direction:column;gap:12px}
+  .mission-panel{order:-1}
+  .world-panel{min-height:0;order:1}
+  /* B2 — canvas vira bloco em fluxo e a alternativa textual flui ABAIXO do mapa (nunca sobrepõe as ilhas) */
+  .canvas-wrap{position:static;flex:none;min-height:0}
+  #world{position:relative;inset:auto;width:100%;height:320px}
+  .map-alt{padding:0 12px 10px}
+  .map-alt .alt-box{max-width:none}
+  .map-hud{font-size:10px;top:14px;left:16px;right:16px}
+  .map-footer{font-size:11px;padding:3px 12px}
+  .map-btn{font-size:11px}
+  /* Painel de etapa: grid da fonte (l.7 .mission-panel + v1.1 l.59–60) */
+  .mission-panel{padding:18px;border-radius:13px;display:grid;grid-template-columns:1fr 48px;column-gap:9px}
+  .mission-kicker{grid-column:1/-1}
+  .mission-panel h2{grid-column:1;grid-row:2;font-size:26px;margin:12px 0 8px;max-width:250px}
+  .mission-icon{grid-column:2;grid-row:2;justify-self:end;align-self:center;margin:7px 0 0;width:37px;height:37px;font-size:22px}
+  .mission-panel>p{grid-column:1/-1;font-size:14px;line-height:1.75}
+  .mission-meta{grid-column:1/-1;margin:13px 0 14px;gap:6px}
+  .task-preview{display:none}
+  .mission-panel .primary{grid-column:1/-1;margin-top:0;min-height:48px;font-size:14px}
+  .mission-note{grid-column:1/-1;font-size:11px!important;margin-top:10px!important}
+  .tag{font-size:11px!important}
+  /* Trilha F1–F4: grid 2×2 da fonte (v1.1 l.61) */
+  .stage-nav{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:13px}
+  .stage-arrow{display:none}
+  .stage-node{padding:12px;gap:9px;min-height:66px}
+  .node-icon{min-width:25px;height:28px}
+  .node-label strong{font-size:13px!important}
+  .node-label small{font-size:10px!important}
+  .footer{flex-direction:column;gap:7px;font-size:11px!important}
+  .cards{grid-template-columns:1fr}
+  .dialog-main{padding:20px 17px}
+  .dialog-top{padding:10px 15px}
+  .lesson-head h2{font-size:24px}
+  .dialog-actions{flex-direction:column;align-items:stretch}
+}
+@media(max-width:375px){
+  /* Tratamento 375px COPIADO da fonte (v1.1 l.72) */
+  .brand{font-size:17px;gap:6px}
+  .brand-mark{width:23px;height:23px}
+  .quiet{min-width:38px;padding:7px}
+  .heading h1{font-size:27px}
+  #world{height:300px}
+  .map-caption{display:none}
+}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#etapa-atual">Pular para a etapa atual</a>
+<div class="shell">
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="AiDevSchool, início">
+      <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      <span>AiDev<small><span class="brand-full">ESCOLA · UMA ESCOLA, VÁRIOS MOTORES</span><span class="brand-short">ESCOLA DE IA</span></small></span>
+    </a>
+    <nav class="top-actions" aria-label="Ferramentas da escola">
+      <button class="quiet" id="help-btn" aria-label="Como funciona a escola"><span aria-hidden="true">▤</span> <span>Como funciona</span></button>
+      <button class="quiet" id="lang-note" aria-label="Nota sobre idioma" title="Protótipo em português">PT</button>
+    </nav>
+  </header>
+
+  <section class="heading">
+    <div>
+      <div class="eyebrow">APRENDA FAZENDO. AVANCE VERIFICANDO.</div>
+      <h1><span>Uma escola. Duas </span><em>jornadas.</em></h1>
+      <p>Fundamentos compartilhados para todo mundo — depois, você segue para IA no cotidiano ou para IA para desenvolvimento. Lições curtas: exemplo, tentativa, feedback e takeaway.</p>
+    </div>
+    <div class="player" aria-label="Seu progresso nos fundamentos">
+      <div>
+        <span>FUNDAMENTOS COMPARTILHADOS</span>
+        <strong><span id="f-progress">0</span>/4</strong>
+        <small>Avance 4 fundamentos, depois escolha sua jornada</small>
+      </div>
+    </div>
+  </section>
+
+  <div class="game-layout">
+    <section class="world-panel" aria-label="Mapa da escola">
+      <div class="map-hud"><span>MAPA DA ESCOLA</span><span class="map-caption">2 JORNADAS · 4 FUNDAMENTOS</span></div>
+      <div class="canvas-wrap">
+        <canvas id="world" width="1040" height="560" role="img" aria-label="Mapa desenhado: a ilha Fundamentos à esquerda; setas seguem para a ilha Dourada 'IA no cotidiano' (acima, à direita) e para a ilha Menta 'IA para Dev' (abaixo, à direita). A versão em texto do mapa está disponível no botão abaixo do mapa."></canvas>
+      </div>
+      <details class="map-alt" id="map-alt">
+        <summary>Versão em texto do mapa</summary>
+        <div class="alt-box" role="list">
+          <ol>
+            <li><a href="#etapa-atual">Ilha Fundamentos (menta, disponível) — F1 Entender IA, F2 Uso seguro, F3 Prompt e contexto, F4 Verificação.</a></li>
+            <li><a href="#jornada-cotidiano">Ilha IA no cotidiano (ouro) — para quem não programa.</a></li>
+            <li><a href="#jornada-dev">Ilha IA para Dev (menta-escura) — para quem constrói software.</a></li>
+          </ol>
+        </div>
+      </details>
+      <div class="map-footer">
+        <span><i class="dot mint"></i>Disponível <i class="dot gold"></i>Jornada cotidiano <i class="dot dim"></i>Desbloqueia após F1–F4</span>
+        <button id="motion-btn" class="map-btn" aria-pressed="false">Ⅱ Pausar cenário</button>
+      </div>
+    </section>
+
+    <aside class="mission-panel" id="etapa-atual" aria-label="Etapa atual" tabindex="-1">
+      <div class="mission-kicker"><span>ETAPA ATUAL · FUNDAMENTOS</span><span class="mission-number" id="mission-number">F1/4</span></div>
+      <div class="mission-icon" id="mission-icon" aria-hidden="true">🧭</div>
+      <h2 id="mission-title">Entender IA</h2>
+      <p id="mission-desc">O que um modelo de linguagem faz de verdade — e o que ele não faz. Primeiro fundamento comum às duas jornadas.</p>
+      <div class="mission-meta" id="mission-meta">
+        <span class="tag">≈ 4 min</span><span class="tag">Exemplo → tentativa</span><span class="tag">Sem código</span>
+      </div>
+      <ul class="task-preview" id="task-preview">
+        <li id="tp1"><span>1</span> Ver o exemplo acompanhado</li>
+        <li id="tp2"><span>2</span> responder 1 pergunta</li>
+        <li id="tp3"><span>3</span> levar o takeaway</li>
+      </ul>
+      <button class="primary" id="start-f1">Começar F1 — Entender IA <span aria-hidden="true">→</span></button>
+      <p class="mission-note">Jogos são prática opcional — nenhum pré-requisito depende deles.</p>
+    </aside>
+  </div>
+
+  <nav class="stage-nav" aria-label="Trilha de fundamentos F1 a F4">
+    <button class="stage-node" data-f="1" aria-current="true"><span class="node-icon" aria-hidden="true">F1</span><span class="node-label"><strong>Entender IA</strong><small>DISPONÍVEL</small></span></button>
+    <span class="stage-arrow" aria-hidden="true">→</span>
+    <button class="stage-node" data-f="2" data-locked="true" disabled><span class="node-icon" aria-hidden="true">F2</span><span class="node-label"><strong>Uso seguro</strong><small>BLOQUEADA</small></span></button>
+    <span class="stage-arrow" aria-hidden="true">→</span>
+    <button class="stage-node" data-f="3" data-locked="true" disabled><span class="node-icon" aria-hidden="true">F3</span><span class="node-label"><strong>Prompt e contexto</strong><small>BLOQUEADA</small></span></button>
+    <span class="stage-arrow" aria-hidden="true">→</span>
+    <button class="stage-node" data-f="4" data-locked="true" disabled><span class="node-icon" aria-hidden="true">F4</span><span class="node-label"><strong>Verificação</strong><small>BLOQUEADA</small></span></button>
+  </nav>
+
+  <section class="journeys" aria-label="Escolha de jornada">
+    <div class="journey-card" id="jornada-cotidiano">
+      <span class="kicker" style="color:#8a6a1f">JORNADA 1 · PARA QUEM NÃO PROGRAMA</span>
+      <h3>IA no cotidiano</h3>
+      <p>Use IA com segurança no dia a dia: e-mails, pesquisa, decisões. Parte dos mesmos fundamentos F1–F4.</p>
+      <button class="secondary" disabled title="Desbloqueia após os fundamentos (protótipo: fatia 1)">Escolher após fundamentos →</button>
+    </div>
+    <div class="journey-card" id="jornada-dev">
+      <span class="kicker" style="color:#1e5b46">JORNADA 2 · PARA QUEM DESENVOLVE</span>
+      <h3>IA para Dev</h3>
+      <p>Construa software robusto com IA: intenção, plano, construção, teste e review. Parte dos mesmos fundamentos F1–F4.</p>
+      <button class="secondary" disabled title="Desbloqueia após os fundamentos (protótipo: fatia 1)">Escolher após fundamentos →</button>
+    </div>
+  </section>
+
+  <section class="practice" aria-label="Prática opcional">
+    <span class="eyebrow">PRÁTICA RECOMENDADA · OPCIONAL</span>
+    <details>
+      <summary>Ver jogos e desafios disponíveis</summary>
+      <ul>
+        <li>SDLC Quest — 18 desafios, 16 desafios TLC, 6 gates (progresso do jogo separado; nada aqui é pré-requisito).</li>
+        <li>Licões reaproveitadas das trilhas existentes aparecem dentro das etapas.</li>
+      </ul>
+    </details>
+  </section>
+
+  <footer class="footer">
+    <span>AIDEVSCHOOL · PROTÓTIPO AID-3458 FATIA 1 · PROGRESSO LOCAL E DEMONSTRATIVO — NÃO ALTERA ESTADO CANÔNICO DO ALUNO</span>
+    <span>IDENTIDADE: SDLCQUEST v1.3</span>
+  </footer>
+</div>
+
+<dialog id="lesson" aria-labelledby="lesson-title">
+  <div class="dialog-top">
+    <span class="eyebrow">FUNDAMENTOS · F1 · ENTENDER IA</span>
+    <button class="close-btn" id="lesson-close" aria-label="Fechar lição">✕</button>
+  </div>
+  <div class="dialog-main">
+    <div class="step-dots" aria-hidden="true"><span class="active"></span><span id="dot2"></span><span id="dot3"></span></div>
+    <div class="lesson-head">
+      <h2 id="lesson-title">O que a IA está fazendo quando responde?</h2>
+      <p>Uma pergunta, quatro opções (A–D). Primeiro veja o exemplo resolvido; depois tente você — pode tentar de novo quantas vezes quiser.</p>
+    </div>
+
+    <details class="lesson-primer" open>
+      <summary>Exemplo acompanhado (leia antes de tentar)</summary>
+      <p><strong>Pergunta do exemplo:</strong> "A IA sabe quantos anos eu tenho?"</p>
+      <p><strong>Resolução:</strong> não, ela não "sabe" nada sobre você — ela <em>prevê</em> texto plausível a partir do que você escreveu. Se você não disse a idade, qualquer número que ela der é invenção plausível (alucinação). A resposta correta é a que descreve <em>previsão a partir do contexto</em>, e não a que afirma "a IA sabe coisas sobre você".</p>
+    </details>
+
+    <p class="instruction" id="instruction">AGORA VOCÊ: escolha a melhor descrição e confirme.</p>
+    <div class="cards" id="options" role="group" aria-labelledby="instruction">
+      <button class="option" data-i="1" aria-pressed="false"><span class="option-index">A</span><span><strong>A IA prevê respostas plausíveis a partir do contexto que recebe.</strong><small> inclui o que você escreveu no prompt e na conversa</small></span></button>
+      <button class="option" data-i="2" aria-pressed="false"><span class="option-index">B</span><span><strong>A IA sabe fatos sobre você e sobre o mundo, sempre atualizados.</strong><small>ela busca a verdade sobre você antes de responder</small></span></button>
+      <button class="option" data-i="3" aria-pressed="false"><span class="option-index">C</span><span><strong>A IA copia a resposta correta de um banco de respostas prontas.</strong><small>existe uma lista de respostas certas que ela consulta</small></span></button>
+      <button class="option" data-i="4" aria-pressed="false"><span class="option-index">D</span><span><strong>A IA decide sozinha o que é verdade e o que é mentira.</strong><small>ela tem intenção própria ao responder</small></span></button>
+    </div>
+
+    <div class="dialog-actions">
+      <button class="primary" id="confirm-btn" disabled>Confirmar resposta</button>
+      <button class="hint-button" id="retry-btn" hidden>Tentar de novo</button>
+      <button class="hint-button" id="next-btn" hidden>Concluir F1 e ver takeaway →</button>
+    </div>
+
+    <div id="feedback" class="feedback" role="status" aria-live="polite" hidden></div>
+    <div id="takeaway" class="takeaway" hidden>
+      <b>TAKEAWAY — LEVE ISTO COM VOCÊ</b>
+      Modelos de linguagem preveem texto plausível a partir do contexto. Isso os torna ótimos parceiros de escrita e raciocínio — e exige que VOCÊ verifique fatos, números e decisões. É por isso que o próximo fundamento é "Uso seguro".
+    </div>
+    <p class="local-note">PROTÓTIPO: este progresso é local e demonstrativo. Não marca domínio, não escreve no estado canônico do aluno.</p>
+  </div>
+</dialog>
+
+<dialog id="help" aria-labelledby="help-title">
+  <div class="dialog-top"><span class="eyebrow">COMO FUNCIONA</span><button class="close-btn" id="help-close" aria-label="Fechar">✕</button></div>
+  <div class="dialog-main">
+    <div class="lesson-head"><h2 id="help-title">Uma escola, duas jornadas</h2>
+    <p>Todos fazem os mesmos 4 fundamentos: Entender IA → Uso seguro → Prompt e contexto → Verificação. Depois, você escolhe IA no cotidiano ou IA para Dev. Jogos são prática opcional. Navegue pelo mapa, pela versão em texto ou pela trilha F1–F4 — tudo funciona por teclado.</p></div>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<noscript><p class="noscript">Sem JavaScript: use a "Versão em texto do mapa" e a trilha F1–F4 acima; a lição interativa fica indisponível, o conteúdo continua acessível.</p></noscript>
+
+<script>
+(function(){
+  var fDone = 0, selected = 0, done = false;
+  var $ = function(s){ return document.querySelector(s); };
+  var stageNode = function(n){ return document.querySelector('.stage-node[data-f="'+n+'"]'); };
+
+  /* B1 — Fonte única dos dados da etapa (kicker/num/título/ícone/descrição/tags/tasks/CTA).
+     renderStep atualiza TODOS os elementos atomicamente; nenhum texto da etapa anterior sobrevive. */
+  var STEPS = {
+    1: { num: 'F1/4', title: 'Entender IA', icon: '🧭',
+         desc: 'O que um modelo de linguagem faz de verdade — e o que ele não faz. Primeiro fundamento comum às duas jornadas.',
+         tags: ['≈ 4 min', 'Exemplo → tentativa', 'Sem código'], cta: 'Começar F1 — Entender IA' },
+    2: { num: 'F2/4', title: 'Uso seguro', icon: '🛡',
+         desc: 'O que entra no prompt e o que fica com você: dados sensíveis, limites de confiança e hábitos seguros nas duas jornadas.',
+         tags: ['≈ 5 min', 'Exemplo → tentativa', 'Sem código'], cta: 'Começar F2 — Uso seguro' },
+    3: { num: 'F3/4', title: 'Prompt e contexto', icon: '✎',
+         desc: 'Pedidos melhores com contexto claro, exemplos e restrições — o hábito que melhora toda conversa com IA.',
+         tags: ['≈ 5 min', 'Exemplo → tentativa', 'Sem código'], cta: 'Começar F3 — Prompt e contexto' },
+    4: { num: 'F4/4', title: 'Verificação', icon: '🔍',
+         desc: 'Como conferir respostas: fatos, números e decisões passam pelo seu crivo antes de virar trabalho.',
+         tags: ['≈ 6 min', 'Exemplo → tentativa', 'Sem código'], cta: 'Começar F4 — Verificação' }
+  };
+  var currentStep = 1;
+  function renderStep(n){
+    var s = STEPS[n]; if (!s) return;
+    currentStep = n;
+    $('#mission-number').textContent = s.num;
+    $('#mission-icon').textContent = s.icon;
+    $('#mission-title').textContent = s.title;
+    $('#mission-desc').textContent = s.desc;
+    var meta = $('#mission-meta'); meta.innerHTML = '';
+    s.tags.forEach(function(tg){ var sp = document.createElement('span'); sp.className = 'tag'; sp.textContent = tg; meta.appendChild(sp); });
+    var tp = $('#task-preview'); tp.innerHTML = '';
+    [['1','Ver o exemplo acompanhado'],['2','responder 1 pergunta'],['3','levar o takeaway']].forEach(function(t, i){
+      var li = document.createElement('li'); li.id = 'tp' + (i + 1);
+      var sp = document.createElement('span'); sp.textContent = t[0]; li.appendChild(sp);
+      li.appendChild(document.createTextNode(' ' + t[1])); tp.appendChild(li);
+    });
+    $('#f-progress').textContent = String(n - 1);
+    $('#start-f1').innerHTML = s.cta + ' <span aria-hidden="true">→</span>';
+  }
+  renderStep(1); /* primeiro paint também sai da fonte única (HTML estático acima = fallback no-JS) */
+
+  /* Mapa Canvas 2D — papel/menta/ilhas preservados (identidade SDLCQuest), setas e rótulos legíveis. */
+  var canvas = $('#world'), ctx = canvas.getContext('2d'), animating = true, t = 0;
+  function iso(x, y, w, h, top, left, right){
+    ctx.beginPath();
+    ctx.moveTo(x, y - h); ctx.lineTo(x + w * .5, y - h * .5); ctx.lineTo(x + w * .5, y + h * .5); ctx.lineTo(x, y + h); ctx.lineTo(x - w * .5, y + h * .5); ctx.lineTo(x - w * .5, y - h * .5); ctx.closePath();
+    ctx.fillStyle = top; ctx.fill();
+    ctx.beginPath(); ctx.moveTo(x, y + h); ctx.lineTo(x + w * .5, y + h * .5); ctx.lineTo(x + w * .5, y - h * .5); ctx.lineTo(x, y - h);
+    ctx.fillStyle = right; ctx.fill();
+    ctx.beginPath(); ctx.moveTo(x, y + h); ctx.lineTo(x - w * .5, y + h * .5); ctx.lineTo(x - w * .5, y - h * .5); ctx.lineTo(x, y - h);
+    ctx.fillStyle = left; ctx.fill();
+  }
+  function arrow(x1, y1, x2, y2, color){
+    var dx = x2 - x1, dy = y2 - y1, len = Math.hypot(dx, dy), a = Math.atan2(dy, dx), hs = 13;
+    ctx.strokeStyle = color; ctx.lineWidth = 3.5; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2 - Math.cos(a) * 16, y2 - Math.sin(a) * 16); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x2, y2);
+    ctx.lineTo(x2 - Math.cos(a - .45) * hs, y2 - Math.sin(a - .45) * hs);
+    ctx.lineTo(x2 - Math.cos(a + .45) * hs, y2 - Math.sin(a + .45) * hs); ctx.closePath();
+    ctx.fillStyle = color; ctx.fill();
+  }
+  function label(text, x, y, color, sub){
+    ctx.textAlign = 'center'; ctx.font = '650 15px "Avenir Next","Segoe UI",Arial,sans-serif';
+    ctx.fillStyle = color; ctx.fillText(text, x, y);
+    if (sub) {
+      /* P4 (revisão 6ff54dd9): subtítulo mais legível (contraste) + shrink-to-fit para nunca cortar em 320px */
+      var subFont = 11;
+      ctx.font = subFont + 'px "SFMono-Regular",Consolas,monospace';
+      while (subFont > 9 && ctx.measureText(sub).width > canvas.width * .42) { subFont--; ctx.font = subFont + 'px "SFMono-Regular",Consolas,monospace'; }
+      ctx.fillStyle = '#3f5348'; ctx.fillText(sub, x, y + 17);
+    }
+  }
+  function bob(base, amp){ return animating ? base + Math.sin(t / 42 + base) * amp : base; }
+  /* C2 — Landmarks ilustrados COPIADOS de engines/sdlc-quest/src/world.js (mesma tela, mesma paleta):
+     primitivas polygon/rect/circle/ellipse/line/box/plant/crystal/robot = cópia 1:1 das l.11–27;
+     casa = silhueta compacta da estação case 0 (l.91–96); torre+antena = estação case 1 (l.98–103).
+     Vocabulário artístico SDLCQuest reutilizado como mandado — zero identidade nova. */
+  function polygon(c, points, fill){ c.beginPath(); points.forEach(function(p, i){ i ? c.lineTo(p[0], p[1]) : c.moveTo(p[0], p[1]); }); c.closePath(); if (fill){ c.fillStyle = fill; c.fill(); } }
+  function rect(c, x, y, w, h, color){ c.fillStyle = color; c.fillRect(Math.round(x), Math.round(y), Math.round(w), Math.round(h)); }
+  function circle(c, x, y, r, color){ c.fillStyle = color; c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.fill(); }
+  function ellipse(c, x, y, rx, ry, color){ c.fillStyle = color; c.beginPath(); c.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2); c.fill(); }
+  function line(c, points, color, width){ c.beginPath(); points.forEach(function(p, i){ i ? c.lineTo(p[0], p[1]) : c.moveTo(p[0], p[1]); }); c.strokeStyle = color; c.lineWidth = width || 2; c.lineCap = 'round'; c.stroke(); }
+  function box(c, x, y, w, d, h, top, left, right){ var p = [[x, y - h - d / 2], [x + w / 2, y - h], [x, y - h + d / 2], [x - w / 2, y - h]]; polygon(c, [p[3], p[2], [x, y + d / 2], [x - w / 2, y]], left); polygon(c, [p[2], p[1], [x + w / 2, y], [x, y + d / 2]], right); polygon(c, p, top); }
+  function plant(c, x, y, scale){ scale = scale || 1; c.save(); c.translate(x, y); c.scale(scale, scale); rect(c, -2, -13, 4, 16, '#314b3c'); polygon(c, [[-1, -4], [-13, -13], [-14, -24], [-3, -20], [2, -9]], '#77a680'); polygon(c, [[0, -9], [10, -29], [20, -32], [18, -20], [6, -7]], '#a2c290'); polygon(c, [[-1, -14], [-7, -28], [0, -40], [7, -26], [4, -9]], '#b0c99b'); c.restore(); }
+  function crystal(c, x, y, color){ polygon(c, [[x, y - 25], [x + 9, y - 10], [x + 6, y + 2], [x - 6, y + 4], [x - 9, y - 8]], '#324f53'); polygon(c, [[x, y - 25], [x + 9, y - 10], [x, y + 1]], color); polygon(c, [[x, y - 25], [x, y + 1], [x - 9, y - 8]], '#5a8a7f'); }
+  function robot(c, x, y, scale, body, eye){ scale = scale || 1; body = body || '#dcdcc4'; eye = eye || '#a0eccd'; c.save(); c.translate(x, y); c.scale(scale, scale); ellipse(c, 0, 18, 19, 6, '#060f1744'); rect(c, -11, 0, 22, 19, '#79958b'); rect(c, -15, -27, 30, 28, body); rect(c, -18, -20, 4, 14, '#8caaa2'); rect(c, 15, -20, 4, 14, '#8caaa2'); rect(c, -11, -19, 22, 11, '#1b3541'); rect(c, -7, -16, 4, 4, eye); rect(c, 4, -16, 4, 4, eye); rect(c, -7, -29, 3, -8, '#d3d9b9'); rect(c, -9, -39, 7, 4, eye); rect(c, -7, 4, 14, 7, body); rect(c, -10, 17, 7, 5, '#cfddc5'); rect(c, 4, 17, 7, 5, '#cfddc5'); rect(c, -17, 4, 6, 11, body); rect(c, 11, 4, 6, 11, body); c.restore(); }
+  /* Silhueta de casa — cópia compacta da estação case 0 (world.js l.91–96), ancorada em (0,0) */
+  function houseStation(c){ box(c, 0, -21, 86, 43, 42, '#baa987', '#687b60', '#8a946b'); rect(c, -30, -98, 60, 37, '#d7ceb0'); c.fillStyle = '#d8cfae'; c.beginPath(); c.arc(0, -98, 30, Math.PI, Math.PI * 2); c.fill(); rect(c, -5, -124, 10, 45, '#789085'); rect(c, -32, -73, 64, 7, '#9ba785'); c.save(); c.translate(20, -104); c.rotate(-.48); rect(c, -3, -7, 47, 15, '#dde0c1'); rect(c, 31, -10, 14, 21, '#8caf9c'); rect(c, 43, -8, 4, 17, '#254d4c'); c.restore(); box(c, -28, -3, 23, 13, 16, '#c7c7a0', '#5e725b', '#819776'); rect(c, 9, -43, 9, 14, '#d4e3b0'); }
+  /* Silhueta de torre+antena — cópia compacta da estação case 1 (world.js l.98–103), ancorada em (0,0) */
+  function towerStation(c, color){ box(c, 0, -16, 77, 40, 60, '#8aa5a0', '#51616b', '#74777c'); box(c, 0, -76, 84, 44, 10, color, '#617182', '#838a9b'); var i; for (i = 0; i < 3; i++){ box(c, -9 + i * 6, -78 - i * 12, 74, 37, 5, i === 2 ? '#cdd5ea' : '#9cadd4', '#66778a', '#8194b0'); } line(c, [[32, -46], [32, -78]], '#d2e3cd', 2); circle(c, 32, -46, 4, '#becbe8'); }
+  function lm(x, y, k, fn){ ctx.save(); ctx.translate(x, y); ctx.scale(k, k); fn(ctx); ctx.restore(); }
+  function draw(){
+    canvas.width = canvas.clientWidth; canvas.height = canvas.clientHeight;
+    t++;
+    var W2 = canvas.width, H = canvas.height, s = W2 / 1040;
+    ctx.clearRect(0, 0, W2, H);
+    /* água-papel profundo */
+    ctx.fillStyle = '#101d28'; ctx.fillRect(0, 0, W2, H);
+    ctx.strokeStyle = 'rgba(167,230,205,0.05)'; ctx.lineWidth = 1;
+    for (var gy = 0; gy < H; gy += 26) { ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(W2, gy); ctx.stroke(); }
+    var fY = bob(H * .52, 3), cY = bob(H * .25, 4), dY = bob(H * .8, 4);
+    /* Ilha Fundamentos (menta) */
+    iso(W2 * .24, fY, 190 * s + 90, 46 * s + 22, '#a7e6cd', '#6fc3a3', '#57ad8d');
+    /* Ilha IA no cotidiano (ouro) */
+    iso(W2 * .78, cY, 170 * s + 80, 42 * s + 20, '#e8c888', '#cfa969', '#b98f52');
+    /* Ilha IA para Dev (menta-escura) */
+    iso(W2 * .78, dY, 170 * s + 80, 42 * s + 20, '#5fbd9b', '#3f9a7c', '#2e7a61');
+    /* C2 — landmarks do vocabulário SDLCQuest (cópia de world.js): ≥1 por ilha, acima do rótulo, sem colisão.
+       Escala acompanha o canvas com piso 0.5 (reconhecível em 320px) e teto pela altura livre do canvas. */
+    var k = Math.max(s, .5);
+    var houseK = Math.min(k * .9, (cY - 18) / 165), towerK = Math.min(k * .85, (dY - cY - 60) / 160);
+    lm(W2 * .24, fY - 16, k, function(c){ crystal(c, -50, 2, '#f2d78f'); plant(c, 52, 8, .8); });
+    lm(W2 * .78, cY - 16, houseK, houseStation);
+    lm(W2 * .78, dY - 20, towerK, function(c){ towerStation(c, '#5fbd9b'); });
+    robot(ctx, W2 * .5, (fY + cY) / 2 + 30 + (animating ? Math.sin(t / 30) * 2 : 0), Math.max(k * .45, .3), '#dce4c8', '#b9f7d4');
+    /* setas de progressão (antes ausentes) */
+    arrow(W2 * .35, fY - 14, W2 * .66, cY + 26, 'rgba(232,200,136,0.85)');
+    arrow(W2 * .35, fY + 18, W2 * .66, dY - 20, 'rgba(167,230,205,0.8)');
+    /* rótulos legíveis (>=15px equivalentes) */
+    label('Fundamentos', W2 * .24, fY + 8, '#0f231c', 'F1–F4 · COMECE AQUI');
+    label('IA no cotidiano', W2 * .78, cY + 8, '#231a09', 'JORNADA 1');
+    label('IA para Dev', W2 * .78, dY + 8, '#081712', 'JORNADA 2');
+    if (fDone > 0) { ctx.font = '700 15px "SFMono-Regular",Consolas,monospace'; ctx.fillStyle = '#195d4b'; ctx.textAlign = 'center'; ctx.fillText('✓ ' + fDone + ' de 4', W2 * .24, fY + 34); }
+    if (animating) requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize', draw);
+  $('#motion-btn').addEventListener('click', function(){
+    animating = !animating;
+    this.setAttribute('aria-pressed', String(!animating));
+    this.textContent = animating ? 'Ⅱ Pausar cenário' : '▶ Retomar cenário';
+    if (animating) requestAnimationFrame(draw); else draw();
+  });
+  draw();
+
+  /* Escolha de jornada pelo mapa textual também foca o cartão */
+  ['#jornada-cotidiano', '#jornada-dev'].forEach(function(sel){
+    document.querySelector('.map-alt a[href="' + sel + '"]').addEventListener('click', function(e){
+      e.preventDefault(); var el = $(sel); el.setAttribute('tabindex', '-1'); el.focus(); el.removeAttribute('tabindex');
+    });
+  });
+
+  /* Lição F1 — exemplo → tentativa → feedback explicativo → retry → takeaway */
+  var lesson = $('#lesson'), options = document.querySelectorAll('.option'), confirmBtn = $('#confirm-btn'), retryBtn = $('#retry-btn'), nextBtn = $('#next-btn'), fb = $('#feedback');
+  $('#start-f1').addEventListener('click', function(){
+    if (currentStep === 1) { lesson.showModal(); }
+    else { showToast('PROTÓTIPO FATIA 1 — a lição interativa cobre F1; as lições F2–F4 chegam na próxima fatia.'); }
+  });
+  $('#lesson-close').addEventListener('click', function(){ lesson.close(); });
+  $('#help-btn').addEventListener('click', function(){ $('#help').showModal(); });
+  $('#help-close').addEventListener('click', function(){ $('#help').close(); });
+  function explain(i){
+    if (i === 1) return { ok: true, msg: 'Correto. O modelo prevê texto plausível com base no contexto (prompt + conversa). Por isso contexto melhor gera resposta melhor — e por isso fatos continuam precisando de verificação.' };
+    if (i === 2) return { ok: false, msg: 'Ainda não. "Sabe fatos sobre você" atribui memória/verdade ao modelo. Ele só usa o que está no contexto; sem a informação, ele pode inventar com confiança. Releia o exemplo e tente de novo.' };
+    if (i === 3) return { ok: false, msg: 'Quase na direção do "contexto", mas não existe banco de respostas prontas: cada resposta é gerada na hora, token a token. Tente de novo.' };
+    return { ok: false, msg: 'Não. Modelos não têm intenção própria — são previsão estatística de texto. A disciplina de verdade vem de você verificar (F4). Tente de novo.' };
+  }
+  options.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      if (done) return;
+      options.forEach(function(b){ b.setAttribute('aria-pressed', 'false'); });
+      btn.setAttribute('aria-pressed', 'true'); selected = +btn.dataset.i;
+      confirmBtn.disabled = false;
+    });
+  });
+  confirmBtn.addEventListener('click', function(){
+    if (!selected || done) return;
+    var r = explain(selected);
+    fb.hidden = false; fb.className = 'feedback ' + (r.ok ? 'ok' : 'no');
+    fb.innerHTML = (r.ok ? '<b>✓ Boa — e aqui está o porquê:</b>' : '<b>✗ Não exatamente — o princípio:</b>') + r.msg;
+    if (r.ok) {
+      done = true; confirmBtn.hidden = true; retryBtn.hidden = true; nextBtn.hidden = false;
+      $('#dot2').classList.add('active'); $('#instruction').textContent = 'RESOLVIDO — veja o takeaway e conclua.';
+      document.querySelectorAll('.option').forEach(function(b){ if (+b.dataset.i !== 1) b.disabled = true; });
+      $('#tp1').classList.add('finished'); $('#tp2').classList.add('finished');
+    } else {
+      confirmBtn.hidden = true; retryBtn.hidden = false;
+    }
+  });
+  retryBtn.addEventListener('click', function(){
+    selected = 0; fb.hidden = true; retryBtn.hidden = true; confirmBtn.hidden = false; confirmBtn.disabled = true;
+    options.forEach(function(b){ b.setAttribute('aria-pressed', 'false'); });
+  });
+  nextBtn.addEventListener('click', function(){
+    fDone = 1;
+    $('#dot3').classList.add('active');
+    $('#takeaway').hidden = false;
+    nextBtn.hidden = true;
+    lesson.close();
+    var n1 = stageNode(1), n2 = stageNode(2);
+    n1.removeAttribute('aria-current'); n1.setAttribute('data-locked', 'false');
+    n1.querySelector('.status-tick').textContent = '✓';
+    n1.querySelector('.node-label small').textContent = 'CONCLUÍDA';
+    n1.disabled = true; n1.dataset.locked = 'false';
+    n2.removeAttribute('data-locked'); n2.disabled = false; n2.setAttribute('aria-current', 'true');
+    n2.querySelector('.node-label small').textContent = 'DISPONÍVEL';
+    renderStep(2); /* B1 — transição atômica: badge/ícone/título/descrição/tags/tasks/CTA/contador da mesma fonte */
+    showToast('F1 concluído: 1/4 fundamentos. F2 "Uso seguro" desbloqueada.');
+  });
+  var toastTimer;
+  function showToast(msg){
+    var el = $('#toast'); el.textContent = msg; el.classList.add('visible');
+    clearTimeout(toastTimer); toastTimer = setTimeout(function(){ el.classList.remove('visible'); }, 4200);
+  }
+  /* status-tick inicial */
+  document.querySelectorAll('.stage-node').forEach(function(n){
+    if (!n.querySelector('.status-tick')) { var s = document.createElement('span'); s.className = 'status-tick'; n.appendChild(s); }
+  });
+})();
+</script>
+</body>
+</html>
