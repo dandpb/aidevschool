@@ -7,7 +7,8 @@ from typing import Any, Callable
 from urllib.parse import urlparse
 
 
-SUPPORTED_ENGINES = frozenset({"literacyDojo", "voxelDojo"})
+SUPPORTED_ENGINES = frozenset({"literacyDojo", "voxelDojo", "codexdojo-os"})
+OS_NATIVE_APP_IDS = frozenset({"practice"})
 SUPPORTED_PROTOCOL_VERSIONS = frozenset({"1.0"})
 _ENVIRONMENT_KEY = re.compile(r"^VITE_[A-Z0-9_]+$")
 _RUNTIME_CONTENT_VERSION = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._@-]*$")
@@ -68,6 +69,25 @@ def validate_runtime(
     protocol_version = _nonempty_string(runtime.get("protocolVersion"), f"{label}.protocolVersion")
     if protocol_version not in SUPPORTED_PROTOCOL_VERSIONS:
         raise MissionCatalogError(f"{label}.protocolVersion {protocol_version!r} is unsupported")
+    content_version = _nonempty_string(runtime.get("contentVersion"), f"{label}.contentVersion")
+    if _RUNTIME_CONTENT_VERSION.fullmatch(content_version) is None:
+        raise MissionCatalogError(f"{label}.contentVersion must be a stable version identifier")
+    if engine_id == "codexdojo-os":
+        app_id = _nonempty_string(runtime.get("appId"), f"{label}.appId")
+        if app_id not in OS_NATIVE_APP_IDS:
+            raise MissionCatalogError(f"{label}.appId {app_id!r} is unsupported")
+        for host_engine_key in ("entrypoint", "environmentKey"):
+            if host_engine_key in runtime:
+                raise MissionCatalogError(
+                    f"{label}.{host_engine_key} must not be declared: codexdojo-os"
+                    " missions run inside the OS bundle, not behind a host-engine URL"
+                )
+        return {
+            "engineId": engine_id,
+            "appId": app_id,
+            "protocolVersion": protocol_version,
+            "contentVersion": content_version,
+        }, None
     entrypoint = _nonempty_string(runtime.get("entrypoint"), f"{label}.entrypoint")
     parsed = urlparse(entrypoint)
     if parsed.scheme not in {"http", "https"} or not parsed.netloc:
@@ -75,9 +95,6 @@ def validate_runtime(
     environment_key = _nonempty_string(runtime.get("environmentKey"), f"{label}.environmentKey")
     if _ENVIRONMENT_KEY.fullmatch(environment_key) is None:
         raise MissionCatalogError(f"{label}.environmentKey must be a VITE_* identifier")
-    content_version = _nonempty_string(runtime.get("contentVersion"), f"{label}.contentVersion")
-    if _RUNTIME_CONTENT_VERSION.fullmatch(content_version) is None:
-        raise MissionCatalogError(f"{label}.contentVersion must be a stable version identifier")
     runtime_record = {
         "engineId": engine_id,
         "entrypoint": entrypoint,
