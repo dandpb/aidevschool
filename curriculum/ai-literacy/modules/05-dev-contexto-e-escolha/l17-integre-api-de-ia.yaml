@@ -8,6 +8,9 @@ objective: "Conectar um endpoint de API de IA, tratar erros e decidir o que vai 
 estimatedMinutes: 5
 skillIds: [integrar]
 prerequisites: [l16]
+competency:
+  primary: D5
+  supporting: [D3]
 
 activities:
   - id: l17-a1
