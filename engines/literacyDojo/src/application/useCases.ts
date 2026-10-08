@@ -144,6 +144,43 @@ export class LiteracyUseCases {
     return progress;
   }
 
+  /**
+   * Serializa escritores de progresso (residual S5V2/AID-3718 — writers
+   * mistos): o callback roda contra o estado COMMITADO via `update` atômico
+   * quando o repositório o oferece, fechando a janela stale load→save que
+   * revertia conclusões (stale-start/stale-submit: status `completed`
+   * revertido a `in_progress`, `completedAt`/revisão perdidos e RE-contagem
+   * da 1ª conclusão no funil O1 — registro S5V2 §2a, receipt eb3a1321).
+   * Sem `update`, degrada para o fluxo histórico load→save (contratos
+   * existentes inalterados). O callback é síncrono; emissões
+   * (evidence/analytics) permanecem pós-commit, fire-and-forget.
+   */
+  private async withProgress<T>(
+    mutate: (current: LearnerProgress) => { next: LearnerProgress; value: T },
+  ): Promise<T> {
+    if (typeof this.deps.progress.update === "function") {
+      let captured: { value: T } | undefined;
+      await this.deps.progress.update((current) => {
+        if (!current) {
+          throw new Error(
+            "Progresso não inicializado — o boot do app deve semear o estado inicial",
+          );
+        }
+        const outcome = mutate(current);
+        captured = { value: outcome.value };
+        return outcome.next;
+      });
+      if (!captured) {
+        throw new Error("Falha invariante: o update atômico não devolveu o valor computado");
+      }
+      return captured.value;
+    }
+    const progress = await this.requireProgress();
+    const outcome = mutate(progress);
+    await this.deps.progress.save(outcome.next);
+    return outcome.value;
+  }
+
   async completeOnboarding(input: {
     goal: OnboardingGoal;
     context: OnboardingContext;
@@ -151,19 +188,20 @@ export class LiteracyUseCases {
     taskCategory: OnboardingTaskCategory;
     audience: AudienceChoice;
   }): Promise<LearnerProgress> {
-    const progress = await this.requireProgress();
-    const next = completeOnboarding(progress, input);
-    await this.deps.progress.save(next);
-    return next;
+    return this.withProgress((current) => {
+      const next = completeOnboarding(current, input);
+      return { next, value: next };
+    });
   }
 
   async startLesson(lessonId: string): Promise<LearnerProgress> {
     const lesson = this.requireLesson(lessonId);
-    const progress = await this.requireProgress();
-    if (!isLessonUnlocked(progress, lessonId))
-      throw new Error(`Lição bloqueada ou sem conteúdo: ${lessonId}`);
-    const next = startLessonInDomain(progress, lessonId);
-    await this.deps.progress.save(next);
+    const next = await this.withProgress((current) => {
+      if (!isLessonUnlocked(current, lessonId))
+        throw new Error(`Lição bloqueada ou sem conteúdo: ${lessonId}`);
+      const started = startLessonInDomain(current, lessonId);
+      return { next: started, value: started };
+    });
     // Funil AID-913: estágio "início de lição". Fire-and-forget após o
     // progresso persistir — o sink nunca lança nem bloqueia a lição.
     this.deps.analytics.track(
@@ -187,29 +225,30 @@ export class LiteracyUseCases {
     if (!HOSTED_OS_MISSION_LESSONS.has(lessonId)) {
       throw new Error(`Lição não autorizada pelo contrato hospedado: ${lessonId}`);
     }
-    let progress = await this.requireProgress();
-    if (!progress.onboarding.completed) {
-      // Lições fora dos módulos do percurso público pertencem à journey dev:
-      // o onboarding hospedado registra a audiência correspondente.
-      const publicModuleIds = new Set(this.deps.content.listModules().map((module) => module.id));
-      const audience = publicModuleIds.has(lesson.moduleId) ? "ia_pratica" : "trilha_dev";
-      progress = completeOnboarding(progress, {
-        goal: "verify_answers",
-        context: "work",
-        confidence: "medium",
-        taskCategory: "news_research",
-        audience,
-      });
-    }
-    if (!isLessonUnlocked(progress, lessonId)) {
-      progress = {
-        ...progress,
-        lessonStatus: { ...progress.lessonStatus, [lessonId]: "available" },
-      };
-    }
-    const next = startLessonInDomain(progress, lessonId);
-    await this.deps.progress.save(next);
-    return next;
+    return this.withProgress((current) => {
+      let progress = current;
+      if (!progress.onboarding.completed) {
+        // Lições fora dos módulos do percurso público pertencem à journey dev:
+        // o onboarding hospedado registra a audiência correspondente.
+        const publicModuleIds = new Set(this.deps.content.listModules().map((module) => module.id));
+        const audience = publicModuleIds.has(lesson.moduleId) ? "ia_pratica" : "trilha_dev";
+        progress = completeOnboarding(progress, {
+          goal: "verify_answers",
+          context: "work",
+          confidence: "medium",
+          taskCategory: "news_research",
+          audience,
+        });
+      }
+      if (!isLessonUnlocked(progress, lessonId)) {
+        progress = {
+          ...progress,
+          lessonStatus: { ...progress.lessonStatus, [lessonId]: "available" },
+        };
+      }
+      const next = startLessonInDomain(progress, lessonId);
+      return { next, value: next };
+    });
   }
 
   async submitActivityAttempt(input: {
@@ -223,16 +262,20 @@ export class LiteracyUseCases {
     const activity = this.requireActivity(lesson, input.activityId);
     const evaluation = evaluateActivity(activity, input.answer);
 
-    const progress = await this.requireProgress();
     const now = this.deps.clock();
-    const next = recordActivityAttempt(progress, {
-      lessonId: lesson.id,
-      evaluation,
-      skillIds: lesson.skillIds,
-      intervalsDays: lesson.review.intervalsDays,
-      now,
+    // S5V2 §2a (stale-submit): a tentativa é registrada contra o estado
+    // COMMITADO — um snapshot pré-conclusão não pode mais reverter a conclusão
+    // concorrente de outra aba ao persistir.
+    const next = await this.withProgress((current) => {
+      const recorded = recordActivityAttempt(current, {
+        lessonId: lesson.id,
+        evaluation,
+        skillIds: lesson.skillIds,
+        intervalsDays: lesson.review.intervalsDays,
+        now,
+      });
+      return { next: recorded, value: recorded };
     });
-    await this.deps.progress.save(next);
 
     const record = buildEvidenceRecord({
       attemptId: `att-${String(next.counters.attempts).padStart(6, "0")}`,
@@ -283,10 +326,11 @@ export class LiteracyUseCases {
     const lesson = this.requireLesson(input.lessonId);
     const activity = this.requireActivity(lesson, input.activityId);
     const hint = this.deps.feedback.hintFor(activity, input.hintIndex);
-    let progress = await this.requireProgress();
     if (input.lessonId === MAP_INITIAL_LESSON_ID) {
-      progress = recordMapInitialHintRequest(progress);
-      await this.deps.progress.save(progress);
+      await this.withProgress((current) => ({
+        next: recordMapInitialHintRequest(current),
+        value: undefined,
+      }));
     }
     return { hint, nextIndex: input.hintIndex + 1 };
   }
@@ -300,9 +344,10 @@ export class LiteracyUseCases {
     const lesson = this.requireLesson(input.lessonId);
     this.requireActivity(lesson, input.activityId);
     if (input.lessonId === MAP_INITIAL_LESSON_ID) {
-      const progress = await this.requireProgress();
-      const next = recordMapInitialRetry(progress);
-      await this.deps.progress.save(next);
+      await this.withProgress((current) => ({
+        next: recordMapInitialRetry(current),
+        value: undefined,
+      }));
     }
   }
 
@@ -312,22 +357,62 @@ export class LiteracyUseCases {
     durationSeconds?: number;
   }): Promise<CompleteLessonResult> {
     const lesson = this.requireLesson(input.lessonId);
+    const modules = this.deps.content.listModules();
+    const now = this.deps.clock();
+    if (typeof this.deps.progress.update === "function") {
+      // AID-3740 (S5-RACE): a transição de status — e portanto o
+      // `firstCompletion`, o bônus +25 e o `lesson_completed` — é decidida
+      // DENTRO da transação atômica contra o estado commitado, não contra um
+      // snapshot pré-carga. Duas abas concorrentes serializam no commit: a
+      // 2ª vê `completed` e degrada para replay (sem 2º evento, sem 2º
+      // bônus), preservando +10 por atividade e o replay sequencial.
+      let computed: CompleteLessonResult | undefined;
+      await this.deps.progress.update((current) => {
+        if (!current) {
+          throw new Error(
+            "Progresso não inicializado — o boot do app deve semear o estado inicial",
+          );
+        }
+        computed = completeLessonInDomain(current, lesson, input.bestScores, modules, now);
+        return computed.progress;
+      });
+      if (!computed) {
+        throw new Error("Falha invariante: o update atômico não devolveu o resultado computado");
+      }
+      const result = computed;
+      if (!result.outcome.completed) {
+        return result;
+      }
+      this.trackLessonCompleted(lesson, result, input.durationSeconds);
+      return result;
+    }
     const progress = await this.requireProgress();
-    const result = completeLessonInDomain(
-      progress,
-      lesson,
-      input.bestScores,
-      this.deps.content.listModules(),
-      this.deps.clock(),
-    );
+    const result = completeLessonInDomain(progress, lesson, input.bestScores, modules, now);
     if (!result.outcome.completed) {
       return result;
     }
     await this.deps.progress.save(result.progress);
-    // ADR-0009 (emenda AID-913): exatamente 1× `lesson_completed` por
-    // conclusão, após o progresso persistir. Fire-and-forget — o contrato dos
-    // sinks é nunca lançar nem adiar a resposta; analytics nunca bloqueia a
-    // lição.
+    this.trackLessonCompleted(lesson, result, input.durationSeconds);
+    return result;
+  }
+
+  /**
+   * ADR-0009 (emendas AID-913 e AID-3731): exatamente 1× `lesson_completed`
+   * por LIÇÃO — emitido somente na primeira conclusão (transição de status
+   * para `completed`), após o progresso persistir. Replay/prática de lição
+   * concluída continua permitido e mensurável pelos eventos de engajamento
+   * (`lesson_started`, `activity_attempted` — e `review_*` no corredor),
+   * sem re-contar conclusões. Fire-and-forget — o contrato dos sinks é
+   * nunca lançar nem adiar a resposta; analytics nunca bloqueia a lição.
+   */
+  private trackLessonCompleted(
+    lesson: LessonDefinition,
+    result: CompleteLessonResult,
+    durationSeconds: number | undefined,
+  ): void {
+    if (!result.firstCompletion) {
+      return;
+    }
     this.deps.analytics.track(
       buildLessonCompletedEvent(
         {
@@ -338,7 +423,7 @@ export class LiteracyUseCases {
           lessonId: lesson.id,
           lessonVersion: lesson.version,
           score: result.outcome.lessonScore,
-          durationSeconds: input.durationSeconds,
+          durationSeconds,
         },
         {
           occurredAt: this.deps.clock().toISOString(),
@@ -346,7 +431,6 @@ export class LiteracyUseCases {
         },
       ),
     );
-    return result;
   }
 
   /**
@@ -403,17 +487,14 @@ export class LiteracyUseCases {
   }): Promise<CompleteLessonResult> {
     const lesson = this.requireLesson(input.lessonId);
     const outcome = evaluateLessonCompletion(lesson, input.bestScores);
-    let progress = await this.requireProgress();
-    if (outcome.completed) {
-      if (input.intervalIndex !== undefined) {
-        progress = scheduleReviewForLesson(
-          progress,
-          lesson,
-          this.deps.clock(),
-          input.intervalIndex,
-        );
-        await this.deps.progress.save(progress);
+    const progress = await this.withProgress((current) => {
+      let next = current;
+      if (outcome.completed && input.intervalIndex !== undefined) {
+        next = scheduleReviewForLesson(current, lesson, this.deps.clock(), input.intervalIndex);
       }
+      return { next, value: next };
+    });
+    if (outcome.completed) {
       this.deps.analytics.track(
         buildReviewCompletedEvent(
           {
@@ -428,7 +509,9 @@ export class LiteracyUseCases {
         ),
       );
     }
-    return { progress, outcome };
+    // Revisão espaçada nunca é 1ª conclusão (spec AID-915 §4.3; AID-3731):
+    // sem XP de lição, sem novo `lesson_completed`.
+    return { progress, outcome, firstCompletion: false };
   }
 
   /**
@@ -439,9 +522,14 @@ export class LiteracyUseCases {
    * schema de evidência intacto, skills avançam pelo caminho já existente.
    */
   async startCheckpoint(checkpointId: ModuleCheckpointId): Promise<{ progress: LearnerProgress }> {
-    const progress = await this.requireProgress();
-    const next = startCheckpointSession(progress, this.deps.content.listModules(), checkpointId);
-    await this.deps.progress.save(next);
+    const next = await this.withProgress((current) => {
+      const started = startCheckpointSession(
+        current,
+        this.deps.content.listModules(),
+        checkpointId,
+      );
+      return { next: started, value: started };
+    });
     return { progress: next };
   }
 
@@ -467,19 +555,19 @@ export class LiteracyUseCases {
     bestScores: Record<string, number>;
   }): Promise<CompleteCheckpointResult> {
     const checkpoint = checkpointById(input.checkpointId);
-    const progress = await this.requireProgress();
     const scores = checkpoint.activityRefs.map(
       (ref) => input.bestScores[`${ref.lessonId}:${ref.activityId}`] ?? 0,
     );
-    const result = completeCheckpointSession(
-      progress,
-      this.deps.content.listModules(),
-      input.checkpointId,
-      scores,
-      this.deps.clock(),
-    );
-    await this.deps.progress.save(result.progress);
-    return result;
+    return this.withProgress((current) => {
+      const result = completeCheckpointSession(
+        current,
+        this.deps.content.listModules(),
+        input.checkpointId,
+        scores,
+        this.deps.clock(),
+      );
+      return { next: result.progress, value: result };
+    });
   }
 
   /** Ponto de retomada após reload: onboarding pendente → onboarding; lição em andamento → player; senão → home. */

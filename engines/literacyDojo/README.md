@@ -148,8 +148,30 @@ UI (src/screens, src/components)
   (`sessionId` por page load, só em memória; `eventId` por evento) e funil
   fechado: `entry_viewed` (1× por load, na home) → `lesson_started`
   (`startLesson`) → `activity_attempted` (`submitActivityAttempt`; retry =
-  tentativas repetidas) → `lesson_completed` (1× por conclusão, após
-  `progress.save`, fire-and-forget). `Services` compõe um **batch sink**
+  tentativas repetidas) → `lesson_completed` (1× por **primeira** conclusão —
+  transição de status para `completed` —, após `progress.save`,
+  fire-and-forget; §Emenda AID-3731: replay/prática de lição concluída
+  permanece permitido e NÃO re-emite `lesson_completed` nem re-concede o bônus
+  de +25 XP — engajamento repetido é medido por `lesson_started`/
+  `activity_attempted`, separando 1ª conclusão de prática; +10 por atividade
+  acertada inalterado, inclusive no replay; §Emenda AID-3740 (S5-RACE): a
+  transição de status é decidida DENTRO do read-modify-write atômico
+  (`ProgressRepository.update` — transação única no
+  `indexedDbProgressRepository`), fechando o TOCTOU multi-tab em que duas abas
+  concorrentes na mesma lição podiam emitir 2× `lesson_completed`; repositórios
+  sem `update` degradam para o fluxo load→save histórico; §Emenda AID-3718
+  S5V2 §2a (residual de writers mistos): TODOS os escritores de progresso
+  (`startLesson`, `submitActivityAttempt`, `requestHint`, `retryActivity`,
+  `completeOnboarding`, `prepareHostedMission`, `startCheckpoint`,
+  `completeCheckpoint`, `completeReview`) serializam pelo mesmo `update`
+  atômico via `withProgress` — um snapshot stale de start/submit não pode mais
+  reverter `completed` ao persistir (stale-start/stale-submit), preservando a
+  contagem única de 1ª conclusão, `completedAt` e o agendamento de revisão;
+  §Emenda AID-3718 DELTA3 (stale-onboarding): `completeOnboarding` é
+  idempotente — re-completar o onboarding (aba atrasada) preserva a
+  PRIMEIRA configuração válida e todo o progresso commitado; o mapper
+  inicial (l02 available/l01 locked/current=l02) nunca reabre lição
+  `completed`, não re-tranca progressão nem rebobina a lição corrente). `Services` compõe um **batch sink**
   (`analyticsBatchSink.ts`: buffer 20 eventos / 15s / pagehide com beacon)
   quando `VITE_ANALYTICS_ENDPOINT` está definido — e o env é definido SOMENTE
   nos `[build.environment]` dos netlify.toml do literacy e do OS, sempre
