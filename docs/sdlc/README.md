@@ -531,6 +531,26 @@ Countersign: AID-<n> verdict <commentId> head=<full-40-hex-head>
 Provenance: agent=<slug-distinto-do-produtor> task=AID-<n> run=<runId> session=<sessionId>
 ```
 
+### Helper offline de recibos canônicos (AID-3585)
+
+`scripts/receipt_canon_check.py` valida/gera RASCUNHO canônico offline (mesmas
+`CITATION_RE`/`PROVENANCE_RE` do gate, importadas — sem duplicar contrato) ANTES
+da postagem: campo ausente, placeholder (incl. `_default`), agent ID no lugar de
+session (troca actor/session), head ausente/stale/divergente, produtor=revisor,
+prosa no fim da linha canônica, linha dentro de code fence. Consome apenas fatos
+fornecidos explicitamente (`--facts` JSON: head esperado, identidades
+produtor/revisor, run/session, referência do veredito, actor IDs capturados);
+nunca adivinha valores e nunca publica. Sucesso significa apenas "forma canônica
+do rascunho OK" — não é countersign, review ou autorização de merge, e não
+verifica resolvabilidade/atualidade do head (limites offline). Testes/fixtures
+sintéticas: `scripts/test_receipt_canon_check.py` +
+`scripts/receipt_canon_fixtures/`.
+
+```bash
+python3 scripts/receipt_canon_check.py --render --facts fatos.json   # emite rascunho
+python3 scripts/receipt_canon_check.py --check --facts fatos.json --draft rascunho.md
+```
+
 ### Modelo de ameaça (o que o gate assume honestamente)
 
 - **Credencial GitHub compartilhada**: identidade de agente só existe via
