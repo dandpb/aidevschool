@@ -121,8 +121,10 @@ que o rollback.
 5. **`literacy-verify` untracked:** a função viva no site literacy (verificadora independente da
   journey standalone) precisa ser preservada no staging manual até ser rastreada in-repo
    (follow-up aberto desde AID-935).
-6. **Créditos:** cada onda consome ~60–90 créditos do pool free (300/mês; deploy prod = 15
-   créditos cada) — ver `README.md` §postura de cotas antes de agendar várias ondas no mesmo mês.
+6. **Créditos:** cada onda consome uma ordem de grandeza de dezenas de créditos **pelos preços
+   de lista** (deploy prod = 15 créditos cada; ref. 2026-09-07, não específica da conta) — ver
+   `README.md` §postura de cotas e **confirmar plano/uso atuais no painel do provedor antes de
+   agendar ondas** (diretiva founder 18:25Z).
 
 ## 9. Custos
 

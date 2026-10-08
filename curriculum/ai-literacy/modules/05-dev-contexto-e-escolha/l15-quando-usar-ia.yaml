@@ -8,6 +8,9 @@ objective: "Diante de três situações de desenvolvimento, decidir com critéri
 estimatedMinutes: 4
 skillIds: [decidir]
 prerequisites: []
+competency:
+  primary: D1
+  supporting: []
 
 activities:
   - id: l15-a1

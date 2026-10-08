@@ -183,7 +183,9 @@ describe("conclusão de lição — retrofit C1 (spec AID-807 §1.4.3/A1–A4, o
   it("A4: as 3 lições retrofitadas têm 3 atividades e requiredActivityIds = conjunto completo", () => {
     expect(retrofitted).toHaveLength(3);
     for (const lesson of retrofitted) {
-      expect(lesson.version, `${lesson.id} version`).toBe(3);
+      // Versões canônicas atuais (bump 2026-09-30.1/AID-3453: l16 v4; l15/l17 v3):
+      const expectedVersion: Record<string, number> = { l15: 3, l16: 4, l17: 3 };
+      expect(lesson.version, `${lesson.id} version`).toBe(expectedVersion[lesson.id]);
       expect(lesson.activities, `${lesson.id} atividades`).toHaveLength(3);
       expect(
         [...lesson.completion.requiredActivityIds].sort(),

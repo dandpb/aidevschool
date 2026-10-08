@@ -1,0 +1,167 @@
+<!doctype html>
+<!-- AID-3453 static entry — ported from engines/school-entry/public/index.html
+     @ 80c7addc (PR #615 candidate). Deltas (directive 17:14Z, proposal aa5bcb5a):
+     paths relativized (./escola.css, ./escola.js, ./entry-contract.js); operator
+     admin navigation REMOVED (it stays on the Node operator surface); recommender form replaced by static
+     links; CTA is a direct same-origin link (no server launch gate); noscript copy
+     adjusted to the static reality (no availability probe exists here). -->
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#101d28">
+  <title>AI DevSchool — uma escola, duas jornadas</title>
+  <meta
+    name="description"
+    content="Fundamentos compartilhados para todo mundo — depois, você segue para IA no cotidiano ou para IA para desenvolvimento. Lições curtas no app de lições; jogos ficam como prática opcional."
+  >
+  <link rel="canonical" href="https://aidevschool-literacydojo.netlify.app/escola/">
+  <meta property="og:title" content="AI DevSchool — uma escola, duas jornadas">
+  <meta
+    property="og:description"
+    content="Fundamentos compartilhados para todo mundo — depois, você segue para IA no cotidiano ou para IA para desenvolvimento. Lições curtas no app de lições; jogos ficam como prática opcional."
+  >
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AiDevSchool">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:url" content="https://aidevschool-literacydojo.netlify.app/escola/">
+  <meta property="og:image" content="https://aidevschool-literacydojo.netlify.app/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="AiDevSchool — uma escola, duas jornadas">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="./escola.css">
+  <script type="module" src="./escola.js"></script>
+</head>
+<body>
+  <a class="skip" href="#etapa-atual">Pular para a etapa atual</a>
+  <div class="shell">
+    <header class="topbar site-header">
+      <a class="brand" href="/" aria-label="AiDevSchool, início">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <span>AiDev<small>ESCOLA DE IA</small></span>
+      </a>
+      <div class="top-actions">
+        <button type="button" class="quiet" id="help-btn">Como funciona</button>
+      </div>
+    </header>
+
+    <section class="heading" aria-labelledby="entry-title">
+      <div>
+        <div class="eyebrow">APRENDA FAZENDO. AVANCE VERIFICANDO.</div>
+        <h1 id="entry-title"><span>Uma escola. Duas </span><em>jornadas.</em></h1>
+        <p>Fundamentos compartilhados para todo mundo — depois, você segue para IA no cotidiano ou para IA para desenvolvimento. Lições curtas no app de lições; jogos ficam como prática opcional.</p>
+      </div>
+      <div class="player" aria-label="Fundamentos compartilhados">
+        <div>
+          <span>FUNDAMENTOS COMPARTILHADOS</span>
+          <strong>Trilha adaptativa</strong>
+          <small>AVALIAÇÃO INICIAL · O PROGRESSO FICA NO APP DE LIÇÕES</small>
+        </div>
+      </div>
+    </section>
+
+    <div class="game-layout">
+      <section class="world-panel" aria-label="Mapa da escola">
+        <div class="map-hud"><span>MAPA DA ESCOLA</span><span class="map-caption">2 JORNADAS · FUNDAMENTOS COMPARTILHADOS</span></div>
+        <div class="canvas-wrap">
+          <canvas id="world" width="1040" height="560" role="img" aria-label="Mapa desenhado: a ilha Fundamentos à esquerda; setas seguem para a ilha Dourada, IA no cotidiano, acima à direita, e para a ilha Menta, IA para Dev, abaixo à direita. A versão em texto do mapa está disponível no botão abaixo do mapa."></canvas>
+          <details class="map-alt" id="map-alt">
+            <summary>Versão em texto do mapa</summary>
+            <div class="alt-box" role="list">
+              <ol>
+                <li><a href="#etapa-atual">Ilha Fundamentos (menta) — entender IA, uso seguro, prompt e contexto, verificação. A entrada fica na raiz deste site.</a></li>
+                <li><a href="#jornada-cotidiano">Ilha IA no cotidiano (ouro) — para quem não programa.</a></li>
+                <li><a href="#jornada-dev">Ilha IA para Dev (menta-escura) — para quem constrói software (prévia).</a></li>
+              </ol>
+            </div>
+          </details>
+        </div>
+        <div class="map-footer">
+          <span><i class="dot mint"></i>Fundamentos <i class="dot gold"></i>Jornada cotidiano <i class="dot dim"></i>Jornada dev (prévia)</span>
+          <button id="motion-btn" class="map-btn" aria-pressed="false">Ⅱ Pausar cenário</button>
+        </div>
+      </section>
+
+      <aside class="mission-panel" id="etapa-atual" aria-label="Etapa atual" tabindex="-1">
+        <p class="mission-fallback">Carregando a etapa atual…</p>
+        <noscript>
+          <div class="mission-kicker"><span>COMECE AQUI · FUNDAMENTOS</span><span class="mission-number">TRILHA ADAPTATIVA</span></div>
+          <h2>Fundamentos de IA</h2>
+          <p>Entender IA, uso seguro, prompt e contexto e verificação — lições curtas no app de lições, que começa com uma avaliação curta e adapta a ordem a você. <a href="/">Entrar no app de lições</a>.</p>
+          <p class="mission-note">O progresso fica no app de lições, no seu dispositivo.</p>
+        </noscript>
+      </aside>
+    </div>
+
+    <nav class="stage-nav" aria-label="Os quatro fundamentos">
+      <div class="stage-node"><span class="node-icon" aria-hidden="true">F1</span><span class="node-label"><strong>Entender IA</strong><small>FUNDAMENTO 1</small></span></div>
+      <span class="stage-arrow" aria-hidden="true">→</span>
+      <div class="stage-node"><span class="node-icon" aria-hidden="true">F2</span><span class="node-label"><strong>Uso seguro</strong><small>FUNDAMENTO 2</small></span></div>
+      <span class="stage-arrow" aria-hidden="true">→</span>
+      <div class="stage-node"><span class="node-icon" aria-hidden="true">F3</span><span class="node-label"><strong>Prompt e contexto</strong><small>FUNDAMENTO 3</small></span></div>
+      <span class="stage-arrow" aria-hidden="true">→</span>
+      <div class="stage-node"><span class="node-icon" aria-hidden="true">F4</span><span class="node-label"><strong>Verificação</strong><small>FUNDAMENTO 4</small></span></div>
+    </nav>
+    <p class="stage-note">No app de lições você responde uma avaliação curta no início; a partir dela o app conduz a trilha — a ordem se adapta a você.</p>
+
+    <section class="journeys" id="jornadas" aria-label="Escolha de jornada">
+      <noscript>
+        <div class="journey-card" id="jornada-cotidiano">
+          <h3>IA no cotidiano</h3>
+          <p>Para quem não programa. Comece pelos fundamentos compartilhados no app de lições.</p>
+        </div>
+        <div class="journey-card" id="jornada-dev">
+          <h3>IA para Dev (prévia)</h3>
+          <p>Para quem desenvolve. Os mesmos fundamentos; depois, a ponte Dev (prévia planejada): l15, l16–l17, l21–l23 e l27–l29 do módulo 05 — ainda não fazem parte do percurso do app.</p>
+        </div>
+      </noscript>
+    </section>
+
+    <section class="practice" aria-label="Prática opcional">
+      <span class="eyebrow">PRÁTICA OPCIONAL · JOGOS</span>
+      <details>
+        <summary>Ver jogos e desafios</summary>
+        <ul>
+          <li>SDLC Quest — jogo do ciclo de desenvolvimento de software (18 tarefas, 16 desafios TLC, 6 gates). O progresso do jogo é separado; nada aqui é pré-requisito.</li>
+        </ul>
+      </details>
+    </section>
+
+    <section class="retomar" id="retomar" aria-labelledby="retomar-title">
+      <h2 id="retomar-title">Já conhece a escola?</h2>
+      <p class="section-description">Cada experiência mantém seu próprio progresso, no seu dispositivo — a entrada da escola não sincroniza entre experiências e não sabe onde você parou.</p>
+      <div class="engine-grid">
+        <article class="engine-card">
+          <h3>App de lições — fundamentos</h3>
+          <p class="engine-description">Trilha adaptativa com avaliação inicial: entender IA, uso seguro, prompt e contexto e verificação. 23 missões públicas em português. O progresso fica no seu dispositivo.</p>
+          <a class="primary" href="/">Entrar no app de lições</a>
+        </article>
+        <article class="engine-card">
+          <h3>CodexDojo OS — laboratórios opcionais</h3>
+          <p class="engine-description">Prática secundária, para quem já programa: missões e ferramentas em um ambiente de aprendizagem. Progresso separado, também no seu dispositivo.</p>
+          <a class="primary" href="https://aidevschool-codexdojo-os.netlify.app/" rel="noopener">Abrir laboratórios opcionais</a>
+        </article>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>AIDEVSCHOOL · UMA ESCOLA, VÁRIOS MOTORES · A ENTRADA APENAS RECOMENDA — CADA EXPERIÊNCIA MANTÉM SEU PRÓPRIO PROGRESSO</span>
+      <span>IDENTIDADE VISUAL: SDLCQUEST v1.3</span>
+    </footer>
+  </div>
+
+  <dialog id="help" aria-labelledby="help-title">
+    <div class="dialog-top"><span class="eyebrow">COMO FUNCIONA</span><button class="close-btn" id="help-close" aria-label="Fechar">✕</button></div>
+    <div class="dialog-main">
+      <div class="lesson-head">
+        <h2 id="help-title">Uma escola, duas jornadas</h2>
+        <p>Todos começam pelos mesmos fundamentos: entender IA, uso seguro, prompt e contexto, verificação — como uma trilha adaptativa de lições curtas no app de lições, que começa com uma avaliação curta. Depois, você segue para IA no cotidiano ou para IA para Dev (prévia planejada). Jogos são prática opcional. O progresso fica em cada experiência, no seu dispositivo; esta entrada não sincroniza nem rastreia. Navegue pelo mapa, pela versão em texto ou pelos cartões — tudo funciona por teclado.</p>
+      </div>
+    </div>
+  </dialog>
+
+  <noscript><p class="noscript">Sem JavaScript: o mapa fica parado e a versão em texto continua disponível; os links para o app de lições seguem funcionando.</p></noscript>
+</body>
+</html>
