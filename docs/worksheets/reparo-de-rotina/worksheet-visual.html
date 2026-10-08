@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Corrija a rotina sem começar do zero — folha de exercício · AiDevSchool</title>
+<meta name="description" content="Folha de exercício: identificar o componente desatualizado de uma rotina assistida e escrever o reparo mínimo, sem reescrever tudo. Material de exercício — não é um app implementado.">
+<style>
+  :root{
+    --paper:#f5f3ec; --card:#fffef9; --ink:#172935; --muted:#4c6057;
+    --line:#d9ded5; --deep:#101d28; --mint:#a7e6cd; --mint-dark:#195d4b;
+    --gold:#e8c888; --coral:#b64c36;
+    --sans:'Avenir Next','Segoe UI',Arial,sans-serif;
+    --mono:'SFMono-Regular',Consolas,'Liberation Mono',monospace;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.75 var(--sans)}
+  :focus-visible{outline:3px solid #12624c;outline-offset:3px}
+  ::selection{background:var(--mint)}
+  .wrap{max-width:880px;margin:0 auto;padding:20px 16px 64px}
+  .skip{position:absolute;left:-9999px}
+  .skip:focus{position:fixed;top:8px;left:8px;background:var(--card);border:2px solid var(--mint-dark);padding:8px 14px;border-radius:9px;z-index:10}
+
+  header.page{padding:8px 0 4px}
+  .eyebrow{font:11px/1.5 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+  h1{font-size:clamp(28px,6vw,42px);line-height:1.15;margin:0 0 10px;font-weight:700}
+  h1 em{font-family:Georgia,serif;font-weight:400;color:#527a69}
+  .meta{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 0;padding:0;list-style:none}
+  .meta li{font:11px/1.5 var(--mono);color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:4px 10px;background:var(--card)}
+  .notice{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:10px;padding:12px 14px;margin:18px 0;font-size:14px}
+  .notice strong{color:var(--ink)}
+
+  nav.toc{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 16px;margin:18px 0}
+  nav.toc h2{font-size:14px;margin:0 0 8px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+  nav.toc ol{margin:0;padding-left:20px;font-size:15px}
+  nav.toc a{color:var(--mint-dark)}
+
+  section{margin:34px 0}
+  .step-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+  .step-n{font:11px/1 var(--mono);color:#fff;background:var(--mint-dark);border-radius:999px;padding:6px 10px;letter-spacing:.08em}
+  h2{font-size:clamp(20px,4.5vw,26px);line-height:1.25;margin:6px 0 2px}
+  .lead{color:var(--muted);margin:4px 0 14px;font-size:15px}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin:14px 0}
+  .card h3{margin:0 0 8px;font-size:16px}
+  .tag{display:inline-block;font:11px/1.4 var(--mono);letter-spacing:.06em;border-radius:999px;padding:3px 10px;margin:0 6px 6px 0;vertical-align:middle}
+  .tag.fix{background:var(--mint);color:#163b2d}
+  .tag.var{background:var(--gold);color:#4a3a14}
+  .tag.src{background:#e6eae1;color:#2c4a3c}
+
+  .prompt-box{font:14px/1.65 var(--mono);background:#fbfaf4;border:1px dashed #b9c4b3;border-radius:10px;padding:12px;margin:10px 0;overflow-wrap:anywhere}
+  .prompt-box .var-part{background:var(--gold);border-radius:6px;padding:0 4px}
+  del{background:#f3ddd6;text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:var(--coral);border-radius:4px;padding:0 2px}
+  ins{background:var(--mint);text-decoration:none;border-radius:4px;padding:0 2px}
+
+  table.data{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0 4px}
+  table.data caption{caption-side:top;text-align:left;font:11px/1.5 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding-bottom:4px}
+  table.data th,table.data td{border:1px solid var(--line);padding:6px 8px;text-align:left}
+  table.data th{background:#e6eae1;font-family:var(--mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase}
+  table.data td.num{font-family:var(--mono);white-space:nowrap}
+  table.data tr.err td{background:#f3ddd6}
+  .sumline{font:13px/1.6 var(--mono);color:var(--muted);margin:4px 0 8px}
+  .sumline strong{color:var(--mint-dark)}
+
+  .flow{display:grid;gap:10px}
+  .flow .arrow{font:12px/1 var(--mono);color:var(--muted);text-align:center;padding:2px 0}
+  @media(min-width:700px){
+    .flow.two{grid-template-columns:1fr 28px 1fr;align-items:start}
+    .flow.two .arrow{align-self:center}
+  }
+  .out{border-left:4px solid var(--coral)}
+  .fixed{border-left:4px solid var(--mint-dark)}
+  .mini{font-size:13px;color:var(--muted);margin:6px 0 0}
+
+  fieldset{border:1px solid var(--line);border-radius:18px;background:var(--card);padding:14px 16px;margin:14px 0}
+  legend{font:11px/1.5 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--mint-dark);padding:0 8px;font-weight:700}
+  .field{margin:12px 0}
+  .field label,.field .lbl{display:block;font-weight:600;font-size:15px;margin-bottom:4px}
+  .field .hint{display:block;color:var(--muted);font-size:13px;margin-bottom:6px}
+  .blank{width:100%;min-height:58px;font:15px/1.6 var(--sans);color:var(--ink);background:#fbfaf4;border:1px solid #b9c4b3;border-radius:10px;padding:10px 12px;resize:vertical}
+  .blank.short{min-height:40px}
+  .blank.line{min-height:34px}
+  .blank::placeholder{color:#8a9a91}
+  .blanknum{display:inline-block;width:100%;font:15px/1.4 var(--mono);color:var(--ink);background:#fbfaf4;border:1px solid #b9c4b3;border-radius:9px;padding:8px 10px;max-width:110px;text-align:center}
+  .numrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:6px 0}
+  .numrow .nl{font-size:14px;font-weight:600}
+
+  .radio{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0}
+  .radio label{display:flex;align-items:center;gap:8px;border:1px solid #ced9c7;border-radius:10px;background:#fffef8;padding:8px 12px;font-size:14px;cursor:pointer}
+  .radio input{width:20px;height:20px;accent-color:var(--mint-dark)}
+
+  .check{list-style:none;padding:0;margin:10px 0}
+  .check li{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line);font-size:15px}
+  .check li:last-child{border-bottom:none}
+  .check input[type=checkbox]{width:22px;height:22px;accent-color:var(--mint-dark);flex:none;margin-top:3px}
+
+  .retry{background:#fbfaf4;border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:12px 0;font-size:14px;overflow-x:auto}
+  .retry h4{margin:0 0 6px;font-size:13px;font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  .retry table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:480px}
+  .retry th,.retry td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+  .retry th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+
+  .neg{display:grid;gap:10px}
+  @media(min-width:640px){.neg{grid-template-columns:repeat(3,1fr)}}
+  .neg .card{margin:0;border-top:4px solid var(--coral)}
+  .neg h3{font-size:15px}
+  .neg p{font-size:14px;margin:6px 0 0;color:var(--muted)}
+
+  footer.page{margin-top:40px;border-top:1px solid var(--line);padding-top:16px;font-size:14px;color:var(--muted)}
+  footer.page p{margin:6px 0}
+  footer.page .tech{font:12px/1.7 var(--mono)}
+
+  @media print{
+    body{background:#fff}
+    .wrap{max-width:none;padding:0}
+    .blank,.blanknum{border:none;border-bottom:2px solid var(--ink);background:#fff;min-height:46px}
+    .card,fieldset,nav.toc,.notice{break-inside:avoid}
+    section{break-inside:auto}
+    .no-print{display:none}
+  }
+  @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#caso">Pular para o seu caso de exercício</a>
+<div class="wrap">
+
+<header class="page">
+  <p class="eyebrow">AiDevSchool · Folha de exercício</p>
+  <h1>Corrija a rotina <em>sem começar do zero</em></h1>
+  <ul class="meta">
+    <li>~20 min</li>
+    <li>depois da lição “Quando a automação erra”</li>
+    <li>papel ou digital</li>
+    <li>dados inventados, só para treinar</li>
+  </ul>
+  <div class="notice" role="note">
+    <strong>Material de exercício.</strong> Aqui você treina <em>no papel</em> o gesto de reparar uma rotina
+    que degrada: saída bonita, números desatualizados. Nada é automatizado, nenhum dado seu é usado e o que
+    você digitar nesta página <strong>não fica salvo</strong> — imprima ou copie antes de fechar. Esta folha
+    é um exercício, não um app implementado.
+  </div>
+</header>
+
+<nav class="toc" aria-label="Roteiro do exercício">
+  <h2>Roteiro</h2>
+  <ol>
+    <li><a href="#exemplo">Exemplo resolvido (Mariana)</a></li>
+    <li><a href="#caso">Seu caso: confira na fonte e repare</a></li>
+    <li><a href="#teste">Teste com a semana 2 (números novos)</a></li>
+    <li><a href="#autocheck">Autochecagem e nova tentativa</a> · <a href="#negativos">O que não fazer</a></li>
+  </ol>
+</nav>
+
+<section aria-label="Regra de ouro do exercício">
+  <div class="card">
+    <h3>A regra de ouro: conferir na fonte, por categoria</h3>
+    <p>Neste exercício, cada pedido/ticket tem <strong>um único status</strong> (as categorias não se
+    sobrepõem: nada é contado duas vezes). Por isso dá para conferir qualquer resumo assim:</p>
+    <p class="sumline"><strong>fonte → soma por categoria → total</strong> (a soma das categorias tem que fechar o total da fonte)</p>
+    <p class="mini">E cuidado: o total fechar <em>sozinho</em> não garante nada — o erro escondido pode estar em
+    <em>onde</em> cada item caiu. Confira categoria por categoria na fonte.</p>
+  </div>
+</section>
+
+<section id="exemplo" aria-labelledby="h-exemplo">
+  <div class="step-head"><span class="step-n" aria-hidden="true">EXEMPLO</span><h2 id="h-exemplo">A rotina da Mariana, degradada e reparada</h2></div>
+  <p class="lead">Acompanhe um caso completo resolvido. No seu caso (parte 2) o cenário é outro — o gesto é o
+  mesmo: conferir na fonte, identificar o que desatualizou, preservar o que funciona e fazer o
+  <strong>reparo mínimo</strong>.</p>
+
+  <div class="flow two">
+    <div class="card out" aria-labelledby="h-antes">
+      <h3 id="h-antes">Antes — a rotina degradou</h3>
+      <p><span class="tag fix">fixo</span><span class="tag var">muda toda semana</span></p>
+      <div class="prompt-box" aria-label="Pedido salvo da Mariana">
+        “Resumo semanal de atendimento para a reunião de segunda: tópicos, 3 indicadores (tickets abertos,
+        tickets <del>resolvidos</del>, tempo médio de resposta), máximo meia página.
+        <span class="var-part">[DADOS DA SEMANA: colar aqui]</span>”
+      </div>
+      <table class="data" aria-label="Painel de atendimento desta semana (fonte)">
+        <caption>Painel desta semana (a fonte)</caption>
+        <thead><tr><th scope="col">Ticket</th><th scope="col">Status</th></tr></thead>
+        <tbody>
+          <tr><td class="num">t-01</td><td>aberto</td></tr>
+          <tr><td class="num">t-02</td><td>aberto</td></tr>
+          <tr><td class="num">t-03</td><td>fechado</td></tr>
+          <tr><td class="num">t-04</td><td>fechado</td></tr>
+          <tr class="err"><td class="num">t-05</td><td>reaberto ← novo status</td></tr>
+          <tr><td class="num">t-06</td><td>fechado</td></tr>
+        </tbody>
+      </table>
+      <p class="sumline">total de tickets no painel: <strong>6</strong></p>
+      <p><strong>O que chegou na sexta (saída da rotina):</strong></p>
+      <div class="prompt-box">“abertos: 2 · resolvidos: 4 · tempo médio: 3h” — no padrão das outras semanas.</div>
+      <p><strong>O que mudou por fora:</strong> o sistema atualizou — “resolvidos” virou “<ins>fechados</ins>”
+      e entrou o status “<ins>reaberto</ins>”. A rotina continuou lendo como antes: contou o reaberto (t-05)
+      dentro de “resolvidos”.</p>
+      <p class="mini">Repare: 2 + 4 = 6, o total até fecha — mas <em>onde</em> cada ticket caiu está errado.
+      Conferir só o total não pega esse erro; é preciso conferir por categoria na fonte.</p>
+    </div>
+    <div class="arrow" aria-hidden="true">reparo mínimo ➜</div>
+    <div class="card fixed" aria-labelledby="h-depois">
+      <h3 id="h-depois">Depois — o reparo mínimo (com conferência)</h3>
+      <p><strong>1. O que mudou no dado:</strong></p>
+      <div class="prompt-box">“A coluna ‘resolvidos’ agora se chama ‘fechados’; use o nome novo. O status
+      ‘reaberto’ conta à parte, separado dos fechados.”</div>
+      <p><strong>2. Como o combinado acomoda o número novo</strong> (decisão declarada, não escondida):</p>
+      <div class="prompt-box">“O resumo passa a listar <ins>4 indicadores</ins>: abertos, fechados, reabertos
+      e tempo médio. Meia página continua dando.”</div>
+      <p><strong>3. O que continua valendo:</strong></p>
+      <div class="prompt-box">“O resto segue como combinado: tópicos, para a reunião de segunda, máximo meia página.”</div>
+      <p><strong>4. Conferência com os números da fonte (o cálculo, de verdade):</strong></p>
+      <p class="sumline">abertos <strong>2</strong> (t-01, t-02) · fechados <strong>3</strong> (t-03, t-04, t-06) ·
+      reabertos <strong>1</strong> (t-05) · cada ticket tem um único status →
+      <strong>2 + 3 + 1 = 6 = total do painel ✓</strong></p>
+      <p><strong>5. Pergunta de validação humana:</strong> “antes de enviar: abertos + fechados + reabertos
+      somam o total do painel? e o t-05 aparece como reaberto, não como fechado?”</p>
+      <p class="mini">Mariana <em>não</em> reescreveu o pedido inteiro, <em>não</em> deixou a coluna velha e
+      <em>não</em> pediu só “atualize”.</p>
+    </div>
+  </div>
+</section>
+
+<section id="caso" aria-labelledby="h-caso">
+  <div class="step-head"><span class="step-n" aria-hidden="true">SEU CASO</span><h2 id="h-caso">A rotina de pedidos da loja — agora com você</h2></div>
+  <p class="lead">Cenário inventado para o exercício — não use dados reais. Toda sexta, a rotina resume os
+  pedidos da loja para o chat da operação. Esta semana a plataforma mudou.</p>
+
+  <div class="card out">
+    <h3>Antes — o que você tem</h3>
+    <p><span class="tag fix">fixo</span><span class="tag var">muda toda semana</span></p>
+    <div class="prompt-box" aria-label="Pedido salvo da rotina">
+      “Resumo semanal de pedidos da loja para o chat da operação: lista com 3 números (pedidos feitos,
+      pedidos entregues, pedidos devolvidos), máximo 10 linhas.
+      <span class="var-part">[DADOS DA SEMANA: colar aqui]</span>”
+    </div>
+    <table class="data" aria-label="Exportação da plataforma desta semana (fonte)">
+      <caption>Plataforma desta semana — semana 1 (a fonte)</caption>
+      <thead><tr><th scope="col">Pedido</th><th scope="col">Status</th></tr></thead>
+      <tbody>
+        <tr><td class="num">p-101</td><td>entregue no prazo</td></tr>
+        <tr><td class="num">p-102</td><td>entregue no prazo</td></tr>
+        <tr><td class="num">p-103</td><td>entregue com atraso</td></tr>
+        <tr><td class="num">p-104</td><td>entregue com atraso</td></tr>
+        <tr class="err"><td class="num">p-105</td><td>devolvido</td></tr>
+        <tr class="err"><td class="num">p-106</td><td>troca ← status novo</td></tr>
+      </tbody>
+    </table>
+    <p class="sumline">total de pedidos na fonte: <strong>6</strong> · “entregues” deixou de ser uma coluna só:
+    agora é <strong>no prazo + com atraso</strong></p>
+    <p><strong>O que chegou na sexta (saída da rotina):</strong></p>
+    <div class="prompt-box">“pedidos feitos: 6 · pedidos entregues: 5 · pedidos devolvidos: 1” — no padrão das outras semanas.</div>
+    <p><strong>O que mudou por fora:</strong> a plataforma dividiu “entregues” em “no prazo” e “com atraso”,
+    e as devoluções agora incluem “trocas”. Lendo como antes, a rotina contou a troca (p-106) como entrega
+    e só reconheceu a devolução literal.</p>
+    <p class="mini">De novo o total engana: 5 + 1 = 6 fecha. O erro está na <em>divisão</em> — confira por
+    categoria na fonte antes de reparar.</p>
+  </div>
+
+  <form onsubmit="return false" aria-label="Campos do exercício">
+  <fieldset>
+    <legend>Campo 1 · Pedido reutilizável — separe o fixo do variável</legend>
+    <div class="field">
+      <label for="f1a">a) Tarefa (o que a rotina pede, sempre igual)</label>
+      <span class="hint">Ex. do caso: resumir os pedidos da semana da loja.</span>
+      <textarea class="blank" id="f1a" autocomplete="off" placeholder="escreva aqui…"></textarea>
+    </div>
+    <div class="field">
+      <label for="f1b">b) Formato (a forma fixa da saída)</label>
+      <span class="hint">Ex. do caso: lista, 3 números, máximo 10 linhas, para o chat da operação.</span>
+      <textarea class="blank short" id="f1b" autocomplete="off" placeholder="escreva aqui…"></textarea>
+    </div>
+    <div class="field">
+      <label for="f1c">c) Dado que muda toda semana (o único campo variável)</label>
+      <span class="hint">Ex. do caso: os números de pedidos da semana, colados no lugar marcado.</span>
+      <textarea class="blank short" id="f1c" autocomplete="off" placeholder="escreva aqui…"></textarea>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Campo 2 · Confira na fonte, por categoria (semana 1)</legend>
+    <div class="field">
+      <span class="lbl">Conte você, na fonte acima — não no resumo de sexta:</span>
+      <div class="numrow"><span class="nl">pedidos feitos:</span><input class="blanknum" id="n1" inputmode="numeric" autocomplete="off" aria-label="pedidos feitos"></div>
+      <div class="numrow"><span class="nl">pedidos entregues (no prazo + com atraso):</span><input class="blanknum" id="n2" inputmode="numeric" autocomplete="off" aria-label="pedidos entregues"></div>
+      <div class="numrow"><span class="nl">pedidos devolvidos (devoluções + trocas):</span><input class="blanknum" id="n3" inputmode="numeric" autocomplete="off" aria-label="pedidos devolvidos"></div>
+      <div class="numrow"><span class="nl">conferência (entregues + devolvidos = total?):</span><input class="blanknum" id="n4" inputmode="numeric" autocomplete="off" aria-label="resultado da conferência"></div>
+      <span class="hint">Dica: cada pedido tem um único status; a soma das categorias tem que fechar o total da fonte.</span>
+    </div>
+    <div class="field">
+      <label for="f2d">Onde a saída de sexta errou? (compare seus números com os dela)</label>
+      <span class="hint">Aponte o componente desatualizado: qual categoria foi contada errada, e por quê.</span>
+      <textarea class="blank" id="f2d" autocomplete="off" placeholder="escreva aqui…"></textarea>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Campo 3 · Reparo mínimo de contexto (semana 1)</legend>
+    <div class="field">
+      <label for="f2a">a) O que mudou no dado desta semana</label>
+      <span class="hint">Nomeie a mudança — sem “atualize aí”. Dica: as colunas que mudaram.</span>
+      <textarea class="blank" id="f2a" autocomplete="off" placeholder="escreva aqui…"></textarea>
+    </div>
+    <div class="field">
+      <label for="f2b">b) Como o combinado acomoda o número novo</label>
+      <span class="hint">Declare a decisão (como a Mariana fez com o 4º indicador): o “devolvidos” passa a somar devoluções + trocas? Adiciona linha separada? O que você decide, fica dito.</span>
+      <textarea class="blank" id="f2b" autocomplete="off" placeholder="escreva aqui…"></textarea>
+    </div>
+    <div class="field">
+      <label for="f2c">c) O que continua valendo (a regra que não mudou)</label>
+      <span class="hint">Reafirme o combinado para o reparo não desmontar o que funcionava.</span>
+      <textarea class="blank" id="f2c" autocomplete="off" placeholder="escreva aqui…"></textarea>
+    </div>
+    <div class="field">
+      <label for="f2e">d) Seu pedido de reparo em 1–2 frases (a + b + c juntos)</label>
+      <span class="hint">É isto que você diria para a rotina voltar a ler o presente.</span>
+      <textarea class="blank" id="f2e" autocomplete="off" placeholder="escreva aqui…"></textarea>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Campo 4 · Pergunta final de validação humana</legend>
+    <div class="field">
+      <label for="f3">A pergunta que você faria ao resultado antes de usar</label>
+      <span class="hint">Uma pergunta com resposta fora da saída da IA — que um erro silencioso (bonito e desatualizado) não passaria. Ex. de forma (não copie): “o número X bate com a fonte Y?”</span>
+      <textarea class="blank" id="f3" autocomplete="off" placeholder="escreva aqui…"></textarea>
+    </div>
+  </fieldset>
+  </form>
+</section>
+
+<section id="teste" aria-labelledby="h-teste">
+  <div class="step-head"><span class="step-n" aria-hidden="true">TESTE</span><h2 id="h-teste">Semana 2 — o reparo aguenta os números novos?</h2></div>
+  <p class="lead">Reparo se testa com dado novo. Na semana seguinte, a plataforma marcou alguns pedidos como
+  “<ins>urgente</ins>” (uma marca, não um status) e entrou o status “<ins>cancelado</ins>”.</p>
+  <div class="card">
+    <table class="data" aria-label="Exportação da plataforma da semana 2 (fonte)">
+      <caption>Plataforma — semana 2 (a fonte)</caption>
+      <thead><tr><th scope="col">Pedido</th><th scope="col">Status</th><th scope="col">Urgente?</th></tr></thead>
+      <tbody>
+        <tr><td class="num">p-201</td><td>entregue no prazo</td><td>sim</td></tr>
+        <tr><td class="num">p-202</td><td>entregue no prazo</td><td>não</td></tr>
+        <tr><td class="num">p-203</td><td>entregue com atraso</td><td>não</td></tr>
+        <tr><td class="num">p-204</td><td>devolvido</td><td>não</td></tr>
+        <tr><td class="num">p-205</td><td>troca</td><td>não</td></tr>
+        <tr class="err"><td class="num">p-206</td><td>cancelado ← status novo</td><td>sim</td></tr>
+      </tbody>
+    </table>
+    <p class="sumline">total de pedidos na fonte: <strong>6</strong> · “urgente” é uma marca que atravessa os
+    status (um pedido urgente continua sendo entrega, devolução…) — não entra na soma de conferência</p>
+
+    <div class="field">
+      <span class="lbl">a) Confira na fonte (semana 2) e conte você:</span>
+      <div class="numrow"><span class="nl">pedidos feitos:</span><input class="blanknum" id="m1" inputmode="numeric" autocomplete="off" aria-label="pedidos feitos semana 2"></div>
+      <div class="numrow"><span class="nl">pedidos entregues (prazo + atraso):</span><input class="blanknum" id="m2" inputmode="numeric" autocomplete="off" aria-label="pedidos entregues semana 2"></div>
+      <div class="numrow"><span class="nl">pedidos devolvidos (devoluções + trocas):</span><input class="blanknum" id="m3" inputmode="numeric" autocomplete="off" aria-label="pedidos devolvidos semana 2"></div>
+      <div class="numrow"><span class="nl">pedidos cancelados:</span><input class="blanknum" id="m4" inputmode="numeric" autocomplete="off" aria-label="pedidos cancelados semana 2"></div>
+      <div class="numrow"><span class="nl">conferência (entregues + devolvidos + cancelados = total?):</span><input class="blanknum" id="m5" inputmode="numeric" autocomplete="off" aria-label="conferência semana 2"></div>
+      <div class="numrow"><span class="nl">pedidos urgentes (contagem à parte):</span><input class="blanknum" id="m6" inputmode="numeric" autocomplete="off" aria-label="pedidos urgentes semana 2"></div>
+    </div>
+    <div class="field">
+      <label for="t2">b) O que do seu reparo da semana 1 ainda vale?</label>
+      <textarea class="blank short" id="t2" autocomplete="off" placeholder="escreva aqui…"></textarea>
+    </div>
+    <div class="field">
+      <span class="lbl">c) Como o combinado acomoda o “cancelado”?</span>
+      <span class="hint">Marque uma decisão e justifique em uma frase — sem deixar o número novo sem casa.</span>
+      <div class="radio">
+        <label><input type="radio" name="acomoda" value="substituir"> substituir um número existente</label>
+        <label><input type="radio" name="acomoda" value="agregar"> somar dentro de um número existente</label>
+        <label><input type="radio" name="acomoda" value="renegociar"> renegociar o formato (linha nova)</label>
+      </div>
+      <textarea class="blank line" id="t3" autocomplete="off" placeholder="sua justificativa em 1 frase…"></textarea>
+    </div>
+    <div class="field">
+      <label for="t4">d) Seu novo reparo mínimo (1 frase — só o que mudou de novo)</label>
+      <span class="hint">Sem reescrever o pedido salvo: ele continua bom.</span>
+      <textarea class="blank" id="t4" autocomplete="off" placeholder="escreva aqui…"></textarea>
+    </div>
+  </div>
+</section>
+
+<section id="autocheck" aria-labelledby="h-check">
+  <div class="step-head"><span class="step-n" aria-hidden="true">AUTOCHEQUE</span><h2 id="h-check">Confira antes de entregar</h2></div>
+  <ul class="check">
+    <li><input type="checkbox" id="c1"><label for="c1">Contei os números <strong>na fonte, por categoria</strong> (não só o total — e não no resumo de sexta)</label></li>
+    <li><input type="checkbox" id="c2"><label for="c2">Apontei <strong>o que mudou</strong> no dado (não escrevi só “atualize”)</label></li>
+    <li><input type="checkbox" id="c3"><label for="c3"><strong>Preservei o combinado</strong> e declarei como o número novo entrou (nada implícito)</label></li>
+    <li><input type="checkbox" id="c4"><label for="c4"><strong>Não reescrevi tudo</strong> — o reparo coube em 1–2 frases justificáveis</label></li>
+  </ul>
+  <div class="retry">
+    <h4>Falhou em algum item? Tente de novo — só no campo indicado</h4>
+    <table>
+      <thead><tr><th scope="col">Se seu reparo…</th><th scope="col">Volte a</th><th scope="col">Pergunta-guia</th></tr></thead>
+      <tbody>
+        <tr><td>conferiu só o total (que fecha mesmo com erro)</td><td>Campo 2</td><td>Cada item da fonte caiu na categoria certa? Onde o t-05/p-106 foram parar?</td></tr>
+        <tr><td>usou a coluna antiga como se nada tivesse mudado</td><td>Campo 3a</td><td>Qual coluna a plataforma renomeou ou criou nesta semana?</td></tr>
+        <tr><td>foi vago (“atualize o resumo, por favor”)</td><td>Campo 3a → 3d</td><td>O que só eu vi na fonte nova?</td></tr>
+        <tr><td>deixou o número novo sem casa (implícito)</td><td>Campo 3b</td><td>Substituir, agregar ou renegociar o formato — qual foi a minha decisão?</td></tr>
+        <tr><td>perdeu o formato/público do combinado</td><td>Campo 3c</td><td>O que seguia valendo e não pode se perder?</td></tr>
+        <tr><td>apagou/reescreveu o pedido inteiro</td><td>Campo 1 vs 3</td><td>O que exatamente quebrou: o pedido, ou o dado que ele lê?</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="negativos" aria-labelledby="h-neg">
+  <div class="step-head"><span class="step-n" aria-hidden="true">NEGATIVOS</span><h2 id="h-neg">O que não fazer (concreto)</h2></div>
+  <div class="neg">
+    <div class="card">
+      <h3>✗ Manter o input velho</h3>
+      <p>Deixar a rotina lendo “entregues” como antes: a troca vira entrega, o reaberto vira fechado — a saída
+      sai bonita lendo um dado que só existe na memória da rotina.</p>
+    </div>
+    <div class="card">
+      <h3>✗ Pedido vago “atualize”</h3>
+      <p>“Atualiza aí o resumo” não diz <em>o que</em> mudou. Quem viu a plataforma nova foi você — a correção
+      repõe o contexto que só você tem.</p>
+    </div>
+    <div class="card">
+      <h3>✗ Reescrita total</h3>
+      <p>Apagar o pedido salvo e começar do zero joga fora semanas de acerto, esconde a causa e o pedido novo
+      nasce com o mesmo buraco.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="page">
+  <p><strong>Para lembrar:</strong> este é um exercício de papel com dados inventados. Nada é automatizado,
+  nada fica salvo, nada é publicado — e nenhum resultado é “garantido”: quem valida é você (Campo 4).</p>
+  <p class="tech">Notas técnicas para docentes (procedência, fontes das lições, limites do material): ver o
+  arquivo <code>README.md</code> que acompanha esta folha. A correção guiada fica no <code>guia-docente.md</code>, separado.</p>
+</footer>
+
+</div>
+</body>
+</html>
