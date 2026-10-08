@@ -73,7 +73,12 @@ describe("full headless playthrough (input → sim → evidence wiring)", () => 
     const puzzle = game.snapshot.replayPuzzle
     if (!puzzle) throw new Error("no replay puzzle")
     // rewind halfway down the lane and predict exactly the cars that will replay from there
-    const tail = puzzle.actual.filter((m) => m.partition === puzzle.partition).length
+    // Optimization: avoid array allocation from .filter().length
+    let tail = 0
+    for (let i = 0; i < puzzle.actual.length; i++) {
+      const m = puzzle.actual[i]
+      if (m && m.partition === puzzle.partition) tail++
+    }
     const rewindTo = Math.floor(tail / 2)
     game.setRewindTo(rewindTo)
     // expected truth = every car on this lane with offset >= rewindTo (recomputed from the log)
