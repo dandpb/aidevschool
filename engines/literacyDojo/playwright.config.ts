@@ -19,13 +19,13 @@ export default defineConfig({
     // o contrato de serving do dist, que não existe no dev server.
     {
       name: "app",
-      testIgnore: /pwa\.spec\.ts|escola-entry\.spec\.ts/,
+      testIgnore: /pwa\.spec\.ts|escola-entry\.spec\.ts|sw-asset-guard\.spec\.ts/,
       use: { baseURL: `http://localhost:${appPort}` },
     },
     // O service worker só é registrado no build, então o PWA é testado no preview.
     {
       name: "pwa",
-      testMatch: /pwa\.spec\.ts|escola-entry\.spec\.ts/,
+      testMatch: /pwa\.spec\.ts|escola-entry\.spec\.ts|sw-asset-guard\.spec\.ts/,
       use: { baseURL: `http://localhost:${pwaPort}` },
     },
   ],

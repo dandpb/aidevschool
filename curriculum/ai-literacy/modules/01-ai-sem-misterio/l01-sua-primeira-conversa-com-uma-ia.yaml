@@ -8,6 +8,9 @@ objective: "Fazer uma primeira pergunta a uma IA e interpretar a resposta como u
 estimatedMinutes: 4
 skillIds: [entender]
 prerequisites: []
+competency:
+  primary: F1
+  supporting: []
 
 activities:
   - id: l01-a1

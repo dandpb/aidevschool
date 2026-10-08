@@ -6,6 +6,9 @@ from typing import Any
 
 import yaml
 
+from learner.substrate.mission_catalog_guided_practice import (
+    load_guided_practice_catalog,
+)
 from learner.substrate.tests.mission_catalog_project_catalog_fixture import (
     PROJECT_CATALOG,
 )
@@ -324,6 +327,98 @@ class MissionCatalogFixture:
             chapter_order - 1,
             _binding(lesson_id, chapter_order, prerequisites),
         )
+
+    def add_guided_practice(self) -> None:
+        """Opt-in pg-d01-shaped synthetic package + dev binding (chapterOrder 11)."""
+        package_root = (
+            self.root / "curriculum" / "sequencia-dev-guiada" / "pg-d01-debug-reproduza"
+        )
+        contents = {
+            "enunciado.md": (
+                "# pg-d01 — Prática guiada sintética: reproduza antes de perguntar\n"
+                "\n"
+                "**Trilha:** Dev (jornada por competências) · **Competência primária:** D4\n"
+                "**Lição-âncora:** `l17` — lição sintética de debug\n"
+                "**Duração alvo:** 25–40 min (uma sessão).\n"
+                "\n"
+                "## Objetivo observável\n"
+                "\n"
+                "Executar o ciclo guiado sintético com evidência local por passo.\n"
+                "\n"
+                "## O ciclo guiado\n"
+                "\n"
+                "### 2. Tentativa\n"
+                "\n"
+                "1. Reproduza manualmente.\n"
+                "2. Confirme a suíte verde.\n"
+            ),
+            "exemplo-trabalhado.md": "# Exemplo trabalhado sintético\n",
+            "insumos/bugreport.md": "# Bug report sintético\n",
+            "insumos/REGRA.md": "# Regra sintética (>= 6.0)\n",
+            "insumos/fixture/notas.py": "def situacao(media):\n    return 'REPROVADO'\n",
+            "insumos/fixture/testes.py": "# suíte sintética\n",
+            "rubrica-v1.md": (
+                "# pg-d01 — Rúbrica sintética v1\n"
+                "\n"
+                "| # | Critério | perCheck |\n"
+                "| --- | --- | --- |\n"
+                "| c-reproducao | Reprodução antes do pedido | Há registro da reprodução? |\n"
+                "| c-verde-latente | Suíte verde com bug presente | Há registro da suíte? |\n"
+            ),
+        }
+        for relative, text in contents.items():
+            path = package_root / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(text, encoding="utf-8")
+        practice = load_guided_practice_catalog(
+            self.root / "curriculum" / "sequencia-dev-guiada"
+        )["pg-d01"]
+        catalog_path = self.root / "curriculum" / "catalog.md"
+        catalog_path.write_text(
+            catalog_path.read_text(encoding="utf-8")
+            + "\n### 10. Dev Guided Sequence\n\n"
+            "| Field | Value |\n"
+            "|-------|-------|\n"
+            "| **Slug** | `10_sequencia_dev_guiada` |\n"
+            "| **Status** | scaffolded |\n"
+            "| **Concepts** | Guided practice cycle |\n"
+            "| **Key question** | Can the learner run a guided cycle? |\n"
+            "| **Learning goal** | Run a guided practice with local evidence. |\n"
+            "| **Directory** | `sequencia-dev-guiada/` |\n"
+            "| **Dependencies** | Project 00 |\n",
+            encoding="utf-8",
+        )
+        self.bindings["bindings"].append(
+            {
+                "missionId": "pg-d01",
+                "version": 1,
+                "chapterOrder": 11,
+                "prerequisites": ["l17"],
+                "trackId": "dev",
+                "curriculum": {
+                    "kind": "guided-practice",
+                    "practiceId": "pg-d01",
+                    "projectId": "10_sequencia_dev_guiada",
+                    "unitId": "sequencia-dev-guiada:pg-d01",
+                },
+                "runtime": {
+                    "engineId": "codexdojo-os",
+                    "appId": "practice",
+                    "protocolVersion": "1.0",
+                    "contentVersion": practice["content_version"],
+                },
+                "evidence": {
+                    "schema": "guided-practice-evidence",
+                    "version": 1,
+                    "verifierRequired": True,
+                },
+                "fallback": {
+                    "kind": "dom",
+                    "summary": "Semantic guided-practice cycle controls.",
+                },
+            }
+        )
+        self.write()
 
     def write(self) -> None:
         literacy = self.root / "curriculum" / "ai-literacy"
