@@ -1,13 +1,16 @@
 # Lição l28 — Onda O1 dev l27–l29 (spec AID-610 rev 2 §2.2): refatorar com assistente sem quebrar comportamento.
 # Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
 id: l28
-version: 2
+version: 3
 moduleId: mod-05
 title: "Refatore com assistente sem quebrar comportamento"
 objective: "Diante de código funcional a melhorar, exigir testes verdes cobrindo o comportamento como pré-condição e refatorar com o assistente em passos pequenos e verificáveis — nunca reescrita de uma vez."
 estimatedMinutes: 5
 skillIds: [codificar]
 prerequisites: [l21]
+competency:
+  primary: D4
+  supporting: [D3]
 
 activities:
   - id: l28-a1
@@ -34,7 +37,7 @@ activities:
         opt-b: "Rewrite de uma vez troca comportamento invisível junto: o assistente 'vê o quadro inteiro' — inclusive a parte que ninguém pediu para mudar."
         opt-c: "Código que funciona se melhora SIM — com rede de segurança. Esperar o bug é jogar fora a vantagem de refatorar com o comportamento ainda são."
         opt-d: "Linter arruma estilo, não comportamento — e 'aplicar tudo' de uma vez é a mesma reescrita sem rede, agora automática."
-      onSuccess: "Exato: a pré-condição é a rede de segurança. Testes verdes antes, passos pequenos durante — comportamento intacto é o que a refatoração promete e os testes provam."
+      onSuccess: "Exato: a pré-condição é a rede de segurança. Testes verdes antes, passos pequenos durante — comportamento intacto nos cenários que a suíte cobre é o que a refatoração promete e os testes conferem; o que está fora da cobertura precisa de revisão e de testes novos."
     storage:
       policy: structured_only
     hints:
@@ -83,10 +86,10 @@ activities:
     skillId: codificar
     instruction: "Duas refactorações assistidas do mesmo módulo. Compare as saídas e escolha a que vale o merge."
     data:
-      scenario: "O mesmo módulo de 300 linhas passou por duas sessões de refatoração com assistente. Qual delas você colocaria no merge sem medo?"
+      scenario: "O mesmo módulo de 300 linhas passou por duas sessões de refatoração com assistente. Qual delas você levaria ao merge com risco localizado e verificável?"
       outputs:
         - id: out-a
-          text: "Passo 1: extrair a função de cálculo — rodar os testes. Passo 2: renomear as variáveis do domínio — rodar os testes. Passo 3: mover a validação para o início — rodar os testes. Suíte verde nos três passos: pronto para o merge."
+          text: "Passo 1: extrair a função de cálculo — rodar os testes. Passo 2: renomear as variáveis do domínio — rodar os testes. Passo 3: mover a validação para o início — rodar os testes. Suíte verde nos três passos: base sólida para revisão e merge."
         - id: out-b
           text: "Pronto! Reescrevi tudo em uma mensagem — o comportamento é o mesmo, confie."
       criteria:
@@ -102,7 +105,7 @@ activities:
       onFailure: "'Confie' não é verificação: cada passo precisa de teste no meio, não só no fim. A saída A nomeia três passos e roda a suíte entre eles; a B entrega 300 linhas novas e uma promessa."
       perCheck:
         betterOutputId: "A saída A é a que acorda bem de manhã: três passos nomeados, teste entre cada um — qualquer regressão nasce localizada. A B troca evidência por 'confie'."
-        c-preserva-comportamento: "Faltou este critério na saída B: 'o comportamento é o mesmo' é afirmação sem prova — quem confere é a suíte, não a promessa."
+        c-preserva-comportamento: "Faltou este critério na saída B: 'o comportamento é o mesmo' é afirmação sem prova — quem confere são os cenários que a suíte cobre (suíte verde diz 'o que testei continua igual', não 'nada mudou'); fora da cobertura, revisão e testes novos."
         c-verificavel-por-etapas: "Faltou este critério na saída B: uma mensagem única não tem etapas — e sem etapa, não há onde parar e conferir."
       onSuccess: "Exato! Passos nomeados com teste entre eles: a refatoração vira uma escada em que cada degrau se verifica — em vez de um salto que se reza."
     storage:
