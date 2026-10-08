@@ -1,0 +1,34 @@
+{
+  "meta": {
+    "pacote": "pg-e01-evals-offline (AID-3648)",
+    "conjunto": "base (desenvolvimento)",
+    "aviso": "DADOS 100% SINTETICOS: tickets ficticios do PrismaDesk (SaaS inexistente). Nenhum modelo de IA real foi executado; saidas foram autoralmente fixadas para a pratica. Nao medem eficacia de modelo, prompt ou produto real.",
+    "rotulo_sintetico": true
+  },
+  "casos": [
+    { "id": "PD-001", "texto": "O app trava ao abrir o relatorio de horas (PrismaDesk v4.2, Android)", "area": "tecnico" },
+    { "id": "PD-002", "texto": "Sincronizacao do calendario falha com erro SYNC-777 desde ontem", "area": "tecnico" },
+    { "id": "PD-003", "texto": "Preciso do log de erros do painel para anexar num chamado do meu lado", "area": "tecnico" },
+    { "id": "PD-004", "texto": "Exportacao CSV retorna arquivo vazio quando o filtro tem acento", "area": "tecnico" },
+    { "id": "PD-005", "texto": "Webhook de integracao responde 504 intermitentemente as 09h", "area": "tecnico" },
+    { "id": "PD-006", "texto": "Login com SSO quebra so no Safari depois da atualizacao de ontem", "area": "tecnico" },
+    { "id": "PD-007", "texto": "Impressao do quadro kanban corta a ultima coluna em A4", "area": "tecnico" },
+    { "id": "PD-008", "texto": "API v3 retorna 429 para um unico cliente com taxa baixa de requisicoes", "area": "tecnico" },
+    { "id": "PD-009", "texto": "Cobranca dupla no cartao na fatura de setembro", "area": "pagamento" },
+    { "id": "PD-010", "texto": "Preciso de reembolso da assinatura anual nao utilizada", "area": "pagamento" },
+    { "id": "PD-011", "texto": "Erro 500 ao tentar pagar a fatura — e cobrou mesmo assim", "area": "pagamento" },
+    { "id": "PD-012", "texto": "Fatura veio com valor errado depois do upgrade do plano Pro", "area": "pagamento" },
+    { "id": "PD-013", "texto": "Cartao declinado mas o plano continua ativo — vou ser cobrado de novo?", "area": "pagamento" },
+    { "id": "PD-014", "texto": "Como atualizo o cartao de cobranca da empresa no painel?", "area": "pagamento" },
+    { "id": "PD-015", "texto": "Preciso adicionar 3 usuarios ao workspace do time", "area": "conta" },
+    { "id": "PD-016", "texto": "Como convido um administrador novo para a organizacao?", "area": "conta" },
+    { "id": "PD-017", "texto": "Remover ex-funcionario da conta da empresa", "area": "conta" },
+    { "id": "PD-018", "texto": "Solicito exportar todos os dados da conta (direito LGPD)", "area": "conta" },
+    { "id": "PD-019", "texto": "Mudar o e-mail do proprietario da conta", "area": "conta" },
+    { "id": "PD-020", "texto": "Qual atalho marca uma tarefa como concluida?", "area": "uso" },
+    { "id": "PD-021", "texto": "Tem como usar o quadro kanban sem o modo foco?", "area": "uso" },
+    { "id": "PD-022", "texto": "Onde vejo o tutorial de automacoes basicas?", "area": "uso" },
+    { "id": "PD-023", "texto": "Como compartilho um filtro salvo com o time inteiro?", "area": "uso" },
+    { "id": "PD-024", "texto": "Quero um relatorio semanal automatico por e-mail — e possivel?", "area": "uso" }
+  ]
+}

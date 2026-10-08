@@ -1,0 +1,23 @@
+{
+  "meta": {
+    "pacote": "pg-e01-evals-offline (AID-3648)",
+    "conjunto": "heldout",
+    "variante": "C = prompt v2.1 (correcao de referencia — consulte guia-de-correcao/proposta-referencia.md APENAS apos escrever a sua)",
+    "aviso": "SAIDAS 100% SINTETICAS: classificacoes autoralmente fixadas para simular a correcao de referencia em casos novos. Nenhum modelo de IA real foi executado. Nao constituem prova de eficacia da correcao em uso real.",
+    "rotulo_sintetico": true
+  },
+  "predicoes": [
+    { "id": "PD-H01", "area": "tecnico" },
+    { "id": "PD-H02", "area": "tecnico" },
+    { "id": "PD-H03", "area": "tecnico" },
+    { "id": "PD-H04", "area": "tecnico" },
+    { "id": "PD-H05", "area": "pagamento" },
+    { "id": "PD-H06", "area": "pagamento" },
+    { "id": "PD-H07", "area": "pagamento" },
+    { "id": "PD-H08", "area": "tecnico" },
+    { "id": "PD-H09", "area": "conta" },
+    { "id": "PD-H10", "area": "conta" },
+    { "id": "PD-H11", "area": "uso" },
+    { "id": "PD-H12", "area": "uso" }
+  ]
+}
