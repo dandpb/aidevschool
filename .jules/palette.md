@@ -29,3 +29,6 @@
 ## 2024-05-18 - Announcing Emoji-Based Visual Indicators
 **Learning:** Emojis used purely as visual indicators (like ❄️ for freezes or 🔥 for streaks) create highly repetitive and noisy announcements for screen readers (e.g. 'floco de neve floco de neve').
 **Action:** Wrap the emoji sequences in an `aria-hidden="true"` span to silence them, and provide a clear, semantic sentence summarizing their meaning in an adjacent `.sr-only` span.
+## 2025-03-01 - Accessible togglable buttons with visual symbols in environments lacking .sr-only
+**Learning:** When dynamically updating togglable UI buttons containing visual symbols in environments lacking `.sr-only` classes (like dojoToday), replacing textContent causes screen readers to misread the visual context or announce decorative symbols.
+**Action:** Use innerHTML instead of textContent to preserve the `<span aria-hidden="true">` wrapper around the visual content, and explicitly apply an aria-label to the parent element, updating it alongside aria-expanded.
