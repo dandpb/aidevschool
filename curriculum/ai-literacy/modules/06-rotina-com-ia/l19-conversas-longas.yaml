@@ -9,6 +9,9 @@ objective: "Em uma conversa multi-turno degradada, identificar qual contexto a I
 estimatedMinutes: 5
 skillIds: [pedir, avaliar]
 prerequisites: [l07]
+competency:
+  primary: F3
+  supporting: []
 
 activities:
   - id: l19-a1

@@ -9,6 +9,9 @@ objective: "Classificar saídas de automação entre uso direto e checagem obrig
 estimatedMinutes: 4
 skillIds: [avaliar, proteger]
 prerequisites: [l12]
+competency:
+  primary: F3
+  supporting: [F2]
 
 activities:
   - id: l31-a1
