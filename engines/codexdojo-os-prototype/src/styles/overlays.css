@@ -67,6 +67,10 @@
 .prompt-chips button:hover { background: #172238; color: #fff; }
 .mentor-box form { display: grid; grid-template-columns: 1fr 32px; gap: 6px; margin-top: 8px; }
 .mentor-box input { min-width: 0; height: 32px; padding: 0 9px; border: 1px solid var(--line); border-radius: 7px; outline: 0; background: #0b1220; color: #fff; font-size: 9px; }
+/* AID-3714 (S3-1 da lente L08/AID-3682): o outline:0 acima empata em especificidade
+   com input:focus-visible da foundation e vence por ordem de @import — anel explícito
+   devolvido aqui (mesmo padrão cyan 2px dos botões vizinhos). */
+.mentor-box input:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
 .mentor-box form button { width: 32px; height: 32px; border: 0; border-radius: 7px; display: grid; place-items: center; background: var(--violet); color: #130f22; cursor: pointer; }
 .mentor-box form svg { width: 14px; }
 
