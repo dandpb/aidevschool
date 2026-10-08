@@ -60,15 +60,15 @@ Saída: `sdlc-quest.html`. O build em Node não baixa pacotes. O gerador Python 
 npm test
 ```
 
-Executa os testes `tests/*.test.cjs`, incluindo as regras das campanhas, o motor de gates e os novos testes de empacotamento/HTTP. O enumerador não depende de expansão de curingas pelo shell.
+Executa os testes `tests/*.test.cjs`, incluindo as regras das campanhas, o motor de gates e os novos testes de empacotamento/HTTP. O enumerador não depende de expansão de curingas pelo shell. Antes da suíte, o manifesto `SHA256SUMS.txt` é conferido; qualquer arquivo listado divergente bloqueia a execução (fail-closed).
 
-Antes de modificar os arquivos ou gerar novas evidências, é possível conferir os bytes do pacote:
+Também é possível conferir os bytes do pacote isoladamente:
 
 ```sh
 npm run check:package
 ```
 
-O manifesto `SHA256SUMS.txt` é local e não é uma assinatura. Ele confere os arquivos listados, não atesta a ausência de arquivos extras. Edições e reexecuções que alterem evidências podem causar divergências esperadas.
+O manifesto `SHA256SUMS.txt` é local e não é uma assinatura. Ele confere os arquivos listados, não atesta a ausência de arquivos extras. A mesma verificação é o primeiro passo do `npm run gate` (AID-3899): um pacote adulterado ou com manifesto defasado não passa nos gates bloqueantes. Edições e reexecuções que alterem evidências podem causar divergências esperadas — quando intencionais, atualize os hashes listados em `SHA256SUMS.txt` na mesma mudança; a saída de falha nomeia cada arquivo divergente.
 
 ## Verificação completa com navegador — opcional
 
@@ -83,7 +83,7 @@ A preparação cria `.venv/` dentro do projeto, instala `playwright==1.57.0` de 
 
 O runner detecta o Python da `.venv/` automaticamente, inclusive em Windows. Não é necessário ativá-la. A variável opcional `QUEST_PYTHON` pode indicar um caminho completo para outro executável; nesse caso, ele precisa ter as dependências instaladas. O ambiente é específico do sistema: recrie a `.venv` após mover o projeto entre computadores.
 
-O gate executa contrato local → build → regras → campanha desktop/mobile → oficina TLC desktop/mobile → laboratório desktop/mobile → jornada de idiomas i18n (desktop). Para no primeiro erro, timeout ou dependência ausente. Não há modo de pular os testes. Os recibos ficam em:
+O gate executa contrato local → verificação do pacote (`SHA256SUMS.txt`) → build → regras → campanha desktop/mobile → oficina TLC desktop/mobile → laboratório desktop/mobile → jornada de idiomas i18n (desktop). Para no primeiro erro, timeout ou dependência ausente. Não há modo de pular os testes. Os recibos ficam em:
 
 ```text
 evidence-v1.3/runs/<id>/run.json
