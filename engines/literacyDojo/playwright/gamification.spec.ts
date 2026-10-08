@@ -75,6 +75,8 @@ test("revisão espaçada vencida: refaz a lição, emite evidência de revisão 
   expect(progress).toMatchObject({
     lessonStatus: { [MAP_INITIAL_LESSON_ID]: "completed" },
   });
-  // A revisão concede XP de atividade (3 passes), mas não XP de conclusão de lição (25).
-  expect(progress?.xp).toBe(85);
+  // AID-3888 (contrato a0bf3e8a): a revisão same-day NÃO reconcede XP de
+  // atividade (ledger diário por alvo) nem o bônus de conclusão (marcador
+  // permanente) — o XP permanece o da conclusão original (55, não 85).
+  expect(progress?.xp).toBe(55);
 });

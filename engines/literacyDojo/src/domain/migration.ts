@@ -20,9 +20,21 @@ import { type LearnerProgress, PROGRESS_SCHEMA_VERSION } from "./progress";
  *   sem migração.
  */
 
+/**
+ * Razões de rejeição tipadas (AID-3888, errata `25b51990`): nenhum caminho
+ * (boot, import, rollback, migração) pode descartar/resetar/sobrescrever
+ * progresso/XP válidos — o chamador bloqueia preservando o dado bruto.
+ * `prototype-schema-5` reconhece a forma do protótipo B (PR #663, HOLD):
+ * nunca lida como formato novo, nunca objeto de cast silencioso.
+ */
+export type UnmigratableReason = "corrupt" | "future-schema" | "prototype-schema-5";
+
 export class UnmigratableProgressError extends Error {
-  constructor(reason: string) {
-    super(`Progresso local não migrável: ${reason}`);
+  constructor(
+    public readonly reason: UnmigratableReason,
+    message: string,
+  ) {
+    super(`Progresso local não migrável: ${message}`);
     this.name = "UnmigratableProgressError";
   }
 }
@@ -33,10 +45,10 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 function checkBaseShape(raw: Record<string, unknown>): void {
   if (!isRecord(raw.lessonStatus) || !isRecord(raw.skills) || !isRecord(raw.streak)) {
-    throw new UnmigratableProgressError("forma inválida (lessonStatus/skills/streak)");
+    throw new UnmigratableProgressError("corrupt", "forma inválida (lessonStatus/skills/streak)");
   }
   if (!isRecord(raw.onboarding) || typeof raw.onboarding.completed !== "boolean") {
-    throw new UnmigratableProgressError("forma inválida (onboarding)");
+    throw new UnmigratableProgressError("corrupt", "forma inválida (onboarding)");
   }
 }
 
@@ -76,11 +88,20 @@ export function migrateProgress(
   now: Date = new Date(),
 ): LearnerProgress {
   if (!isRecord(raw)) {
-    throw new UnmigratableProgressError("estado salvo não é um objeto");
+    throw new UnmigratableProgressError("corrupt", "estado salvo não é um objeto");
   }
   const version = raw.schemaVersion;
+  if (version === 5) {
+    // Forma do protótipo B (AID-3888/PR #663, preservado em HOLD): rejeição
+    // tipada com preservação obrigatória — nunca cast silencioso (errata 25b51990).
+    throw new UnmigratableProgressError(
+      "prototype-schema-5",
+      "schemaVersion 5 é a forma do protótipo B (xpAwards in-record) — formato não adotado",
+    );
+  }
   if (version !== PROGRESS_SCHEMA_VERSION && version !== 1 && version !== 2 && version !== 3) {
     throw new UnmigratableProgressError(
+      "future-schema",
       `schemaVersion ${String(version)} (esperado ${PROGRESS_SCHEMA_VERSION}, 1, 2 ou 3 migrável)`,
     );
   }

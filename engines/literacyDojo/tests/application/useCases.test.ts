@@ -12,7 +12,7 @@ import {
   XP_PER_LESSON_COMPLETE,
   createInitialProgress,
 } from "../../src/domain/progress";
-import { InMemoryEvidenceSink, InMemoryProgressRepository, fixedClock } from "../fakes";
+import { InMemoryEvidenceSink, InMemoryLearnerStateStore, fixedClock } from "../fakes";
 import { FIXED_NOW, makeServices } from "../helpers";
 
 const lesson = lessons.find((item) => item.id === MAP_INITIAL_LESSON_ID);
@@ -110,15 +110,15 @@ describe("startLesson", () => {
     const hosted = lessons.find((item) => item.id === "l16");
     if (!hosted) throw new Error("l16 ausente do read model");
     const unpublished = { ...hosted, id: "l99" };
-    const progressRepo = new InMemoryProgressRepository();
-    progressRepo.seed(createInitialProgress(generatedContentAdapter.listModules(), "test"));
+    const stateStore = new InMemoryLearnerStateStore();
+    stateStore.seedProgress(createInitialProgress(generatedContentAdapter.listModules(), "test"));
     const services = createServices({
       content: {
         ...generatedContentAdapter,
         getLesson: (lessonId: string) =>
           lessonId === "l99" ? unpublished : generatedContentAdapter.getLesson(lessonId),
       },
-      progressRepo,
+      stateStore,
       evidence: new InMemoryEvidenceSink(),
       clock: fixedClock(FIXED_NOW),
     });
@@ -134,6 +134,7 @@ describe("submitActivityAttempt", () => {
   });
 
   it("tentativa errada: evidência válida emitida, sem XP, skill registrada, streak iniciada", async () => {
+    const { services, stateStore } = makeServices();
     const result = await services.useCases.submitActivityAttempt({
       lessonId: lesson.id,
       activityId,
@@ -166,7 +167,7 @@ describe("submitActivityAttempt", () => {
     expect(skill.attempts).toBe(1);
     expect(skill.passes).toBe(0);
 
-    const persisted = await services.progressRepo.load();
+    const persisted = await stateStore.loadProgress();
     expect(persisted?.counters.attempts).toBe(1);
   });
 
@@ -325,9 +326,9 @@ describe("completeLesson", () => {
 
 describe("resumeSession", () => {
   it("sem progresso ou sem onboarding → onboarding", async () => {
-    const { services, progressRepo } = makeServices();
+    const { services, stateStore } = makeServices();
     expect(await services.useCases.resumeSession()).toEqual({ kind: "onboarding" });
-    await progressRepo.reset();
+    await stateStore.deleteState();
     expect(await services.useCases.resumeSession()).toEqual({ kind: "onboarding" });
   });
 
@@ -369,24 +370,27 @@ describe("completeOnboarding", () => {
 
 describe("export/import progress", () => {
   it("exporta JSON e reimporta persistindo via migrateProgress", async () => {
-    const { services, progressRepo } = makeServices();
+    const { services, stateStore } = makeServices();
     await completeMvpOnboarding(services);
+    const before = await stateStore.loadProgress();
     const exported = await services.useCases.exportProgress();
     expect(exported).not.toContain("mastered");
 
     const imported = await services.useCases.importProgress(exported);
     expect(imported.onboarding.completed).toBe(true);
     expect(JSON.stringify(imported)).not.toContain("mastered");
-    expect(await progressRepo.load()).toEqual(imported);
+    const afterImport = await stateStore.loadProgress();
+    expect(afterImport).toEqual(imported);
+    expect(afterImport?.xp).toBe(before?.xp);
   });
 
   it("rejeita backup inválido e preserva o progresso atual", async () => {
-    const { services, progressRepo } = makeServices();
-    const before = await progressRepo.load();
+    const { services, stateStore } = makeServices();
+    const before = await stateStore.loadProgress();
     await expect(services.useCases.importProgress("{")).rejects.toThrow(
       /não migrável|JSON inválido/,
     );
-    expect(await progressRepo.load()).toEqual(before);
+    expect(await stateStore.loadProgress()).toEqual(before);
   });
 });
 
@@ -403,10 +407,10 @@ class InMemoryAnalyticsSink {
 }
 
 function makeAnalyticsServices(progress?: LearnerProgress) {
-  const progressRepo = new InMemoryProgressRepository();
+  const stateStore = new InMemoryLearnerStateStore();
   const analytics = new InMemoryAnalyticsSink();
   const services = createServices({
-    progressRepo,
+    stateStore,
     evidence: new InMemoryEvidenceSink(),
     clock: fixedClock(FIXED_NOW),
     analytics,
@@ -414,8 +418,8 @@ function makeAnalyticsServices(progress?: LearnerProgress) {
   const initial =
     progress ??
     createInitialProgress(services.content.listModules(), services.content.getContentVersion());
-  progressRepo.seed(initial);
-  return { services, progressRepo, analytics };
+  stateStore.seedProgress(initial);
+  return { services, stateStore, analytics };
 }
 
 function corridorProgressWith(completedIds: string[]) {
@@ -493,10 +497,10 @@ describe("corredor: casos de uso do Desafio de Módulo (spec AID-915 §3)", () =
     await expect(locked.services.useCases.startCheckpoint("cp-01")).rejects.toThrow(/indisponível/);
 
     const progress = corridorProgressWith(["l01", "l02", "l03"]);
-    const { services, progressRepo } = makeAnalyticsServices(progress);
+    const { services, stateStore } = makeAnalyticsServices(progress);
     const started = await services.useCases.startCheckpoint("cp-01");
     expect(started.progress.moduleCheckpoints["mod-01"]?.attempts).toBe(1);
-    expect((await progressRepo.load())?.moduleCheckpoints["mod-01"]?.attempts).toBe(1);
+    expect((await stateStore.loadProgress())?.moduleCheckpoints["mod-01"]?.attempts).toBe(1);
   });
 
   it("checkpointState reflete disponibilidade e completação para a UI", async () => {
@@ -594,7 +598,7 @@ describe("corredor: uma sessão de revisão = um hop de janela (spec AID-915 §4
       lastPracticedAt: FIXED_NOW.toISOString(),
       nextReviewAt: FIXED_NOW.toISOString(),
     };
-    const { services, progressRepo } = makeAnalyticsServices(progress);
+    const { services, stateStore } = makeAnalyticsServices(progress);
     const lessonReview = lessons.find((item) => item.id === "l02");
     if (!lessonReview) throw new Error("l02 ausente");
     const result = await services.useCases.completeReview({
@@ -604,6 +608,6 @@ describe("corredor: uma sessão de revisão = um hop de janela (spec AID-915 §4
       ),
     });
     expect(result.outcome.completed).toBe(true);
-    expect(await progressRepo.load()).toEqual(progress);
+    expect(await stateStore.loadProgress()).toEqual(progress);
   });
 });

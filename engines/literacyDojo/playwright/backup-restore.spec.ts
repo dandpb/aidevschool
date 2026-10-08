@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { copyFile, readFile } from "node:fs/promises";
 import { expect, test } from "@playwright/test";
 import { XP_PER_ACTIVITY_PASS, XP_PER_LESSON_COMPLETE } from "../src/domain/progress";
-import { answerRight, completeOnboarding, deleteProgress, readProgress } from "./support";
+import { answerRight, completeOnboarding, deleteProgress, readLearnerState } from "./support";
 
 /**
  * Drill de durabilidade do storage (spike AID-2884, plano AID-2876): prova
@@ -49,20 +49,32 @@ test("export→wipe→import é lossless: backup com sha256 restaura o progresso
   const exported = JSON.parse(exportedJson);
   const sha256 = createHash("sha256").update(exportedJson).digest("hex");
   expect(sha256).toMatch(/^[0-9a-f]{64}$/);
-  expect(exported.schemaVersion).toBe(4);
-  expect(exported.xp).toBe(EXPECTED_XP);
+  // AID-3888: o export é o envelope v2 do estado COMPLETO (forma e versão
+  // explícitas): progresso schema 4 + ledger de XP — não um registro único.
+  expect(exported.format).toBe("literacydojo-backup");
+  expect(exported.formatVersion).toBe(2);
+  expect(exported.progress.schemaVersion).toBe(4);
+  expect(exported.progress.xp).toBe(EXPECTED_XP);
+  expect(exported.xpLedger).toMatchObject({ ledgerVersion: 1 });
+  // A conclusão do Mapa Inicial marcou o firstCompletionAwarded permanente.
+  expect(Object.keys(exported.xpLedger.firstCompletionAwarded)).toContain("lesson:l02");
 
-  // Export lossless: o JSON baixado equivale ao documento persistido no
-  // IndexedDB (normalização JSON dos dois lados da comparação).
-  const persisted = await readProgress(page);
-  expect(JSON.parse(JSON.stringify(persisted))).toEqual(exported);
+  // Export lossless: o JSON baixado equivale ao estado autoritativo
+  // persistido no IndexedDB (progresso + ledger, normalização JSON dos dois
+  // lados da comparação).
+  const persisted = await readLearnerState(page);
+  expect(persisted?.stateVersion).toBe(1);
+  expect(JSON.parse(JSON.stringify(persisted?.progress))).toEqual(exported.progress);
+  expect(JSON.parse(JSON.stringify(persisted?.xpLedger))).toEqual(exported.xpLedger);
 
   // 3) Perda simulada: "limpar dados do site" apaga a jornada inteira.
   // (A leitura precisa ser ANTES do reload: no boot seguinte o app volta a
   // semear o estado inicial — onboarding.completed=false — e a chave existe
   // de novo, só que vazia de jornada.)
+  // "Limpar dados do site" apaga TODAS as chaves do app (estado novo,
+  // snapshot, marker e ramo legado) — perda total.
   await deleteProgress(page);
-  expect(await readProgress(page)).toBeUndefined();
+  expect(await readLearnerState(page)).toBeUndefined();
   await page.reload();
   await expect(page.getByTestId("assistant-welcome")).toBeVisible();
 
@@ -84,9 +96,11 @@ test("export→wipe→import é lossless: backup com sha256 restaura o progresso
     "Backup restaurado neste navegador.",
   );
 
-  // Restore lossless: o documento re-persistido é idêntico ao exportado e a
-  // UI reflete o estado restaurado (XP e lição concluída de volta).
-  const restored = await readProgress(page);
-  expect(restored).toEqual(exported);
+  // Restore lossless: o estado re-persistido é idêntico ao exportado
+  // (progresso + ledger) e a UI reflete o estado restaurado (XP e lição
+  // concluída de volta).
+  const restored = await readLearnerState(page);
+  expect(JSON.parse(JSON.stringify(restored?.progress))).toEqual(exported.progress);
+  expect(JSON.parse(JSON.stringify(restored?.xpLedger))).toEqual(exported.xpLedger);
   await expect(page.getByTestId("progress-xp")).toContainText(`${EXPECTED_XP} XP`);
 });

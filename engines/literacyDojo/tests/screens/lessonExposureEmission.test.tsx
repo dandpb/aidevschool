@@ -9,7 +9,7 @@ import { lessons } from "../../src/data/generated/lessons";
 import type { ProductAnalyticsEvent } from "../../src/domain/analytics";
 import { createInitialProgress } from "../../src/domain/progress";
 import { LessonScreen } from "../../src/screens/LessonScreen";
-import { InMemoryEvidenceSink, InMemoryProgressRepository, fixedClock } from "../fakes";
+import { InMemoryEvidenceSink, InMemoryLearnerStateStore, fixedClock } from "../fakes";
 
 // F2 prova 2 (plan §3): intro renderiza → `lesson_brief_viewed` 1×; navegação
 // p/ índice i → `activity_presented` 1× por (sessão, índice absoluto) —
@@ -34,14 +34,14 @@ const lesson = (() => {
 
 function makeServices() {
   const analytics = new InMemoryAnalyticsSink();
-  const progressRepo = new InMemoryProgressRepository();
+  const stateStore = new InMemoryLearnerStateStore();
   const services = createServices({
-    progressRepo,
+    stateStore,
     evidence: new InMemoryEvidenceSink(),
     clock: fixedClock(FIXED_NOW),
     analytics,
   });
-  progressRepo.seed(
+  stateStore.seedProgress(
     createInitialProgress(services.content.listModules(), services.content.getContentVersion()),
   );
   return { analytics, services };
