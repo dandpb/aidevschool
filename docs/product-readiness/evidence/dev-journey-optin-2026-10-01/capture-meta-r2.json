@@ -1,0 +1,22 @@
+{
+  "head": "c02d2954fdbe384e1782cec34a90338ef98285d1",
+  "browser": "chromium (Playwright project app, headless default)",
+  "capturedAt": {
+    "06-home-DEV-active-mobile-360.png": {
+      "startedAtUtc": "2026-10-01T05:02:55.707Z",
+      "viewport": {
+        "width": 360,
+        "height": 740
+      },
+      "finishedAtUtc": "2026-10-01T05:02:55.873Z"
+    },
+    "07-home-DEV-active-desktop-1280.png": {
+      "startedAtUtc": "2026-10-01T05:02:55.895Z",
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "finishedAtUtc": "2026-10-01T05:02:56.260Z"
+    }
+  }
+}
