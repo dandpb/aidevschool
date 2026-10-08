@@ -29,3 +29,6 @@
 ## 2024-05-18 - Announcing Emoji-Based Visual Indicators
 **Learning:** Emojis used purely as visual indicators (like ❄️ for freezes or 🔥 for streaks) create highly repetitive and noisy announcements for screen readers (e.g. 'floco de neve floco de neve').
 **Action:** Wrap the emoji sequences in an `aria-hidden="true"` span to silence them, and provide a clear, semantic sentence summarizing their meaning in an adjacent `.sr-only` span.
+## 2026-10-01 - Accessible Emojis using sr-only
+**Learning:** For accessibility in UI elements containing emojis (e.g., in codexDojo), avoid applying `role="text"` and `aria-label` to the container, as they are often ignored or cause noisy announcements.
+**Action:** Instead, wrap the descriptive text in a visually hidden `<span class="sr-only">` and hide the emoji itself with a `<span aria-hidden="true">`. Ensure you don't use `aria-label` on the container.
