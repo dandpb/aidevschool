@@ -9,6 +9,9 @@ objective: "Detectar que uma rotina automatizada degradou (saída coerente com a
 estimatedMinutes: 3
 skillIds: [avaliar]
 prerequisites: [l19]
+competency:
+  primary: F4
+  supporting: [F3]
 
 activities:
   - id: l32-a1

@@ -8,6 +8,9 @@ objective: "Melhorar um pedido genérico preenchendo campos estruturados de obje
 estimatedMinutes: 5
 skillIds: [pedir]
 prerequisites: [l04]
+competency:
+  primary: F3
+  supporting: []
 
 activities:
   - id: l05-a1

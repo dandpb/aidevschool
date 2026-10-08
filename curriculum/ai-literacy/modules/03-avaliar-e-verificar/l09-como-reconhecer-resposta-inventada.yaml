@@ -8,6 +8,9 @@ objective: "Identificar sinais de alucinação: fontes que não existem, número
 estimatedMinutes: 4
 skillIds: [avaliar]
 prerequisites: [l08]
+competency:
+  primary: F4
+  supporting: []
 
 activities:
   - id: l09-a1
