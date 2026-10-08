@@ -331,6 +331,31 @@ todo writer (hoje o single-writer FPE; sob R1, quem mergar):
     quebrado: o merge já está no histórico (nunca reescrito) — triage no
     incidente, mesmo critério de severidade desta emenda.
     Registro: `intent/AID-3447-merge-msg-mechanical-check/`.
+
+    **Emenda escopo first-parent (AID-3795, FPE, auditoria SM AID-3792,
+    2026-10-02).** 1º e 2º falsos-positivos do `merge-msg-gate` em 41min
+    (AID-3788 `a336a192`/PR #617 14:44Z; AID-3791 `2257edee`/PR #619
+    15:29Z): o range auditado em push@main (`git log <before>..<head>`)
+    incluía TODO commit novo alcançável do head — inclusive o lado do
+    branch do PR (segundo pai). Merges de update-branch
+    (`PUT /pulls/<n>/update-branch`, exigidos pela branch protection
+    `strict:true`) têm corpo vazio por construção e eram sinalizados como
+    fora-da-porta. Merges reais íntegros (countersigns pré-merge nos heads
+    pinados < merged_at; `--sha` PASS; porta única; producer ≠ verifier ≠
+    merger) — sem ação retroativa. **Escopo emendado:** a obrigação de
+    linha canônica vale para o merge que ATERRISSA em main — o modo range
+    do `merge_msg_check.py` lista apenas o **caminho first-parent de
+    main** (todo merge aterrissado por merge em main é commit first-parent
+    do tip, seja qual for o caminho que o compôs: porta, web UI, API raw,
+    CLI fallback — detecção fora-da-porta preservada, self-test negativo
+    pinando o shape #607 no first-parent path); merges do lado do branch
+    (update-branch, merges internos de feature) ficam fora do escopo;
+    `--sha` permanece auditoria explícita do commit pinado, esteja onde
+    estiver (ferramenta de triage). O step de incidente do workflow usa o
+    mesmo escopo. Sem enfraquecimento da regra: a exigência da linha
+    canônica nos merges de main permanece idêntica (emendas
+    AID-2655/AID-3447 inalteradas).
+    Registro: `intent/AID-3795-merge-msg-first-parent/`.
 6. **Trailer de proveniência por agente em comentários de processo
    (AID-2493, 2026-09-18).** Binding para TODO agente que posta comentário de
    processo no GitHub (veredito, citação countersign, registro de produtor,
@@ -396,6 +421,24 @@ todo writer (hoje o single-writer FPE; sob R1, quem mergar):
     verificação com o último passo executado localmente. A porta imprime
     este protocolo no stderr quando o merge via API falha
     (`scripts/merge_pr.sh` §5, AID-3433/E2).
+8. **Recibo de push-run com escopo de run/evento/PR/SHA (AID-3521 Fase1
+     v2.1 docs-only; achado AID-3278).** O tier `issue_comment` do
+     `countersign-gate` roda na cópia de main e o check-run resultante é
+     anexado ao HEAD de main — runs de PRs alheios pintam de vermelho
+     commits de merge não relacionados (18 falhas cross-PR em 7 HEADs só em
+     2026-09-28; matriz no thread AID-3278). A partir daqui, todo recibo de
+     push-run pós-merge que cite checks de um commit de merge M **enumera os
+     check-runs de M e resolve cada linha pela run de origem** (event,
+     workflow, head), classificando por proveniência — `push @ M` (pertence
+     a M; vermelho é real e permanece visível, ex.: `product readiness
+     (claims)` failed no run 36491949848 do M=a02b1833), `cross-PR (PR P @
+     H)` (veredito sobre outro PR/HEAD, rotulado com run/PR/SHA — mantido,
+     nunca descartado) ou `derived @ M` (workflow_run encadeado ao push de
+     M). **Proibido descarte global** de checks de main, ocultação de
+     vermelho real de push ou classificação sem endpoint citado; template:
+     `docs/sdlc/templates/push-run-receipt.md`. Sem mudança mecânica: o
+     gate do merge continua sendo o `countersign-gate` no head do PR + o
+     re-run live da porta (`scripts/merge_pr.sh`).
 
 ## GATE pré-merge mecânico `countersign-gate` (AID-2768 — fim da classe F)
 

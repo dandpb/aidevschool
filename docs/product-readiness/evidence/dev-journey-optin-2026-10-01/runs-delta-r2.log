@@ -1,0 +1,16 @@
+AID-3584 r2 — delta do fix de copy (request_changes LEE 71a8f919 / PO 9695d6d8)
+Head do fix: c02d2954fdbe384e1782cec34a90338ef98285d1 (branch aid3584/dev-journey-optin, Draft PR #638; base 579ce995)
+Worktree /paperclip/tmp/wt3584 limpo no head do fix. Delta = HomeScreen.tsx (rótulo do CTA open-map journey-aware) + 2 asserts em tests/app/journeySwitchFlow.test.tsx.
+
+Verificação DELTA-ONLY (a pedido do revisor; suíte inteira NÃO repetida):
+- npx biome check (2 arquivos tocados) -> OK
+- npx tsc -b -> OK
+- vitest tests/app/journeySwitchFlow.test.tsx -> 5 passed (inclui rótulo do CTA: IA ativa = "Explorar Vila Lume"; Dev ativa = "Explorar Jornada Dev")
+- capturas r2 geradas por spec que asserta o estado ANTES de capturar (journey-switch-dev aria-pressed=true; open-map text="Explorar Jornada Dev")
+
+Metadados VERDADEIROS das capturas NOVAS (registrados no ato; ver capture-meta-r2.json):
+06-home-DEV-active-mobile-360.png   sha256 408ff23f1871a38ec8fafb8fd813826cd254b226317292f9c04c119dd91ca4ae  IHDR 360x2317(fullPage)  viewport 360x740   chromium headless  capturada 2026-10-01T05:02:55.707Z..05:02:55.873Z  head c02d2954
+07-home-DEV-active-desktop-1280.png sha256 cabddd34cf9b2c78d34beab13aaeaa674c141f0d3b8e71a98776fce90fe6d2b8 IHDR 1280x1677(fullPage) viewport 1280x800 chromium headless  capturada 2026-10-01T05:02:55.895Z..05:02:56.260Z head c02d2954
+
+Estado capturado: Home com jornada DEV ativa (0/9), CTA "Explorar Jornada Dev" (corrigido; antes "Explorar Vila Lume").
+Lacunas A (proveniência das 5 capturas ORIGINAIS de 2026-10-01T04:4xZ) permanecem as declaradas pelo LEE — não recapturadas, não repetidas.
