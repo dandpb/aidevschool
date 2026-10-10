@@ -57,3 +57,6 @@
 ## 2025-02-19 - Avoid GC pressure from .filter().length
 **Learning:** In simulation code like `engines/voxelDojo/game-04-task-queue`, calculating active counts with `.filter(...).length` creates unnecessary intermediate array allocations, increasing garbage collection (GC) overhead during frequent calls.
 **Action:** Replace `.filter(...).length` with standard indexed `for` loops and a counter variable to prevent intermediate array creation and reduce GC pressure.
+## 2024-10-10 - Caching Derived State Requires Care
+**Learning:** Naively caching derived state (like `#roofedCount` or `#inhabitedShops`) purely inside `tick()` transitions introduces subtle but critical bugs because it misses initialization/loading phases and deletions. In hot loops, replacing `for...of` with a traditional indexed `for` loop provides a safe, strict GC-free optimization without breaking functional correctness.
+**Action:** Prefer traditional indexed `for` loops in highly-called methods (e.g. `snapshot`) to reduce iterator allocation GC pressure, instead of caching state if caching cannot perfectly mirror the entire lifecycle.
