@@ -329,7 +329,9 @@ export class Town {
   /** Advance the simulation by real `dt` seconds. Returns the snapshot AFTER the tick. */
   tick(dt: number): WorldSnapshot {
     this.dayNight.tick(dt)
-    for (const building of this.buildings) {
+    for (let i = 0; i < this.buildings.length; i++) {
+      const building = this.buildings[i]
+      if (!building) continue
       const construction = this.constructions.get(building.id)
       if (!construction) continue
       construction.tick(dt)
@@ -351,8 +353,8 @@ export class Town {
     // Optimization: traditional indexed loop avoids iterator allocation overhead
     // which reduces GC pressure in this frequently called method
     for (let i = 0; i < this.buildings.length; i++) {
-      const stage = this.buildings[i].stage
-      if (stage === "roofed" || stage === "inhabited") roofedCount++
+      const building = this.buildings[i]
+      if (building && (building.stage === "roofed" || building.stage === "inhabited")) roofedCount++
     }
     return {
       simTime: this.dayNight.simTime,
