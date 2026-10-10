@@ -348,8 +348,11 @@ export class Town {
   /** Read-only view of the world for HUD / e2e contract. */
   snapshot(): WorldSnapshot {
     let roofedCount = 0
-    for (const building of this.buildings) {
-      if (building.stage === "roofed" || building.stage === "inhabited") roofedCount++
+    // Optimization: traditional indexed loop avoids iterator allocation overhead
+    // which reduces GC pressure in this frequently called method
+    for (let i = 0; i < this.buildings.length; i++) {
+      const stage = this.buildings[i].stage
+      if (stage === "roofed" || stage === "inhabited") roofedCount++
     }
     return {
       simTime: this.dayNight.simTime,
