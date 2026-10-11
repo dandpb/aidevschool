@@ -29,3 +29,7 @@
 ## 2024-05-18 - Announcing Emoji-Based Visual Indicators
 **Learning:** Emojis used purely as visual indicators (like ❄️ for freezes or 🔥 for streaks) create highly repetitive and noisy announcements for screen readers (e.g. 'floco de neve floco de neve').
 **Action:** Wrap the emoji sequences in an `aria-hidden="true"` span to silence them, and provide a clear, semantic sentence summarizing their meaning in an adjacent `.sr-only` span.
+
+## 2024-05-18 - Announcing Emoji-Based Visual Indicators (Update)
+**Learning:** Emojis and visual symbols (like `▶`, `▽`, `⚙️`) used as decorative components in toggle buttons are often announced literally by screen readers (e.g. "black right-pointing triangle"), creating noisy announcements that conflict with the actual text. When dynamically updating these buttons in environments lacking `.sr-only` classes, using `.textContent` will obliterate the accessibility markup.
+**Action:** Wrap the decorative symbols in a `<span aria-hidden="true">` to silence them. Crucially, when dynamically updating the content of these buttons in JavaScript (e.g., toggling the icon), use `.innerHTML` instead of `.textContent` to preserve the HTML wrapper, and update semantic states using explicit attributes like `aria-expanded`.
