@@ -1,8 +1,0 @@
-⚡ Bolt: optimize renderer sync loops to reduce gc pressure
-
-💡 What: Removed `for...of` loops and `new Set()` allocations from the 60-FPS `sync()` methods in `BuildingsRenderer`, `ZonesRenderer`, and `RoadsRenderer`. The set allocation is now guarded by a size check (`map.size > source.length`).
-🎯 Why: These `sync()` methods are called every frame to update the scene. Allocating a `Set` and its iterators 60 times a second creates unnecessary garbage collection pressure and slows down rendering.
-📊 Impact: Completely eliminates allocations in the steady-state rendering path, reducing GC pauses and improving framerate stability.
-🔬 Measurement: Run `pnpm test` in `engines/miniTown` to verify that town building and removal logic continues to function exactly as before. Run the dev server to see the framerate stability.
-
-Provenance: agent=bolt task=AID-2768 run=6916670749973450109 session=6916670749973450109
