@@ -57,3 +57,6 @@
 ## 2025-02-19 - Avoid GC pressure from .filter().length
 **Learning:** In simulation code like `engines/voxelDojo/game-04-task-queue`, calculating active counts with `.filter(...).length` creates unnecessary intermediate array allocations, increasing garbage collection (GC) overhead during frequent calls.
 **Action:** Replace `.filter(...).length` with standard indexed `for` loops and a counter variable to prevent intermediate array creation and reduce GC pressure.
+## 2026-10-13 - Prevent Set Allocations in Continuous Sync Loops
+**Learning:** In 60-FPS environments like `miniTown`, using `new Set()` inside the `sync()` loop on every frame to identify removed items causes excessive garbage collection pressure. This can be mitigated by guarding the cleanup with a size check (e.g. `map.size > source.length`) so the set is only allocated when items are actually removed, which is rare.
+**Action:** Use an indexed loop instead of `for...of` for the main sync, and wrap the cleanup block (including the `seen` Set allocation) inside an `if (currentSize > targetLength)` condition.
