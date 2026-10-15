@@ -8,20 +8,25 @@ phase: cycle-complete
 
 | Language | Status | Notes |
 | --- | --- | --- |
-| Go | done | In-memory HTTP key-value store with TTL, batch operations, limits, and tests. |
-| Rust | done | In-memory Axum-backed key-value store with explicit errors, TTL behavior, and tests. |
-| Node | done | Express/Zod TypeScript key-value store with clear store/server split and tests. |
+| Go | removed | `go-impl/` was removed in `1b0a309` quality cuts; no Go implementation exists on disk. |
+| Rust | removed | `rust-impl/` was removed in `1b0a309` quality cuts; no Rust implementation exists on disk. |
+| Node | gated & certified (Node.js only) | TypeScript key-value store with store/server split; 33/33 tests across `store`, `server`, and `mutation` (verified 2026-09-13 @ `05fca349`). |
 
 ## Verifier Evidence
 
-Pending full benchmark.
+Wave 1 verification: [2026-09-13 @ `05fca349`](../../../docs/product-readiness/assessments/2026-09-13-05fca349-devjourneys-wave1.md).
+Node lint/build/test passed. v8 All files coverage: 89.4% statements / 92.26%
+branches / 100% functions / 89.4% lines (`store.ts` 95.91/90.26/100/95.91,
+`server.ts` 95.89/94.93/100/95.89, `log.ts`/`types.ts` 0%).
 
 Observed review evidence:
 
-- Go tests cover TTL, persistence, atomic MSET, capacity, memory limits, duplicate keys, concurrency, HTTP envelopes, invalid JSON, missing keys, key listing, TTL/PERSIST/EXPIRE, and flush behavior.
-- Rust tests cover store semantics, atomic MSET, validation, HTTP routes, capacity, memory accounting, and expiry.
 - Node tests cover store semantics, atomicity, validation, HTTP envelopes, MGET, KEYS, health, and error responses.
+- Historical Go/Rust review notes do not describe present implementations; both directories were removed in `1b0a309`.
+- Node-only benchmark and evolution evidence is recorded in `benchmark_results.md` and `evolution_report.md`; no cross-language benchmark claim is made.
 
 ## Current Assessment
 
-All three implementations are complete enough to mark the project cycle complete for learning purposes. The next verification step is not more feature work; it is benchmarking and contract-hardening, especially around validation consistency and concurrent read/write behavior.
+The cycle-complete phase records the Node-only software cycle. It does not certify
+Go/Rust or grant learner mastery. The catalog's Node-only certification and
+benchmark/evolution caveats remain authoritative.
