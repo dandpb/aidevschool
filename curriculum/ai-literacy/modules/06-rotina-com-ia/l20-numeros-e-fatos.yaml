@@ -9,6 +9,9 @@ objective: "Diante de uma resposta com números e fatos específicos, marcar qua
 estimatedMinutes: 3
 skillIds: [avaliar]
 prerequisites: [l10]
+competency:
+  primary: F4
+  supporting: []
 
 activities:
   - id: l20-a1

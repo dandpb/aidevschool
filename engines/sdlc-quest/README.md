@@ -62,15 +62,15 @@ Output: `sdlc-quest.html`. The Node build downloads no packages. The original Py
 npm test
 ```
 
-Runs the `tests/*.test.cjs` tests, including the campaign rules, the gate engine and the packaging/HTTP tests. The enumerator does not rely on shell glob expansion.
+Runs the `tests/*.test.cjs` tests, including the campaign rules, the gate engine and the packaging/HTTP tests. The enumerator does not rely on shell glob expansion. Before the suite runs, the `SHA256SUMS.txt` manifest is verified; any divergent listed file blocks the run (fail-closed).
 
-Before editing files or generating new evidence, you can verify the package bytes:
+You can also verify the package bytes on their own:
 
 ```sh
 npm run check:package
 ```
 
-The `SHA256SUMS.txt` manifest is local and is not a signature. It checks the listed files; it does not attest the absence of extra files. Edits and reruns that change evidence can cause expected divergences.
+The `SHA256SUMS.txt` manifest is local and is not a signature. It checks the listed files; it does not attest the absence of extra files. The same verification is the first step of `npm run gate` (AID-3899): a tampered or stale package cannot pass the blocking gates. Edits and reruns that change evidence can cause expected divergences — when they are intentional, update the listed hashes in `SHA256SUMS.txt` in the same change; the failure output names every divergent file.
 
 ## Full browser verification — optional
 
@@ -85,7 +85,7 @@ The setup creates `.venv/` inside the project, installs `playwright==1.57.0` fro
 
 The runner detects the `.venv/` Python automatically, including on Windows. Activating it is not necessary. The optional variable `QUEST_PYTHON` can point to a full path to another executable; in that case it must have the dependencies installed. The environment is system-specific: recreate the `.venv` after moving the project between computers.
 
-The gate runs local contract → build → rules → desktop/mobile campaign → desktop/mobile TLC workshop → desktop/mobile lab → i18n language journey (desktop). It stops at the first error, timeout or missing dependency. There is no way to skip the tests. Receipts are kept in:
+The gate runs local contract → package verification (`SHA256SUMS.txt`) → build → rules → desktop/mobile campaign → desktop/mobile TLC workshop → desktop/mobile lab → i18n language journey (desktop). It stops at the first error, timeout or missing dependency. There is no way to skip the tests. Receipts are kept in:
 
 ```text
 evidence-v1.3/runs/<id>/run.json

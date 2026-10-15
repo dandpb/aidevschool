@@ -1,3 +1,4 @@
+import type { CompetencyMapping } from "../data/generated/competency-map";
 import type {
   ActivityDefinition,
   LessonDefinition,
@@ -24,6 +25,19 @@ export interface ContentRepository {
   getLesson(lessonId: string): LessonDefinition | undefined;
   getSkillTitle(skillId: string): string;
   getContentVersion(): string;
+  /**
+   * Competência da lição (contrato AID-3514 §7.1(2), colapsada):
+   * `null` ≡ «não mapeada» — cobre `mapping: null` do mapa e o `undefined`
+   * legado (sem entrada no mapa). Estado legítimo, nunca erro; nunca infere
+   * `primary`; nunca lança. Leitura pura: não toca progresso.
+   */
+  getCompetency(lessonId: string): CompetencyMapping | null;
+  /**
+   * §7.1(3): distingue «não mapeada» (entrada com mapping null) de
+   * fora-do-universo (planned/ausente do mapa) — para decisão de render
+   * (Fase 3, dono UX). Não é gate de visibilidade (§4.5).
+   */
+  hasCompetencyEntry(lessonId: string): boolean;
 }
 
 export interface ProgressRepository {

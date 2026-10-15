@@ -209,6 +209,15 @@ def _render_content(catalog, ready_lessons):
     ready_lessons_all = [
         lesson for lesson in ready_lessons if lesson["moduleId"] in journey_module_ids
     ]
+    # AID-3457 (scaffolding de schema, fatia limitada autorizada): o campo opcional
+    # `competency` NÃO é propagado para o read model — a saída gerada permanece
+    # byte-idêntica com ou sem o campo (testemunhado por test_compatibility em
+    # tools/tests/test_competency_field_contract.py). Propagação a consumidores é
+    # fatia futura, dependente de contrato compatível e revisão própria.
+    lessons_payload = [
+        {key: value for key, value in lesson.items() if key != "competency"}
+        for lesson in ready_lessons_all
+    ]
     entries = _catalog_entries(catalog, ready_lessons_all, journey_module_ids)
     modules_payload = _modules_payload(catalog.get("modules") or [], entries)
     track_payload = {key: catalog["track"][key] for key in ("id", "title", "audience", "promise", "language")}
@@ -235,7 +244,7 @@ def _render_content(catalog, ready_lessons):
         + "\n\nexport const skills: SkillDefinition[] = "
         + _as_ts(skills_payload)
         + "\n\nexport const lessons: LessonDefinition[] = "
-        + _as_ts(ready_lessons_all)
+        + _as_ts(lessons_payload)
         + "\n"
     )
     return content

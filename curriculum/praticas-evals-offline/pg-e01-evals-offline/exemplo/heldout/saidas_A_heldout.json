@@ -1,0 +1,17 @@
+{
+  "meta": {
+    "pacote": "pg-e01-evals-offline (AID-3648) — EXEMPLO TRABALHADO",
+    "conjunto": "heldout",
+    "variante": "A = prompt v1 (em producao)",
+    "aviso": "SAIDAS 100% SINTETICAS. Nenhum modelo de IA real foi executado.",
+    "rotulo_sintetico": true
+  },
+  "predicoes": [
+    { "id": "TH-01", "area": "bug" },
+    { "id": "TH-02", "area": "duvida" },
+    { "id": "TH-03", "area": "duvida" },
+    { "id": "TH-04", "area": "duvida" },
+    { "id": "TH-05", "area": "melhoria" },
+    { "id": "TH-06", "area": "melhoria" }
+  ]
+}

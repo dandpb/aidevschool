@@ -8,6 +8,9 @@ objective: "Diante de sugestões em categorias de risco diferente, decidir o que
 estimatedMinutes: 3
 skillIds: [decidir, codificar]
 prerequisites: [l15]
+competency:
+  primary: D4
+  supporting: []
 
 activities:
   - id: l23-a1

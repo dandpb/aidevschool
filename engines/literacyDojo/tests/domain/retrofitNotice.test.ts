@@ -14,11 +14,14 @@ import {
  * - O3-C1 (spec AID-644 rev 2 §3): l01–l07 sob 2026-09-02.3.
  * - C1 (spec AID-807 §1 / ordem AID-806/B): l15–l17 sob 2026-09-04.1.
  * - O3-C2 (spec AID-1220/B3, ruling AID-640): l08–l13 sob 2026-09-10.2.
+ * - r2.1 AID-3453 (content-contract regra 3): l16/l27/l28 sob 2026-09-30.1
+ *   (critérios revisados — conclusão anterior continua valendo).
  */
 const LAUNCHED_WAVES: Record<string, readonly string[]> = {
   "2026-09-02.3": ["l01", "l02", "l03", "l04", "l05", "l06", "l07"],
   "2026-09-04.1": ["l15", "l16", "l17"],
   "2026-09-10.2": ["l08", "l09", "l10", "l11", "l12", "l13"],
+  "2026-09-30.1": ["l16", "l27", "l28"],
 };
 
 function statuses(completed: string[]): Record<string, LessonStatus> {
@@ -35,9 +38,12 @@ describe("retrofitNotice (ondas O3-C1 + C1 + O3-C2, specs AID-644 rev 2 §3 / AI
 
   it("isRetrofittedLesson: lição da onda no version do bump; onda vizinha ou versão outra, não", () => {
     for (const [version, waveLessons] of Object.entries(LAUNCHED_WAVES)) {
+      // l16 pertence a DUAS ondas (C1 2026-09-04.1 e r2.1 2026-09-30.1): o
+      // ex-negativo só vale para lições fora da onda corrente.
       const otherWave = Object.entries(LAUNCHED_WAVES)
         .filter(([v]) => v !== version)
-        .flatMap(([, lessons]) => lessons);
+        .flatMap(([, lessons]) => lessons)
+        .filter((id) => !waveLessons.includes(id));
       for (const lessonId of waveLessons) {
         expect(isRetrofittedLesson(lessonId, version), `${lessonId}@${version}`).toBe(true);
       }
@@ -45,7 +51,7 @@ describe("retrofitNotice (ondas O3-C1 + C1 + O3-C2, specs AID-644 rev 2 §3 / AI
         expect(isRetrofittedLesson(lessonId, version), `${lessonId}@${version}`).toBe(false);
       }
       expect(isRetrofittedLesson("l14", version)).toBe(false);
-      expect(isRetrofittedLesson("l27", version)).toBe(false);
+      expect(isRetrofittedLesson("l18", version)).toBe(false); // fora de toda onda (ex-negativo era l27; entrou na onda 2026-09-30.1)
     }
     expect(isRetrofittedLesson("l01", "2026-09-02.2")).toBe(false);
     expect(isRetrofittedLesson("l15", "2026-09-02.3")).toBe(false);

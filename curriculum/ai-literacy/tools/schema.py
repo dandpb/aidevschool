@@ -128,6 +128,14 @@ def _validate_array(instance, schema, current_file, resolver, path, errors):
         errors.append("%s: %s deve ter ao menos %d item(ns)" % (current_file, path, schema["minItems"]))
     if "maxItems" in schema and len(instance) > schema["maxItems"]:
         errors.append("%s: %s deve ter no máximo %d item(ns)" % (current_file, path, schema["maxItems"]))
+    if schema.get("uniqueItems"):
+        seen = []
+        for item in instance:
+            key = json.dumps(item, sort_keys=True, ensure_ascii=False)
+            if key in seen:
+                errors.append("%s: %s não deve conter itens duplicados" % (current_file, path))
+                break
+            seen.append(key)
     if "items" in schema:
         for index, item in enumerate(instance):
             _validate(item, schema["items"], current_file, resolver, "%s[%d]" % (path, index), errors)

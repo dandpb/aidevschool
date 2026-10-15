@@ -8,6 +8,9 @@ objective: "Classificar informações do dia a dia de trabalho como seguras ou s
 estimatedMinutes: 4
 skillIds: [proteger]
 prerequisites: [l11]
+competency:
+  primary: F2
+  supporting: []
 
 activities:
   - id: l12-a1

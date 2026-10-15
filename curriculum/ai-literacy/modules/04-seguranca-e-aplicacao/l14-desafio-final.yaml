@@ -8,6 +8,9 @@ objective: "Executar o ciclo completo — pedir com contexto, avaliar com crité
 estimatedMinutes: 5
 skillIds: [pedir, avaliar, proteger, aplicar]
 prerequisites: [l13]
+competency:
+  primary: F4
+  supporting: [F3, F2]
 
 activities:
   - id: l14-a1

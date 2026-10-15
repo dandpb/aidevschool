@@ -8,6 +8,9 @@ objective: "Diante de código sugerido por assistente, aplicar critérios objeti
 estimatedMinutes: 5
 skillIds: [codificar, avaliar]
 prerequisites: [l16]
+competency:
+  primary: D4
+  supporting: []
 
 activities:
   - id: l22-a1
