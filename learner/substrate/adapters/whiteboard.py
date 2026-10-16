@@ -1,10 +1,17 @@
 """Adapter that derives the minimaxDojo whiteboard views."""
 
+from pathlib import Path
 from typing import Any
 
 import yaml
 
 from learner.substrate.projection_clock import projection_today
+from learner.substrate.snapshot_sources import pitfalls_from_markdown, profile_matrix
+
+ROOT = Path(__file__).resolve().parents[3]
+LEARNER_PROFILE = ROOT / "learner" / "learner_profile.md"
+PITFALLS = ROOT / "learner" / "pitfalls.md"
+JOURNAL = ROOT / "learner" / "journal.md"
 
 STATE_MAP_PT = {
     "presenting": "APRESENTANDO",
@@ -20,11 +27,32 @@ LEVEL_MAP_PT = {
 }
 
 
+def _mastered_unit_ids(state: dict[str, Any]) -> list[str]:
+    units = state.get("units_log") or []
+    return [
+        str(u["unit_id"])
+        for u in units
+        if isinstance(u, dict) and u.get("mastered") is True and u.get("unit_id")
+    ]
+
+
+def _top_pitfall_labels() -> list[str]:
+    pitfalls = pitfalls_from_markdown(PITFALLS, JOURNAL)
+    return [f"{p['id']}: {p['description']}" for p in pitfalls[:3]]
+
+
+def _normalized_slug(value: str, fallback: str) -> str:
+    cleaned = value.strip().lower().replace(" ", "_")
+    return cleaned or fallback
+
+
 def derive_whiteboard_profile(state: dict[str, Any]) -> dict[str, Any]:
     """Return the whiteboard profile core derived from the canonical state."""
     learner = state["learner"]
     active = state["active_unit"]
     level = learner.get("level", "")
+    levels = profile_matrix(LEARNER_PROFILE)
+    mastered_ids = _mastered_unit_ids(state)
 
     return {
         "id": "aluno-001",
@@ -38,18 +66,18 @@ def derive_whiteboard_profile(state: dict[str, Any]) -> dict[str, Any]:
                 "linguagem_foco": learner.get("active_language", ""),
                 "tempo_semanal": f"{learner.get('weekly_time_hours', 0)}h",
                 "nivel_autodeclado": LEVEL_MAP_PT.get(level, level),
-                "dreyfus_global": "advanced_beginner",
-                "bloom_global": "apply",
+                "dreyfus_global": _normalized_slug(levels.get("dreyfus", ""), "advanced_beginner"),
+                "bloom_global": _normalized_slug(levels.get("bloom", ""), "apply"),
                 "ai_dependency_index": float(learner["aidi"]["current"]),
-                "socrates_quota_today": "0 / 15",
+                "socrates_quota_today": f"0 / {learner.get('budget', {}).get('hint_queries_per_day', 15)}",
                 "human_instructor": learner.get("human_instructor", "none"),
             },
             "trilha": {
                 "proxima_unidade": active.get("id", "U-001"),
-                "ultima_dominada": None,
+                "ultima_dominada": mastered_ids[-1] if mastered_ids else None,
             },
-            "pegadinhas_top_3": [],
-            "skills_ativas_top_3": [],
+            "pegadinhas_top_3": _top_pitfall_labels(),
+            "skills_ativas_top_3": mastered_ids[-3:],
         },
     }
 
