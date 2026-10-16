@@ -1,0 +1,509 @@
+{
+  "engineId": "school-entry",
+  "caseName": "declared-use",
+  "criterion": "C27",
+  "observedAt": "2026-10-16T01:41:35.121Z",
+  "producerContext": {
+    "id": "qa-local-products-runtime",
+    "role": "evidence-producer",
+    "pid": 79494,
+    "argv": [
+      "/Users/danielbarreto/.hermes/node/bin/node",
+      "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/local-products-runtime.mjs",
+      "school-entry",
+      "declared-use"
+    ],
+    "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool"
+  },
+  "verifierContext": null,
+  "sourceCommit": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+  "commands": [
+    {
+      "executable": "rtk",
+      "argv": [
+        "proxy",
+        "node",
+        "tools/serve.cjs",
+        "--port",
+        "51789"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest",
+      "envKeys": [
+        "HOST",
+        "HOSTNAME",
+        "PORT"
+      ],
+      "startedAt": "2026-10-16T01:41:35.529Z",
+      "pid": 79507,
+      "exitCode": null,
+      "signal": "SIGTERM",
+      "endedAt": "2026-10-16T01:41:40.597Z",
+      "stdout": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-local-products/school-entry/2026-10-16T01-41-35-115Z/command-0.stdout.log",
+      "stderr": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-local-products/school-entry/2026-10-16T01-41-35-115Z/command-0.stderr.log"
+    },
+    {
+      "executable": "rtk",
+      "argv": [
+        "proxy",
+        "node",
+        "server/main.mjs"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry",
+      "envKeys": [
+        "DATA_DIR",
+        "ENGINE_TARGETS_FILE",
+        "ALLOW_LOCAL_TARGETS",
+        "ADMIN_PASSWORD_HASH",
+        "NODE_ENV",
+        "HOST",
+        "HOSTNAME",
+        "PORT"
+      ],
+      "startedAt": "2026-10-16T01:41:35.857Z",
+      "pid": 79509,
+      "exitCode": null,
+      "signal": "SIGTERM",
+      "endedAt": "2026-10-16T01:41:40.591Z",
+      "stdout": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-local-products/school-entry/2026-10-16T01-41-35-115Z/command-1.stdout.log",
+      "stderr": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-local-products/school-entry/2026-10-16T01-41-35-115Z/command-1.stderr.log"
+    }
+  ],
+  "servers": [
+    {
+      "engine": "sdlc-quest",
+      "origin": "http://127.0.0.1:51789",
+      "port": 51789,
+      "pid": 79507
+    },
+    {
+      "engine": "school-entry",
+      "origin": "http://127.0.0.1:51794",
+      "port": 51794,
+      "pid": 79509
+    },
+    {
+      "engine": "school-entry",
+      "origin": "http://127.0.0.1:51834",
+      "pid": 79494,
+      "method": "createRuntime in observer, private closed SQLite fault",
+      "stopped": true
+    }
+  ],
+  "checks": [
+    {
+      "name": "Page identity and meaningful entry",
+      "status": "pass"
+    },
+    {
+      "name": "Anonymous release denied",
+      "status": "pass",
+      "httpStatus": 401
+    },
+    {
+      "name": "Default catalogue honestly empty",
+      "status": "pass"
+    },
+    {
+      "name": "All thirteen destinations initially disabled",
+      "status": "pass"
+    },
+    {
+      "name": "Real checker makes enabled Quest eligible",
+      "status": "pass"
+    },
+    {
+      "name": "Missing provider key has distinct honest fallback",
+      "status": "pass",
+      "cards": 1
+    },
+    {
+      "name": "Launch repeats real health check and reaches actual Quest",
+      "status": "pass"
+    },
+    {
+      "name": "Closed private SQLite returns service error rather than empty",
+      "status": "pass",
+      "httpStatus": 503,
+      "scope": "in-process actual createRuntime; explicit close of its private store only"
+    },
+    {
+      "name": "No page JavaScript errors",
+      "status": "pass"
+    }
+  ],
+  "cases": [
+    {
+      "id": "operator-check-launch",
+      "status": "pass",
+      "source": "engines/school-entry/README.md#configurar-um-destino",
+      "method": "Actual entry runtime with private SQLite; real Chromium checker without overrides; actual Quest HTTP destination",
+      "empty": true,
+      "anonymousDenied": true,
+      "enabledTarget": "sdlc-quest",
+      "cards": 1,
+      "launch": "http://127.0.0.1:51789"
+    },
+    {
+      "id": "recommendation-provider-positive-timeout",
+      "status": "unverified",
+      "reason": "No TypeSafe credential/call authorization. Missing-key fallback observed; producer model tests cover timeout/error but do not prove configured provider."
+    },
+    {
+      "id": "storage-error",
+      "status": "pass",
+      "method": "Actual private SQLite explicitly closed after runtime startup; no checker/ranker mock"
+    }
+  ],
+  "errors": [],
+  "consoleErrors": [
+    {
+      "case": "storage-error",
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+    }
+  ],
+  "limitations": [
+    "Independent verifier and TypeSafe/Jev semantic image judgment pending; no model/provider calls made."
+  ],
+  "mediaDir": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/test-results/readiness-plan-runtime/2026-10-16T01-41-35-115Z",
+  "logDir": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-local-products/school-entry/2026-10-16T01-41-35-115Z",
+  "sharedBaseProvenance": [
+    {
+      "path": "/Users/danielbarreto/Development/aidevschool/engines/shared/playwright/base.config.ts",
+      "sha256": "5519ac81eac5d277c939da29e816130dd614bf18009a9200263aa9014ae525a7"
+    },
+    {
+      "path": "/Users/danielbarreto/Development/aidevschool/engines/shared/playwright/README.md",
+      "sha256": "576211c36acc1d96040e473230a588977f388abee17029818a7ab13883873858"
+    }
+  ],
+  "sourceFiles": [
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/.dockerignore",
+      "sha256": "4175b1a2b3cf0a50ef62c702f1afbbf8673e7060695014f5ba30b718f4126b5b"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/.gitignore",
+      "sha256": "5879a63f45536fe2dc2f75d1b0b320d92de7f0d6656f2ce3bb64f78863284e6e"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/DESIGN.md",
+      "sha256": "8ba493c2904d83c2d799b2a7528bdd9b78016a8dcc99287cbf0f63742954376b"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/Dockerfile",
+      "sha256": "588f5970469c93dcde08392b7caa536c48ced3cff5f2fcf0bcd09919246fecd6"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/README.md",
+      "sha256": "223eee7cc6d7017904b7e0fa81fdc6b3a373e103d25426cecf3be041b22e50d9"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/docs/VALIDATION.md",
+      "sha256": "61b10d1c1789df28f67c56f9abf038bfb21575c196b4501e2ae3840e727c58a2"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/docs/entry-concept.png",
+      "sha256": "1dcc1a9a4c1d625710200ac1bf2847f2b80aa8f5da87973964671797385535a9"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/package-lock.json",
+      "sha256": "1e45f83b0ca4839d767da326aba0d5399263b314caef0fdf24f4645e47a9c355"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/package.json",
+      "sha256": "561031524771b8f5bf16b4d63d65a9054f1ae2ac36ced6006c04c502663fb755"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/public/admin.html",
+      "sha256": "4d377e1b1e7e2f1ca7efceac4d08835dfa161dfdc8e0c5b5547679f233040707"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/public/admin.js",
+      "sha256": "0994821c8c330c1722b4e30861c3a1c3124245b751be54cfa487b91b6ecdb1ca"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/public/api.js",
+      "sha256": "9c6ab123aa9c294dd3ac51f3f38be227707136dd29da0bc6b93198020f353ca9"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/public/app.js",
+      "sha256": "4473d73f658c1927093c56579050bdfb3ee65dde1108060b8ff9ba2d5782db7e"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/public/index.html",
+      "sha256": "4567a2476a3d69419d514ab1c8082c78b7ec6e3caa0994751ebf8bf4c5d5fa65"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/public/styles.css",
+      "sha256": "27181e1328874b4eb69f4d7edfe63cb9ef523f0fe242cc4a654985b3a996c4bb"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/scripts/check.mjs",
+      "sha256": "05012c7e330e06ec46389bc57093e18490244dbb2744afeb5c08d38d0bff66b4"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/scripts/hash-password.mjs",
+      "sha256": "0af517de445ef246bdd1592fc7d6fa531f336d1e38bd3496823d6837e52deda8"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/scripts/live-api.mjs",
+      "sha256": "b1a51b4da6a5fe123d7e08a4207b54ef91e89784dc0c2bc6d58e99b1821c66d8"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/server/app.mjs",
+      "sha256": "c00cc6f612ba23c5f90bffe4a6e2c616e0c92dedc71e6a0f68382ac60d613912"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/server/auth.mjs",
+      "sha256": "449ba589db7c408e9132734aeb1104a092c1b83a31f98b4bdf08b2ad1be59b10"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/server/catalog.mjs",
+      "sha256": "53ce862fc91b5b44ef883a7c41d742753e500cc53c9b0caa9c8d6bc0ac30e1ac"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/server/health.mjs",
+      "sha256": "2028c1e7e47f7a17db11199ed54cfb67cad0a3bd32464c6560f56d867b3a893c"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/server/main.mjs",
+      "sha256": "d6ee67f4f0644f1b9e66d6279345a9e9e556ab0fdab2546049aba29baabd7444"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/server/model.mjs",
+      "sha256": "ce983576ca6a18bdab7fbe67fdbb626214f8e37a82923425afafc033e15947e9"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/server/runtime.mjs",
+      "sha256": "3e5fb79a91c754f45a10be39c000ed537e3e070b8bbbaef686c3aa7a02177f36"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/server/static.mjs",
+      "sha256": "b68f7f685cc0b518efc3e3f476292c00fa0234db4a6ab1093df0ca794c4a6a50"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/server/store.mjs",
+      "sha256": "1a7d7d345b2ddc5282a81bec58b6ce55320aac315a453b10a6cb0211869340d0"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/targets.example.json",
+      "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/tests/backend.test.mjs",
+      "sha256": "75494d50da96b837b408661091fac1641f0e58f9cdd0e0c50794effc2fca7acb"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/tests/browser.spec.mjs",
+      "sha256": "426607fbf8b09e46b3b10f08cf260354cc828a592090fe21a0f2a6b401141b2c"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/tests/concurrency.test.mjs",
+      "sha256": "a5d719d8cd65cd7d693f5cf89881cd23ce659cbbddde3c5e25db6383fd3ca486"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/tests/health.test.mjs",
+      "sha256": "7b5aaee85106045f41f2c58bcde9f92715fe5e48e5050b66ce35213d4c82f99d"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/tests/model.test.mjs",
+      "sha256": "22e467487d2a1441dec3b62c503abb43195ba5797be91b4541c36dfcc9037000"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/tests/review-regressions.test.mjs",
+      "sha256": "d1183254e9164a98d2354ccb7823a4236fb7949e9a15952303319680e7bb9242"
+    }
+  ],
+  "sourceFingerprint": "dd9925111e49cc7642905c59451d0fc2eee94aef51f85d8ac16339b13dd3a0e8",
+  "learnerBefore": [
+    {
+      "root": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/",
+      "files": [
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/learning_state.yaml",
+          "sha256": "36419ae44e755a9bd8bd049b14d0dee03d8b5937e577285f67ffe730733735e2"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/learner_profile.md",
+          "sha256": "f32b2cf779dab2d2a88057838f0172440e8ba5e5ae8874733ae8609f01653183"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/pitfalls.md",
+          "sha256": "c63fe93060cdc58d97696cad549cf8af2899fd99ca50c94fe6e6fc2d1d0f7405"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/journal.md",
+          "sha256": "60aa71fddacbff585358c8376e0ead77612a4248ab0f1700301c9dc39397ab6f"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/pipeline_status.yaml",
+          "sha256": "668ac80145de042c0bd78dd4210ceccf1dc0ad932770eb4a03f2fd6d886f169a"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/pipeline_status.md",
+          "sha256": "a8fcbcb603f68ddd03ac7f3e6742c5580dae6194b11bd112206a7d7033188b54"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/predictions.yaml",
+          "sha256": "97f010c12e57942419a2a9326f29df792c5039aca3e1c779ed1508a67124eb37"
+        }
+      ],
+      "digest": "0e8e49b105ded1015b28caecd6968df31a5223a17104c2768c262aa8647192b6"
+    },
+    {
+      "root": "/Users/danielbarreto/Development/aidevschool",
+      "files": [
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/learning_state.yaml",
+          "sha256": "36419ae44e755a9bd8bd049b14d0dee03d8b5937e577285f67ffe730733735e2"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/learner_profile.md",
+          "sha256": "f32b2cf779dab2d2a88057838f0172440e8ba5e5ae8874733ae8609f01653183"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/pitfalls.md",
+          "sha256": "c63fe93060cdc58d97696cad549cf8af2899fd99ca50c94fe6e6fc2d1d0f7405"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/journal.md",
+          "sha256": "60aa71fddacbff585358c8376e0ead77612a4248ab0f1700301c9dc39397ab6f"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/pipeline_status.yaml",
+          "sha256": "668ac80145de042c0bd78dd4210ceccf1dc0ad932770eb4a03f2fd6d886f169a"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/pipeline_status.md",
+          "sha256": "a8fcbcb603f68ddd03ac7f3e6742c5580dae6194b11bd112206a7d7033188b54"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/predictions.yaml",
+          "sha256": "97f010c12e57942419a2a9326f29df792c5039aca3e1c779ed1508a67124eb37"
+        }
+      ],
+      "digest": "e2df008696e860ba89828c06958b7998b4f9248f52edd1c24169437d3b98a4d2"
+    }
+  ],
+  "browser": {
+    "name": "Chromium",
+    "version": "149.0.7827.55",
+    "routing": "Browser plugin not available; regular Playwright authorized for this observer"
+  },
+  "privateStorage": {
+    "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-local-products/school-entry/2026-10-16T01-41-35-115Z/private-data",
+    "database": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-local-products/school-entry/2026-10-16T01-41-35-115Z/private-data/release.sqlite",
+    "target": "http://127.0.0.1:51789",
+    "providerKey": "absent"
+  },
+  "allOwnedProcessesStopped": true,
+  "learnerAfter": [
+    {
+      "root": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/",
+      "files": [
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/learning_state.yaml",
+          "sha256": "36419ae44e755a9bd8bd049b14d0dee03d8b5937e577285f67ffe730733735e2"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/learner_profile.md",
+          "sha256": "f32b2cf779dab2d2a88057838f0172440e8ba5e5ae8874733ae8609f01653183"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/pitfalls.md",
+          "sha256": "c63fe93060cdc58d97696cad549cf8af2899fd99ca50c94fe6e6fc2d1d0f7405"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/journal.md",
+          "sha256": "60aa71fddacbff585358c8376e0ead77612a4248ab0f1700301c9dc39397ab6f"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/pipeline_status.yaml",
+          "sha256": "668ac80145de042c0bd78dd4210ceccf1dc0ad932770eb4a03f2fd6d886f169a"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/pipeline_status.md",
+          "sha256": "a8fcbcb603f68ddd03ac7f3e6742c5580dae6194b11bd112206a7d7033188b54"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/predictions.yaml",
+          "sha256": "97f010c12e57942419a2a9326f29df792c5039aca3e1c779ed1508a67124eb37"
+        }
+      ],
+      "digest": "0e8e49b105ded1015b28caecd6968df31a5223a17104c2768c262aa8647192b6"
+    },
+    {
+      "root": "/Users/danielbarreto/Development/aidevschool",
+      "files": [
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/learning_state.yaml",
+          "sha256": "36419ae44e755a9bd8bd049b14d0dee03d8b5937e577285f67ffe730733735e2"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/learner_profile.md",
+          "sha256": "f32b2cf779dab2d2a88057838f0172440e8ba5e5ae8874733ae8609f01653183"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/pitfalls.md",
+          "sha256": "c63fe93060cdc58d97696cad549cf8af2899fd99ca50c94fe6e6fc2d1d0f7405"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/journal.md",
+          "sha256": "60aa71fddacbff585358c8376e0ead77612a4248ab0f1700301c9dc39397ab6f"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/pipeline_status.yaml",
+          "sha256": "668ac80145de042c0bd78dd4210ceccf1dc0ad932770eb4a03f2fd6d886f169a"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/pipeline_status.md",
+          "sha256": "a8fcbcb603f68ddd03ac7f3e6742c5580dae6194b11bd112206a7d7033188b54"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/predictions.yaml",
+          "sha256": "97f010c12e57942419a2a9326f29df792c5039aca3e1c779ed1508a67124eb37"
+        }
+      ],
+      "digest": "e2df008696e860ba89828c06958b7998b4f9248f52edd1c24169437d3b98a4d2"
+    }
+  ],
+  "learnerUnchanged": true,
+  "evidenceRefs": [
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/test-results/readiness-plan-runtime/2026-10-16T01-41-35-115Z/operator-and-student/page@763566b3fb4996c3b9c856580a36247e.webm",
+      "sha256": "827236c3d5d15fc5850f6311af7d8a01bf50813c5be14877d5ee81b3f6767280"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/test-results/readiness-plan-runtime/2026-10-16T01-41-35-115Z/school-entry-eligible-fallback.png",
+      "sha256": "ae0e3b1f938b1647d45c26e7f8271c6b84ede262406c3245fc9391e919a075fd"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/test-results/readiness-plan-runtime/2026-10-16T01-41-35-115Z/school-entry-empty.png",
+      "sha256": "4e33db91934d72498d41685b60bdc181221db4313555e4668e3b15ccac863917"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/test-results/readiness-plan-runtime/2026-10-16T01-41-35-115Z/school-entry-first.png",
+      "sha256": "5662c571db9ee22e57458c1606ab27faf6a4722fef4a810f3f57e3a73c363e74"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/test-results/readiness-plan-runtime/2026-10-16T01-41-35-115Z/school-entry-launched-real-quest.png",
+      "sha256": "d50803205fb09c3c02fb7bc19f5a1b6eba9a3d117348bf5fd31ec9301aacb0ca"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/test-results/readiness-plan-runtime/2026-10-16T01-41-35-115Z/school-entry-operator-enabled.png",
+      "sha256": "b9dab07a524ded708601c9a13bf0e8fe79384834c39d622b419b5d42b6ec5dae"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/test-results/readiness-plan-runtime/2026-10-16T01-41-35-115Z/school-entry-storage-error.png",
+      "sha256": "155591923827a98e6b20202f50158862ae03e7353082009751fbe1083d605744"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry/test-results/readiness-plan-runtime/2026-10-16T01-41-35-115Z/storage-error/page@7e5dac1ec27791cc12f99570247d12d6.webm",
+      "sha256": "98c9c1baea605f31988bd13c67c373336ddc2bf5d4784391f149d95994b363bf"
+    }
+  ],
+  "functionalStatus": "unverified",
+  "status": "unverified",
+  "completedAt": "2026-10-16T01:41:40.602Z",
+  "report": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-local-products/school-entry/2026-10-16T01-41-35-115Z/report.json"
+}

@@ -1,0 +1,199 @@
+{
+  "schemaVersion": 1,
+  "kind": "discovery-evidence-only",
+  "baseline": "f98e7fa32deac836addc348e185e8788fd197627",
+  "branch": "codex/product-readiness-discovery-20261015",
+  "retainedAt": "2026-10-15T21:59:16.387072+00:00",
+  "sourceFiles": [
+    {
+      "path": "docs/product-readiness/inventory.yaml",
+      "sha256": "9a43d6462ae87239c7c780f0ecdf38f39f9c63030dbf32aae4354472291b7811"
+    },
+    {
+      "path": "docs/product-readiness/policy.yaml",
+      "sha256": "891deb96b328bb42038ce946bab8b57ae64d36d820906d2236d58991ac3ff3f8"
+    },
+    {
+      "path": "learner/gate/canonical_gate.py",
+      "sha256": "2660dddda8e3ef550292fbe135e069e1a2bf30316ea69b3d393e22e404a27302"
+    },
+    {
+      "path": "learner/gate/evidence_io.py",
+      "sha256": "6316cebe0e1b7f9ff7c46576456a9b267c6e5218ee5d070cbeb8cbc691c9154c"
+    },
+    {
+      "path": "learner/gate/netlify-functions/literacy-verify.mjs",
+      "sha256": "954658d35868ad602ebe157aae05e6d47f174e7a1f844575757de735cba58b89"
+    },
+    {
+      "path": "engines/literacyDojo/src/domain/evidence.ts",
+      "sha256": "85b6f6150aae06e102d41e3022b0659b3f0c1163474ddbd72baf3d88bcbae3b0"
+    },
+    {
+      "path": "curriculum/ai-literacy/modules/01-ai-sem-misterio/l02-ia-nao-e-fonte-de-verdade.yaml",
+      "sha256": "5f6f7fd81aa3ede7c4364e6d9ffc4de18cd8d0549efcb4324e61fcbed7f7f454"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "a6151f80142bc0e6e4f9ad58ffd113f4f3b2fecac55a9e9b0f4e720da805fdf9"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/README.md",
+      "sha256": "d094a306acfb6c58821462e57d9c3d0327818a4ccd396fddc93a68389d3f78df"
+    },
+    {
+      "path": "engines/codexDojo/README.md",
+      "sha256": "e6ba0c706d79506a9fc8666a38d4dda777adcb3db95ed767c4c214899c99ec44"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/README.md",
+      "sha256": "322ac70e93a4a23156bc9967b7b47e514f60b2557de6bd31fc99288b9e8a97b5"
+    },
+    {
+      "path": "engines/dojoToday/README.md",
+      "sha256": "9e8fd41db0d89cd8bbe29dd7f098a63a4a526e0e7fd267ce04ed488679b82c9a"
+    },
+    {
+      "path": "engines/literacyDojo/README.md",
+      "sha256": "0e01ac72a6ab8abec6caf45f2b64d662a1daf143f74a8cd20224f822491575ea"
+    },
+    {
+      "path": "engines/miniMaxEvolutionEngine/README.md",
+      "sha256": "458569f8f7258f0fa0aeea7f32c32a8e70b88e6f45ba76f89bc5f4c68948a379"
+    },
+    {
+      "path": "engines/miniTown/README.md",
+      "sha256": "889415e108b28bd7160961387970e6f2535f3c88b54baf37ae2f53c30f612645"
+    },
+    {
+      "path": "engines/minimaxDojo/README.md",
+      "sha256": "cfaddb0a22fd56e3fbe95c0491be851040bb6d78b63404ccbaa05725de66bc87"
+    },
+    {
+      "path": "engines/openclaw/README.md",
+      "sha256": "6c3a3887db2077daf0e7f11c1145bf43f234972efa858eee1d3f7654ee511ed4"
+    },
+    {
+      "path": "engines/pixelDojo/README.md",
+      "sha256": "1b06a68d1e2fe2875a7b8d8c3df3ef7e9fa1a14fd7be725cf1a6c95065eef346"
+    },
+    {
+      "path": "engines/school-entry/README.md",
+      "sha256": "223eee7cc6d7017904b7e0fa81fdc6b3a373e103d25426cecf3be041b22e50d9"
+    },
+    {
+      "path": "engines/sdlc-quest/README.md",
+      "sha256": "1eaa39f8590dbc12f3d3887856348a23f51adf0c3a5814514629e19f5d2184db"
+    },
+    {
+      "path": "engines/voxelDojo/README.md",
+      "sha256": "d32f918bffed4ae2fdc04c6f06477f56ea9bcd4ae35b2febe58f939c27b1c665"
+    },
+    {
+      "path": "engines/zai-duolingo-like/QWEN.md",
+      "sha256": "537487d2acd0290d652d382447b5ce0c3f0b424c1e183ea6dae47644b9d63d36"
+    }
+  ],
+  "retainedFiles": [
+    {
+      "path": "findings.json",
+      "sha256": "05602e59db3856952a18749772c7dd77e62786cbc91654bfb63b3a75647d75b3"
+    },
+    {
+      "path": "literacy-result.json",
+      "sha256": "0ae6dfac09c954a6349b47da32370b5d8fb0bf64c2312d1aaaf3910e52d04074"
+    },
+    {
+      "path": "literacy_version.mjs",
+      "sha256": "282fb3587872bd40eddc36f8dc2140cc7fb5d23cc1b5594152da08f13eb6b457"
+    },
+    {
+      "path": "main-ci-stale.txt",
+      "sha256": "ffccaa76a7cf9071fb9d67926f3ae5bea12ffdcaab8208b7f49def2fd296f4bf"
+    },
+    {
+      "path": "mastery-result.json",
+      "sha256": "32542447a95cbc7675fd881c3da938aecc06a6bb1bbccb7c19b58212a5751984"
+    },
+    {
+      "path": "mastery_without_verifier.py",
+      "sha256": "13dba31149c24fff11e29d86fb27f17b54950d509d79494f4b95b0a877525ae8"
+    },
+    {
+      "path": "readiness-check.json",
+      "sha256": "4cea59924511c07c1a91f63944df4d85fbecbca36948166a53abce54b622fb3c"
+    },
+    {
+      "path": "situation.json",
+      "sha256": "e4ee6a11f198a55621d7c0bf4d046e5e7c326158a7a33e60b8085a053feaead2"
+    }
+  ],
+  "commands": [
+    {
+      "command": ".scratch/gh-375/venv/bin/python .scratch/readiness-discovery-20261015/probes/mastery_without_verifier.py",
+      "exitCode": 0,
+      "result": "mastery-result.json"
+    },
+    {
+      "command": "node .scratch/readiness-discovery-20261015/probes/literacy_version.mjs",
+      "exitCode": 0,
+      "result": "literacy-result.json"
+    },
+    {
+      "command": ".scratch/gh-375/venv/bin/python docs/product-readiness/tools/cli.py check --require-current",
+      "exitCode": 1,
+      "result": "readiness-check.json"
+    }
+  ],
+  "probeRetention": "Retained scripts are byte-identical to the executed scratch scripts. Outputs were copied, not reinterpreted as runtime qualification. Historical mastery probe guards main-tree equality; candidate regression proof must bind the candidate SHA explicitly.",
+  "inFlight": [
+    {
+      "pr": 657,
+      "state": "open",
+      "head": "817b9872b2b966314794540472860a6287c4737c",
+      "files": [
+        "learner/gate/canonical_gate.py",
+        "learner/gate/evidence_io.py",
+        "learner/gate/tests/test_gate.py",
+        "learner/gate/tests/test_gate_multirecord_receipt_binding.py",
+        "scripts/python_complexity_baseline.txt"
+      ]
+    },
+    {
+      "pr": 656,
+      "state": "open",
+      "head": "b29631ee366954803d59691b646c10f0779082ce",
+      "files": [
+        "learner/gate/AGENTS.md",
+        "learner/gate/netlify-functions/README.md",
+        "learner/gate/netlify-functions/literacy-verify.mjs",
+        "learner/gate/tests/literacy_verify_identity.test.mjs",
+        "learner/gate/tests/literacy_verify_netlify.test.mjs"
+      ]
+    },
+    {
+      "pr": 662,
+      "appliesTo": "guided-practice RC; not established on pinned main"
+    }
+  ],
+  "limits": [
+    "Nenhuma qualificação completa dos 14 runtimes foi executada nesta rodada.",
+    "Os dois defeitos foram reproduzidos no código da main com dados sintéticos; nenhuma alegação sobre deployment remoto.",
+    "Nenhum estado canônico de aprendiz ou arquivo de produto foi alterado.",
+    "No exhaustive runtime qualification; no proof of deployed verifier version; no PR patch approval; no implementation/commit/push/external publication in this discovery."
+  ],
+  "placement": {
+    "path": "intent/2026-10-15-ecosystem-product-readiness",
+    "reason": "AiDevSchool intent home; installed placement helper resolves Heropa/VLab heropa-docs, not this repository."
+  },
+  "artifactFiles": [
+    {
+      "path": "intent.md",
+      "sha256": "fea13b52a55e93cdf9823ebee3cecc4163e61248fe4f3b94d95a9c63cf442e49"
+    },
+    {
+      "path": "design.md",
+      "sha256": "eab37dc1d6f639f358f5e27e6d07719585e0fe1badecfb180b179c8836d3f256"
+    }
+  ]
+}

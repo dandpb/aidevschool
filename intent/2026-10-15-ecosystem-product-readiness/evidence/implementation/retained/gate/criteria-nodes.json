@@ -1,0 +1,120 @@
+{
+  "C1": {
+    "named_nodes": {
+      "learner/gate/tests/test_gate.py::TestCheckEvidence::test_game_pass_without_verifier_receipt_is_not_eligible": [
+        "learner/gate/tests/test_gate.py::TestCheckEvidence::test_game_pass_without_verifier_receipt_is_not_eligible[gatekeeper] PASSED [  3%]",
+        "learner/gate/tests/test_gate.py::TestCheckEvidence::test_game_pass_without_verifier_receipt_is_not_eligible[pixelquest] PASSED [  4%]"
+      ],
+      "learner/gate/tests/test_gate.py::TestDecide::test_forged_pass_without_receipt_never_decides_passed": [
+        "learner/gate/tests/test_gate.py::TestDecide::test_forged_pass_without_receipt_never_decides_passed PASSED [ 39%]"
+      ],
+      "learner/gate/tests/test_readiness_plan_contract.py::test_no_receipt_preserves_state": [
+        "learner/gate/tests/test_readiness_plan_contract.py::test_no_receipt_preserves_state[gatekeeper] PASSED [ 85%]",
+        "learner/gate/tests/test_readiness_plan_contract.py::test_no_receipt_preserves_state[pixelquest] PASSED [ 86%]"
+      ]
+    },
+    "all_named_nodes_passed": true
+  },
+  "C2": {
+    "named_nodes": {
+      "learner/gate/tests/test_gate.py::TestCheckEvidence::test_embedded_verifier_cannot_override_producer_judgment": [
+        "learner/gate/tests/test_gate.py::TestCheckEvidence::test_embedded_verifier_cannot_override_producer_judgment PASSED [ 11%]"
+      ],
+      "learner/gate/tests/test_gate_multirecord_receipt_binding.py::TestMultirecordEndToEnd::test_multirecord_receipt_for_other_unit_record_is_not_eligible": [
+        "learner/gate/tests/test_gate_multirecord_receipt_binding.py::TestMultirecordEndToEnd::test_multirecord_receipt_for_other_unit_record_is_not_eligible PASSED [ 84%]"
+      ],
+      "learner/gate/tests/test_readiness_plan_contract.py::test_invalid_receipt_preserves_state": [
+        "learner/gate/tests/test_readiness_plan_contract.py::test_invalid_receipt_preserves_state[gatekeeper-other_digest-evidence_digest does not match] PASSED [ 87%]",
+        "learner/gate/tests/test_readiness_plan_contract.py::test_invalid_receipt_preserves_state[gatekeeper-outside_path-learner/verifier_receipts] PASSED [ 87%]",
+        "learner/gate/tests/test_readiness_plan_contract.py::test_invalid_receipt_preserves_state[gatekeeper-context_not_isolated-context_isolated is not true] PASSED [ 88%]",
+        "learner/gate/tests/test_readiness_plan_contract.py::test_invalid_receipt_preserves_state[gatekeeper-producer_embedded-embedded verifier] PASSED [ 89%]",
+        "learner/gate/tests/test_readiness_plan_contract.py::test_invalid_receipt_preserves_state[pixelquest-other_digest-evidence_digest does not match] PASSED [ 90%]",
+        "learner/gate/tests/test_readiness_plan_contract.py::test_invalid_receipt_preserves_state[pixelquest-outside_path-learner/verifier_receipts] PASSED [ 91%]",
+        "learner/gate/tests/test_readiness_plan_contract.py::test_invalid_receipt_preserves_state[pixelquest-context_not_isolated-context_isolated is not true] PASSED [ 91%]",
+        "learner/gate/tests/test_readiness_plan_contract.py::test_invalid_receipt_preserves_state[pixelquest-producer_embedded-embedded verifier] PASSED [ 92%]"
+      ]
+    },
+    "all_named_nodes_passed": true
+  },
+  "C3": {
+    "named_nodes": {
+      "learner/gate/tests/test_gate.py::TestDecide::test_pass_first_try": [
+        "learner/gate/tests/test_gate.py::TestDecide::test_pass_first_try PASSED  [ 37%]"
+      ],
+      "learner/gate/tests/test_gate.py::TestDecide::test_pass_after_retry": [
+        "learner/gate/tests/test_gate.py::TestDecide::test_pass_after_retry PASSED [ 37%]"
+      ],
+      "learner/gate/tests/test_gate.py::TestEndToEnd::test_pixelquest_pass_with_digest_bound_receipt_masters": [
+        "learner/gate/tests/test_gate.py::TestEndToEnd::test_pixelquest_pass_with_digest_bound_receipt_masters PASSED [ 44%]"
+      ],
+      "learner/gate/tests/test_readiness_plan_contract.py::test_retry_receipt_persists_source": [
+        "learner/gate/tests/test_readiness_plan_contract.py::test_retry_receipt_persists_source PASSED [ 93%]"
+      ]
+    },
+    "all_named_nodes_passed": true
+  },
+  "C4": {
+    "named_nodes": {
+      "learner/gate/tests/test_gate.py::TestDecide::test_failed_run_gates_to_fail": [
+        "learner/gate/tests/test_gate.py::TestDecide::test_failed_run_gates_to_fail PASSED [ 38%]"
+      ],
+      "learner/gate/tests/test_gate.py::TestApplyGate::test_fail_increments_retry_and_keeps_evaluating": [
+        "learner/gate/tests/test_gate.py::TestApplyGate::test_fail_increments_retry_and_keeps_evaluating PASSED [ 41%]"
+      ]
+    },
+    "all_named_nodes_passed": true
+  },
+  "C5": {
+    "named_nodes": {
+      "learner/gate/tests/test_gate_multirecord_receipt_binding.py::TestMultirecordEndToEnd::test_gates_latest_matching_record_with_receipt": [
+        "learner/gate/tests/test_gate_multirecord_receipt_binding.py::TestMultirecordEndToEnd::test_gates_latest_matching_record_with_receipt PASSED [ 82%]"
+      ],
+      "learner/gate/tests/test_gate_multirecord_receipt_binding.py::TestMultirecordEndToEnd::test_persisted_multirecord_state_revalidates": [
+        "learner/gate/tests/test_gate_multirecord_receipt_binding.py::TestMultirecordEndToEnd::test_persisted_multirecord_state_revalidates PASSED [ 83%]"
+      ],
+      "learner/gate/tests/test_gate.py::TestLoadEvidenceNdjson::test_malformed_line_rejects_whole_file": [
+        "learner/gate/tests/test_gate.py::TestLoadEvidenceNdjson::test_malformed_line_rejects_whole_file PASSED [ 52%]"
+      ],
+      "learner/gate/tests/test_gate.py::TestLoadEvidenceNdjson::test_non_object_line_rejected": [
+        "learner/gate/tests/test_gate.py::TestLoadEvidenceNdjson::test_non_object_line_rejected PASSED [ 53%]"
+      ],
+      "learner/gate/tests/test_readiness_plan_contract.py::test_nothing_to_grade_cli_does_not_write": [
+        "learner/gate/tests/test_readiness_plan_contract.py::test_nothing_to_grade_cli_does_not_write PASSED [ 94%]"
+      ]
+    },
+    "all_named_nodes_passed": true,
+    "additional_named_node": "learner/gate/tests/test_readiness_plan_contract.py::test_committed_multirecord_backing_revalidates"
+  },
+  "C6": {
+    "named_nodes": {
+      "learner/gate/tests/test_gate.py::TestEndToEnd::test_historical_mastered_without_receipt_still_validates": [
+        "learner/gate/tests/test_gate.py::TestEndToEnd::test_historical_mastered_without_receipt_still_validates PASSED [ 45%]"
+      ]
+    },
+    "all_named_nodes_passed": true
+  },
+  "C7": {
+    "named_nodes": {
+      "learner/gate/tests/test_gate.py::TestGateIntegrity::test_same_payload_with_bumped_timestamp_is_rejected_by_digest": [
+        "learner/gate/tests/test_gate.py::TestGateIntegrity::test_same_payload_with_bumped_timestamp_is_rejected_by_digest PASSED [ 61%]"
+      ],
+      "learner/gate/tests/test_gate.py::TestGateIntegrity::test_ignored_producer_nonce_cannot_bypass_consumed_evidence": [
+        "learner/gate/tests/test_gate.py::TestGateIntegrity::test_ignored_producer_nonce_cannot_bypass_consumed_evidence PASSED [ 62%]"
+      ],
+      "learner/gate/tests/test_gate.py::TestGateIntegrity::test_same_run_id_with_changed_payload_is_rejected": [
+        "learner/gate/tests/test_gate.py::TestGateIntegrity::test_same_run_id_with_changed_payload_is_rejected PASSED [ 62%]"
+      ],
+      "learner/gate/tests/test_gate.py::TestCli::test_dry_run_writes_nothing": [
+        "learner/gate/tests/test_gate.py::TestCli::test_dry_run_writes_nothing PASSED [ 75%]"
+      ],
+      "learner/gate/tests/test_readiness_plan_contract.py::test_replay_preserves_consumed_state": [
+        "learner/gate/tests/test_readiness_plan_contract.py::test_replay_preserves_consumed_state[same_record-stale or duplicate] PASSED [ 95%]",
+        "learner/gate/tests/test_readiness_plan_contract.py::test_replay_preserves_consumed_state[new_timestamp-digest replay] PASSED [ 96%]",
+        "learner/gate/tests/test_readiness_plan_contract.py::test_replay_preserves_consumed_state[producer_nonce-attempt/scenario replay] PASSED [ 97%]",
+        "learner/gate/tests/test_readiness_plan_contract.py::test_replay_preserves_consumed_state[changed_payload-run_id is immutable] PASSED [ 98%]"
+      ]
+    },
+    "all_named_nodes_passed": true,
+    "additional_named_node": "learner/gate/tests/test_readiness_plan_contract.py::test_dry_run_preserves_all_files"
+  }
+}

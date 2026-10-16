@@ -1,0 +1,466 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-10-16T01:51:11.995540+00:00",
+  "status": "INCOMPLETE",
+  "verdict": "UNVERIFIED",
+  "binding": {
+    "baseCommit": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+    "worktree": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool",
+    "scope": "Read-only producer browser-suite diagnosis; only scratch observer wrapper/config/report additions. No product or protected test changes."
+  },
+  "dojoToday": {
+    "initial": "suite setup stopped before collecting/running tests because port5180 was owned by concurrent OS webServer",
+    "evidence": "dojoToday.initial.log",
+    "rerun": "same 4 selected files, serialized, original timeout/assertions/retries, fresh engine media directory",
+    "result": {
+      "engine": "dojoToday",
+      "argv": [
+        "npx",
+        "playwright",
+        "test",
+        "playwright/readiness.spec.ts",
+        "playwright/continuity.spec.ts",
+        "playwright/hosted-os.spec.ts",
+        "playwright/a11y-w3.spec.ts",
+        "--config",
+        "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/browser-producers/dojoToday.diagnosis.config.ts"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday",
+      "exitCode": 0,
+      "seconds": 12.11,
+      "observedAt": "2026-10-16T01:45:01.766720+00:00",
+      "stats": {
+        "startTime": "2026-10-16T01:44:52.471Z",
+        "duration": 9242.533,
+        "expected": 15,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "report": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/browser-producers/dojoToday.diagnosis.report.json",
+      "scope": "same selected existing producer tests; serialized to avoid OS dependency port5180 collision"
+    }
+  },
+  "osInitial": {
+    "result": {
+      "engine": "codexdojo-os-prototype",
+      "argv": [
+        "npx",
+        "playwright",
+        "test",
+        "tests/release-journeys.smoke.spec.ts",
+        "tests/readiness-recovery.smoke.spec.ts",
+        "tests/chapter-continuity.smoke.spec.ts",
+        "tests/renderer-fallback.smoke.spec.ts",
+        "tests/engines.smoke.spec.ts",
+        "--config",
+        "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/browser-producers/codexdojo-os-prototype.config.ts"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexdojo-os-prototype",
+      "exitCode": 1,
+      "seconds": 374.4,
+      "observedAt": "2026-10-16T01:36:20.097213+00:00",
+      "report": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/browser-producers/codexdojo-os-prototype.report.json",
+      "media": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexdojo-os-prototype/test-results/readiness-plan-suite",
+      "scope": "selected existing producer tests, partial declared-use coverage; no independent semantic verdict",
+      "stats": {
+        "startTime": "2026-10-16T01:30:07.303Z",
+        "duration": 372752.66599999997,
+        "expected": 22,
+        "skipped": 8,
+        "unexpected": 6,
+        "flaky": 0
+      }
+    },
+    "pixelFailures": {
+      "count": 4,
+      "classification": "protected producer test expectation drift",
+      "expectedAccessibleName": "Orbita 3D",
+      "observedAccessibleName": "Órbita 3D",
+      "testLocations": [
+        "engines.smoke.spec.ts:58",
+        "engines.smoke.spec.ts:118"
+      ],
+      "source": "engines/pixelDojo/pixel-quest/src/ui/orbitPanels.ts:48",
+      "domEvidence": "engines/codexdojo-os-prototype/test-results/readiness-plan-suite/engines.smoke-keeps-Engine-dbefd--at-the-configured-viewport-desktop-1280/error-context.md"
+    },
+    "releaseFailures": {
+      "count": 2,
+      "classification": "overall 30s test timeout cancels explicit60s receipt expectation; receipt persistence not established by this failure",
+      "source": "engines/codexdojo-os-prototype/tests/release-journeys.smoke.spec.ts:78",
+      "rerun": "same5selectedfiles with wrappertimeout60000 per original sharedbase policy; no assertion/retry/source edits"
+    }
+  },
+  "osRerun": {
+    "engine": "codexdojo-os-prototype",
+    "argv": [
+      "npx",
+      "playwright",
+      "test",
+      "tests/release-journeys.smoke.spec.ts",
+      "tests/readiness-recovery.smoke.spec.ts",
+      "tests/chapter-continuity.smoke.spec.ts",
+      "tests/renderer-fallback.smoke.spec.ts",
+      "tests/engines.smoke.spec.ts",
+      "--config",
+      "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/browser-producers/codexdojo-os-prototype.diagnosis.config.ts"
+    ],
+    "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexdojo-os-prototype",
+    "exitCode": -15,
+    "seconds": 323.07,
+    "observedAt": "2026-10-16T01:50:33.548812+00:00",
+    "stats": null,
+    "report": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/browser-producers/codexdojo-os-prototype.diagnosis.report.json",
+    "scope": "same selected existing producer tests; wrapper timeout60s matches original shared policy; assertions/retries/source unchanged",
+    "status": "INCOMPLETE",
+    "verdict": "UNVERIFIED",
+    "cause": "Root-directed stop due severe host resource contention. Runner terminated by SIGTERM after323.07s; no completed JSONreport; no runtime product verdict inferred."
+  },
+  "sharedBasePolicy": {
+    "path": "/Users/danielbarreto/Development/aidevschool/engines/shared/playwright/base.config.ts",
+    "sha256": "5519ac81eac5d277c939da29e816130dd614bf18009a9200263aa9014ae525a7",
+    "status": "untracked in original checkout and absent from worktree; read only, never copied or imported",
+    "appliedValues": {
+      "timeout": 60000,
+      "screenshot": "on",
+      "video": "on",
+      "trace": "retain-on-failure"
+    }
+  },
+  "sourceHashesUnchanged": true,
+  "cleanup": {
+    "at": "2026-10-16T01:50:33.414393+00:00",
+    "reason": "root instructed immediate stop after host severe resource contention; no additional browser runs",
+    "runnerPid": 91574,
+    "exclusiveServerProcessGroups": [
+      91618,
+      91745,
+      91837,
+      91941,
+      92012,
+      92105,
+      92190
+    ],
+    "ownedDescendantPids": [
+      91574,
+      91618,
+      91676,
+      91745,
+      91756,
+      91837,
+      91838,
+      91859,
+      91887,
+      91941,
+      91942,
+      91989,
+      92002,
+      92012,
+      92034,
+      92060,
+      92085,
+      92105,
+      92149,
+      92162,
+      92190,
+      92210,
+      92275,
+      92309,
+      92484,
+      92529
+    ],
+    "actions": [
+      {
+        "target": "group",
+        "id": 91618,
+        "signal": "TERM"
+      },
+      {
+        "target": "group",
+        "id": 91745,
+        "signal": "TERM"
+      },
+      {
+        "target": "group",
+        "id": 91837,
+        "signal": "TERM"
+      },
+      {
+        "target": "group",
+        "id": 91941,
+        "signal": "TERM"
+      },
+      {
+        "target": "group",
+        "id": 92012,
+        "signal": "TERM"
+      },
+      {
+        "target": "group",
+        "id": 92105,
+        "signal": "TERM"
+      },
+      {
+        "target": "group",
+        "id": 92190,
+        "signal": "TERM"
+      },
+      {
+        "target": "pid",
+        "id": 92529,
+        "signal": "TERM"
+      },
+      {
+        "target": "pid",
+        "id": 92484,
+        "signal": "TERM"
+      },
+      {
+        "target": "pid",
+        "id": 92309,
+        "signal": "TERM"
+      },
+      {
+        "target": "pid",
+        "id": 92275,
+        "signal": "TERM"
+      },
+      {
+        "target": "pid",
+        "id": 92210,
+        "signal": "TERM"
+      },
+      {
+        "target": "pid",
+        "id": 92190,
+        "signal": "TERM"
+      },
+      {
+        "target": "pid",
+        "id": 92162,
+        "signal": "TERM"
+      },
+      {
+        "target": "pid",
+        "id": 92149,
+        "signal": "TERM"
+      },
+      {
+        "target": "pid",
+        "id": 92105,
+        "signal": "TERM"
+      },
+      {
+        "target": "pid",
+        "id": 92085,
+        "signal": "TERM"
+      },
+      {
+        "target": "pid",
+        "id": 92060,
+        "signal": "TERM"
+      },
+      {
+        "target": "pid",
+        "id": 92034,
+        "signal": "TERM"
+      },
+      {
+        "target": "pid",
+        "id": 92012,
+        "signal": "TERM"
+      },
+      {
+        "target": "pid",
+        "id": 92002,
+        "signal": "TERM"
+      },
+      {
+        "target": "pid",
+        "id": 91989,
+        "signal": "TERM"
+      },
+      {
+        "target": "pid",
+        "id": 91942,
+        "signal": "TERM"
+      },
+      {
+        "target": "pid",
+        "id": 91941,
+        "signal": "TERM"
+      },
+      {
+        "target": "pid",
+        "id": 91887,
+        "signal": "TERM"
+      },
+      {
+        "target": "pid",
+        "id": 91859,
+        "signal": "TERM"
+      },
+      {
+        "target": "pid",
+        "id": 91838,
+        "signal": "TERM"
+      },
+      {
+        "target": "pid",
+        "id": 91837,
+        "signal": "TERM"
+      },
+      {
+        "target": "pid",
+        "id": 91756,
+        "signal": "TERM"
+      },
+      {
+        "target": "pid",
+        "id": 91745,
+        "signal": "TERM"
+      },
+      {
+        "target": "pid",
+        "id": 91676,
+        "signal": "TERM"
+      },
+      {
+        "target": "pid",
+        "id": 91618,
+        "signal": "TERM"
+      },
+      {
+        "target": "pid",
+        "id": 91574,
+        "signal": "TERM"
+      }
+    ],
+    "observedAfterTermination": "2026-10-16T01:50:46.968530+00:00",
+    "remainingOwnedRows": [],
+    "liveOwnedPids": [],
+    "dependencyPortsListeningAfterTermination": {
+      "4174": false,
+      "5175": false,
+      "5176": false,
+      "5177": false,
+      "5178": false,
+      "5179": false,
+      "5180": false
+    }
+  },
+  "retainedArtifacts": [
+    {
+      "path": ".scratch/readiness-implementation-20261015/browser-producers/dojoToday.config.ts",
+      "sha256": "091945aeb012a6d7e5d4515eeefb2c8fb7198822283a1af68385a6b9f1a5b579",
+      "bytes": 1284
+    },
+    {
+      "path": ".scratch/readiness-implementation-20261015/browser-producers/dojoToday.json",
+      "sha256": "165c328475297c7d68ce8afcf0e71c769fbdfcd51484a5509350547eafa4191c",
+      "bytes": 1168
+    },
+    {
+      "path": ".scratch/readiness-implementation-20261015/browser-producers/dojoToday.log",
+      "sha256": "4b7d48f8ed14ac9a3987ae90c14c65d9979d03a94e41ecdeb5ecb9c969ce14bb",
+      "bytes": 151
+    },
+    {
+      "path": ".scratch/readiness-implementation-20261015/browser-producers/dojoToday.report.json",
+      "sha256": "6d7ee0b050f876fc97a6fa119bea5e048e8141911a470300b2adba646ffb2c14",
+      "bytes": 2778
+    },
+    {
+      "path": ".scratch/readiness-implementation-20261015/browser-producers/dojoToday.diagnosis.config.ts",
+      "sha256": "4d2c5f9de97c1c12022d1bfa7af150da3e84ed69a593346674006f4fd7863b69",
+      "bytes": 1304
+    },
+    {
+      "path": ".scratch/readiness-implementation-20261015/browser-producers/dojoToday.diagnosis.json",
+      "sha256": "6a1d8d21c6e024449ef4b9899b93cc2607be8818933906c15dbaa0ff4610a2c3",
+      "bytes": 1042
+    },
+    {
+      "path": ".scratch/readiness-implementation-20261015/browser-producers/dojoToday.diagnosis.log",
+      "sha256": "827a275ed6007e622ebe1bb552e4918a653a374c3318f228b4731852547a8a06",
+      "bytes": 3090
+    },
+    {
+      "path": ".scratch/readiness-implementation-20261015/browser-producers/codexdojo-os-prototype.config.ts",
+      "sha256": "eaaacc82d1c9e1cf1f0a327f6bbcfb17cbe83c682d9280b8236191dcf8ea4bd4",
+      "bytes": 1336
+    },
+    {
+      "path": ".scratch/readiness-implementation-20261015/browser-producers/codexdojo-os-prototype.json",
+      "sha256": "5bbe38e9b2d266fcc399a80607697043c985a5178e8f391217fd33c28d56a202",
+      "bytes": 1309
+    },
+    {
+      "path": ".scratch/readiness-implementation-20261015/browser-producers/codexdojo-os-prototype.log",
+      "sha256": "b58dc9e62742c995570e5e0315f5f8022c9a6f8865eaa8bb8586fdab0e313635",
+      "bytes": 31027
+    },
+    {
+      "path": ".scratch/readiness-implementation-20261015/browser-producers/codexdojo-os-prototype.report.json",
+      "sha256": "c580c0771d8b0a6d496f349aba9a587a94ecaeac7b5e317c23cf058bc670be22",
+      "bytes": 104582
+    },
+    {
+      "path": ".scratch/readiness-implementation-20261015/browser-producers/codexdojo-os-prototype.diagnosis.config.ts",
+      "sha256": "7b592456747212b43dcb6eea9c0d23dac69315fba79b2a14c542f35833811fce",
+      "bytes": 1372
+    },
+    {
+      "path": ".scratch/readiness-implementation-20261015/browser-producers/codexdojo-os-prototype.diagnosis.json",
+      "sha256": "604615f656e61dd6d47bed8f9b093349a94d80169938f10e507d44807cc63add",
+      "bytes": 1058
+    },
+    {
+      "path": ".scratch/readiness-implementation-20261015/browser-producers/codexdojo-os-prototype.diagnosis.log",
+      "sha256": "a145a1e19facba65c6635c1dc368fe59b7caeb51588b139c71215bb3e4f30b15",
+      "bytes": 2960
+    },
+    {
+      "path": ".scratch/readiness-implementation-20261015/browser-producers/dojoToday.diagnosis.report.json",
+      "sha256": "2cc3ac056ae746741daa9db13ccecd4b4f343a572a75233782f64067470af778",
+      "bytes": 23241
+    },
+    {
+      "path": ".scratch/readiness-implementation-20261015/browser-producers/diagnosis/os-rerun-cleanup.json",
+      "sha256": "2f989776cd3d9825718cdfc71685f52daf23e00e9c5d674fde71681acc156679",
+      "bytes": 3524
+    },
+    {
+      "path": ".scratch/readiness-implementation-20261015/browser-producers/diagnosis/source-hashes-before.json",
+      "sha256": "7924994b8b64b563c1d84e6db12f1eda64bdc09105dc621ff69f9bc5a9e05453",
+      "bytes": 638
+    },
+    {
+      "path": ".scratch/readiness-implementation-20261015/browser-producers/diagnosis/source-hashes-after.json",
+      "sha256": "7924994b8b64b563c1d84e6db12f1eda64bdc09105dc621ff69f9bc5a9e05453",
+      "bytes": 638
+    },
+    {
+      "path": ".scratch/readiness-implementation-20261015/browser-producers/diagnosis/diagnostic-source-hashes.json",
+      "sha256": "e777a8f10d3d13fd3824c76ceb6b044b4a348b8c76718df5c0bd14127a052715",
+      "bytes": 3327
+    },
+    {
+      "path": ".scratch/readiness-implementation-20261015/browser-producers/diagnosis/diagnostic-source-hashes-after.json",
+      "sha256": "e777a8f10d3d13fd3824c76ceb6b044b4a348b8c76718df5c0bd14127a052715",
+      "bytes": 3327
+    },
+    {
+      "path": ".scratch/readiness-implementation-20261015/browser-producers/diagnosis/os-initial-test-inventory.json",
+      "sha256": "e03a3ffe1516ef63feb2beb76f8ff8d53c0fe243753c1c8e15057294b8b2e0e0",
+      "bytes": 13477
+    }
+  ],
+  "limits": [
+    "Selected producer tests are not exhaustive declared-use qualification.",
+    "No semantic TypeSafe/Jev review ran in this task.",
+    "Four OS Pixel assertions drift from actual accented accessible name; test edits require separate owner authorization.",
+    "The original30s total test timeout cancels an explicit60s receipt assertion. Receipt persistence after a complete60s wait remains unverified by this diagnosis.",
+    "No further browser reruns until root authorizes after resource pressure settles."
+  ]
+}

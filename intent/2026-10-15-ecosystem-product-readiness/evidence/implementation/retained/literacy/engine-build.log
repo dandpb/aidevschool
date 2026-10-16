@@ -1,0 +1,29 @@
+
+> literacydojo@0.1.0 prebuild
+> npm run gen:content
+
+
+> literacydojo@0.1.0 gen:content
+> cd ../.. && python3 curriculum/ai-literacy/tools/validate.py --compile engines/literacyDojo/src/data/generated --compile-competency engines/literacyDojo/src/data/generated
+
+OK: 32 lição(ões) ready validadas: 23 IA na Prática, 9 Dev; 0 planned (sem arquivo exigido).
+Read model gerado: engines/literacyDojo/src/data/generated/lessons.ts
+Competency map gerado: engines/literacyDojo/src/data/generated/competency-map.ts
+
+> literacydojo@0.1.0 build
+> tsc -b && vite build
+
+vite v6.4.3 building for production...
+transforming...
+✓ 88 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   2.81 kB │ gzip:   0.85 kB
+dist/assets/index-CL6Vb0lo.css   33.54 kB │ gzip:   8.28 kB
+dist/assets/index-Dm7bsiWn.js   508.33 kB │ gzip: 147.50 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 801ms

@@ -1,0 +1,2195 @@
+{
+  "engineId": "sdlc-quest",
+  "caseName": "declared-use",
+  "criterion": "C28",
+  "observedAt": "2026-10-16T01:42:22.231Z",
+  "producerContext": {
+    "id": "qa-local-products-runtime",
+    "role": "evidence-producer",
+    "pid": 81129,
+    "argv": [
+      "/Users/danielbarreto/.hermes/node/bin/node",
+      "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/local-products-runtime.mjs",
+      "sdlc-quest",
+      "declared-use"
+    ],
+    "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool"
+  },
+  "verifierContext": null,
+  "sourceCommit": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+  "commands": [
+    {
+      "executable": "rtk",
+      "argv": [
+        "proxy",
+        "node",
+        "tools/serve.cjs",
+        "--port",
+        "51979"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest",
+      "envKeys": [
+        "HOST",
+        "HOSTNAME",
+        "PORT"
+      ],
+      "startedAt": "2026-10-16T01:42:22.600Z",
+      "pid": 81138,
+      "exitCode": null,
+      "signal": "SIGTERM",
+      "endedAt": "2026-10-16T01:42:56.390Z",
+      "stdout": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-local-products/sdlc-quest/2026-10-16T01-42-22-230Z/command-0.stdout.log",
+      "stderr": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-local-products/sdlc-quest/2026-10-16T01-42-22-230Z/command-0.stderr.log"
+    }
+  ],
+  "servers": [
+    {
+      "engine": "sdlc-quest",
+      "origin": "http://127.0.0.1:51979",
+      "port": 51979,
+      "pid": 81138
+    }
+  ],
+  "checks": [
+    {
+      "name": "http-pt-BR native entry zero progress",
+      "status": "pass",
+      "url": "http://127.0.0.1:51979/",
+      "title": "SDLC Quest v1.3 — Laboratório de execução"
+    },
+    {
+      "name": "http-pt-BR offered language selected",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR incorrect campaign answer denied",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR current campaign intent",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR completed campaign intent",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR native partial-save reload",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR current campaign risk",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR completed campaign risk",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR current campaign intent-gate",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR completed campaign intent-gate",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR current campaign contracts",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR completed campaign contracts",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR current campaign pillars",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR completed campaign pillars",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR current campaign secrets",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR completed campaign secrets",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR current campaign diff",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR completed campaign diff",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR current campaign redgreen",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR completed campaign redgreen",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR current campaign delegation",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR completed campaign delegation",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR current campaign patch",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR completed campaign patch",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR current campaign evidence",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR completed campaign evidence",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR current campaign evals",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR completed campaign evals",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR current campaign review",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR completed campaign review",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR current campaign gate",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR completed campaign gate",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR current campaign guardrail",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR completed campaign guardrail",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR current campaign bands",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR completed campaign bands",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR current campaign incident",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR completed campaign incident",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR current campaign loop",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR completed campaign loop",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR all eighteen campaign challenges",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR current TLC tlc-situation",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR wrong TLC answer denied",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR completed TLC tlc-situation",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR current TLC tlc-verdict",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR completed TLC tlc-verdict",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR current TLC tlc-design",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR completed TLC tlc-design",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR current TLC tlc-success",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR completed TLC tlc-success",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR current TLC tlc-slice",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR completed TLC tlc-slice",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR current TLC tlc-sweep",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR completed TLC tlc-sweep",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR current TLC tlc-criteria",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR completed TLC tlc-criteria",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR current TLC tlc-task-pr",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR completed TLC tlc-task-pr",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR current TLC tlc-profile",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR completed TLC tlc-profile",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR current TLC tlc-proof-lab",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR completed TLC tlc-proof-lab",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR current TLC tlc-verifier",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR completed TLC tlc-verifier",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR current TLC tlc-handoff",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR completed TLC tlc-handoff",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR current TLC tlc-review",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR completed TLC tlc-review",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR current TLC tlc-severity",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR completed TLC tlc-severity",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR current TLC tlc-carryover",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR completed TLC tlc-carryover",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR current TLC tlc-converge",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR completed TLC tlc-converge",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR all sixteen TLC challenges",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR lab self-declaration denied",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR lab six current local receipts",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR lab package download enabled",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR lab package disclaims authority",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR native return persists campaign and TLC",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR lab reload drops approvals",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR import preview describes replace and unapproved lab",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR preview does not apply progress",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR import confirms progress",
+      "status": "pass"
+    },
+    {
+      "name": "http-pt-BR imported lab has inputs without approval",
+      "status": "pass"
+    },
+    {
+      "name": "http-en native entry zero progress",
+      "status": "pass",
+      "url": "http://127.0.0.1:51979/",
+      "title": "SDLC Quest v1.3 — Laboratório de execução"
+    },
+    {
+      "name": "http-en offered language selected",
+      "status": "pass"
+    },
+    {
+      "name": "http-en incorrect campaign answer denied",
+      "status": "pass"
+    },
+    {
+      "name": "http-en current campaign intent",
+      "status": "pass"
+    },
+    {
+      "name": "http-en completed campaign intent",
+      "status": "pass"
+    },
+    {
+      "name": "http-en native partial-save reload",
+      "status": "pass"
+    },
+    {
+      "name": "http-en current campaign risk",
+      "status": "pass"
+    },
+    {
+      "name": "http-en completed campaign risk",
+      "status": "pass"
+    },
+    {
+      "name": "http-en current campaign intent-gate",
+      "status": "pass"
+    },
+    {
+      "name": "http-en completed campaign intent-gate",
+      "status": "pass"
+    },
+    {
+      "name": "http-en current campaign contracts",
+      "status": "pass"
+    },
+    {
+      "name": "http-en completed campaign contracts",
+      "status": "pass"
+    },
+    {
+      "name": "http-en current campaign pillars",
+      "status": "pass"
+    },
+    {
+      "name": "http-en completed campaign pillars",
+      "status": "pass"
+    },
+    {
+      "name": "http-en current campaign secrets",
+      "status": "pass"
+    },
+    {
+      "name": "http-en completed campaign secrets",
+      "status": "pass"
+    },
+    {
+      "name": "http-en current campaign diff",
+      "status": "pass"
+    },
+    {
+      "name": "http-en completed campaign diff",
+      "status": "pass"
+    },
+    {
+      "name": "http-en current campaign redgreen",
+      "status": "pass"
+    },
+    {
+      "name": "http-en completed campaign redgreen",
+      "status": "pass"
+    },
+    {
+      "name": "http-en current campaign delegation",
+      "status": "pass"
+    },
+    {
+      "name": "http-en completed campaign delegation",
+      "status": "pass"
+    },
+    {
+      "name": "http-en current campaign patch",
+      "status": "pass"
+    },
+    {
+      "name": "http-en completed campaign patch",
+      "status": "pass"
+    },
+    {
+      "name": "http-en current campaign evidence",
+      "status": "pass"
+    },
+    {
+      "name": "http-en completed campaign evidence",
+      "status": "pass"
+    },
+    {
+      "name": "http-en current campaign evals",
+      "status": "pass"
+    },
+    {
+      "name": "http-en completed campaign evals",
+      "status": "pass"
+    },
+    {
+      "name": "http-en current campaign review",
+      "status": "pass"
+    },
+    {
+      "name": "http-en completed campaign review",
+      "status": "pass"
+    },
+    {
+      "name": "http-en current campaign gate",
+      "status": "pass"
+    },
+    {
+      "name": "http-en completed campaign gate",
+      "status": "pass"
+    },
+    {
+      "name": "http-en current campaign guardrail",
+      "status": "pass"
+    },
+    {
+      "name": "http-en completed campaign guardrail",
+      "status": "pass"
+    },
+    {
+      "name": "http-en current campaign bands",
+      "status": "pass"
+    },
+    {
+      "name": "http-en completed campaign bands",
+      "status": "pass"
+    },
+    {
+      "name": "http-en current campaign incident",
+      "status": "pass"
+    },
+    {
+      "name": "http-en completed campaign incident",
+      "status": "pass"
+    },
+    {
+      "name": "http-en current campaign loop",
+      "status": "pass"
+    },
+    {
+      "name": "http-en completed campaign loop",
+      "status": "pass"
+    },
+    {
+      "name": "http-en all eighteen campaign challenges",
+      "status": "pass"
+    },
+    {
+      "name": "http-en current TLC tlc-situation",
+      "status": "pass"
+    },
+    {
+      "name": "http-en wrong TLC answer denied",
+      "status": "pass"
+    },
+    {
+      "name": "http-en completed TLC tlc-situation",
+      "status": "pass"
+    },
+    {
+      "name": "http-en current TLC tlc-verdict",
+      "status": "pass"
+    },
+    {
+      "name": "http-en completed TLC tlc-verdict",
+      "status": "pass"
+    },
+    {
+      "name": "http-en current TLC tlc-design",
+      "status": "pass"
+    },
+    {
+      "name": "http-en completed TLC tlc-design",
+      "status": "pass"
+    },
+    {
+      "name": "http-en current TLC tlc-success",
+      "status": "pass"
+    },
+    {
+      "name": "http-en completed TLC tlc-success",
+      "status": "pass"
+    },
+    {
+      "name": "http-en current TLC tlc-slice",
+      "status": "pass"
+    },
+    {
+      "name": "http-en completed TLC tlc-slice",
+      "status": "pass"
+    },
+    {
+      "name": "http-en current TLC tlc-sweep",
+      "status": "pass"
+    },
+    {
+      "name": "http-en completed TLC tlc-sweep",
+      "status": "pass"
+    },
+    {
+      "name": "http-en current TLC tlc-criteria",
+      "status": "pass"
+    },
+    {
+      "name": "http-en completed TLC tlc-criteria",
+      "status": "pass"
+    },
+    {
+      "name": "http-en current TLC tlc-task-pr",
+      "status": "pass"
+    },
+    {
+      "name": "http-en completed TLC tlc-task-pr",
+      "status": "pass"
+    },
+    {
+      "name": "http-en current TLC tlc-profile",
+      "status": "pass"
+    },
+    {
+      "name": "http-en completed TLC tlc-profile",
+      "status": "pass"
+    },
+    {
+      "name": "http-en current TLC tlc-proof-lab",
+      "status": "pass"
+    },
+    {
+      "name": "http-en completed TLC tlc-proof-lab",
+      "status": "pass"
+    },
+    {
+      "name": "http-en current TLC tlc-verifier",
+      "status": "pass"
+    },
+    {
+      "name": "http-en completed TLC tlc-verifier",
+      "status": "pass"
+    },
+    {
+      "name": "http-en current TLC tlc-handoff",
+      "status": "pass"
+    },
+    {
+      "name": "http-en completed TLC tlc-handoff",
+      "status": "pass"
+    },
+    {
+      "name": "http-en current TLC tlc-review",
+      "status": "pass"
+    },
+    {
+      "name": "http-en completed TLC tlc-review",
+      "status": "pass"
+    },
+    {
+      "name": "http-en current TLC tlc-severity",
+      "status": "pass"
+    },
+    {
+      "name": "http-en completed TLC tlc-severity",
+      "status": "pass"
+    },
+    {
+      "name": "http-en current TLC tlc-carryover",
+      "status": "pass"
+    },
+    {
+      "name": "http-en completed TLC tlc-carryover",
+      "status": "pass"
+    },
+    {
+      "name": "http-en current TLC tlc-converge",
+      "status": "pass"
+    },
+    {
+      "name": "http-en completed TLC tlc-converge",
+      "status": "pass"
+    },
+    {
+      "name": "http-en all sixteen TLC challenges",
+      "status": "pass"
+    },
+    {
+      "name": "http-en lab self-declaration denied",
+      "status": "pass"
+    },
+    {
+      "name": "http-en lab six current local receipts",
+      "status": "pass"
+    },
+    {
+      "name": "http-en lab package download enabled",
+      "status": "pass"
+    },
+    {
+      "name": "http-en lab package disclaims authority",
+      "status": "pass"
+    },
+    {
+      "name": "http-en native return persists campaign and TLC",
+      "status": "pass"
+    },
+    {
+      "name": "http-en lab reload drops approvals",
+      "status": "pass"
+    },
+    {
+      "name": "http-en import preview describes replace and unapproved lab",
+      "status": "pass"
+    },
+    {
+      "name": "http-en preview does not apply progress",
+      "status": "pass"
+    },
+    {
+      "name": "http-en import confirms progress",
+      "status": "pass"
+    },
+    {
+      "name": "http-en imported lab has inputs without approval",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR native entry zero progress",
+      "status": "pass",
+      "url": "file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/sdlc-quest.html",
+      "title": "SDLC Quest v1.3 — Laboratório de execução"
+    },
+    {
+      "name": "native-file-pt-BR offered language selected",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR incorrect campaign answer denied",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR current campaign intent",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR completed campaign intent",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR native partial-save reload",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR current campaign risk",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR completed campaign risk",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR current campaign intent-gate",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR completed campaign intent-gate",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR current campaign contracts",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR completed campaign contracts",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR current campaign pillars",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR completed campaign pillars",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR current campaign secrets",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR completed campaign secrets",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR current campaign diff",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR completed campaign diff",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR current campaign redgreen",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR completed campaign redgreen",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR current campaign delegation",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR completed campaign delegation",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR current campaign patch",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR completed campaign patch",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR current campaign evidence",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR completed campaign evidence",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR current campaign evals",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR completed campaign evals",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR current campaign review",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR completed campaign review",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR current campaign gate",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR completed campaign gate",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR current campaign guardrail",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR completed campaign guardrail",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR current campaign bands",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR completed campaign bands",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR current campaign incident",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR completed campaign incident",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR current campaign loop",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR completed campaign loop",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR all eighteen campaign challenges",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR current TLC tlc-situation",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR wrong TLC answer denied",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR completed TLC tlc-situation",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR current TLC tlc-verdict",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR completed TLC tlc-verdict",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR current TLC tlc-design",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR completed TLC tlc-design",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR current TLC tlc-success",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR completed TLC tlc-success",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR current TLC tlc-slice",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR completed TLC tlc-slice",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR current TLC tlc-sweep",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR completed TLC tlc-sweep",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR current TLC tlc-criteria",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR completed TLC tlc-criteria",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR current TLC tlc-task-pr",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR completed TLC tlc-task-pr",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR current TLC tlc-profile",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR completed TLC tlc-profile",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR current TLC tlc-proof-lab",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR completed TLC tlc-proof-lab",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR current TLC tlc-verifier",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR completed TLC tlc-verifier",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR current TLC tlc-handoff",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR completed TLC tlc-handoff",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR current TLC tlc-review",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR completed TLC tlc-review",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR current TLC tlc-severity",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR completed TLC tlc-severity",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR current TLC tlc-carryover",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR completed TLC tlc-carryover",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR current TLC tlc-converge",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR completed TLC tlc-converge",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR all sixteen TLC challenges",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR lab self-declaration denied",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR lab six current local receipts",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR lab package download enabled",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR lab package disclaims authority",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR native return persists campaign and TLC",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR lab reload drops approvals",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR import preview describes replace and unapproved lab",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR preview does not apply progress",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR import confirms progress",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-pt-BR imported lab has inputs without approval",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en native entry zero progress",
+      "status": "pass",
+      "url": "file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/sdlc-quest.html",
+      "title": "SDLC Quest v1.3 — Laboratório de execução"
+    },
+    {
+      "name": "native-file-en offered language selected",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en incorrect campaign answer denied",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en current campaign intent",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en completed campaign intent",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en native partial-save reload",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en current campaign risk",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en completed campaign risk",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en current campaign intent-gate",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en completed campaign intent-gate",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en current campaign contracts",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en completed campaign contracts",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en current campaign pillars",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en completed campaign pillars",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en current campaign secrets",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en completed campaign secrets",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en current campaign diff",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en completed campaign diff",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en current campaign redgreen",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en completed campaign redgreen",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en current campaign delegation",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en completed campaign delegation",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en current campaign patch",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en completed campaign patch",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en current campaign evidence",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en completed campaign evidence",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en current campaign evals",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en completed campaign evals",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en current campaign review",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en completed campaign review",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en current campaign gate",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en completed campaign gate",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en current campaign guardrail",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en completed campaign guardrail",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en current campaign bands",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en completed campaign bands",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en current campaign incident",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en completed campaign incident",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en current campaign loop",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en completed campaign loop",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en all eighteen campaign challenges",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en current TLC tlc-situation",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en wrong TLC answer denied",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en completed TLC tlc-situation",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en current TLC tlc-verdict",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en completed TLC tlc-verdict",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en current TLC tlc-design",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en completed TLC tlc-design",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en current TLC tlc-success",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en completed TLC tlc-success",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en current TLC tlc-slice",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en completed TLC tlc-slice",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en current TLC tlc-sweep",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en completed TLC tlc-sweep",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en current TLC tlc-criteria",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en completed TLC tlc-criteria",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en current TLC tlc-task-pr",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en completed TLC tlc-task-pr",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en current TLC tlc-profile",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en completed TLC tlc-profile",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en current TLC tlc-proof-lab",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en completed TLC tlc-proof-lab",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en current TLC tlc-verifier",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en completed TLC tlc-verifier",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en current TLC tlc-handoff",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en completed TLC tlc-handoff",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en current TLC tlc-review",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en completed TLC tlc-review",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en current TLC tlc-severity",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en completed TLC tlc-severity",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en current TLC tlc-carryover",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en completed TLC tlc-carryover",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en current TLC tlc-converge",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en completed TLC tlc-converge",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en all sixteen TLC challenges",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en lab self-declaration denied",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en lab six current local receipts",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en lab package download enabled",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en lab package disclaims authority",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en native return persists campaign and TLC",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en lab reload drops approvals",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en import preview describes replace and unapproved lab",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en preview does not apply progress",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en import confirms progress",
+      "status": "pass"
+    },
+    {
+      "name": "native-file-en imported lab has inputs without approval",
+      "status": "pass"
+    },
+    {
+      "name": "No browser page errors across HTTP and native file modes",
+      "status": "pass"
+    }
+  ],
+  "cases": [
+    {
+      "id": "http-pt-BR",
+      "status": "pass",
+      "transport": "http",
+      "url": "http://127.0.0.1:51979",
+      "language": "pt-BR",
+      "campaignChallenges": 18,
+      "workshopChallenges": 16,
+      "labSteps": 6,
+      "nativeStorage": true,
+      "partialReload": true,
+      "backup": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/http-pt-BR-backup.json",
+      "importPreview": true,
+      "importReplaces": true,
+      "labApprovalsDiscarded": true
+    },
+    {
+      "id": "http-en",
+      "status": "pass",
+      "transport": "http",
+      "url": "http://127.0.0.1:51979",
+      "language": "en",
+      "campaignChallenges": 18,
+      "workshopChallenges": 16,
+      "labSteps": 6,
+      "nativeStorage": true,
+      "partialReload": true,
+      "backup": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/http-en-backup.json",
+      "importPreview": true,
+      "importReplaces": true,
+      "labApprovalsDiscarded": true
+    },
+    {
+      "id": "native-file-pt-BR",
+      "status": "pass",
+      "transport": "native-file",
+      "url": "file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/sdlc-quest.html",
+      "language": "pt-BR",
+      "campaignChallenges": 18,
+      "workshopChallenges": 16,
+      "labSteps": 6,
+      "nativeStorage": true,
+      "partialReload": true,
+      "backup": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/native-file-pt-BR-backup.json",
+      "importPreview": true,
+      "importReplaces": true,
+      "labApprovalsDiscarded": true
+    },
+    {
+      "id": "native-file-en",
+      "status": "pass",
+      "transport": "native-file",
+      "url": "file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/sdlc-quest.html",
+      "language": "en",
+      "campaignChallenges": 18,
+      "workshopChallenges": 16,
+      "labSteps": 6,
+      "nativeStorage": true,
+      "partialReload": true,
+      "backup": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/native-file-en-backup.json",
+      "importPreview": true,
+      "importReplaces": true,
+      "labApprovalsDiscarded": true
+    }
+  ],
+  "errors": [],
+  "consoleErrors": [],
+  "limitations": [
+    "Independent verifier and TypeSafe/Jev semantic image judgment pending; no model/provider calls made.",
+    "Native file validation is Chromium on this machine; no physical mobile, Safari or Firefox proof. Different HTTP ports/file origin use independent browser storage per documented origin contract."
+  ],
+  "mediaDir": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z",
+  "logDir": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-local-products/sdlc-quest/2026-10-16T01-42-22-230Z",
+  "sharedBaseProvenance": [
+    {
+      "path": "/Users/danielbarreto/Development/aidevschool/engines/shared/playwright/base.config.ts",
+      "sha256": "5519ac81eac5d277c939da29e816130dd614bf18009a9200263aa9014ae525a7"
+    },
+    {
+      "path": "/Users/danielbarreto/Development/aidevschool/engines/shared/playwright/README.md",
+      "sha256": "576211c36acc1d96040e473230a588977f388abee17029818a7ab13883873858"
+    }
+  ],
+  "sourceFiles": [
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/.gitignore",
+      "sha256": "14e3a540ab1beee8658eacc34c652cad8da922fefe5f5c58a202273b020ad438"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/.nvmrc",
+      "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/HARNESS-GUIDE.md",
+      "sha256": "9312b957bf30691e9177910359e7ca23308da9ccf573afd95c16928ac0d50334"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/HARNESS-GUIDE.pt-BR.md",
+      "sha256": "5b62f749a899f82fc56dc41653baa04ebe5c4b10bf117c1fd07d83aa8c6339f0"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/INICIAR-Mac.command",
+      "sha256": "c1c3cadd3ad61fd1904667ab969e0e54c889d4a202ba74eb91b2ac26586a11fb"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/INICIAR-Windows.cmd",
+      "sha256": "3660438b77c8ba49d0d667553fedb76572e9987aa0afffbf29ffdc4e07edccd4"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/LEIA-ME-PRIMEIRO.txt",
+      "sha256": "b2f2a8405b8e5ee59094130491fee2fc61a85ecb813e9d35fac56619e6fbeb63"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/LICENSE",
+      "sha256": "f723320526d15edd87cfe054b147346ca671fb4b27b8c9f53904208bcb8dbdd3"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/README.md",
+      "sha256": "1eaa39f8590dbc12f3d3887856348a23f51adf0c3a5814514629e19f5d2184db"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/README.pt-BR.md",
+      "sha256": "b21ca843c7be841557ae91bfd704d4940f58de9e50588fa40809ee7c5152da41"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/SHA256SUMS.txt",
+      "sha256": "0e9a6e4ba621b2150c5d23e9124c24400bbd4ea5c4c92e4ecbb20dee23e128a7"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/TEST-REPORT-v1.2.md",
+      "sha256": "9af8b10bd82bed8229dabef9c884391c312d96167bf6dc3a3922ed1738f27038"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/TEST-REPORT-v1.3.md",
+      "sha256": "6d985b9158bab883a547fd9dfe08119175bd724c3bd5f2d02d9880a3bdc45f2d"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/THIRD-PARTY-NOTICES.md",
+      "sha256": "dda5ddccc8006777152ffd32488c10f585d4d639b5caee65432d9947d6253583"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/TLC-GUIDE.md",
+      "sha256": "7c08880783f8735b9ec23022b2f0d1a36eb977b85c1a3685535687dc57b29676"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/TLC-GUIDE.pt-BR.md",
+      "sha256": "bc03e2f2da6e5d0f4bbda5978817f5e55f08125f5e670ed3804f49498c69080d"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/artifacts/evidence.json",
+      "sha256": "9aa061161eacee795c84f298deb628d02abcac9aab355392224c2460205eb776"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/artifacts/incident-intent.md",
+      "sha256": "43e48ec0189a8622773222ddf7349c8efef6e967a97cd3af878ab94416842e6a"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/artifacts/intent.md",
+      "sha256": "a178f38b50a6a176ded42d90433acc7592f1b6a0df2134a1fb5be894ac4850f6"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/artifacts/plan.md",
+      "sha256": "093cf1184d6704e40d2d23ec2cdc8887ea3ec2883166946991d65eb77b0c8aeb"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/artifacts/review-release.md",
+      "sha256": "e946e77471ea6878d2e4abdc938b65b57a2d972efef394f81f5dbc61706c5988"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/artifacts/spec.md",
+      "sha256": "77f5322b6fe17cf692b1f74c2bda61597b801289a89dd46b90570e63f4070bf8"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/docs/harness/contract.json",
+      "sha256": "c1ca3f3797efb8081b72b91ef5d1aeeef2ddbdd1e1e5325e93a2e71e240ef3b7"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/docs/harness/integration-status.md",
+      "sha256": "d1fc1af128948e577e6f6aa6967b573bd5f6a9b8c6e86d25cb4f49660656b546"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/docs/packaging/PORTABILIDADE.md",
+      "sha256": "24c413351ae838c4bd40ca30f5159fb4b1e2c0d3bdf29fb60bbab28682fefa7f"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/docs/packaging/README-v1.3-original.md",
+      "sha256": "46a310ef8c3f8877bc0575ce5b0cc9ce9ff456862954e0e80e1511c1996741f9"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/docs/packaging/VALIDACAO-LOCAL.md",
+      "sha256": "94c00a593841618de0359e18e9143d975b0a9f3f19007d549a3988c41d55ab35"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/docs/packaging/desktop-home.png",
+      "sha256": "917c535e6ab81be2eccc25da1dec0986ba4ac6330f46852bd389f89831856527"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/docs/packaging/gate-run/run.json",
+      "sha256": "808f89f7a48ced2e2d07b171685d12bb24b60596631606414cc0abad8d99d654"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/docs/packaging/harness-desktop.json",
+      "sha256": "d507ed0a7a27e39365a05cadd9138b007f0dea51d2195e076cdad67e625207f2"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/docs/packaging/harness-mobile.json",
+      "sha256": "c72ecea08b3f892d88ca7520acd510baba609700afcea163582ab7cc59d5ce88"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/docs/packaging/http-probe.json",
+      "sha256": "09944c7af73d84bab25ce107668c029a78b6dbe2f69576512520cc9dc9fca8ec"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/docs/packaging/legacy-desktop.json",
+      "sha256": "203f0bf74f533003fffa0275c4f77d8082458147db1c6dca2e277a4af084cf8a"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/docs/packaging/legacy-mobile.json",
+      "sha256": "61d15b309edb0963a6d13f0e667fb87ed0e440ed1bf2838690388c2cd0263ea2"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/docs/packaging/mobile-tlc.png",
+      "sha256": "4268f2a5ba2b4d9f6ca3d65a1f739141d7a4cef463c9dd67f09ca45bc165fc52"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/docs/packaging/rules.tap",
+      "sha256": "78acb189c1e099d2d5f320aeade7b406a7d7ffa5a4c8aef571d0b64282391ae5"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/docs/packaging/tlc-desktop.json",
+      "sha256": "8a36560dfa491ee9192baae005c8530e760887cf5c2f04f566641928019a6989"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/docs/packaging/tlc-mobile.json",
+      "sha256": "50bd04505aa3b98bb089b24c1c57613941c394c3ec2a1a45f749670ec9c0df91"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/index.html",
+      "sha256": "f94b2a39e19ba475b049f5cfe8cb70d562d3c19934392cd75c327ae74d4a9f31"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/iniciar.sh",
+      "sha256": "c1c3cadd3ad61fd1904667ab969e0e54c889d4a202ba74eb91b2ac26586a11fb"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/notes/tlc-integration.md",
+      "sha256": "3981f66d9a8c5ff1ee923f7683ad81251202068cf530d63770ee3dae7fb5968e"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/package-lock.json",
+      "sha256": "08598e2c9e173d8bf96d9f85f92228a15fc41e90f9ad0e50892a845871b61bac"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/package.json",
+      "sha256": "c91f4660fd1bbc5b47581da9ad5b1dc788136f2871bc4ad50890440d673927a1"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/refs/tlc/SOURCES.md",
+      "sha256": "7099b86d82102dff097d76b2de2a289e712874d4b683095d650fab99d2027b16"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/requirements-dev.txt",
+      "sha256": "df7696acf1e200684a962c8b7cb25363273b8239093235e68bb3f60231a9799f"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/sdlc-quest.html",
+      "sha256": "9092224b1a2860e672e611617bf49826f928890883d1ad63986d4daac912a057"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/src/app.js",
+      "sha256": "211b544d1acc49d23a9ca0bc919ca68dff89dd1637860361868a4658e7e93365"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/src/core.js",
+      "sha256": "dd82013e52b54e8edde5eab810a6e3b9228565ed10ac30e6532947bb3da94fc9"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/src/data.js",
+      "sha256": "940eae399f9055e4b3ad350cbd241f7a5deee347a6dbc5cbdf4515c6e8e8dd95"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/src/harness-app.js",
+      "sha256": "9f18322213eeb8e87098b5d7d2d320481d22d257330f7e6a7fceaa3707c531e8"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/src/harness-core.js",
+      "sha256": "63bffecc54ffe1387c505ae692d39004e095f5ddb60f9a2d0957bc048683eb89"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/src/harness-style.css",
+      "sha256": "c619a93221c1ca9d3c943d8d4a2c4dac99b25ae069f30a37cf0377a39ca6cf2d"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/src/lang.js",
+      "sha256": "801881a3a0a525b49ed74b7da17c0b84b376bca22bb8ed86c2d97bdac1d61d29"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/src/style.css",
+      "sha256": "d47d2f20c1134debb08c3d215074bb6a927f417179eeb9aa5b4631e43c7403df"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/src/tlc-app.js",
+      "sha256": "b2c9985f5322d983c26a36b789fbdfa6fa396d06fe6990e4845b822a9634ca4d"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/src/tlc-core.js",
+      "sha256": "81533bb07cd9361e7f15e91d30f53ec16c59a5ad53ab22a3e62549e266c624aa"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/src/tlc-data.js",
+      "sha256": "8aef81cd8b8467267fbad1989b5d1d74c3cd4142f1c6cb8b612fde923519f79f"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/src/tlc-style.css",
+      "sha256": "ce8a7799917682554fd2ad923d99d9b94f64aea1c3c1a62f4d07584012c7094e"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/src/world.js",
+      "sha256": "b4b737ad07b0355e7cc0882c3dca904c77135f0b69f679e067ea0ad7dc11d1f4"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/tests/audit-browser.py",
+      "sha256": "e4821e5615a69ee9cdb8a2dffe7cbcec31037dcc0e3b12feeb8966ff68544503"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/tests/audit.test.cjs",
+      "sha256": "c7d3a3eace8b9fea44882c71917983a4df9943cbc6c65660055810fdec2a1dc1"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/tests/browser_support.py",
+      "sha256": "ced6331bf021653cb620f91ae80aae8982e070846253b18b8c41464d7eeca003"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/tests/contrast-probe.js",
+      "sha256": "3c3798f09f06be2e2513f6ec0aff7c6623d9f6b3024bbb0abe37c53b2a0425c9"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/tests/core.test.cjs",
+      "sha256": "686f456c4b5b3ab3e4f6511ec4e34f4f16ef7d087f38bbb8f73c9f2cf1793f3e"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/tests/docs-bilingual.test.cjs",
+      "sha256": "7565fb2dd14c192595e1e7e02dc75af84cabca938aba49247976fe68c29eefa1"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/tests/fixtures/accepted-decisions.json",
+      "sha256": "fa95a4c55c2c6e88121864af752f78fe04335242b2723f98a4506d3dab776791"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/tests/fixtures/tlc-decisions.json",
+      "sha256": "965396d00299807927055b5b63a0de94b306a5f63a6714138923e18536df3f74"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/tests/golden.test.cjs",
+      "sha256": "00319db000e04474707bc62fe6d498f1d8cc2e3066eebb932ccdd6317e7a1bc2"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/tests/harness-browser.py",
+      "sha256": "ac75b8938c65f572606043a1870778fc05f46b65fcae64fb2dd1130d21f41668"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/tests/harness.test.cjs",
+      "sha256": "dacffd97692cf34bd77d8fbb3c0dd82628adc0ce8c3f24856d6aec293b2e8e78"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/tests/i18n-browser.py",
+      "sha256": "2aebbe1cef9f0a3a74106b3400e7a8a519395321553509ef8a78435e324da127"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/tests/i18n.test.cjs",
+      "sha256": "7f7d0ea417c8e059ff341a093cde5c3c2211a2c89b4938f446f8542c5cdcf2ae"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/tests/local-package.test.cjs",
+      "sha256": "b28fd6d0778d719b9104ba37991b078c7c24045d6d02a14dc269643812f21ab1"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/tests/playtest.py",
+      "sha256": "53d5536ad3db82cab5047a2882391d157545f73defd17f149cb3bfe4a28f3190"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/tests/quest-gate.test.cjs",
+      "sha256": "92914a16c984490dfc4f6b1edccf781cda6f77e24597204f90ec185b21064714"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/tests/tlc-browser.py",
+      "sha256": "506fb1a8552a290a7335bc11a1c9f58b301506353d96ac73dc81504f067c51ce"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/tests/tlc.test.cjs",
+      "sha256": "9cc03586847103eb0edc1bc53819211ae986596892e3675da41aaf1fb05fd48f"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/tests/tools-lang.test.cjs",
+      "sha256": "695b88b0dbd162c7d266ba121e43e573e09d8dca2e623251fb64884e0a951cab"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/tests/ui-matrix.py",
+      "sha256": "a1025a5dd1a92f481608d734820f90b9e2489f442509cfa7aea664179ccc0738"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/tools/build.cjs",
+      "sha256": "e5335a56a890c22b78f8f740e9aa82d41b8dfff17173facb7db7644057f19bb3"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/tools/build.py",
+      "sha256": "c02730206d8752e49c593980b86097c7fa795d826c77aa1f585436a3f581c17e"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/tools/check-package.cjs",
+      "sha256": "0827f24d275cdb5841dbb69cb62d8573bdc2e1eb30eb56250188428bb09412fd"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/tools/create_tlc_content.py",
+      "sha256": "fa44c9e1c687740832550b4d1b74ca94c368498f3e66ca9a8388f6b2fcdfe301"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/tools/python-runtime.cjs",
+      "sha256": "cd6416165a1fb28ceaef9374d5ebd8db8d14dfb52a7e4e80758fa62f8c9a7338"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/tools/quest-gate.cjs",
+      "sha256": "98033549c246e7699f6f7d7f73e3399e2b865d60136619c76b4446c79668073a"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/tools/serve.cjs",
+      "sha256": "6ce6407db8ba456804a58f6ab5e3c8e8a0c586e063db5894ced52bc4a246f6bc"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/tools/setup-tests.cjs",
+      "sha256": "599db7baf4b27c870cb7abcdd854380ab0d47ad44113f11e7d946f401663a258"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/tools/test.cjs",
+      "sha256": "346f0ff535170f2cd33a727549067d5b8c52f6ac445e0d458c5d5c4d6b0cc486"
+    }
+  ],
+  "sourceFingerprint": "933ffe3dc670dc81ce7ee854c3d7d192b46eade3c1bb774495152147b44a1864",
+  "learnerBefore": [
+    {
+      "root": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/",
+      "files": [
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/learning_state.yaml",
+          "sha256": "36419ae44e755a9bd8bd049b14d0dee03d8b5937e577285f67ffe730733735e2"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/learner_profile.md",
+          "sha256": "f32b2cf779dab2d2a88057838f0172440e8ba5e5ae8874733ae8609f01653183"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/pitfalls.md",
+          "sha256": "c63fe93060cdc58d97696cad549cf8af2899fd99ca50c94fe6e6fc2d1d0f7405"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/journal.md",
+          "sha256": "60aa71fddacbff585358c8376e0ead77612a4248ab0f1700301c9dc39397ab6f"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/pipeline_status.yaml",
+          "sha256": "668ac80145de042c0bd78dd4210ceccf1dc0ad932770eb4a03f2fd6d886f169a"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/pipeline_status.md",
+          "sha256": "a8fcbcb603f68ddd03ac7f3e6742c5580dae6194b11bd112206a7d7033188b54"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/predictions.yaml",
+          "sha256": "97f010c12e57942419a2a9326f29df792c5039aca3e1c779ed1508a67124eb37"
+        }
+      ],
+      "digest": "0e8e49b105ded1015b28caecd6968df31a5223a17104c2768c262aa8647192b6"
+    },
+    {
+      "root": "/Users/danielbarreto/Development/aidevschool",
+      "files": [
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/learning_state.yaml",
+          "sha256": "36419ae44e755a9bd8bd049b14d0dee03d8b5937e577285f67ffe730733735e2"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/learner_profile.md",
+          "sha256": "f32b2cf779dab2d2a88057838f0172440e8ba5e5ae8874733ae8609f01653183"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/pitfalls.md",
+          "sha256": "c63fe93060cdc58d97696cad549cf8af2899fd99ca50c94fe6e6fc2d1d0f7405"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/journal.md",
+          "sha256": "60aa71fddacbff585358c8376e0ead77612a4248ab0f1700301c9dc39397ab6f"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/pipeline_status.yaml",
+          "sha256": "668ac80145de042c0bd78dd4210ceccf1dc0ad932770eb4a03f2fd6d886f169a"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/pipeline_status.md",
+          "sha256": "a8fcbcb603f68ddd03ac7f3e6742c5580dae6194b11bd112206a7d7033188b54"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/predictions.yaml",
+          "sha256": "97f010c12e57942419a2a9326f29df792c5039aca3e1c779ed1508a67124eb37"
+        }
+      ],
+      "digest": "e2df008696e860ba89828c06958b7998b4f9248f52edd1c24169437d3b98a4d2"
+    }
+  ],
+  "browser": {
+    "name": "Chromium",
+    "version": "149.0.7827.55",
+    "routing": "Browser plugin not available; regular Playwright authorized for this observer"
+  },
+  "allOwnedProcessesStopped": true,
+  "learnerAfter": [
+    {
+      "root": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/",
+      "files": [
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/learning_state.yaml",
+          "sha256": "36419ae44e755a9bd8bd049b14d0dee03d8b5937e577285f67ffe730733735e2"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/learner_profile.md",
+          "sha256": "f32b2cf779dab2d2a88057838f0172440e8ba5e5ae8874733ae8609f01653183"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/pitfalls.md",
+          "sha256": "c63fe93060cdc58d97696cad549cf8af2899fd99ca50c94fe6e6fc2d1d0f7405"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/journal.md",
+          "sha256": "60aa71fddacbff585358c8376e0ead77612a4248ab0f1700301c9dc39397ab6f"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/pipeline_status.yaml",
+          "sha256": "668ac80145de042c0bd78dd4210ceccf1dc0ad932770eb4a03f2fd6d886f169a"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/pipeline_status.md",
+          "sha256": "a8fcbcb603f68ddd03ac7f3e6742c5580dae6194b11bd112206a7d7033188b54"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/predictions.yaml",
+          "sha256": "97f010c12e57942419a2a9326f29df792c5039aca3e1c779ed1508a67124eb37"
+        }
+      ],
+      "digest": "0e8e49b105ded1015b28caecd6968df31a5223a17104c2768c262aa8647192b6"
+    },
+    {
+      "root": "/Users/danielbarreto/Development/aidevschool",
+      "files": [
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/learning_state.yaml",
+          "sha256": "36419ae44e755a9bd8bd049b14d0dee03d8b5937e577285f67ffe730733735e2"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/learner_profile.md",
+          "sha256": "f32b2cf779dab2d2a88057838f0172440e8ba5e5ae8874733ae8609f01653183"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/pitfalls.md",
+          "sha256": "c63fe93060cdc58d97696cad549cf8af2899fd99ca50c94fe6e6fc2d1d0f7405"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/journal.md",
+          "sha256": "60aa71fddacbff585358c8376e0ead77612a4248ab0f1700301c9dc39397ab6f"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/pipeline_status.yaml",
+          "sha256": "668ac80145de042c0bd78dd4210ceccf1dc0ad932770eb4a03f2fd6d886f169a"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/pipeline_status.md",
+          "sha256": "a8fcbcb603f68ddd03ac7f3e6742c5580dae6194b11bd112206a7d7033188b54"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/predictions.yaml",
+          "sha256": "97f010c12e57942419a2a9326f29df792c5039aca3e1c779ed1508a67124eb37"
+        }
+      ],
+      "digest": "e2df008696e860ba89828c06958b7998b4f9248f52edd1c24169437d3b98a4d2"
+    }
+  ],
+  "learnerUnchanged": true,
+  "evidenceRefs": [
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/http-en/page@1d78359270f1a9fc7ec796819fa10138.webm",
+      "sha256": "8eab47401c250e250d4047b81db8ab5008bca3a0a8b6402e8da4969d137a92f8"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/http-en-backup.json",
+      "sha256": "1abbd7abccd18724cd29b8c307447bd6893eaa1dc3b06645dac31af4c5990811"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/http-en-campaign-complete.png",
+      "sha256": "8e3c98ed1c5d42e9e62705bdcdf49008f6645924aae363274aad1896475ee422"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/http-en-campaign-wrong.png",
+      "sha256": "c8208eee901b5905e4da24515532701bcb3f3233789264023594eb69c230a7fe"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/http-en-entry.png",
+      "sha256": "328fed35b942cd60cba35aafa756c89e586d33dd44e726bc063326c9a9a53515"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/http-en-import/page@57d6f03a0bc6cd4bf645573f1a8d8e6e.webm",
+      "sha256": "8cd0320f95631ee3933fa83c4a621cae04f17d8b68beb846e0148d22b3334184"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/http-en-import-preview.png",
+      "sha256": "1ee6caf3008f70cb7f54897536d3053133daa0744430a7abb882341bceea3ec3"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/http-en-imported.png",
+      "sha256": "84f8fc1a719fd015372163011b36fbadfec67d45c0b344fe5bf01cd0232b0b64"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/http-en-lab-package.json",
+      "sha256": "80eea166d4b19c600a11439380b388ebda056e5d6729bbe5ef55f83a0c507e2a"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/http-en-lab-package.png",
+      "sha256": "52f6e0a5b4e96491425f8c6ea61185a3cf3d7e864938b0834c31590464ebfced"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/http-en-tlc-complete.png",
+      "sha256": "1dda6b11e2ccb68681a3dc94b6c2889ff7adadb1fe64813edf4564ff77cebac1"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/http-pt-BR/page@09f08090f1ff97427b716d92039502ad.webm",
+      "sha256": "a0000517f5923c64ccfe661b2e3f2b894b277f9b47bdbcdb234974f64ea5fa94"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/http-pt-BR-backup.json",
+      "sha256": "e5f487d2b1d50352cd4cb2d97185d993b04d9ed1cf5a112436bd809f757e6754"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/http-pt-BR-campaign-complete.png",
+      "sha256": "4d99b1fb2cf40843f68bc3edee59bc6de8b3098360328c0d64df4160cf61e689"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/http-pt-BR-campaign-wrong.png",
+      "sha256": "1a6eb273e68d74af36b601eb98a507f2c11ebcc0f331fc33dab0f98874b6f525"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/http-pt-BR-entry.png",
+      "sha256": "3a84e20529c778f9db0799da409b1b3fa395b2e8478d824f7b0d5766912502c1"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/http-pt-BR-import/page@7f8d9eab2a422fd63685717281cb1182.webm",
+      "sha256": "81837a0dfd3f66e882604b72253402adc7c66f6c5fee09ef16cc73492dcf05e6"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/http-pt-BR-import-preview.png",
+      "sha256": "e769e802dd6ee485100638ca222027cbe41bea80adfe43657ee4b4d3bf654c12"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/http-pt-BR-imported.png",
+      "sha256": "7e389c1d24731f1af421ec40716ea6944ff8ba7b432d40cce5a7f9ff05819e79"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/http-pt-BR-lab-package.json",
+      "sha256": "cfdbf72bea2ab5cb250f0dca730ef1fdfb70ef7aa55d90f7915d331c976b9867"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/http-pt-BR-lab-package.png",
+      "sha256": "bf2f8fead58ae6364d6622f175ff4876a84fb530710aa466475a512bb8e586f6"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/http-pt-BR-tlc-complete.png",
+      "sha256": "4d398698001169c948c86c8422c446626bf68b795090922a9560c4210da0532e"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/native-file-en/page@e7bb18c1bf7351177773a36c7112e100.webm",
+      "sha256": "3be89b8e367c8f3c93a1e0cc74365de04d861649517cc4bc1be4bd4d09629fe1"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/native-file-en-backup.json",
+      "sha256": "2a9da15ae888fee863695020c5950dd465cda8cfa540685950e0412fadb190cc"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/native-file-en-campaign-complete.png",
+      "sha256": "8e3c98ed1c5d42e9e62705bdcdf49008f6645924aae363274aad1896475ee422"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/native-file-en-campaign-wrong.png",
+      "sha256": "c8208eee901b5905e4da24515532701bcb3f3233789264023594eb69c230a7fe"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/native-file-en-entry.png",
+      "sha256": "328fed35b942cd60cba35aafa756c89e586d33dd44e726bc063326c9a9a53515"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/native-file-en-import/page@66e192988f02d9cf5581aae126189c7b.webm",
+      "sha256": "3928d57ead0531fe4f9668e2c75681267d4df2eea9e96c86816f657944cda606"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/native-file-en-import-preview.png",
+      "sha256": "41f4552f9e7cf6807357b7139de82cada22958a78030eaf3e11d8de32e772ebb"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/native-file-en-imported.png",
+      "sha256": "84f8fc1a719fd015372163011b36fbadfec67d45c0b344fe5bf01cd0232b0b64"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/native-file-en-lab-package.json",
+      "sha256": "deff2db872d222902b0844db2cdde01d7159deb5c5b792e091245fe0f7fc7e48"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/native-file-en-lab-package.png",
+      "sha256": "12349c985d96573b54d52946a1475653e52026e737d4addb545637cddb76a3ec"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/native-file-en-tlc-complete.png",
+      "sha256": "1dda6b11e2ccb68681a3dc94b6c2889ff7adadb1fe64813edf4564ff77cebac1"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/native-file-pt-BR/page@2eae34cdade870c086b17738ba7e1e5c.webm",
+      "sha256": "eec186ce38a3235bed0bafafd510d64226177fb1a76ed947042f434d9bf08507"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/native-file-pt-BR-backup.json",
+      "sha256": "927cfae2c1339e31c8ddfb5fc09ed3069bde43e89d0b8d38cc24910e583e6880"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/native-file-pt-BR-campaign-complete.png",
+      "sha256": "4d99b1fb2cf40843f68bc3edee59bc6de8b3098360328c0d64df4160cf61e689"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/native-file-pt-BR-campaign-wrong.png",
+      "sha256": "1a6eb273e68d74af36b601eb98a507f2c11ebcc0f331fc33dab0f98874b6f525"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/native-file-pt-BR-entry.png",
+      "sha256": "1cd67e00e529d66834372de256c522ee937e45adbf9c7ee454a9aadda1e2ff7c"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/native-file-pt-BR-import/page@d613b4ac3810e70957f9acbd1dca8769.webm",
+      "sha256": "b571cd8884babf00575d7ea0e26b1de9ac424566d654c9f58f460adb99140fd1"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/native-file-pt-BR-import-preview.png",
+      "sha256": "eaae3d6842e9a097fd2f6320e39c5690c45056949f011fd72796265b37fcceff"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/native-file-pt-BR-imported.png",
+      "sha256": "7e389c1d24731f1af421ec40716ea6944ff8ba7b432d40cce5a7f9ff05819e79"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/native-file-pt-BR-lab-package.json",
+      "sha256": "532b9a2883881e8aa6b9d8ff6d414271d86f007c9d49dfb728380d767100fd9a"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/native-file-pt-BR-lab-package.png",
+      "sha256": "bf2f8fead58ae6364d6622f175ff4876a84fb530710aa466475a512bb8e586f6"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/sdlc-quest/test-results/readiness-plan-runtime/2026-10-16T01-42-22-230Z/native-file-pt-BR-tlc-complete.png",
+      "sha256": "4d398698001169c948c86c8422c446626bf68b795090922a9560c4210da0532e"
+    }
+  ],
+  "functionalStatus": "pass",
+  "status": "unverified",
+  "completedAt": "2026-10-16T01:42:56.400Z",
+  "report": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-local-products/sdlc-quest/2026-10-16T01-42-22-230Z/report.json"
+}

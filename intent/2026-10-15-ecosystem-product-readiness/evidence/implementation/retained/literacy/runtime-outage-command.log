@@ -1,0 +1,50 @@
+{
+  "engineId": "literacyDojo",
+  "caseName": "verifier-outage-retry",
+  "observedAt": "2026-10-16T01:20:58.932Z",
+  "producerContext": "readiness-literacy-build-agent",
+  "verifierContext": null,
+  "sourceCommit": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+  "functionSource": {
+    "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/netlify-functions/literacy-verify.mjs",
+    "sha256": "7d53901ea068302abb91fa07bfa0cb99b3ed7952566a50b4ef9e6dfbf15fa8c3"
+  },
+  "status": "blocked",
+  "evidenceRefs": [
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime/verifier-outage-retry-2026-10-16T01-20-58-910Z/browser-console.json",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime/verifier-outage-retry-2026-10-16T01-20-58-910Z/http-requests.json",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime/verifier-outage-retry-2026-10-16T01-20-58-910Z/network.json",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    }
+  ],
+  "limitations": [],
+  "browserAvailability": "Browser plugin not available; regular Playwright used per frontend-testing-debugging skill",
+  "evidencePolicy": {
+    "source": {
+      "path": "/Users/danielbarreto/Development/aidevschool/engines/shared/playwright/base.config.ts",
+      "sha256": "5519ac81eac5d277c939da29e816130dd614bf18009a9200263aa9014ae525a7"
+    },
+    "importedOrPromoted": false,
+    "screenshot": "on",
+    "video": "on",
+    "trace": "retain-on-failure",
+    "outputDir": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/test-results/readiness-plan-runtime/verifier-outage-retry-2026-10-16T01-20-58-910Z"
+  },
+  "error": {
+    "message": "Error: browserType.launch: Executable doesn't exist at /Users/danielbarreto/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
+    "stack": "browserType.launch: Executable doesn't exist at /Users/danielbarreto/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝\n    at browserCase (/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/literacy-runtime.mjs:155:30)\n    at async run (/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/literacy-runtime.mjs:262:10)\n    at async file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/literacy-runtime.mjs:275:18"
+  },
+  "canonicalAfter": {
+    "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/learning_state.yaml",
+    "sha256": "36419ae44e755a9bd8bd049b14d0dee03d8b5937e577285f67ffe730733735e2"
+  },
+  "reportPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime/verifier-outage-retry-2026-10-16T01-20-58-910Z/report.json",
+  "reportSha256": "ab81f0382b4d3d1831aa7862f4ab0ed789f45e2f1599d314e65b41792db76b3d"
+}

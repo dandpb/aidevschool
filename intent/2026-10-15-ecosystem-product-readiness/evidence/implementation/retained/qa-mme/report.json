@@ -1,0 +1,123 @@
+{
+  "observedAt": "2026-10-16T01:51:24.500555+00:00",
+  "producerContext": "Codex qa_mme_runtime; not wholefeatureVerifier",
+  "baseCommit": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+  "privateRoot": "/Users/danielbarreto/.codex/worktrees/readiness-mme-runtime/aidevschool",
+  "privateTreeSha256": "4ed598b7bfa6a42cf94e4479568f28fd967915c67a62e07918f1202e3fbc72ca",
+  "privateManifestEntries": 6517,
+  "sourceEngineFilesUnchanged": true,
+  "carry": [
+    {
+      "path": "learner/gate/canonical_gate.py",
+      "parent_sha256": "717f64f2372ceaebb26942cc96a3672bf51ec341994f6907e8aa41866eb54e76",
+      "private_before_sha256": "2660dddda8e3ef550292fbe135e069e1a2bf30316ea69b3d393e22e404a27302",
+      "private_after_sha256": "717f64f2372ceaebb26942cc96a3672bf51ec341994f6907e8aa41866eb54e76",
+      "PR657_head": "817b9872",
+      "byte_identical_PR657": true
+    },
+    {
+      "path": "learner/gate/evidence_io.py",
+      "parent_sha256": "53146a798b65e71839d4a12e37097f5824c844d7c81fd4236a9a9f310eea2da3",
+      "private_before_sha256": "6316cebe0e1b7f9ff7c46576456a9b267c6e5218ee5d070cbeb8cbc691c9154c",
+      "private_after_sha256": "53146a798b65e71839d4a12e37097f5824c844d7c81fd4236a9a9f310eea2da3",
+      "PR657_head": "817b9872",
+      "byte_identical_PR657": true
+    }
+  ],
+  "protectedLearnerTrees": {
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool": {
+      "unchanged": true,
+      "filesBefore": 250,
+      "filesAfter": 250,
+      "changedPaths": []
+    },
+    "/Users/danielbarreto/Development/aidevschool": {
+      "unchanged": true,
+      "filesBefore": 246,
+      "filesAfter": 246,
+      "changedPaths": []
+    }
+  },
+  "C22": {
+    "runtimeStatus": "unverified",
+    "entrypointStatus": "blocked",
+    "fivePhaseCycle": "not completed; halted correctly on independent implementation FAIL",
+    "successfulStages": [
+      "native status via colon entry",
+      "Sonda synthetic attempt evaluation",
+      "spec after one explicitly authorized Curator retry and fresh verifier PASS"
+    ],
+    "haltedStage": "implementation; dev-node produced artifacts, independent verifier found surviving negative-time guard mutant",
+    "pipelineAtHalt": {
+      "phase": "spec-done",
+      "grade": "verified",
+      "advanced_by": "/devschool-spec"
+    },
+    "realLearnerChanges": false,
+    "masteryGranted": false,
+    "automaticRedispatch": false,
+    "autonomy": "disabled; no local enabling config created; actual autonomy not qualified",
+    "recovery": "native interruption status/reconcile preserved phase; separate supervised interrupted-poll block/resume case exercised without model dispatch",
+    "intentDraft": "intent/2026-10-15-mme-native-entrypoints/intent.md",
+    "remaining": [
+      "passing independent implementation verification",
+      "review phase",
+      "benchmark phase",
+      "optimize phase",
+      "actual optional autonomy if offered"
+    ],
+    "limitations": [
+      "hyphen commands are not registered by observed native CLI",
+      "positive native calls supplied PYTHONPATH private root and existing Python dependency runtime",
+      "180-second initial compound timeout is QA-bound, not a product SLO",
+      "source Node-only/three-language later-phase mismatch is a static warning, not an executed failure"
+    ]
+  },
+  "C25": {
+    "runtimeStatus": "pass",
+    "truth": "simulate-grade checklist only; no model execution, compilation or human mastery",
+    "cases": [
+      "blocked gate",
+      "missing spec",
+      "undersized spec",
+      "preview read-only",
+      "bounded partial advance",
+      "resume to cycle-complete",
+      "repeat after MME using separately reset synthetic state"
+    ],
+    "recipe": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/agent-runtime-openclaw.py",
+    "recipeReport": "openclaw-recipe-replay-v2/report.json",
+    "recipeExit": 0,
+    "missingRuntimeInterfaceExit": 2,
+    "temporaryCopyRemoved": true,
+    "stdoutInterface": {
+      "fields": [
+        "status",
+        "runtimeStatus",
+        "reportPath"
+      ],
+      "exitCodes": {
+        "pass": 0,
+        "blocked": 1,
+        "unverified": 2
+      }
+    }
+  },
+  "ownedProcesses": {
+    "allAwaited": true,
+    "matchingRemaining": 0
+  },
+  "wholeFeatureVerdict": null,
+  "publication": "no commit, push, deployment, PR or external schedule",
+  "resourceRetention": {
+    "worktreeIdentityKey": "/Users/danielbarreto/.codex/worktrees/readiness-mme-runtime/aidevschool",
+    "archived": false,
+    "reason": "explicit root instruction retain attached worktree; avoid cleanup I/O under host load",
+    "neededEvidenceCopied": true
+  },
+  "filesAuthored": [
+    "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/agent-runtime-openclaw.py",
+    "intent/2026-10-15-mme-native-entrypoints/intent.md"
+  ],
+  "finalizedAt": "2026-10-16T01:52:45.427202+00:00"
+}

@@ -1,0 +1,100 @@
+TAP version 13
+# Subtest: failed startup terminates its owned child and closes its log before rejecting
+not ok 1 - failed startup terminates its owned child and closes its log before rejecting
+  ---
+  duration_ms: 294.167667
+  type: 'test'
+  location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/lifecycle-repair/observer-lifecycle.test.mjs:55:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    null !== 'SIGTERM'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'SIGTERM'
+  actual: ~
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/lifecycle-repair/observer-lifecycle.test.mjs:58:10)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: an already exited startup still closes the opened log
+not ok 2 - an already exited startup still closes the opened log
+  ---
+  duration_ms: 2.854042
+  type: 'test'
+  location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/lifecycle-repair/observer-lifecycle.test.mjs:62:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    0 !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 0
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/lifecycle-repair/observer-lifecycle.test.mjs:65:10)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: stopping the same owned server twice closes its log once
+not ok 3 - stopping the same owned server twice closes its log once
+  ---
+  duration_ms: 2.283959
+  type: 'test'
+  location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/lifecycle-repair/observer-lifecycle.test.mjs:69:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    2 !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 2
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/lifecycle-repair/observer-lifecycle.test.mjs:74:10)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: exit during ownership persistence is observed and wait finishes with its actual status
+not ok 4 - exit during ownership persistence is observed and wait finishes with its actual status
+  ---
+  duration_ms: 103.830708
+  type: 'test'
+  location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/lifecycle-repair/observer-lifecycle.test.mjs:78:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'missed exit event'
+    - 'finished'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'finished'
+  actual: 'missed exit event'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/lifecycle-repair/observer-lifecycle.test.mjs:99:10)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 0
+# fail 4
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 466.316333

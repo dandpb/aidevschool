@@ -1,0 +1,160 @@
+10:22:39 PM [vite] http proxy error: /.netlify/functions/literacy-verify
+Error: connect ECONNREFUSED 127.0.0.1:63028
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1638:16)
+    at TCPConnectWrap.callbackTrampoline (node:internal/async_hooks:130:17)
+10:22:39 PM [vite] http proxy error: /.netlify/functions/literacy-verify
+Error: connect ECONNREFUSED 127.0.0.1:63028
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1638:16)
+    at TCPConnectWrap.callbackTrampoline (node:internal/async_hooks:130:17)
+{
+  "engineId": "literacyDojo",
+  "caseName": "verifier-outage-retry",
+  "observedAt": "2026-10-16T01:22:37.392Z",
+  "producerContext": "readiness-literacy-build-agent",
+  "verifierContext": null,
+  "sourceCommit": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+  "functionSource": {
+    "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/netlify-functions/literacy-verify.mjs",
+    "sha256": "7d53901ea068302abb91fa07bfa0cb99b3ed7952566a50b4ef9e6dfbf15fa8c3"
+  },
+  "status": "pass",
+  "evidenceRefs": [
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime/verifier-outage-retry-2026-10-16T01-22-37-373Z/browser-console.json",
+      "sha256": "dbc64cad4640d527768d501828e3fb7abf4be8b266f48c18669eb82703641b98"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime/verifier-outage-retry-2026-10-16T01-22-37-373Z/http-requests.json",
+      "sha256": "6a50bd46d3eb0b65401830767f1f945094a34227451e6096a94537e95bf168d6"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime/verifier-outage-retry-2026-10-16T01-22-37-373Z/network.json",
+      "sha256": "608662adc68dc91fef515b2bab5292e15856a7ab89fc40e7c810ea9ebf0f0ebc"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/test-results/readiness-plan-runtime/verifier-outage-retry-2026-10-16T01-22-37-373Z/bound-receipt-pass.png",
+      "sha256": "282e1e14003adedd37729d8108e6ca6bb5e2b7527b8fca3fbe77dc51fbf247cd"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/test-results/readiness-plan-runtime/verifier-outage-retry-2026-10-16T01-22-37-373Z/endpoint-outage.png",
+      "sha256": "52cc3adeb2d90d98ce1c4564fbf0df24bca89f5e8e240a76dab68fa6970ce868"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/test-results/readiness-plan-runtime/verifier-outage-retry-2026-10-16T01-22-37-373Z/page@aa95e63749d1bfc76c4e83c9deb55289.webm",
+      "sha256": "df74bb5a2c0380f705994c8b47aa25f5425f9ab019e7f297ef7bd896099ddd99"
+    }
+  ],
+  "limitations": [],
+  "browserAvailability": "Browser plugin not available; regular Playwright used per frontend-testing-debugging skill",
+  "evidencePolicy": {
+    "source": {
+      "path": "/Users/danielbarreto/Development/aidevschool/engines/shared/playwright/base.config.ts",
+      "sha256": "5519ac81eac5d277c939da29e816130dd614bf18009a9200263aa9014ae525a7"
+    },
+    "importedOrPromoted": false,
+    "screenshot": "on",
+    "video": "on",
+    "trace": "retain-on-failure",
+    "outputDir": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/test-results/readiness-plan-runtime/verifier-outage-retry-2026-10-16T01-22-37-373Z"
+  },
+  "transitions": [
+    {
+      "state": "endpoint-stopped",
+      "port": 63028
+    },
+    {
+      "state": "endpoint-restored",
+      "port": 63028
+    },
+    {
+      "state": "retry-bound-receipt-pass",
+      "attemptId": "att-000003"
+    }
+  ],
+  "page": {
+    "url": "http://127.0.0.1:63029/",
+    "title": "LiteracyDojo — IA com confiança no trabalho",
+    "viewport": {
+      "width": 360,
+      "height": 740
+    },
+    "nonblank": true,
+    "frameworkOverlay": false
+  },
+  "selectedEvidence": {
+    "schemaVersion": 1,
+    "source": "literacydojo",
+    "attemptId": "att-000003",
+    "lessonId": "l02",
+    "lessonVersion": 4,
+    "activityId": "l02-a3",
+    "activityType": "sort",
+    "skillIds": [
+      "entender",
+      "avaliar"
+    ],
+    "deterministicChecks": {
+      "fluxo-resposta": true,
+      "fluxo-afirmacoes": true,
+      "fluxo-fonte": true,
+      "fluxo-conferencia": true,
+      "fluxo-uso": true
+    },
+    "score": 1,
+    "pass": true,
+    "timestamp": "2026-10-16T01:22:39.124Z",
+    "verifierRequired": true,
+    "answer": {
+      "orderedIds": [
+        "fluxo-resposta",
+        "fluxo-afirmacoes",
+        "fluxo-fonte",
+        "fluxo-conferencia",
+        "fluxo-uso"
+      ]
+    },
+    "context": "initial"
+  },
+  "receipt": {
+    "verdict": "PASS",
+    "context_isolated": true,
+    "source": "independent-literacy-verifier",
+    "verifier_version": "1-netlify-l02-v4",
+    "verified_at": "2026-10-16T01:22:39.349Z",
+    "evidence_digest": "a8528669b5c53922cc32bb3b7623f9f84f97d4f80473d38df2a8583ec6ca326c",
+    "lesson_id": "l02",
+    "lesson_version": 4,
+    "activity_id": "l02-a3",
+    "attempt_id": "att-000003",
+    "independent_pass": true,
+    "mastery_eligible": true,
+    "producer_writes_mastered": false,
+    "max_producer_claim": "completed",
+    "errors": []
+  },
+  "functionRequestCount": 1,
+  "localState": {
+    "lessonStatus": "completed",
+    "unchangedByVerification": true,
+    "canonicalBefore": {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/learning_state.yaml",
+      "sha256": "36419ae44e755a9bd8bd049b14d0dee03d8b5937e577285f67ffe730733735e2"
+    }
+  },
+  "transport": {
+    "kind": "real-http",
+    "appOrigin": "http://127.0.0.1:63029",
+    "functionOrigin": "http://127.0.0.1:63028",
+    "defaultHandler": "learner/gate/netlify-functions/literacy-verify.mjs",
+    "mockedResponses": false
+  },
+  "observedLastPassingActivities": [
+    "l02-a3"
+  ],
+  "canonicalAfter": {
+    "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/learning_state.yaml",
+    "sha256": "36419ae44e755a9bd8bd049b14d0dee03d8b5937e577285f67ffe730733735e2"
+  },
+  "reportPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime/verifier-outage-retry-2026-10-16T01-22-37-373Z/report.json",
+  "reportSha256": "388c49c377ea085a3199432749a64487e59c879645b660c14abb28d2bf376ea6"
+}

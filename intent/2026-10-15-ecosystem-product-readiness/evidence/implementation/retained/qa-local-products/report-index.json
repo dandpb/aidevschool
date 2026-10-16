@@ -1,0 +1,17 @@
+{
+  "C27": {
+    "engineId": "school-entry",
+    "report": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-local-products/school-entry/2026-10-16T01-41-35-115Z/report.json",
+    "sha256": "06579ba1760a7bc5538f3a30c5b9deafab3f33cb42eb1a79210210213cd410cc"
+  },
+  "C28": {
+    "engineId": "sdlc-quest",
+    "report": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-local-products/sdlc-quest/2026-10-16T01-42-22-230Z/report.json",
+    "sha256": "715d116d6ef037637f209cc94505007246b2731956309e12bc5519b4e230f096"
+  },
+  "C30": {
+    "engineId": "zai-duolingo-like",
+    "report": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-local-products/zai-duolingo-like/2026-10-16T01-46-27-742Z/report.json",
+    "sha256": "871a65c27dabefd5362a96f89618a9c5d8285eabef3eee5391aef1d626703bfc"
+  }
+}

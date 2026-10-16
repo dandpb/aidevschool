@@ -1,0 +1,169 @@
+{
+  "kind": "read-only-runtime-prerequisite-preflight",
+  "observed_at": "2026-10-16T01:20:30.390980+00:00",
+  "source_commit": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+  "qualification_verdict": null,
+  "scope_note": "Prerequisites only. No engine PASS or platform-unavailable verdict is granted by this report.",
+  "performed": {
+    "model_calls": false,
+    "installs": false,
+    "servers": false,
+    "cron_mutation": false,
+    "profile_creation": false,
+    "messages": false,
+    "deploys": false,
+    "product_edits": false
+  },
+  "hermes": {
+    "binary_present": true,
+    "version": "0.21.5+2295.gc6e0f24 (2026.9.24)",
+    "configured_provider": "alibaba",
+    "provider_key_present_in_hermes_dotenv": true,
+    "model_access_proven": false,
+    "default_aidevschool_skill_present": true,
+    "native_profile_isolation_supported": true,
+    "existing_named_profile_present": false,
+    "hermes_home_override_supported": true,
+    "local_cron_delivery_supported": true,
+    "cron_create_paused_supported": true,
+    "installer_paused_option_present": false,
+    "isolation_limit": "Native profile isolates Hermes configuration/state/skills/cron; host subprocess HOME is real HOME by default. This is not filesystem confinement.",
+    "required_preparation": [
+      "Create and inspect dedicated disposable native profile before any MVP invocation.",
+      "Select local-only delivery if installer is later authorized; never use default all.",
+      "Record actual attempt-bound G4 model judgments; shipped recordings do not prove a fresh live judgment."
+    ],
+    "evidence_refs": [
+      "engines/aiDevschoolMvp/aidevschool/install.py:37-55",
+      "engines/aiDevschoolMvp/aidevschool/install.py:165-193",
+      "engines/aiDevschoolMvp/aidevschool/install.py:248-250",
+      "engines/aiDevschoolMvp/aidevschool/scripts/gate_check.py:88-100",
+      "/Users/danielbarreto/.hermes/hermes-agent/hermes_cli/profiles.py:30-36",
+      "/Users/danielbarreto/.hermes/hermes-agent/hermes_cli/main.py:425-426",
+      "/Users/danielbarreto/.hermes/hermes-agent/hermes_cli/auth.py:218-219"
+    ],
+    "read_only_probes": [
+      "hermes --help",
+      "hermes --version",
+      "hermes status",
+      "hermes profile --help",
+      "hermes profile create --help",
+      "hermes profile show --help",
+      "hermes cron create --help"
+    ]
+  },
+  "external_openclaw": {
+    "binary_on_path": false,
+    "default_home_present": true,
+    "default_workspace_present": false,
+    "other_installation_or_account_access": "unknown",
+    "scope_note": "External MVP harness only. The repo Python openclaw checklist engine is a separate local runtime and does not require an external OpenClaw binary.",
+    "evidence_refs": [
+      "engines/aiDevschoolMvp/aidevschool/install.py:42-47",
+      "engines/openclaw/AGENTS.md:5-9",
+      "engines/openclaw/AGENTS.md:40-42"
+    ]
+  },
+  "claude_code_mme": {
+    "binary_present": true,
+    "version": "2.1.301",
+    "logged_in": true,
+    "auth_method": "claude.ai",
+    "api_provider": "firstParty",
+    "explicit_fresh_session_flags_available": true,
+    "explicit_settings_source_flags_available": true,
+    "readonly_mme_status_exit": 0,
+    "readonly_autonomous_status_exit": 0,
+    "autonomy_enabled_reported": false,
+    "five_phase_model_cycle_proven": false,
+    "required_preparation": [
+      "Use a complete disposable checkout with internal shared-state symlinks and explicit fresh producer/verifier sessions.",
+      "Observe the five-phase cycle and explicit recovery; readonly supervisor status and fixture traces do not satisfy it."
+    ],
+    "evidence_refs": [
+      "engines/miniMaxEvolutionEngine/README.md:14-18",
+      "engines/miniMaxEvolutionEngine/README.md:33-53",
+      "engines/miniMaxEvolutionEngine/AGENTS.md:29-38"
+    ],
+    "read_only_probes": [
+      "claude --help",
+      "claude --version",
+      "claude auth --help",
+      "claude auth status --help",
+      "claude auth status --json",
+      "python3 -m engines.miniMaxEvolutionEngine.supervisor status",
+      "python3 -m engines.miniMaxEvolutionEngine.supervisor autonomous-status"
+    ]
+  },
+  "minimax_agent_team": {
+    "minimax_binary_on_path": false,
+    "local_config_present": true,
+    "local_native_app_at_standard_paths_present": false,
+    "minimax_key_present_in_hermes_dotenv": true,
+    "team_platform_session_access": "unknown",
+    "team_context_isolation_capability_observed": false,
+    "required_confirmation": "Confirm the offered MiniMax Agent Team platform/session and support for separate Maestro, producer, Prometor and Critic contexts. A provider API key or absent CLI does not establish Team Engine availability.",
+    "evidence_refs": [
+      "engines/minimaxDojo/docs/QUICK_START.md:25-32",
+      "engines/minimaxDojo/README.md:148",
+      "intent/2026-10-15-ecosystem-product-readiness/plan.md:56"
+    ]
+  },
+  "netlify_existing_literacy_deployment": {
+    "binary_present": true,
+    "version": "27.0.0",
+    "stored_auth_present": true,
+    "original_engine_site_link_present": true,
+    "qualification_worktree_site_link_present": false,
+    "existing_site_read_access_confirmed": true,
+    "read_returned_site_matches_link": true,
+    "published_deploy_identity_present": true,
+    "published_deploy_url_present": true,
+    "published_deploy_explicit_commit_ref_present": false,
+    "required_proof": [
+      "Bind the observed deployed verifier to its source SHA before claiming criterion 13. The current API published_deploy commit_ref is absent.",
+      "Execute required positive and negative endpoint cases on the actual published origin; successful site read is access evidence only."
+    ],
+    "evidence_refs": [
+      "/Users/danielbarreto/Development/aidevschool/engines/literacyDojo/.netlify/state.json:1",
+      "engines/literacyDojo/netlify.toml:4-7",
+      "intent/2026-10-15-ecosystem-product-readiness/plan.md:39"
+    ],
+    "read_only_probes": [
+      "netlify --help",
+      "netlify status --help",
+      "netlify api --help",
+      "netlify status --json (exit 1 in unlinked worktree; not classified as auth failure)",
+      "netlify api getSite --data <existing linked site id; response sanitized without retention>"
+    ]
+  },
+  "typesafe_jev": {
+    "typesafe_cli_present": false,
+    "jev_cli_present": false,
+    "cli_required_by_reference_http_client": false,
+    "typesafe_key_exported_in_current_session": false,
+    "typesafe_key_in_original_repo_dotenv": false,
+    "typesafe_key_in_hermes_dotenv": false,
+    "credentials_elsewhere": "unknown",
+    "live_endpoint_or_quota_access_proven": false,
+    "reference_http_client_uses_python_stdlib": true,
+    "reference_helper_provenance": "Original helper supplied as untracked reference by parent. Not copied, edited or promoted by this preflight.",
+    "required_preparation": [
+      "Make an existing valid TYPESAFE_API_KEY available in the dedicated independent verifier execution context without putting it in reports. Other credential stores were not searched.",
+      "Consult current TypeSafe judgment documentation before live calls and compose typed criteria/state for captured evidence in a separate verifier context."
+    ],
+    "evidence_refs": [
+      "/Users/danielbarreto/Development/aidevschool/learner/substrate/judgments.py:16-19",
+      "/Users/danielbarreto/Development/aidevschool/learner/substrate/judgments.py:24-35",
+      "/Users/danielbarreto/Development/aidevschool/learner/substrate/judgments.py:43-44",
+      "/Users/danielbarreto/Development/aidevschool/learner/substrate/judgments.py:95-120",
+      "/Users/danielbarreto/Development/aidevschool/engines/shared/playwright/README.md:39-51"
+    ]
+  },
+  "operator_input_boundary": {
+    "confirmed_auth_blocker_for_hermes_claude_or_netlify": false,
+    "minimax_team_access_confirmation_needed": true,
+    "typesafe_credential_injection_not_currently_available_in_checked_contexts": true,
+    "no_platform_inaccessibility_inferred_from_missing_cli": true
+  }
+}

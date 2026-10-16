@@ -1,0 +1,43 @@
+{
+  "engine": "zai-duolingo-like",
+  "scope": "producer checks only; no declared-use qualification granted",
+  "results": [
+    {
+      "argv": [
+        "npm",
+        "run",
+        "db:generate"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/zai-duolingo-like",
+      "exitCode": 0,
+      "seconds": 1.47,
+      "log": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/producers/zai-duolingo-like-1.log",
+      "observedAt": "2026-10-16T01:23:40.967361+00:00"
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "verify"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/zai-duolingo-like",
+      "exitCode": 0,
+      "seconds": 33.72,
+      "log": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/producers/zai-duolingo-like-2.log",
+      "observedAt": "2026-10-16T01:24:14.685112+00:00"
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/zai-duolingo-like",
+      "exitCode": 0,
+      "seconds": 8.26,
+      "log": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/producers/zai-duolingo-like-3.log",
+      "observedAt": "2026-10-16T01:24:22.943038+00:00"
+    }
+  ],
+  "allRequestedRan": true
+}

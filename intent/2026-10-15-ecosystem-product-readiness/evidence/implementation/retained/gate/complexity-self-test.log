@@ -1,0 +1,6 @@
+/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/tmp30zmkxh4/synthetic.py:tangled:1:10
+self-test: uncovered synthetic violation fails (exit 1)
+self-test: baseline-covered violation passes (exit 0)
+stale baseline entry: /var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/tmp30zmkxh4/ghost.py:vanished
+self-test: stale baseline entry fails (exit 1)
+self-test: PASS

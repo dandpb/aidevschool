@@ -1,0 +1,22 @@
+{
+  "engine": "codexdojo-os-prototype",
+  "argv": [
+    "npx",
+    "playwright",
+    "test",
+    "tests/release-journeys.smoke.spec.ts",
+    "tests/readiness-recovery.smoke.spec.ts",
+    "tests/chapter-continuity.smoke.spec.ts",
+    "tests/renderer-fallback.smoke.spec.ts",
+    "tests/engines.smoke.spec.ts",
+    "--config",
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/browser-producers/codexdojo-os-prototype.diagnosis.config.ts"
+  ],
+  "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexdojo-os-prototype",
+  "exitCode": -15,
+  "seconds": 323.07,
+  "observedAt": "2026-10-16T01:50:33.548812+00:00",
+  "stats": null,
+  "report": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/browser-producers/codexdojo-os-prototype.diagnosis.report.json",
+  "scope": "same selected existing producer tests; wrapper timeout60s matches original shared policy; assertions/retries/source unchanged"
+}

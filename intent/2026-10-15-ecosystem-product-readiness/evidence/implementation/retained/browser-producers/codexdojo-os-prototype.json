@@ -1,0 +1,30 @@
+{
+  "engine": "codexdojo-os-prototype",
+  "argv": [
+    "npx",
+    "playwright",
+    "test",
+    "tests/release-journeys.smoke.spec.ts",
+    "tests/readiness-recovery.smoke.spec.ts",
+    "tests/chapter-continuity.smoke.spec.ts",
+    "tests/renderer-fallback.smoke.spec.ts",
+    "tests/engines.smoke.spec.ts",
+    "--config",
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/browser-producers/codexdojo-os-prototype.config.ts"
+  ],
+  "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexdojo-os-prototype",
+  "exitCode": 1,
+  "seconds": 374.4,
+  "observedAt": "2026-10-16T01:36:20.097213+00:00",
+  "report": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/browser-producers/codexdojo-os-prototype.report.json",
+  "media": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexdojo-os-prototype/test-results/readiness-plan-suite",
+  "scope": "selected existing producer tests, partial declared-use coverage; no independent semantic verdict",
+  "stats": {
+    "startTime": "2026-10-16T01:30:07.303Z",
+    "duration": 372752.66599999997,
+    "expected": 22,
+    "skipped": 8,
+    "unexpected": 6,
+    "flaky": 0
+  }
+}

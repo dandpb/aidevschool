@@ -1,0 +1,7 @@
+
+> literacydojo@0.1.0 gen:content
+> cd ../.. && python3 curriculum/ai-literacy/tools/validate.py --compile engines/literacyDojo/src/data/generated --compile-competency engines/literacyDojo/src/data/generated
+
+OK: 32 lição(ões) ready validadas: 23 IA na Prática, 9 Dev; 0 planned (sem arquivo exigido).
+Read model gerado: engines/literacyDojo/src/data/generated/lessons.ts
+Competency map gerado: engines/literacyDojo/src/data/generated/competency-map.ts

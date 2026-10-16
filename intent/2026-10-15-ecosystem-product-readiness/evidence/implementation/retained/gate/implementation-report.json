@@ -1,0 +1,281 @@
+{
+  "task": "intent/2026-10-15-ecosystem-product-readiness/plan.md",
+  "scope": "S1 / C1-C7 only",
+  "profile": "light (frozen checklist default)",
+  "producer_status": "build proofs green; independent verification remains orchestrator-owned",
+  "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool",
+  "head": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+  "pr657": "817b9872b2b966314794540472860a6287c4737c",
+  "changed_files": {
+    "learner/gate/canonical_gate.py": "717f64f2372ceaebb26942cc96a3672bf51ec341994f6907e8aa41866eb54e76",
+    "learner/gate/evidence_io.py": "53146a798b65e71839d4a12e37097f5824c844d7c81fd4236a9a9f310eea2da3",
+    "learner/gate/tests/test_gate.py": "31c138206f811b1e0bd50eabbaaab8b4c8f1962b41887e53d7c510218bb9ca44",
+    "learner/gate/tests/test_gate_multirecord_receipt_binding.py": "580238074e62bf88425c7ecf86f86613992872d89b1f09944292e49b861f11c2",
+    "learner/gate/tests/test_readiness_plan_contract.py": "2ba45c4b5204302edca8f1e5f2ea93e52fed017e25a296ebe99500fa916b51ec",
+    "scripts/python_complexity_baseline.txt": "26c75455888c10e3b389c3199d237c8e183a40c0c8cdde5d0c7470645036a70e"
+  },
+  "scope_fingerprint_sha256": "6ce528344a35d352cbba5a1c1ab2363b2829bcae741ddff85677b56918041517",
+  "criteria_node_results": {
+    "C1": {
+      "named_nodes": {
+        "learner/gate/tests/test_gate.py::TestCheckEvidence::test_game_pass_without_verifier_receipt_is_not_eligible": [
+          "learner/gate/tests/test_gate.py::TestCheckEvidence::test_game_pass_without_verifier_receipt_is_not_eligible[gatekeeper] PASSED [  3%]",
+          "learner/gate/tests/test_gate.py::TestCheckEvidence::test_game_pass_without_verifier_receipt_is_not_eligible[pixelquest] PASSED [  4%]"
+        ],
+        "learner/gate/tests/test_gate.py::TestDecide::test_forged_pass_without_receipt_never_decides_passed": [
+          "learner/gate/tests/test_gate.py::TestDecide::test_forged_pass_without_receipt_never_decides_passed PASSED [ 39%]"
+        ],
+        "learner/gate/tests/test_readiness_plan_contract.py::test_no_receipt_preserves_state": [
+          "learner/gate/tests/test_readiness_plan_contract.py::test_no_receipt_preserves_state[gatekeeper] PASSED [ 85%]",
+          "learner/gate/tests/test_readiness_plan_contract.py::test_no_receipt_preserves_state[pixelquest] PASSED [ 86%]"
+        ]
+      },
+      "all_named_nodes_passed": true
+    },
+    "C2": {
+      "named_nodes": {
+        "learner/gate/tests/test_gate.py::TestCheckEvidence::test_embedded_verifier_cannot_override_producer_judgment": [
+          "learner/gate/tests/test_gate.py::TestCheckEvidence::test_embedded_verifier_cannot_override_producer_judgment PASSED [ 11%]"
+        ],
+        "learner/gate/tests/test_gate_multirecord_receipt_binding.py::TestMultirecordEndToEnd::test_multirecord_receipt_for_other_unit_record_is_not_eligible": [
+          "learner/gate/tests/test_gate_multirecord_receipt_binding.py::TestMultirecordEndToEnd::test_multirecord_receipt_for_other_unit_record_is_not_eligible PASSED [ 84%]"
+        ],
+        "learner/gate/tests/test_readiness_plan_contract.py::test_invalid_receipt_preserves_state": [
+          "learner/gate/tests/test_readiness_plan_contract.py::test_invalid_receipt_preserves_state[gatekeeper-other_digest-evidence_digest does not match] PASSED [ 87%]",
+          "learner/gate/tests/test_readiness_plan_contract.py::test_invalid_receipt_preserves_state[gatekeeper-outside_path-learner/verifier_receipts] PASSED [ 87%]",
+          "learner/gate/tests/test_readiness_plan_contract.py::test_invalid_receipt_preserves_state[gatekeeper-context_not_isolated-context_isolated is not true] PASSED [ 88%]",
+          "learner/gate/tests/test_readiness_plan_contract.py::test_invalid_receipt_preserves_state[gatekeeper-producer_embedded-embedded verifier] PASSED [ 89%]",
+          "learner/gate/tests/test_readiness_plan_contract.py::test_invalid_receipt_preserves_state[pixelquest-other_digest-evidence_digest does not match] PASSED [ 90%]",
+          "learner/gate/tests/test_readiness_plan_contract.py::test_invalid_receipt_preserves_state[pixelquest-outside_path-learner/verifier_receipts] PASSED [ 91%]",
+          "learner/gate/tests/test_readiness_plan_contract.py::test_invalid_receipt_preserves_state[pixelquest-context_not_isolated-context_isolated is not true] PASSED [ 91%]",
+          "learner/gate/tests/test_readiness_plan_contract.py::test_invalid_receipt_preserves_state[pixelquest-producer_embedded-embedded verifier] PASSED [ 92%]"
+        ]
+      },
+      "all_named_nodes_passed": true
+    },
+    "C3": {
+      "named_nodes": {
+        "learner/gate/tests/test_gate.py::TestDecide::test_pass_first_try": [
+          "learner/gate/tests/test_gate.py::TestDecide::test_pass_first_try PASSED  [ 37%]"
+        ],
+        "learner/gate/tests/test_gate.py::TestDecide::test_pass_after_retry": [
+          "learner/gate/tests/test_gate.py::TestDecide::test_pass_after_retry PASSED [ 37%]"
+        ],
+        "learner/gate/tests/test_gate.py::TestEndToEnd::test_pixelquest_pass_with_digest_bound_receipt_masters": [
+          "learner/gate/tests/test_gate.py::TestEndToEnd::test_pixelquest_pass_with_digest_bound_receipt_masters PASSED [ 44%]"
+        ],
+        "learner/gate/tests/test_readiness_plan_contract.py::test_retry_receipt_persists_source": [
+          "learner/gate/tests/test_readiness_plan_contract.py::test_retry_receipt_persists_source PASSED [ 93%]"
+        ]
+      },
+      "all_named_nodes_passed": true
+    },
+    "C4": {
+      "named_nodes": {
+        "learner/gate/tests/test_gate.py::TestDecide::test_failed_run_gates_to_fail": [
+          "learner/gate/tests/test_gate.py::TestDecide::test_failed_run_gates_to_fail PASSED [ 38%]"
+        ],
+        "learner/gate/tests/test_gate.py::TestApplyGate::test_fail_increments_retry_and_keeps_evaluating": [
+          "learner/gate/tests/test_gate.py::TestApplyGate::test_fail_increments_retry_and_keeps_evaluating PASSED [ 41%]"
+        ]
+      },
+      "all_named_nodes_passed": true
+    },
+    "C5": {
+      "named_nodes": {
+        "learner/gate/tests/test_gate_multirecord_receipt_binding.py::TestMultirecordEndToEnd::test_gates_latest_matching_record_with_receipt": [
+          "learner/gate/tests/test_gate_multirecord_receipt_binding.py::TestMultirecordEndToEnd::test_gates_latest_matching_record_with_receipt PASSED [ 82%]"
+        ],
+        "learner/gate/tests/test_gate_multirecord_receipt_binding.py::TestMultirecordEndToEnd::test_persisted_multirecord_state_revalidates": [
+          "learner/gate/tests/test_gate_multirecord_receipt_binding.py::TestMultirecordEndToEnd::test_persisted_multirecord_state_revalidates PASSED [ 83%]"
+        ],
+        "learner/gate/tests/test_gate.py::TestLoadEvidenceNdjson::test_malformed_line_rejects_whole_file": [
+          "learner/gate/tests/test_gate.py::TestLoadEvidenceNdjson::test_malformed_line_rejects_whole_file PASSED [ 52%]"
+        ],
+        "learner/gate/tests/test_gate.py::TestLoadEvidenceNdjson::test_non_object_line_rejected": [
+          "learner/gate/tests/test_gate.py::TestLoadEvidenceNdjson::test_non_object_line_rejected PASSED [ 53%]"
+        ],
+        "learner/gate/tests/test_readiness_plan_contract.py::test_nothing_to_grade_cli_does_not_write": [
+          "learner/gate/tests/test_readiness_plan_contract.py::test_nothing_to_grade_cli_does_not_write PASSED [ 94%]"
+        ]
+      },
+      "all_named_nodes_passed": true,
+      "additional_named_node": "learner/gate/tests/test_readiness_plan_contract.py::test_committed_multirecord_backing_revalidates"
+    },
+    "C6": {
+      "named_nodes": {
+        "learner/gate/tests/test_gate.py::TestEndToEnd::test_historical_mastered_without_receipt_still_validates": [
+          "learner/gate/tests/test_gate.py::TestEndToEnd::test_historical_mastered_without_receipt_still_validates PASSED [ 45%]"
+        ]
+      },
+      "all_named_nodes_passed": true
+    },
+    "C7": {
+      "named_nodes": {
+        "learner/gate/tests/test_gate.py::TestGateIntegrity::test_same_payload_with_bumped_timestamp_is_rejected_by_digest": [
+          "learner/gate/tests/test_gate.py::TestGateIntegrity::test_same_payload_with_bumped_timestamp_is_rejected_by_digest PASSED [ 61%]"
+        ],
+        "learner/gate/tests/test_gate.py::TestGateIntegrity::test_ignored_producer_nonce_cannot_bypass_consumed_evidence": [
+          "learner/gate/tests/test_gate.py::TestGateIntegrity::test_ignored_producer_nonce_cannot_bypass_consumed_evidence PASSED [ 62%]"
+        ],
+        "learner/gate/tests/test_gate.py::TestGateIntegrity::test_same_run_id_with_changed_payload_is_rejected": [
+          "learner/gate/tests/test_gate.py::TestGateIntegrity::test_same_run_id_with_changed_payload_is_rejected PASSED [ 62%]"
+        ],
+        "learner/gate/tests/test_gate.py::TestCli::test_dry_run_writes_nothing": [
+          "learner/gate/tests/test_gate.py::TestCli::test_dry_run_writes_nothing PASSED [ 75%]"
+        ],
+        "learner/gate/tests/test_readiness_plan_contract.py::test_replay_preserves_consumed_state": [
+          "learner/gate/tests/test_readiness_plan_contract.py::test_replay_preserves_consumed_state[same_record-stale or duplicate] PASSED [ 95%]",
+          "learner/gate/tests/test_readiness_plan_contract.py::test_replay_preserves_consumed_state[new_timestamp-digest replay] PASSED [ 96%]",
+          "learner/gate/tests/test_readiness_plan_contract.py::test_replay_preserves_consumed_state[producer_nonce-attempt/scenario replay] PASSED [ 97%]",
+          "learner/gate/tests/test_readiness_plan_contract.py::test_replay_preserves_consumed_state[changed_payload-run_id is immutable] PASSED [ 98%]"
+        ]
+      },
+      "all_named_nodes_passed": true,
+      "additional_named_node": "learner/gate/tests/test_readiness_plan_contract.py::test_dry_run_preserves_all_files"
+    }
+  },
+  "runs": {
+    "failing-first": {
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool",
+      "argv": [
+        "rtk",
+        "proxy",
+        "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/gh-375/venv/bin/python",
+        "-m",
+        "pytest",
+        "learner/gate/tests/test_gate.py",
+        "learner/gate/tests/test_gate_multirecord_receipt_binding.py",
+        "learner/gate/tests/test_readiness_plan_contract.py",
+        "-vv"
+      ],
+      "start": "2026-10-16T01:16:14.769713+00:00",
+      "end": "2026-10-16T01:16:17.227201+00:00",
+      "exit_code": 1,
+      "log": "failing-first.log"
+    },
+    "focused-after-fix": {
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool",
+      "argv": [
+        "rtk",
+        "proxy",
+        "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/gh-375/venv/bin/python",
+        "-m",
+        "pytest",
+        "learner/gate/tests/test_gate.py",
+        "learner/gate/tests/test_gate_multirecord_receipt_binding.py",
+        "learner/gate/tests/test_readiness_plan_contract.py",
+        "-vv"
+      ],
+      "start": "2026-10-16T01:16:23.840733+00:00",
+      "end": "2026-10-16T01:16:26.087622+00:00",
+      "exit_code": 0,
+      "log": "focused-after-fix.log"
+    },
+    "shared-regression": {
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool",
+      "argv": [
+        "rtk",
+        "proxy",
+        ".scratch/gh-375/venv/bin/python",
+        "-m",
+        "pytest",
+        "learner/substrate/tests",
+        "learner/gate/tests",
+        "learner/tests",
+        "learner/analytics_events/tests",
+        "curriculum/_shared/tests",
+        "curriculum/ai-literacy/tools/tests",
+        "engines/test_engine_contracts.py",
+        "-q"
+      ],
+      "start": "2026-10-16T01:16:40.690060+00:00",
+      "end": "2026-10-16T01:17:09.438241+00:00",
+      "exit_code": 0,
+      "log": "shared-regression.log"
+    },
+    "complexity-self-test": {
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool",
+      "argv": [
+        "rtk",
+        "proxy",
+        ".scratch/gh-375/venv/bin/python",
+        "scripts/check_python_complexity.py",
+        "--self-test"
+      ],
+      "start": "2026-10-16T01:16:40.687061+00:00",
+      "end": "2026-10-16T01:16:41.263563+00:00",
+      "exit_code": 0,
+      "log": "complexity-self-test.log"
+    },
+    "complexity-ratchet": {
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool",
+      "argv": [
+        "rtk",
+        "proxy",
+        ".scratch/gh-375/venv/bin/python",
+        "scripts/check_python_complexity.py",
+        "--max",
+        "8",
+        "--baseline",
+        "scripts/python_complexity_baseline.txt",
+        "learner",
+        "engines/minimaxDojo",
+        "engines/openclaw",
+        "engines/miniMaxEvolutionEngine",
+        "engines/aiDevschoolMvp"
+      ],
+      "start": "2026-10-16T01:16:40.683541+00:00",
+      "end": "2026-10-16T01:16:41.353115+00:00",
+      "exit_code": 0,
+      "log": "complexity-ratchet.log"
+    }
+  },
+  "summaries": {
+    "failing-first": "15 failed, 109 passed; pytest exit 1",
+    "focused-after-fix": "124 passed; pytest exit 0",
+    "shared-regression": "918 passed, 2 skipped; pytest exit 0",
+    "complexity-self-test": "PASS; exit 0",
+    "complexity-ratchet": "exit 0"
+  },
+  "integrity_checks": {
+    "tests_and_checklist_unchanged_since_failing_first": true,
+    "learner/gate/canonical_gate.py_equals_PR657": true,
+    "learner/gate/evidence_io.py_equals_PR657": true,
+    "learner/gate/tests/test_gate.py_equals_PR657": true,
+    "learner/gate/tests/test_gate_multirecord_receipt_binding.py_equals_PR657": true,
+    "scripts/python_complexity_baseline.txt_equals_PR657": true,
+    "protected_standards_rubric_state_unchanged": true
+  },
+  "new_one_way_doors": [],
+  "remaining_gaps": [
+    "Fresh whole-feature verifier and publication/merge proofs are orchestrator-owned, not supplied by S1 builder.",
+    "Two existing optional live TypeSafe tests were skipped because TYPESAFE_API_KEY is absent: test_live_smoke_occurrences and test_live_paraphrase_semantics. They are outside the S1 frozen named proofs."
+  ],
+  "abandoned": [
+    "Initial venv path in primary checkout did not exist; retained preflight error and used worktree-local .scratch/gh-375/venv.",
+    "Initial new replay test overwrote consumed receipt-bound backing; corrected fixture setup before production change to retain consumed artifact and supply a separate replay artifact. Retained first log; assertions unchanged."
+  ],
+  "actions": {
+    "shared_repository_commits": 0,
+    "temp_fixture_commit": "test_committed_multirecord_backing_revalidates commits only inside pytest temporary root",
+    "push": 0,
+    "pr_comments": 0,
+    "checkout": 0,
+    "merge": 0,
+    "agents_spawned": 0
+  },
+  "sdlc_warnings": [
+    {
+      "id": "SDLC-GATE-657-001",
+      "repo": "aidevschool",
+      "head": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+      "issue": "S1 has producer proofs; a distinct fresh-context whole-feature verifier has not run.",
+      "evidence": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/gate/focused-after-fix.log",
+      "correction": "Orchestrator dispatches the fresh whole-feature verifier after the final authorized build batch, pinning the complete candidate diff and frozen task/checklist.",
+      "verification": "Independent report accounts for every frozen criterion; C1-C7 rerun against the final candidate and verify protected history/rubric/state remain unchanged.",
+      "status": "open",
+      "prerequisite": "Final authorized build batch and distinct verifier context."
+    }
+  ]
+}

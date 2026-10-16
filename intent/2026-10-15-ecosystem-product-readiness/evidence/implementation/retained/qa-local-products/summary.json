@@ -1,0 +1,98 @@
+{
+  "reports": [
+    {
+      "engineId": "school-entry",
+      "criterion": "C27",
+      "status": "unverified",
+      "functionalStatus": "unverified",
+      "report": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-local-products/school-entry/2026-10-16T01-41-35-115Z/report.json",
+      "sha256": "06579ba1760a7bc5538f3a30c5b9deafab3f33cb42eb1a79210210213cd410cc",
+      "checks": 9,
+      "coverage": null,
+      "allOwnedProcessesStopped": true,
+      "httpServerStopped": null,
+      "unverifiedCases": [
+        "recommendation-provider-positive-timeout"
+      ]
+    },
+    {
+      "engineId": "sdlc-quest",
+      "criterion": "C28",
+      "status": "unverified",
+      "functionalStatus": "pass",
+      "report": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-local-products/sdlc-quest/2026-10-16T01-42-22-230Z/report.json",
+      "sha256": "715d116d6ef037637f209cc94505007246b2731956309e12bc5519b4e230f096",
+      "checks": 341,
+      "coverage": null,
+      "allOwnedProcessesStopped": true,
+      "httpServerStopped": null,
+      "unverifiedCases": []
+    },
+    {
+      "engineId": "zai-duolingo-like",
+      "criterion": "C30",
+      "status": "unverified",
+      "functionalStatus": "unverified",
+      "report": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-local-products/zai-duolingo-like/2026-10-16T01-46-27-742Z/report.json",
+      "sha256": "871a65c27dabefd5362a96f89618a9c5d8285eabef3eee5391aef1d626703bfc",
+      "checks": 0,
+      "coverage": {
+        "completedLessons": 23,
+        "offeredLessons": 27,
+        "observedInteractionTypes": [
+          "fill-blank",
+          "multiple-choice",
+          "order",
+          "swipe",
+          "true-false"
+        ],
+        "onboardingPathsCompleted": [
+          "neon-syntax"
+        ],
+        "runtimeModesObserved": [
+          "Next production"
+        ],
+        "runtimeModesNotStarted": [
+          "Bun standalone"
+        ]
+      },
+      "allOwnedProcessesStopped": null,
+      "httpServerStopped": true,
+      "unverifiedCases": [
+        "next-lesson-loop-engineering",
+        "next-lesson-o-workflow-permanente",
+        "next-lesson-caso-real-feature-previsivel",
+        "next-lesson-privacidade-dados",
+        "onboarding-silicon-shrine",
+        "practice-review",
+        "chat-missing-provider",
+        "chat-provider-failure",
+        "chat-configured-provider",
+        "bun-standalone"
+      ]
+    }
+  ],
+  "engineSourceDiffExit": 0,
+  "observers": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/local-products-runtime*.mjs",
+  "newRuntimeAfterResourceStop": false,
+  "independentSemanticVerification": "pending",
+  "incident": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-local-products/incident-sanitized.json",
+  "reportIndex": {
+    "C27": {
+      "engineId": "school-entry",
+      "report": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-local-products/school-entry/2026-10-16T01-41-35-115Z/report.json",
+      "sha256": "06579ba1760a7bc5538f3a30c5b9deafab3f33cb42eb1a79210210213cd410cc"
+    },
+    "C28": {
+      "engineId": "sdlc-quest",
+      "report": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-local-products/sdlc-quest/2026-10-16T01-42-22-230Z/report.json",
+      "sha256": "715d116d6ef037637f209cc94505007246b2731956309e12bc5519b4e230f096"
+    },
+    "C30": {
+      "engineId": "zai-duolingo-like",
+      "report": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-local-products/zai-duolingo-like/2026-10-16T01-46-27-742Z/report.json",
+      "sha256": "871a65c27dabefd5362a96f89618a9c5d8285eabef3eee5391aef1d626703bfc"
+    }
+  },
+  "formattingReport": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-local-products/formatting-report.json"
+}

@@ -1,0 +1,657 @@
+{
+  "engineId": "miniTown",
+  "caseName": "declared-use",
+  "status": "unverified",
+  "criterion": "C23",
+  "criteriaSource": ".checks/product-readiness-20261015.md",
+  "observedAt": "2026-10-16T01:43:10.310Z",
+  "producerContext": "readiness-dashboard-runtime-producer",
+  "verifierContext": null,
+  "sourceCommit": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+  "sourceFingerprint": "c88424a0bbf2cbbe824487ccda251d370fad970564f99c5bd8346bcc37313e1f",
+  "browserAvailability": "Browser plugin not available; regular installed engine Playwright per frontend-testing-debugging skill and project AGENTS",
+  "runtime": {
+    "node": "v22.23.2",
+    "playwright": "1.61.1",
+    "observerPid": 83262,
+    "observerParentPid": 83245,
+    "kind": "fresh local strict-port processes",
+    "viewport": {
+      "width": 1280,
+      "height": 800
+    },
+    "externalModelCalls": 0
+  },
+  "invocation": {
+    "argv": [
+      "/Users/danielbarreto/.hermes/node/bin/node",
+      "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/dashboard-runtime.mjs",
+      "miniTown",
+      "declared-use"
+    ],
+    "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool"
+  },
+  "logDir": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/miniTown-2026-10-16T01-43-10-066Z",
+  "mediaDir": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-10-066Z",
+  "assertions": [
+    {
+      "id": "C23-entry-hud-exploration",
+      "mandatory": true,
+      "promiseSource": "miniTown/README.md; DESIGN.md; experimental-minitown student guide",
+      "status": "pass",
+      "startedAt": "2026-10-16T01:43:11.942Z",
+      "observed": {
+        "actualPointerDrag": true,
+        "actualWheelZoom": true,
+        "before": {
+          "distance": 35,
+          "azimuth": 0,
+          "polar": 0.9599310885968813,
+          "simTime": 8.00551200000048
+        },
+        "after": {
+          "distance": 33.425,
+          "azimuth": -0.6394336525569247,
+          "polar": 0.8000726754576499,
+          "simTime": 8.069560000000465,
+          "sceneChildren": 6,
+          "worldSnapshot": {
+            "simTime": 8.069560000000465,
+            "phase": "morning",
+            "zoneCount": 0,
+            "roadCount": 0,
+            "buildingCount": 0,
+            "residentCount": 0,
+            "vehicleCount": 0,
+            "roofedCount": 0
+          }
+        },
+        "page": {
+          "url": "http://127.0.0.1:52183/",
+          "title": "MiniTown — Engine Skeleton",
+          "viewport": {
+            "width": 1280,
+            "height": 800
+          },
+          "body": "MiniTown — morning simTime=8.09h",
+          "aria": "- text: MiniTown — morning simTime=8.09h",
+          "frameworkOverlayCount": 0
+        }
+      },
+      "endedAt": "2026-10-16T01:43:13.499Z"
+    },
+    {
+      "id": "C23-declared-town-content",
+      "mandatory": true,
+      "promiseSource": "miniTown/README.md; docs/product-readiness/student-guide.md#experimental-minitown (observe zones, residents and vehicles)",
+      "status": "unverified",
+      "observed": {
+        "simTime": 8.085440000000474,
+        "phase": "morning",
+        "zoneCount": 0,
+        "roadCount": 0,
+        "buildingCount": 0,
+        "residentCount": 0,
+        "vehicleCount": 0,
+        "roofedCount": 0
+      },
+      "detail": "Ordinary entry exposes an empty town. Camera, clock, HUD and exit behavior are observed separately; these facts do not establish the guide's described town content. No zones/residents/vehicles were injected through the test hook.",
+      "missingPrerequisites": [
+        "Independent decision whether this empty experimental entry satisfies the frozen declared-use promise",
+        "Observation of the documented town content on the offered entry when applicable"
+      ]
+    },
+    {
+      "id": "C23-day-night-public-tick-and-hud",
+      "mandatory": true,
+      "promiseSource": "miniTown/README.md: 300 seconds = 24 hours; docs/concepts/CONCEPTS.md",
+      "status": "pass",
+      "startedAt": "2026-10-16T01:43:13.500Z",
+      "observed": {
+        "before": {
+          "phase": "morning",
+          "simTime": 8.085440000000474
+        },
+        "after": {
+          "phase": "night",
+          "simTime": 22.085440000000474
+        },
+        "sunIntensity": 0,
+        "kind": "documented public observation hook manual tick; real animation loop separately observed",
+        "page": {
+          "url": "http://127.0.0.1:52183/",
+          "title": "MiniTown — Engine Skeleton",
+          "viewport": {
+            "width": 1280,
+            "height": 800
+          },
+          "body": "MiniTown — night simTime=22.09h",
+          "aria": "- text: MiniTown — night simTime=22.09h",
+          "frameworkOverlayCount": 0
+        }
+      },
+      "endedAt": "2026-10-16T01:43:13.699Z"
+    },
+    {
+      "id": "C23-exit-reopen-no-persistence-promise",
+      "mandatory": true,
+      "promiseSource": "inventory.yaml#minitown-explore-only; student-guide.md#experimental-minitown",
+      "status": "pass",
+      "startedAt": "2026-10-16T01:43:13.699Z",
+      "observed": {
+        "leftRouteAndReopened": true,
+        "restoredLearnerProgressClaimed": false,
+        "snapshot": {
+          "simTime": 8.004959999999997,
+          "phase": "morning",
+          "localKeys": [],
+          "sessionKeys": []
+        },
+        "page": {
+          "url": "http://127.0.0.1:52183/",
+          "title": "MiniTown — Engine Skeleton",
+          "viewport": {
+            "width": 1280,
+            "height": 800
+          },
+          "body": "MiniTown — morning simTime=8.02h",
+          "aria": "- text: MiniTown — morning simTime=8.02h",
+          "frameworkOverlayCount": 0
+        },
+        "health": {
+          "url": "http://127.0.0.1:52183/",
+          "title": "MiniTown — Engine Skeleton",
+          "nonblank": true,
+          "frameworkOverlay": false,
+          "appErrors": 0,
+          "warnings": [
+            {
+              "page": "http://127.0.0.1:52183/",
+              "type": "warning",
+              "text": "[.WebGL-0x13c00614200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+            },
+            {
+              "page": "http://127.0.0.1:52183/",
+              "type": "warning",
+              "text": "[.WebGL-0x13c00614200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+            },
+            {
+              "page": "http://127.0.0.1:52183/",
+              "type": "warning",
+              "text": "[.WebGL-0x13c00614200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+            },
+            {
+              "page": "http://127.0.0.1:52183/",
+              "type": "warning",
+              "text": "[.WebGL-0x13c00614200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
+            }
+          ]
+        }
+      },
+      "endedAt": "2026-10-16T01:43:14.309Z"
+    },
+    {
+      "id": "C23-renderer-unavailable-reload-and-exit",
+      "mandatory": true,
+      "promiseSource": "inventory.yaml#minitown-explore-only; facilitator-guide.md#experimental-minitown",
+      "status": "pass",
+      "startedAt": "2026-10-16T01:43:14.567Z",
+      "observed": {
+        "injectedUnavailableWebGL": true,
+        "reloadAttempts": 1,
+        "unavailableRecorded": true,
+        "exitReached": "about:blank",
+        "appFallbackNotPromised": true,
+        "first": {
+          "canvas": 0,
+          "hook": false,
+          "errors": [
+            "THREE.WebGLRenderer: Error creating WebGL context.",
+            "Error: Error creating WebGL context."
+          ]
+        }
+      },
+      "endedAt": "2026-10-16T01:43:15.855Z"
+    },
+    {
+      "id": "C23-route-unavailable-one-retry-exit-and-reopen",
+      "mandatory": true,
+      "promiseSource": "inventory.yaml#minitown-explore-only; facilitator-guide.md#Recover and escalate",
+      "status": "pass",
+      "startedAt": "2026-10-16T01:43:16.046Z",
+      "observed": {
+        "routeAbsentErrors": [
+          "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:52183/",
+          "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:52183/"
+        ],
+        "reloadAttempts": 1,
+        "exited": true,
+        "ownOriginRestored": "http://127.0.0.1:52183",
+        "ownPid": 83515,
+        "page": {
+          "url": "http://127.0.0.1:52183/",
+          "title": "MiniTown — Engine Skeleton",
+          "viewport": {
+            "width": 1280,
+            "height": 800
+          },
+          "body": "MiniTown — morning simTime=8.03h",
+          "aria": "- text: MiniTown — morning simTime=8.03h",
+          "frameworkOverlayCount": 0
+        }
+      },
+      "endedAt": "2026-10-16T01:43:17.726Z"
+    },
+    {
+      "id": "C23-learner-preserved",
+      "mandatory": true,
+      "promiseSource": "qualification-matrix.md#Protocolo comum; C18/C20/C23",
+      "status": "pass",
+      "observed": {
+        "originalCheckoutAndWorktreeCanonicalFilesUnchanged": true
+      }
+    },
+    {
+      "id": "C23-independent-semantic-image-judgment",
+      "mandatory": true,
+      "promiseSource": "AGENTS.md#Browser-test evidence; engines/shared/playwright/README.md",
+      "status": "unverified",
+      "missingPrerequisites": [
+        "Separate verifier context",
+        "Authorized TypeSafe/Jev credential and semantic judgment receipt"
+      ],
+      "detail": "Functional observations and positive captures are producer evidence. No semantic image judgment or readiness grant is asserted."
+    }
+  ],
+  "commands": [
+    {
+      "executable": "rtk",
+      "argv": [
+        "proxy",
+        "pnpm",
+        "run",
+        "dev",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "52183",
+        "--strictPort"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown",
+      "envOverrides": {},
+      "startedAt": "2026-10-16T01:43:10.495Z",
+      "pid": 83302,
+      "exitCode": null,
+      "signal": "SIGTERM",
+      "endedAt": "2026-10-16T01:43:15.998Z",
+      "stdout": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/miniTown-2026-10-16T01-43-10-066Z/command-0-stdout.log",
+      "stderr": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/miniTown-2026-10-16T01-43-10-066Z/command-0-stderr.log"
+    },
+    {
+      "executable": "rtk",
+      "argv": [
+        "proxy",
+        "pnpm",
+        "run",
+        "dev",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "52183",
+        "--strictPort"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown",
+      "envOverrides": {},
+      "startedAt": "2026-10-16T01:43:16.211Z",
+      "pid": 83515,
+      "exitCode": null,
+      "signal": "SIGTERM",
+      "endedAt": "2026-10-16T01:43:18.003Z",
+      "stdout": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/miniTown-2026-10-16T01-43-10-066Z/command-1-stdout.log",
+      "stderr": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/miniTown-2026-10-16T01-43-10-066Z/command-1-stderr.log"
+    }
+  ],
+  "evidenceRefs": [
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/miniTown-2026-10-16T01-43-10-066Z/command-0-stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/miniTown-2026-10-16T01-43-10-066Z/command-0-stdout.log",
+      "sha256": "6787f2db409be22f43494e51b6e61ad3f98702b683d7604382ffcf308fb8bca6"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/miniTown-2026-10-16T01-43-10-066Z/command-1-stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/miniTown-2026-10-16T01-43-10-066Z/command-1-stdout.log",
+      "sha256": "966e3b5c5c2e2ae7c0e6871152802fc9cdb0f1887588c376fa61e192862573ed"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-10-066Z/explore-day-night-return/console.json",
+      "sha256": "234bb20bf3896ad19cefe40aa2d9b2e4d5b386399129bd86e8ab406b6d3afd2c"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-10-066Z/explore-day-night-return/explored-morning.json",
+      "sha256": "b3815f0af4380929b7375e82735cecf0111132390b92f6803df2bbff771bdad9"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-10-066Z/explore-day-night-return/explored-morning.png",
+      "sha256": "02ee5393dbee40e06da5717b5641897229637c7942cb8abcf54e26b54f4c8c8e"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-10-066Z/explore-day-night-return/network.json",
+      "sha256": "87d5a10a22280f17fe13a045a80a6e671255265c2a28385c5714ed539b837d85"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-10-066Z/explore-day-night-return/night-hud.json",
+      "sha256": "0765622f23bb7639d63ff343263b9bd25d5690d6827f481707224df4962012a1"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-10-066Z/explore-day-night-return/night-hud.png",
+      "sha256": "f82bf4076c23f4fdbc77f94c019893d0073f57d7926b7418ecc332d535f695c6"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-10-066Z/explore-day-night-return/page@e9dee8725bd8b61277c2aa90d7f9b04b.webm",
+      "sha256": "76da57e96f1f0c5ae3a0adbd3a56cc4c4caa266bf6b3409a619e6e52ce7e7f24"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-10-066Z/explore-day-night-return/reopened.json",
+      "sha256": "bdf6f4965bef871bca9f56e9bc24fbd47ab44f3c798aa79d2c8ba714fc1b0a0f"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-10-066Z/explore-day-night-return/reopened.png",
+      "sha256": "ad7cd6f0daf1c87f53c40f801b7300e05460a42b49e747b2516c2a91620e7953"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-10-066Z/renderer-unavailable-exit/console.json",
+      "sha256": "742606a279898acbfec65fe0d24b1134ab2e7c773960b0cba92ea266088c7842"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-10-066Z/renderer-unavailable-exit/network.json",
+      "sha256": "87d5a10a22280f17fe13a045a80a6e671255265c2a28385c5714ed539b837d85"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-10-066Z/renderer-unavailable-exit/page@ce44f17b67ea4e14d46aeaf6808dc43b.webm",
+      "sha256": "3f9fa0e4be847845687e47bd40f9408806abe7858c19a92389165b4f45fa3fe6"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-10-066Z/renderer-unavailable-exit/renderer-unavailable.json",
+      "sha256": "74b95be062c47ab953f8614f07e3a3133c0b6d7040c0835fed1d6b72e28e3735"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-10-066Z/renderer-unavailable-exit/renderer-unavailable.png",
+      "sha256": "c2f0332c792be537d66e446069512a467b652f5cc972868f27fddcf9e5cf0f69"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-10-066Z/route-unavailable-recovery/console.json",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-10-066Z/route-unavailable-recovery/network.json",
+      "sha256": "506ad7e7293cf343c2d66dd406d4fbb3fe18371b172fd02ed6b3522c076534a5"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-10-066Z/route-unavailable-recovery/page@955b0761a335fd8ae0f323ac41b96e9e.webm",
+      "sha256": "67ffded7a29557bea884d79a669f434e6670d4f2d1b13cca6e9eb8e6b506f6d9"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-10-066Z/route-unavailable-recovery/route-restored.json",
+      "sha256": "987042c3f9b2fc09d704093be4f7074903f3ecd6ce35b616fa6a6a5e29531084"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-10-066Z/route-unavailable-recovery/route-restored.png",
+      "sha256": "9506e7e82414e93c00204c6d7427cf9bd2b7639ab657bf6a32436a9054fefbea"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-10-066Z/route-unavailable-recovery/route-unavailable.json",
+      "sha256": "ba2063ad715d60cfe66e7807b32ec7415ec44870ce6e7f6ed06437bf490e6833"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-10-066Z/route-unavailable-recovery/route-unavailable.png",
+      "sha256": "3eab349ebf404dae5a2a20d041325042a032d46aeab4b9730d8f8962686fb9b0"
+    }
+  ],
+  "limitations": [
+    "Normal entry has zero zones, buildings, residents and vehicles; the capture shows ground only. The populated-town description in the current student guide remains unverified, without reducing the frozen promise or injecting debug content.",
+    "No TypeSafe/Jev key was supplied. Independent semantic judgment of captured images remains an explicit prerequisite; no global engineReady claim is made."
+  ],
+  "sourceFiles": [
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/README.md",
+      "sha256": "889415e108b28bd7160961387970e6f2535f3c88b54baf37ae2f53c30f612645"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/DESIGN.md",
+      "sha256": "dccf7e6f0c1bb8d00ddc883d417584cdafd5065f642ea91ee6ddb80dcc7442ea"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/package.json",
+      "sha256": "b204d69da9ca8d93645800bd268353a41b7f26fa31bfe86c8ebedbf87574bce6"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/src/main.ts",
+      "sha256": "0150feedb728c4a1f6441117ea18630271fcd2333720f0e213b5115ace540a45"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/src/evidence/e2e.contract.ts",
+      "sha256": "d26263c54ed662532b0e06339cc13da9a15707a863814568ae81c079417306d3"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/src/game/controller.ts",
+      "sha256": "60606bbbb74912324426c317618ad217b0d651dbc5264cead35302d59ae3fa07"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/src/scene/camera.ts",
+      "sha256": "04510dad03718a100d53b4b18d8f462d3b8ad804052344beb2f5e401135baf6e"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/src/scene/dayNight.ts",
+      "sha256": "42aadaddd0d5a557e5a6ab7e091861ba31ac17ead417f66cda18532c2421a201"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/src/scene/sceneRoot.ts",
+      "sha256": "d1768d82d28c4f2fef246d215b640bbf8b01839c184bdd0433ddecb6fe190b37"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/src/scene/state.ts",
+      "sha256": "2bb696f58645a23c67e5847314b8029a061dc9c1d3052aa349c359b2dc9b036e"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/docs/concepts/CONCEPTS.md",
+      "sha256": "c4c7e5b93c9da369a8d376c9138bde24129d651014a76b21048fe4d218e28a57"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.checks/product-readiness-20261015.md",
+      "sha256": "52b0f861cb81849237d09e6cb98ae0c8c154fd09d34325a590d0b45f34ae6c56"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/plan.md",
+      "sha256": "aaa184768897b4863b6cfbc8e36b2513e3212bb02ea496e0f19590a49887af0e"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/design.md",
+      "sha256": "eab37dc1d6f639f358f5e27e6d07719585e0fe1badecfb180b179c8836d3f256"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/qualification-matrix.md",
+      "sha256": "0e9448e46c26d8075831b5215d609bab38a4d052567b04f5e99251019b5f2b35"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/docs/product-readiness/inventory.yaml",
+      "sha256": "9a43d6462ae87239c7c780f0ecdf38f39f9c63030dbf32aae4354472291b7811"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/docs/product-readiness/student-guide.md",
+      "sha256": "27d62eab38efabe9296c5d4bc0a9b44889b78653b3ef27b0ce9d3b4c084fd606"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/docs/product-readiness/facilitator-guide.md",
+      "sha256": "a6d858ccc19ea9afd136da62523b18e617b2eabe70506e22ad34887d407a069a"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/dashboard-runtime.mjs",
+      "sha256": "c21035f43f8d7cec9c43391e5a188ddbb0e2f199f8086b01b2e2eb2f38331543"
+    }
+  ],
+  "evidencePolicy": {
+    "source": {
+      "path": "/Users/danielbarreto/Development/aidevschool/engines/shared/playwright/base.config.ts",
+      "sha256": "5519ac81eac5d277c939da29e816130dd614bf18009a9200263aa9014ae525a7"
+    },
+    "importedOrPromoted": false,
+    "screenshot": "on",
+    "video": "on",
+    "trace": "retain-on-failure",
+    "outputDir": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-10-066Z"
+  },
+  "stateBefore": {
+    "worktree": {
+      "root": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/",
+      "files": [
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/learning_state.yaml",
+          "sha256": "36419ae44e755a9bd8bd049b14d0dee03d8b5937e577285f67ffe730733735e2"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/learner_profile.md",
+          "sha256": "f32b2cf779dab2d2a88057838f0172440e8ba5e5ae8874733ae8609f01653183"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/pitfalls.md",
+          "sha256": "c63fe93060cdc58d97696cad549cf8af2899fd99ca50c94fe6e6fc2d1d0f7405"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/journal.md",
+          "sha256": "60aa71fddacbff585358c8376e0ead77612a4248ab0f1700301c9dc39397ab6f"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/pipeline_status.yaml",
+          "sha256": "668ac80145de042c0bd78dd4210ceccf1dc0ad932770eb4a03f2fd6d886f169a"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/pipeline_status.md",
+          "sha256": "a8fcbcb603f68ddd03ac7f3e6742c5580dae6194b11bd112206a7d7033188b54"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/predictions.yaml",
+          "sha256": "97f010c12e57942419a2a9326f29df792c5039aca3e1c779ed1508a67124eb37"
+        }
+      ],
+      "digest": "0e8e49b105ded1015b28caecd6968df31a5223a17104c2768c262aa8647192b6"
+    },
+    "originalCheckout": {
+      "root": "/Users/danielbarreto/Development/aidevschool",
+      "files": [
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/learning_state.yaml",
+          "sha256": "36419ae44e755a9bd8bd049b14d0dee03d8b5937e577285f67ffe730733735e2"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/learner_profile.md",
+          "sha256": "f32b2cf779dab2d2a88057838f0172440e8ba5e5ae8874733ae8609f01653183"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/pitfalls.md",
+          "sha256": "c63fe93060cdc58d97696cad549cf8af2899fd99ca50c94fe6e6fc2d1d0f7405"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/journal.md",
+          "sha256": "60aa71fddacbff585358c8376e0ead77612a4248ab0f1700301c9dc39397ab6f"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/pipeline_status.yaml",
+          "sha256": "668ac80145de042c0bd78dd4210ceccf1dc0ad932770eb4a03f2fd6d886f169a"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/pipeline_status.md",
+          "sha256": "a8fcbcb603f68ddd03ac7f3e6742c5580dae6194b11bd112206a7d7033188b54"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/predictions.yaml",
+          "sha256": "97f010c12e57942419a2a9326f29df792c5039aca3e1c779ed1508a67124eb37"
+        }
+      ],
+      "digest": "e2df008696e860ba89828c06958b7998b4f9248f52edd1c24169437d3b98a4d2"
+    }
+  },
+  "inapplicable": [
+    {
+      "promise": "persistence, lesson, assessment, progression and mastery",
+      "source": "docs/product-readiness/inventory.yaml#minitown-explore-only; miniTown/README.md#Limites",
+      "reason": "The experimental observation contract explicitly excludes these promises."
+    }
+  ],
+  "stateAfter": {
+    "worktree": {
+      "root": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/",
+      "files": [
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/learning_state.yaml",
+          "sha256": "36419ae44e755a9bd8bd049b14d0dee03d8b5937e577285f67ffe730733735e2"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/learner_profile.md",
+          "sha256": "f32b2cf779dab2d2a88057838f0172440e8ba5e5ae8874733ae8609f01653183"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/pitfalls.md",
+          "sha256": "c63fe93060cdc58d97696cad549cf8af2899fd99ca50c94fe6e6fc2d1d0f7405"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/journal.md",
+          "sha256": "60aa71fddacbff585358c8376e0ead77612a4248ab0f1700301c9dc39397ab6f"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/pipeline_status.yaml",
+          "sha256": "668ac80145de042c0bd78dd4210ceccf1dc0ad932770eb4a03f2fd6d886f169a"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/pipeline_status.md",
+          "sha256": "a8fcbcb603f68ddd03ac7f3e6742c5580dae6194b11bd112206a7d7033188b54"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/predictions.yaml",
+          "sha256": "97f010c12e57942419a2a9326f29df792c5039aca3e1c779ed1508a67124eb37"
+        }
+      ],
+      "digest": "0e8e49b105ded1015b28caecd6968df31a5223a17104c2768c262aa8647192b6"
+    },
+    "originalCheckout": {
+      "root": "/Users/danielbarreto/Development/aidevschool",
+      "files": [
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/learning_state.yaml",
+          "sha256": "36419ae44e755a9bd8bd049b14d0dee03d8b5937e577285f67ffe730733735e2"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/learner_profile.md",
+          "sha256": "f32b2cf779dab2d2a88057838f0172440e8ba5e5ae8874733ae8609f01653183"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/pitfalls.md",
+          "sha256": "c63fe93060cdc58d97696cad549cf8af2899fd99ca50c94fe6e6fc2d1d0f7405"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/journal.md",
+          "sha256": "60aa71fddacbff585358c8376e0ead77612a4248ab0f1700301c9dc39397ab6f"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/pipeline_status.yaml",
+          "sha256": "668ac80145de042c0bd78dd4210ceccf1dc0ad932770eb4a03f2fd6d886f169a"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/pipeline_status.md",
+          "sha256": "a8fcbcb603f68ddd03ac7f3e6742c5580dae6194b11bd112206a7d7033188b54"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/predictions.yaml",
+          "sha256": "97f010c12e57942419a2a9326f29df792c5039aca3e1c779ed1508a67124eb37"
+        }
+      ],
+      "digest": "e2df008696e860ba89828c06958b7998b4f9248f52edd1c24169437d3b98a4d2"
+    }
+  },
+  "endedAt": "2026-10-16T01:43:20.193Z"
+}

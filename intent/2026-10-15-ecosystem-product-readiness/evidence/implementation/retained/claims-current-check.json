@@ -1,0 +1,13 @@
+{
+  "argv": [
+    "rtk",
+    "proxy",
+    "python3",
+    "docs/product-readiness/tools/cli.py",
+    "check",
+    "--require-current"
+  ],
+  "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool",
+  "exitCode": 1,
+  "scope": "canonical claims freshness only; no assessment written"
+}

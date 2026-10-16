@@ -1,0 +1,48 @@
+{
+  "sdlc_warnings": [
+    {
+      "id": "SDLC-READY-001",
+      "repo": "dandpb/aidevschool",
+      "head": "f98e7fa32deac836addc348e185e8788fd197627",
+      "issue": "Registro sintético de jogo sem recibo independente permite decisão de passed e transição simulada para mastered.",
+      "evidence": "[mastery-result.json](/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/mastery-result.json); nenhuma escrita canônica ou execução real de jogo.",
+      "correction": "Concluir e revisar o [PR #657](https://github.com/dandpb/aidevschool/pull/657), preservando histórico e evidência multirregistro.",
+      "verification": "No candidato, python -m pytest learner/gate/tests -q; reproduzir sem recibo → inelegível, recibo válido vinculado → passa; histórico e NDJSON legítimo intactos. Vincular o probe ao novo SHA.",
+      "status": "open",
+      "prerequisite": "Plano aceito e verificador independente; o probe retido possui guarda da baseline histórica."
+    },
+    {
+      "id": "SDLC-READY-002",
+      "repo": "dandpb/aidevschool",
+      "head": "f98e7fa32deac836addc348e185e8788fd197627",
+      "issue": "O conteúdo l02 v4 é recusado pelo verificador Netlify fixado em l02 v3.",
+      "evidence": "[literacy-result.json](/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/literacy-result.json): a1 v3 PASS/v4 FAIL; conteúdo atual é v4. Deployment não sondado.",
+      "correction": "Concluir e revisar o [PR #656](https://github.com/dandpb/aidevschool/pull/656), com recomputação independente por atividade.",
+      "verification": "No candidato, node --test learner/gate/tests/literacy_verify_netlify.test.mjs learner/gate/tests/literacy_verify_identity.test.mjs: aceitar v4 a1/a2/a3 honestos, recusar adulteração; repetir probe a1.",
+      "status": "open",
+      "prerequisite": "Plano aceito; provar também o endpoint publicado antes de declarar a jornada remota resolvida."
+    },
+    {
+      "id": "SDLC-READY-003",
+      "repo": "dandpb/aidevschool",
+      "head": "f98e7fa32deac836addc348e185e8788fd197627",
+      "issue": "Seis claims customer-ready estão stale por divergência de fingerprint na árvore atual.",
+      "evidence": "[readiness-check.json](/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/readiness-check.json) (exit 1, seis STALE-WINDOW) e [CI main 38792377959](https://github.com/dandpb/aidevschool/actions/runs/38792377959).",
+      "correction": "Reobservar as jornadas e acrescentar fatos/assessments independentes para a fonte oferecida.",
+      "verification": "python docs/product-readiness/tools/cli.py check --require-current e lane de claims em main passam; build de produtor não concede grant.",
+      "status": "open",
+      "prerequisite": "Reparos que afetam as jornadas concluídos; runtimes disponíveis e assessor independente."
+    },
+    {
+      "id": "SDLC-READY-004",
+      "repo": "dandpb/aidevschool",
+      "head": "f98e7fa32deac836addc348e185e8788fd197627",
+      "issue": "O inventário formal cobre 6 de 14 engines; os outros oito não foram qualificados, impedindo afirmar prontidão do conjunto.",
+      "evidence": "[Inventário](/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/docs/product-readiness/inventory.yaml): 9 casos/6 owners; [matriz dos 14 engines](/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/design.md) com lacunas explícitas.",
+      "correction": "Qualificar os 14 engines e suas variantes oferecidas no uso declarado, incluindo os oito fora do inventário.",
+      "verification": "14/14 pass com prova independente de entrada, fluxo principal, recuperação e limites. blocked/unverified impede afirmar prontidão global.",
+      "status": "open",
+      "prerequisite": "Ambientes/harnesses declarados disponíveis; a execução completa ainda não foi realizada."
+    }
+  ]
+}

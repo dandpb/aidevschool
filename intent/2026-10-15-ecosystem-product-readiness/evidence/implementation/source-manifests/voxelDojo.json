@@ -1,0 +1,2392 @@
+{
+  "schemaVersion": 1,
+  "membership": "git tracked regular files at refresh; excluded dependency/build/test-result outputs",
+  "sourceScope": [
+    "engines/voxelDojo",
+    "learner/gate",
+    "learner/substrate",
+    "engines/shared"
+  ],
+  "files": [
+    {
+      "path": "engines/shared/pilotSupport.ts",
+      "sha256": "8ad29abbf971a33b5c804c478399207c3f265cc58a6f8854a548ece2dd27142d"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/README.md",
+      "sha256": "c45fc5459871ed943979a54a0e0e951b00180f4febd065cbe0115eeb2fb8abe1"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/emit.ts",
+      "sha256": "69164a47d4045714eb9f519acf0b3613ea9c0180660ce319ec90f6b8d9786064"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/evidenceEnvelope.ts",
+      "sha256": "53539456b5ba4ae9ccdd353825c9d67d6299949f9481fcc2e96f6fce5aad6bee"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/evidenceTransport.ts",
+      "sha256": "b42814c0d5c1404b9fe7a5597c515febf96b85ec982b3bdb65faee751f5a70d1"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/funnelCore.ts",
+      "sha256": "65ab2510f90bda0ac0e23f0493511497f658c3c69f74dce6b0b0a0566e6adbad"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/funnelTelemetry.ts",
+      "sha256": "41201edcdc81525b9f60ec074372befa73ee324eaa1ca21b36ade251b61d8b10"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/hostMessageDecoder.ts",
+      "sha256": "cdbf01825c1c8ddb845399bf64a339aa10a20f290f303bc253b43cd3949c8116"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/hostProtocol.ts",
+      "sha256": "7c1d86dd36bf1d20b00f13f358eb88e83a468994e45aebda3045fb7ddde76ba4"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/package.json",
+      "sha256": "225a4df4e5ba11101b1631f6212fbbad60e228abdb7093e03eddfa9974033794"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/tests/emit.test.ts",
+      "sha256": "68f19d92f53f6ddaff6b7b229635d39f25e834bed431b177521d4494bf86c99e"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/tests/evidenceEnvelope.test.ts",
+      "sha256": "e7feb329f14f46f4fa7f46a7b02ae6a51d48f8081cf7c46c568a7b9c34d84e23"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/tests/evidenceTransport.test.ts",
+      "sha256": "453301d7bb2051dcbd615f8a1eb6ab9ce874bd0d1e196717e8edfd19cc455ead"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/tests/funnelCollectorContract.test.ts",
+      "sha256": "c51d7760ef20389e4ec46c8a963ac2c3040805f604f298d23938349bba9fba7f"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/tests/funnelCore.test.ts",
+      "sha256": "72fff69d19895a64d370c5e010e5659014ffc9bd6480a1dbcb212a8076f164a3"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/tests/funnelTelemetry.test.ts",
+      "sha256": "d1540520e8da4d6a3ab8a104729d9e19a72398b5d033183ab7cacef095415d35"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/tests/harness.ts",
+      "sha256": "7ce9ab7adb51d8152b46b7bdace6cf7311b0427124e2e123533b362b570e315f"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/vitest.config.ts",
+      "sha256": "d591182e32770b0f8ade880fa4642fd22378fcf739bc7e15ff3c0d042d26b6b5"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/vocabularies.ts",
+      "sha256": "2016dca12f14698160632355bbacad26540d37e25874eb91d7af1116b9f1fc04"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/vocabularies/literacy.json",
+      "sha256": "c294b3ed73c482c221e2e16cbf7845bdfc1c5837d09d29704523809e70d4d340"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/vocabularies/os.json",
+      "sha256": "42737a25d1d861c3634f08f0b852346d058d92f3eb5a8876307c1f3dce0f21da"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/vocabularies/surfaces.json",
+      "sha256": "52afdf46b27968473689651f06c319265cbe3573e172648e193bb21cb169aeac"
+    },
+    {
+      "path": "engines/voxelDojo/.npmrc",
+      "sha256": "dd16b8e18cce3bba4b48a70884281d0bfdfa508903007847e372a4dde113ecbd"
+    },
+    {
+      "path": "engines/voxelDojo/AGENTS.md",
+      "sha256": "2927b70bdc17b4b1a22fb4e1307e1d564528f4a3bbac32df807bd551845a1f5c"
+    },
+    {
+      "path": "engines/voxelDojo/CLAUDE.md",
+      "sha256": "0ac78eac609fbb77f8aff1d72110f8c2e83721cdc888b3002b1377908b72002d"
+    },
+    {
+      "path": "engines/voxelDojo/CONTEXT.md",
+      "sha256": "6cab30898e5fd5b6eb9db3c6a6633eb46f3e961496d4386470574a24f9c631ea"
+    },
+    {
+      "path": "engines/voxelDojo/DESIGN.md",
+      "sha256": "7252c923809fc1e2d0a1392888d49de6e658d4a454e8c3ec6a96b1e62f27889b"
+    },
+    {
+      "path": "engines/voxelDojo/PLAN.md",
+      "sha256": "130a95b00bd08c7a8f0ecb4b28719a67327474fde52f61c3ed80b23963a61b97"
+    },
+    {
+      "path": "engines/voxelDojo/README.md",
+      "sha256": "d32f918bffed4ae2fdc04c6f06477f56ea9bcd4ae35b2febe58f939c27b1c665"
+    },
+    {
+      "path": "engines/voxelDojo/biome.jsonc",
+      "sha256": "4aa86aa5a80592d2640cc0e879fb81800e2fdbd639ddd68bba23f09c19869b09"
+    },
+    {
+      "path": "engines/voxelDojo/catalog.json",
+      "sha256": "c255e9bcc25c01b03900092cd80b19334cade999d5f0b95fe7dce1f0d0500df4"
+    },
+    {
+      "path": "engines/voxelDojo/docs/3d-style.md",
+      "sha256": "8bca368555c8802296dcb28f3795811ab3a41774fe48a9b0d653f32aac21deb4"
+    },
+    {
+      "path": "engines/voxelDojo/docs/ARCHITECTURE.md",
+      "sha256": "0342a947afe0f1d70a3ca3125ccb5821dab74e6907cfbdaf8bebe7298933db29"
+    },
+    {
+      "path": "engines/voxelDojo/docs/GAP_ANALYSIS.md",
+      "sha256": "eac7dc7bbab16deb45601f06f52a56fba278586d6ba375d322bcfdae30612741"
+    },
+    {
+      "path": "engines/voxelDojo/docs/plans/02_key_value_store.md",
+      "sha256": "210b1d99cd68ca431c5f35b726f0e13169a239b4641352d9775b57b0595a9b8a"
+    },
+    {
+      "path": "engines/voxelDojo/docs/plans/03_url_shortener.md",
+      "sha256": "b696a9d48a0ee82eb256a2178bc9a633c542f9691796ac5ef1cd36295d89490b"
+    },
+    {
+      "path": "engines/voxelDojo/docs/plans/05_websocket_chat.md",
+      "sha256": "8fd4245a5f8436f17c201634dfc4b24015e67d5df7ecb2ebc73264a878dd9fb1"
+    },
+    {
+      "path": "engines/voxelDojo/docs/plans/06_file_upload_pipeline.md",
+      "sha256": "e14dbf61bb66e1cf6c570c2454e79c406988f7bb5a289196be8b7c72ecaa9388"
+    },
+    {
+      "path": "engines/voxelDojo/docs/plans/07_rest_api_auth.md",
+      "sha256": "58f09c45bef062680d1400ea9013c95d30ac2abec5d345c69e32d50938866a9c"
+    },
+    {
+      "path": "engines/voxelDojo/docs/plans/08_event_driven_order_system.md",
+      "sha256": "ae1fa9fe41e3099e45e85901ea676ab42500a3115389f9cf281fb3215a07c181"
+    },
+    {
+      "path": "engines/voxelDojo/docs/plans/09_plugin_system.md",
+      "sha256": "ca2a702ad6b5e8cc20578a2cebc832eedca34235fc187a8f996ca90575c79630"
+    },
+    {
+      "path": "engines/voxelDojo/docs/plans/11_load_balancer.md",
+      "sha256": "75cb3f6984e2b35873cb75db28685a2778afb7516c3e27ffa72d9491754ffe9e"
+    },
+    {
+      "path": "engines/voxelDojo/docs/plans/12_distributed_job_scheduler.md",
+      "sha256": "ba8280c77f96ceca729a46cd6ae2a338217941e51b3b8040aca27e5dd2278b70"
+    },
+    {
+      "path": "engines/voxelDojo/docs/plans/13_api_gateway_circuit_breaker.md",
+      "sha256": "86ba143105718881a924f62f2b3465ab5580af2a843cea9fd2ac5d405b605bdb"
+    },
+    {
+      "path": "engines/voxelDojo/docs/plans/14_log_aggregator.md",
+      "sha256": "c7cd03b852134bdb01ccde26815616aba7388f1560e64712224f189b842da074"
+    },
+    {
+      "path": "engines/voxelDojo/docs/plans/15_metrics_collector.md",
+      "sha256": "183c5e8f157b321bc31b6e0eaa27e0620eb847b69386a75f8ca01a8f3b47ecda"
+    },
+    {
+      "path": "engines/voxelDojo/docs/plans/16_mini_message_queue.md",
+      "sha256": "448bf4bab7745057855f2c7d350d2c98ba947a5ee16210a23d8527f6a155f4f8"
+    },
+    {
+      "path": "engines/voxelDojo/docs/plans/17_distributed_config_service.md",
+      "sha256": "c397e7fc0973777dcbfdf2aaaa9fb57324e0b71c6a07ed420c558f21fda6059c"
+    },
+    {
+      "path": "engines/voxelDojo/docs/plans/18_search_engine.md",
+      "sha256": "7403bb188f50be360389ab74dccaea70c3835bf767ddfe79a2d0da926eaf3028"
+    },
+    {
+      "path": "engines/voxelDojo/game-02-warehouse/index.html",
+      "sha256": "c80cefb295e1526ff8b9e584f9d57b106eba601eadb3d9db98a6f9944b37d04b"
+    },
+    {
+      "path": "engines/voxelDojo/game-02-warehouse/netlify.toml",
+      "sha256": "5b0e22f3698c55f32b1ccaa70923513b730bd6f19efcc3994b74bbb56b682e25"
+    },
+    {
+      "path": "engines/voxelDojo/game-02-warehouse/package.json",
+      "sha256": "be195ab6f3ec0f0dfe823f6e4424cf895f14b757f0b574a37fdd584228629a35"
+    },
+    {
+      "path": "engines/voxelDojo/game-02-warehouse/playwright.config.ts",
+      "sha256": "4a1b0f9d088f64b43dd46d69e4ef5998f5ac3c52f3b5cc1502e400921d6a6507"
+    },
+    {
+      "path": "engines/voxelDojo/game-02-warehouse/playwright/warehouse.spec.ts",
+      "sha256": "c8161969f71428092ff0f4fd6b32bc10670d542a981857b7ef122444ce328c25"
+    },
+    {
+      "path": "engines/voxelDojo/game-02-warehouse/src/config/crateTtlMs.test.ts",
+      "sha256": "ebdedc49b4823a79ac2bcc6f945e629c32e8a7038ea6dde402e75832e65ff144"
+    },
+    {
+      "path": "engines/voxelDojo/game-02-warehouse/src/config/crateTtlMs.ts",
+      "sha256": "e5beb4cd79df8544884329231562ff4957b8f04ca450226df3e39e0c2c83322b"
+    },
+    {
+      "path": "engines/voxelDojo/game-02-warehouse/src/evidence/emit.ts",
+      "sha256": "ef04cf8a3e9b8ca457253e985aa725223e6c02dd276721e5d55181c959915cbd"
+    },
+    {
+      "path": "engines/voxelDojo/game-02-warehouse/src/game/controller.test.ts",
+      "sha256": "8a1a767ec1fcc802fc4d4bfb53c50a0808e767881956bd4060f03b5a0cf91997"
+    },
+    {
+      "path": "engines/voxelDojo/game-02-warehouse/src/game/controller.ts",
+      "sha256": "f2860d07f047c9cd4a1bc0cfbd963a48c1300d7ae109f99732a897a817548172"
+    },
+    {
+      "path": "engines/voxelDojo/game-02-warehouse/src/index.test.ts",
+      "sha256": "9a4d2c971186a9c697b32bc48805aa1e2f6d6c8f74d251a3887679fa70772be4"
+    },
+    {
+      "path": "engines/voxelDojo/game-02-warehouse/src/index.ts",
+      "sha256": "5f49ecc670012fb8a819e5afe7332fab52e236d3bbebfb0c598f6a0d7d9f9be6"
+    },
+    {
+      "path": "engines/voxelDojo/game-02-warehouse/src/main.ts",
+      "sha256": "18cc029a859772d0a3b7d3517588badc171cf51dcad0c5ebe0e3fc27cb1e778a"
+    },
+    {
+      "path": "engines/voxelDojo/game-02-warehouse/src/reviewSlice.ts",
+      "sha256": "d54af92a2d7e2b9b1e073fae273c244bcbf8fc41a5e493ee910a56f65c4c5920"
+    },
+    {
+      "path": "engines/voxelDojo/game-02-warehouse/src/scene/accessible.ts",
+      "sha256": "d3888003ce05fd669ba8ba9f340390fd44d1f32598047b08a8e8c95fa103d0ad"
+    },
+    {
+      "path": "engines/voxelDojo/game-02-warehouse/src/scene/hud.ts",
+      "sha256": "18ac0c3c30af532e92248da5b290ff94481f9532e6f1e55195c947c8aacab43e"
+    },
+    {
+      "path": "engines/voxelDojo/game-02-warehouse/src/scene/warehouseScene.ts",
+      "sha256": "f0a8fcd438d3b70b42fba1354cd85f2809babbfe07e07a257b917ad0456350ae"
+    },
+    {
+      "path": "engines/voxelDojo/game-02-warehouse/src/sim/hash.ts",
+      "sha256": "643d5086841cc49c43094ceaecae032962b37d10e3bf0b932c5d8d61d7f444c2"
+    },
+    {
+      "path": "engines/voxelDojo/game-02-warehouse/src/sim/levels.ts",
+      "sha256": "980285d1e7b7d567d7984e9598d210fcceba359bcb109e79989b34447c467bb9"
+    },
+    {
+      "path": "engines/voxelDojo/game-02-warehouse/src/sim/rng.ts",
+      "sha256": "0f7f07f642a69874978a003dc36766b3297c1321566675e55bc6e3f45bb46d10"
+    },
+    {
+      "path": "engines/voxelDojo/game-02-warehouse/src/sim/store.test.ts",
+      "sha256": "c50c4a568a9f1bb586bbcbf71a69436b4b324acf27e6d85eac488b1d36755c70"
+    },
+    {
+      "path": "engines/voxelDojo/game-02-warehouse/src/sim/store.ts",
+      "sha256": "00824d45f99a7854ad3738df6d0cc077c67579a0001b5e3156f2249eba4b3bcf"
+    },
+    {
+      "path": "engines/voxelDojo/game-02-warehouse/tsconfig.json",
+      "sha256": "0baa7dd48e8a2672ee9f96c7f611889bf0aa2f53dfe71a1f35020dd6ee786336"
+    },
+    {
+      "path": "engines/voxelDojo/game-02-warehouse/vite.config.ts",
+      "sha256": "af7c5f300e3f6628c120a89e87f20f8536a891f1c6ed16a5ff908e4070621d8a"
+    },
+    {
+      "path": "engines/voxelDojo/game-03-wormhole/.gitignore",
+      "sha256": "5c760e51a35188b418dc0e1157450e88c0b26f44fac3ec3452f06636c41f4e9e"
+    },
+    {
+      "path": "engines/voxelDojo/game-03-wormhole/index.html",
+      "sha256": "f62fe67996e1837e6360e88954d725f7ded4dc5c2e39177412fd546da4ea0eb3"
+    },
+    {
+      "path": "engines/voxelDojo/game-03-wormhole/package.json",
+      "sha256": "3ac80d964ef4deb27f9941d5ee2bf89b64fdd1e2a72496342c5800df42b4e949"
+    },
+    {
+      "path": "engines/voxelDojo/game-03-wormhole/playwright.config.ts",
+      "sha256": "ed14a9f9c526aaedfe39ed7be14c6f42e7932d01d2a73ae976da2262d8956f5f"
+    },
+    {
+      "path": "engines/voxelDojo/game-03-wormhole/playwright/wormhole.spec.ts",
+      "sha256": "9f3466cce00dfad5109d287b0baca2115c0f56e5f22400e2cbf2b51f943d0edb"
+    },
+    {
+      "path": "engines/voxelDojo/game-03-wormhole/src/evidence/emit.ts",
+      "sha256": "ad9636bdbac32dc8a35b75988c5205645aa5b82419e117383219b249034ab155"
+    },
+    {
+      "path": "engines/voxelDojo/game-03-wormhole/src/game/controller.test.ts",
+      "sha256": "7febd5b93756bb0e2a3145ff68aa16d2cd50579a54a6d16bdc8b756fe6cc262b"
+    },
+    {
+      "path": "engines/voxelDojo/game-03-wormhole/src/game/controller.ts",
+      "sha256": "719dbde927e92765008edd0a86457c4046ae40622b9717a777e98d46f766c4a5"
+    },
+    {
+      "path": "engines/voxelDojo/game-03-wormhole/src/index.ts",
+      "sha256": "cc37a7288d0c610fbaa37f48b037b51807c334e7dd337d3bb84f7aff7990790f"
+    },
+    {
+      "path": "engines/voxelDojo/game-03-wormhole/src/main.ts",
+      "sha256": "8e50047c1f23bd9b5658662bfb6f3338f09ff6c6bf925ee49fa7edaa13bd4d0a"
+    },
+    {
+      "path": "engines/voxelDojo/game-03-wormhole/src/reviewSlice.ts",
+      "sha256": "8aaaf4f3a1ca90ae923a14043a29fa1d8a0ecadf712f6a67e2a7cbb301dc8e2f"
+    },
+    {
+      "path": "engines/voxelDojo/game-03-wormhole/src/scene/accessible.ts",
+      "sha256": "9bd779c2257b989d4f4ed4c99b886d7024cfa55a33c333b4d9c53cba6aefe88b"
+    },
+    {
+      "path": "engines/voxelDojo/game-03-wormhole/src/scene/hud.ts",
+      "sha256": "6845928b4c24e86eda8f78734140886d63432a287fd55e6fde164e39323556f4"
+    },
+    {
+      "path": "engines/voxelDojo/game-03-wormhole/src/scene/wormholePortalVisual.test.ts",
+      "sha256": "8e6e7ccde3caf4473cb5da3f6eb1ccd6d1a5d9c7c04306d8922e1328cdc8e82a"
+    },
+    {
+      "path": "engines/voxelDojo/game-03-wormhole/src/scene/wormholePortalVisual.ts",
+      "sha256": "675c6c9a3a8e70431b5b9ef644301b82ed94126bc0fa168be2e058045ce26cc7"
+    },
+    {
+      "path": "engines/voxelDojo/game-03-wormhole/src/scene/wormholeScene.ts",
+      "sha256": "b0a7f42562ec85e9866343fb214c35e43c49eacc4948f1a23f1664675748de02"
+    },
+    {
+      "path": "engines/voxelDojo/game-03-wormhole/src/sim/levels.ts",
+      "sha256": "51531dbc42b06189dda68aba2e0bbc9324f8833fdfc4915c71bdf835bf4fc8bb"
+    },
+    {
+      "path": "engines/voxelDojo/game-03-wormhole/src/sim/rng.ts",
+      "sha256": "b9f751b0a55031ab8f02d6f5606c35c1c90380aa5146c9245ec3587acff3be3b"
+    },
+    {
+      "path": "engines/voxelDojo/game-03-wormhole/src/sim/shortener.test.ts",
+      "sha256": "98f3ff42924195749541b1d7bd273f0f8417cbafabb28689e76ccab554de6add"
+    },
+    {
+      "path": "engines/voxelDojo/game-03-wormhole/src/sim/shortener.ts",
+      "sha256": "0fe139a8f78b326a372d70016cc5ce0552949576df4641649e9c34e57407cc71"
+    },
+    {
+      "path": "engines/voxelDojo/game-03-wormhole/tsconfig.json",
+      "sha256": "0baa7dd48e8a2672ee9f96c7f611889bf0aa2f53dfe71a1f35020dd6ee786336"
+    },
+    {
+      "path": "engines/voxelDojo/game-04-task-queue/.gitignore",
+      "sha256": "5c760e51a35188b418dc0e1157450e88c0b26f44fac3ec3452f06636c41f4e9e"
+    },
+    {
+      "path": "engines/voxelDojo/game-04-task-queue/DECISIONS.md",
+      "sha256": "51c24c50096b3782232a3d642554674e987f5db9f5b92f9bbcf09469e3cb17fe"
+    },
+    {
+      "path": "engines/voxelDojo/game-04-task-queue/index.html",
+      "sha256": "2950eee6d05c7f01584e4d0cc92adbbe2685300ec3cb513291b70e8a750eee89"
+    },
+    {
+      "path": "engines/voxelDojo/game-04-task-queue/package.json",
+      "sha256": "5e295331d7037daa4a5c1cff3fd7e004d7fb82af239db5090606c4698ec7907f"
+    },
+    {
+      "path": "engines/voxelDojo/game-04-task-queue/playwright.config.ts",
+      "sha256": "dad671914bc13d6cdf1369252fa48746105ce912f856f495f39180eaf241de33"
+    },
+    {
+      "path": "engines/voxelDojo/game-04-task-queue/playwright/task-forge.spec.ts",
+      "sha256": "4c4564ec7b2a6bcfe86dbd9d86790fe943c6043600199fd0fee3ad26b781bdd9"
+    },
+    {
+      "path": "engines/voxelDojo/game-04-task-queue/src/evidence/emit.ts",
+      "sha256": "cdfdd3a7bd80dcb3a8d6cd46a40cda415f97ab372f668dcd591cef0e411e6dc2"
+    },
+    {
+      "path": "engines/voxelDojo/game-04-task-queue/src/game/controller.test.ts",
+      "sha256": "3982f1dd55263ebabcfd22d66d46eaebc124c0ea0bc5e596c44c27dacfe23e05"
+    },
+    {
+      "path": "engines/voxelDojo/game-04-task-queue/src/game/controller.ts",
+      "sha256": "6907b69060b88dc45e9c246788cf9c0a971001ddc31a8de4a6b0e6ce54eec55c"
+    },
+    {
+      "path": "engines/voxelDojo/game-04-task-queue/src/index.ts",
+      "sha256": "e5942783eaf7b713c486b3f2166f3b4b97bfac019ed4c4ece3e609c57a20b3a3"
+    },
+    {
+      "path": "engines/voxelDojo/game-04-task-queue/src/main.ts",
+      "sha256": "67954c6ac875354fbfee52540916245d425319d0c1b7f11f1ecbb768e18e7599"
+    },
+    {
+      "path": "engines/voxelDojo/game-04-task-queue/src/reviewSlice.ts",
+      "sha256": "8fdf3c663cf8063db67c9ada5327355b54265a57cc01e35b9894409a108e2ffc"
+    },
+    {
+      "path": "engines/voxelDojo/game-04-task-queue/src/scene/accessible.ts",
+      "sha256": "0d84a5da77c500359ff8eb668494e87111c6885be27b4e1a16ddac803ca2a019"
+    },
+    {
+      "path": "engines/voxelDojo/game-04-task-queue/src/scene/hud.ts",
+      "sha256": "25daa8951aa2a01ef0ce8f1c1f8b6dc54696b37918f99a13ffd2c95c7926edf6"
+    },
+    {
+      "path": "engines/voxelDojo/game-04-task-queue/src/scene/taskForgeScene.ts",
+      "sha256": "6bf501e502d4847d15a0463108931657d4d54a7b15821b225e34f1dd847b7ace"
+    },
+    {
+      "path": "engines/voxelDojo/game-04-task-queue/src/sim/levels.ts",
+      "sha256": "442c06229f6e8638eb2b6f833fffe587d219771e1a2aa5633c6aa1ca5a4b8ebb"
+    },
+    {
+      "path": "engines/voxelDojo/game-04-task-queue/src/sim/queue.test.ts",
+      "sha256": "44f9ee1c90ed10f22d3669e59de9fe8623534f47a7c827d697acb3099b10bafd"
+    },
+    {
+      "path": "engines/voxelDojo/game-04-task-queue/src/sim/queue.ts",
+      "sha256": "aff0129ac2ccaad748fabec391bef174bf79681e8a14db91a7d07d31b3e3a386"
+    },
+    {
+      "path": "engines/voxelDojo/game-04-task-queue/src/sim/rng.ts",
+      "sha256": "49afd91891ec9e8054c1050e5a9741bba399b22cabd469e296dcee092d957322"
+    },
+    {
+      "path": "engines/voxelDojo/game-04-task-queue/tsconfig.json",
+      "sha256": "0baa7dd48e8a2672ee9f96c7f611889bf0aa2f53dfe71a1f35020dd6ee786336"
+    },
+    {
+      "path": "engines/voxelDojo/game-05-relay-station/index.html",
+      "sha256": "a3620ed4bac29889da282392403d87be7cd371fc43bc1f070f33d995f54d862c"
+    },
+    {
+      "path": "engines/voxelDojo/game-05-relay-station/package.json",
+      "sha256": "b84368c0ce53eeebda678729265084d74a8c24796d40909cc169cb9bcf0a67b5"
+    },
+    {
+      "path": "engines/voxelDojo/game-05-relay-station/playwright.config.ts",
+      "sha256": "3d1ae34908a7778a079722bba2efc7d733a4763e11f6d172581b05836a6eb342"
+    },
+    {
+      "path": "engines/voxelDojo/game-05-relay-station/playwright/relay-station.spec.ts",
+      "sha256": "f5b007860e390a0e9d8fe2f9ab4fab10fe841f48e77e2cda3a09dc701a00bef8"
+    },
+    {
+      "path": "engines/voxelDojo/game-05-relay-station/src/evidence/emit.ts",
+      "sha256": "59891d7e80c36b1f392e60ac147c4eafcde77bc937709b773974453cf841253b"
+    },
+    {
+      "path": "engines/voxelDojo/game-05-relay-station/src/game/controller.test.ts",
+      "sha256": "d2079886481c3e6dc19bc8c2201919e117b280654521b04aea25e30587a09dcd"
+    },
+    {
+      "path": "engines/voxelDojo/game-05-relay-station/src/game/controller.ts",
+      "sha256": "a66c91f3a4887bff26b1f38cd8c32bc2aa1847b13148fbb7604cea05223a5603"
+    },
+    {
+      "path": "engines/voxelDojo/game-05-relay-station/src/index.ts",
+      "sha256": "a969b3e6afb9a3cfb15b1b7650a105c95295c3b0672e0c520ac5a794e789edb2"
+    },
+    {
+      "path": "engines/voxelDojo/game-05-relay-station/src/main.ts",
+      "sha256": "30affe95eb9748625e4d189f01223554558baf34db5f107fd2732e04ce9fadc1"
+    },
+    {
+      "path": "engines/voxelDojo/game-05-relay-station/src/reviewSlice.ts",
+      "sha256": "fc21e2bc4ab33189e9ddada70e8503e76a7094b9589f25671249e4fdc283e3d8"
+    },
+    {
+      "path": "engines/voxelDojo/game-05-relay-station/src/scene/accessible.ts",
+      "sha256": "57458bb8325b5c21384793ec14dd57e572283dfae52eb05f0d8faadad782e599"
+    },
+    {
+      "path": "engines/voxelDojo/game-05-relay-station/src/scene/hud.ts",
+      "sha256": "25704f4c72ed55c6be293a52332f4781dd96df63065b862060e0919d81a01479"
+    },
+    {
+      "path": "engines/voxelDojo/game-05-relay-station/src/scene/relayScene.ts",
+      "sha256": "af825f8e4cb257046ac584b5ac7017f1fb5167d35554dc90ba01bd17ad79e312"
+    },
+    {
+      "path": "engines/voxelDojo/game-05-relay-station/src/sim/levels.ts",
+      "sha256": "7fe1e42ec46fb4806358978904ae3b185ecd72a4050e0b0dbfb500b7c87cc77b"
+    },
+    {
+      "path": "engines/voxelDojo/game-05-relay-station/src/sim/relay.test.ts",
+      "sha256": "f13026e728eba5e044f445b3bed87904b47e3c24ff791f150660b3fca67c87c9"
+    },
+    {
+      "path": "engines/voxelDojo/game-05-relay-station/src/sim/relay.ts",
+      "sha256": "2f7737f9833795811647c5c98130fb3c276d0ca6b30926dc3f4e68789c8c69a7"
+    },
+    {
+      "path": "engines/voxelDojo/game-05-relay-station/src/sim/rng.ts",
+      "sha256": "8169e5040d476046e3d2ae4b4cb2771af48807d5a4159baa7ee6b12fd4199baa"
+    },
+    {
+      "path": "engines/voxelDojo/game-05-relay-station/tsconfig.json",
+      "sha256": "0baa7dd48e8a2672ee9f96c7f611889bf0aa2f53dfe71a1f35020dd6ee786336"
+    },
+    {
+      "path": "engines/voxelDojo/game-06-pipeline-plant/index.html",
+      "sha256": "de39ce778ccf57384b5fe6a593196bb6f87b1f98c98a27981ebd8fd92d5cf852"
+    },
+    {
+      "path": "engines/voxelDojo/game-06-pipeline-plant/package.json",
+      "sha256": "6a832c23323fb408362009cc13283179bbb6173d6e8565b1353e6255481ea526"
+    },
+    {
+      "path": "engines/voxelDojo/game-06-pipeline-plant/playwright.config.ts",
+      "sha256": "6c63da91fa9b39e802b0b3c46d6b1d9c75fb9a28a05986518e88ad21446cc764"
+    },
+    {
+      "path": "engines/voxelDojo/game-06-pipeline-plant/playwright/pipeline-plant.spec.ts",
+      "sha256": "c84a73836eeaa8dacc69847b45ae99819e5b06de232878d83d71991fefe6c8cf"
+    },
+    {
+      "path": "engines/voxelDojo/game-06-pipeline-plant/src/evidence/emit.ts",
+      "sha256": "f144c31a65b61e1cb26beb5af5f28d784287dfbc188d7c0fd474e9fef0a0fb70"
+    },
+    {
+      "path": "engines/voxelDojo/game-06-pipeline-plant/src/game/controller.ts",
+      "sha256": "8895e512e4cefcbdb74e36836a06d032f60d381ded0f87481431da3965f37b8f"
+    },
+    {
+      "path": "engines/voxelDojo/game-06-pipeline-plant/src/index.ts",
+      "sha256": "72e6cf00dc774985b0accfe9badd128e01590698134d0bddd98e72d1aad41457"
+    },
+    {
+      "path": "engines/voxelDojo/game-06-pipeline-plant/src/main.ts",
+      "sha256": "07777111b3c6784dd09dde42c8eecf64cbc610156339a4d4f37a81a095b814f5"
+    },
+    {
+      "path": "engines/voxelDojo/game-06-pipeline-plant/src/reviewSlice.ts",
+      "sha256": "dd7777775ee61698e941bba6423d557a73099c7d407eb75f55d5e93e66055870"
+    },
+    {
+      "path": "engines/voxelDojo/game-06-pipeline-plant/src/scene/accessible.ts",
+      "sha256": "f8d81a4ab1389dc99411e0938f0e34c0d21f19566421f61c663a46ae05d9a84c"
+    },
+    {
+      "path": "engines/voxelDojo/game-06-pipeline-plant/src/scene/hud.ts",
+      "sha256": "c7ac3b7e5339eb5b797d014a0fa6571e05824f8ea163760104322b7a15006cb3"
+    },
+    {
+      "path": "engines/voxelDojo/game-06-pipeline-plant/src/scene/pipelineScene.ts",
+      "sha256": "6cd6936b9272922060d67d38316068ce64f1aec29c97da615800460f1ec0b9c8"
+    },
+    {
+      "path": "engines/voxelDojo/game-06-pipeline-plant/src/sim/levels.ts",
+      "sha256": "2a5d03daf46471020146fb933a22cb819d82986afcf1e4a4861e587108a4e2ce"
+    },
+    {
+      "path": "engines/voxelDojo/game-06-pipeline-plant/src/sim/pipeline.test.ts",
+      "sha256": "a93749d8a898263546ebc6754e3c2a6a604dad0d3bf434b6b610db5ecde12351"
+    },
+    {
+      "path": "engines/voxelDojo/game-06-pipeline-plant/src/sim/pipeline.ts",
+      "sha256": "451541c42d98bff18d2f70d92f51098787ab5cc3c1d05ad3eaeed1158bfccb6d"
+    },
+    {
+      "path": "engines/voxelDojo/game-06-pipeline-plant/src/sim/rng.ts",
+      "sha256": "6b11f343a991491bdda636c079cdfc5b022df22a5458e43cae52f27e02fa996f"
+    },
+    {
+      "path": "engines/voxelDojo/game-06-pipeline-plant/tsconfig.json",
+      "sha256": "0baa7dd48e8a2672ee9f96c7f611889bf0aa2f53dfe71a1f35020dd6ee786336"
+    },
+    {
+      "path": "engines/voxelDojo/game-07-checkpoint-city/index.html",
+      "sha256": "addbfd1a2f615f4cd00ef1a726c612973e158bec7977ee7c2fa948d50fe5c448"
+    },
+    {
+      "path": "engines/voxelDojo/game-07-checkpoint-city/package.json",
+      "sha256": "6b84974322a75de3d26e0457a8550f13075b177d557100df18ba2c41b45b2334"
+    },
+    {
+      "path": "engines/voxelDojo/game-07-checkpoint-city/playwright.config.ts",
+      "sha256": "f96ed3d5bf62f59a7c4a25e3951db7ab0fde3a7023dd1e14270252e8de021d51"
+    },
+    {
+      "path": "engines/voxelDojo/game-07-checkpoint-city/playwright/checkpoint-city.spec.ts",
+      "sha256": "0334561987afd70e521f1fe416772b95687ba6dc04e58194bf28563c36bab68b"
+    },
+    {
+      "path": "engines/voxelDojo/game-07-checkpoint-city/src/evidence/emit.ts",
+      "sha256": "aacee19b595244cdd17aa5a946d59f2496f9904798fa2055719f5ec142ecdf0c"
+    },
+    {
+      "path": "engines/voxelDojo/game-07-checkpoint-city/src/game/controller.test.ts",
+      "sha256": "b743ddbeb10eb4b3e9ba00d8ddd174cb60c9d9047f8130ea9a0a9061f346f4b3"
+    },
+    {
+      "path": "engines/voxelDojo/game-07-checkpoint-city/src/game/controller.ts",
+      "sha256": "7ffa2a4a142174f9b1e3afe2f1af74e125a4798ba26750fabc71535c861bb5be"
+    },
+    {
+      "path": "engines/voxelDojo/game-07-checkpoint-city/src/index.test.ts",
+      "sha256": "23e85cd8cc826d602a226c36f0c1d53db000dffc59ac0ff260eb130e97a624d8"
+    },
+    {
+      "path": "engines/voxelDojo/game-07-checkpoint-city/src/index.ts",
+      "sha256": "98261cf49accedd9a80aceca659d93d038c5d0fc720581fb2a96fdd6ec1f85eb"
+    },
+    {
+      "path": "engines/voxelDojo/game-07-checkpoint-city/src/main.ts",
+      "sha256": "6b4c3b14bd9c1896cf0ab98fa51f296da23f16687bbe8c0713b66a1663bf823a"
+    },
+    {
+      "path": "engines/voxelDojo/game-07-checkpoint-city/src/reviewSlice.ts",
+      "sha256": "b3090e7003f1d6ac59709b360a9ffe462e49a3966f847bc890a44205dfcd5d25"
+    },
+    {
+      "path": "engines/voxelDojo/game-07-checkpoint-city/src/scene/accessible.ts",
+      "sha256": "bcee55e44d40a326ab575ed85ee717d1306dde3a688bd18ffa40518e20032035"
+    },
+    {
+      "path": "engines/voxelDojo/game-07-checkpoint-city/src/scene/checkpointScene.ts",
+      "sha256": "954057139a30334fa6f913c8b007fa9582142f3484b1a4d2b1770b85ece14890"
+    },
+    {
+      "path": "engines/voxelDojo/game-07-checkpoint-city/src/scene/hud.ts",
+      "sha256": "2f6f71ed750e416ae64aca149a49e739c475ae58cc22689c42c9568e6d6c5f80"
+    },
+    {
+      "path": "engines/voxelDojo/game-07-checkpoint-city/src/sim/levels.test.ts",
+      "sha256": "dd6d00669b7a23fc35b36f34368e9621acf4bf870efc4adb5121e35d3ddd3143"
+    },
+    {
+      "path": "engines/voxelDojo/game-07-checkpoint-city/src/sim/levels.ts",
+      "sha256": "145d80ed9061724b06dc2fc074a95058978902c12157538eb48dbf95202f08b6"
+    },
+    {
+      "path": "engines/voxelDojo/game-07-checkpoint-city/src/sim/middleware.test.ts",
+      "sha256": "408a91998dfb0c881d942d9b4509b77ce2b091b4e5709265d4715e292eb5c6a2"
+    },
+    {
+      "path": "engines/voxelDojo/game-07-checkpoint-city/src/sim/middleware.ts",
+      "sha256": "1c26d248652ed7646006e0831e2574a6bae78fe8f858791f5a8f1cebf6fd708c"
+    },
+    {
+      "path": "engines/voxelDojo/game-07-checkpoint-city/src/sim/rng.ts",
+      "sha256": "4e6ae8d5eaec28ab14caec7df0fe6ea510870706745562e35d4885d955119373"
+    },
+    {
+      "path": "engines/voxelDojo/game-07-checkpoint-city/tsconfig.json",
+      "sha256": "0baa7dd48e8a2672ee9f96c7f611889bf0aa2f53dfe71a1f35020dd6ee786336"
+    },
+    {
+      "path": "engines/voxelDojo/game-08-timeline-tower/.gitignore",
+      "sha256": "27708798cc43f561f24614e06ff2ed7f616cb26cf893a2e4bd3582cf40fe7449"
+    },
+    {
+      "path": "engines/voxelDojo/game-08-timeline-tower/index.html",
+      "sha256": "2285caeb41e5e6e701c966bbd4be48c2c169f8c530aa20c4b953bc4eecdd6462"
+    },
+    {
+      "path": "engines/voxelDojo/game-08-timeline-tower/package.json",
+      "sha256": "84173727e48dcca2c31110eee80b17d480cf04aba0e629299f7c0091a15b6c88"
+    },
+    {
+      "path": "engines/voxelDojo/game-08-timeline-tower/playwright.config.ts",
+      "sha256": "088e936547a20bb411f795b9b2b728475cadfc83b919876902451e5f825b0d7b"
+    },
+    {
+      "path": "engines/voxelDojo/game-08-timeline-tower/playwright/timeline-tower.spec.ts",
+      "sha256": "1112780e2034edb32d2632eb21e211ef4537e0908adbd57b275ee3c16a15771a"
+    },
+    {
+      "path": "engines/voxelDojo/game-08-timeline-tower/src/evidence/emit.ts",
+      "sha256": "745039910689a73ba42346e4c9f7c4d14efdbbace8e5890f389676dabedde1df"
+    },
+    {
+      "path": "engines/voxelDojo/game-08-timeline-tower/src/game/controller.test.ts",
+      "sha256": "f9e3428cc273086e60037d4848ff42f73758ecaea0308615c66cfe9550b46f36"
+    },
+    {
+      "path": "engines/voxelDojo/game-08-timeline-tower/src/game/controller.ts",
+      "sha256": "ab7cc3c78e3933892394a9098ec80dfb999de02e6799ff5fa985b29e750ddcb2"
+    },
+    {
+      "path": "engines/voxelDojo/game-08-timeline-tower/src/index.test.ts",
+      "sha256": "fe7758ae10830d5ee9cde9980e2a126b37ba98a8020a5bd2eafd840d9a12842c"
+    },
+    {
+      "path": "engines/voxelDojo/game-08-timeline-tower/src/index.ts",
+      "sha256": "cb4a5409925da70163ffa09cbd4f79d1588e9f8a0e8aa38c60e2fd1564cf395c"
+    },
+    {
+      "path": "engines/voxelDojo/game-08-timeline-tower/src/main.ts",
+      "sha256": "1484fcedf4bfd8ffabc4f50a6f8566ab213fa31ed5586103dbd2ec0b8d6208b0"
+    },
+    {
+      "path": "engines/voxelDojo/game-08-timeline-tower/src/reviewSlice.ts",
+      "sha256": "2e85599bb92b39c618c7c104c64cbd15308920cab0c4e525e4663058f82c2e18"
+    },
+    {
+      "path": "engines/voxelDojo/game-08-timeline-tower/src/scene/accessible.ts",
+      "sha256": "2a0473ca4e2cd2a2c788bd0a4739b99d1bbef52c0f5a0a28b2bb0087b8c26367"
+    },
+    {
+      "path": "engines/voxelDojo/game-08-timeline-tower/src/scene/hud.ts",
+      "sha256": "5cdc015f6b50bcd35b5948bf0f602db66d27facc3a32c21f1742eb43bf50b7ac"
+    },
+    {
+      "path": "engines/voxelDojo/game-08-timeline-tower/src/scene/towerScene.ts",
+      "sha256": "5cd232bcf5b853bf1cef2976164d77150a59a8664302665c2813d6c62d5bbb89"
+    },
+    {
+      "path": "engines/voxelDojo/game-08-timeline-tower/src/sim/levels.ts",
+      "sha256": "b462d832a3d51b7afef6c943d5a20194cbe22965eee11e7d324148fc6895069f"
+    },
+    {
+      "path": "engines/voxelDojo/game-08-timeline-tower/src/sim/sourcing.test.ts",
+      "sha256": "aa2d4fdad5a86715c4556c8534b0ed60ae32833dafb15ba96c4cf2ac75f16136"
+    },
+    {
+      "path": "engines/voxelDojo/game-08-timeline-tower/src/sim/sourcing.ts",
+      "sha256": "d8739a97553664b48ff6895943bf31441056f67629b62d5fe1fabe6ec975d246"
+    },
+    {
+      "path": "engines/voxelDojo/game-08-timeline-tower/tsconfig.json",
+      "sha256": "0baa7dd48e8a2672ee9f96c7f611889bf0aa2f53dfe71a1f35020dd6ee786336"
+    },
+    {
+      "path": "engines/voxelDojo/game-09-docking-bay/index.html",
+      "sha256": "6b0d1afeee9f4feda8b4056025b708cb97028f5aebdf2d64c1f66b044512ef9e"
+    },
+    {
+      "path": "engines/voxelDojo/game-09-docking-bay/package.json",
+      "sha256": "836f38164f53e7b93494de4903a7677e14cc1ef325ea5effa7f405f83986a687"
+    },
+    {
+      "path": "engines/voxelDojo/game-09-docking-bay/playwright.config.ts",
+      "sha256": "93e4b63fa963ef57071d3db88aa9615d8d722e8c6323c5d55069b30ee59c73c3"
+    },
+    {
+      "path": "engines/voxelDojo/game-09-docking-bay/playwright/docking-bay.spec.ts",
+      "sha256": "baed9b6b34a904d5174924e1403538d177453b2c95ceb7922195b4c48348599e"
+    },
+    {
+      "path": "engines/voxelDojo/game-09-docking-bay/src/evidence/emit.ts",
+      "sha256": "182aa6282ae0a43776ba907a776d57133a8e615a8a7c507a69fd2e4c135801b7"
+    },
+    {
+      "path": "engines/voxelDojo/game-09-docking-bay/src/game/controller.test.ts",
+      "sha256": "c06c04e8915d768d9c487977f2d7968daf9e78e659f8c1fb41b71687614cd417"
+    },
+    {
+      "path": "engines/voxelDojo/game-09-docking-bay/src/game/controller.ts",
+      "sha256": "a3381dff87b3496ebcbd48d1aeceb64a55e1596b138a19ca60a85e356cdb0490"
+    },
+    {
+      "path": "engines/voxelDojo/game-09-docking-bay/src/index.test.ts",
+      "sha256": "756e161a7887de1efa74bb92b0b0a9003cf115951d60cfc0c71411a82e60aa7f"
+    },
+    {
+      "path": "engines/voxelDojo/game-09-docking-bay/src/index.ts",
+      "sha256": "71c46ac2f202d84b511b1b4d8eb06abe6a956f6b3839af09587ed4cadb60e185"
+    },
+    {
+      "path": "engines/voxelDojo/game-09-docking-bay/src/main.ts",
+      "sha256": "95f98c8f28856c312706635a9464abbf252d2ddd56bcb39bd7cc2163b2fb5511"
+    },
+    {
+      "path": "engines/voxelDojo/game-09-docking-bay/src/reviewSlice.ts",
+      "sha256": "d048e71c08696979f31182aba7d15170bd409fa29e83c11aa482fc5e08763186"
+    },
+    {
+      "path": "engines/voxelDojo/game-09-docking-bay/src/scene/accessible.ts",
+      "sha256": "3af669255160980c303585e6423f29be82396051e80de324d4c6e061db07214b"
+    },
+    {
+      "path": "engines/voxelDojo/game-09-docking-bay/src/scene/dockingScene.ts",
+      "sha256": "fccda22eb7b4b71e586f43b3fdab48424463dcbd7fe6eda3fa388cf093cbcd0b"
+    },
+    {
+      "path": "engines/voxelDojo/game-09-docking-bay/src/scene/hud.ts",
+      "sha256": "50f8ab965a7a702743dc1cba66b4fe0e36fafe7906ec05170f21f778830a0f49"
+    },
+    {
+      "path": "engines/voxelDojo/game-09-docking-bay/src/sim/levels.test.ts",
+      "sha256": "5ef1e41d9eedc798e037112db65d1d725d008335993c6a93ac214124b63d4c9b"
+    },
+    {
+      "path": "engines/voxelDojo/game-09-docking-bay/src/sim/levels.ts",
+      "sha256": "c92ff2f4518e8ea8897adbecef2264adb2b435915de230eb3d33c56486585492"
+    },
+    {
+      "path": "engines/voxelDojo/game-09-docking-bay/src/sim/plugin.test.ts",
+      "sha256": "2e063225b09ab507996372b95e0dd8a496d5e496e677a17d5fdb2c01d7b3c556"
+    },
+    {
+      "path": "engines/voxelDojo/game-09-docking-bay/src/sim/plugin.ts",
+      "sha256": "8f3071704460ccf8ea6884ba9e77c44f6c009b6ba44d63c7e31c7db88cb26d67"
+    },
+    {
+      "path": "engines/voxelDojo/game-09-docking-bay/src/sim/rng.ts",
+      "sha256": "49afd91891ec9e8054c1050e5a9741bba399b22cabd469e296dcee092d957322"
+    },
+    {
+      "path": "engines/voxelDojo/game-09-docking-bay/tsconfig.json",
+      "sha256": "0baa7dd48e8a2672ee9f96c7f611889bf0aa2f53dfe71a1f35020dd6ee786336"
+    },
+    {
+      "path": "engines/voxelDojo/game-10-hash-ring/index.html",
+      "sha256": "1799f9b76aea97a75a24e078d9301ecafc7cced663655c53eb96e42333b8bb08"
+    },
+    {
+      "path": "engines/voxelDojo/game-10-hash-ring/package.json",
+      "sha256": "299f8948e7f8afb92915ac307c0db85c8dadd29ffe1e0b4df458f7560b267ec8"
+    },
+    {
+      "path": "engines/voxelDojo/game-10-hash-ring/playwright.config.ts",
+      "sha256": "e04e07cba6c7e6761bcdf8fba7c0cdc1f321d346031a6bdd9e8565ff3312cb05"
+    },
+    {
+      "path": "engines/voxelDojo/game-10-hash-ring/playwright/hash-ring.spec.ts",
+      "sha256": "473701961b44b14d82ff74de417c0872db6810e96ff0aae56d8fcbe7c09132b3"
+    },
+    {
+      "path": "engines/voxelDojo/game-10-hash-ring/src/evidence/emit.ts",
+      "sha256": "e40cafc039a1bc82da635c6854a3aa07bb11196ca498c31dbc794dc5c12a5259"
+    },
+    {
+      "path": "engines/voxelDojo/game-10-hash-ring/src/game/controller.test.ts",
+      "sha256": "01a466e730fe63b460915eda2a344da5bf30b3e38a8539b65035e6d75e5fbe07"
+    },
+    {
+      "path": "engines/voxelDojo/game-10-hash-ring/src/game/controller.ts",
+      "sha256": "534cf37894b391c2abf799f2513fb8b5e577316591517bb23bb6b93e341ec651"
+    },
+    {
+      "path": "engines/voxelDojo/game-10-hash-ring/src/index.test.ts",
+      "sha256": "27d3fd7da1b40d448988db979a1ca1a64c6ad86ba251069e8122050ce119d93f"
+    },
+    {
+      "path": "engines/voxelDojo/game-10-hash-ring/src/index.ts",
+      "sha256": "72a1427df02e5c2d53919483e7d14ca78cadea45daf084ae862d1179adf77b33"
+    },
+    {
+      "path": "engines/voxelDojo/game-10-hash-ring/src/main.ts",
+      "sha256": "944669b198c5d6b5c5680d23a77492fd4779db41afd252576bc32a9d38ae9726"
+    },
+    {
+      "path": "engines/voxelDojo/game-10-hash-ring/src/reviewSlice.ts",
+      "sha256": "40201dfc4d4ba5a049f3f2427e5676e885ad5eb4a4a387f8958cf92a5d4b63a5"
+    },
+    {
+      "path": "engines/voxelDojo/game-10-hash-ring/src/scene/hud.ts",
+      "sha256": "22d7d83ad3cf7c21074b9d4abbbd1f3f02637dcdb326b2fc2880987bf956fc37"
+    },
+    {
+      "path": "engines/voxelDojo/game-10-hash-ring/src/scene/ringScene.ts",
+      "sha256": "21d1f4b7ec0ca78392eccb352ceaab9ab894aa6be49516cc65dd86c6932985d9"
+    },
+    {
+      "path": "engines/voxelDojo/game-10-hash-ring/src/sim/hash.ts",
+      "sha256": "f9de2d9f064e028f23b846bcfd0829ab3b85f089df21ac1b10779d8a34a3aa88"
+    },
+    {
+      "path": "engines/voxelDojo/game-10-hash-ring/src/sim/levels.ts",
+      "sha256": "cd86631587a705ef5c7373bfe11df46f8266d6c35e62ba2c8d1ae4435d467592"
+    },
+    {
+      "path": "engines/voxelDojo/game-10-hash-ring/src/sim/ring.test.ts",
+      "sha256": "cfee0344730b147fa5edccfe8e06b68a5b108e7438414aef68b256c717297936"
+    },
+    {
+      "path": "engines/voxelDojo/game-10-hash-ring/src/sim/ring.ts",
+      "sha256": "d7c88bef9bb8d4804480f98a4e67a2a8a81a573dfb90f1c9b16b1f6414dc6af0"
+    },
+    {
+      "path": "engines/voxelDojo/game-10-hash-ring/src/sim/rng.ts",
+      "sha256": "265865b5e9b73117b4e25ada4e603e47e82e0ef3a943160af03f0e6ebd8625ec"
+    },
+    {
+      "path": "engines/voxelDojo/game-10-hash-ring/tsconfig.json",
+      "sha256": "0baa7dd48e8a2672ee9f96c7f611889bf0aa2f53dfe71a1f35020dd6ee786336"
+    },
+    {
+      "path": "engines/voxelDojo/game-11-air-traffic/.gitignore",
+      "sha256": "27708798cc43f561f24614e06ff2ed7f616cb26cf893a2e4bd3582cf40fe7449"
+    },
+    {
+      "path": "engines/voxelDojo/game-11-air-traffic/index.html",
+      "sha256": "7358e5cfb54192fd44ef573ade4587bad09710cb755819df9f4a017067b52284"
+    },
+    {
+      "path": "engines/voxelDojo/game-11-air-traffic/package.json",
+      "sha256": "99df3460086c99072cd8ad4f0304ccd56007a56612615a9b6fd7c0e0183c92c7"
+    },
+    {
+      "path": "engines/voxelDojo/game-11-air-traffic/playwright.config.ts",
+      "sha256": "484c2e9e087eab1d16cbce8df3fbfaa97eb222777de0236e322bafb8cef16556"
+    },
+    {
+      "path": "engines/voxelDojo/game-11-air-traffic/playwright/air-traffic.spec.ts",
+      "sha256": "42c96f85155413a4d3063ab33e1fad8671279f52aac986b7fc8984a5dc74957c"
+    },
+    {
+      "path": "engines/voxelDojo/game-11-air-traffic/src/evidence/emit.ts",
+      "sha256": "3028fda36f882a20ce2f808cd286e281c723fc189a825e752d101b220e2259f1"
+    },
+    {
+      "path": "engines/voxelDojo/game-11-air-traffic/src/game/controller.test.ts",
+      "sha256": "c98fb94a1535ffc28e2118be7b23bdb53112ec83ba77a56403f1f499bebf6a95"
+    },
+    {
+      "path": "engines/voxelDojo/game-11-air-traffic/src/game/controller.ts",
+      "sha256": "dfc64168dda546adee6c70f38cda11320110cc632a4512811fe3c90234b8dc6c"
+    },
+    {
+      "path": "engines/voxelDojo/game-11-air-traffic/src/index.test.ts",
+      "sha256": "bbeb6e750b239e5826f57b981921aa8eb2fac3d87e7514ddc2ca9490047c33d2"
+    },
+    {
+      "path": "engines/voxelDojo/game-11-air-traffic/src/index.ts",
+      "sha256": "38e3bf8e3912957695ca9b7200227e9d9fd38cae4feca1642b5735689fbe66c4"
+    },
+    {
+      "path": "engines/voxelDojo/game-11-air-traffic/src/main.ts",
+      "sha256": "0dc18a24a0e55f710313fe610b566395d42ff9840e752e3ec3904979fe1f5e9d"
+    },
+    {
+      "path": "engines/voxelDojo/game-11-air-traffic/src/reviewSlice.ts",
+      "sha256": "8e8b5fd5b35fcb4510aeca47c3e3cda973f7a8ba59acaddd9cec840f1a10f436"
+    },
+    {
+      "path": "engines/voxelDojo/game-11-air-traffic/src/scene/airScene.ts",
+      "sha256": "1884fdc762661b0fb139c5f5265d50ee098eb1e82138d3f6645fb0d9cf0a7881"
+    },
+    {
+      "path": "engines/voxelDojo/game-11-air-traffic/src/scene/hud.ts",
+      "sha256": "ba2b709a95ca227f2d4b6d875671217b360cfd0fe487c3fc35dac36797f504fd"
+    },
+    {
+      "path": "engines/voxelDojo/game-11-air-traffic/src/sim/balancer.test.ts",
+      "sha256": "0be677d53bf9269ce332b6ce8d6084c4ab3cb9e1df34c1a615fe57b6942e2df1"
+    },
+    {
+      "path": "engines/voxelDojo/game-11-air-traffic/src/sim/balancer.ts",
+      "sha256": "2973089c59aa49f580a88cdfde3d000ef1f5305a9e388501cdbd08a3684bb342"
+    },
+    {
+      "path": "engines/voxelDojo/game-11-air-traffic/src/sim/levels.ts",
+      "sha256": "6d322ce04bf30a9a499373bb6d2d4bde2f2ad2c10c8f44da18b26f889728758b"
+    },
+    {
+      "path": "engines/voxelDojo/game-11-air-traffic/src/sim/rng.ts",
+      "sha256": "81a816cd640e0bb10beea766825240ac1125ded84a31c93a28ab8555e37c49cf"
+    },
+    {
+      "path": "engines/voxelDojo/game-11-air-traffic/tsconfig.json",
+      "sha256": "0baa7dd48e8a2672ee9f96c7f611889bf0aa2f53dfe71a1f35020dd6ee786336"
+    },
+    {
+      "path": "engines/voxelDojo/game-12-mission-control/.gitignore",
+      "sha256": "27708798cc43f561f24614e06ff2ed7f616cb26cf893a2e4bd3582cf40fe7449"
+    },
+    {
+      "path": "engines/voxelDojo/game-12-mission-control/index.html",
+      "sha256": "8bc0c5c1521bc1ca196f646b3311e0d88c8744abb79e5ae7e87976e2736f030b"
+    },
+    {
+      "path": "engines/voxelDojo/game-12-mission-control/package.json",
+      "sha256": "86b8dc4269c14992959f7caf1784b37b91a2686434c5b1c31dc8485bdf1a053e"
+    },
+    {
+      "path": "engines/voxelDojo/game-12-mission-control/playwright.config.ts",
+      "sha256": "b8cd8796a13f0e9da0242db84d9ba56b7a5990e9dc53ed57a590aed1e656d8e1"
+    },
+    {
+      "path": "engines/voxelDojo/game-12-mission-control/playwright/mission-control.spec.ts",
+      "sha256": "71f4d495156b7345b6e73b78f3dd9d9d0d3bfb713ec313bb888ca7ad82ebfc8a"
+    },
+    {
+      "path": "engines/voxelDojo/game-12-mission-control/src/evidence/emit.ts",
+      "sha256": "0bd761789e72b045769c76bb7bfba23656d802d519b1bf9b6b3b5d9c1560e856"
+    },
+    {
+      "path": "engines/voxelDojo/game-12-mission-control/src/game/controller.ts",
+      "sha256": "ba68c783df2deef27e2b06c53f09bf8d07166fa8b2276342a3984e62bf4959a6"
+    },
+    {
+      "path": "engines/voxelDojo/game-12-mission-control/src/main.ts",
+      "sha256": "37888960dbd84fbebcca46eb783d632b755320415ecca470afd080cd4564f017"
+    },
+    {
+      "path": "engines/voxelDojo/game-12-mission-control/src/reviewSlice.ts",
+      "sha256": "c7716bf3c2dbfc26763ea6b3c058a7e8c3cf4ba9c4823993fedf3f77259efae1"
+    },
+    {
+      "path": "engines/voxelDojo/game-12-mission-control/src/scene/hud.ts",
+      "sha256": "0e0da5d90f3b770acfcbcb24a98d32fd8c657ca7bf68d10c123f49525e3305dd"
+    },
+    {
+      "path": "engines/voxelDojo/game-12-mission-control/src/scene/missionScene.ts",
+      "sha256": "73e0b9eb0ed2581c64bb3febdc23f2712413a8ec7030476c39043d1ad44af15f"
+    },
+    {
+      "path": "engines/voxelDojo/game-12-mission-control/src/sim/dag.test.ts",
+      "sha256": "b2d081648a70ad03a203e3a64a454bb12f2649fdfdecbe4e52a84204b0980ee5"
+    },
+    {
+      "path": "engines/voxelDojo/game-12-mission-control/src/sim/dag.ts",
+      "sha256": "e0a2891ffaafc789790b7c9a7529371e4434ee15020c5d1bf7877bcb9eea067b"
+    },
+    {
+      "path": "engines/voxelDojo/game-12-mission-control/src/sim/election.test.ts",
+      "sha256": "bfd8848ca480e22b7a4883cf5fd3e3f61789d70c24931d1edf9a96266b2e47a0"
+    },
+    {
+      "path": "engines/voxelDojo/game-12-mission-control/src/sim/election.ts",
+      "sha256": "59985dc42e81e449d4e25debec57b17584c490983b303a10cc856e176f2efba6"
+    },
+    {
+      "path": "engines/voxelDojo/game-12-mission-control/src/sim/levels.ts",
+      "sha256": "474504e247957d9c04001255728ca6a83deb52a5eb3b14233546c4a249d66f56"
+    },
+    {
+      "path": "engines/voxelDojo/game-12-mission-control/src/sim/rng.ts",
+      "sha256": "c1944757e384c01a76eacf9e8b058e631eae4c2af365bdf8090b1ca3bfd1d1cf"
+    },
+    {
+      "path": "engines/voxelDojo/game-12-mission-control/tsconfig.json",
+      "sha256": "0baa7dd48e8a2672ee9f96c7f611889bf0aa2f53dfe71a1f35020dd6ee786336"
+    },
+    {
+      "path": "engines/voxelDojo/game-13-breaker-grid/.gitignore",
+      "sha256": "27708798cc43f561f24614e06ff2ed7f616cb26cf893a2e4bd3582cf40fe7449"
+    },
+    {
+      "path": "engines/voxelDojo/game-13-breaker-grid/index.html",
+      "sha256": "c10e6aad75dd37fda957254c6859b4b3dca78ea7b080b30329f0dc07f1002916"
+    },
+    {
+      "path": "engines/voxelDojo/game-13-breaker-grid/package.json",
+      "sha256": "920d65f4c243504b8ce2fc9e6cb8ff992adb01a5a2b69994126ba3eeb514b38e"
+    },
+    {
+      "path": "engines/voxelDojo/game-13-breaker-grid/playwright.config.ts",
+      "sha256": "88bfb8d4aa2a7ddf0fd94d855b5e022178e7e63a717267d01b4c1af507496a13"
+    },
+    {
+      "path": "engines/voxelDojo/game-13-breaker-grid/playwright/breaker-grid.spec.ts",
+      "sha256": "cdc6415f667ef7681d92bda22d76fed66fa1843e7f42cc0ffc32d15b083e2a74"
+    },
+    {
+      "path": "engines/voxelDojo/game-13-breaker-grid/src/evidence/emit.ts",
+      "sha256": "edf106056fe48f8270eba2fe121d8d8a40b255764d6b1cd319b197d08b0e2ae7"
+    },
+    {
+      "path": "engines/voxelDojo/game-13-breaker-grid/src/game/controller.test.ts",
+      "sha256": "b9c0ced3d2f98dd250eac494be40a24dc8f389a9ae95e51f47e4162a12e21916"
+    },
+    {
+      "path": "engines/voxelDojo/game-13-breaker-grid/src/game/controller.ts",
+      "sha256": "7a7cd3e8b96fcb468a8947b4909f2865be3a363734797fa4ebc1ec85b65bc5a4"
+    },
+    {
+      "path": "engines/voxelDojo/game-13-breaker-grid/src/index.ts",
+      "sha256": "d6925b5bf246ae60313b5774e668b0f096f2957505de7d9647d158ea01ed7353"
+    },
+    {
+      "path": "engines/voxelDojo/game-13-breaker-grid/src/main.ts",
+      "sha256": "95041b6f0a840eee9be8412005ea3d738b80d7b636eda3c972eac9b025ce0f25"
+    },
+    {
+      "path": "engines/voxelDojo/game-13-breaker-grid/src/reviewSlice.ts",
+      "sha256": "8e09be4462d5d03cf70585db2b66ae8a2f6cab2a85933311194d5402e6f8bc47"
+    },
+    {
+      "path": "engines/voxelDojo/game-13-breaker-grid/src/scene/breakerScene.ts",
+      "sha256": "3015815b61f9009160bf2dd4a6262ba0247842d323c65313b534db35ce835c04"
+    },
+    {
+      "path": "engines/voxelDojo/game-13-breaker-grid/src/scene/hud.ts",
+      "sha256": "1b01af7e2b314d3377730a971b5490cff24e7c4fd632d0e14cf5870f831ed282"
+    },
+    {
+      "path": "engines/voxelDojo/game-13-breaker-grid/src/sim/breaker.test.ts",
+      "sha256": "da82e423c1ae6c3fb68e7c8e4a717150f255f8c116c9d8c5f7b1fa562f2e4ae2"
+    },
+    {
+      "path": "engines/voxelDojo/game-13-breaker-grid/src/sim/breaker.ts",
+      "sha256": "96e89805cc01ff8f140723cf0e787ae94a8376fdbb73d926025cc1b08bbde6de"
+    },
+    {
+      "path": "engines/voxelDojo/game-13-breaker-grid/src/sim/levels.ts",
+      "sha256": "384f3d7e3d46a0b79827321b25063e42924115aba7bae4b1d42d18a6ce62a8ee"
+    },
+    {
+      "path": "engines/voxelDojo/game-13-breaker-grid/src/sim/rng.ts",
+      "sha256": "49afd91891ec9e8054c1050e5a9741bba399b22cabd469e296dcee092d957322"
+    },
+    {
+      "path": "engines/voxelDojo/game-13-breaker-grid/tsconfig.json",
+      "sha256": "0baa7dd48e8a2672ee9f96c7f611889bf0aa2f53dfe71a1f35020dd6ee786336"
+    },
+    {
+      "path": "engines/voxelDojo/game-14-river-delta/index.html",
+      "sha256": "b4845a434a9eb1113642f798cdb63f52de086ea29a014684c3c9a9e884a520a8"
+    },
+    {
+      "path": "engines/voxelDojo/game-14-river-delta/package.json",
+      "sha256": "de10d8fc28c6b939c2fda13e913ef34e6cfacfedfbf801b5461605e52bb0c820"
+    },
+    {
+      "path": "engines/voxelDojo/game-14-river-delta/playwright.config.ts",
+      "sha256": "38da0b560633278c7492de4c527341e30092396b3408530ea53b282943ef33b9"
+    },
+    {
+      "path": "engines/voxelDojo/game-14-river-delta/playwright/river-delta.spec.ts",
+      "sha256": "833e5532ff70221a94ca88ed9ed17ebb6c66e697acfae265892c8bb22a518dd0"
+    },
+    {
+      "path": "engines/voxelDojo/game-14-river-delta/src/evidence/emit.ts",
+      "sha256": "86e8fa36305c7a3d651d184ae80e00f4bede82b2b41897b3c23d4a8131716e4e"
+    },
+    {
+      "path": "engines/voxelDojo/game-14-river-delta/src/game/controller.test.ts",
+      "sha256": "db08f9042259496f78f773bcd6dc34f1ec4241765719bb06a27491186928a0a0"
+    },
+    {
+      "path": "engines/voxelDojo/game-14-river-delta/src/game/controller.ts",
+      "sha256": "2f61e301af97e9b134bc85442184c7715d71dd4a5dbe0ba0a49c1b3f4d6933a9"
+    },
+    {
+      "path": "engines/voxelDojo/game-14-river-delta/src/index.ts",
+      "sha256": "e4157a85e918d56fee7258b9d8c1d52d2761060ff1e29b8ebacb34044c276f4a"
+    },
+    {
+      "path": "engines/voxelDojo/game-14-river-delta/src/main.ts",
+      "sha256": "1cc92fcc0e8a788898ebe14315a3a4d55e687c2befa77900b8d8936a2b45a6c2"
+    },
+    {
+      "path": "engines/voxelDojo/game-14-river-delta/src/reviewSlice.ts",
+      "sha256": "aa342281efe5531f5d05bcd179afab649b0cfb40bae5dcdf66d32967565d8161"
+    },
+    {
+      "path": "engines/voxelDojo/game-14-river-delta/src/scene/deltaScene.ts",
+      "sha256": "1b15914997d8bd217e60e39f8074845aa69942b9539d33539316f33c3d487a9c"
+    },
+    {
+      "path": "engines/voxelDojo/game-14-river-delta/src/scene/hud.ts",
+      "sha256": "3609c36bca901f305db0d772be2f6f8d1f5f4eed3e8647ab7d6bba13a31f9490"
+    },
+    {
+      "path": "engines/voxelDojo/game-14-river-delta/src/sim/levels.ts",
+      "sha256": "e60a156fef83777ffbf8a4e0322ce1763f41a26fa1d6c008510b2d059d043c93"
+    },
+    {
+      "path": "engines/voxelDojo/game-14-river-delta/src/sim/pipeline.test.ts",
+      "sha256": "321ec1ea38d4f2228ee1aa14128c9449c1f806edb1e0a535f67229ab48c6abd0"
+    },
+    {
+      "path": "engines/voxelDojo/game-14-river-delta/src/sim/pipeline.ts",
+      "sha256": "99c21ceeda44928ed6ced1c895358373b8f8e0f6d09df43de04a117f728799e0"
+    },
+    {
+      "path": "engines/voxelDojo/game-14-river-delta/src/sim/rng.ts",
+      "sha256": "fe054bab50d2a1bf88d85563a56fdbdc913a26e48c5baac7ecc692a2b40a7774"
+    },
+    {
+      "path": "engines/voxelDojo/game-14-river-delta/tsconfig.json",
+      "sha256": "0baa7dd48e8a2672ee9f96c7f611889bf0aa2f53dfe71a1f35020dd6ee786336"
+    },
+    {
+      "path": "engines/voxelDojo/game-15-observatory/.gitignore",
+      "sha256": "e54f444282a472e8fac8b66c2720ee343d6cdcbecc6467156e11dbc0f063a669"
+    },
+    {
+      "path": "engines/voxelDojo/game-15-observatory/index.html",
+      "sha256": "55bd471a7cc4156584118f2fece1fb275d2d71eda3f1a2cbfdf43fc3bb53cb6c"
+    },
+    {
+      "path": "engines/voxelDojo/game-15-observatory/package.json",
+      "sha256": "912685cda84b8d70dfe3966e5927bc099aad7e003d1e2e8f9d62bfe4142b5952"
+    },
+    {
+      "path": "engines/voxelDojo/game-15-observatory/playwright.config.ts",
+      "sha256": "89336053ff9b4e6677bd6637bf36e3d4d8eba2db297b61f805c12cd9ec80dba0"
+    },
+    {
+      "path": "engines/voxelDojo/game-15-observatory/playwright/observatory.spec.ts",
+      "sha256": "f5a8ef94e259f05f81338cb989d20ac9bafbdcfdec408fa9f98e046922146f3b"
+    },
+    {
+      "path": "engines/voxelDojo/game-15-observatory/src/evidence/emit.ts",
+      "sha256": "c131d063d5b1898e0b43bca046f1c3e13e7af137aac5b0a6b548bc33ddbe4f21"
+    },
+    {
+      "path": "engines/voxelDojo/game-15-observatory/src/game/controller.test.ts",
+      "sha256": "1636c861337df43de4154c350ff4f6bb96d9deb69d06337b45eadb1e426be177"
+    },
+    {
+      "path": "engines/voxelDojo/game-15-observatory/src/game/controller.ts",
+      "sha256": "b785093fe1ca4d682c8850b35eae9b689a50b65c9fb44c22c5e3cd4068293cec"
+    },
+    {
+      "path": "engines/voxelDojo/game-15-observatory/src/index.test.ts",
+      "sha256": "7b015c5e5768a6a8bb346642952f0c0f76466c73fc83f62290a5218ce8c46843"
+    },
+    {
+      "path": "engines/voxelDojo/game-15-observatory/src/index.ts",
+      "sha256": "550cefaf800f70069f9a2afbee272cdb548f829aa71fcdf945be61f0ef010cf0"
+    },
+    {
+      "path": "engines/voxelDojo/game-15-observatory/src/main.ts",
+      "sha256": "e4809ab760dcd7fcc1100b3c5872a77215cde58990e30cede5a6ee6e80f014b6"
+    },
+    {
+      "path": "engines/voxelDojo/game-15-observatory/src/reviewSlice.ts",
+      "sha256": "7a12cf957857a196d756db7861c2cd61b83ae79867ec870458679cb69313784a"
+    },
+    {
+      "path": "engines/voxelDojo/game-15-observatory/src/scene/hud.ts",
+      "sha256": "e8a3cbefde566bda0e46294d8128cf2ffbeb8facdc041177258f82349dd9ed78"
+    },
+    {
+      "path": "engines/voxelDojo/game-15-observatory/src/scene/observatoryScene.ts",
+      "sha256": "6bb623962edfd300a969cd134414b94bff96c0646f8305aa2b40a6b55c660cb1"
+    },
+    {
+      "path": "engines/voxelDojo/game-15-observatory/src/sim/histogram.test.ts",
+      "sha256": "62bdc10b720f9c3000c7c0d6e36d47f69a0203048131fdbefce62b10160e6153"
+    },
+    {
+      "path": "engines/voxelDojo/game-15-observatory/src/sim/histogram.ts",
+      "sha256": "26ae1f45eea26a61200a16fec977ece899d8e9f0ef0f7f184226ff1ba67b1147"
+    },
+    {
+      "path": "engines/voxelDojo/game-15-observatory/src/sim/levels.ts",
+      "sha256": "6f473cf997da36bd950f40813f84570f55f7cad20aaf73b3a588351c77c40f0e"
+    },
+    {
+      "path": "engines/voxelDojo/game-15-observatory/src/sim/rng.ts",
+      "sha256": "f94be491ca346465195266700e73cb5920c5757d07788fa5ab817808245a62d4"
+    },
+    {
+      "path": "engines/voxelDojo/game-15-observatory/tsconfig.json",
+      "sha256": "0baa7dd48e8a2672ee9f96c7f611889bf0aa2f53dfe71a1f35020dd6ee786336"
+    },
+    {
+      "path": "engines/voxelDojo/game-16-freight-yard/.gitignore",
+      "sha256": "27708798cc43f561f24614e06ff2ed7f616cb26cf893a2e4bd3582cf40fe7449"
+    },
+    {
+      "path": "engines/voxelDojo/game-16-freight-yard/index.html",
+      "sha256": "a4f4410ff570dc9647ed01908abbc28abd2400a94033db243b8f68fbeeea6d6f"
+    },
+    {
+      "path": "engines/voxelDojo/game-16-freight-yard/package.json",
+      "sha256": "585b841599ea3c90180c2a0cecf32f423c39734415c3b869dc38a232c79f3a59"
+    },
+    {
+      "path": "engines/voxelDojo/game-16-freight-yard/playwright.config.ts",
+      "sha256": "6a3d775daa591a661f247c2768ddefa80afe8ac4b162152a4b501d4deda7939e"
+    },
+    {
+      "path": "engines/voxelDojo/game-16-freight-yard/playwright/freight-yard.spec.ts",
+      "sha256": "275e2734884926a02be10c738fb13870ea6420bf0c0b81874df7eec70c8761f1"
+    },
+    {
+      "path": "engines/voxelDojo/game-16-freight-yard/src/evidence/emit.ts",
+      "sha256": "c10635a806f4d8bd1ac6bb796f8cfa8f5bd4d4edd9b4a64a0c22fd1206918ed9"
+    },
+    {
+      "path": "engines/voxelDojo/game-16-freight-yard/src/game/controller.test.ts",
+      "sha256": "bc659d53b783d659b9aeb4fa277b3ca6a2c9eec39b4630b46916d3fc9a40f925"
+    },
+    {
+      "path": "engines/voxelDojo/game-16-freight-yard/src/game/controller.ts",
+      "sha256": "b157e9972fd452a5f8705cf220cbf52fdbd555d6b557a9b3f9223d7935de550a"
+    },
+    {
+      "path": "engines/voxelDojo/game-16-freight-yard/src/index.ts",
+      "sha256": "b87a26e96a7639555f92cd4ae6d4134496ac9d7b966352655c7509351315ec8b"
+    },
+    {
+      "path": "engines/voxelDojo/game-16-freight-yard/src/main.ts",
+      "sha256": "9ba9e7b0a098316e7ffdc488657d79b9f0938fc1c15d74bd85199a428ceb894a"
+    },
+    {
+      "path": "engines/voxelDojo/game-16-freight-yard/src/reviewSlice.ts",
+      "sha256": "a28f1bf61082411d803e674b79ba4bcce22d50af3193d113181cf2c29e510498"
+    },
+    {
+      "path": "engines/voxelDojo/game-16-freight-yard/src/scene/freightScene.ts",
+      "sha256": "fbdfe2a69662cc5abe3f6b5db30b1f7fda87cf61e3a28ff838b58d4c72582388"
+    },
+    {
+      "path": "engines/voxelDojo/game-16-freight-yard/src/scene/hud.ts",
+      "sha256": "ed12d16cf839e633a825b7a889be25eef3da9d3c88b3e94d3309d41ff019706a"
+    },
+    {
+      "path": "engines/voxelDojo/game-16-freight-yard/src/sim/levels.ts",
+      "sha256": "3c494b9f1cabb049992127a06d2f78a39c7e44b16af695302ec8eb82b2f2783f"
+    },
+    {
+      "path": "engines/voxelDojo/game-16-freight-yard/src/sim/queue.test.ts",
+      "sha256": "7c938e470146efc63b8e87d3fbbc591667767dc98c9f6b9da11e758493bb108a"
+    },
+    {
+      "path": "engines/voxelDojo/game-16-freight-yard/src/sim/queue.ts",
+      "sha256": "4890ecdced2ae1efec8e49b224e5977937701f6412d6d1aebf7ac1f425a0abe0"
+    },
+    {
+      "path": "engines/voxelDojo/game-16-freight-yard/src/sim/rng.ts",
+      "sha256": "dbfefbc0ac39ff88eb7de4229551b16dc01874274ca438593095597f511da80b"
+    },
+    {
+      "path": "engines/voxelDojo/game-16-freight-yard/tsconfig.json",
+      "sha256": "0baa7dd48e8a2672ee9f96c7f611889bf0aa2f53dfe71a1f35020dd6ee786336"
+    },
+    {
+      "path": "engines/voxelDojo/game-17-lighthouse-network/.gitignore",
+      "sha256": "27708798cc43f561f24614e06ff2ed7f616cb26cf893a2e4bd3582cf40fe7449"
+    },
+    {
+      "path": "engines/voxelDojo/game-17-lighthouse-network/index.html",
+      "sha256": "25af5acb69156e77bb8f34c3e7d7861a6e6f19503bcc353906aa03aa2b899e79"
+    },
+    {
+      "path": "engines/voxelDojo/game-17-lighthouse-network/package.json",
+      "sha256": "99b77229db427d33d4d4d532099116e4014d3cda546845e0af3e2348e7c25c97"
+    },
+    {
+      "path": "engines/voxelDojo/game-17-lighthouse-network/playwright.config.ts",
+      "sha256": "c22155bfcc215441eadbaaf5adbd0ba1e6c18b7932f4883f8f0101a6e3f2f124"
+    },
+    {
+      "path": "engines/voxelDojo/game-17-lighthouse-network/playwright/lighthouse-network.spec.ts",
+      "sha256": "4bd4e69230e706a6b0f70f65beb154876124b7d674ccecbd7b278de66e435559"
+    },
+    {
+      "path": "engines/voxelDojo/game-17-lighthouse-network/src/evidence/emit.ts",
+      "sha256": "812cd76c8eb52bc09158f2be035fa9a2558c81f196829b6d0528a74cf39ef546"
+    },
+    {
+      "path": "engines/voxelDojo/game-17-lighthouse-network/src/game/controller.test.ts",
+      "sha256": "6c96c0524a0f14d6b31c60f07bf36a26bf654ff753a12acce8a18e032e81f390"
+    },
+    {
+      "path": "engines/voxelDojo/game-17-lighthouse-network/src/game/controller.ts",
+      "sha256": "0c9117fe4c5ab81e0e83f7f4ff66e0500e0be81e3963733c593c8ac3e06300e9"
+    },
+    {
+      "path": "engines/voxelDojo/game-17-lighthouse-network/src/index.ts",
+      "sha256": "ecc709d8c76f787a5d21ecb7cdf70754fdc305a4859ed78fedf2c67eb1cbd4a0"
+    },
+    {
+      "path": "engines/voxelDojo/game-17-lighthouse-network/src/main.ts",
+      "sha256": "3880159d4ee051e4c1997138a959416a6b6006d18334fb264225e02caa6fc017"
+    },
+    {
+      "path": "engines/voxelDojo/game-17-lighthouse-network/src/reviewSlice.ts",
+      "sha256": "495a08ef8ddddca6b22570ad3ec7daf99e0fa61d9a446f5607cb23d11803e7c0"
+    },
+    {
+      "path": "engines/voxelDojo/game-17-lighthouse-network/src/scene/hud.ts",
+      "sha256": "521a40b1b84e2ef024549443c66bbd20f50ca4218d11034620f00221b4ab7f36"
+    },
+    {
+      "path": "engines/voxelDojo/game-17-lighthouse-network/src/scene/lighthouseScene.ts",
+      "sha256": "6b372317b10e8d3c0e792a603e509f7d3e895a50e53d430d70c2a249defbe116"
+    },
+    {
+      "path": "engines/voxelDojo/game-17-lighthouse-network/src/sim/consensus.test.ts",
+      "sha256": "d7babf28125f513fb03ea69111ae0cd97778cdd693cca00bcd8da60a832f122a"
+    },
+    {
+      "path": "engines/voxelDojo/game-17-lighthouse-network/src/sim/consensus.ts",
+      "sha256": "10e0dd35d1a8f03ac7beabc3108b05b99ea871067b4db610fda551a1893ac84e"
+    },
+    {
+      "path": "engines/voxelDojo/game-17-lighthouse-network/src/sim/levels.ts",
+      "sha256": "962c2dd42cdc601a52a412ee5830402b6823b469432684423a1d6e0f402b186d"
+    },
+    {
+      "path": "engines/voxelDojo/game-17-lighthouse-network/src/sim/rng.ts",
+      "sha256": "6fddaa768120a31ed058b1a320a8e45077dba6300f0f8483bf3f999eb739f49d"
+    },
+    {
+      "path": "engines/voxelDojo/game-17-lighthouse-network/tsconfig.json",
+      "sha256": "0baa7dd48e8a2672ee9f96c7f611889bf0aa2f53dfe71a1f35020dd6ee786336"
+    },
+    {
+      "path": "engines/voxelDojo/game-18-stacks/.gitignore",
+      "sha256": "27708798cc43f561f24614e06ff2ed7f616cb26cf893a2e4bd3582cf40fe7449"
+    },
+    {
+      "path": "engines/voxelDojo/game-18-stacks/index.html",
+      "sha256": "24276562e0b3328b04205a4020dbfeaad904fab0377e100e8db051a4f5fa68b7"
+    },
+    {
+      "path": "engines/voxelDojo/game-18-stacks/package.json",
+      "sha256": "d1f6b7a89bbf169c2daed5a6b47b0f1c1728811f18d123f8cd2eeaad89804a4b"
+    },
+    {
+      "path": "engines/voxelDojo/game-18-stacks/playwright.config.ts",
+      "sha256": "b40b3eda54a0327978db7040beaba47778f04550493cd415fb715bfa1abbf9b2"
+    },
+    {
+      "path": "engines/voxelDojo/game-18-stacks/playwright/stacks.spec.ts",
+      "sha256": "c583f1e6224080d19cd1cfe7768e15d5e0c590f89f24774fe219c769f56eb69d"
+    },
+    {
+      "path": "engines/voxelDojo/game-18-stacks/src/evidence/emit.ts",
+      "sha256": "64219004cab9bb1b4396fc8f6e45f0b815c9819189fe662f45a4198c176cdb73"
+    },
+    {
+      "path": "engines/voxelDojo/game-18-stacks/src/game/controller.ts",
+      "sha256": "954413d2cffdc3acc74206620aebee93ef24f8735307241dfc4a254487ff2e69"
+    },
+    {
+      "path": "engines/voxelDojo/game-18-stacks/src/index.ts",
+      "sha256": "3462d415db4ee2f27b1808ca37c423ab00df3cc3f68b4d293548bcfc0e1da4e3"
+    },
+    {
+      "path": "engines/voxelDojo/game-18-stacks/src/main.ts",
+      "sha256": "9a36c5fbd80ced13c472ea3a72a78a84a3a3fe95b5469e8f583912252395f2d4"
+    },
+    {
+      "path": "engines/voxelDojo/game-18-stacks/src/reviewSlice.ts",
+      "sha256": "a28b3e00584d7d845b112a395c0a1f447e530846a8cdcdaf2e56c4a92ec10f98"
+    },
+    {
+      "path": "engines/voxelDojo/game-18-stacks/src/scene/hud.ts",
+      "sha256": "e31cbd4d1efb98429dfba09339acc7858d290e00b408fcae2f5d1af350215e86"
+    },
+    {
+      "path": "engines/voxelDojo/game-18-stacks/src/scene/stacksScene.ts",
+      "sha256": "c49c296f566a3b3c9df3f15582e2e52be8ecd81cc983bd4e6db4deb56d8d6c1f"
+    },
+    {
+      "path": "engines/voxelDojo/game-18-stacks/src/sim/index.test.ts",
+      "sha256": "5e3ff0e973bb7d05439b4358338cd7091c52cd74b7f656f855bfec53dd9f99a4"
+    },
+    {
+      "path": "engines/voxelDojo/game-18-stacks/src/sim/index.ts",
+      "sha256": "ef5b7b839e4a5fc12226bc3b721779252685bc97cc66d5783042ca249d44291d"
+    },
+    {
+      "path": "engines/voxelDojo/game-18-stacks/src/sim/levels.ts",
+      "sha256": "1b4d4241db13def2f213762001fc788527227d125ddf7ed45e569b88d9dd788c"
+    },
+    {
+      "path": "engines/voxelDojo/game-18-stacks/tsconfig.json",
+      "sha256": "0baa7dd48e8a2672ee9f96c7f611889bf0aa2f53dfe71a1f35020dd6ee786336"
+    },
+    {
+      "path": "engines/voxelDojo/package.json",
+      "sha256": "63972dd82d5e5f924397ec522318457bad2744ef4cf6bfd847ba5d7cab4f2bfd"
+    },
+    {
+      "path": "engines/voxelDojo/pnpm-lock.yaml",
+      "sha256": "55a5161d17a2ff0fee2e8c369f2213da497cf65db3c40c996242530347365c23"
+    },
+    {
+      "path": "engines/voxelDojo/pnpm-workspace.yaml",
+      "sha256": "a600456ac83057d0ef53233fabeee32f81b87be77966d5224d6f4118fecb7adc"
+    },
+    {
+      "path": "engines/voxelDojo/scripts/check-hud-innerhtml.mjs",
+      "sha256": "5a7061e354f254f6fcb562fd712bd5c52b18e7531edbd60ffe0f19ade56c29fd"
+    },
+    {
+      "path": "engines/voxelDojo/scripts/readiness-report.mjs",
+      "sha256": "1c6ce4f2ae0971cee92af69c0d05e894dcfd69bdf1d8479e90fe6074a0bf2187"
+    },
+    {
+      "path": "engines/voxelDojo/scripts/serve-catalog.mjs",
+      "sha256": "8e4d227187ffd07d55511dbe39ec9993dc02e58e61cb076abfe5132a59158e92"
+    },
+    {
+      "path": "engines/voxelDojo/shared/accessibleProjection.test.ts",
+      "sha256": "b3358a5ee1ff2549f7f3aa3ab528b31b307bbd9569315cf5346d30a44f292f1c"
+    },
+    {
+      "path": "engines/voxelDojo/shared/accessibleProjection.ts",
+      "sha256": "569e24c492f3d948de7b013a086bbfaea3df43a41909652fd50496684e8a8678"
+    },
+    {
+      "path": "engines/voxelDojo/shared/content.ts",
+      "sha256": "9c18bc11fb72a81f1133b0507206060a9b9fb40a4e9783c29150f2241a6797d6"
+    },
+    {
+      "path": "engines/voxelDojo/shared/createEmitForGame.ts",
+      "sha256": "324d15063203bb5ceb3f6d7a2ed84122ea7981bff7c8580cd5b0ea6629e55e10"
+    },
+    {
+      "path": "engines/voxelDojo/shared/escapeHtml.test.ts",
+      "sha256": "a3d5a4dc3c4dab0249eaccbe191b36ed25b75cfed7a823b8ac94984d062dcacf"
+    },
+    {
+      "path": "engines/voxelDojo/shared/escapeHtml.ts",
+      "sha256": "fed786b688cdb3e289f401fdbce395e8247928300113c3794f072b0a0622b4fe"
+    },
+    {
+      "path": "engines/voxelDojo/shared/evidence.ts",
+      "sha256": "7b448bab43f4711a56a68526ba1549a016c7f8bb6a7f744924ad4b12c56d64fa"
+    },
+    {
+      "path": "engines/voxelDojo/shared/funnelTelemetry.test.ts",
+      "sha256": "0a9a6170f1130ee5eabb1c7e960f08d47f1dc10fa5aa6626d7309fb4fe7e81cf"
+    },
+    {
+      "path": "engines/voxelDojo/shared/gameEvidenceMeta.ts",
+      "sha256": "2b27a7b1dad9fde9770c78edb8b7de2c54bce62ab6aa0ccc8c84de8abea12a1b"
+    },
+    {
+      "path": "engines/voxelDojo/shared/hostMessageDecoder.test.ts",
+      "sha256": "ee3e99ea40299806c92aa2499c1d18b7886a04423c3896b4a1af53335a1147ae"
+    },
+    {
+      "path": "engines/voxelDojo/shared/palette.ts",
+      "sha256": "eb0b51f12799fb0005f1a63da77f66ac7cf6150891eaabb75675c7ba72ec98c5"
+    },
+    {
+      "path": "engines/voxelDojo/shared/projection.ts",
+      "sha256": "26cdb35a4498f618a0872903b957454c3c675c0d0569b19a6b383156fd3ded38"
+    },
+    {
+      "path": "engines/voxelDojo/shared/reducedMotion.ts",
+      "sha256": "514ae4bc1be9e73db9d71fa488b4ac7d7459766b7035cc84e6a4d9de1e04fbc6"
+    },
+    {
+      "path": "engines/voxelDojo/shared/rng.ts",
+      "sha256": "fd77c47412d6af14197fc6fcd9ff67c2b9ad343e01b22c34edd954c0a5864016"
+    },
+    {
+      "path": "engines/voxelDojo/shared/sceneHarness.ts",
+      "sha256": "52eb366172ab1363d094bc0e83ec98492bb8e9a31aef95d350aeddcf453ec11f"
+    },
+    {
+      "path": "engines/voxelDojo/shared/testHelpers.ts",
+      "sha256": "b04e2cffd308ceb1c5e21ddb28519fdbc7b6c54199a91bd99fb935b594670562"
+    },
+    {
+      "path": "engines/voxelDojo/shared/viewport.ts",
+      "sha256": "a8b2d3cad470f0b954cad1f721d1419e027ec7de62fe9cb9a6664fae3bcb80ab"
+    },
+    {
+      "path": "engines/voxelDojo/tsconfig.base.json",
+      "sha256": "5d5a6e8c146048081ad37ce67afc2e67cde46523a59b79f1ac6f5482ae55d06c"
+    },
+    {
+      "path": "learner/gate/AGENTS.md",
+      "sha256": "b7e028db77260e18043dca1eb9c11b039f179d3df5bceb3a90714973ed00a0c9"
+    },
+    {
+      "path": "learner/gate/README.md",
+      "sha256": "b490cb3af093284a3c093082f284dc49b66c42551d817c8d2f5213a02316dad5"
+    },
+    {
+      "path": "learner/gate/__init__.py",
+      "sha256": "ad1b2ee6c2582bcf90f9a3eb312620d4af03bb7bd84afce1773699e3ee021f99"
+    },
+    {
+      "path": "learner/gate/__main__.py",
+      "sha256": "b7e5b624c00b8f6624dcd22bdf3abb75ce229504defb8177c4f204c2ac249c20"
+    },
+    {
+      "path": "learner/gate/air_traffic_evaluator.py",
+      "sha256": "2d7613286ad1a9e85f2ea65aabe0c0000c468d920d547c381e987a2ddeb84e7d"
+    },
+    {
+      "path": "learner/gate/analytics/README.md",
+      "sha256": "82d4fa7470e013d23ff5e1804052b42025147967be16423ed3e6381e449e6625"
+    },
+    {
+      "path": "learner/gate/analytics/aggregate_funnel.mjs",
+      "sha256": "7e3fa643ac02b0a950c402acdbee20a661bd89177f977bb1423df32de53dfbb3"
+    },
+    {
+      "path": "learner/gate/analytics/dojo-analytics-collector.d.mts",
+      "sha256": "2257fd3d3fb9bbceccdc8d56c56a7fa3ecc2befc1455beb5315626a27d551ea7"
+    },
+    {
+      "path": "learner/gate/analytics/ndjson_input.mjs",
+      "sha256": "c59ab207863952ebc32635015e0badd10a63f28979bd1e9ec12349355c5c8247"
+    },
+    {
+      "path": "learner/gate/analytics/probe_collector_export.mjs",
+      "sha256": "74c8d1d3158029991702a76fd81e78e24ae3bcfc6a2166231ed5fc3f09eb5fbe"
+    },
+    {
+      "path": "learner/gate/analytics/refresh_vocabularies.mjs",
+      "sha256": "fb314a06be12883e2871451a28d1cecc6ded34edbf933e71a50349bdc0428551"
+    },
+    {
+      "path": "learner/gate/analytics/schema_drift_monitor.mjs",
+      "sha256": "6c8789c0b34a93d0e938d011acdd443780ee2d22ac8f8d9b3c2c572eb7ec820e"
+    },
+    {
+      "path": "learner/gate/analytics/verify_deployed_blobs.mjs",
+      "sha256": "05d31f422a28131b350fb4b38b66248fa3c9a5c457ae405bd50ad3022cdc07a6"
+    },
+    {
+      "path": "learner/gate/breaker_grid_evaluator.py",
+      "sha256": "7c455a8ab5bca30acf8b2c1219601ed91970d12d1cba5229342512ce15c74e20"
+    },
+    {
+      "path": "learner/gate/canonical_gate.py",
+      "sha256": "717f64f2372ceaebb26942cc96a3672bf51ec341994f6907e8aa41866eb54e76"
+    },
+    {
+      "path": "learner/gate/checkpoint_evaluator.py",
+      "sha256": "1c694e849702ba51a83c61bb646520afe7d80ed443148e43529fdd2b8238b4f1"
+    },
+    {
+      "path": "learner/gate/core.py",
+      "sha256": "4230de9f7ab04199a2a7e9b85cf8b373d2dcb7f8222fc1090980e000bd3e6b72"
+    },
+    {
+      "path": "learner/gate/docking_evaluator.py",
+      "sha256": "9c73241eb07633cc847edfcb16073df99e57ae43da740fe1b7c9989715da75fd"
+    },
+    {
+      "path": "learner/gate/engine.py",
+      "sha256": "364879bde468b5b2d614ce63d782170facec5799e7b9c5e5e075cfc7af28e169"
+    },
+    {
+      "path": "learner/gate/evaluator_primitives.py",
+      "sha256": "249b4127c3b8914f59746633ae3443653fc64ea05774bf5a4f9238d7597b1cc1"
+    },
+    {
+      "path": "learner/gate/evidence_io.py",
+      "sha256": "53146a798b65e71839d4a12e37097f5824c844d7c81fd4236a9a9f310eea2da3"
+    },
+    {
+      "path": "learner/gate/evidence_rubrics.yaml",
+      "sha256": "4aa2224cad2fb9e4afea09ea1d89f018f84273e7f280b748295e02b0d8a09dc1"
+    },
+    {
+      "path": "learner/gate/evidence_schema.py",
+      "sha256": "512face66d6ce9508451987af6f6cabd62df932b4fa1ab77c8c1d2b4b1a2f36c"
+    },
+    {
+      "path": "learner/gate/evidence_validator.py",
+      "sha256": "2b95c18f508f97ea8c1ff25034ac19297b375a01a391d89bca94a56f3e877974"
+    },
+    {
+      "path": "learner/gate/hash_ring_evaluator.py",
+      "sha256": "c4f303cf7a12b86a09c5c9c7fe4a5891c70ae8e8887133e6825d0edec3c8ee4c"
+    },
+    {
+      "path": "learner/gate/literacy.py",
+      "sha256": "cd4e3f13eb7107cf49d74394f000ad1cb1cbc124e6b4149946dbd4614a8cce41"
+    },
+    {
+      "path": "learner/gate/literacy_bridge.py",
+      "sha256": "5647567c191f234d5ea9d48cda2ed697cf697d2f9205149d840367edbbe972dd"
+    },
+    {
+      "path": "learner/gate/literacy_evaluator.py",
+      "sha256": "181b2f9a50daa1c8432d3809e4d4a68a450049f407826d0d0dc93d889f81f3a8"
+    },
+    {
+      "path": "learner/gate/literacy_evidence.schema.json",
+      "sha256": "692290b5065d2872303c7ead5e2b9cd9ef43c899324794009b52e920aab76630"
+    },
+    {
+      "path": "learner/gate/literacy_judgment.py",
+      "sha256": "5e64e6e5d9fcdf7ab9c0799739ffe322dff5b032452c2424bf793050853835ec"
+    },
+    {
+      "path": "learner/gate/literacy_verifier.py",
+      "sha256": "6bc0335fed63ae799f5531745d21536012035bd62ff1336185378d1697c44d49"
+    },
+    {
+      "path": "learner/gate/metric_failure_snapshot.yaml",
+      "sha256": "648375eac496234bc1ed8f83dd4de4b446ff348a9cf72e7e46132497fc3682e8"
+    },
+    {
+      "path": "learner/gate/metric_lint.py",
+      "sha256": "126f2c90955bdfd39d74394069f1db9979a5618a5b572afe12fb5f21f61a7d28"
+    },
+    {
+      "path": "learner/gate/metric_snapshot.py",
+      "sha256": "9e3494afef6d0a7619d0159fe543044544e0e6539f589209e86de475c156a2f8"
+    },
+    {
+      "path": "learner/gate/mission_control_evaluator.py",
+      "sha256": "25f19b491bb2678cf65f55c8e17d0862beaa4abf257129c4ee90b020d714a4ea"
+    },
+    {
+      "path": "learner/gate/netlify-functions/README.md",
+      "sha256": "784bc0fbcda7e1d5cd816e9d778f6e1deddf461ec97fc240e69e835b474805f7"
+    },
+    {
+      "path": "learner/gate/netlify-functions/_shared/literacy-corpus.mjs",
+      "sha256": "491f04f84f6986bfcc88a62ca23123b7869c208b19546c507f2604da6f0f9ee6"
+    },
+    {
+      "path": "learner/gate/netlify-functions/dojo-analytics-collector.mjs",
+      "sha256": "0080d300ef0b782d94ebe7f1dc6fe03f220f0598827289dc54d7d2b36d827b7e"
+    },
+    {
+      "path": "learner/gate/netlify-functions/dojo-verification-bridge.mjs",
+      "sha256": "93e4cb036d84d7776ed23dfa792bb693c306346be8faa0cb87f365653693c663"
+    },
+    {
+      "path": "learner/gate/netlify-functions/literacy-verify.mjs",
+      "sha256": "7d53901ea068302abb91fa07bfa0cb99b3ed7952566a50b4ef9e6dfbf15fa8c3"
+    },
+    {
+      "path": "learner/gate/netlify-functions/netlify-blobs-runtime.mjs",
+      "sha256": "7c33576cb5c98dc4d69891c6382a794bc547d96cbce2371069b7573b368bc0d5"
+    },
+    {
+      "path": "learner/gate/netlify-functions/package-lock.json",
+      "sha256": "14969a3a42235d3f7b3437cf4ed18f90636f2fc08c5eca2eb449a64f6aef5c64"
+    },
+    {
+      "path": "learner/gate/netlify-functions/package.json",
+      "sha256": "8bfe1dd402901fda685150b35b569f763a6b2fb7f95fcd4fc3d9b0f9fbdb8501"
+    },
+    {
+      "path": "learner/gate/no_code.py",
+      "sha256": "06186286d2e09722dc38ec835df4bb0c16db538a8d263dbb76a5034b25e40897"
+    },
+    {
+      "path": "learner/gate/no_code_checklist.py",
+      "sha256": "07bf04e3d5b8941e262ea6d0488b3b3f71f12ff4aabf5360941fb9b73465ba04"
+    },
+    {
+      "path": "learner/gate/pipeline_evaluator.py",
+      "sha256": "c929aa1448c6e524ec800561e48b9034adc25917c887a4dc7c930932a3fbfe60"
+    },
+    {
+      "path": "learner/gate/relay_evaluator.py",
+      "sha256": "eecd885d3f8f9892dc5c32172298282e13926b963bac0e2375384e800937fcf5"
+    },
+    {
+      "path": "learner/gate/river_delta_evaluator.py",
+      "sha256": "644afb5ce2352a0781f2f4e8564606a7785ac5a9d9cbec37c384dfca921b0578"
+    },
+    {
+      "path": "learner/gate/security.py",
+      "sha256": "64d2e85cede2dd1727b2af5d8c4739223ed3db88aebd43501dcb146ad823e738"
+    },
+    {
+      "path": "learner/gate/standards.py",
+      "sha256": "604462cef530acc1c3068e139b426d06e6a154114a99ac81157a347734778d8f"
+    },
+    {
+      "path": "learner/gate/state.py",
+      "sha256": "303b63217e37532032a76c838d8e75953b4663d65dc1ac6c0ea90b82b998a640"
+    },
+    {
+      "path": "learner/gate/state_transitions.py",
+      "sha256": "8903b0ed1c23531db1d17f79925ad2486531b0aeaf3908fb6df174ff379c6248"
+    },
+    {
+      "path": "learner/gate/task_queue_evaluator.py",
+      "sha256": "28a155581af24d6e28505e9c23180872d08f4d877c03d5801e825ade4e45bf65"
+    },
+    {
+      "path": "learner/gate/teaching_game_bridge.py",
+      "sha256": "964c680fd61832353c9e0bf1c7557c556bd40252432835330bb7ac47ca20c92a"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_activation_surfaces.test.mjs",
+      "sha256": "58096960ee152cb898cc6b5d2c3817e84540f68d9695ba5c1817ad6e889a2d19"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_collector_edge_semantics.test.mjs",
+      "sha256": "ef7b9c8b91810a473704e5f474edabb895013e38c2d5bf722cd5537b7df82f54"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_collector_netlify.test.mjs",
+      "sha256": "dbc09a9306846fc0f847f6beab99b6fca3d6e366a06f25ee473f7f121147d11b"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_collector_packaging.test.mjs",
+      "sha256": "2e8a479281ba8d197ddc200d1881aa528b738a14c124b975f68b2d48b3b7b236"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_collector_v2.test.mjs",
+      "sha256": "f721ccf0624203b168161d441a7d126d64ed6c8aff907c7e74677fc3448b8cc0"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_collector_v3.test.mjs",
+      "sha256": "45a3eeb544272b27fc3268e5b6824371e360a010d5d0a109c4ce4d9f463cb2a0"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_collector_v4.test.mjs",
+      "sha256": "bb80ec68d59733d7df004eec4082b38fa3f63384af6bcf81145320bde19ac495"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_funnel_aggregation.test.mjs",
+      "sha256": "ea38d6ed74672ea2b18ca4b916e7fcd19503b7934b1bb8cc4e229034d1d8141f"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_funnel_aggregation_v2.test.mjs",
+      "sha256": "a1a8b712e21c14c2c708f1fbd5427bcf46fbce861dec676238f14c06ec0cc67d"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_funnel_aggregation_v4.test.mjs",
+      "sha256": "fee9cb9f8cc7337b482f89a16b753c502b03c36b077329f136cdcb5d28c15ddc"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_funnel_surfaces_v3.test.mjs",
+      "sha256": "493ea42e889644eb8ad5062878ee10b55dddf473a8e1f2ccdbc18719c8a13bc5"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_schema_drift_monitor.test.mjs",
+      "sha256": "d671f50c1927304643873c2a21fb66cc83efa59c657abc838c88cccc66703073"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_schema_drift_monitor_v2.test.mjs",
+      "sha256": "81832c1586c26206c57f2b53c96139710451e31043431af95f2455a4aeb45acb"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_schema_drift_monitor_v3.test.mjs",
+      "sha256": "25966f0dcd2d967294ab3602a5adfc00184880e9d17cb310df6339d15f9c75a5"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_schema_drift_monitor_v4.test.mjs",
+      "sha256": "a056e4f57cbd45d759d97960628b70094e3e0851b59c5931d0b3e3c5b7b7fce6"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_vocabularies.test.mjs",
+      "sha256": "219062e813ede2f479116a86080cd70367277994b76d685aac29246915f0b59d"
+    },
+    {
+      "path": "learner/gate/tests/dojo_verification_bridge_netlify.test.mjs",
+      "sha256": "b0158b1921561e9f1e2c1436e0daed075786c985566525d680d4e3651ef8f2fc"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/drift-v2/events-2026-09-14.ndjson",
+      "sha256": "8156e88c797b38fbff8e07f5c3bcba498cb2d1f0dafdaf23c61787e7b417c76e"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/drift-v3/events-2026-09-14.ndjson",
+      "sha256": "d200c6ae6ceb618655edc3bebeadb6e3a68aa4b6f330f7ffd259b242db4b04a7"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/drift/events-2026-08-05.ndjson",
+      "sha256": "6368aecffb976dc799fc53784a861331e62ecbb31575c842243a6162cd1d4b17"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/example-funnel-report.json",
+      "sha256": "ffda2e3948b683c7356616d3c00bb3b53f1a30c09c05e2b262a942eb647f346d"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/example-funnel-report.md",
+      "sha256": "6701a4ce6a7030364113d0ff57932412cd1fcc34e5af5a6dc9fef5c3f4c59964"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/load_fixtures.d.mts",
+      "sha256": "d8b89355a0cb984473804dfc5cf406caf242e8b5c59e0a7632117f132243d762"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/load_fixtures.mjs",
+      "sha256": "bc6ffc71e6778c6d8826153e7ed27a710601be6e99c3d8c995c54a19817f4133"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic-v2/events-2026-09-14.ndjson",
+      "sha256": "bc4dab189430c2b9691a470913e15eaad309a0f89cf81948e48dd03d5c07d6c1"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic-v3/events-2026-09-14.ndjson",
+      "sha256": "0ade762461e2520f49839441ba625c674ced8f4e89907043b86aa5ffc27d5470"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic-v4/events-2026-09-16.ndjson",
+      "sha256": "c749d29688e31a708e2dd58bea7272a02db63ee9aaef5a4dd99eac0791e830af"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-13.ndjson",
+      "sha256": "3a9b62556992c8a704f3fe44fdd46321ed7ad159a520e0a449799f6fe3a29535"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-14.ndjson",
+      "sha256": "6226575197e63d71d09bfe231884614393316f613e0bdd69799ac5c406c7229f"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-15.ndjson",
+      "sha256": "cb039195ea1a2f2f51b6f3ae6a2bfa5cb8cd0c6a6794c5324467106d48ec37a7"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-16.ndjson",
+      "sha256": "5b22dd2bf5a8c7879095bbac46c4f14654671c31c2c9ad86878eab2bd00e9337"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-17.ndjson",
+      "sha256": "37db671ec2c60e4e68d6797e05bc5b136d858ffeb3191585d2526db99750f4d3"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-18.ndjson",
+      "sha256": "d075cf05323df31247944b413cfcdfc83e52461c19fd248c83a426dbb2e99f5b"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-21.ndjson",
+      "sha256": "623549191c0d34720040726949418abbb3c6b4ed2ed499141f003fd14044c1d3"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-25.ndjson",
+      "sha256": "fbe785fced0d8813107c201ac4a9044956ad18b005dff571d34665b6d797f007"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-04.ndjson",
+      "sha256": "564c76ab3cebb689c52ed554a12037e8b09ea3142787cc9533b34977e746de1f"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-08.ndjson",
+      "sha256": "528c165faf5228d569393807f6387797acb3ae605ab32becaf57c10e95ac7d5c"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-10.ndjson",
+      "sha256": "18e148a16312afbf1830b6f7b214c74b10d4c3d4af0eb98adfc5a3098d92ca57"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-11.ndjson",
+      "sha256": "a5667740622d258b914aed3eff14fb263c146cd5c8bddbd73d6dbae1ff2002d5"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-12.ndjson",
+      "sha256": "6817107e70a897c3b8ed279eb52ac6a5da2f0ec0a68d79e341b0d7a3be0461bc"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-20.ndjson",
+      "sha256": "c6e31c8b975ffda27ec8f852b3ae9af6fb0db4fe972c6bdeff5402b2711f216a"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-24.ndjson",
+      "sha256": "beddbd3ff568e4c86bffeb66ff867d6ca5f45cdb023541c28e1c50ac14be3deb"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-25.ndjson",
+      "sha256": "2bc6580f78170b13e015227f78ca15c59c36757ffde67c2b2d945c151395ab94"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-26.ndjson",
+      "sha256": "7d31017448ba33bcf44e681d048af1dad556aee9843c425cf5ed9d51864260f3"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-27.ndjson",
+      "sha256": "acdd1035a2b2477b2a9f8c1f7b8baaa2c7375575ccfd744918a539094cf3c2e6"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-28.ndjson",
+      "sha256": "5995aff8a3a6ea3f6fa4ee9eb95bf213307c62ab902f011a6c4b2b1b23a6252d"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-31.ndjson",
+      "sha256": "ce8d5106b04b09b563466df3e4f8cea38fd679583e8e47c74805af9f1937adc3"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-09-02.ndjson",
+      "sha256": "4756943fcd0c4b74a95c661291de41abf3c4624f850cf9420f68e4970ce6afe6"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-09-08.ndjson",
+      "sha256": "76c060c2e5cd631a1b1dea91f586fa9007454585f4cb8a1897818bdcbea3c78a"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-09-09.ndjson",
+      "sha256": "7ef41a3a4679e955bfbcdd2a7c197157afaa769fef322c043de145eea485b5a7"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-09-11.ndjson",
+      "sha256": "78364f0aa5d89125a7b9b0159a816e0af650d7277b7c6fbf31b9f008192587af"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-09-17.ndjson",
+      "sha256": "337780a7f249e43f796f03ea17282ebf5ae1afa4302e5fdef6853f216090b498"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/literacy_producer_payloads.json",
+      "sha256": "23d3a4f8348f6ecdde6ddd9cbcebd11c1fe2bed883f189db958fe0ac7fa3d082"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/teaching_game_producer_payloads.json",
+      "sha256": "b309ad9bf4800a7ac2a1f48ca725d6065850a852d525c9cf36b542a03e8cc6fb"
+    },
+    {
+      "path": "learner/gate/tests/literacy_verifier_records.py",
+      "sha256": "59867766093bc70590bfc8707f9512ce43d5ebdedfa7e222212102d1afa55f72"
+    },
+    {
+      "path": "learner/gate/tests/literacy_verify_netlify.test.mjs",
+      "sha256": "1265169ebd09de19498f5066257763ab714399eb4f670cc73318bd4e0983ed9a"
+    },
+    {
+      "path": "learner/gate/tests/teaching_game_bridge_records.py",
+      "sha256": "b7e7f09ee40d321093fe579a3523a8e8e655e9b6b9ba23b50bcaa0ebb6d23acd"
+    },
+    {
+      "path": "learner/gate/tests/test_air_traffic_evaluator.py",
+      "sha256": "1de26219f0866c4e73aef2f10f222f82606605ede204c895eedc2a290d6f2469"
+    },
+    {
+      "path": "learner/gate/tests/test_breaker_grid_evaluator.py",
+      "sha256": "4859e0b77fa029ca0bfe8207392b64c1bc7685619573e483a0b84ad4c1ada3c2"
+    },
+    {
+      "path": "learner/gate/tests/test_checkpoint_evaluator.py",
+      "sha256": "d4dd7515aec19e769190bff0617d6ad719f198ff8763750cc52660a3f90eb3d9"
+    },
+    {
+      "path": "learner/gate/tests/test_docking_evaluator.py",
+      "sha256": "bbfbaec87246bc97de254a67d09e9d701746e453dafad9a97afef7e333d8236c"
+    },
+    {
+      "path": "learner/gate/tests/test_gate.py",
+      "sha256": "31c138206f811b1e0bd50eabbaaab8b4c8f1962b41887e53d7c510218bb9ca44"
+    },
+    {
+      "path": "learner/gate/tests/test_gate_game_coverage.py",
+      "sha256": "f4e54dd283ad0765e66a80e00eb39ce911acd7d434c461958be5d7e45250ea64"
+    },
+    {
+      "path": "learner/gate/tests/test_hash_ring_evaluator.py",
+      "sha256": "5e3d865aed2d649d30ba150e31cdc469097ea43de6cd10d01aea44d12e3628ef"
+    },
+    {
+      "path": "learner/gate/tests/test_isolated_bridges.py",
+      "sha256": "b4c9d0be5a8b5189297bd3a640c1343489db767b9263133c8cd7579b25423aaa"
+    },
+    {
+      "path": "learner/gate/tests/test_literacy_judgment.py",
+      "sha256": "b6865fa816bc196b79fc7a6f6258cbfee07550deef981d47cd31d94d1946130e"
+    },
+    {
+      "path": "learner/gate/tests/test_literacy_verifier.py",
+      "sha256": "d03edaa06e85b14c4ff01337a34f21aa3e19cb81b2aa62560867a1066b836a97"
+    },
+    {
+      "path": "learner/gate/tests/test_literacy_verifier_producer_contract.py",
+      "sha256": "7758e6801e125ee25aea6ccf6e87b6ca47da20bf060e0ab81aa698067fbfb523"
+    },
+    {
+      "path": "learner/gate/tests/test_literacy_verifier_receipts.py",
+      "sha256": "ad31531fb9d852b613d95afbfa956ff4f7ed4312de4ddd29ca43d236160e92f7"
+    },
+    {
+      "path": "learner/gate/tests/test_manifest_atomic.py",
+      "sha256": "cfbadbd1e747b3c6673081758e9be4fa534d99d2df0d2610fc464da787a7a8c9"
+    },
+    {
+      "path": "learner/gate/tests/test_metric_lint.py",
+      "sha256": "1cf2de709440f71fecc2f2a973774856fd79a155f8be47776893d2e860f84835"
+    },
+    {
+      "path": "learner/gate/tests/test_mission_control_evaluator.py",
+      "sha256": "4b56f795b8fab1433bae451d989c8c1108ef71561d019a7f29c2204419cef9b2"
+    },
+    {
+      "path": "learner/gate/tests/test_no_code_checklist.py",
+      "sha256": "7e2a9d7751a43b4b3080351d0ac3a293471ea8f01e446965ab1d3ef08dce490a"
+    },
+    {
+      "path": "learner/gate/tests/test_no_code_gate.py",
+      "sha256": "348d82cb84dfaa533110794589b3409e6df814ccbb9c41e2647bc12a0594a5e9"
+    },
+    {
+      "path": "learner/gate/tests/test_pipeline_evaluator.py",
+      "sha256": "f804d1ca9da24412ab1feb6dbefdaa8fee45240bdc76d115da1427c63f7dd45a"
+    },
+    {
+      "path": "learner/gate/tests/test_relay_evaluator.py",
+      "sha256": "3281a1d12993f578f15a3a36b634afdc58b0c3d42d733263be4bbcf551ffa932"
+    },
+    {
+      "path": "learner/gate/tests/test_river_delta_evaluator.py",
+      "sha256": "a03362a20a8860d9d298f7349a3b4b4bbc52988ed6c90c6ba73abac15dbc850c"
+    },
+    {
+      "path": "learner/gate/tests/test_standards.py",
+      "sha256": "25dd53628da07e14b442222c5d67905dadacb7de55c05426f04f5333d641877a"
+    },
+    {
+      "path": "learner/gate/tests/test_task_queue_evaluator.py",
+      "sha256": "068e07fafe7a275d844e27bca3950d7d143c2752f83184b193db4c16393013cc"
+    },
+    {
+      "path": "learner/gate/tests/test_teaching_game_bridge.py",
+      "sha256": "a5aaedc7f47ec63e1f338306c702e5d47774c261e0226672e849f5fdd0820955"
+    },
+    {
+      "path": "learner/gate/tests/test_teaching_game_bridge_rejections.py",
+      "sha256": "22244990c6e103dd05766b024b53f345f88b1a3d5b0a0a6e5fc5416e60d4fc4e"
+    },
+    {
+      "path": "learner/gate/tests/test_timeline_evaluator.py",
+      "sha256": "cc2ff42ecb5f42fdf18b12ab047716df1d18ce4007003c8ff301cc2fd54657ca"
+    },
+    {
+      "path": "learner/gate/tests/test_verifier_corpus_drift.py",
+      "sha256": "b4e644fb715737243c55b990432d7ed24c7985f376852fa15d990f45794a6e2e"
+    },
+    {
+      "path": "learner/gate/tests/test_wormhole_evaluator.py",
+      "sha256": "74f6619f1aaf3e01f32ea6176e6970a6d530355db76e6d33ff8690e7a362d4b6"
+    },
+    {
+      "path": "learner/gate/timeline_evaluator.py",
+      "sha256": "0a7883b79a919ba993eb2b872e89810b16edd0d11c15b7d8dcf9074b541945b8"
+    },
+    {
+      "path": "learner/gate/timestamps.py",
+      "sha256": "f435b6be5e498f3b6bc98930c6d60be99aa2adf0405dc54885984da4ea512cac"
+    },
+    {
+      "path": "learner/gate/verifier.py",
+      "sha256": "9be5d56c845a21147fcc71d4eb213e9927cc9a93ba794845226208996588cb5a"
+    },
+    {
+      "path": "learner/gate/verifier_receipt.py",
+      "sha256": "3a5d9145dc919d6ed7ace7494fccf3fcddcb4ae19461c75b8ef47f7b607a1737"
+    },
+    {
+      "path": "learner/gate/warehouse_evaluator.py",
+      "sha256": "aef6b0834504c35bc2ea3b1e76e7665d944c89d91bcdc928b563f1910f7ff605"
+    },
+    {
+      "path": "learner/gate/wormhole_evaluator.py",
+      "sha256": "3c23959525273f3d49a7a19f9d4f9e306a46133cf53ec3219f4ae2f05e2e51af"
+    },
+    {
+      "path": "learner/substrate/AGENTS.md",
+      "sha256": "84c4457bfabe6a379359b2f8b49389883964d8a42a5863e92c2a1864cbb9abf4"
+    },
+    {
+      "path": "learner/substrate/README.md",
+      "sha256": "03d62ff0f57e29efccd0478308f078b3a4a4872f9b105df90211673dd2fd00ca"
+    },
+    {
+      "path": "learner/substrate/__init__.py",
+      "sha256": "067fc498a2d5cd6b6dece6a0175ec445a4dc548e49386ad607f6c0e7c7812f40"
+    },
+    {
+      "path": "learner/substrate/__main__.py",
+      "sha256": "79e210c48675e70807e732d4bde00ed0cd4a3549b3ab98c613adee91d869f553"
+    },
+    {
+      "path": "learner/substrate/adapters/__init__.py",
+      "sha256": "db64e5eaa7e5dd87476ea80ecf810dfebc3b6feb4ee6b76f69b7423fe8f44526"
+    },
+    {
+      "path": "learner/substrate/adapters/dojotoday.py",
+      "sha256": "0efbacf906f636e55499faaefd78367d4accd6e22b8fab2bc6b5b7e623b51a80"
+    },
+    {
+      "path": "learner/substrate/adapters/mavis.py",
+      "sha256": "d776dd20a6bbdc4cb224bae64dcb6164f4a68df6e3f1995d072c72c83c3942c3"
+    },
+    {
+      "path": "learner/substrate/adapters/whiteboard.py",
+      "sha256": "45b81f4eb2fc835b26943d5d89a3af51015433cf60d38acf065846ff2fd9b574"
+    },
+    {
+      "path": "learner/substrate/catalog.py",
+      "sha256": "6455b92eaebc98a4240c140a804948d083df1a4b5dbacfb4a86c62bb1ab72c52"
+    },
+    {
+      "path": "learner/substrate/dashboard_data.py",
+      "sha256": "94a834829ba34ad0c177499fcc85f51b1c89378bc6d060111c383c216379f64e"
+    },
+    {
+      "path": "learner/substrate/dashboard_snapshot.py",
+      "sha256": "6c819806f0eec7cd12e2bea514eeb99b7128e1ba4d901c1312ecb83749f3dd0a"
+    },
+    {
+      "path": "learner/substrate/gate.py",
+      "sha256": "19022c06fabafcb1768ce5d9a16577bfa778178eb61f24bf16cc9896daef5acd"
+    },
+    {
+      "path": "learner/substrate/generated_views.py",
+      "sha256": "2f6c5539807b30d34e7e13a995ee2a1e8d1f100857f95a08363eb340e787a816"
+    },
+    {
+      "path": "learner/substrate/interface.md",
+      "sha256": "05a494203550dcd32ce3c7e959fd21d787058b5a553ba111315c54cc20c6def1"
+    },
+    {
+      "path": "learner/substrate/judgments.py",
+      "sha256": "07321efbce8a9bd0c5d3e771af5d14a283fa680a58a38fc8c821cb8a76eb9fbe"
+    },
+    {
+      "path": "learner/substrate/mission_catalog.py",
+      "sha256": "7ca414d6fd5a69b960d6e25c6815bd378335c26db82c91e52be64a259216ae57"
+    },
+    {
+      "path": "learner/substrate/mission_catalog_bindings.py",
+      "sha256": "f0f390dee94fa971dc5d44b5dff6fa89118d2d65f37478dc757639a0674dc3b0"
+    },
+    {
+      "path": "learner/substrate/mission_catalog_guided_practice.py",
+      "sha256": "847814e6c539864f74e7a0978086380504b6575ecf2e9adc44ac26fed0bb2843"
+    },
+    {
+      "path": "learner/substrate/mission_catalog_rules.py",
+      "sha256": "5bcd82553548b1e78dfc2287dcc1e925df543df23659049bbab79a22d542f16f"
+    },
+    {
+      "path": "learner/substrate/mission_catalog_voxel.py",
+      "sha256": "633608d50afdfb21ca1550c8608088477a810af00982586b703601199296b4c6"
+    },
+    {
+      "path": "learner/substrate/prediction_store.py",
+      "sha256": "abedc4c4999f589d6edf54d76b6749abbb6f636f43ce57b4916e2ea19fc85874"
+    },
+    {
+      "path": "learner/substrate/predictions_summary.py",
+      "sha256": "0a25e488a1271d0d5ca1da08b5f7cd49b908dd8fd9797aef00516de7b6d18262"
+    },
+    {
+      "path": "learner/substrate/projection_clock.py",
+      "sha256": "ca71c00b340d08f6bf6f94214d0ebc18e882778782470424a3e2878cb8762a79"
+    },
+    {
+      "path": "learner/substrate/projection_clock.yaml",
+      "sha256": "aa351d6130ea38d216934d89225f4fd5c360197035121ccc57c91b616deb75a4"
+    },
+    {
+      "path": "learner/substrate/projections.py",
+      "sha256": "5c6a87ada6046bc1b1b092a0b3bcad89e1dc1baa1e53df725172101a7d74ad80"
+    },
+    {
+      "path": "learner/substrate/scheduling.py",
+      "sha256": "55ecb22eaa44a590248c44b8b703c642f024049e8bfa3372c1af61b0d480c9dc"
+    },
+    {
+      "path": "learner/substrate/schema.yaml",
+      "sha256": "03468fba0926e584aab92e33da54b7ee92eaa1591c916084041a544bd0d2dcbd"
+    },
+    {
+      "path": "learner/substrate/snapshot_sources.py",
+      "sha256": "2c7d2a90aba99f6714065394716d02734947ab59b4a6ca9043603bb5f0680f2c"
+    },
+    {
+      "path": "learner/substrate/tests/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "learner/substrate/tests/fixtures/judgments_golden.json",
+      "sha256": "6fea96e48b8020de3f015554328c16c8f3457abf0cc9677bc6c0ce1f68d4e8ae"
+    },
+    {
+      "path": "learner/substrate/tests/judgments_fixture.py",
+      "sha256": "61f08c6be131b508522aaef809004c3dda2cf90f87638113dfe2d3efc596492b"
+    },
+    {
+      "path": "learner/substrate/tests/mission_catalog_fixture.py",
+      "sha256": "1f43f95a5b0ac2dca41601e16ca2b8a42f12355b4024c1201c7aa9f0995635da"
+    },
+    {
+      "path": "learner/substrate/tests/mission_catalog_project_catalog_fixture.py",
+      "sha256": "69b4ab2a5a0adb7f3a603ace6ce6ceab25caa7bca40533d4e183b9894d9e88d3"
+    },
+    {
+      "path": "learner/substrate/tests/test_catalog_level0.py",
+      "sha256": "b3a1105bb6ceddad6e4ce64585256f224b9fd4a01ea20c8e2d0733e303e9abc1"
+    },
+    {
+      "path": "learner/substrate/tests/test_catalog_projections.py",
+      "sha256": "2cc01bf296828789844e4784e2e6f0c2db70924aec6162a56a0a816660a77a4f"
+    },
+    {
+      "path": "learner/substrate/tests/test_codexdojo_os_snapshot.py",
+      "sha256": "295017e6688915036c30988c54914db58fd66f681a4bcaf0a112dfe70aeead6c"
+    },
+    {
+      "path": "learner/substrate/tests/test_dashboard_data.py",
+      "sha256": "3b3576a6bb622894ae077524da84e145f1525623a898f7746e458cafbe4d5744"
+    },
+    {
+      "path": "learner/substrate/tests/test_dojotoday.py",
+      "sha256": "6b32950dad50499290824d15974c99e3422c6d44dd9dc159c6d8f677f020a342"
+    },
+    {
+      "path": "learner/substrate/tests/test_engine_topology.py",
+      "sha256": "b9ebcf7783aac4eb9dd53b327dd7d89078ef24ce1d7699a73c23867f46b67acd"
+    },
+    {
+      "path": "learner/substrate/tests/test_gate.py",
+      "sha256": "6cc795e9a77960a9bc02a8a2409f95519dfce17cc1e8f0ca34f3274b5c292e25"
+    },
+    {
+      "path": "learner/substrate/tests/test_gate_evidence_class.py",
+      "sha256": "eb0a4ca235a58cc183f73afdeaab4e45c2530ec96ca1373620684ada1c3a4103"
+    },
+    {
+      "path": "learner/substrate/tests/test_generated_views.py",
+      "sha256": "81e3772fcc955d9983e5912a279641012333c31b6e970e821a132502271741d1"
+    },
+    {
+      "path": "learner/substrate/tests/test_judgments.py",
+      "sha256": "a74550741f631117d31a9a7d4256b5bc3b9803ab53739869a7797cbaebf5c677"
+    },
+    {
+      "path": "learner/substrate/tests/test_mavis_adapter.py",
+      "sha256": "f784bfc856ed38a38e911ee3dce55d0ec35ea9d540f4170fdfa69bbd0d9f3eb2"
+    },
+    {
+      "path": "learner/substrate/tests/test_mission_catalog_graph_rules.py",
+      "sha256": "643391a8fbb624e3265d87ba89f6ad0977088cb670852d4ef685d3fca68b9cc6"
+    },
+    {
+      "path": "learner/substrate/tests/test_mission_catalog_guided_practice.py",
+      "sha256": "e4934b9f39e3a874ba5f864476ec9b1991a15ef9b9ad8cd4910d426f2b5a2afb"
+    },
+    {
+      "path": "learner/substrate/tests/test_mission_catalog_normalization.py",
+      "sha256": "1dd482ad37799ba7a032f5ce88e35263677bff8ccb3135373c6bb1689ebf4239"
+    },
+    {
+      "path": "learner/substrate/tests/test_mission_catalog_release_order.py",
+      "sha256": "4c59082603afbb6a08060e1423404a759bd52c5e782a9e261fe0726c038e2550"
+    },
+    {
+      "path": "learner/substrate/tests/test_prediction_store.py",
+      "sha256": "5d47026e1e8d06918e5134ca1fc78acbdda5c329d5d2f77f051cf3459bd1f35e"
+    },
+    {
+      "path": "learner/substrate/tests/test_predictions_summary.py",
+      "sha256": "db6b6b4903e31e91d7238015e0823c58bcb147f36c48d40ab195db99d854bb3a"
+    },
+    {
+      "path": "learner/substrate/tests/test_projection_clock.py",
+      "sha256": "0aa35a8ec68ed12114844111e576794089d31a534e9586cdab1d49911e8f9d89"
+    },
+    {
+      "path": "learner/substrate/tests/test_save_canonical.py",
+      "sha256": "50a128e889badee70ba0f0bd0de66c90876ce3a62f3d61062be3557b4cbc8ad9"
+    },
+    {
+      "path": "learner/substrate/tests/test_substrate.py",
+      "sha256": "1ffbc50c2f0df45063146adf29186aaee21192cbae50bd6db1d521649092d66b"
+    },
+    {
+      "path": "learner/substrate/tests/test_substrate_cli.py",
+      "sha256": "71fdeff16a4a8143a67e53051f2459b2e0f29536514840b2ebd9f2eef1ad4c16"
+    },
+    {
+      "path": "learner/substrate/tests/test_ts_render.py",
+      "sha256": "5e8336469f1e02a0cd48f5a180fc7dd900e762bf6322a1fbec25254cf33cf9e0"
+    },
+    {
+      "path": "learner/substrate/tests/test_voxel_slice.py",
+      "sha256": "e70ae1c39854097b0b3f42cb630b25a6cda6fcefb8740b4f64d843816a2d8024"
+    },
+    {
+      "path": "learner/substrate/ts_render.py",
+      "sha256": "605b0cd50226d8de8027a66ea0f3b52fbc457cc1128e6f011ac89a19c4688b09"
+    }
+  ]
+}

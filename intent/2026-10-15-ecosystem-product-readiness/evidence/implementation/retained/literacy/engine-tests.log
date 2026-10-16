@@ -1,0 +1,481 @@
+
+> literacydojo@0.1.0 pretest
+> npm run gen:content
+
+
+> literacydojo@0.1.0 gen:content
+> cd ../.. && python3 curriculum/ai-literacy/tools/validate.py --compile engines/literacyDojo/src/data/generated --compile-competency engines/literacyDojo/src/data/generated
+
+OK: 32 lição(ões) ready validadas: 23 IA na Prática, 9 Dev; 0 planned (sem arquivo exigido).
+Read model gerado: engines/literacyDojo/src/data/generated/lessons.ts
+Competency map gerado: engines/literacyDojo/src/data/generated/competency-map.ts
+
+> literacydojo@0.1.0 test
+> NODE_ENV=development vitest run
+
+
+ RUN  v3.2.7 /Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo
+
+ ✓ tests/domain/lessonSession.test.ts (12 tests) 5ms
+ ✓ tests/domain/contentBumpV3toV4RealPath.test.ts (3 tests) 27ms
+stdout | tests/application/useCases.test.ts > startLesson > lição disponível vira in_progress
+[analytics] lesson_started { lessonId: 'l02', lessonVersion: 4 }
+
+ ✓ tests/domain/checkpoints.test.ts (17 tests) 21ms
+stdout | tests/application/useCases.test.ts > submitActivityAttempt > tentativa errada: evidência válida emitida, sem XP, skill registrada, streak iniciada
+[analytics] activity_attempted { lessonId: 'l02', activityType: 'output_comparison', passed: false }
+
+ ✓ tests/domain/progress.test.ts (16 tests) 17ms
+stdout | tests/application/useCases.test.ts > submitActivityAttempt > tentativa certa: XP, pass, revisão agendada e evento activity_passed
+[analytics] activity_attempted { lessonId: 'l02', activityType: 'output_comparison', passed: false }
+
+stdout | tests/application/useCases.test.ts > submitActivityAttempt > tentativa certa: XP, pass, revisão agendada e evento activity_passed
+[analytics] activity_attempted { lessonId: 'l02', activityType: 'output_comparison', passed: true }
+
+stdout | tests/application/useCases.test.ts > submitActivityAttempt > prompt builder persiste os valores por campo para verificação independente
+[analytics] activity_attempted { lessonId: 'l05', activityType: 'prompt_builder', passed: true }
+
+stdout | tests/application/useCases.test.ts > submitActivityAttempt > feedback determinístico vem do conteúdo (onFailure + perCheck)
+[analytics] activity_attempted { lessonId: 'l02', activityType: 'output_comparison', passed: false }
+
+stdout | tests/application/useCases.test.ts > completeLesson > acerto de primeira no Mapa Inicial libera a rota intermediária
+[analytics] lesson_started { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/application/useCases.test.ts > completeLesson > acerto de primeira no Mapa Inicial libera a rota intermediária
+[analytics] activity_attempted { lessonId: 'l02', activityType: 'output_comparison', passed: true }
+
+stdout | tests/application/useCases.test.ts > completeLesson > acerto de primeira no Mapa Inicial libera a rota intermediária
+[analytics] lesson_completed { lessonId: 'l02', lessonVersion: 4, score: 1, durationSeconds: 180 }
+
+stdout | tests/application/useCases.test.ts > completeLesson > dica ou nova tentativa no Mapa Inicial libera a rota guiada
+[analytics] lesson_started { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/application/useCases.test.ts > completeLesson > dica ou nova tentativa no Mapa Inicial libera a rota guiada
+[analytics] lesson_completed { lessonId: 'l02', lessonVersion: 4, score: 1 }
+
+stdout | tests/application/useCases.test.ts > completeLesson > erro na primeira tentativa também libera a rota guiada
+[analytics] lesson_started { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/application/useCases.test.ts > completeLesson > erro na primeira tentativa também libera a rota guiada
+[analytics] activity_attempted { lessonId: 'l02', activityType: 'output_comparison', passed: false }
+
+stdout | tests/application/useCases.test.ts > completeLesson > erro na primeira tentativa também libera a rota guiada
+[analytics] activity_attempted { lessonId: 'l02', activityType: 'output_comparison', passed: true }
+
+stdout | tests/application/useCases.test.ts > completeLesson > erro na primeira tentativa também libera a rota guiada
+[analytics] lesson_completed { lessonId: 'l02', lessonVersion: 4, score: 1 }
+
+ ✓ tests/application/useCases.test.ts (47 tests) 64ms
+stdout | tests/app/retrofitNotice.test.tsx > aviso de retrofit no app (S1/S2/item D; onda C1 = l15–l17 hospedadas) > app avulso (trilha ia_pratica): card de revisão renderiza, mas S1 NÃO — a onda C1 é dev-only
+[analytics] entry_viewed { entry: 'home' }
+
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > onboarding acolhe, coleta contexto estruturado e abre o Mapa Inicial
+[analytics] entry_viewed { entry: 'onboarding' }
+
+stdout | tests/app/screenRefocusAnnounce.test.tsx > AID-1755/T3: refocus/anúncio em Progress/Checkpoint/ErrorRecovery > Progress: h1 focável (tabIndex=-1) e focado ao entrar na tela — com o efeito genérico de rota do App desligado
+[analytics] entry_viewed { entry: 'home' }
+
+stdout | tests/app/firstTouchIntro.test.tsx > F1 R1/P1+P2: intro declara o 1º toque (mapa fechado, Anexo A verbatim) > intro de l02 com 1ª atividade choice exibe lead-in + frase do tipo, antes do CTA
+[analytics] entry_viewed { entry: 'home' }
+
+stdout | tests/app/firstTouchIntro.test.tsx > F1 R1/P1+P2: intro declara o 1º toque (mapa fechado, Anexo A verbatim) > intro de l02 com 1ª atividade choice exibe lead-in + frase do tipo, antes do CTA
+[analytics] lesson_started { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/app/retrofitNotice.test.tsx > aviso de retrofit no app (S1/S2/item D; onda C1 = l15–l17 hospedadas) > app avulso (trilha ia_pratica): card de revisão renderiza, mas S1 NÃO — a onda C1 é dev-only
+[analytics] review_started { lessonId: 'l01', intervalDays: 1, stage: 0 }
+
+stdout | tests/app/retrofitNotice.test.tsx > aviso de retrofit no app (S1/S2/item D; onda C1 = l15–l17 hospedadas) > app avulso (trilha ia_pratica): card de revisão renderiza, mas S1 NÃO — a onda C1 é dev-only
+[analytics] lesson_brief_viewed { lessonId: 'l01', lessonVersion: 2 }
+
+stdout | tests/app/firstTouchIntro.test.tsx > F1 R1/P1+P2: intro declara o 1º toque (mapa fechado, Anexo A verbatim) > intro de l02 com 1ª atividade choice exibe lead-in + frase do tipo, antes do CTA
+[analytics] lesson_brief_viewed { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/app/firstTouchIntro.test.tsx > F1 R1/P1+P2: intro declara o 1º toque (mapa fechado, Anexo A verbatim) > intro de l02 com 1ª atividade sort exibe lead-in + frase do tipo, antes do CTA
+[analytics] entry_viewed { entry: 'home' }
+
+stdout | tests/app/firstTouchIntro.test.tsx > F1 R1/P1+P2: intro declara o 1º toque (mapa fechado, Anexo A verbatim) > intro de l02 com 1ª atividade sort exibe lead-in + frase do tipo, antes do CTA
+[analytics] lesson_started { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/app/firstTouchIntro.test.tsx > F1 R1/P1+P2: intro declara o 1º toque (mapa fechado, Anexo A verbatim) > intro de l02 com 1ª atividade sort exibe lead-in + frase do tipo, antes do CTA
+[analytics] lesson_brief_viewed { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/app/firstTouchIntro.test.tsx > F1 R1/P1+P2: intro declara o 1º toque (mapa fechado, Anexo A verbatim) > intro de l02 com 1ª atividade missing_context exibe lead-in + frase do tipo, antes do CTA
+[analytics] entry_viewed { entry: 'home' }
+
+stdout | tests/app/firstTouchIntro.test.tsx > F1 R1/P1+P2: intro declara o 1º toque (mapa fechado, Anexo A verbatim) > intro de l02 com 1ª atividade missing_context exibe lead-in + frase do tipo, antes do CTA
+[analytics] lesson_started { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/app/screenRefocusAnnounce.test.tsx > AID-1755/T3: refocus/anúncio em Progress/Checkpoint/ErrorRecovery > Checkpoint: transição de atividade foca o h1 e atualiza o status 'Atividade N de M'
+[analytics] entry_viewed { entry: 'home' }
+
+stdout | tests/app/firstTouchIntro.test.tsx > F1 R1/P1+P2: intro declara o 1º toque (mapa fechado, Anexo A verbatim) > intro de l02 com 1ª atividade missing_context exibe lead-in + frase do tipo, antes do CTA
+[analytics] lesson_brief_viewed { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/app/firstTouchIntro.test.tsx > F1 R1/P1+P2: intro declara o 1º toque (mapa fechado, Anexo A verbatim) > intro de l02 com 1ª atividade safety_classification exibe lead-in + frase do tipo, antes do CTA
+[analytics] entry_viewed { entry: 'home' }
+
+stdout | tests/app/retrofitNotice.test.tsx > aviso de retrofit no app (S1/S2/item D; onda C1 = l15–l17 hospedadas) > missão hospedada l15 (missionVersion 3): S2 na intro, ack estruturado, idempotente por bump
+[analytics] lesson_brief_viewed { lessonId: 'l15', lessonVersion: 3 }
+
+stdout | tests/app/firstTouchIntro.test.tsx > F1 R1/P1+P2: intro declara o 1º toque (mapa fechado, Anexo A verbatim) > intro de l02 com 1ª atividade safety_classification exibe lead-in + frase do tipo, antes do CTA
+[analytics] lesson_started { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/app/retrofitNotice.test.tsx > aviso de retrofit no app (S1/S2/item D; onda C1 = l15–l17 hospedadas) > missão hospedada l15 (missionVersion 3): S2 na intro, ack estruturado, idempotente por bump
+[analytics] lesson_brief_viewed { lessonId: 'l15', lessonVersion: 3 }
+
+stdout | tests/app/retrofitNotice.test.tsx > aviso de retrofit no app (S1/S2/item D; onda C1 = l15–l17 hospedadas) > learner sem lição concluída não vê aviso de retrofit
+[analytics] entry_viewed { entry: 'home' }
+
+stdout | tests/app/firstTouchIntro.test.tsx > F1 R1/P1+P2: intro declara o 1º toque (mapa fechado, Anexo A verbatim) > intro de l02 com 1ª atividade safety_classification exibe lead-in + frase do tipo, antes do CTA
+[analytics] lesson_brief_viewed { lessonId: 'l02', lessonVersion: 4 }
+
+ ✓ tests/app/retrofitNotice.test.tsx (3 tests) 443ms
+   ✓ aviso de retrofit no app (S1/S2/item D; onda C1 = l15–l17 hospedadas) > app avulso (trilha ia_pratica): card de revisão renderiza, mas S1 NÃO — a onda C1 é dev-only  353ms
+stdout | tests/app/firstTouchIntro.test.tsx > F1 R1/P1+P2: intro declara o 1º toque (mapa fechado, Anexo A verbatim) > intro de l02 com 1ª atividade prompt_builder exibe lead-in + frase do tipo, antes do CTA
+[analytics] entry_viewed { entry: 'home' }
+
+stdout | tests/app/screenRefocusAnnounce.test.tsx > AID-1755/T3: refocus/anúncio em Progress/Checkpoint/ErrorRecovery > Checkpoint: transição de atividade foca o h1 e atualiza o status 'Atividade N de M'
+[analytics] activity_attempted { lessonId: 'l01', activityType: 'sort', passed: true }
+
+stdout | tests/app/firstTouchIntro.test.tsx > F1 R1/P1+P2: intro declara o 1º toque (mapa fechado, Anexo A verbatim) > intro de l02 com 1ª atividade prompt_builder exibe lead-in + frase do tipo, antes do CTA
+[analytics] lesson_started { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/app/firstTouchIntro.test.tsx > F1 R1/P1+P2: intro declara o 1º toque (mapa fechado, Anexo A verbatim) > intro de l02 com 1ª atividade prompt_builder exibe lead-in + frase do tipo, antes do CTA
+[analytics] lesson_brief_viewed { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/app/firstTouchIntro.test.tsx > F1 R1/P1+P2: intro declara o 1º toque (mapa fechado, Anexo A verbatim) > intro de l02 com 1ª atividade output_comparison exibe lead-in + frase do tipo, antes do CTA
+[analytics] entry_viewed { entry: 'home' }
+
+stdout | tests/app/firstTouchIntro.test.tsx > F1 R1/P1+P2: intro declara o 1º toque (mapa fechado, Anexo A verbatim) > intro de l02 com 1ª atividade output_comparison exibe lead-in + frase do tipo, antes do CTA
+[analytics] lesson_started { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/app/firstTouchIntro.test.tsx > F1 R1/P1+P2: intro declara o 1º toque (mapa fechado, Anexo A verbatim) > intro de l02 com 1ª atividade output_comparison exibe lead-in + frase do tipo, antes do CTA
+[analytics] lesson_brief_viewed { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/app/firstTouchIntro.test.tsx > F1 R1/P1+P2: intro declara o 1º toque (mapa fechado, Anexo A verbatim) > intro de l02 com 1ª atividade rubric_review exibe lead-in + frase do tipo, antes do CTA
+[analytics] entry_viewed { entry: 'home' }
+
+stderr | tests/app/screenRefocusAnnounce.test.tsx > AID-1755/T3: refocus/anúncio em Progress/Checkpoint/ErrorRecovery > ErrorRecovery: h1 focado na montagem e mensagem em role=alert
+[literacydojo] progresso anterior incompatível; reiniciando do zero. Error: armazenamento local inacessível (teste)
+    at BrokenProgressRepository.load (/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/tests/app/screenRefocusAnnounce.test.tsx:40:11)
+    at loadOrSeedProgress (/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/src/app/services.ts:117:48)
+    at /Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/src/app/App.tsx:102:24
+    at /Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/src/app/App.tsx:127:5
+    at commitHookEffectListMount (/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/node_modules/react-dom/cjs/react-dom.development.js:23189:26)
+    at commitPassiveMountOnFiber (/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/node_modules/react-dom/cjs/react-dom.development.js:24970:11)
+    at commitPassiveMountEffects_complete (/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/node_modules/react-dom/cjs/react-dom.development.js:24930:9)
+    at commitPassiveMountEffects_begin (/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/node_modules/react-dom/cjs/react-dom.development.js:24917:7)
+    at commitPassiveMountEffects (/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/node_modules/react-dom/cjs/react-dom.development.js:24905:3)
+    at flushPassiveEffectsImpl (/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/node_modules/react-dom/cjs/react-dom.development.js:27078:3)
+
+stdout | tests/app/firstTouchIntro.test.tsx > F1 R1/P1+P2: intro declara o 1º toque (mapa fechado, Anexo A verbatim) > intro de l02 com 1ª atividade rubric_review exibe lead-in + frase do tipo, antes do CTA
+[analytics] lesson_started { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/app/firstTouchIntro.test.tsx > F1 R1/P1+P2: intro declara o 1º toque (mapa fechado, Anexo A verbatim) > intro de l02 com 1ª atividade rubric_review exibe lead-in + frase do tipo, antes do CTA
+[analytics] lesson_brief_viewed { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/app/firstTouchIntro.test.tsx > F1 R1/P1+P2: intro declara o 1º toque (mapa fechado, Anexo A verbatim) > modo revisão herda a mesma frase do tipo da 1ª atividade (sem bifurcação)
+[analytics] entry_viewed { entry: 'home' }
+
+ ✓ tests/app/screenRefocusAnnounce.test.tsx (3 tests) 562ms
+   ✓ AID-1755/T3: refocus/anúncio em Progress/Checkpoint/ErrorRecovery > Checkpoint: transição de atividade foca o h1 e atualiza o status 'Atividade N de M'  323ms
+stdout | tests/app/firstTouchIntro.test.tsx > F1 R1/P1+P2: intro declara o 1º toque (mapa fechado, Anexo A verbatim) > modo revisão herda a mesma frase do tipo da 1ª atividade (sem bifurcação)
+[analytics] review_started { lessonId: 'l02', intervalDays: 1, stage: 0 }
+
+stdout | tests/app/firstTouchIntro.test.tsx > F1 R1/P1+P2: intro declara o 1º toque (mapa fechado, Anexo A verbatim) > modo revisão herda a mesma frase do tipo da 1ª atividade (sem bifurcação)
+[analytics] lesson_brief_viewed { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/app/firstTouchIntro.test.tsx > F1 R1/P1+P2: intro declara o 1º toque (mapa fechado, Anexo A verbatim) > missão hospedada (adapter OS) herda o bloco pela mesma tela
+[analytics] lesson_brief_viewed { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/app/services.analytics.test.ts > createServices analytics transport selection > (a) sem VITE_ANALYTICS_ENDPOINT ⇒ zero chamadas de fetch
+[analytics] lesson_completed { lessonId: 'l02', lessonVersion: 1, score: 1 }
+
+stdout | tests/app/services.analytics.test.ts > createServices analytics transport selection > (b) VITE_ANALYTICS_ENDPOINT="" ⇒ zero rede
+[analytics] lesson_completed { lessonId: 'l02', lessonVersion: 1, score: 1 }
+
+stdout | tests/app/firstTouchIntro.test.tsx > F1 R2/P3: framing de primeiro toque somente no índice 0 > índice 0 exibe o framing no eyebrow e mantém o botão Pedir dica
+[analytics] entry_viewed { entry: 'home' }
+
+ ✓ tests/app/services.analytics.test.ts (5 tests) 8ms
+stdout | tests/app/firstTouchIntro.test.tsx > F1 R2/P3: framing de primeiro toque somente no índice 0 > índice 0 exibe o framing no eyebrow e mantém o botão Pedir dica
+[analytics] lesson_started { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/app/firstTouchIntro.test.tsx > F1 R2/P3: framing de primeiro toque somente no índice 0 > índice 0 exibe o framing no eyebrow e mantém o botão Pedir dica
+[analytics] lesson_brief_viewed { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/app/firstTouchIntro.test.tsx > F1 R2/P3: framing de primeiro toque somente no índice 0 > índice 0 exibe o framing no eyebrow e mantém o botão Pedir dica
+[analytics] activity_presented {
+  lessonId: 'l02',
+  activityType: 'output_comparison',
+  activityIndex: 0
+}
+
+stdout | tests/app/firstTouchIntro.test.tsx > F1 R2/P3: framing de primeiro toque somente no índice 0 > índice >0 não exibe o framing (eyebrow inalterado)
+[analytics] entry_viewed { entry: 'home' }
+
+stdout | tests/app/firstTouchIntro.test.tsx > F1 R2/P3: framing de primeiro toque somente no índice 0 > índice >0 não exibe o framing (eyebrow inalterado)
+[analytics] lesson_started { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/app/firstTouchIntro.test.tsx > F1 R2/P3: framing de primeiro toque somente no índice 0 > índice >0 não exibe o framing (eyebrow inalterado)
+[analytics] lesson_brief_viewed { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/app/firstTouchIntro.test.tsx > F1 R2/P3: framing de primeiro toque somente no índice 0 > índice >0 não exibe o framing (eyebrow inalterado)
+[analytics] activity_presented {
+  lessonId: 'l02',
+  activityType: 'output_comparison',
+  activityIndex: 0
+}
+
+ ✓ tests/domain/evaluation.test.ts (12 tests) 6ms
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > onboarding acolhe, coleta contexto estruturado e abre o Mapa Inicial
+[analytics] lesson_started { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > onboarding acolhe, coleta contexto estruturado e abre o Mapa Inicial
+[analytics] lesson_brief_viewed { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > usa categoria para contextualizar o Mapa Inicial e confiança baixa para oferecer apoio
+[analytics] entry_viewed { entry: 'home' }
+
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > usa categoria para contextualizar o Mapa Inicial e confiança baixa para oferecer apoio
+[analytics] lesson_started { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > usa categoria para contextualizar o Mapa Inicial e confiança baixa para oferecer apoio
+[analytics] lesson_brief_viewed { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/app/firstTouchIntro.test.tsx > F1 R2/P3: framing de primeiro toque somente no índice 0 > índice >0 não exibe o framing (eyebrow inalterado)
+[analytics] activity_attempted { lessonId: 'l02', activityType: 'output_comparison', passed: true }
+
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > mapa público limita IA na Prática ao catálogo ia_pratica (23 com l32) e mantém Dev fora do percurso
+[analytics] entry_viewed { entry: 'home' }
+
+ ✓ tests/domain/migration.test.ts (12 tests) 7ms
+ ✓ tests/host/missionExposureEvents.test.ts (7 tests) 13ms
+stdout | tests/app/firstTouchIntro.test.tsx > F1 R2/P3: framing de primeiro toque somente no índice 0 > índice >0 não exibe o framing (eyebrow inalterado)
+[analytics] activity_presented { lessonId: 'l02', activityType: 'choice', activityIndex: 1 }
+
+ ✓ tests/app/firstTouchIntro.test.tsx (12 tests) 789ms
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > lição completa: erro → dica → tentar novamente → acerto → resultado, com evidência por tentativa
+[analytics] entry_viewed { entry: 'home' }
+
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > lição completa: erro → dica → tentar novamente → acerto → resultado, com evidência por tentativa
+[analytics] lesson_started { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > lição completa: erro → dica → tentar novamente → acerto → resultado, com evidência por tentativa
+[analytics] lesson_brief_viewed { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > lição completa: erro → dica → tentar novamente → acerto → resultado, com evidência por tentativa
+[analytics] activity_presented {
+  lessonId: 'l02',
+  activityType: 'output_comparison',
+  activityIndex: 0
+}
+
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > lição completa: erro → dica → tentar novamente → acerto → resultado, com evidência por tentativa
+[analytics] activity_attempted { lessonId: 'l02', activityType: 'output_comparison', passed: false }
+
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > lição completa: erro → dica → tentar novamente → acerto → resultado, com evidência por tentativa
+[analytics] activity_attempted { lessonId: 'l02', activityType: 'output_comparison', passed: true }
+
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > lição completa: erro → dica → tentar novamente → acerto → resultado, com evidência por tentativa
+[analytics] activity_presented { lessonId: 'l02', activityType: 'choice', activityIndex: 1 }
+
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > lição completa: erro → dica → tentar novamente → acerto → resultado, com evidência por tentativa
+[analytics] activity_attempted { lessonId: 'l02', activityType: 'choice', passed: true }
+
+ ✓ tests/screens/lessonExposureEmission.test.tsx (4 tests) 233ms
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > lição completa: erro → dica → tentar novamente → acerto → resultado, com evidência por tentativa
+[analytics] activity_presented { lessonId: 'l02', activityType: 'sort', activityIndex: 2 }
+
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > lição completa: erro → dica → tentar novamente → acerto → resultado, com evidência por tentativa
+[analytics] activity_attempted { lessonId: 'l02', activityType: 'sort', passed: true }
+
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > lição completa: erro → dica → tentar novamente → acerto → resultado, com evidência por tentativa
+[analytics] lesson_completed { lessonId: 'l02', lessonVersion: 4, score: 1, durationSeconds: 0 }
+
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > resposta parcial mostra o check que faltou e não libera a conclusão
+[analytics] entry_viewed { entry: 'home' }
+
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > resposta parcial mostra o check que faltou e não libera a conclusão
+[analytics] lesson_started { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > resposta parcial mostra o check que faltou e não libera a conclusão
+[analytics] lesson_brief_viewed { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > resposta parcial mostra o check que faltou e não libera a conclusão
+[analytics] activity_presented {
+  lessonId: 'l02',
+  activityType: 'output_comparison',
+  activityIndex: 0
+}
+
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > resposta parcial mostra o check que faltou e não libera a conclusão
+[analytics] activity_attempted { lessonId: 'l02', activityType: 'output_comparison', passed: false }
+
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > explica a rota guiada sem atribuir erro a quem pediu dica antes de responder
+[analytics] entry_viewed { entry: 'home' }
+
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > explica a rota guiada sem atribuir erro a quem pediu dica antes de responder
+[analytics] lesson_started { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > explica a rota guiada sem atribuir erro a quem pediu dica antes de responder
+[analytics] lesson_brief_viewed { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > explica a rota guiada sem atribuir erro a quem pediu dica antes de responder
+[analytics] activity_presented {
+  lessonId: 'l02',
+  activityType: 'output_comparison',
+  activityIndex: 0
+}
+
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > explica a rota guiada sem atribuir erro a quem pediu dica antes de responder
+[analytics] activity_attempted { lessonId: 'l02', activityType: 'output_comparison', passed: true }
+
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > explica a rota guiada sem atribuir erro a quem pediu dica antes de responder
+[analytics] activity_presented { lessonId: 'l02', activityType: 'choice', activityIndex: 1 }
+
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > explica a rota guiada sem atribuir erro a quem pediu dica antes de responder
+[analytics] activity_attempted { lessonId: 'l02', activityType: 'choice', passed: true }
+
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > explica a rota guiada sem atribuir erro a quem pediu dica antes de responder
+[analytics] activity_presented { lessonId: 'l02', activityType: 'sort', activityIndex: 2 }
+
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > explica a rota guiada sem atribuir erro a quem pediu dica antes de responder
+[analytics] activity_attempted { lessonId: 'l02', activityType: 'sort', passed: true }
+
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > explica a rota guiada sem atribuir erro a quem pediu dica antes de responder
+[analytics] lesson_completed { lessonId: 'l02', lessonVersion: 4, score: 1, durationSeconds: 0 }
+
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > retomada: reload com lição em andamento volta direto ao player
+[analytics] lesson_brief_viewed { lessonId: 'l02', lessonVersion: 4 }
+[analytics] entry_viewed { entry: 'lesson-resume' }
+
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > só exibe a lição depois de persistir o estado necessário para retomada
+[analytics] entry_viewed { entry: 'home' }
+
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > só exibe a lição depois de persistir o estado necessário para retomada
+[analytics] lesson_started { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > só exibe a lição depois de persistir o estado necessário para retomada
+[analytics] lesson_brief_viewed { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > retomada: trilha concluída volta para home com progresso preservado
+[analytics] entry_viewed { entry: 'home' }
+
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > revisão no Progresso usa somente uma lição concluída e valida a abertura
+[analytics] entry_viewed { entry: 'home' }
+
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > revisão no Progresso usa somente uma lição concluída e valida a abertura
+[analytics] review_started { lessonId: 'l02', intervalDays: 1, stage: 0 }
+
+stdout | tests/app/appFlow.test.tsx > fluxo do app (integração) > revisão no Progresso usa somente uma lição concluída e valida a abertura
+[analytics] lesson_brief_viewed { lessonId: 'l02', lessonVersion: 4 }
+
+ ✓ tests/app/appFlow.test.tsx (10 tests) 1889ms
+   ✓ fluxo do app (integração) > onboarding acolhe, coleta contexto estruturado e abre o Mapa Inicial  741ms
+   ✓ fluxo do app (integração) > lição completa: erro → dica → tentar novamente → acerto → resultado, com evidência por tentativa  317ms
+   ✓ fluxo do app (integração) > explica a rota guiada sem atribuir erro a quem pediu dica antes de responder  368ms
+ ✓ tests/adapters/analyticsBatchSink.test.ts (6 tests) 6ms
+ ✓ tests/domain/analytics.test.ts (6 tests) 12ms
+ ✓ tests/domain/retrofitNotice.test.ts (7 tests) 14ms
+ ✓ tests/app/funnelEmission.test.ts (4 tests) 7ms
+ ✓ tests/domain/analyticsV2.test.ts (6 tests) 11ms
+ ✓ tests/host/protocol.test.ts (5 tests) 13ms
+stdout | tests/app/lessonStateContract.test.tsx > AID-1089/W2: state contract no loop de lição > loading: submit desabilita + aria-busy e região role=status anuncia o andamento
+[analytics] entry_viewed { entry: 'home' }
+
+stdout | tests/app/lessonStateContract.test.tsx > AID-1089/W2: state contract no loop de lição > loading: submit desabilita + aria-busy e região role=status anuncia o andamento
+[analytics] lesson_started { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/app/lessonStateContract.test.tsx > AID-1089/W2: state contract no loop de lição > loading: submit desabilita + aria-busy e região role=status anuncia o andamento
+[analytics] lesson_brief_viewed { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/app/lessonStateContract.test.tsx > AID-1089/W2: state contract no loop de lição > loading: submit desabilita + aria-busy e região role=status anuncia o andamento
+[analytics] activity_presented {
+  lessonId: 'l02',
+  activityType: 'output_comparison',
+  activityIndex: 0
+}
+
+ ✓ tests/domain/analyticsExposure.test.ts (9 tests) 5ms
+ ✓ tests/app/entryViewedExposure.test.tsx (4 tests) 178ms
+stdout | tests/app/lessonStateContract.test.tsx > AID-1089/W2: state contract no loop de lição > loading: submit desabilita + aria-busy e região role=status anuncia o andamento
+[analytics] activity_attempted { lessonId: 'l02', activityType: 'output_comparison', passed: false }
+
+stdout | tests/app/lessonStateContract.test.tsx > AID-1089/W2: state contract no loop de lição > retry: foco é preservado no heading tabIndex=-1 (não cai no body)
+[analytics] entry_viewed { entry: 'home' }
+
+stdout | tests/app/lessonStateContract.test.tsx > AID-1089/W2: state contract no loop de lição > retry: foco é preservado no heading tabIndex=-1 (não cai no body)
+[analytics] lesson_started { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/app/lessonStateContract.test.tsx > AID-1089/W2: state contract no loop de lição > retry: foco é preservado no heading tabIndex=-1 (não cai no body)
+[analytics] lesson_brief_viewed { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/app/lessonStateContract.test.tsx > AID-1089/W2: state contract no loop de lição > retry: foco é preservado no heading tabIndex=-1 (não cai no body)
+[analytics] activity_presented {
+  lessonId: 'l02',
+  activityType: 'output_comparison',
+  activityIndex: 0
+}
+
+stdout | tests/app/lessonStateContract.test.tsx > AID-1089/W2: state contract no loop de lição > retry: foco é preservado no heading tabIndex=-1 (não cai no body)
+[analytics] activity_attempted { lessonId: 'l02', activityType: 'output_comparison', passed: false }
+
+stdout | tests/app/lessonStateContract.test.tsx > AID-1089/W2: state contract no loop de lição > feedback container: aria-live polite + aria-atomic (estado por cor+borda+texto)
+[analytics] entry_viewed { entry: 'home' }
+
+stdout | tests/app/lessonStateContract.test.tsx > AID-1089/W2: state contract no loop de lição > feedback container: aria-live polite + aria-atomic (estado por cor+borda+texto)
+[analytics] lesson_started { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/app/lessonStateContract.test.tsx > AID-1089/W2: state contract no loop de lição > feedback container: aria-live polite + aria-atomic (estado por cor+borda+texto)
+[analytics] lesson_brief_viewed { lessonId: 'l02', lessonVersion: 4 }
+
+stdout | tests/app/lessonStateContract.test.tsx > AID-1089/W2: state contract no loop de lição > feedback container: aria-live polite + aria-atomic (estado por cor+borda+texto)
+[analytics] activity_presented {
+  lessonId: 'l02',
+  activityType: 'output_comparison',
+  activityIndex: 0
+}
+
+stdout | tests/app/lessonStateContract.test.tsx > AID-1089/W2: state contract no loop de lição > feedback container: aria-live polite + aria-atomic (estado por cor+borda+texto)
+[analytics] activity_attempted { lessonId: 'l02', activityType: 'output_comparison', passed: false }
+
+ ✓ tests/app/lessonStateContract.test.tsx (3 tests) 743ms
+   ✓ AID-1089/W2: state contract no loop de lição > loading: submit desabilita + aria-busy e região role=status anuncia o andamento  374ms
+ ✓ tests/adapters/indexedDbProgressRepository.test.ts (7 tests) 12ms
+ ✓ tests/app/loopContractW3.test.tsx (3 tests) 174ms
+stdout | tests/app/onboardingStepAnnounce.test.tsx > AID-1150: anúncio de mudança de etapa no onboarding > h1 da etapa tem tabIndex=-1 e contador de etapa em role=status (live)
+[analytics] entry_viewed { entry: 'onboarding' }
+
+stdout | tests/app/onboardingStepAnnounce.test.tsx > AID-1150: anúncio de mudança de etapa no onboarding > cada transição para a Etapa 2–5 move o foco para o h1 e atualiza o status
+[analytics] entry_viewed { entry: 'onboarding' }
+
+ ✓ tests/adapters/generatedContentRepository.competency.test.ts (6 tests) 14ms
+ ✓ tests/adapters/retrofitAcks.test.ts (4 tests) 5ms
+stdout | tests/app/onboardingStepAnnounce.test.tsx > AID-1150: anúncio de mudança de etapa no onboarding > voltar também reposiciona o foco no h1 da etapa anterior
+[analytics] entry_viewed { entry: 'onboarding' }
+
+stdout | tests/app/lessonOpeningFailure.test.tsx > abertura de lição > mantém a tela atual e informa quando o progresso não pode ser salvo
+[analytics] entry_viewed { entry: 'home' }
+
+stdout | tests/app/lessonOpeningFailure.test.tsx > abertura de lição > mantém Progresso aberto quando a revisão é rejeitada
+[analytics] entry_viewed { entry: 'home' }
+
+ ✓ tests/app/onboardingStepAnnounce.test.tsx (3 tests) 1049ms
+   ✓ AID-1150: anúncio de mudança de etapa no onboarding > cada transição para a Etapa 2–5 move o foco para o h1 e atualiza o status  645ms
+ ✓ tests/adapters/generatedContentRepository.unmappedEntry.test.ts (3 tests) 70ms
+ ✓ tests/app/lessonOpeningFailure.test.tsx (2 tests) 183ms
+ ✓ tests/domain/progressBackup.test.ts (4 tests) 2ms
+ ✓ tests/domain/evidence.test.ts (8 tests) 3ms
+ ✓ tests/domain/verification.test.ts (5 tests) 17ms
+ ✓ tests/components/OutputComparisonView.test.tsx (2 tests) 85ms
+ ✓ tests/static-entry/escola-honesty.test.ts (10 tests | 1 skipped) 6ms
+ ✓ tests/pwaRoute.test.ts (2 tests) 5ms
+ ✓ tests/adapters/generatedContentRepository.mapVersionGuard.test.ts (1 test) 29ms
+ ✓ tests/components/SupportCta.test.tsx (1 test) 18ms
+
+ Test Files  38 passed (38)
+      Tests  273 passed | 1 skipped (274)
+   Start at  22:19:24
+   Duration  9.91s (transform 2.57s, setup 5.88s, collect 14.07s, tests 6.75s, environment 28.34s, prepare 4.78s)
+

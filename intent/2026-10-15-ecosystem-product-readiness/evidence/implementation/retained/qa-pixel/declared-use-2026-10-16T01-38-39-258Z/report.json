@@ -1,0 +1,3743 @@
+{
+  "engineId": "pixelDojo",
+  "caseName": "declared-use",
+  "observedAt": "2026-10-16T01:38:39.290Z",
+  "criterion": 26,
+  "declaredUse": "18 offered curriculum labs: briefing/map → practice → duel → raw NDJSON → journal; fail/retry and return/replay; no canonical mastery",
+  "sourceCommit": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+  "sourceFingerprint": "545d82d441c7d3a11b0e3380cca89a08435b47a7c75d957016aa1d677a99c31a",
+  "sourceRefs": [
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.checks/product-readiness-20261015.md",
+      "sha256": "52b0f861cb81849237d09e6cb98ae0c8c154fd09d34325a590d0b45f34ae6c56"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/plan.md",
+      "sha256": "aaa184768897b4863b6cfbc8e36b2513e3212bb02ea496e0f19590a49887af0e"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/qualification-matrix.md",
+      "sha256": "0e9448e46c26d8075831b5215d609bab38a4d052567b04f5e99251019b5f2b35"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/curriculum/catalog.md",
+      "sha256": "66891eb21cc585eeba2c6a87f928f9ce1c1736ec40a481e24f1598906f96a7af"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/EVIDENCE_CONTRACT.md",
+      "sha256": "fc7a6bd8ebf0fb4880faddb709d6863278b90081eb076b034d4b434a2dfeb273"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/src/content/curriculumPack.ts",
+      "sha256": "6831cc38b5d620994474e19278983f840ff4cf29959fc3414040c1f1d9e390c5"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/src/content/types.ts",
+      "sha256": "8de5187d4e2c9e1effd617ec3f815df971fd35de8d5947dc4f90508e0e1213ee"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/src/app/PixelQuestApp.ts",
+      "sha256": "13cd124cf7f1110afbc5804c7791f34a3ef5a8d8537e39a734164feca645f0db"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/src/game/evidence/evidence.ts",
+      "sha256": "a570d30a59e705599ab06c92b9658d3d595ce2ca32547653d7fe756f41c60955"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/src/game/evidence/emitter.ts",
+      "sha256": "8456d3061b5352f8ccb2d9965ca0a0ca4a2c0fa48194a8f8b9fad3c6410ab30e"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/src/ui/Hud.ts",
+      "sha256": "4c0732621deb919f2f202502d078983e5d7c02b04d19a44643967b7a9785cac5"
+    }
+  ],
+  "producerContext": "readiness-pixel-runtime-producer",
+  "verifierContext": null,
+  "invocation": {
+    "argv": [
+      "/Users/danielbarreto/.hermes/node/bin/node",
+      "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/pixel-runtime.mjs",
+      "declared-use"
+    ],
+    "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool",
+    "pid": 72203,
+    "caseName": "declared-use"
+  },
+  "helperSource": {
+    "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/pixel-runtime.mjs",
+    "sha256": "8e94aa55c5b97926c3aba287c8046c0b57b02de34d03d852beafebefc3a031f4"
+  },
+  "browserAvailability": "Browser plugin not available; regular installed Playwright used per frontend-testing-debugging skill",
+  "evidencePolicy": {
+    "source": {
+      "path": "/Users/danielbarreto/Development/aidevschool/engines/shared/playwright/base.config.ts",
+      "sha256": "5519ac81eac5d277c939da29e816130dd614bf18009a9200263aa9014ae525a7"
+    },
+    "importedOrPromoted": false,
+    "screenshot": "on",
+    "video": "on",
+    "trace": "retain-on-failure",
+    "outputDir": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z",
+    "viewport": {
+      "width": 1280,
+      "height": 800
+    }
+  },
+  "assertions": [
+    {
+      "name": "offered_catalog_matches_all18_numbered_curriculum_projects",
+      "passed": true,
+      "count": 18
+    },
+    {
+      "name": "dual_console_page_evidence_channels_match",
+      "passed": true,
+      "count": 36
+    },
+    {
+      "name": "console_no_runtime_errors",
+      "passed": true
+    },
+    {
+      "name": "no_failed_requests",
+      "passed": true
+    },
+    {
+      "name": "no_framework_overlay",
+      "passed": true
+    },
+    {
+      "name": "canonical_learner_sha256_unchanged",
+      "passed": true
+    }
+  ],
+  "cases": [
+    {
+      "project": "01_rate_limiter",
+      "regionId": "lab-01_rate_limiter",
+      "encounterId": "encounter-agent-quest-01",
+      "unitId": "U0-sonda-rate-limiter-robustness",
+      "kind": "token_bucket",
+      "status": "pass",
+      "entry": "briefing Começar",
+      "assertions": [
+        {
+          "name": "visible-entry-map",
+          "passed": true
+        },
+        {
+          "name": "visible-briefing-practice-duel-controls",
+          "passed": true
+        },
+        {
+          "name": "incorrect-actions-emit-fail",
+          "passed": true
+        },
+        {
+          "name": "retry-correct-actions-emit-pass",
+          "passed": true
+        },
+        {
+          "name": "journal-and-return-to-map",
+          "passed": true
+        },
+        {
+          "name": "prior-evidence-prefix-preserved",
+          "passed": true
+        },
+        {
+          "name": "schema-identity-and-context-bound",
+          "passed": true
+        },
+        {
+          "name": "no-browser-mastery-state",
+          "passed": true
+        }
+      ],
+      "failEvidence": {
+        "source": "pixelquest",
+        "unit_id": "U0-sonda-rate-limiter-robustness",
+        "project": "01_rate_limiter",
+        "game": "PixelDojo Quest",
+        "ts": "2026-10-16T01:38:43.859Z",
+        "pass": false,
+        "metrics": {
+          "kind": "pixelquest-token-bucket",
+          "target_rate": 1.5,
+          "observed_admit_rate": 0,
+          "max_burst_1s": 1,
+          "good_admits": 0,
+          "legit_rejected": 8,
+          "abusive_admitted": 4,
+          "abusive_rejected": 0,
+          "heat_peak": 112,
+          "overheated": true
+        },
+        "encounter_id": "encounter-agent-quest-01",
+        "review_context": {
+          "unit_kind": "concept",
+          "scheduled_review": true,
+          "review_reason": "overdue",
+          "streak_candidate": false,
+          "scheduler_source": "learner-substrate",
+          "verifier_required": true
+        },
+        "curriculum_context": {
+          "concept": "Token bucket: capacidade vs refill, admitir legítimos e rejeitar abusivos",
+          "mechanic": "Token Bucket",
+          "accepted_signal": "requisição legítima",
+          "rejected_trap": "rajada abusiva"
+        }
+      },
+      "passEvidence": {
+        "source": "pixelquest",
+        "unit_id": "U0-sonda-rate-limiter-robustness",
+        "project": "01_rate_limiter",
+        "game": "PixelDojo Quest",
+        "ts": "2026-10-16T01:38:46.042Z",
+        "pass": true,
+        "metrics": {
+          "kind": "pixelquest-token-bucket",
+          "target_rate": 1.5,
+          "observed_admit_rate": 0.73,
+          "max_burst_1s": 2,
+          "good_admits": 8,
+          "legit_rejected": 0,
+          "abusive_admitted": 0,
+          "abusive_rejected": 4,
+          "heat_peak": 56,
+          "overheated": false
+        },
+        "encounter_id": "encounter-agent-quest-01",
+        "review_context": {
+          "unit_kind": "concept",
+          "scheduled_review": true,
+          "review_reason": "overdue",
+          "streak_candidate": true,
+          "scheduler_source": "learner-substrate",
+          "verifier_required": true
+        },
+        "curriculum_context": {
+          "concept": "Token bucket: capacidade vs refill, admitir legítimos e rejeitar abusivos",
+          "mechanic": "Token Bucket",
+          "accepted_signal": "requisição legítima",
+          "rejected_trap": "rajada abusiva"
+        }
+      },
+      "runtimeStatus": "pass",
+      "returning": {
+        "status": "pass",
+        "entry": "reload → fresh briefing → public enterRegion input → visible practice/duel controls",
+        "record": {
+          "source": "pixelquest",
+          "unit_id": "U0-sonda-rate-limiter-robustness",
+          "project": "01_rate_limiter",
+          "game": "PixelDojo Quest",
+          "ts": "2026-10-16T01:40:38.185Z",
+          "pass": true,
+          "metrics": {
+            "kind": "pixelquest-token-bucket",
+            "target_rate": 1.5,
+            "observed_admit_rate": 0.73,
+            "max_burst_1s": 2,
+            "good_admits": 8,
+            "legit_rejected": 0,
+            "abusive_admitted": 0,
+            "abusive_rejected": 4,
+            "heat_peak": 56,
+            "overheated": false
+          },
+          "encounter_id": "encounter-agent-quest-01",
+          "review_context": {
+            "unit_kind": "concept",
+            "scheduled_review": true,
+            "review_reason": "overdue",
+            "streak_candidate": true,
+            "scheduler_source": "learner-substrate",
+            "verifier_required": true
+          },
+          "curriculum_context": {
+            "concept": "Token bucket: capacidade vs refill, admitir legítimos e rejeitar abusivos",
+            "mechanic": "Token Bucket",
+            "accepted_signal": "requisição legítima",
+            "rejected_trap": "rajada abusiva"
+          }
+        },
+        "assertions": [
+          "fresh-session-empty-channel",
+          "visible-replay-controls",
+          "deterministic-core-identical",
+          "fresh-timestamp",
+          "saved-ndjson-sha-unchanged",
+          "journal-return"
+        ]
+      }
+    },
+    {
+      "project": "02_key_value_store",
+      "regionId": "lab-02_key_value_store",
+      "encounterId": "encounter-02_key_value_store",
+      "unitId": "U-02_key_value_store",
+      "kind": "sequence_flow",
+      "status": "pass",
+      "entry": "Órbita 3D → Próximo → Abrir lab",
+      "assertions": [
+        {
+          "name": "visible-entry-map",
+          "passed": true
+        },
+        {
+          "name": "visible-briefing-practice-duel-controls",
+          "passed": true
+        },
+        {
+          "name": "incorrect-actions-emit-fail",
+          "passed": true
+        },
+        {
+          "name": "retry-correct-actions-emit-pass",
+          "passed": true
+        },
+        {
+          "name": "journal-and-return-to-map",
+          "passed": true
+        },
+        {
+          "name": "prior-evidence-prefix-preserved",
+          "passed": true
+        },
+        {
+          "name": "schema-identity-and-context-bound",
+          "passed": true
+        },
+        {
+          "name": "no-browser-mastery-state",
+          "passed": true
+        }
+      ],
+      "failEvidence": {
+        "source": "pixelquest",
+        "unit_id": "U-02_key_value_store",
+        "project": "02_key_value_store",
+        "game": "PixelDojo Quest",
+        "ts": "2026-10-16T01:38:47.456Z",
+        "pass": false,
+        "metrics": {
+          "kind": "pixelquest-sequence-flow",
+          "advanced": 0,
+          "held": 0,
+          "skipped_required": 3,
+          "guards_missed": 2,
+          "heat_peak": 60,
+          "overheated": true
+        },
+        "encounter_id": "encounter-02_key_value_store",
+        "review_context": {
+          "unit_kind": "concept",
+          "scheduled_review": false,
+          "review_reason": "overdue",
+          "streak_candidate": false,
+          "scheduler_source": "learner-substrate",
+          "verifier_required": true
+        },
+        "curriculum_context": {
+          "concept": "Leitura, escrita, expiração e consistência básica de chaves",
+          "mechanic": "TTL Cache",
+          "accepted_signal": "chave quente válida",
+          "rejected_trap": "leitura expirada"
+        }
+      },
+      "passEvidence": {
+        "source": "pixelquest",
+        "unit_id": "U-02_key_value_store",
+        "project": "02_key_value_store",
+        "game": "PixelDojo Quest",
+        "ts": "2026-10-16T01:38:48.741Z",
+        "pass": true,
+        "metrics": {
+          "kind": "pixelquest-sequence-flow",
+          "advanced": 3,
+          "held": 2,
+          "skipped_required": 0,
+          "guards_missed": 0,
+          "heat_peak": 0,
+          "overheated": false
+        },
+        "encounter_id": "encounter-02_key_value_store",
+        "review_context": {
+          "unit_kind": "concept",
+          "scheduled_review": false,
+          "review_reason": "overdue",
+          "streak_candidate": true,
+          "scheduler_source": "learner-substrate",
+          "verifier_required": true
+        },
+        "curriculum_context": {
+          "concept": "Leitura, escrita, expiração e consistência básica de chaves",
+          "mechanic": "TTL Cache",
+          "accepted_signal": "chave quente válida",
+          "rejected_trap": "leitura expirada"
+        }
+      },
+      "runtimeStatus": "pass",
+      "returning": {
+        "status": "pass",
+        "entry": "reload → fresh briefing → public enterRegion input → visible practice/duel controls",
+        "record": {
+          "source": "pixelquest",
+          "unit_id": "U-02_key_value_store",
+          "project": "02_key_value_store",
+          "game": "PixelDojo Quest",
+          "ts": "2026-10-16T01:40:39.293Z",
+          "pass": true,
+          "metrics": {
+            "kind": "pixelquest-sequence-flow",
+            "advanced": 3,
+            "held": 2,
+            "skipped_required": 0,
+            "guards_missed": 0,
+            "heat_peak": 0,
+            "overheated": false
+          },
+          "encounter_id": "encounter-02_key_value_store",
+          "review_context": {
+            "unit_kind": "concept",
+            "scheduled_review": false,
+            "review_reason": "overdue",
+            "streak_candidate": true,
+            "scheduler_source": "learner-substrate",
+            "verifier_required": true
+          },
+          "curriculum_context": {
+            "concept": "Leitura, escrita, expiração e consistência básica de chaves",
+            "mechanic": "TTL Cache",
+            "accepted_signal": "chave quente válida",
+            "rejected_trap": "leitura expirada"
+          }
+        },
+        "assertions": [
+          "fresh-session-empty-channel",
+          "visible-replay-controls",
+          "deterministic-core-identical",
+          "fresh-timestamp",
+          "saved-ndjson-sha-unchanged",
+          "journal-return"
+        ]
+      }
+    },
+    {
+      "project": "03_url_shortener",
+      "regionId": "lab-03_url_shortener",
+      "encounterId": "encounter-03_url_shortener",
+      "unitId": "U-03_url_shortener",
+      "kind": "token_bucket",
+      "status": "pass",
+      "entry": "Órbita 3D → Próximo → Abrir lab",
+      "assertions": [
+        {
+          "name": "visible-entry-map",
+          "passed": true
+        },
+        {
+          "name": "visible-briefing-practice-duel-controls",
+          "passed": true
+        },
+        {
+          "name": "incorrect-actions-emit-fail",
+          "passed": true
+        },
+        {
+          "name": "retry-correct-actions-emit-pass",
+          "passed": true
+        },
+        {
+          "name": "journal-and-return-to-map",
+          "passed": true
+        },
+        {
+          "name": "prior-evidence-prefix-preserved",
+          "passed": true
+        },
+        {
+          "name": "schema-identity-and-context-bound",
+          "passed": true
+        },
+        {
+          "name": "no-browser-mastery-state",
+          "passed": true
+        }
+      ],
+      "failEvidence": {
+        "source": "pixelquest",
+        "unit_id": "U-03_url_shortener",
+        "project": "03_url_shortener",
+        "game": "PixelDojo Quest",
+        "ts": "2026-10-16T01:38:51.141Z",
+        "pass": false,
+        "metrics": {
+          "kind": "pixelquest-token-bucket",
+          "target_rate": 1.5,
+          "observed_admit_rate": 0,
+          "max_burst_1s": 1,
+          "good_admits": 0,
+          "legit_rejected": 8,
+          "abusive_admitted": 4,
+          "abusive_rejected": 0,
+          "heat_peak": 112,
+          "overheated": true
+        },
+        "encounter_id": "encounter-03_url_shortener",
+        "review_context": {
+          "unit_kind": "concept",
+          "scheduled_review": false,
+          "review_reason": "overdue",
+          "streak_candidate": false,
+          "scheduler_source": "learner-substrate",
+          "verifier_required": true
+        },
+        "curriculum_context": {
+          "concept": "Códigos curtos, colisão e redirecionamento confiável",
+          "mechanic": "Slug Router",
+          "accepted_signal": "slug único",
+          "rejected_trap": "colisão de slug"
+        }
+      },
+      "passEvidence": {
+        "source": "pixelquest",
+        "unit_id": "U-03_url_shortener",
+        "project": "03_url_shortener",
+        "game": "PixelDojo Quest",
+        "ts": "2026-10-16T01:38:52.355Z",
+        "pass": true,
+        "metrics": {
+          "kind": "pixelquest-token-bucket",
+          "target_rate": 1.5,
+          "observed_admit_rate": 0.73,
+          "max_burst_1s": 2,
+          "good_admits": 8,
+          "legit_rejected": 0,
+          "abusive_admitted": 0,
+          "abusive_rejected": 4,
+          "heat_peak": 56,
+          "overheated": false
+        },
+        "encounter_id": "encounter-03_url_shortener",
+        "review_context": {
+          "unit_kind": "concept",
+          "scheduled_review": false,
+          "review_reason": "overdue",
+          "streak_candidate": true,
+          "scheduler_source": "learner-substrate",
+          "verifier_required": true
+        },
+        "curriculum_context": {
+          "concept": "Códigos curtos, colisão e redirecionamento confiável",
+          "mechanic": "Slug Router",
+          "accepted_signal": "slug único",
+          "rejected_trap": "colisão de slug"
+        }
+      },
+      "runtimeStatus": "pass",
+      "returning": {
+        "status": "pass",
+        "entry": "reload → fresh briefing → public enterRegion input → visible practice/duel controls",
+        "record": {
+          "source": "pixelquest",
+          "unit_id": "U-03_url_shortener",
+          "project": "03_url_shortener",
+          "game": "PixelDojo Quest",
+          "ts": "2026-10-16T01:40:40.925Z",
+          "pass": true,
+          "metrics": {
+            "kind": "pixelquest-token-bucket",
+            "target_rate": 1.5,
+            "observed_admit_rate": 0.73,
+            "max_burst_1s": 2,
+            "good_admits": 8,
+            "legit_rejected": 0,
+            "abusive_admitted": 0,
+            "abusive_rejected": 4,
+            "heat_peak": 56,
+            "overheated": false
+          },
+          "encounter_id": "encounter-03_url_shortener",
+          "review_context": {
+            "unit_kind": "concept",
+            "scheduled_review": false,
+            "review_reason": "overdue",
+            "streak_candidate": true,
+            "scheduler_source": "learner-substrate",
+            "verifier_required": true
+          },
+          "curriculum_context": {
+            "concept": "Códigos curtos, colisão e redirecionamento confiável",
+            "mechanic": "Slug Router",
+            "accepted_signal": "slug único",
+            "rejected_trap": "colisão de slug"
+          }
+        },
+        "assertions": [
+          "fresh-session-empty-channel",
+          "visible-replay-controls",
+          "deterministic-core-identical",
+          "fresh-timestamp",
+          "saved-ndjson-sha-unchanged",
+          "journal-return"
+        ]
+      }
+    },
+    {
+      "project": "04_concurrent_task_queue",
+      "regionId": "lab-04_concurrent_task_queue",
+      "encounterId": "encounter-04_concurrent_task_queue",
+      "unitId": "U4-task-queue",
+      "kind": "task_queue",
+      "status": "pass",
+      "entry": "Órbita 3D → Próximo → Abrir lab",
+      "assertions": [
+        {
+          "name": "visible-entry-map",
+          "passed": true
+        },
+        {
+          "name": "visible-briefing-practice-duel-controls",
+          "passed": true
+        },
+        {
+          "name": "incorrect-actions-emit-fail",
+          "passed": true
+        },
+        {
+          "name": "retry-correct-actions-emit-pass",
+          "passed": true
+        },
+        {
+          "name": "journal-and-return-to-map",
+          "passed": true
+        },
+        {
+          "name": "prior-evidence-prefix-preserved",
+          "passed": true
+        },
+        {
+          "name": "schema-identity-and-context-bound",
+          "passed": true
+        },
+        {
+          "name": "no-browser-mastery-state",
+          "passed": true
+        }
+      ],
+      "failEvidence": {
+        "source": "pixelquest",
+        "unit_id": "U4-task-queue",
+        "project": "04_concurrent_task_queue",
+        "game": "PixelDojo Quest",
+        "ts": "2026-10-16T01:38:54.856Z",
+        "pass": false,
+        "metrics": {
+          "kind": "pixelquest-task-queue",
+          "processed": 0,
+          "poison_dead_lettered": 0,
+          "poison_retried": 3,
+          "legit_retried": 10,
+          "backpressure_peak": 1,
+          "overheated": false
+        },
+        "encounter_id": "encounter-04_concurrent_task_queue",
+        "review_context": {
+          "unit_kind": "concept",
+          "scheduled_review": false,
+          "review_reason": "overdue",
+          "streak_candidate": false,
+          "scheduler_source": "learner-substrate",
+          "verifier_required": true
+        },
+        "curriculum_context": {
+          "concept": "Fila concorrente, backpressure e processamento justo",
+          "mechanic": "Worker Queue",
+          "accepted_signal": "tarefa pronta",
+          "rejected_trap": "job veneno sem lease"
+        }
+      },
+      "passEvidence": {
+        "source": "pixelquest",
+        "unit_id": "U4-task-queue",
+        "project": "04_concurrent_task_queue",
+        "game": "PixelDojo Quest",
+        "ts": "2026-10-16T01:38:58.056Z",
+        "pass": true,
+        "metrics": {
+          "kind": "pixelquest-task-queue",
+          "processed": 10,
+          "poison_dead_lettered": 3,
+          "poison_retried": 0,
+          "legit_retried": 0,
+          "backpressure_peak": 0,
+          "overheated": false
+        },
+        "encounter_id": "encounter-04_concurrent_task_queue",
+        "review_context": {
+          "unit_kind": "concept",
+          "scheduled_review": false,
+          "review_reason": "overdue",
+          "streak_candidate": true,
+          "scheduler_source": "learner-substrate",
+          "verifier_required": true
+        },
+        "curriculum_context": {
+          "concept": "Fila concorrente, backpressure e processamento justo",
+          "mechanic": "Worker Queue",
+          "accepted_signal": "tarefa pronta",
+          "rejected_trap": "job veneno sem lease"
+        }
+      },
+      "runtimeStatus": "pass",
+      "returning": {
+        "status": "pass",
+        "entry": "reload → fresh briefing → public enterRegion input → visible practice/duel controls",
+        "record": {
+          "source": "pixelquest",
+          "unit_id": "U4-task-queue",
+          "project": "04_concurrent_task_queue",
+          "game": "PixelDojo Quest",
+          "ts": "2026-10-16T01:40:42.480Z",
+          "pass": true,
+          "metrics": {
+            "kind": "pixelquest-task-queue",
+            "processed": 10,
+            "poison_dead_lettered": 3,
+            "poison_retried": 0,
+            "legit_retried": 0,
+            "backpressure_peak": 0,
+            "overheated": false
+          },
+          "encounter_id": "encounter-04_concurrent_task_queue",
+          "review_context": {
+            "unit_kind": "concept",
+            "scheduled_review": false,
+            "review_reason": "overdue",
+            "streak_candidate": true,
+            "scheduler_source": "learner-substrate",
+            "verifier_required": true
+          },
+          "curriculum_context": {
+            "concept": "Fila concorrente, backpressure e processamento justo",
+            "mechanic": "Worker Queue",
+            "accepted_signal": "tarefa pronta",
+            "rejected_trap": "job veneno sem lease"
+          }
+        },
+        "assertions": [
+          "fresh-session-empty-channel",
+          "visible-replay-controls",
+          "deterministic-core-identical",
+          "fresh-timestamp",
+          "saved-ndjson-sha-unchanged",
+          "journal-return"
+        ]
+      }
+    },
+    {
+      "project": "05_websocket_chat",
+      "regionId": "lab-05_websocket_chat",
+      "encounterId": "encounter-05_websocket_chat",
+      "unitId": "U-05_websocket_chat",
+      "kind": "token_bucket",
+      "status": "pass",
+      "entry": "Órbita 3D → Próximo → Abrir lab",
+      "assertions": [
+        {
+          "name": "visible-entry-map",
+          "passed": true
+        },
+        {
+          "name": "visible-briefing-practice-duel-controls",
+          "passed": true
+        },
+        {
+          "name": "incorrect-actions-emit-fail",
+          "passed": true
+        },
+        {
+          "name": "retry-correct-actions-emit-pass",
+          "passed": true
+        },
+        {
+          "name": "journal-and-return-to-map",
+          "passed": true
+        },
+        {
+          "name": "prior-evidence-prefix-preserved",
+          "passed": true
+        },
+        {
+          "name": "schema-identity-and-context-bound",
+          "passed": true
+        },
+        {
+          "name": "no-browser-mastery-state",
+          "passed": true
+        }
+      ],
+      "failEvidence": {
+        "source": "pixelquest",
+        "unit_id": "U-05_websocket_chat",
+        "project": "05_websocket_chat",
+        "game": "PixelDojo Quest",
+        "ts": "2026-10-16T01:38:59.565Z",
+        "pass": false,
+        "metrics": {
+          "kind": "pixelquest-token-bucket",
+          "target_rate": 1.5,
+          "observed_admit_rate": 0,
+          "max_burst_1s": 1,
+          "good_admits": 0,
+          "legit_rejected": 8,
+          "abusive_admitted": 4,
+          "abusive_rejected": 0,
+          "heat_peak": 112,
+          "overheated": true
+        },
+        "encounter_id": "encounter-05_websocket_chat",
+        "review_context": {
+          "unit_kind": "concept",
+          "scheduled_review": false,
+          "review_reason": "overdue",
+          "streak_candidate": false,
+          "scheduler_source": "learner-substrate",
+          "verifier_required": true
+        },
+        "curriculum_context": {
+          "concept": "Conexões persistentes, broadcast e isolamento de clientes",
+          "mechanic": "Broadcast Hub",
+          "accepted_signal": "mensagem autenticada",
+          "rejected_trap": "rajada sem sessão"
+        }
+      },
+      "passEvidence": {
+        "source": "pixelquest",
+        "unit_id": "U-05_websocket_chat",
+        "project": "05_websocket_chat",
+        "game": "PixelDojo Quest",
+        "ts": "2026-10-16T01:39:04.747Z",
+        "pass": true,
+        "metrics": {
+          "kind": "pixelquest-token-bucket",
+          "target_rate": 1.5,
+          "observed_admit_rate": 0.73,
+          "max_burst_1s": 2,
+          "good_admits": 8,
+          "legit_rejected": 0,
+          "abusive_admitted": 0,
+          "abusive_rejected": 4,
+          "heat_peak": 56,
+          "overheated": false
+        },
+        "encounter_id": "encounter-05_websocket_chat",
+        "review_context": {
+          "unit_kind": "concept",
+          "scheduled_review": false,
+          "review_reason": "overdue",
+          "streak_candidate": true,
+          "scheduler_source": "learner-substrate",
+          "verifier_required": true
+        },
+        "curriculum_context": {
+          "concept": "Conexões persistentes, broadcast e isolamento de clientes",
+          "mechanic": "Broadcast Hub",
+          "accepted_signal": "mensagem autenticada",
+          "rejected_trap": "rajada sem sessão"
+        }
+      },
+      "runtimeStatus": "pass",
+      "returning": {
+        "status": "pass",
+        "entry": "reload → fresh briefing → public enterRegion input → visible practice/duel controls",
+        "record": {
+          "source": "pixelquest",
+          "unit_id": "U-05_websocket_chat",
+          "project": "05_websocket_chat",
+          "game": "PixelDojo Quest",
+          "ts": "2026-10-16T01:40:43.451Z",
+          "pass": true,
+          "metrics": {
+            "kind": "pixelquest-token-bucket",
+            "target_rate": 1.5,
+            "observed_admit_rate": 0.73,
+            "max_burst_1s": 2,
+            "good_admits": 8,
+            "legit_rejected": 0,
+            "abusive_admitted": 0,
+            "abusive_rejected": 4,
+            "heat_peak": 56,
+            "overheated": false
+          },
+          "encounter_id": "encounter-05_websocket_chat",
+          "review_context": {
+            "unit_kind": "concept",
+            "scheduled_review": false,
+            "review_reason": "overdue",
+            "streak_candidate": true,
+            "scheduler_source": "learner-substrate",
+            "verifier_required": true
+          },
+          "curriculum_context": {
+            "concept": "Conexões persistentes, broadcast e isolamento de clientes",
+            "mechanic": "Broadcast Hub",
+            "accepted_signal": "mensagem autenticada",
+            "rejected_trap": "rajada sem sessão"
+          }
+        },
+        "assertions": [
+          "fresh-session-empty-channel",
+          "visible-replay-controls",
+          "deterministic-core-identical",
+          "fresh-timestamp",
+          "saved-ndjson-sha-unchanged",
+          "journal-return"
+        ]
+      }
+    },
+    {
+      "project": "06_file_upload_pipeline",
+      "regionId": "lab-06_file_upload_pipeline",
+      "encounterId": "encounter-06_file_upload_pipeline",
+      "unitId": "U-06_file_upload_pipeline",
+      "kind": "sequence_flow",
+      "status": "pass",
+      "entry": "Órbita 3D → Próximo → Abrir lab",
+      "assertions": [
+        {
+          "name": "visible-entry-map",
+          "passed": true
+        },
+        {
+          "name": "visible-briefing-practice-duel-controls",
+          "passed": true
+        },
+        {
+          "name": "incorrect-actions-emit-fail",
+          "passed": true
+        },
+        {
+          "name": "retry-correct-actions-emit-pass",
+          "passed": true
+        },
+        {
+          "name": "journal-and-return-to-map",
+          "passed": true
+        },
+        {
+          "name": "prior-evidence-prefix-preserved",
+          "passed": true
+        },
+        {
+          "name": "schema-identity-and-context-bound",
+          "passed": true
+        },
+        {
+          "name": "no-browser-mastery-state",
+          "passed": true
+        }
+      ],
+      "failEvidence": {
+        "source": "pixelquest",
+        "unit_id": "U-06_file_upload_pipeline",
+        "project": "06_file_upload_pipeline",
+        "game": "PixelDojo Quest",
+        "ts": "2026-10-16T01:39:06.171Z",
+        "pass": false,
+        "metrics": {
+          "kind": "pixelquest-sequence-flow",
+          "advanced": 0,
+          "held": 0,
+          "skipped_required": 3,
+          "guards_missed": 2,
+          "heat_peak": 60,
+          "overheated": true
+        },
+        "encounter_id": "encounter-06_file_upload_pipeline",
+        "review_context": {
+          "unit_kind": "concept",
+          "scheduled_review": false,
+          "review_reason": "overdue",
+          "streak_candidate": false,
+          "scheduler_source": "learner-substrate",
+          "verifier_required": true
+        },
+        "curriculum_context": {
+          "concept": "Validação, streaming e etapas seguras de upload",
+          "mechanic": "Upload Pipeline",
+          "accepted_signal": "chunk validado",
+          "rejected_trap": "payload suspeito"
+        }
+      },
+      "passEvidence": {
+        "source": "pixelquest",
+        "unit_id": "U-06_file_upload_pipeline",
+        "project": "06_file_upload_pipeline",
+        "game": "PixelDojo Quest",
+        "ts": "2026-10-16T01:39:08.769Z",
+        "pass": true,
+        "metrics": {
+          "kind": "pixelquest-sequence-flow",
+          "advanced": 3,
+          "held": 2,
+          "skipped_required": 0,
+          "guards_missed": 0,
+          "heat_peak": 0,
+          "overheated": false
+        },
+        "encounter_id": "encounter-06_file_upload_pipeline",
+        "review_context": {
+          "unit_kind": "concept",
+          "scheduled_review": false,
+          "review_reason": "overdue",
+          "streak_candidate": true,
+          "scheduler_source": "learner-substrate",
+          "verifier_required": true
+        },
+        "curriculum_context": {
+          "concept": "Validação, streaming e etapas seguras de upload",
+          "mechanic": "Upload Pipeline",
+          "accepted_signal": "chunk validado",
+          "rejected_trap": "payload suspeito"
+        }
+      },
+      "runtimeStatus": "pass",
+      "returning": {
+        "status": "pass",
+        "entry": "reload → fresh briefing → public enterRegion input → visible practice/duel controls",
+        "record": {
+          "source": "pixelquest",
+          "unit_id": "U-06_file_upload_pipeline",
+          "project": "06_file_upload_pipeline",
+          "game": "PixelDojo Quest",
+          "ts": "2026-10-16T01:40:44.067Z",
+          "pass": true,
+          "metrics": {
+            "kind": "pixelquest-sequence-flow",
+            "advanced": 3,
+            "held": 2,
+            "skipped_required": 0,
+            "guards_missed": 0,
+            "heat_peak": 0,
+            "overheated": false
+          },
+          "encounter_id": "encounter-06_file_upload_pipeline",
+          "review_context": {
+            "unit_kind": "concept",
+            "scheduled_review": false,
+            "review_reason": "overdue",
+            "streak_candidate": true,
+            "scheduler_source": "learner-substrate",
+            "verifier_required": true
+          },
+          "curriculum_context": {
+            "concept": "Validação, streaming e etapas seguras de upload",
+            "mechanic": "Upload Pipeline",
+            "accepted_signal": "chunk validado",
+            "rejected_trap": "payload suspeito"
+          }
+        },
+        "assertions": [
+          "fresh-session-empty-channel",
+          "visible-replay-controls",
+          "deterministic-core-identical",
+          "fresh-timestamp",
+          "saved-ndjson-sha-unchanged",
+          "journal-return"
+        ]
+      }
+    },
+    {
+      "project": "07_rest_api_auth",
+      "regionId": "lab-07_rest_api_auth",
+      "encounterId": "encounter-07_rest_api_auth",
+      "unitId": "U-07_rest_api_auth",
+      "kind": "policy_gate",
+      "status": "pass",
+      "entry": "Órbita 3D → Próximo → Abrir lab",
+      "assertions": [
+        {
+          "name": "visible-entry-map",
+          "passed": true
+        },
+        {
+          "name": "visible-briefing-practice-duel-controls",
+          "passed": true
+        },
+        {
+          "name": "incorrect-actions-emit-fail",
+          "passed": true
+        },
+        {
+          "name": "retry-correct-actions-emit-pass",
+          "passed": true
+        },
+        {
+          "name": "journal-and-return-to-map",
+          "passed": true
+        },
+        {
+          "name": "prior-evidence-prefix-preserved",
+          "passed": true
+        },
+        {
+          "name": "schema-identity-and-context-bound",
+          "passed": true
+        },
+        {
+          "name": "no-browser-mastery-state",
+          "passed": true
+        }
+      ],
+      "failEvidence": {
+        "source": "pixelquest",
+        "unit_id": "U-07_rest_api_auth",
+        "project": "07_rest_api_auth",
+        "game": "PixelDojo Quest",
+        "ts": "2026-10-16T01:39:13.501Z",
+        "pass": false,
+        "metrics": {
+          "kind": "pixelquest-policy-gate",
+          "allowed": 0,
+          "denied": 0,
+          "policy_leaks": 3,
+          "false_denies": 3,
+          "heat_peak": 120,
+          "overheated": true
+        },
+        "encounter_id": "encounter-07_rest_api_auth",
+        "review_context": {
+          "unit_kind": "concept",
+          "scheduled_review": false,
+          "review_reason": "overdue",
+          "streak_candidate": false,
+          "scheduler_source": "learner-substrate",
+          "verifier_required": true
+        },
+        "curriculum_context": {
+          "concept": "Autenticação, autorização e respostas HTTP seguras",
+          "mechanic": "Auth Gate",
+          "accepted_signal": "token autorizado",
+          "rejected_trap": "escopo inválido"
+        }
+      },
+      "passEvidence": {
+        "source": "pixelquest",
+        "unit_id": "U-07_rest_api_auth",
+        "project": "07_rest_api_auth",
+        "game": "PixelDojo Quest",
+        "ts": "2026-10-16T01:39:17.795Z",
+        "pass": true,
+        "metrics": {
+          "kind": "pixelquest-policy-gate",
+          "allowed": 3,
+          "denied": 3,
+          "policy_leaks": 0,
+          "false_denies": 0,
+          "heat_peak": 0,
+          "overheated": false
+        },
+        "encounter_id": "encounter-07_rest_api_auth",
+        "review_context": {
+          "unit_kind": "concept",
+          "scheduled_review": false,
+          "review_reason": "overdue",
+          "streak_candidate": true,
+          "scheduler_source": "learner-substrate",
+          "verifier_required": true
+        },
+        "curriculum_context": {
+          "concept": "Autenticação, autorização e respostas HTTP seguras",
+          "mechanic": "Auth Gate",
+          "accepted_signal": "token autorizado",
+          "rejected_trap": "escopo inválido"
+        }
+      },
+      "runtimeStatus": "pass",
+      "returning": {
+        "status": "pass",
+        "entry": "reload → fresh briefing → public enterRegion input → visible practice/duel controls",
+        "record": {
+          "source": "pixelquest",
+          "unit_id": "U-07_rest_api_auth",
+          "project": "07_rest_api_auth",
+          "game": "PixelDojo Quest",
+          "ts": "2026-10-16T01:40:44.856Z",
+          "pass": true,
+          "metrics": {
+            "kind": "pixelquest-policy-gate",
+            "allowed": 3,
+            "denied": 3,
+            "policy_leaks": 0,
+            "false_denies": 0,
+            "heat_peak": 0,
+            "overheated": false
+          },
+          "encounter_id": "encounter-07_rest_api_auth",
+          "review_context": {
+            "unit_kind": "concept",
+            "scheduled_review": false,
+            "review_reason": "overdue",
+            "streak_candidate": true,
+            "scheduler_source": "learner-substrate",
+            "verifier_required": true
+          },
+          "curriculum_context": {
+            "concept": "Autenticação, autorização e respostas HTTP seguras",
+            "mechanic": "Auth Gate",
+            "accepted_signal": "token autorizado",
+            "rejected_trap": "escopo inválido"
+          }
+        },
+        "assertions": [
+          "fresh-session-empty-channel",
+          "visible-replay-controls",
+          "deterministic-core-identical",
+          "fresh-timestamp",
+          "saved-ndjson-sha-unchanged",
+          "journal-return"
+        ]
+      }
+    },
+    {
+      "project": "08_event_driven_order_system",
+      "regionId": "lab-08_event_driven_order_system",
+      "encounterId": "encounter-08_event_driven_order_system",
+      "unitId": "U-08_event_driven_order_system",
+      "kind": "sequence_flow",
+      "status": "pass",
+      "entry": "Órbita 3D → Próximo → Abrir lab",
+      "assertions": [
+        {
+          "name": "visible-entry-map",
+          "passed": true
+        },
+        {
+          "name": "visible-briefing-practice-duel-controls",
+          "passed": true
+        },
+        {
+          "name": "incorrect-actions-emit-fail",
+          "passed": true
+        },
+        {
+          "name": "retry-correct-actions-emit-pass",
+          "passed": true
+        },
+        {
+          "name": "journal-and-return-to-map",
+          "passed": true
+        },
+        {
+          "name": "prior-evidence-prefix-preserved",
+          "passed": true
+        },
+        {
+          "name": "schema-identity-and-context-bound",
+          "passed": true
+        },
+        {
+          "name": "no-browser-mastery-state",
+          "passed": true
+        }
+      ],
+      "failEvidence": {
+        "source": "pixelquest",
+        "unit_id": "U-08_event_driven_order_system",
+        "project": "08_event_driven_order_system",
+        "game": "PixelDojo Quest",
+        "ts": "2026-10-16T01:39:23.545Z",
+        "pass": false,
+        "metrics": {
+          "kind": "pixelquest-sequence-flow",
+          "advanced": 0,
+          "held": 0,
+          "skipped_required": 3,
+          "guards_missed": 2,
+          "heat_peak": 60,
+          "overheated": true
+        },
+        "encounter_id": "encounter-08_event_driven_order_system",
+        "review_context": {
+          "unit_kind": "concept",
+          "scheduled_review": false,
+          "review_reason": "overdue",
+          "streak_candidate": false,
+          "scheduler_source": "learner-substrate",
+          "verifier_required": true
+        },
+        "curriculum_context": {
+          "concept": "Eventos, idempotência e fluxo de pedidos",
+          "mechanic": "Order Event Log",
+          "accepted_signal": "evento novo",
+          "rejected_trap": "evento duplicado"
+        }
+      },
+      "passEvidence": {
+        "source": "pixelquest",
+        "unit_id": "U-08_event_driven_order_system",
+        "project": "08_event_driven_order_system",
+        "game": "PixelDojo Quest",
+        "ts": "2026-10-16T01:39:34.111Z",
+        "pass": true,
+        "metrics": {
+          "kind": "pixelquest-sequence-flow",
+          "advanced": 3,
+          "held": 2,
+          "skipped_required": 0,
+          "guards_missed": 0,
+          "heat_peak": 0,
+          "overheated": false
+        },
+        "encounter_id": "encounter-08_event_driven_order_system",
+        "review_context": {
+          "unit_kind": "concept",
+          "scheduled_review": false,
+          "review_reason": "overdue",
+          "streak_candidate": true,
+          "scheduler_source": "learner-substrate",
+          "verifier_required": true
+        },
+        "curriculum_context": {
+          "concept": "Eventos, idempotência e fluxo de pedidos",
+          "mechanic": "Order Event Log",
+          "accepted_signal": "evento novo",
+          "rejected_trap": "evento duplicado"
+        }
+      },
+      "runtimeStatus": "pass",
+      "returning": {
+        "status": "pass",
+        "entry": "reload → fresh briefing → public enterRegion input → visible practice/duel controls",
+        "record": {
+          "source": "pixelquest",
+          "unit_id": "U-08_event_driven_order_system",
+          "project": "08_event_driven_order_system",
+          "game": "PixelDojo Quest",
+          "ts": "2026-10-16T01:40:45.459Z",
+          "pass": true,
+          "metrics": {
+            "kind": "pixelquest-sequence-flow",
+            "advanced": 3,
+            "held": 2,
+            "skipped_required": 0,
+            "guards_missed": 0,
+            "heat_peak": 0,
+            "overheated": false
+          },
+          "encounter_id": "encounter-08_event_driven_order_system",
+          "review_context": {
+            "unit_kind": "concept",
+            "scheduled_review": false,
+            "review_reason": "overdue",
+            "streak_candidate": true,
+            "scheduler_source": "learner-substrate",
+            "verifier_required": true
+          },
+          "curriculum_context": {
+            "concept": "Eventos, idempotência e fluxo de pedidos",
+            "mechanic": "Order Event Log",
+            "accepted_signal": "evento novo",
+            "rejected_trap": "evento duplicado"
+          }
+        },
+        "assertions": [
+          "fresh-session-empty-channel",
+          "visible-replay-controls",
+          "deterministic-core-identical",
+          "fresh-timestamp",
+          "saved-ndjson-sha-unchanged",
+          "journal-return"
+        ]
+      }
+    },
+    {
+      "project": "09_plugin_system",
+      "regionId": "lab-09_plugin_system",
+      "encounterId": "encounter-09_plugin_system",
+      "unitId": "U-09_plugin_system",
+      "kind": "policy_gate",
+      "status": "pass",
+      "entry": "Órbita 3D → Próximo → Abrir lab",
+      "assertions": [
+        {
+          "name": "visible-entry-map",
+          "passed": true
+        },
+        {
+          "name": "visible-briefing-practice-duel-controls",
+          "passed": true
+        },
+        {
+          "name": "incorrect-actions-emit-fail",
+          "passed": true
+        },
+        {
+          "name": "retry-correct-actions-emit-pass",
+          "passed": true
+        },
+        {
+          "name": "journal-and-return-to-map",
+          "passed": true
+        },
+        {
+          "name": "prior-evidence-prefix-preserved",
+          "passed": true
+        },
+        {
+          "name": "schema-identity-and-context-bound",
+          "passed": true
+        },
+        {
+          "name": "no-browser-mastery-state",
+          "passed": true
+        }
+      ],
+      "failEvidence": {
+        "source": "pixelquest",
+        "unit_id": "U-09_plugin_system",
+        "project": "09_plugin_system",
+        "game": "PixelDojo Quest",
+        "ts": "2026-10-16T01:39:40.938Z",
+        "pass": false,
+        "metrics": {
+          "kind": "pixelquest-policy-gate",
+          "allowed": 0,
+          "denied": 0,
+          "policy_leaks": 3,
+          "false_denies": 3,
+          "heat_peak": 120,
+          "overheated": true
+        },
+        "encounter_id": "encounter-09_plugin_system",
+        "review_context": {
+          "unit_kind": "concept",
+          "scheduled_review": false,
+          "review_reason": "overdue",
+          "streak_candidate": false,
+          "scheduler_source": "learner-substrate",
+          "verifier_required": true
+        },
+        "curriculum_context": {
+          "concept": "Contrato de plugins, isolamento e carregamento dinâmico",
+          "mechanic": "Plugin Host",
+          "accepted_signal": "plugin assinado",
+          "rejected_trap": "contrato quebrado"
+        }
+      },
+      "passEvidence": {
+        "source": "pixelquest",
+        "unit_id": "U-09_plugin_system",
+        "project": "09_plugin_system",
+        "game": "PixelDojo Quest",
+        "ts": "2026-10-16T01:39:45.998Z",
+        "pass": true,
+        "metrics": {
+          "kind": "pixelquest-policy-gate",
+          "allowed": 3,
+          "denied": 3,
+          "policy_leaks": 0,
+          "false_denies": 0,
+          "heat_peak": 0,
+          "overheated": false
+        },
+        "encounter_id": "encounter-09_plugin_system",
+        "review_context": {
+          "unit_kind": "concept",
+          "scheduled_review": false,
+          "review_reason": "overdue",
+          "streak_candidate": true,
+          "scheduler_source": "learner-substrate",
+          "verifier_required": true
+        },
+        "curriculum_context": {
+          "concept": "Contrato de plugins, isolamento e carregamento dinâmico",
+          "mechanic": "Plugin Host",
+          "accepted_signal": "plugin assinado",
+          "rejected_trap": "contrato quebrado"
+        }
+      },
+      "runtimeStatus": "pass",
+      "returning": {
+        "status": "pass",
+        "entry": "reload → fresh briefing → public enterRegion input → visible practice/duel controls",
+        "record": {
+          "source": "pixelquest",
+          "unit_id": "U-09_plugin_system",
+          "project": "09_plugin_system",
+          "game": "PixelDojo Quest",
+          "ts": "2026-10-16T01:40:46.280Z",
+          "pass": true,
+          "metrics": {
+            "kind": "pixelquest-policy-gate",
+            "allowed": 3,
+            "denied": 3,
+            "policy_leaks": 0,
+            "false_denies": 0,
+            "heat_peak": 0,
+            "overheated": false
+          },
+          "encounter_id": "encounter-09_plugin_system",
+          "review_context": {
+            "unit_kind": "concept",
+            "scheduled_review": false,
+            "review_reason": "overdue",
+            "streak_candidate": true,
+            "scheduler_source": "learner-substrate",
+            "verifier_required": true
+          },
+          "curriculum_context": {
+            "concept": "Contrato de plugins, isolamento e carregamento dinâmico",
+            "mechanic": "Plugin Host",
+            "accepted_signal": "plugin assinado",
+            "rejected_trap": "contrato quebrado"
+          }
+        },
+        "assertions": [
+          "fresh-session-empty-channel",
+          "visible-replay-controls",
+          "deterministic-core-identical",
+          "fresh-timestamp",
+          "saved-ndjson-sha-unchanged",
+          "journal-return"
+        ]
+      }
+    },
+    {
+      "project": "10_distributed_cache",
+      "regionId": "lab-10_distributed_cache",
+      "encounterId": "encounter-10_distributed_cache",
+      "unitId": "U-10_distributed_cache",
+      "kind": "token_bucket",
+      "status": "pass",
+      "entry": "Órbita 3D → Próximo → Abrir lab",
+      "assertions": [
+        {
+          "name": "visible-entry-map",
+          "passed": true
+        },
+        {
+          "name": "visible-briefing-practice-duel-controls",
+          "passed": true
+        },
+        {
+          "name": "incorrect-actions-emit-fail",
+          "passed": true
+        },
+        {
+          "name": "retry-correct-actions-emit-pass",
+          "passed": true
+        },
+        {
+          "name": "journal-and-return-to-map",
+          "passed": true
+        },
+        {
+          "name": "prior-evidence-prefix-preserved",
+          "passed": true
+        },
+        {
+          "name": "schema-identity-and-context-bound",
+          "passed": true
+        },
+        {
+          "name": "no-browser-mastery-state",
+          "passed": true
+        }
+      ],
+      "failEvidence": {
+        "source": "pixelquest",
+        "unit_id": "U-10_distributed_cache",
+        "project": "10_distributed_cache",
+        "game": "PixelDojo Quest",
+        "ts": "2026-10-16T01:40:03.426Z",
+        "pass": false,
+        "metrics": {
+          "kind": "pixelquest-token-bucket",
+          "target_rate": 1.5,
+          "observed_admit_rate": 0,
+          "max_burst_1s": 1,
+          "good_admits": 0,
+          "legit_rejected": 8,
+          "abusive_admitted": 4,
+          "abusive_rejected": 0,
+          "heat_peak": 112,
+          "overheated": true
+        },
+        "encounter_id": "encounter-10_distributed_cache",
+        "review_context": {
+          "unit_kind": "concept",
+          "scheduled_review": false,
+          "review_reason": "overdue",
+          "streak_candidate": false,
+          "scheduler_source": "learner-substrate",
+          "verifier_required": true
+        },
+        "curriculum_context": {
+          "concept": "Replicação, invalidação e leitura distribuída",
+          "mechanic": "Replica Cache",
+          "accepted_signal": "hit consistente",
+          "rejected_trap": "valor obsoleto"
+        }
+      },
+      "passEvidence": {
+        "source": "pixelquest",
+        "unit_id": "U-10_distributed_cache",
+        "project": "10_distributed_cache",
+        "game": "PixelDojo Quest",
+        "ts": "2026-10-16T01:40:18.692Z",
+        "pass": true,
+        "metrics": {
+          "kind": "pixelquest-token-bucket",
+          "target_rate": 1.5,
+          "observed_admit_rate": 0.73,
+          "max_burst_1s": 2,
+          "good_admits": 8,
+          "legit_rejected": 0,
+          "abusive_admitted": 0,
+          "abusive_rejected": 4,
+          "heat_peak": 56,
+          "overheated": false
+        },
+        "encounter_id": "encounter-10_distributed_cache",
+        "review_context": {
+          "unit_kind": "concept",
+          "scheduled_review": false,
+          "review_reason": "overdue",
+          "streak_candidate": true,
+          "scheduler_source": "learner-substrate",
+          "verifier_required": true
+        },
+        "curriculum_context": {
+          "concept": "Replicação, invalidação e leitura distribuída",
+          "mechanic": "Replica Cache",
+          "accepted_signal": "hit consistente",
+          "rejected_trap": "valor obsoleto"
+        }
+      },
+      "runtimeStatus": "pass",
+      "returning": {
+        "status": "pass",
+        "entry": "reload → fresh briefing → public enterRegion input → visible practice/duel controls",
+        "record": {
+          "source": "pixelquest",
+          "unit_id": "U-10_distributed_cache",
+          "project": "10_distributed_cache",
+          "game": "PixelDojo Quest",
+          "ts": "2026-10-16T01:40:47.374Z",
+          "pass": true,
+          "metrics": {
+            "kind": "pixelquest-token-bucket",
+            "target_rate": 1.5,
+            "observed_admit_rate": 0.73,
+            "max_burst_1s": 2,
+            "good_admits": 8,
+            "legit_rejected": 0,
+            "abusive_admitted": 0,
+            "abusive_rejected": 4,
+            "heat_peak": 56,
+            "overheated": false
+          },
+          "encounter_id": "encounter-10_distributed_cache",
+          "review_context": {
+            "unit_kind": "concept",
+            "scheduled_review": false,
+            "review_reason": "overdue",
+            "streak_candidate": true,
+            "scheduler_source": "learner-substrate",
+            "verifier_required": true
+          },
+          "curriculum_context": {
+            "concept": "Replicação, invalidação e leitura distribuída",
+            "mechanic": "Replica Cache",
+            "accepted_signal": "hit consistente",
+            "rejected_trap": "valor obsoleto"
+          }
+        },
+        "assertions": [
+          "fresh-session-empty-channel",
+          "visible-replay-controls",
+          "deterministic-core-identical",
+          "fresh-timestamp",
+          "saved-ndjson-sha-unchanged",
+          "journal-return"
+        ]
+      }
+    },
+    {
+      "project": "11_load_balancer",
+      "regionId": "lab-11_load_balancer",
+      "encounterId": "encounter-11_load_balancer",
+      "unitId": "U-11_load_balancer",
+      "kind": "route_health",
+      "status": "pass",
+      "entry": "Órbita 3D → Próximo → Abrir lab",
+      "assertions": [
+        {
+          "name": "visible-entry-map",
+          "passed": true
+        },
+        {
+          "name": "visible-briefing-practice-duel-controls",
+          "passed": true
+        },
+        {
+          "name": "incorrect-actions-emit-fail",
+          "passed": true
+        },
+        {
+          "name": "retry-correct-actions-emit-pass",
+          "passed": true
+        },
+        {
+          "name": "journal-and-return-to-map",
+          "passed": true
+        },
+        {
+          "name": "prior-evidence-prefix-preserved",
+          "passed": true
+        },
+        {
+          "name": "schema-identity-and-context-bound",
+          "passed": true
+        },
+        {
+          "name": "no-browser-mastery-state",
+          "passed": true
+        }
+      ],
+      "failEvidence": {
+        "source": "pixelquest",
+        "unit_id": "U-11_load_balancer",
+        "project": "11_load_balancer",
+        "game": "PixelDojo Quest",
+        "ts": "2026-10-16T01:40:19.940Z",
+        "pass": false,
+        "metrics": {
+          "kind": "pixelquest-route-health",
+          "routed": 0,
+          "isolated": 0,
+          "bad_routes": 2,
+          "good_rejected": 3,
+          "heat_peak": 70,
+          "overheated": true
+        },
+        "encounter_id": "encounter-11_load_balancer",
+        "review_context": {
+          "unit_kind": "concept",
+          "scheduled_review": false,
+          "review_reason": "overdue",
+          "streak_candidate": false,
+          "scheduler_source": "learner-substrate",
+          "verifier_required": true
+        },
+        "curriculum_context": {
+          "concept": "Distribuição de carga, health checks e failover",
+          "mechanic": "Health Router",
+          "accepted_signal": "nó saudável",
+          "rejected_trap": "nó degradado"
+        }
+      },
+      "passEvidence": {
+        "source": "pixelquest",
+        "unit_id": "U-11_load_balancer",
+        "project": "11_load_balancer",
+        "game": "PixelDojo Quest",
+        "ts": "2026-10-16T01:40:20.773Z",
+        "pass": true,
+        "metrics": {
+          "kind": "pixelquest-route-health",
+          "routed": 3,
+          "isolated": 2,
+          "bad_routes": 0,
+          "good_rejected": 0,
+          "heat_peak": 0,
+          "overheated": false
+        },
+        "encounter_id": "encounter-11_load_balancer",
+        "review_context": {
+          "unit_kind": "concept",
+          "scheduled_review": false,
+          "review_reason": "overdue",
+          "streak_candidate": true,
+          "scheduler_source": "learner-substrate",
+          "verifier_required": true
+        },
+        "curriculum_context": {
+          "concept": "Distribuição de carga, health checks e failover",
+          "mechanic": "Health Router",
+          "accepted_signal": "nó saudável",
+          "rejected_trap": "nó degradado"
+        }
+      },
+      "runtimeStatus": "pass",
+      "returning": {
+        "status": "pass",
+        "entry": "reload → fresh briefing → public enterRegion input → visible practice/duel controls",
+        "record": {
+          "source": "pixelquest",
+          "unit_id": "U-11_load_balancer",
+          "project": "11_load_balancer",
+          "game": "PixelDojo Quest",
+          "ts": "2026-10-16T01:40:48.131Z",
+          "pass": true,
+          "metrics": {
+            "kind": "pixelquest-route-health",
+            "routed": 3,
+            "isolated": 2,
+            "bad_routes": 0,
+            "good_rejected": 0,
+            "heat_peak": 0,
+            "overheated": false
+          },
+          "encounter_id": "encounter-11_load_balancer",
+          "review_context": {
+            "unit_kind": "concept",
+            "scheduled_review": false,
+            "review_reason": "overdue",
+            "streak_candidate": true,
+            "scheduler_source": "learner-substrate",
+            "verifier_required": true
+          },
+          "curriculum_context": {
+            "concept": "Distribuição de carga, health checks e failover",
+            "mechanic": "Health Router",
+            "accepted_signal": "nó saudável",
+            "rejected_trap": "nó degradado"
+          }
+        },
+        "assertions": [
+          "fresh-session-empty-channel",
+          "visible-replay-controls",
+          "deterministic-core-identical",
+          "fresh-timestamp",
+          "saved-ndjson-sha-unchanged",
+          "journal-return"
+        ]
+      }
+    },
+    {
+      "project": "12_distributed_job_scheduler",
+      "regionId": "lab-12_distributed_job_scheduler",
+      "encounterId": "encounter-12_distributed_job_scheduler",
+      "unitId": "U-12_distributed_job_scheduler",
+      "kind": "sequence_flow",
+      "status": "pass",
+      "entry": "Órbita 3D → Próximo → Abrir lab",
+      "assertions": [
+        {
+          "name": "visible-entry-map",
+          "passed": true
+        },
+        {
+          "name": "visible-briefing-practice-duel-controls",
+          "passed": true
+        },
+        {
+          "name": "incorrect-actions-emit-fail",
+          "passed": true
+        },
+        {
+          "name": "retry-correct-actions-emit-pass",
+          "passed": true
+        },
+        {
+          "name": "journal-and-return-to-map",
+          "passed": true
+        },
+        {
+          "name": "prior-evidence-prefix-preserved",
+          "passed": true
+        },
+        {
+          "name": "schema-identity-and-context-bound",
+          "passed": true
+        },
+        {
+          "name": "no-browser-mastery-state",
+          "passed": true
+        }
+      ],
+      "failEvidence": {
+        "source": "pixelquest",
+        "unit_id": "U-12_distributed_job_scheduler",
+        "project": "12_distributed_job_scheduler",
+        "game": "PixelDojo Quest",
+        "ts": "2026-10-16T01:40:21.433Z",
+        "pass": false,
+        "metrics": {
+          "kind": "pixelquest-sequence-flow",
+          "advanced": 0,
+          "held": 0,
+          "skipped_required": 3,
+          "guards_missed": 2,
+          "heat_peak": 60,
+          "overheated": true
+        },
+        "encounter_id": "encounter-12_distributed_job_scheduler",
+        "review_context": {
+          "unit_kind": "concept",
+          "scheduled_review": false,
+          "review_reason": "overdue",
+          "streak_candidate": false,
+          "scheduler_source": "learner-substrate",
+          "verifier_required": true
+        },
+        "curriculum_context": {
+          "concept": "Agendamento distribuido, leases e retry",
+          "mechanic": "Lease Scheduler",
+          "accepted_signal": "job elegível",
+          "rejected_trap": "lease duplicado"
+        }
+      },
+      "passEvidence": {
+        "source": "pixelquest",
+        "unit_id": "U-12_distributed_job_scheduler",
+        "project": "12_distributed_job_scheduler",
+        "game": "PixelDojo Quest",
+        "ts": "2026-10-16T01:40:23.926Z",
+        "pass": true,
+        "metrics": {
+          "kind": "pixelquest-sequence-flow",
+          "advanced": 3,
+          "held": 2,
+          "skipped_required": 0,
+          "guards_missed": 0,
+          "heat_peak": 0,
+          "overheated": false
+        },
+        "encounter_id": "encounter-12_distributed_job_scheduler",
+        "review_context": {
+          "unit_kind": "concept",
+          "scheduled_review": false,
+          "review_reason": "overdue",
+          "streak_candidate": true,
+          "scheduler_source": "learner-substrate",
+          "verifier_required": true
+        },
+        "curriculum_context": {
+          "concept": "Agendamento distribuido, leases e retry",
+          "mechanic": "Lease Scheduler",
+          "accepted_signal": "job elegível",
+          "rejected_trap": "lease duplicado"
+        }
+      },
+      "runtimeStatus": "pass",
+      "returning": {
+        "status": "pass",
+        "entry": "reload → fresh briefing → public enterRegion input → visible practice/duel controls",
+        "record": {
+          "source": "pixelquest",
+          "unit_id": "U-12_distributed_job_scheduler",
+          "project": "12_distributed_job_scheduler",
+          "game": "PixelDojo Quest",
+          "ts": "2026-10-16T01:40:48.801Z",
+          "pass": true,
+          "metrics": {
+            "kind": "pixelquest-sequence-flow",
+            "advanced": 3,
+            "held": 2,
+            "skipped_required": 0,
+            "guards_missed": 0,
+            "heat_peak": 0,
+            "overheated": false
+          },
+          "encounter_id": "encounter-12_distributed_job_scheduler",
+          "review_context": {
+            "unit_kind": "concept",
+            "scheduled_review": false,
+            "review_reason": "overdue",
+            "streak_candidate": true,
+            "scheduler_source": "learner-substrate",
+            "verifier_required": true
+          },
+          "curriculum_context": {
+            "concept": "Agendamento distribuido, leases e retry",
+            "mechanic": "Lease Scheduler",
+            "accepted_signal": "job elegível",
+            "rejected_trap": "lease duplicado"
+          }
+        },
+        "assertions": [
+          "fresh-session-empty-channel",
+          "visible-replay-controls",
+          "deterministic-core-identical",
+          "fresh-timestamp",
+          "saved-ndjson-sha-unchanged",
+          "journal-return"
+        ]
+      }
+    },
+    {
+      "project": "13_api_gateway_circuit_breaker",
+      "regionId": "lab-13_api_gateway_circuit_breaker",
+      "encounterId": "encounter-13_api_gateway_circuit_breaker",
+      "unitId": "U-13_api_gateway_circuit_breaker",
+      "kind": "route_health",
+      "status": "pass",
+      "entry": "Órbita 3D → Próximo → Abrir lab",
+      "assertions": [
+        {
+          "name": "visible-entry-map",
+          "passed": true
+        },
+        {
+          "name": "visible-briefing-practice-duel-controls",
+          "passed": true
+        },
+        {
+          "name": "incorrect-actions-emit-fail",
+          "passed": true
+        },
+        {
+          "name": "retry-correct-actions-emit-pass",
+          "passed": true
+        },
+        {
+          "name": "journal-and-return-to-map",
+          "passed": true
+        },
+        {
+          "name": "prior-evidence-prefix-preserved",
+          "passed": true
+        },
+        {
+          "name": "schema-identity-and-context-bound",
+          "passed": true
+        },
+        {
+          "name": "no-browser-mastery-state",
+          "passed": true
+        }
+      ],
+      "failEvidence": {
+        "source": "pixelquest",
+        "unit_id": "U-13_api_gateway_circuit_breaker",
+        "project": "13_api_gateway_circuit_breaker",
+        "game": "PixelDojo Quest",
+        "ts": "2026-10-16T01:40:26.383Z",
+        "pass": false,
+        "metrics": {
+          "kind": "pixelquest-route-health",
+          "routed": 0,
+          "isolated": 0,
+          "bad_routes": 2,
+          "good_rejected": 3,
+          "heat_peak": 70,
+          "overheated": true
+        },
+        "encounter_id": "encounter-13_api_gateway_circuit_breaker",
+        "review_context": {
+          "unit_kind": "concept",
+          "scheduled_review": false,
+          "review_reason": "overdue",
+          "streak_candidate": false,
+          "scheduler_source": "learner-substrate",
+          "verifier_required": true
+        },
+        "curriculum_context": {
+          "concept": "Circuit breaker, bulkhead, retry e limites adaptativos",
+          "mechanic": "Circuit Breaker",
+          "accepted_signal": "upstream saudável",
+          "rejected_trap": "falha em cascata"
+        }
+      },
+      "passEvidence": {
+        "source": "pixelquest",
+        "unit_id": "U-13_api_gateway_circuit_breaker",
+        "project": "13_api_gateway_circuit_breaker",
+        "game": "PixelDojo Quest",
+        "ts": "2026-10-16T01:40:27.043Z",
+        "pass": true,
+        "metrics": {
+          "kind": "pixelquest-route-health",
+          "routed": 3,
+          "isolated": 2,
+          "bad_routes": 0,
+          "good_rejected": 0,
+          "heat_peak": 0,
+          "overheated": false
+        },
+        "encounter_id": "encounter-13_api_gateway_circuit_breaker",
+        "review_context": {
+          "unit_kind": "concept",
+          "scheduled_review": false,
+          "review_reason": "overdue",
+          "streak_candidate": true,
+          "scheduler_source": "learner-substrate",
+          "verifier_required": true
+        },
+        "curriculum_context": {
+          "concept": "Circuit breaker, bulkhead, retry e limites adaptativos",
+          "mechanic": "Circuit Breaker",
+          "accepted_signal": "upstream saudável",
+          "rejected_trap": "falha em cascata"
+        }
+      },
+      "runtimeStatus": "pass",
+      "returning": {
+        "status": "pass",
+        "entry": "reload → fresh briefing → public enterRegion input → visible practice/duel controls",
+        "record": {
+          "source": "pixelquest",
+          "unit_id": "U-13_api_gateway_circuit_breaker",
+          "project": "13_api_gateway_circuit_breaker",
+          "game": "PixelDojo Quest",
+          "ts": "2026-10-16T01:40:49.497Z",
+          "pass": true,
+          "metrics": {
+            "kind": "pixelquest-route-health",
+            "routed": 3,
+            "isolated": 2,
+            "bad_routes": 0,
+            "good_rejected": 0,
+            "heat_peak": 0,
+            "overheated": false
+          },
+          "encounter_id": "encounter-13_api_gateway_circuit_breaker",
+          "review_context": {
+            "unit_kind": "concept",
+            "scheduled_review": false,
+            "review_reason": "overdue",
+            "streak_candidate": true,
+            "scheduler_source": "learner-substrate",
+            "verifier_required": true
+          },
+          "curriculum_context": {
+            "concept": "Circuit breaker, bulkhead, retry e limites adaptativos",
+            "mechanic": "Circuit Breaker",
+            "accepted_signal": "upstream saudável",
+            "rejected_trap": "falha em cascata"
+          }
+        },
+        "assertions": [
+          "fresh-session-empty-channel",
+          "visible-replay-controls",
+          "deterministic-core-identical",
+          "fresh-timestamp",
+          "saved-ndjson-sha-unchanged",
+          "journal-return"
+        ]
+      }
+    },
+    {
+      "project": "14_log_aggregator",
+      "regionId": "lab-14_log_aggregator",
+      "encounterId": "encounter-14_log_aggregator",
+      "unitId": "U-14_log_aggregator",
+      "kind": "token_bucket",
+      "status": "pass",
+      "entry": "Órbita 3D → Próximo → Abrir lab",
+      "assertions": [
+        {
+          "name": "visible-entry-map",
+          "passed": true
+        },
+        {
+          "name": "visible-briefing-practice-duel-controls",
+          "passed": true
+        },
+        {
+          "name": "incorrect-actions-emit-fail",
+          "passed": true
+        },
+        {
+          "name": "retry-correct-actions-emit-pass",
+          "passed": true
+        },
+        {
+          "name": "journal-and-return-to-map",
+          "passed": true
+        },
+        {
+          "name": "prior-evidence-prefix-preserved",
+          "passed": true
+        },
+        {
+          "name": "schema-identity-and-context-bound",
+          "passed": true
+        },
+        {
+          "name": "no-browser-mastery-state",
+          "passed": true
+        }
+      ],
+      "failEvidence": {
+        "source": "pixelquest",
+        "unit_id": "U-14_log_aggregator",
+        "project": "14_log_aggregator",
+        "game": "PixelDojo Quest",
+        "ts": "2026-10-16T01:40:30.701Z",
+        "pass": false,
+        "metrics": {
+          "kind": "pixelquest-token-bucket",
+          "target_rate": 1.5,
+          "observed_admit_rate": 0,
+          "max_burst_1s": 1,
+          "good_admits": 0,
+          "legit_rejected": 8,
+          "abusive_admitted": 4,
+          "abusive_rejected": 0,
+          "heat_peak": 112,
+          "overheated": true
+        },
+        "encounter_id": "encounter-14_log_aggregator",
+        "review_context": {
+          "unit_kind": "concept",
+          "scheduled_review": false,
+          "review_reason": "overdue",
+          "streak_candidate": false,
+          "scheduler_source": "learner-substrate",
+          "verifier_required": true
+        },
+        "curriculum_context": {
+          "concept": "Ingestão, consulta e ordenação de logs",
+          "mechanic": "Log Ingest",
+          "accepted_signal": "linha indexável",
+          "rejected_trap": "ruído malformado"
+        }
+      },
+      "passEvidence": {
+        "source": "pixelquest",
+        "unit_id": "U-14_log_aggregator",
+        "project": "14_log_aggregator",
+        "game": "PixelDojo Quest",
+        "ts": "2026-10-16T01:40:31.967Z",
+        "pass": true,
+        "metrics": {
+          "kind": "pixelquest-token-bucket",
+          "target_rate": 1.5,
+          "observed_admit_rate": 0.73,
+          "max_burst_1s": 2,
+          "good_admits": 8,
+          "legit_rejected": 0,
+          "abusive_admitted": 0,
+          "abusive_rejected": 4,
+          "heat_peak": 56,
+          "overheated": false
+        },
+        "encounter_id": "encounter-14_log_aggregator",
+        "review_context": {
+          "unit_kind": "concept",
+          "scheduled_review": false,
+          "review_reason": "overdue",
+          "streak_candidate": true,
+          "scheduler_source": "learner-substrate",
+          "verifier_required": true
+        },
+        "curriculum_context": {
+          "concept": "Ingestão, consulta e ordenação de logs",
+          "mechanic": "Log Ingest",
+          "accepted_signal": "linha indexável",
+          "rejected_trap": "ruído malformado"
+        }
+      },
+      "runtimeStatus": "pass",
+      "returning": {
+        "status": "pass",
+        "entry": "reload → fresh briefing → public enterRegion input → visible practice/duel controls",
+        "record": {
+          "source": "pixelquest",
+          "unit_id": "U-14_log_aggregator",
+          "project": "14_log_aggregator",
+          "game": "PixelDojo Quest",
+          "ts": "2026-10-16T01:40:50.684Z",
+          "pass": true,
+          "metrics": {
+            "kind": "pixelquest-token-bucket",
+            "target_rate": 1.5,
+            "observed_admit_rate": 0.73,
+            "max_burst_1s": 2,
+            "good_admits": 8,
+            "legit_rejected": 0,
+            "abusive_admitted": 0,
+            "abusive_rejected": 4,
+            "heat_peak": 56,
+            "overheated": false
+          },
+          "encounter_id": "encounter-14_log_aggregator",
+          "review_context": {
+            "unit_kind": "concept",
+            "scheduled_review": false,
+            "review_reason": "overdue",
+            "streak_candidate": true,
+            "scheduler_source": "learner-substrate",
+            "verifier_required": true
+          },
+          "curriculum_context": {
+            "concept": "Ingestão, consulta e ordenação de logs",
+            "mechanic": "Log Ingest",
+            "accepted_signal": "linha indexável",
+            "rejected_trap": "ruído malformado"
+          }
+        },
+        "assertions": [
+          "fresh-session-empty-channel",
+          "visible-replay-controls",
+          "deterministic-core-identical",
+          "fresh-timestamp",
+          "saved-ndjson-sha-unchanged",
+          "journal-return"
+        ]
+      }
+    },
+    {
+      "project": "15_metrics_collector",
+      "regionId": "lab-15_metrics_collector",
+      "encounterId": "encounter-15_metrics_collector",
+      "unitId": "U-15_metrics_collector",
+      "kind": "token_bucket",
+      "status": "pass",
+      "entry": "Órbita 3D → Próximo → Abrir lab",
+      "assertions": [
+        {
+          "name": "visible-entry-map",
+          "passed": true
+        },
+        {
+          "name": "visible-briefing-practice-duel-controls",
+          "passed": true
+        },
+        {
+          "name": "incorrect-actions-emit-fail",
+          "passed": true
+        },
+        {
+          "name": "retry-correct-actions-emit-pass",
+          "passed": true
+        },
+        {
+          "name": "journal-and-return-to-map",
+          "passed": true
+        },
+        {
+          "name": "prior-evidence-prefix-preserved",
+          "passed": true
+        },
+        {
+          "name": "schema-identity-and-context-bound",
+          "passed": true
+        },
+        {
+          "name": "no-browser-mastery-state",
+          "passed": true
+        }
+      ],
+      "failEvidence": {
+        "source": "pixelquest",
+        "unit_id": "U-15_metrics_collector",
+        "project": "15_metrics_collector",
+        "game": "PixelDojo Quest",
+        "ts": "2026-10-16T01:40:33.002Z",
+        "pass": false,
+        "metrics": {
+          "kind": "pixelquest-token-bucket",
+          "target_rate": 1.5,
+          "observed_admit_rate": 0,
+          "max_burst_1s": 1,
+          "good_admits": 0,
+          "legit_rejected": 8,
+          "abusive_admitted": 4,
+          "abusive_rejected": 0,
+          "heat_peak": 112,
+          "overheated": true
+        },
+        "encounter_id": "encounter-15_metrics_collector",
+        "review_context": {
+          "unit_kind": "concept",
+          "scheduled_review": false,
+          "review_reason": "overdue",
+          "streak_candidate": false,
+          "scheduler_source": "learner-substrate",
+          "verifier_required": true
+        },
+        "curriculum_context": {
+          "concept": "Coleta, agregação e janelas de métricas",
+          "mechanic": "Metrics Window",
+          "accepted_signal": "amostra agregável",
+          "rejected_trap": "cardinalidade explosiva"
+        }
+      },
+      "passEvidence": {
+        "source": "pixelquest",
+        "unit_id": "U-15_metrics_collector",
+        "project": "15_metrics_collector",
+        "game": "PixelDojo Quest",
+        "ts": "2026-10-16T01:40:33.876Z",
+        "pass": true,
+        "metrics": {
+          "kind": "pixelquest-token-bucket",
+          "target_rate": 1.5,
+          "observed_admit_rate": 0.73,
+          "max_burst_1s": 2,
+          "good_admits": 8,
+          "legit_rejected": 0,
+          "abusive_admitted": 0,
+          "abusive_rejected": 4,
+          "heat_peak": 56,
+          "overheated": false
+        },
+        "encounter_id": "encounter-15_metrics_collector",
+        "review_context": {
+          "unit_kind": "concept",
+          "scheduled_review": false,
+          "review_reason": "overdue",
+          "streak_candidate": true,
+          "scheduler_source": "learner-substrate",
+          "verifier_required": true
+        },
+        "curriculum_context": {
+          "concept": "Coleta, agregação e janelas de métricas",
+          "mechanic": "Metrics Window",
+          "accepted_signal": "amostra agregável",
+          "rejected_trap": "cardinalidade explosiva"
+        }
+      },
+      "runtimeStatus": "pass",
+      "returning": {
+        "status": "pass",
+        "entry": "reload → fresh briefing → public enterRegion input → visible practice/duel controls",
+        "record": {
+          "source": "pixelquest",
+          "unit_id": "U-15_metrics_collector",
+          "project": "15_metrics_collector",
+          "game": "PixelDojo Quest",
+          "ts": "2026-10-16T01:40:51.551Z",
+          "pass": true,
+          "metrics": {
+            "kind": "pixelquest-token-bucket",
+            "target_rate": 1.5,
+            "observed_admit_rate": 0.73,
+            "max_burst_1s": 2,
+            "good_admits": 8,
+            "legit_rejected": 0,
+            "abusive_admitted": 0,
+            "abusive_rejected": 4,
+            "heat_peak": 56,
+            "overheated": false
+          },
+          "encounter_id": "encounter-15_metrics_collector",
+          "review_context": {
+            "unit_kind": "concept",
+            "scheduled_review": false,
+            "review_reason": "overdue",
+            "streak_candidate": true,
+            "scheduler_source": "learner-substrate",
+            "verifier_required": true
+          },
+          "curriculum_context": {
+            "concept": "Coleta, agregação e janelas de métricas",
+            "mechanic": "Metrics Window",
+            "accepted_signal": "amostra agregável",
+            "rejected_trap": "cardinalidade explosiva"
+          }
+        },
+        "assertions": [
+          "fresh-session-empty-channel",
+          "visible-replay-controls",
+          "deterministic-core-identical",
+          "fresh-timestamp",
+          "saved-ndjson-sha-unchanged",
+          "journal-return"
+        ]
+      }
+    },
+    {
+      "project": "16_mini_message_queue",
+      "regionId": "lab-16_mini_message_queue",
+      "encounterId": "encounter-16_mini_message_queue",
+      "unitId": "U-16_mini_message_queue",
+      "kind": "sequence_flow",
+      "status": "pass",
+      "entry": "Órbita 3D → Próximo → Abrir lab",
+      "assertions": [
+        {
+          "name": "visible-entry-map",
+          "passed": true
+        },
+        {
+          "name": "visible-briefing-practice-duel-controls",
+          "passed": true
+        },
+        {
+          "name": "incorrect-actions-emit-fail",
+          "passed": true
+        },
+        {
+          "name": "retry-correct-actions-emit-pass",
+          "passed": true
+        },
+        {
+          "name": "journal-and-return-to-map",
+          "passed": true
+        },
+        {
+          "name": "prior-evidence-prefix-preserved",
+          "passed": true
+        },
+        {
+          "name": "schema-identity-and-context-bound",
+          "passed": true
+        },
+        {
+          "name": "no-browser-mastery-state",
+          "passed": true
+        }
+      ],
+      "failEvidence": {
+        "source": "pixelquest",
+        "unit_id": "U-16_mini_message_queue",
+        "project": "16_mini_message_queue",
+        "game": "PixelDojo Quest",
+        "ts": "2026-10-16T01:40:34.442Z",
+        "pass": false,
+        "metrics": {
+          "kind": "pixelquest-sequence-flow",
+          "advanced": 0,
+          "held": 0,
+          "skipped_required": 3,
+          "guards_missed": 2,
+          "heat_peak": 60,
+          "overheated": true
+        },
+        "encounter_id": "encounter-16_mini_message_queue",
+        "review_context": {
+          "unit_kind": "concept",
+          "scheduled_review": false,
+          "review_reason": "overdue",
+          "streak_candidate": false,
+          "scheduler_source": "learner-substrate",
+          "verifier_required": true
+        },
+        "curriculum_context": {
+          "concept": "Publish/subscribe, ack e entrega controlada",
+          "mechanic": "Ack Queue",
+          "accepted_signal": "mensagem pronta",
+          "rejected_trap": "ack ausente"
+        }
+      },
+      "passEvidence": {
+        "source": "pixelquest",
+        "unit_id": "U-16_mini_message_queue",
+        "project": "16_mini_message_queue",
+        "game": "PixelDojo Quest",
+        "ts": "2026-10-16T01:40:35.043Z",
+        "pass": true,
+        "metrics": {
+          "kind": "pixelquest-sequence-flow",
+          "advanced": 3,
+          "held": 2,
+          "skipped_required": 0,
+          "guards_missed": 0,
+          "heat_peak": 0,
+          "overheated": false
+        },
+        "encounter_id": "encounter-16_mini_message_queue",
+        "review_context": {
+          "unit_kind": "concept",
+          "scheduled_review": false,
+          "review_reason": "overdue",
+          "streak_candidate": true,
+          "scheduler_source": "learner-substrate",
+          "verifier_required": true
+        },
+        "curriculum_context": {
+          "concept": "Publish/subscribe, ack e entrega controlada",
+          "mechanic": "Ack Queue",
+          "accepted_signal": "mensagem pronta",
+          "rejected_trap": "ack ausente"
+        }
+      },
+      "runtimeStatus": "pass",
+      "returning": {
+        "status": "pass",
+        "entry": "reload → fresh briefing → public enterRegion input → visible practice/duel controls",
+        "record": {
+          "source": "pixelquest",
+          "unit_id": "U-16_mini_message_queue",
+          "project": "16_mini_message_queue",
+          "game": "PixelDojo Quest",
+          "ts": "2026-10-16T01:40:52.134Z",
+          "pass": true,
+          "metrics": {
+            "kind": "pixelquest-sequence-flow",
+            "advanced": 3,
+            "held": 2,
+            "skipped_required": 0,
+            "guards_missed": 0,
+            "heat_peak": 0,
+            "overheated": false
+          },
+          "encounter_id": "encounter-16_mini_message_queue",
+          "review_context": {
+            "unit_kind": "concept",
+            "scheduled_review": false,
+            "review_reason": "overdue",
+            "streak_candidate": true,
+            "scheduler_source": "learner-substrate",
+            "verifier_required": true
+          },
+          "curriculum_context": {
+            "concept": "Publish/subscribe, ack e entrega controlada",
+            "mechanic": "Ack Queue",
+            "accepted_signal": "mensagem pronta",
+            "rejected_trap": "ack ausente"
+          }
+        },
+        "assertions": [
+          "fresh-session-empty-channel",
+          "visible-replay-controls",
+          "deterministic-core-identical",
+          "fresh-timestamp",
+          "saved-ndjson-sha-unchanged",
+          "journal-return"
+        ]
+      }
+    },
+    {
+      "project": "17_distributed_config_service",
+      "regionId": "lab-17_distributed_config_service",
+      "encounterId": "encounter-17_distributed_config_service",
+      "unitId": "U-17_distributed_config_service",
+      "kind": "sequence_flow",
+      "status": "pass",
+      "entry": "Órbita 3D → Próximo → Abrir lab",
+      "assertions": [
+        {
+          "name": "visible-entry-map",
+          "passed": true
+        },
+        {
+          "name": "visible-briefing-practice-duel-controls",
+          "passed": true
+        },
+        {
+          "name": "incorrect-actions-emit-fail",
+          "passed": true
+        },
+        {
+          "name": "retry-correct-actions-emit-pass",
+          "passed": true
+        },
+        {
+          "name": "journal-and-return-to-map",
+          "passed": true
+        },
+        {
+          "name": "prior-evidence-prefix-preserved",
+          "passed": true
+        },
+        {
+          "name": "schema-identity-and-context-bound",
+          "passed": true
+        },
+        {
+          "name": "no-browser-mastery-state",
+          "passed": true
+        }
+      ],
+      "failEvidence": {
+        "source": "pixelquest",
+        "unit_id": "U-17_distributed_config_service",
+        "project": "17_distributed_config_service",
+        "game": "PixelDojo Quest",
+        "ts": "2026-10-16T01:40:35.776Z",
+        "pass": false,
+        "metrics": {
+          "kind": "pixelquest-sequence-flow",
+          "advanced": 0,
+          "held": 0,
+          "skipped_required": 3,
+          "guards_missed": 2,
+          "heat_peak": 60,
+          "overheated": true
+        },
+        "encounter_id": "encounter-17_distributed_config_service",
+        "review_context": {
+          "unit_kind": "concept",
+          "scheduled_review": false,
+          "review_reason": "overdue",
+          "streak_candidate": false,
+          "scheduler_source": "learner-substrate",
+          "verifier_required": true
+        },
+        "curriculum_context": {
+          "concept": "Config versionada, watch e propagação segura",
+          "mechanic": "Config Watch",
+          "accepted_signal": "config versionada",
+          "rejected_trap": "rollback quebrado"
+        }
+      },
+      "passEvidence": {
+        "source": "pixelquest",
+        "unit_id": "U-17_distributed_config_service",
+        "project": "17_distributed_config_service",
+        "game": "PixelDojo Quest",
+        "ts": "2026-10-16T01:40:36.225Z",
+        "pass": true,
+        "metrics": {
+          "kind": "pixelquest-sequence-flow",
+          "advanced": 3,
+          "held": 2,
+          "skipped_required": 0,
+          "guards_missed": 0,
+          "heat_peak": 0,
+          "overheated": false
+        },
+        "encounter_id": "encounter-17_distributed_config_service",
+        "review_context": {
+          "unit_kind": "concept",
+          "scheduled_review": false,
+          "review_reason": "overdue",
+          "streak_candidate": true,
+          "scheduler_source": "learner-substrate",
+          "verifier_required": true
+        },
+        "curriculum_context": {
+          "concept": "Config versionada, watch e propagação segura",
+          "mechanic": "Config Watch",
+          "accepted_signal": "config versionada",
+          "rejected_trap": "rollback quebrado"
+        }
+      },
+      "runtimeStatus": "pass",
+      "returning": {
+        "status": "pass",
+        "entry": "reload → fresh briefing → public enterRegion input → visible practice/duel controls",
+        "record": {
+          "source": "pixelquest",
+          "unit_id": "U-17_distributed_config_service",
+          "project": "17_distributed_config_service",
+          "game": "PixelDojo Quest",
+          "ts": "2026-10-16T01:40:52.776Z",
+          "pass": true,
+          "metrics": {
+            "kind": "pixelquest-sequence-flow",
+            "advanced": 3,
+            "held": 2,
+            "skipped_required": 0,
+            "guards_missed": 0,
+            "heat_peak": 0,
+            "overheated": false
+          },
+          "encounter_id": "encounter-17_distributed_config_service",
+          "review_context": {
+            "unit_kind": "concept",
+            "scheduled_review": false,
+            "review_reason": "overdue",
+            "streak_candidate": true,
+            "scheduler_source": "learner-substrate",
+            "verifier_required": true
+          },
+          "curriculum_context": {
+            "concept": "Config versionada, watch e propagação segura",
+            "mechanic": "Config Watch",
+            "accepted_signal": "config versionada",
+            "rejected_trap": "rollback quebrado"
+          }
+        },
+        "assertions": [
+          "fresh-session-empty-channel",
+          "visible-replay-controls",
+          "deterministic-core-identical",
+          "fresh-timestamp",
+          "saved-ndjson-sha-unchanged",
+          "journal-return"
+        ]
+      }
+    },
+    {
+      "project": "18_search_engine",
+      "regionId": "lab-18_search_engine",
+      "encounterId": "encounter-18_search_engine",
+      "unitId": "U-18_search_engine",
+      "kind": "sequence_flow",
+      "status": "pass",
+      "entry": "Órbita 3D → Próximo → Abrir lab",
+      "assertions": [
+        {
+          "name": "visible-entry-map",
+          "passed": true
+        },
+        {
+          "name": "visible-briefing-practice-duel-controls",
+          "passed": true
+        },
+        {
+          "name": "incorrect-actions-emit-fail",
+          "passed": true
+        },
+        {
+          "name": "retry-correct-actions-emit-pass",
+          "passed": true
+        },
+        {
+          "name": "journal-and-return-to-map",
+          "passed": true
+        },
+        {
+          "name": "prior-evidence-prefix-preserved",
+          "passed": true
+        },
+        {
+          "name": "schema-identity-and-context-bound",
+          "passed": true
+        },
+        {
+          "name": "no-browser-mastery-state",
+          "passed": true
+        }
+      ],
+      "failEvidence": {
+        "source": "pixelquest",
+        "unit_id": "U-18_search_engine",
+        "project": "18_search_engine",
+        "game": "PixelDojo Quest",
+        "ts": "2026-10-16T01:40:36.691Z",
+        "pass": false,
+        "metrics": {
+          "kind": "pixelquest-sequence-flow",
+          "advanced": 0,
+          "held": 0,
+          "skipped_required": 3,
+          "guards_missed": 2,
+          "heat_peak": 60,
+          "overheated": true
+        },
+        "encounter_id": "encounter-18_search_engine",
+        "review_context": {
+          "unit_kind": "concept",
+          "scheduled_review": false,
+          "review_reason": "overdue",
+          "streak_candidate": false,
+          "scheduler_source": "learner-substrate",
+          "verifier_required": true
+        },
+        "curriculum_context": {
+          "concept": "Indexação, ranking e consulta incremental",
+          "mechanic": "Search Index",
+          "accepted_signal": "documento relevante",
+          "rejected_trap": "consulta ruidosa"
+        }
+      },
+      "passEvidence": {
+        "source": "pixelquest",
+        "unit_id": "U-18_search_engine",
+        "project": "18_search_engine",
+        "game": "PixelDojo Quest",
+        "ts": "2026-10-16T01:40:37.158Z",
+        "pass": true,
+        "metrics": {
+          "kind": "pixelquest-sequence-flow",
+          "advanced": 3,
+          "held": 2,
+          "skipped_required": 0,
+          "guards_missed": 0,
+          "heat_peak": 0,
+          "overheated": false
+        },
+        "encounter_id": "encounter-18_search_engine",
+        "review_context": {
+          "unit_kind": "concept",
+          "scheduled_review": false,
+          "review_reason": "overdue",
+          "streak_candidate": true,
+          "scheduler_source": "learner-substrate",
+          "verifier_required": true
+        },
+        "curriculum_context": {
+          "concept": "Indexação, ranking e consulta incremental",
+          "mechanic": "Search Index",
+          "accepted_signal": "documento relevante",
+          "rejected_trap": "consulta ruidosa"
+        }
+      },
+      "runtimeStatus": "pass",
+      "returning": {
+        "status": "pass",
+        "entry": "reload → fresh briefing → public enterRegion input → visible practice/duel controls",
+        "record": {
+          "source": "pixelquest",
+          "unit_id": "U-18_search_engine",
+          "project": "18_search_engine",
+          "game": "PixelDojo Quest",
+          "ts": "2026-10-16T01:40:53.434Z",
+          "pass": true,
+          "metrics": {
+            "kind": "pixelquest-sequence-flow",
+            "advanced": 3,
+            "held": 2,
+            "skipped_required": 0,
+            "guards_missed": 0,
+            "heat_peak": 0,
+            "overheated": false
+          },
+          "encounter_id": "encounter-18_search_engine",
+          "review_context": {
+            "unit_kind": "concept",
+            "scheduled_review": false,
+            "review_reason": "overdue",
+            "streak_candidate": true,
+            "scheduler_source": "learner-substrate",
+            "verifier_required": true
+          },
+          "curriculum_context": {
+            "concept": "Indexação, ranking e consulta incremental",
+            "mechanic": "Search Index",
+            "accepted_signal": "documento relevante",
+            "rejected_trap": "consulta ruidosa"
+          }
+        },
+        "assertions": [
+          "fresh-session-empty-channel",
+          "visible-replay-controls",
+          "deterministic-core-identical",
+          "fresh-timestamp",
+          "saved-ndjson-sha-unchanged",
+          "journal-return"
+        ]
+      }
+    }
+  ],
+  "evidenceRefs": [
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/01_rate_limiter-fail-dom.json",
+      "sha256": "7edd27781a647a81669751455f6216c9b116169638c41f1cc2ef1b137473eee1"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/01_rate_limiter-fail-retry.ndjson",
+      "sha256": "7b03a285ba8f4cf0bb43cf80cdd68385c9825cdcecf09e4eab08e38753d2cef1"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/01_rate_limiter-retry-pass-dom.json",
+      "sha256": "3504e33378f1c226330add34d8d2ca8adcf2a31b72339a3b61305741601e4e06"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/01_rate_limiter-returning-pass-dom.json",
+      "sha256": "3504e33378f1c226330add34d8d2ca8adcf2a31b72339a3b61305741601e4e06"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/01_rate_limiter-returning.ndjson",
+      "sha256": "368b8d040f461989b11128d7d3fc812bd3bf85acaf223493f7df18b18114d951"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/02_key_value_store-fail-dom.json",
+      "sha256": "eacf7a286857763932bf07a3ac41604e6f8f0dac85060f5eafdc0da4b4f2dbb5"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/02_key_value_store-fail-retry.ndjson",
+      "sha256": "48a4eba50e2f036eb09d548d3da67e6fad4a598de559a73e7b7d03b11f6aaab7"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/02_key_value_store-retry-pass-dom.json",
+      "sha256": "736dd9aa85c6fb99a8d5b711930c8e1c3588f943daa6b44d6d70e02a5e109697"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/02_key_value_store-returning-pass-dom.json",
+      "sha256": "736dd9aa85c6fb99a8d5b711930c8e1c3588f943daa6b44d6d70e02a5e109697"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/02_key_value_store-returning.ndjson",
+      "sha256": "e665f461f4140c76ae29e62bcb485745d2bade1335714b238e0f56ae0b81a5b6"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/03_url_shortener-fail-dom.json",
+      "sha256": "a731eec90df1c9137c80445ba1b67a751c43470f2dbcf5f59c97ccdbfb5ea7e8"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/03_url_shortener-fail-retry.ndjson",
+      "sha256": "6cae3847cf67fe5682d36d2a41b27c849e77a8de22b14a37deadaf180fc70adc"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/03_url_shortener-retry-pass-dom.json",
+      "sha256": "14354a28474057af6f5dbc01d2c555e3fcbb48d43fe4d5056d55e657667aa87b"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/03_url_shortener-returning-pass-dom.json",
+      "sha256": "14354a28474057af6f5dbc01d2c555e3fcbb48d43fe4d5056d55e657667aa87b"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/03_url_shortener-returning.ndjson",
+      "sha256": "2875fc69345c388763dda872b2397cbe6cc742cd03f7e338035809f37486daa2"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/04_concurrent_task_queue-fail-dom.json",
+      "sha256": "0b395ee4047d2cfa1e5036c8a3d2cec9c24c418e886cde1ecfbb49d8f1274097"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/04_concurrent_task_queue-fail-retry.ndjson",
+      "sha256": "6b789c2057ad28805258ba605d60b4ae79487c2b9b7e5c5ce0b3067f87ee28ff"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/04_concurrent_task_queue-retry-pass-dom.json",
+      "sha256": "0fde406ca087a1e29b103ad205812ed7d70782eb5764dcd76f8e5322948193eb"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/04_concurrent_task_queue-returning-pass-dom.json",
+      "sha256": "0fde406ca087a1e29b103ad205812ed7d70782eb5764dcd76f8e5322948193eb"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/04_concurrent_task_queue-returning.ndjson",
+      "sha256": "e849c566c49cfa83e1095dff46a439cafed54f446c1e96c8b0d341cb300a1a30"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/05_websocket_chat-fail-dom.json",
+      "sha256": "31510c5476b87fe5915f105589c910b4c1e1694f575d8c200a0e94a22d9e0869"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/05_websocket_chat-fail-retry.ndjson",
+      "sha256": "b6ffe036dbed205b4c42474a1c300ac8e607e0ad77b4c7c5a4f4f8bd649f10bf"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/05_websocket_chat-retry-pass-dom.json",
+      "sha256": "76e76e547c5f06024dfb209824cd52e4f41a4d533e296a10fb294bd46faf8a17"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/05_websocket_chat-returning-pass-dom.json",
+      "sha256": "76e76e547c5f06024dfb209824cd52e4f41a4d533e296a10fb294bd46faf8a17"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/05_websocket_chat-returning.ndjson",
+      "sha256": "216d2d338758497249caa369882b4cd916a83f20cc29707788317c7f3039fb84"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/06_file_upload_pipeline-fail-dom.json",
+      "sha256": "eee32238e1e0f88cf3c5c82dc5c9d8b9ad2e98baa9f8bf784f7f58d8e1ccbbc0"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/06_file_upload_pipeline-fail-retry.ndjson",
+      "sha256": "1f363462734cfc041b3d2f0c1fcbaca9cf24677ee1e6dfa26a47f638b9af7426"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/06_file_upload_pipeline-retry-pass-dom.json",
+      "sha256": "8e74792347991c0a226f82e39cbb8465270a523ed5be7ab1c40bfaec4dc1988f"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/06_file_upload_pipeline-returning-pass-dom.json",
+      "sha256": "8e74792347991c0a226f82e39cbb8465270a523ed5be7ab1c40bfaec4dc1988f"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/06_file_upload_pipeline-returning.ndjson",
+      "sha256": "2e9742c1259e6fc8ca64d6b7d7d4b5d5710380ec0b1dfa44a453cd8f7e5370d7"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/07_rest_api_auth-fail-dom.json",
+      "sha256": "25ec8b3d9a84dcb4354433cf33ea3436958bc2de99d89c073344d5614ec4d7be"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/07_rest_api_auth-fail-retry.ndjson",
+      "sha256": "3261ad7c2d5cddccaead17eae0fbeca0cf76222049a8c30905161817e31fdacb"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/07_rest_api_auth-retry-pass-dom.json",
+      "sha256": "76b1fc0009c111f5bc41bb7a58992891989f0b5fcb5dc1803de878c91358819c"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/07_rest_api_auth-returning-pass-dom.json",
+      "sha256": "76b1fc0009c111f5bc41bb7a58992891989f0b5fcb5dc1803de878c91358819c"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/07_rest_api_auth-returning.ndjson",
+      "sha256": "0c994b237d1cdf6d8e7d0950cc6dda6b51df7eb0466c7b258a424bdbe65601f3"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/08_event_driven_order_system-fail-dom.json",
+      "sha256": "1e0ce057618aa7399a54d7717df67828193136cf34e10f2ba957d98a485780b8"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/08_event_driven_order_system-fail-retry.ndjson",
+      "sha256": "202f3c79b57787173d37680470fb0c752481318c2d323367a494c1f416f6ae40"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/08_event_driven_order_system-retry-pass-dom.json",
+      "sha256": "3a6f19877a1671c3a5ac408eb8c8385a34a366e8db2e513fc801eebd43fdbacd"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/08_event_driven_order_system-returning-pass-dom.json",
+      "sha256": "3a6f19877a1671c3a5ac408eb8c8385a34a366e8db2e513fc801eebd43fdbacd"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/08_event_driven_order_system-returning.ndjson",
+      "sha256": "dac715fe7b120b85f0ac4ff2c9162e4f92ae15704734ff17e07f0b19c028272b"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/09_plugin_system-fail-dom.json",
+      "sha256": "eb9800bf3f2c91e065745a7a1f7ecab35d23292ac9ffe4b60021f8e96488a5dc"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/09_plugin_system-fail-retry.ndjson",
+      "sha256": "29611d1a716e083d56f2b2f53f756de96055bc799f7d1b236ba15ce6071460ba"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/09_plugin_system-retry-pass-dom.json",
+      "sha256": "1c2fe8f147e53dd7839f2e892764a26bbae801a11e94e9a7dfe0f70208d23117"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/09_plugin_system-returning-pass-dom.json",
+      "sha256": "1c2fe8f147e53dd7839f2e892764a26bbae801a11e94e9a7dfe0f70208d23117"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/09_plugin_system-returning.ndjson",
+      "sha256": "a17691e047072b8df0db4e957638bb06f0eb0841e20ea20cd79075250027723f"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/10_distributed_cache-fail-dom.json",
+      "sha256": "f10177a9e3ac0d2136a664efbf4308a558720da67740533056dbd3b00cf072cb"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/10_distributed_cache-fail-retry.ndjson",
+      "sha256": "c7edf9109b32466c1dc5eb061ed0ce90c59dc066e2ba87ad532aa8d43b856db6"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/10_distributed_cache-retry-pass-dom.json",
+      "sha256": "57686aa4d7350227045b5cc53e0febc6314cbe68726885d9d3744b24cf588439"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/10_distributed_cache-returning-pass-dom.json",
+      "sha256": "57686aa4d7350227045b5cc53e0febc6314cbe68726885d9d3744b24cf588439"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/10_distributed_cache-returning.ndjson",
+      "sha256": "952d38e6cbce10cb8ac85d80cbd9b018f012d05e834de0a1a6597aab5a867b11"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/11_load_balancer-fail-dom.json",
+      "sha256": "637ec4c011fcf2214455bad7126092ec2dc290f6194b63be3a465ed470917550"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/11_load_balancer-fail-retry.ndjson",
+      "sha256": "75fc7cc048294f5cdae1c0217bc9c4d6d95dd1fd396b1096fc50cdfa2eabde7d"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/11_load_balancer-retry-pass-dom.json",
+      "sha256": "dfa096432ea4ea327d5f826c1334393f0937780bb8343dcc44ff1e0fcd839783"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/11_load_balancer-returning-pass-dom.json",
+      "sha256": "dfa096432ea4ea327d5f826c1334393f0937780bb8343dcc44ff1e0fcd839783"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/11_load_balancer-returning.ndjson",
+      "sha256": "2b74890699389fd72e5bff2090458cff51d92fa685a8ea98c24dcbe745bf84d6"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/12_distributed_job_scheduler-fail-dom.json",
+      "sha256": "86f8a82252b66553f5913a45706f64548201d1fe3ce8876ac3b63ee684a3ad36"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/12_distributed_job_scheduler-fail-retry.ndjson",
+      "sha256": "f1fb066be0aa0cbde7b198ae1fe6af407f314312699167596e481a929084b32b"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/12_distributed_job_scheduler-retry-pass-dom.json",
+      "sha256": "210be7f0f4a198f92d5eabb628e4084500072642fb680a388cc61361f29f221a"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/12_distributed_job_scheduler-returning-pass-dom.json",
+      "sha256": "210be7f0f4a198f92d5eabb628e4084500072642fb680a388cc61361f29f221a"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/12_distributed_job_scheduler-returning.ndjson",
+      "sha256": "5493fba45f07fce6e8e04891a1143ae977292b2889d0ad2e57256df83232fc30"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/13_api_gateway_circuit_breaker-fail-dom.json",
+      "sha256": "d7fc03e97c0e56f77ec767bcec9574ab60faa22c5faa342d9fb64371db682903"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/13_api_gateway_circuit_breaker-fail-retry.ndjson",
+      "sha256": "f192467db03fbea971ac0148369737ea132481f4df7074a24163aa8c464cbf04"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/13_api_gateway_circuit_breaker-retry-pass-dom.json",
+      "sha256": "942d785d91cd13e568878cad7e20b1c81375fcb68650fb95842443a4143a8492"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/13_api_gateway_circuit_breaker-returning-pass-dom.json",
+      "sha256": "942d785d91cd13e568878cad7e20b1c81375fcb68650fb95842443a4143a8492"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/13_api_gateway_circuit_breaker-returning.ndjson",
+      "sha256": "f202bfd1abb35168d1c73bcb3c40cb0a4fc9752c5c4bda8fc85aea9aecb06342"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/14_log_aggregator-fail-dom.json",
+      "sha256": "1ea78b2a1bf0d9d3e0f3a195dfd94d040753566c3320877408ca998f6fd55b3d"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/14_log_aggregator-fail-retry.ndjson",
+      "sha256": "ca412fcd1bcfa0eff800eb4a9daf07689700b58d857311235791919180ae8016"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/14_log_aggregator-retry-pass-dom.json",
+      "sha256": "8967a00291b7dee2c693809f2f46e0fded1a0e6bae7f676a90429f4d11405bd5"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/14_log_aggregator-returning-pass-dom.json",
+      "sha256": "8967a00291b7dee2c693809f2f46e0fded1a0e6bae7f676a90429f4d11405bd5"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/14_log_aggregator-returning.ndjson",
+      "sha256": "57c349dd81934f6cd977ec5badd0b6b7e63a4c4d87644444d16a1c0b527e0862"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/15_metrics_collector-fail-dom.json",
+      "sha256": "af53eead27518e07819fd0d82a3bca444c504a8a972a15d0f83b4ebde8094956"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/15_metrics_collector-fail-retry.ndjson",
+      "sha256": "e2d41dbdebb134932efb0dc998d7b811426af19e7abfccf5702b2c2d55206fe2"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/15_metrics_collector-retry-pass-dom.json",
+      "sha256": "c5a696e00908454d93ba732e66f6d685258552a3fceb1ee7ce44904223e8c41f"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/15_metrics_collector-returning-pass-dom.json",
+      "sha256": "c5a696e00908454d93ba732e66f6d685258552a3fceb1ee7ce44904223e8c41f"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/15_metrics_collector-returning.ndjson",
+      "sha256": "90ffef7275e81e16b916e3bba125823d0a302ec977a2a6df9efbddf6fcb196ac"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/16_mini_message_queue-fail-dom.json",
+      "sha256": "7d06c1d7b4c01cd08e4f13a3ba10b1dd180f0b1c5ca5b94c46d3564f809a713e"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/16_mini_message_queue-fail-retry.ndjson",
+      "sha256": "47c245714352db6d0453ec20c467e970ea07adbb08d778ea4663b3f39287694a"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/16_mini_message_queue-retry-pass-dom.json",
+      "sha256": "4c4b6cf1b687b67e1dcc8449cfad185228f73211262d920dc9dccf74c307fc48"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/16_mini_message_queue-returning-pass-dom.json",
+      "sha256": "4c4b6cf1b687b67e1dcc8449cfad185228f73211262d920dc9dccf74c307fc48"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/16_mini_message_queue-returning.ndjson",
+      "sha256": "e215b5164eaf9b2c62d1ce2a8de0c59033d645fd918585a4ecfa771cf892344d"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/17_distributed_config_service-fail-dom.json",
+      "sha256": "350013104deb9c80cdf62c122691bf9a7fd67d4fd9e20f53924cc11cb8ab5cd2"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/17_distributed_config_service-fail-retry.ndjson",
+      "sha256": "21ba9deea85d9e44728892a0ee12b904c9f45f365ba098ce435c16246ee1060f"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/17_distributed_config_service-retry-pass-dom.json",
+      "sha256": "3e03b51845452a690b07a979fb1d5661e4486912f2ac1233a10a989d3aa838c5"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/17_distributed_config_service-returning-pass-dom.json",
+      "sha256": "3e03b51845452a690b07a979fb1d5661e4486912f2ac1233a10a989d3aa838c5"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/17_distributed_config_service-returning.ndjson",
+      "sha256": "8736a3edc7c9957a2106d5e4c89eee4e0472b5233bf8cfaa7e60f793b1abce16"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/18_search_engine-fail-dom.json",
+      "sha256": "2c72c7e2ba2b82159d64ac34df71ada02f1ba1cac22b0b887a6448edff6bd1cc"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/18_search_engine-fail-retry.ndjson",
+      "sha256": "a5596a5df99db98810aadaa75abc62cc29263cfdd9c9d145a437a0bd5bb007d7"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/18_search_engine-retry-pass-dom.json",
+      "sha256": "fcbafd468672a5895137b5a8774e26e8b6d6c465db462ccb5f1cf4e083f2d319"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/18_search_engine-returning-pass-dom.json",
+      "sha256": "fcbafd468672a5895137b5a8774e26e8b6d6c465db462ccb5f1cf4e083f2d319"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/18_search_engine-returning.ndjson",
+      "sha256": "6bc8a40a50b5979b42ea14b466b6e42b2bb1d3f7d491f2c046efa4cfead1c0a6"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/all-console-evidence.ndjson",
+      "sha256": "57ae6d1fa056b3f5a585d7c92514e568200ccc27afc04c5b707bae213c27eb65"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/browser-console.json",
+      "sha256": "c29de02513b015fdf496027913f85a5f367375740f3c6f7d201b51823014d9fd"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/catalog.json",
+      "sha256": "316fcb4417e73df08b9caaca9882a497ab37cdf61f00fcc29a2116b327715b96"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/entry-briefing-dom.json",
+      "sha256": "294a4f82d28b3f928a00574c02e5952faa275ed542c25a17d6cb153db9fb6d15"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/network-failures.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/session-one-append-only.ndjson",
+      "sha256": "81610f0de438b5f6b64a474f788837fb1c5f2a5814ed3b7a6becebdc3ffeec04"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/ui-actions.json",
+      "sha256": "2df6e3f311c50d9860388432c027bd2ca8f1316d65c8fa74776e048ce26e2653"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/01_rate_limiter-fail.png",
+      "sha256": "0731cecf6d65e70944aedf11ed2bc0c86c76a48d5b35b01313fe7785cad87176"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/01_rate_limiter-retry-pass.png",
+      "sha256": "3c6bab742b42303b32b4822ca1a40ff28aa32df352952a262ed04c2b28aff09d"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/01_rate_limiter-returning-pass.png",
+      "sha256": "3c6bab742b42303b32b4822ca1a40ff28aa32df352952a262ed04c2b28aff09d"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/02_key_value_store-fail.png",
+      "sha256": "27d38bdb74022a0aa1e0ce7aeb706dbc2d1faf9159c635e2da518aeab94a6a95"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/02_key_value_store-retry-pass.png",
+      "sha256": "2c4427b8ba4d59f4949087576f5f0c3a0cedc76e2bf86937325d87de0df8ae5b"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/02_key_value_store-returning-pass.png",
+      "sha256": "2c4427b8ba4d59f4949087576f5f0c3a0cedc76e2bf86937325d87de0df8ae5b"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/03_url_shortener-fail.png",
+      "sha256": "17a19cdb8abfac4c6b78b27db7be60c70830fc50e67292f6ca61f4053d04ec25"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/03_url_shortener-retry-pass.png",
+      "sha256": "7814f3d4969e5bc4065613dcada995785d9e5240707b9ccbfdf8858a9ce87da8"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/03_url_shortener-returning-pass.png",
+      "sha256": "7814f3d4969e5bc4065613dcada995785d9e5240707b9ccbfdf8858a9ce87da8"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/04_concurrent_task_queue-fail.png",
+      "sha256": "7acaf4d1ac56a26302fac95301f9acf5603d5e60edbceb79bdfdbfeb14b28c26"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/04_concurrent_task_queue-retry-pass.png",
+      "sha256": "fa198fcafd1c128fcf03411fc5a069971d8fa585293d67c6c1681e155002888b"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/04_concurrent_task_queue-returning-pass.png",
+      "sha256": "fa198fcafd1c128fcf03411fc5a069971d8fa585293d67c6c1681e155002888b"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/05_websocket_chat-fail.png",
+      "sha256": "392ac0b22b2c933585cfb7260b9803de514ce49ca8802f8e22cf3a3d2ff5bcee"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/05_websocket_chat-retry-pass.png",
+      "sha256": "6c7d108f436b34295b77825b878fc4a2ab45e053a2cfd10b183add77ede1b2bf"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/05_websocket_chat-returning-pass.png",
+      "sha256": "6c7d108f436b34295b77825b878fc4a2ab45e053a2cfd10b183add77ede1b2bf"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/06_file_upload_pipeline-fail.png",
+      "sha256": "286560114ffdb627b3dad40de74f418f9a776fc4fa377f89653b8c31421b8675"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/06_file_upload_pipeline-retry-pass.png",
+      "sha256": "aaa7a0ddea9a2d13f953deff9fa7a1a9a0b241e1395bec880d32efd287943f46"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/06_file_upload_pipeline-returning-pass.png",
+      "sha256": "aaa7a0ddea9a2d13f953deff9fa7a1a9a0b241e1395bec880d32efd287943f46"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/07_rest_api_auth-fail.png",
+      "sha256": "75559bac77ae76d080890ebe961a6366dea01a97b9c2861411a4e03d4191edf5"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/07_rest_api_auth-retry-pass.png",
+      "sha256": "c30bdfdbece202d4b6083f1c75b3e53b3c756dccbe8ffb3f18de952f39e8740e"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/07_rest_api_auth-returning-pass.png",
+      "sha256": "8391a63483f1d660fe4e4da71b2d0a136fe472c23e95d277a138d7526292961b"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/08_event_driven_order_system-fail.png",
+      "sha256": "189b22fe7fc9587f83aaa8353dd0530be5817e6a869fd651dea9a91fa08f6cc1"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/08_event_driven_order_system-retry-pass.png",
+      "sha256": "6e30798493e077c535de653820e493c8224290f090afb77143b8e5f18035ad5a"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/08_event_driven_order_system-returning-pass.png",
+      "sha256": "6e30798493e077c535de653820e493c8224290f090afb77143b8e5f18035ad5a"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/09_plugin_system-fail.png",
+      "sha256": "4a9eea6eb31e4c9f1f0c97f7799857356323e395addf7185e43b802a57413a39"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/09_plugin_system-retry-pass.png",
+      "sha256": "1d2b862dbe09ace81be465ab56221cf9785d6cacaccdd1ae9fca8932fcd38f3c"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/09_plugin_system-returning-pass.png",
+      "sha256": "7aa7d6927f91523e336712dba144ea9e1015f53ae0cfe93c28e7ae83a4db08ef"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/10_distributed_cache-fail.png",
+      "sha256": "49645417a2c8cea54b08ab2cd144ce7a5d9588a6d8873fee14dc293773463698"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/10_distributed_cache-retry-pass.png",
+      "sha256": "43d272ab7a7276d874444e583e0dd071b6943a0eb5f1105424a99c43530dc8f7"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/10_distributed_cache-returning-pass.png",
+      "sha256": "43d272ab7a7276d874444e583e0dd071b6943a0eb5f1105424a99c43530dc8f7"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/11_load_balancer-fail.png",
+      "sha256": "488f75d5ed625866c78cbe209250cff584cfa5cdbf16f54764069e7d155b8de7"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/11_load_balancer-retry-pass.png",
+      "sha256": "1db0e1f3295dafa354b9f49655552aa0b1b94f1a0c1c96a48da5d9b2702db566"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/11_load_balancer-returning-pass.png",
+      "sha256": "4130525f838f5d1eb2edabf7ac573dc6b44bc6eb6ebe4e16a124a324c5026d91"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/12_distributed_job_scheduler-fail.png",
+      "sha256": "a40a90caf08b63ae77496298093862e82d309ebeb9f7b2b668c18071adbfd902"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/12_distributed_job_scheduler-retry-pass.png",
+      "sha256": "aa2db980191eab60e438c0b536a9cb8040fd7b61d66d5bfaa997a86a46f6a689"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/12_distributed_job_scheduler-returning-pass.png",
+      "sha256": "aa2db980191eab60e438c0b536a9cb8040fd7b61d66d5bfaa997a86a46f6a689"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/13_api_gateway_circuit_breaker-fail.png",
+      "sha256": "ca14f55b0ca1044a10237e762c247ecdb206e1daeab1f9a43e247b2039df4ca2"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/13_api_gateway_circuit_breaker-retry-pass.png",
+      "sha256": "4a596779095ac3d64203cc3334c3578f1fc28f701c72a5762cf873dd3ba871e4"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/13_api_gateway_circuit_breaker-returning-pass.png",
+      "sha256": "8217da8616d25625752f2e25acff1dbf276edfd265955ce382c2b8bf06bce0bf"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/14_log_aggregator-fail.png",
+      "sha256": "d44c262203bcd6369c12d1f1744222bcd85c1144baa27cfe6e7e260239978cd9"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/14_log_aggregator-retry-pass.png",
+      "sha256": "19470e83f7cdcceff6ad5952ea57f677046466dc6222a00a355e497aef4323a5"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/14_log_aggregator-returning-pass.png",
+      "sha256": "19470e83f7cdcceff6ad5952ea57f677046466dc6222a00a355e497aef4323a5"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/15_metrics_collector-fail.png",
+      "sha256": "2f4fb40a3e851ee70a634c3746c6befe555ad422227033e44eabc41b357c8db8"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/15_metrics_collector-retry-pass.png",
+      "sha256": "54d9dc7f19bd5758ad9654a261a533c3362d3e44d685919e6d11142d9c27169b"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/15_metrics_collector-returning-pass.png",
+      "sha256": "54d9dc7f19bd5758ad9654a261a533c3362d3e44d685919e6d11142d9c27169b"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/16_mini_message_queue-fail.png",
+      "sha256": "8775d3ac4b67766f20c40fc2466ed3321d1c0d545ad98e783ded580929a3de0b"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/16_mini_message_queue-retry-pass.png",
+      "sha256": "d54e77349fefa1bb7d728dcc96bada80ebedd1a503692955501aa4f2397b31a1"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/16_mini_message_queue-returning-pass.png",
+      "sha256": "d54e77349fefa1bb7d728dcc96bada80ebedd1a503692955501aa4f2397b31a1"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/17_distributed_config_service-fail.png",
+      "sha256": "ecfc8a94ac6e04462417ee54dad5b0c0ad0f6277389f1575f4efd00b891b1398"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/17_distributed_config_service-retry-pass.png",
+      "sha256": "6b17ea8061a31cef85cb752c66574f04edf3b637dd504e11df04c6775564de18"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/17_distributed_config_service-returning-pass.png",
+      "sha256": "6b17ea8061a31cef85cb752c66574f04edf3b637dd504e11df04c6775564de18"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/18_search_engine-fail.png",
+      "sha256": "c26b6ced9240fd1b5c91eb3d0a912d659259b4e89797f84d5c5a84469c8d8c2f"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/18_search_engine-retry-pass.png",
+      "sha256": "cb22584d66849a6e84bf44b2b4c2c2c54aedd3e33eb8e60e38de95d7563541f1"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/18_search_engine-returning-pass.png",
+      "sha256": "cb22584d66849a6e84bf44b2b4c2c2c54aedd3e33eb8e60e38de95d7563541f1"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/entry-briefing.png",
+      "sha256": "0971c86c264788d4741055d851e6752d8fc3ab658662d80b7b47b22ee83d74f2"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-runtime/pixel-all18-2026-10-16T01-38-39-258Z/page@3eaef6498c35885d530538fab7a9e01f.webm",
+      "sha256": "d564d7e17b2b92b5f28ead39ae996d496fa9c617a9fed99f55f45fd9772e228b"
+    }
+  ],
+  "status": "unverified",
+  "runtimeStatus": "pass",
+  "limitations": [
+    "Producer runtime evidence is not an independent semantic judgment. TypeSafe/Jev verification of retained media is a prerequisite; no model/API call was made.",
+    "Return to labs 02–18 uses the existing public __pixelQuestDebug.enterRegion input after reload because progress is session-bound; duels and evidence are produced through visible native controls. No completeEncounter/auto-pass hook is used.",
+    "This observation covers local HTTP Chromium at 1280×800, not deployment, all browsers, or mobile usability."
+  ],
+  "runtime": {
+    "kind": "real-http",
+    "origin": "http://127.0.0.1:51060",
+    "serverPid": 72203,
+    "serverApi": "vite.createServer",
+    "serverOptions": {
+      "root": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest",
+      "configFile": false,
+      "host": "127.0.0.1",
+      "port": 51060,
+      "strictPort": true
+    },
+    "reusedServer": false,
+    "node": "v22.23.2"
+  },
+  "catalog": [
+    {
+      "project": "01_rate_limiter",
+      "regionId": "lab-01_rate_limiter",
+      "title": "Laboratório 1: Rate Limiter",
+      "encounterId": "encounter-agent-quest-01",
+      "unitId": "U0-sonda-rate-limiter-robustness",
+      "kind": "token_bucket",
+      "inputCount": 12
+    },
+    {
+      "project": "02_key_value_store",
+      "regionId": "lab-02_key_value_store",
+      "title": "Laboratório 2: Key Value Store",
+      "encounterId": "encounter-02_key_value_store",
+      "unitId": "U-02_key_value_store",
+      "kind": "sequence_flow",
+      "inputCount": 5
+    },
+    {
+      "project": "03_url_shortener",
+      "regionId": "lab-03_url_shortener",
+      "title": "Laboratório 3: URL Shortener",
+      "encounterId": "encounter-03_url_shortener",
+      "unitId": "U-03_url_shortener",
+      "kind": "token_bucket",
+      "inputCount": 12
+    },
+    {
+      "project": "04_concurrent_task_queue",
+      "regionId": "lab-04_concurrent_task_queue",
+      "title": "Laboratório 4: Concurrent Task Queue",
+      "encounterId": "encounter-04_concurrent_task_queue",
+      "unitId": "U4-task-queue",
+      "kind": "task_queue",
+      "inputCount": 13
+    },
+    {
+      "project": "05_websocket_chat",
+      "regionId": "lab-05_websocket_chat",
+      "title": "Laboratório 5: WebSocket Chat",
+      "encounterId": "encounter-05_websocket_chat",
+      "unitId": "U-05_websocket_chat",
+      "kind": "token_bucket",
+      "inputCount": 12
+    },
+    {
+      "project": "06_file_upload_pipeline",
+      "regionId": "lab-06_file_upload_pipeline",
+      "title": "Laboratório 6: File Upload Pipeline",
+      "encounterId": "encounter-06_file_upload_pipeline",
+      "unitId": "U-06_file_upload_pipeline",
+      "kind": "sequence_flow",
+      "inputCount": 5
+    },
+    {
+      "project": "07_rest_api_auth",
+      "regionId": "lab-07_rest_api_auth",
+      "title": "Laboratório 7: REST API Auth",
+      "encounterId": "encounter-07_rest_api_auth",
+      "unitId": "U-07_rest_api_auth",
+      "kind": "policy_gate",
+      "inputCount": 6
+    },
+    {
+      "project": "08_event_driven_order_system",
+      "regionId": "lab-08_event_driven_order_system",
+      "title": "Laboratório 8: Event Driven Orders",
+      "encounterId": "encounter-08_event_driven_order_system",
+      "unitId": "U-08_event_driven_order_system",
+      "kind": "sequence_flow",
+      "inputCount": 5
+    },
+    {
+      "project": "09_plugin_system",
+      "regionId": "lab-09_plugin_system",
+      "title": "Laboratório 9: Plugin System",
+      "encounterId": "encounter-09_plugin_system",
+      "unitId": "U-09_plugin_system",
+      "kind": "policy_gate",
+      "inputCount": 6
+    },
+    {
+      "project": "10_distributed_cache",
+      "regionId": "lab-10_distributed_cache",
+      "title": "Laboratório 10: Distributed Cache",
+      "encounterId": "encounter-10_distributed_cache",
+      "unitId": "U-10_distributed_cache",
+      "kind": "token_bucket",
+      "inputCount": 12
+    },
+    {
+      "project": "11_load_balancer",
+      "regionId": "lab-11_load_balancer",
+      "title": "Laboratório 11: Load Balancer",
+      "encounterId": "encounter-11_load_balancer",
+      "unitId": "U-11_load_balancer",
+      "kind": "route_health",
+      "inputCount": 5
+    },
+    {
+      "project": "12_distributed_job_scheduler",
+      "regionId": "lab-12_distributed_job_scheduler",
+      "title": "Laboratório 12: Distributed Job Scheduler",
+      "encounterId": "encounter-12_distributed_job_scheduler",
+      "unitId": "U-12_distributed_job_scheduler",
+      "kind": "sequence_flow",
+      "inputCount": 5
+    },
+    {
+      "project": "13_api_gateway_circuit_breaker",
+      "regionId": "lab-13_api_gateway_circuit_breaker",
+      "title": "Laboratório 13: API Gateway Circuit Breaker",
+      "encounterId": "encounter-13_api_gateway_circuit_breaker",
+      "unitId": "U-13_api_gateway_circuit_breaker",
+      "kind": "route_health",
+      "inputCount": 5
+    },
+    {
+      "project": "14_log_aggregator",
+      "regionId": "lab-14_log_aggregator",
+      "title": "Laboratório 14: Log Aggregator",
+      "encounterId": "encounter-14_log_aggregator",
+      "unitId": "U-14_log_aggregator",
+      "kind": "token_bucket",
+      "inputCount": 12
+    },
+    {
+      "project": "15_metrics_collector",
+      "regionId": "lab-15_metrics_collector",
+      "title": "Laboratório 15: Metrics Collector",
+      "encounterId": "encounter-15_metrics_collector",
+      "unitId": "U-15_metrics_collector",
+      "kind": "token_bucket",
+      "inputCount": 12
+    },
+    {
+      "project": "16_mini_message_queue",
+      "regionId": "lab-16_mini_message_queue",
+      "title": "Laboratório 16: Mini Message Queue",
+      "encounterId": "encounter-16_mini_message_queue",
+      "unitId": "U-16_mini_message_queue",
+      "kind": "sequence_flow",
+      "inputCount": 5
+    },
+    {
+      "project": "17_distributed_config_service",
+      "regionId": "lab-17_distributed_config_service",
+      "title": "Laboratório 17: Distributed Config Service",
+      "encounterId": "encounter-17_distributed_config_service",
+      "unitId": "U-17_distributed_config_service",
+      "kind": "sequence_flow",
+      "inputCount": 5
+    },
+    {
+      "project": "18_search_engine",
+      "regionId": "lab-18_search_engine",
+      "title": "Laboratório 18: Search Engine",
+      "encounterId": "encounter-18_search_engine",
+      "unitId": "U-18_search_engine",
+      "kind": "sequence_flow",
+      "inputCount": 5
+    }
+  ],
+  "handoff": {
+    "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/session-one-append-only.ndjson",
+    "sha256": "81610f0de438b5f6b64a474f788837fb1c5f2a5814ed3b7a6becebdc3ffeec04",
+    "count": 36,
+    "format": "NDJSON",
+    "consumer": "learner/gate (not invoked; separate verifier receipt required)",
+    "recordsProducedInBrowser": true,
+    "untouchedByReplay": true
+  },
+  "browserState": {
+    "published": false,
+    "local": [],
+    "session": []
+  },
+  "coverage": {
+    "offered": 18,
+    "mainPass": 18,
+    "returningPass": 18,
+    "mainRecords": 36,
+    "independentlySemanticallyVerified": 0
+  },
+  "cleanup": {
+    "browserClosed": true,
+    "ownViteServerClosed": true,
+    "reusedUnknownServer": false,
+    "at": "2026-10-16T01:41:06.271Z"
+  },
+  "canonicalBefore": {
+    "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/learning_state.yaml",
+    "sha256": "36419ae44e755a9bd8bd049b14d0dee03d8b5937e577285f67ffe730733735e2"
+  },
+  "canonicalAfter": {
+    "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/learning_state.yaml",
+    "sha256": "36419ae44e755a9bd8bd049b14d0dee03d8b5937e577285f67ffe730733735e2"
+  },
+  "finishedAt": "2026-10-16T01:41:06.302Z"
+}

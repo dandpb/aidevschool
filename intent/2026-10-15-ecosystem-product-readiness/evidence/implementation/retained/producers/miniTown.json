@@ -1,0 +1,56 @@
+{
+  "engine": "miniTown",
+  "scope": "producer checks only; no declared-use qualification granted",
+  "results": [
+    {
+      "argv": [
+        "pnpm",
+        "run",
+        "lint"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown",
+      "exitCode": 0,
+      "seconds": 4.44,
+      "log": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/producers/miniTown-1.log",
+      "observedAt": "2026-10-16T01:23:17.160198+00:00"
+    },
+    {
+      "argv": [
+        "pnpm",
+        "run",
+        "test",
+        "--reporter=verbose"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown",
+      "exitCode": 0,
+      "seconds": 4.57,
+      "log": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/producers/miniTown-2.log",
+      "observedAt": "2026-10-16T01:23:21.733006+00:00"
+    },
+    {
+      "argv": [
+        "pnpm",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown",
+      "exitCode": 0,
+      "seconds": 2.12,
+      "log": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/producers/miniTown-3.log",
+      "observedAt": "2026-10-16T01:23:23.857200+00:00"
+    },
+    {
+      "argv": [
+        "pnpm",
+        "run",
+        "build"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown",
+      "exitCode": 0,
+      "seconds": 4.15,
+      "log": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/producers/miniTown-4.log",
+      "observedAt": "2026-10-16T01:23:28.010037+00:00"
+    }
+  ],
+  "allRequestedRan": true
+}

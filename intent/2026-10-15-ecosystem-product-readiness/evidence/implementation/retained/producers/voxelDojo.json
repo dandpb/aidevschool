@@ -1,0 +1,55 @@
+{
+  "engine": "voxelDojo",
+  "scope": "producer checks only; no declared-use qualification granted",
+  "results": [
+    {
+      "argv": [
+        "pnpm",
+        "run",
+        "lint"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/voxelDojo",
+      "exitCode": 0,
+      "seconds": 2.0,
+      "log": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/producers/voxelDojo-1.log",
+      "observedAt": "2026-10-16T01:23:25.621035+00:00"
+    },
+    {
+      "argv": [
+        "pnpm",
+        "run",
+        "test"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/voxelDojo",
+      "exitCode": 0,
+      "seconds": 14.41,
+      "log": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/producers/voxelDojo-2.log",
+      "observedAt": "2026-10-16T01:23:40.027369+00:00"
+    },
+    {
+      "argv": [
+        "pnpm",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/voxelDojo",
+      "exitCode": 0,
+      "seconds": 10.8,
+      "log": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/producers/voxelDojo-3.log",
+      "observedAt": "2026-10-16T01:23:50.827057+00:00"
+    },
+    {
+      "argv": [
+        "pnpm",
+        "run",
+        "build"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/voxelDojo",
+      "exitCode": 0,
+      "seconds": 19.37,
+      "log": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/producers/voxelDojo-4.log",
+      "observedAt": "2026-10-16T01:24:10.195796+00:00"
+    }
+  ],
+  "allRequestedRan": true
+}

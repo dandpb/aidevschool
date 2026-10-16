@@ -1,0 +1,2 @@
+{"probe":"startVite readiness failure","startupError":"Error: Vite literacyDojo did not become ready","stopSignals":0,"logClosed":false,"childStillRunning":true,"method":"Unchanged function source; fake child/fs/fetch and immediate timers; no process or server launched"}
+{"probe":"command short-child exit before ownership-write completes","childExitCode":0,"recordExitCode":null,"doneResolved":false,"method":"Unchanged function source; fake child emits real EventEmitter exit during ownership write; no process or server launched"}

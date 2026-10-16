@@ -1,0 +1,7 @@
+{
+  "fullCheck": "git diff --cached --check reports trailing whitespace in immutable raw pytest/TAP logs and the approved unified-diff patch context",
+  "sourceCheck": "git diff --cached --check -- . :(exclude)intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/**/*.log :(exclude)intent/2026-10-15-ecosystem-product-readiness/evidence/pr656-protected-test.patch",
+  "excluded": "Only byte-identical raw logs and the exact owner-approved patch; no source code, Markdown, JSON or assertion is excluded.",
+  "reason": "Trimming tool output or patch context would change historical evidence and its recorded SHA-256.",
+  "sourceCheckExitCode": 0
+}

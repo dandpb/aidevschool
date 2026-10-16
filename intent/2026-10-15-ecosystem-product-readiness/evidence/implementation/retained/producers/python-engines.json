@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/gh-375/venv/bin/python",
+    "-m",
+    "pytest",
+    "engines/minimaxDojo/tests",
+    "engines/openclaw/tests",
+    "engines/miniMaxEvolutionEngine/tests",
+    "engines/aiDevschoolMvp/tests",
+    "-vv",
+    "--junitxml",
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/producers/python-engines.xml"
+  ],
+  "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool",
+  "observedAt": "2026-10-16T01:21:48.907636+00:00",
+  "exitCode": 0,
+  "scope": "producer contracts only; no live harness claim",
+  "log": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/producers/python-engines.log"
+}

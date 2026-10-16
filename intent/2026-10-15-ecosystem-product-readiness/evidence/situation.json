@@ -1,0 +1,133 @@
+{
+  "source": "f98e7fa32deac836addc348e185e8788fd197627",
+  "confirmed_decisions": {
+    "scope": "Todos os 14 engines; shared tratado como dependência transversal",
+    "readiness": "Pronto para o uso declarado; entrada, fluxo principal, recuperação e limites documentados",
+    "baseline": "main atual @ f98e7fa32deac836addc348e185e8788fd197627",
+    "operating_stage": "Beta/piloto em construção"
+  },
+  "pending_owner_context": {},
+  "facts": {
+    "engineCount": 14,
+    "readinessUseCases": 9,
+    "coveredEngineOwners": 6,
+    "staleUseCases": 6,
+    "locallyReproducedContractFailures": 2
+  },
+  "engines": [
+    {
+      "engine": "aiDevschoolMvp",
+      "promise": "Tutor de chat, 24 conceitos",
+      "sequence": "Instalar SKILL → tentativa → gates G1–G4 → ledger/revisão",
+      "status": "Sem claim formal; fluxo de usuário atual não requalificado nesta rodada"
+    },
+    {
+      "engine": "codexDojo",
+      "promise": "Dashboard local",
+      "sequence": "Abrir → ler snapshots → seguir próxima ação",
+      "status": "Sem claim formal; CI não equivale a avaliação de jornada"
+    },
+    {
+      "engine": "codexdojo-os-prototype",
+      "promise": "Host de missões",
+      "sequence": "Onboarding → escolher trilha → missão → verificação/retorno",
+      "status": "3 casos formais stale; defeito RC #662 é condicional"
+    },
+    {
+      "engine": "dojoToday",
+      "promise": "Orientação diária somente leitura",
+      "sequence": "Abrir → revisões/unidade ativa → próxima ação",
+      "status": "1 caso formal stale"
+    },
+    {
+      "engine": "literacyDojo",
+      "promise": "Microlições locais",
+      "sequence": "Entrada → tentativa/feedback → l02 v4 → recibo → retomada",
+      "status": "2 casos formais stale; incompatibilidade v4/v3 reproduzida"
+    },
+    {
+      "engine": "miniMaxEvolutionEngine",
+      "promise": "Motor Claude Code de cinco fases",
+      "sequence": "Status/diagnóstico → ciclo → verificador → artefatos",
+      "status": "Sem claim formal; execução agentic atual não requalificada"
+    },
+    {
+      "engine": "miniTown",
+      "promise": "Exploração experimental local",
+      "sequence": "Abrir simulação → explorar → saída segura",
+      "status": "1 caso experimental no inventário; sem promessa de maestria"
+    },
+    {
+      "engine": "minimaxDojo",
+      "promise": "Protocolo e núcleo de tutoria",
+      "sequence": "Bootstrap → tentativa → protocolo pedagógico → gate",
+      "status": "Sem claim formal; execução na plataforma declarada não requalificada"
+    },
+    {
+      "engine": "openclaw",
+      "promise": "Runner explícito de checklist",
+      "sequence": "Preview → fases por artefatos → preservar gate e pipeline",
+      "status": "Sem claim formal; contrato de checklist difere de maestria"
+    },
+    {
+      "engine": "pixelDojo",
+      "promise": "Experiências de jogo com evidência",
+      "sequence": "Encontro → evidência → entrega à verificação independente",
+      "status": "1 caso formal; gate canônico compartilhado aceita síntese sem recibo no probe"
+    },
+    {
+      "engine": "school-entry",
+      "promise": "Entrada e liberação operacional",
+      "sequence": "Operador libera → checagem de entrada → recomendação/lançamento",
+      "status": "Sem claim formal; URL e operação atuais não verificadas"
+    },
+    {
+      "engine": "sdlc-quest",
+      "promise": "Pacote local de ensino de SDLC",
+      "sequence": "Extrair → npm start → missão → salvar/retomar",
+      "status": "Sem claim formal; jornada de pacote atual não requalificada"
+    },
+    {
+      "engine": "voxelDojo",
+      "promise": "Simulações didáticas",
+      "sequence": "Jogo declarado → loop → evidência → verificação",
+      "status": "1 caso formal; qualificação integral de cada jogo ainda não realizada nesta discovery"
+    },
+    {
+      "engine": "zai-duolingo-like",
+      "promise": "Protótipo local autônomo",
+      "sequence": "Perfil local → lição → progresso/revisão do jogo",
+      "status": "Sem claim formal; decisão de integração permanece própria do protótipo"
+    }
+  ],
+  "in_flight": [
+    {
+      "pr": 657,
+      "scope": "Gate de jogos exige recibo independente",
+      "status": "open; não incluído em main"
+    },
+    {
+      "pr": 656,
+      "scope": "Verificador l02 por atividade v4",
+      "status": "open; não incluído em main"
+    },
+    {
+      "pr": 662,
+      "scope": "Cancel em 320x568 no RC de prática guiada",
+      "status": "RC-specific; practice.css ausente em main"
+    }
+  ],
+  "limits": [
+    "Nenhuma qualificação completa dos 14 runtimes foi executada nesta rodada.",
+    "Os dois defeitos foram reproduzidos no código da main com dados sintéticos; nenhuma alegação sobre deployment remoto.",
+    "Nenhum estado canônico de aprendiz ou arquivo de produto foi alterado."
+  ],
+  "verdict_proposal": {
+    "status": "objective_and_scope_committed_by_owner; technical_design_draft",
+    "recommendation": "Remover os dois bloqueios de integridade confirmados e qualificar os 14 engines para seu uso declarado; revalidar os claims afetados após estabilizar as jornadas.",
+    "worked_if": "14/14 engines com fluxo principal e recuperação comprovados no uso declarado, zero bloqueio crítico/alto aberto nesse escopo e claims publicados válidos para o snapshot oferecido.",
+    "early_signal": "Os dois contraexemplos locais passam a produzir a decisão correta, com o histórico canônico preservado; cada engine recebe evidência rastreável ou uma lacuna explícita.",
+    "review_trigger": "Revisão independente ao concluir cada bloco e antes de afirmar prontidão do conjunto; Daniel confirma o resultado para o piloto.",
+    "authorization": "Owner confirmed scope, declared-use readiness, main baseline and beta stage; no accepted implementation plan or authorization to publish/merge from this discovery."
+  }
+}

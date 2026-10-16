@@ -1,0 +1,34 @@
+TAP version 13
+# Subtest: failed startup terminates its owned child and closes its log before rejecting
+ok 1 - failed startup terminates its owned child and closes its log before rejecting
+  ---
+  duration_ms: 290.114333
+  type: 'test'
+  ...
+# Subtest: an already exited startup still closes the opened log
+ok 2 - an already exited startup still closes the opened log
+  ---
+  duration_ms: 1.719625
+  type: 'test'
+  ...
+# Subtest: stopping the same owned server twice closes its log once
+ok 3 - stopping the same owned server twice closes its log once
+  ---
+  duration_ms: 1.646083
+  type: 'test'
+  ...
+# Subtest: exit during ownership persistence is observed and wait finishes with its actual status
+ok 4 - exit during ownership persistence is observed and wait finishes with its actual status
+  ---
+  duration_ms: 3.105875
+  type: 'test'
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 362.245042

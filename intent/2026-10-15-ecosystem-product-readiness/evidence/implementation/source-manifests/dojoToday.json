@@ -1,0 +1,1028 @@
+{
+  "schemaVersion": 1,
+  "membership": "git tracked regular files at refresh; excluded dependency/build/test-result outputs",
+  "sourceScope": [
+    "engines/dojoToday",
+    "learner/gate",
+    "learner/substrate",
+    "engines/shared"
+  ],
+  "files": [
+    {
+      "path": "engines/dojoToday/DESIGN.md",
+      "sha256": "b36c2a0fb4407947b70ad919d515f64c7542970ee7d08f505b5579139937ed50"
+    },
+    {
+      "path": "engines/dojoToday/README.md",
+      "sha256": "9e8fd41db0d89cd8bbe29dd7f098a63a4a526e0e7fd267ce04ed488679b82c9a"
+    },
+    {
+      "path": "engines/dojoToday/biome.json",
+      "sha256": "0b3ed52522d4f3d91173ecd7f7b070db5d019e8e2853d675dcc1f76149ecb62b"
+    },
+    {
+      "path": "engines/dojoToday/index.html",
+      "sha256": "5ed91f84b8c18f3c7eb9d8c6e74dede81201747e2a147c93b736d1dde4ed0626"
+    },
+    {
+      "path": "engines/dojoToday/netlify.toml",
+      "sha256": "8db5b4eb7b0dd89ddbc6c21f0cacc88e8f5a821b19b8cf651fd20da900f098b7"
+    },
+    {
+      "path": "engines/dojoToday/package-lock.json",
+      "sha256": "ea8d426b3b66b21d472b4198b810920abf7edc11c6388601b3e11bd8a82466e0"
+    },
+    {
+      "path": "engines/dojoToday/package.json",
+      "sha256": "b5b9f3643c704f252a0487eadb93a979f7cec7dcacec373062ef334f8fe19ec5"
+    },
+    {
+      "path": "engines/dojoToday/playwright.config.ts",
+      "sha256": "7932494ede6d3e15c9808036f4d15e4e2057d26ff63d5627d29ccb23692b981a"
+    },
+    {
+      "path": "engines/dojoToday/playwright/a11y-w0.spec.ts",
+      "sha256": "08eb100b5f36540b38ba82f050a684229673de1d26a0a4a099e3175d13fd8c71"
+    },
+    {
+      "path": "engines/dojoToday/playwright/a11y-w1.spec.ts",
+      "sha256": "57c054a4d11a0be0bf9d299f4c0a5862127ff8d05906cd334eb0715395007be8"
+    },
+    {
+      "path": "engines/dojoToday/playwright/a11y-w2.spec.ts",
+      "sha256": "3bb26924aef2321d2f73df830de360560f173d229e3d760ce644825e0d72629f"
+    },
+    {
+      "path": "engines/dojoToday/playwright/a11y-w3.spec.ts",
+      "sha256": "cade4d170941c78f46c40ea0627fb97a38d723c98fc738a84d818423f354a9bc"
+    },
+    {
+      "path": "engines/dojoToday/playwright/continuity.spec.ts",
+      "sha256": "972d5ab321bdaed35d42743ea7602048759a9f98f0e7158393c3921a854a2100"
+    },
+    {
+      "path": "engines/dojoToday/playwright/fixtures/today.day-n-plus-1.ts",
+      "sha256": "b3e52ff95dd412f8c0678c4dced7e003bb644836cf791eac474a3c8b135dd2ad"
+    },
+    {
+      "path": "engines/dojoToday/playwright/fixtures/today.day-n.ts",
+      "sha256": "96ba5f6fb6cd7f7a10d9164e645a458bd6d12d1ec5aecf6bdd267064107baaf3"
+    },
+    {
+      "path": "engines/dojoToday/playwright/fixtures/today.numeric-hostile-record.ts",
+      "sha256": "3294f1496a5f666007e2a3d64747719f82260ee1c5b8eacaeec9fb05fffcc13f"
+    },
+    {
+      "path": "engines/dojoToday/playwright/fixtures/today.numeric-hostile.ts",
+      "sha256": "07d6936a1e646c767c330d91e1eafb62a2a37f04fbf41c86705f1b74fdb028d8"
+    },
+    {
+      "path": "engines/dojoToday/playwright/hosted-os.spec.ts",
+      "sha256": "3e6d6143300bf0961924edb57e9e4250c96b6de0c2d35c27877d5e4d04dddcd1"
+    },
+    {
+      "path": "engines/dojoToday/playwright/numeric-fields-escape.spec.ts",
+      "sha256": "0fae96ad47d9131ef9a66e6c56e989dc07f11a5aefcd53567bf16e9dcd72e49e"
+    },
+    {
+      "path": "engines/dojoToday/playwright/readiness.spec.ts",
+      "sha256": "290f8a375e47eaee54240dfe343552b81be0b4f14ed3dfeeceb257b85127bb7b"
+    },
+    {
+      "path": "engines/dojoToday/scripts/readiness-report.mjs",
+      "sha256": "d546f83e5a3d14f906c4487ea9a4febe6be350cd5f371d095d7627a0937adbb4"
+    },
+    {
+      "path": "engines/dojoToday/src/assistant.ts",
+      "sha256": "1f1d451383720a048ef6c6f6214871888e78c8bd909ea9d7838d722bf88e2c40"
+    },
+    {
+      "path": "engines/dojoToday/src/data/today.ts",
+      "sha256": "c21aee84ddc67cf8bdcab3a6196227badc595177f449000d78ed8cef3bda4f18"
+    },
+    {
+      "path": "engines/dojoToday/src/escape.ts",
+      "sha256": "e28093db27ae4b0b42e2004b1fe0a927c4d5d4f6f1cddeaf5b7393cf22995e6d"
+    },
+    {
+      "path": "engines/dojoToday/src/localProjection.ts",
+      "sha256": "95f2d0917d1bb578135c108fc8c4f25faf5d011a5fa3f8c71877cab9dfbcdb1b"
+    },
+    {
+      "path": "engines/dojoToday/src/main.ts",
+      "sha256": "00f0d44a35eaa9f5b39d63ac7000c989d2084278ee84f9fcf45dd6067fed7447"
+    },
+    {
+      "path": "engines/dojoToday/src/styles.css",
+      "sha256": "236b3eee2fc00cc628e4a2e870e1dcfd5010e0e5aa64cc535084b5579b1a6ec3"
+    },
+    {
+      "path": "engines/dojoToday/src/types.ts",
+      "sha256": "2a9796c3e4eea40cb5c3cd3c172c4ea047b9bca7ce6738db3f5cb168f62546c3"
+    },
+    {
+      "path": "engines/dojoToday/tools/selfcheck.py",
+      "sha256": "5bd135cb3042ac8e3837d3e8e7bebac30a3351a3bb478cfb8be5df69d8a94b32"
+    },
+    {
+      "path": "engines/dojoToday/tsconfig.json",
+      "sha256": "a85e8eb4757bc72e365f1149310a03c9de2d518b90f59f2785312210ed3daafe"
+    },
+    {
+      "path": "engines/dojoToday/vite.config.ts",
+      "sha256": "4fcee1ba32301256a40f668e54c747f0034aba7e32fe79fae41a8f8744e5e097"
+    },
+    {
+      "path": "engines/shared/pilotSupport.ts",
+      "sha256": "8ad29abbf971a33b5c804c478399207c3f265cc58a6f8854a548ece2dd27142d"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/README.md",
+      "sha256": "c45fc5459871ed943979a54a0e0e951b00180f4febd065cbe0115eeb2fb8abe1"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/emit.ts",
+      "sha256": "69164a47d4045714eb9f519acf0b3613ea9c0180660ce319ec90f6b8d9786064"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/evidenceEnvelope.ts",
+      "sha256": "53539456b5ba4ae9ccdd353825c9d67d6299949f9481fcc2e96f6fce5aad6bee"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/evidenceTransport.ts",
+      "sha256": "b42814c0d5c1404b9fe7a5597c515febf96b85ec982b3bdb65faee751f5a70d1"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/funnelCore.ts",
+      "sha256": "65ab2510f90bda0ac0e23f0493511497f658c3c69f74dce6b0b0a0566e6adbad"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/funnelTelemetry.ts",
+      "sha256": "41201edcdc81525b9f60ec074372befa73ee324eaa1ca21b36ade251b61d8b10"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/hostMessageDecoder.ts",
+      "sha256": "cdbf01825c1c8ddb845399bf64a339aa10a20f290f303bc253b43cd3949c8116"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/hostProtocol.ts",
+      "sha256": "7c1d86dd36bf1d20b00f13f358eb88e83a468994e45aebda3045fb7ddde76ba4"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/package.json",
+      "sha256": "225a4df4e5ba11101b1631f6212fbbad60e228abdb7093e03eddfa9974033794"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/tests/emit.test.ts",
+      "sha256": "68f19d92f53f6ddaff6b7b229635d39f25e834bed431b177521d4494bf86c99e"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/tests/evidenceEnvelope.test.ts",
+      "sha256": "e7feb329f14f46f4fa7f46a7b02ae6a51d48f8081cf7c46c568a7b9c34d84e23"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/tests/evidenceTransport.test.ts",
+      "sha256": "453301d7bb2051dcbd615f8a1eb6ab9ce874bd0d1e196717e8edfd19cc455ead"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/tests/funnelCollectorContract.test.ts",
+      "sha256": "c51d7760ef20389e4ec46c8a963ac2c3040805f604f298d23938349bba9fba7f"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/tests/funnelCore.test.ts",
+      "sha256": "72fff69d19895a64d370c5e010e5659014ffc9bd6480a1dbcb212a8076f164a3"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/tests/funnelTelemetry.test.ts",
+      "sha256": "d1540520e8da4d6a3ab8a104729d9e19a72398b5d033183ab7cacef095415d35"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/tests/harness.ts",
+      "sha256": "7ce9ab7adb51d8152b46b7bdace6cf7311b0427124e2e123533b362b570e315f"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/vitest.config.ts",
+      "sha256": "d591182e32770b0f8ade880fa4642fd22378fcf739bc7e15ff3c0d042d26b6b5"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/vocabularies.ts",
+      "sha256": "2016dca12f14698160632355bbacad26540d37e25874eb91d7af1116b9f1fc04"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/vocabularies/literacy.json",
+      "sha256": "c294b3ed73c482c221e2e16cbf7845bdfc1c5837d09d29704523809e70d4d340"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/vocabularies/os.json",
+      "sha256": "42737a25d1d861c3634f08f0b852346d058d92f3eb5a8876307c1f3dce0f21da"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/vocabularies/surfaces.json",
+      "sha256": "52afdf46b27968473689651f06c319265cbe3573e172648e193bb21cb169aeac"
+    },
+    {
+      "path": "learner/gate/AGENTS.md",
+      "sha256": "b7e028db77260e18043dca1eb9c11b039f179d3df5bceb3a90714973ed00a0c9"
+    },
+    {
+      "path": "learner/gate/README.md",
+      "sha256": "b490cb3af093284a3c093082f284dc49b66c42551d817c8d2f5213a02316dad5"
+    },
+    {
+      "path": "learner/gate/__init__.py",
+      "sha256": "ad1b2ee6c2582bcf90f9a3eb312620d4af03bb7bd84afce1773699e3ee021f99"
+    },
+    {
+      "path": "learner/gate/__main__.py",
+      "sha256": "b7e5b624c00b8f6624dcd22bdf3abb75ce229504defb8177c4f204c2ac249c20"
+    },
+    {
+      "path": "learner/gate/air_traffic_evaluator.py",
+      "sha256": "2d7613286ad1a9e85f2ea65aabe0c0000c468d920d547c381e987a2ddeb84e7d"
+    },
+    {
+      "path": "learner/gate/analytics/README.md",
+      "sha256": "82d4fa7470e013d23ff5e1804052b42025147967be16423ed3e6381e449e6625"
+    },
+    {
+      "path": "learner/gate/analytics/aggregate_funnel.mjs",
+      "sha256": "7e3fa643ac02b0a950c402acdbee20a661bd89177f977bb1423df32de53dfbb3"
+    },
+    {
+      "path": "learner/gate/analytics/dojo-analytics-collector.d.mts",
+      "sha256": "2257fd3d3fb9bbceccdc8d56c56a7fa3ecc2befc1455beb5315626a27d551ea7"
+    },
+    {
+      "path": "learner/gate/analytics/ndjson_input.mjs",
+      "sha256": "c59ab207863952ebc32635015e0badd10a63f28979bd1e9ec12349355c5c8247"
+    },
+    {
+      "path": "learner/gate/analytics/probe_collector_export.mjs",
+      "sha256": "74c8d1d3158029991702a76fd81e78e24ae3bcfc6a2166231ed5fc3f09eb5fbe"
+    },
+    {
+      "path": "learner/gate/analytics/refresh_vocabularies.mjs",
+      "sha256": "fb314a06be12883e2871451a28d1cecc6ded34edbf933e71a50349bdc0428551"
+    },
+    {
+      "path": "learner/gate/analytics/schema_drift_monitor.mjs",
+      "sha256": "6c8789c0b34a93d0e938d011acdd443780ee2d22ac8f8d9b3c2c572eb7ec820e"
+    },
+    {
+      "path": "learner/gate/analytics/verify_deployed_blobs.mjs",
+      "sha256": "05d31f422a28131b350fb4b38b66248fa3c9a5c457ae405bd50ad3022cdc07a6"
+    },
+    {
+      "path": "learner/gate/breaker_grid_evaluator.py",
+      "sha256": "7c455a8ab5bca30acf8b2c1219601ed91970d12d1cba5229342512ce15c74e20"
+    },
+    {
+      "path": "learner/gate/canonical_gate.py",
+      "sha256": "717f64f2372ceaebb26942cc96a3672bf51ec341994f6907e8aa41866eb54e76"
+    },
+    {
+      "path": "learner/gate/checkpoint_evaluator.py",
+      "sha256": "1c694e849702ba51a83c61bb646520afe7d80ed443148e43529fdd2b8238b4f1"
+    },
+    {
+      "path": "learner/gate/core.py",
+      "sha256": "4230de9f7ab04199a2a7e9b85cf8b373d2dcb7f8222fc1090980e000bd3e6b72"
+    },
+    {
+      "path": "learner/gate/docking_evaluator.py",
+      "sha256": "9c73241eb07633cc847edfcb16073df99e57ae43da740fe1b7c9989715da75fd"
+    },
+    {
+      "path": "learner/gate/engine.py",
+      "sha256": "364879bde468b5b2d614ce63d782170facec5799e7b9c5e5e075cfc7af28e169"
+    },
+    {
+      "path": "learner/gate/evaluator_primitives.py",
+      "sha256": "249b4127c3b8914f59746633ae3443653fc64ea05774bf5a4f9238d7597b1cc1"
+    },
+    {
+      "path": "learner/gate/evidence_io.py",
+      "sha256": "53146a798b65e71839d4a12e37097f5824c844d7c81fd4236a9a9f310eea2da3"
+    },
+    {
+      "path": "learner/gate/evidence_rubrics.yaml",
+      "sha256": "4aa2224cad2fb9e4afea09ea1d89f018f84273e7f280b748295e02b0d8a09dc1"
+    },
+    {
+      "path": "learner/gate/evidence_schema.py",
+      "sha256": "512face66d6ce9508451987af6f6cabd62df932b4fa1ab77c8c1d2b4b1a2f36c"
+    },
+    {
+      "path": "learner/gate/evidence_validator.py",
+      "sha256": "2b95c18f508f97ea8c1ff25034ac19297b375a01a391d89bca94a56f3e877974"
+    },
+    {
+      "path": "learner/gate/hash_ring_evaluator.py",
+      "sha256": "c4f303cf7a12b86a09c5c9c7fe4a5891c70ae8e8887133e6825d0edec3c8ee4c"
+    },
+    {
+      "path": "learner/gate/literacy.py",
+      "sha256": "cd4e3f13eb7107cf49d74394f000ad1cb1cbc124e6b4149946dbd4614a8cce41"
+    },
+    {
+      "path": "learner/gate/literacy_bridge.py",
+      "sha256": "5647567c191f234d5ea9d48cda2ed697cf697d2f9205149d840367edbbe972dd"
+    },
+    {
+      "path": "learner/gate/literacy_evaluator.py",
+      "sha256": "181b2f9a50daa1c8432d3809e4d4a68a450049f407826d0d0dc93d889f81f3a8"
+    },
+    {
+      "path": "learner/gate/literacy_evidence.schema.json",
+      "sha256": "692290b5065d2872303c7ead5e2b9cd9ef43c899324794009b52e920aab76630"
+    },
+    {
+      "path": "learner/gate/literacy_judgment.py",
+      "sha256": "5e64e6e5d9fcdf7ab9c0799739ffe322dff5b032452c2424bf793050853835ec"
+    },
+    {
+      "path": "learner/gate/literacy_verifier.py",
+      "sha256": "6bc0335fed63ae799f5531745d21536012035bd62ff1336185378d1697c44d49"
+    },
+    {
+      "path": "learner/gate/metric_failure_snapshot.yaml",
+      "sha256": "648375eac496234bc1ed8f83dd4de4b446ff348a9cf72e7e46132497fc3682e8"
+    },
+    {
+      "path": "learner/gate/metric_lint.py",
+      "sha256": "126f2c90955bdfd39d74394069f1db9979a5618a5b572afe12fb5f21f61a7d28"
+    },
+    {
+      "path": "learner/gate/metric_snapshot.py",
+      "sha256": "9e3494afef6d0a7619d0159fe543044544e0e6539f589209e86de475c156a2f8"
+    },
+    {
+      "path": "learner/gate/mission_control_evaluator.py",
+      "sha256": "25f19b491bb2678cf65f55c8e17d0862beaa4abf257129c4ee90b020d714a4ea"
+    },
+    {
+      "path": "learner/gate/netlify-functions/README.md",
+      "sha256": "784bc0fbcda7e1d5cd816e9d778f6e1deddf461ec97fc240e69e835b474805f7"
+    },
+    {
+      "path": "learner/gate/netlify-functions/_shared/literacy-corpus.mjs",
+      "sha256": "491f04f84f6986bfcc88a62ca23123b7869c208b19546c507f2604da6f0f9ee6"
+    },
+    {
+      "path": "learner/gate/netlify-functions/dojo-analytics-collector.mjs",
+      "sha256": "0080d300ef0b782d94ebe7f1dc6fe03f220f0598827289dc54d7d2b36d827b7e"
+    },
+    {
+      "path": "learner/gate/netlify-functions/dojo-verification-bridge.mjs",
+      "sha256": "93e4cb036d84d7776ed23dfa792bb693c306346be8faa0cb87f365653693c663"
+    },
+    {
+      "path": "learner/gate/netlify-functions/literacy-verify.mjs",
+      "sha256": "7d53901ea068302abb91fa07bfa0cb99b3ed7952566a50b4ef9e6dfbf15fa8c3"
+    },
+    {
+      "path": "learner/gate/netlify-functions/netlify-blobs-runtime.mjs",
+      "sha256": "7c33576cb5c98dc4d69891c6382a794bc547d96cbce2371069b7573b368bc0d5"
+    },
+    {
+      "path": "learner/gate/netlify-functions/package-lock.json",
+      "sha256": "14969a3a42235d3f7b3437cf4ed18f90636f2fc08c5eca2eb449a64f6aef5c64"
+    },
+    {
+      "path": "learner/gate/netlify-functions/package.json",
+      "sha256": "8bfe1dd402901fda685150b35b569f763a6b2fb7f95fcd4fc3d9b0f9fbdb8501"
+    },
+    {
+      "path": "learner/gate/no_code.py",
+      "sha256": "06186286d2e09722dc38ec835df4bb0c16db538a8d263dbb76a5034b25e40897"
+    },
+    {
+      "path": "learner/gate/no_code_checklist.py",
+      "sha256": "07bf04e3d5b8941e262ea6d0488b3b3f71f12ff4aabf5360941fb9b73465ba04"
+    },
+    {
+      "path": "learner/gate/pipeline_evaluator.py",
+      "sha256": "c929aa1448c6e524ec800561e48b9034adc25917c887a4dc7c930932a3fbfe60"
+    },
+    {
+      "path": "learner/gate/relay_evaluator.py",
+      "sha256": "eecd885d3f8f9892dc5c32172298282e13926b963bac0e2375384e800937fcf5"
+    },
+    {
+      "path": "learner/gate/river_delta_evaluator.py",
+      "sha256": "644afb5ce2352a0781f2f4e8564606a7785ac5a9d9cbec37c384dfca921b0578"
+    },
+    {
+      "path": "learner/gate/security.py",
+      "sha256": "64d2e85cede2dd1727b2af5d8c4739223ed3db88aebd43501dcb146ad823e738"
+    },
+    {
+      "path": "learner/gate/standards.py",
+      "sha256": "604462cef530acc1c3068e139b426d06e6a154114a99ac81157a347734778d8f"
+    },
+    {
+      "path": "learner/gate/state.py",
+      "sha256": "303b63217e37532032a76c838d8e75953b4663d65dc1ac6c0ea90b82b998a640"
+    },
+    {
+      "path": "learner/gate/state_transitions.py",
+      "sha256": "8903b0ed1c23531db1d17f79925ad2486531b0aeaf3908fb6df174ff379c6248"
+    },
+    {
+      "path": "learner/gate/task_queue_evaluator.py",
+      "sha256": "28a155581af24d6e28505e9c23180872d08f4d877c03d5801e825ade4e45bf65"
+    },
+    {
+      "path": "learner/gate/teaching_game_bridge.py",
+      "sha256": "964c680fd61832353c9e0bf1c7557c556bd40252432835330bb7ac47ca20c92a"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_activation_surfaces.test.mjs",
+      "sha256": "58096960ee152cb898cc6b5d2c3817e84540f68d9695ba5c1817ad6e889a2d19"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_collector_edge_semantics.test.mjs",
+      "sha256": "ef7b9c8b91810a473704e5f474edabb895013e38c2d5bf722cd5537b7df82f54"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_collector_netlify.test.mjs",
+      "sha256": "dbc09a9306846fc0f847f6beab99b6fca3d6e366a06f25ee473f7f121147d11b"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_collector_packaging.test.mjs",
+      "sha256": "2e8a479281ba8d197ddc200d1881aa528b738a14c124b975f68b2d48b3b7b236"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_collector_v2.test.mjs",
+      "sha256": "f721ccf0624203b168161d441a7d126d64ed6c8aff907c7e74677fc3448b8cc0"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_collector_v3.test.mjs",
+      "sha256": "45a3eeb544272b27fc3268e5b6824371e360a010d5d0a109c4ce4d9f463cb2a0"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_collector_v4.test.mjs",
+      "sha256": "bb80ec68d59733d7df004eec4082b38fa3f63384af6bcf81145320bde19ac495"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_funnel_aggregation.test.mjs",
+      "sha256": "ea38d6ed74672ea2b18ca4b916e7fcd19503b7934b1bb8cc4e229034d1d8141f"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_funnel_aggregation_v2.test.mjs",
+      "sha256": "a1a8b712e21c14c2c708f1fbd5427bcf46fbce861dec676238f14c06ec0cc67d"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_funnel_aggregation_v4.test.mjs",
+      "sha256": "fee9cb9f8cc7337b482f89a16b753c502b03c36b077329f136cdcb5d28c15ddc"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_funnel_surfaces_v3.test.mjs",
+      "sha256": "493ea42e889644eb8ad5062878ee10b55dddf473a8e1f2ccdbc18719c8a13bc5"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_schema_drift_monitor.test.mjs",
+      "sha256": "d671f50c1927304643873c2a21fb66cc83efa59c657abc838c88cccc66703073"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_schema_drift_monitor_v2.test.mjs",
+      "sha256": "81832c1586c26206c57f2b53c96139710451e31043431af95f2455a4aeb45acb"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_schema_drift_monitor_v3.test.mjs",
+      "sha256": "25966f0dcd2d967294ab3602a5adfc00184880e9d17cb310df6339d15f9c75a5"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_schema_drift_monitor_v4.test.mjs",
+      "sha256": "a056e4f57cbd45d759d97960628b70094e3e0851b59c5931d0b3e3c5b7b7fce6"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_vocabularies.test.mjs",
+      "sha256": "219062e813ede2f479116a86080cd70367277994b76d685aac29246915f0b59d"
+    },
+    {
+      "path": "learner/gate/tests/dojo_verification_bridge_netlify.test.mjs",
+      "sha256": "b0158b1921561e9f1e2c1436e0daed075786c985566525d680d4e3651ef8f2fc"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/drift-v2/events-2026-09-14.ndjson",
+      "sha256": "8156e88c797b38fbff8e07f5c3bcba498cb2d1f0dafdaf23c61787e7b417c76e"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/drift-v3/events-2026-09-14.ndjson",
+      "sha256": "d200c6ae6ceb618655edc3bebeadb6e3a68aa4b6f330f7ffd259b242db4b04a7"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/drift/events-2026-08-05.ndjson",
+      "sha256": "6368aecffb976dc799fc53784a861331e62ecbb31575c842243a6162cd1d4b17"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/example-funnel-report.json",
+      "sha256": "ffda2e3948b683c7356616d3c00bb3b53f1a30c09c05e2b262a942eb647f346d"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/example-funnel-report.md",
+      "sha256": "6701a4ce6a7030364113d0ff57932412cd1fcc34e5af5a6dc9fef5c3f4c59964"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/load_fixtures.d.mts",
+      "sha256": "d8b89355a0cb984473804dfc5cf406caf242e8b5c59e0a7632117f132243d762"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/load_fixtures.mjs",
+      "sha256": "bc6ffc71e6778c6d8826153e7ed27a710601be6e99c3d8c995c54a19817f4133"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic-v2/events-2026-09-14.ndjson",
+      "sha256": "bc4dab189430c2b9691a470913e15eaad309a0f89cf81948e48dd03d5c07d6c1"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic-v3/events-2026-09-14.ndjson",
+      "sha256": "0ade762461e2520f49839441ba625c674ced8f4e89907043b86aa5ffc27d5470"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic-v4/events-2026-09-16.ndjson",
+      "sha256": "c749d29688e31a708e2dd58bea7272a02db63ee9aaef5a4dd99eac0791e830af"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-13.ndjson",
+      "sha256": "3a9b62556992c8a704f3fe44fdd46321ed7ad159a520e0a449799f6fe3a29535"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-14.ndjson",
+      "sha256": "6226575197e63d71d09bfe231884614393316f613e0bdd69799ac5c406c7229f"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-15.ndjson",
+      "sha256": "cb039195ea1a2f2f51b6f3ae6a2bfa5cb8cd0c6a6794c5324467106d48ec37a7"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-16.ndjson",
+      "sha256": "5b22dd2bf5a8c7879095bbac46c4f14654671c31c2c9ad86878eab2bd00e9337"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-17.ndjson",
+      "sha256": "37db671ec2c60e4e68d6797e05bc5b136d858ffeb3191585d2526db99750f4d3"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-18.ndjson",
+      "sha256": "d075cf05323df31247944b413cfcdfc83e52461c19fd248c83a426dbb2e99f5b"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-21.ndjson",
+      "sha256": "623549191c0d34720040726949418abbb3c6b4ed2ed499141f003fd14044c1d3"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-25.ndjson",
+      "sha256": "fbe785fced0d8813107c201ac4a9044956ad18b005dff571d34665b6d797f007"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-04.ndjson",
+      "sha256": "564c76ab3cebb689c52ed554a12037e8b09ea3142787cc9533b34977e746de1f"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-08.ndjson",
+      "sha256": "528c165faf5228d569393807f6387797acb3ae605ab32becaf57c10e95ac7d5c"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-10.ndjson",
+      "sha256": "18e148a16312afbf1830b6f7b214c74b10d4c3d4af0eb98adfc5a3098d92ca57"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-11.ndjson",
+      "sha256": "a5667740622d258b914aed3eff14fb263c146cd5c8bddbd73d6dbae1ff2002d5"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-12.ndjson",
+      "sha256": "6817107e70a897c3b8ed279eb52ac6a5da2f0ec0a68d79e341b0d7a3be0461bc"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-20.ndjson",
+      "sha256": "c6e31c8b975ffda27ec8f852b3ae9af6fb0db4fe972c6bdeff5402b2711f216a"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-24.ndjson",
+      "sha256": "beddbd3ff568e4c86bffeb66ff867d6ca5f45cdb023541c28e1c50ac14be3deb"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-25.ndjson",
+      "sha256": "2bc6580f78170b13e015227f78ca15c59c36757ffde67c2b2d945c151395ab94"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-26.ndjson",
+      "sha256": "7d31017448ba33bcf44e681d048af1dad556aee9843c425cf5ed9d51864260f3"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-27.ndjson",
+      "sha256": "acdd1035a2b2477b2a9f8c1f7b8baaa2c7375575ccfd744918a539094cf3c2e6"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-28.ndjson",
+      "sha256": "5995aff8a3a6ea3f6fa4ee9eb95bf213307c62ab902f011a6c4b2b1b23a6252d"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-31.ndjson",
+      "sha256": "ce8d5106b04b09b563466df3e4f8cea38fd679583e8e47c74805af9f1937adc3"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-09-02.ndjson",
+      "sha256": "4756943fcd0c4b74a95c661291de41abf3c4624f850cf9420f68e4970ce6afe6"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-09-08.ndjson",
+      "sha256": "76c060c2e5cd631a1b1dea91f586fa9007454585f4cb8a1897818bdcbea3c78a"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-09-09.ndjson",
+      "sha256": "7ef41a3a4679e955bfbcdd2a7c197157afaa769fef322c043de145eea485b5a7"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-09-11.ndjson",
+      "sha256": "78364f0aa5d89125a7b9b0159a816e0af650d7277b7c6fbf31b9f008192587af"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-09-17.ndjson",
+      "sha256": "337780a7f249e43f796f03ea17282ebf5ae1afa4302e5fdef6853f216090b498"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/literacy_producer_payloads.json",
+      "sha256": "23d3a4f8348f6ecdde6ddd9cbcebd11c1fe2bed883f189db958fe0ac7fa3d082"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/teaching_game_producer_payloads.json",
+      "sha256": "b309ad9bf4800a7ac2a1f48ca725d6065850a852d525c9cf36b542a03e8cc6fb"
+    },
+    {
+      "path": "learner/gate/tests/literacy_verifier_records.py",
+      "sha256": "59867766093bc70590bfc8707f9512ce43d5ebdedfa7e222212102d1afa55f72"
+    },
+    {
+      "path": "learner/gate/tests/literacy_verify_netlify.test.mjs",
+      "sha256": "1265169ebd09de19498f5066257763ab714399eb4f670cc73318bd4e0983ed9a"
+    },
+    {
+      "path": "learner/gate/tests/teaching_game_bridge_records.py",
+      "sha256": "b7e7f09ee40d321093fe579a3523a8e8e655e9b6b9ba23b50bcaa0ebb6d23acd"
+    },
+    {
+      "path": "learner/gate/tests/test_air_traffic_evaluator.py",
+      "sha256": "1de26219f0866c4e73aef2f10f222f82606605ede204c895eedc2a290d6f2469"
+    },
+    {
+      "path": "learner/gate/tests/test_breaker_grid_evaluator.py",
+      "sha256": "4859e0b77fa029ca0bfe8207392b64c1bc7685619573e483a0b84ad4c1ada3c2"
+    },
+    {
+      "path": "learner/gate/tests/test_checkpoint_evaluator.py",
+      "sha256": "d4dd7515aec19e769190bff0617d6ad719f198ff8763750cc52660a3f90eb3d9"
+    },
+    {
+      "path": "learner/gate/tests/test_docking_evaluator.py",
+      "sha256": "bbfbaec87246bc97de254a67d09e9d701746e453dafad9a97afef7e333d8236c"
+    },
+    {
+      "path": "learner/gate/tests/test_gate.py",
+      "sha256": "31c138206f811b1e0bd50eabbaaab8b4c8f1962b41887e53d7c510218bb9ca44"
+    },
+    {
+      "path": "learner/gate/tests/test_gate_game_coverage.py",
+      "sha256": "f4e54dd283ad0765e66a80e00eb39ce911acd7d434c461958be5d7e45250ea64"
+    },
+    {
+      "path": "learner/gate/tests/test_hash_ring_evaluator.py",
+      "sha256": "5e3d865aed2d649d30ba150e31cdc469097ea43de6cd10d01aea44d12e3628ef"
+    },
+    {
+      "path": "learner/gate/tests/test_isolated_bridges.py",
+      "sha256": "b4c9d0be5a8b5189297bd3a640c1343489db767b9263133c8cd7579b25423aaa"
+    },
+    {
+      "path": "learner/gate/tests/test_literacy_judgment.py",
+      "sha256": "b6865fa816bc196b79fc7a6f6258cbfee07550deef981d47cd31d94d1946130e"
+    },
+    {
+      "path": "learner/gate/tests/test_literacy_verifier.py",
+      "sha256": "d03edaa06e85b14c4ff01337a34f21aa3e19cb81b2aa62560867a1066b836a97"
+    },
+    {
+      "path": "learner/gate/tests/test_literacy_verifier_producer_contract.py",
+      "sha256": "7758e6801e125ee25aea6ccf6e87b6ca47da20bf060e0ab81aa698067fbfb523"
+    },
+    {
+      "path": "learner/gate/tests/test_literacy_verifier_receipts.py",
+      "sha256": "ad31531fb9d852b613d95afbfa956ff4f7ed4312de4ddd29ca43d236160e92f7"
+    },
+    {
+      "path": "learner/gate/tests/test_manifest_atomic.py",
+      "sha256": "cfbadbd1e747b3c6673081758e9be4fa534d99d2df0d2610fc464da787a7a8c9"
+    },
+    {
+      "path": "learner/gate/tests/test_metric_lint.py",
+      "sha256": "1cf2de709440f71fecc2f2a973774856fd79a155f8be47776893d2e860f84835"
+    },
+    {
+      "path": "learner/gate/tests/test_mission_control_evaluator.py",
+      "sha256": "4b56f795b8fab1433bae451d989c8c1108ef71561d019a7f29c2204419cef9b2"
+    },
+    {
+      "path": "learner/gate/tests/test_no_code_checklist.py",
+      "sha256": "7e2a9d7751a43b4b3080351d0ac3a293471ea8f01e446965ab1d3ef08dce490a"
+    },
+    {
+      "path": "learner/gate/tests/test_no_code_gate.py",
+      "sha256": "348d82cb84dfaa533110794589b3409e6df814ccbb9c41e2647bc12a0594a5e9"
+    },
+    {
+      "path": "learner/gate/tests/test_pipeline_evaluator.py",
+      "sha256": "f804d1ca9da24412ab1feb6dbefdaa8fee45240bdc76d115da1427c63f7dd45a"
+    },
+    {
+      "path": "learner/gate/tests/test_relay_evaluator.py",
+      "sha256": "3281a1d12993f578f15a3a36b634afdc58b0c3d42d733263be4bbcf551ffa932"
+    },
+    {
+      "path": "learner/gate/tests/test_river_delta_evaluator.py",
+      "sha256": "a03362a20a8860d9d298f7349a3b4b4bbc52988ed6c90c6ba73abac15dbc850c"
+    },
+    {
+      "path": "learner/gate/tests/test_standards.py",
+      "sha256": "25dd53628da07e14b442222c5d67905dadacb7de55c05426f04f5333d641877a"
+    },
+    {
+      "path": "learner/gate/tests/test_task_queue_evaluator.py",
+      "sha256": "068e07fafe7a275d844e27bca3950d7d143c2752f83184b193db4c16393013cc"
+    },
+    {
+      "path": "learner/gate/tests/test_teaching_game_bridge.py",
+      "sha256": "a5aaedc7f47ec63e1f338306c702e5d47774c261e0226672e849f5fdd0820955"
+    },
+    {
+      "path": "learner/gate/tests/test_teaching_game_bridge_rejections.py",
+      "sha256": "22244990c6e103dd05766b024b53f345f88b1a3d5b0a0a6e5fc5416e60d4fc4e"
+    },
+    {
+      "path": "learner/gate/tests/test_timeline_evaluator.py",
+      "sha256": "cc2ff42ecb5f42fdf18b12ab047716df1d18ce4007003c8ff301cc2fd54657ca"
+    },
+    {
+      "path": "learner/gate/tests/test_verifier_corpus_drift.py",
+      "sha256": "b4e644fb715737243c55b990432d7ed24c7985f376852fa15d990f45794a6e2e"
+    },
+    {
+      "path": "learner/gate/tests/test_wormhole_evaluator.py",
+      "sha256": "74f6619f1aaf3e01f32ea6176e6970a6d530355db76e6d33ff8690e7a362d4b6"
+    },
+    {
+      "path": "learner/gate/timeline_evaluator.py",
+      "sha256": "0a7883b79a919ba993eb2b872e89810b16edd0d11c15b7d8dcf9074b541945b8"
+    },
+    {
+      "path": "learner/gate/timestamps.py",
+      "sha256": "f435b6be5e498f3b6bc98930c6d60be99aa2adf0405dc54885984da4ea512cac"
+    },
+    {
+      "path": "learner/gate/verifier.py",
+      "sha256": "9be5d56c845a21147fcc71d4eb213e9927cc9a93ba794845226208996588cb5a"
+    },
+    {
+      "path": "learner/gate/verifier_receipt.py",
+      "sha256": "3a5d9145dc919d6ed7ace7494fccf3fcddcb4ae19461c75b8ef47f7b607a1737"
+    },
+    {
+      "path": "learner/gate/warehouse_evaluator.py",
+      "sha256": "aef6b0834504c35bc2ea3b1e76e7665d944c89d91bcdc928b563f1910f7ff605"
+    },
+    {
+      "path": "learner/gate/wormhole_evaluator.py",
+      "sha256": "3c23959525273f3d49a7a19f9d4f9e306a46133cf53ec3219f4ae2f05e2e51af"
+    },
+    {
+      "path": "learner/substrate/AGENTS.md",
+      "sha256": "84c4457bfabe6a379359b2f8b49389883964d8a42a5863e92c2a1864cbb9abf4"
+    },
+    {
+      "path": "learner/substrate/README.md",
+      "sha256": "03d62ff0f57e29efccd0478308f078b3a4a4872f9b105df90211673dd2fd00ca"
+    },
+    {
+      "path": "learner/substrate/__init__.py",
+      "sha256": "067fc498a2d5cd6b6dece6a0175ec445a4dc548e49386ad607f6c0e7c7812f40"
+    },
+    {
+      "path": "learner/substrate/__main__.py",
+      "sha256": "79e210c48675e70807e732d4bde00ed0cd4a3549b3ab98c613adee91d869f553"
+    },
+    {
+      "path": "learner/substrate/adapters/__init__.py",
+      "sha256": "db64e5eaa7e5dd87476ea80ecf810dfebc3b6feb4ee6b76f69b7423fe8f44526"
+    },
+    {
+      "path": "learner/substrate/adapters/dojotoday.py",
+      "sha256": "0efbacf906f636e55499faaefd78367d4accd6e22b8fab2bc6b5b7e623b51a80"
+    },
+    {
+      "path": "learner/substrate/adapters/mavis.py",
+      "sha256": "d776dd20a6bbdc4cb224bae64dcb6164f4a68df6e3f1995d072c72c83c3942c3"
+    },
+    {
+      "path": "learner/substrate/adapters/whiteboard.py",
+      "sha256": "45b81f4eb2fc835b26943d5d89a3af51015433cf60d38acf065846ff2fd9b574"
+    },
+    {
+      "path": "learner/substrate/catalog.py",
+      "sha256": "6455b92eaebc98a4240c140a804948d083df1a4b5dbacfb4a86c62bb1ab72c52"
+    },
+    {
+      "path": "learner/substrate/dashboard_data.py",
+      "sha256": "94a834829ba34ad0c177499fcc85f51b1c89378bc6d060111c383c216379f64e"
+    },
+    {
+      "path": "learner/substrate/dashboard_snapshot.py",
+      "sha256": "6c819806f0eec7cd12e2bea514eeb99b7128e1ba4d901c1312ecb83749f3dd0a"
+    },
+    {
+      "path": "learner/substrate/gate.py",
+      "sha256": "19022c06fabafcb1768ce5d9a16577bfa778178eb61f24bf16cc9896daef5acd"
+    },
+    {
+      "path": "learner/substrate/generated_views.py",
+      "sha256": "2f6c5539807b30d34e7e13a995ee2a1e8d1f100857f95a08363eb340e787a816"
+    },
+    {
+      "path": "learner/substrate/interface.md",
+      "sha256": "05a494203550dcd32ce3c7e959fd21d787058b5a553ba111315c54cc20c6def1"
+    },
+    {
+      "path": "learner/substrate/judgments.py",
+      "sha256": "07321efbce8a9bd0c5d3e771af5d14a283fa680a58a38fc8c821cb8a76eb9fbe"
+    },
+    {
+      "path": "learner/substrate/mission_catalog.py",
+      "sha256": "7ca414d6fd5a69b960d6e25c6815bd378335c26db82c91e52be64a259216ae57"
+    },
+    {
+      "path": "learner/substrate/mission_catalog_bindings.py",
+      "sha256": "f0f390dee94fa971dc5d44b5dff6fa89118d2d65f37478dc757639a0674dc3b0"
+    },
+    {
+      "path": "learner/substrate/mission_catalog_guided_practice.py",
+      "sha256": "847814e6c539864f74e7a0978086380504b6575ecf2e9adc44ac26fed0bb2843"
+    },
+    {
+      "path": "learner/substrate/mission_catalog_rules.py",
+      "sha256": "5bcd82553548b1e78dfc2287dcc1e925df543df23659049bbab79a22d542f16f"
+    },
+    {
+      "path": "learner/substrate/mission_catalog_voxel.py",
+      "sha256": "633608d50afdfb21ca1550c8608088477a810af00982586b703601199296b4c6"
+    },
+    {
+      "path": "learner/substrate/prediction_store.py",
+      "sha256": "abedc4c4999f589d6edf54d76b6749abbb6f636f43ce57b4916e2ea19fc85874"
+    },
+    {
+      "path": "learner/substrate/predictions_summary.py",
+      "sha256": "0a25e488a1271d0d5ca1da08b5f7cd49b908dd8fd9797aef00516de7b6d18262"
+    },
+    {
+      "path": "learner/substrate/projection_clock.py",
+      "sha256": "ca71c00b340d08f6bf6f94214d0ebc18e882778782470424a3e2878cb8762a79"
+    },
+    {
+      "path": "learner/substrate/projection_clock.yaml",
+      "sha256": "aa351d6130ea38d216934d89225f4fd5c360197035121ccc57c91b616deb75a4"
+    },
+    {
+      "path": "learner/substrate/projections.py",
+      "sha256": "5c6a87ada6046bc1b1b092a0b3bcad89e1dc1baa1e53df725172101a7d74ad80"
+    },
+    {
+      "path": "learner/substrate/scheduling.py",
+      "sha256": "55ecb22eaa44a590248c44b8b703c642f024049e8bfa3372c1af61b0d480c9dc"
+    },
+    {
+      "path": "learner/substrate/schema.yaml",
+      "sha256": "03468fba0926e584aab92e33da54b7ee92eaa1591c916084041a544bd0d2dcbd"
+    },
+    {
+      "path": "learner/substrate/snapshot_sources.py",
+      "sha256": "2c7d2a90aba99f6714065394716d02734947ab59b4a6ca9043603bb5f0680f2c"
+    },
+    {
+      "path": "learner/substrate/tests/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "learner/substrate/tests/fixtures/judgments_golden.json",
+      "sha256": "6fea96e48b8020de3f015554328c16c8f3457abf0cc9677bc6c0ce1f68d4e8ae"
+    },
+    {
+      "path": "learner/substrate/tests/judgments_fixture.py",
+      "sha256": "61f08c6be131b508522aaef809004c3dda2cf90f87638113dfe2d3efc596492b"
+    },
+    {
+      "path": "learner/substrate/tests/mission_catalog_fixture.py",
+      "sha256": "1f43f95a5b0ac2dca41601e16ca2b8a42f12355b4024c1201c7aa9f0995635da"
+    },
+    {
+      "path": "learner/substrate/tests/mission_catalog_project_catalog_fixture.py",
+      "sha256": "69b4ab2a5a0adb7f3a603ace6ce6ceab25caa7bca40533d4e183b9894d9e88d3"
+    },
+    {
+      "path": "learner/substrate/tests/test_catalog_level0.py",
+      "sha256": "b3a1105bb6ceddad6e4ce64585256f224b9fd4a01ea20c8e2d0733e303e9abc1"
+    },
+    {
+      "path": "learner/substrate/tests/test_catalog_projections.py",
+      "sha256": "2cc01bf296828789844e4784e2e6f0c2db70924aec6162a56a0a816660a77a4f"
+    },
+    {
+      "path": "learner/substrate/tests/test_codexdojo_os_snapshot.py",
+      "sha256": "295017e6688915036c30988c54914db58fd66f681a4bcaf0a112dfe70aeead6c"
+    },
+    {
+      "path": "learner/substrate/tests/test_dashboard_data.py",
+      "sha256": "3b3576a6bb622894ae077524da84e145f1525623a898f7746e458cafbe4d5744"
+    },
+    {
+      "path": "learner/substrate/tests/test_dojotoday.py",
+      "sha256": "6b32950dad50499290824d15974c99e3422c6d44dd9dc159c6d8f677f020a342"
+    },
+    {
+      "path": "learner/substrate/tests/test_engine_topology.py",
+      "sha256": "b9ebcf7783aac4eb9dd53b327dd7d89078ef24ce1d7699a73c23867f46b67acd"
+    },
+    {
+      "path": "learner/substrate/tests/test_gate.py",
+      "sha256": "6cc795e9a77960a9bc02a8a2409f95519dfce17cc1e8f0ca34f3274b5c292e25"
+    },
+    {
+      "path": "learner/substrate/tests/test_gate_evidence_class.py",
+      "sha256": "eb0a4ca235a58cc183f73afdeaab4e45c2530ec96ca1373620684ada1c3a4103"
+    },
+    {
+      "path": "learner/substrate/tests/test_generated_views.py",
+      "sha256": "81e3772fcc955d9983e5912a279641012333c31b6e970e821a132502271741d1"
+    },
+    {
+      "path": "learner/substrate/tests/test_judgments.py",
+      "sha256": "a74550741f631117d31a9a7d4256b5bc3b9803ab53739869a7797cbaebf5c677"
+    },
+    {
+      "path": "learner/substrate/tests/test_mavis_adapter.py",
+      "sha256": "f784bfc856ed38a38e911ee3dce55d0ec35ea9d540f4170fdfa69bbd0d9f3eb2"
+    },
+    {
+      "path": "learner/substrate/tests/test_mission_catalog_graph_rules.py",
+      "sha256": "643391a8fbb624e3265d87ba89f6ad0977088cb670852d4ef685d3fca68b9cc6"
+    },
+    {
+      "path": "learner/substrate/tests/test_mission_catalog_guided_practice.py",
+      "sha256": "e4934b9f39e3a874ba5f864476ec9b1991a15ef9b9ad8cd4910d426f2b5a2afb"
+    },
+    {
+      "path": "learner/substrate/tests/test_mission_catalog_normalization.py",
+      "sha256": "1dd482ad37799ba7a032f5ce88e35263677bff8ccb3135373c6bb1689ebf4239"
+    },
+    {
+      "path": "learner/substrate/tests/test_mission_catalog_release_order.py",
+      "sha256": "4c59082603afbb6a08060e1423404a759bd52c5e782a9e261fe0726c038e2550"
+    },
+    {
+      "path": "learner/substrate/tests/test_prediction_store.py",
+      "sha256": "5d47026e1e8d06918e5134ca1fc78acbdda5c329d5d2f77f051cf3459bd1f35e"
+    },
+    {
+      "path": "learner/substrate/tests/test_predictions_summary.py",
+      "sha256": "db6b6b4903e31e91d7238015e0823c58bcb147f36c48d40ab195db99d854bb3a"
+    },
+    {
+      "path": "learner/substrate/tests/test_projection_clock.py",
+      "sha256": "0aa35a8ec68ed12114844111e576794089d31a534e9586cdab1d49911e8f9d89"
+    },
+    {
+      "path": "learner/substrate/tests/test_save_canonical.py",
+      "sha256": "50a128e889badee70ba0f0bd0de66c90876ce3a62f3d61062be3557b4cbc8ad9"
+    },
+    {
+      "path": "learner/substrate/tests/test_substrate.py",
+      "sha256": "1ffbc50c2f0df45063146adf29186aaee21192cbae50bd6db1d521649092d66b"
+    },
+    {
+      "path": "learner/substrate/tests/test_substrate_cli.py",
+      "sha256": "71fdeff16a4a8143a67e53051f2459b2e0f29536514840b2ebd9f2eef1ad4c16"
+    },
+    {
+      "path": "learner/substrate/tests/test_ts_render.py",
+      "sha256": "5e8336469f1e02a0cd48f5a180fc7dd900e762bf6322a1fbec25254cf33cf9e0"
+    },
+    {
+      "path": "learner/substrate/tests/test_voxel_slice.py",
+      "sha256": "e70ae1c39854097b0b3f42cb630b25a6cda6fcefb8740b4f64d843816a2d8024"
+    },
+    {
+      "path": "learner/substrate/ts_render.py",
+      "sha256": "605b0cd50226d8de8027a66ea0f3b52fbc457cc1128e6f011ac89a19c4688b09"
+    }
+  ]
+}

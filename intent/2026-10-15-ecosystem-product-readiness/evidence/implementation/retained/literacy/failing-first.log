@@ -1,0 +1,1624 @@
+TAP version 13
+# Subtest: array activityId never passes via key coercion (was PASS with empty activity_id)
+not ok 1 - array activityId never passes via key coercion (was PASS with empty activity_id)
+  ---
+  duration_ms: 18.232958
+  type: 'test'
+  location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_identity.test.mjs:43:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'evidence identity is not the fixed l02 v3 verifier contract'
+    - 'evidence identity is not the fixed l02 v4 verifier contract'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'evidence identity is not the fixed l02 v4 verifier contract'
+  actual: 'evidence identity is not the fixed l02 v3 verifier contract'
+  operator: 'strictEqual'
+  stack: |-
+    assertFailClosedIdentity (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_identity.test.mjs:40:10)
+    TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_identity.test.mjs:45:3)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.start (node:internal/test_runner/test:944:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+# Subtest: array activityId for other contract activities also fails closed
+not ok 2 - array activityId for other contract activities also fails closed
+  ---
+  duration_ms: 0.315208
+  type: 'test'
+  location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_identity.test.mjs:49:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'evidence identity is not the fixed l02 v3 verifier contract'
+    - 'evidence identity is not the fixed l02 v4 verifier contract'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'evidence identity is not the fixed l02 v4 verifier contract'
+  actual: 'evidence identity is not the fixed l02 v3 verifier contract'
+  operator: 'strictEqual'
+  stack: |-
+    assertFailClosedIdentity (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_identity.test.mjs:40:10)
+    TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_identity.test.mjs:50:3)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: object activityId with null toString returns a FAIL receipt instead of throwing
+not ok 3 - object activityId with null toString returns a FAIL receipt instead of throwing
+  ---
+  duration_ms: 0.141292
+  type: 'test'
+  location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_identity.test.mjs:53:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'evidence identity is not the fixed l02 v3 verifier contract'
+    - 'evidence identity is not the fixed l02 v4 verifier contract'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'evidence identity is not the fixed l02 v4 verifier contract'
+  actual: 'evidence identity is not the fixed l02 v3 verifier contract'
+  operator: 'strictEqual'
+  stack: |-
+    assertFailClosedIdentity (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_identity.test.mjs:40:10)
+    TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_identity.test.mjs:55:3)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: plain object activityId fails closed
+not ok 4 - plain object activityId fails closed
+  ---
+  duration_ms: 0.11625
+  type: 'test'
+  location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_identity.test.mjs:58:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'evidence identity is not the fixed l02 v3 verifier contract'
+    - 'evidence identity is not the fixed l02 v4 verifier contract'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'evidence identity is not the fixed l02 v4 verifier contract'
+  actual: 'evidence identity is not the fixed l02 v3 verifier contract'
+  operator: 'strictEqual'
+  stack: |-
+    assertFailClosedIdentity (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_identity.test.mjs:40:10)
+    TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_identity.test.mjs:59:3)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: null activityId fails closed
+not ok 5 - null activityId fails closed
+  ---
+  duration_ms: 0.184667
+  type: 'test'
+  location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_identity.test.mjs:62:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'evidence identity is not the fixed l02 v3 verifier contract'
+    - 'evidence identity is not the fixed l02 v4 verifier contract'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'evidence identity is not the fixed l02 v4 verifier contract'
+  actual: 'evidence identity is not the fixed l02 v3 verifier contract'
+  operator: 'strictEqual'
+  stack: |-
+    assertFailClosedIdentity (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_identity.test.mjs:40:10)
+    TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_identity.test.mjs:63:3)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: numeric activityId fails closed
+not ok 6 - numeric activityId fails closed
+  ---
+  duration_ms: 0.1595
+  type: 'test'
+  location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_identity.test.mjs:66:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'evidence identity is not the fixed l02 v3 verifier contract'
+    - 'evidence identity is not the fixed l02 v4 verifier contract'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'evidence identity is not the fixed l02 v4 verifier contract'
+  actual: 'evidence identity is not the fixed l02 v3 verifier contract'
+  operator: 'strictEqual'
+  stack: |-
+    assertFailClosedIdentity (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_identity.test.mjs:40:10)
+    TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_identity.test.mjs:67:3)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: boolean activityId fails closed
+not ok 7 - boolean activityId fails closed
+  ---
+  duration_ms: 0.102417
+  type: 'test'
+  location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_identity.test.mjs:70:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'evidence identity is not the fixed l02 v3 verifier contract'
+    - 'evidence identity is not the fixed l02 v4 verifier contract'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'evidence identity is not the fixed l02 v4 verifier contract'
+  actual: 'evidence identity is not the fixed l02 v3 verifier contract'
+  operator: 'strictEqual'
+  stack: |-
+    assertFailClosedIdentity (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_identity.test.mjs:40:10)
+    TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_identity.test.mjs:71:3)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: missing activityId fails closed
+not ok 8 - missing activityId fails closed
+  ---
+  duration_ms: 3.904208
+  type: 'test'
+  location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_identity.test.mjs:74:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'evidence identity is not the fixed l02 v3 verifier contract'
+    - 'evidence identity is not the fixed l02 v4 verifier contract'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'evidence identity is not the fixed l02 v4 verifier contract'
+  actual: 'evidence identity is not the fixed l02 v3 verifier contract'
+  operator: 'strictEqual'
+  stack: |-
+    assertFailClosedIdentity (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_identity.test.mjs:40:10)
+    TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_identity.test.mjs:77:3)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: string activityId still passes the v4 contract (guard did not overreach)
+not ok 9 - string activityId still passes the v4 contract (guard did not overreach)
+  ---
+  duration_ms: 0.959
+  type: 'test'
+  location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_identity.test.mjs:80:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    'FAIL' !== 'PASS'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'PASS'
+  actual: 'FAIL'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_identity.test.mjs:82:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: accepts the independently recomputed l02 v4 a1 output_comparison attempt
+not ok 10 - accepts the independently recomputed l02 v4 a1 output_comparison attempt
+  ---
+  duration_ms: 14.376208
+  type: 'test'
+  location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_netlify.test.mjs:78:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    'FAIL' !== 'PASS'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'PASS'
+  actual: 'FAIL'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_netlify.test.mjs:80:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.start (node:internal/test_runner/test:944:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+# Subtest: fails closed when producer claims drift from the structured answer (a1)
+ok 11 - fails closed when producer claims drift from the structured answer (a1)
+  ---
+  duration_ms: 0.226917
+  type: 'test'
+  ...
+# Subtest: fails closed outside the fixed canonical lesson contract
+ok 12 - fails closed outside the fixed canonical lesson contract
+  ---
+  duration_ms: 0.099958
+  type: 'test'
+  ...
+# Subtest: fails closed on legacy l02 v3 records (superseded contract)
+not ok 13 - fails closed on legacy l02 v3 records (superseded contract)
+  ---
+  duration_ms: 0.291541
+  type: 'test'
+  location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_netlify.test.mjs:99:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    'PASS' !== 'FAIL'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'FAIL'
+  actual: 'PASS'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_netlify.test.mjs:113:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: accepts the independently recomputed l02 v4 a2 choice attempt
+not ok 14 - accepts the independently recomputed l02 v4 a2 choice attempt
+  ---
+  duration_ms: 0.157
+  type: 'test'
+  location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_netlify.test.mjs:118:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    'FAIL' !== 'PASS'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'PASS'
+  actual: 'FAIL'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_netlify.test.mjs:131:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: fails closed on a2 wrong selection even with honest producer claims
+not ok 15 - fails closed on a2 wrong selection even with honest producer claims
+  ---
+  duration_ms: 0.129958
+  type: 'test'
+  location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_netlify.test.mjs:136:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    1 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_netlify.test.mjs:152:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: accepts the independently recomputed l02 v4 a3 sort attempt
+not ok 16 - accepts the independently recomputed l02 v4 a3 sort attempt
+  ---
+  duration_ms: 0.376208
+  type: 'test'
+  location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_netlify.test.mjs:155:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    'FAIL' !== 'PASS'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'PASS'
+  actual: 'FAIL'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_netlify.test.mjs:170:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: fails closed on a3 with swapped positions (3/5 = 0.6 below threshold)
+not ok 17 - fails closed on a3 with swapped positions (3/5 = 0.6 below threshold)
+  ---
+  duration_ms: 3.272
+  type: 'test'
+  location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_netlify.test.mjs:175:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    1 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_netlify.test.mjs:199:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: accepts a3 at the inclusive pass boundary (4/5 = 0.8 >= 0.75)
+not ok 18 - accepts a3 at the inclusive pass boundary (4/5 = 0.8 >= 0.75)
+  ---
+  duration_ms: 1.65775
+  type: 'test'
+  location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_netlify.test.mjs:202:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    'FAIL' !== 'PASS'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'PASS'
+  actual: 'FAIL'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_netlify.test.mjs:218:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: fails closed on a3 with tampered score and checks (recomputation error)
+not ok 19 - fails closed on a3 with tampered score and checks (recomputation error)
+  ---
+  duration_ms: 5.310458
+  type: 'test'
+  location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_netlify.test.mjs:222:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert.ok(result.errors.includes("producer deterministicChecks does not match independent recomputation"))
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_netlify.test.mjs:239:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: fails closed for lessons and activities outside the l02 v4 contract
+ok 20 - fails closed for lessons and activities outside the l02 v4 contract
+  ---
+  duration_ms: 2.608834
+  type: 'test'
+  ...
+# Subtest: plan: complete v4 receipt binding
+    # Subtest: l02-a1/output_comparison
+    not ok 1 - l02-a1/output_comparison
+      ---
+      duration_ms: 17.638
+      type: 'test'
+      location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:83:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        
+        'FAIL' !== 'PASS'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'PASS'
+      actual: 'FAIL'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:92:14)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        TestContext.test (node:internal/test_runner/test:373:20)
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:83:13)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+      ...
+    # Subtest: l02-a2/choice
+    not ok 2 - l02-a2/choice
+      ---
+      duration_ms: 0.542334
+      type: 'test'
+      location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:83:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        
+        'FAIL' !== 'PASS'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'PASS'
+      actual: 'FAIL'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:92:14)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        TestContext.test (node:internal/test_runner/test:373:20)
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:83:13)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: l02-a3/sort
+    not ok 3 - l02-a3/sort
+      ---
+      duration_ms: 0.426291
+      type: 'test'
+      location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:83:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        
+        'FAIL' !== 'PASS'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'PASS'
+      actual: 'FAIL'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:92:14)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        TestContext.test (node:internal/test_runner/test:373:20)
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:83:13)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    1..3
+not ok 21 - plan: complete v4 receipt binding
+  ---
+  duration_ms: 19.447083
+  type: 'test'
+  location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:81:1'
+  failureType: 'subtestsFailed'
+  error: '3 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: plan: independent tamper rejection
+    # Subtest: l02-a1: deterministicChecks changed alone
+    not ok 1 - l02-a1: deterministicChecks changed alone
+      ---
+      duration_ms: 0.49075
+      type: 'test'
+      location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:116:15'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+          [
+        +   'evidence identity is not the fixed l02 v3 verifier contract'
+        -   'producer deterministicChecks does not match independent recomputation'
+          ]
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+        0: 'producer deterministicChecks does not match independent recomputation'
+      actual:
+        0: 'evidence identity is not the fixed l02 v3 verifier contract'
+      operator: 'deepStrictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:126:16)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        TestContext.test (node:internal/test_runner/test:373:20)
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:116:15)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+        Test.postRun (node:internal/test_runner/test:1173:19)
+      ...
+    # Subtest: l02-a1: score changed alone
+    not ok 2 - l02-a1: score changed alone
+      ---
+      duration_ms: 0.513292
+      type: 'test'
+      location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:116:15'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+          [
+        +   'evidence identity is not the fixed l02 v3 verifier contract'
+        -   'producer score does not match independent recomputation'
+          ]
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+        0: 'producer score does not match independent recomputation'
+      actual:
+        0: 'evidence identity is not the fixed l02 v3 verifier contract'
+      operator: 'deepStrictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:126:16)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        TestContext.test (node:internal/test_runner/test:373:20)
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:116:15)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: l02-a1: pass changed alone
+    not ok 3 - l02-a1: pass changed alone
+      ---
+      duration_ms: 1.01275
+      type: 'test'
+      location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:116:15'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+          [
+        +   'evidence identity is not the fixed l02 v3 verifier contract'
+        -   'producer pass does not match independent recomputation'
+          ]
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+        0: 'producer pass does not match independent recomputation'
+      actual:
+        0: 'evidence identity is not the fixed l02 v3 verifier contract'
+      operator: 'deepStrictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:126:16)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        TestContext.test (node:internal/test_runner/test:373:20)
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:116:15)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: l02-a1: honest incorrect answer
+    not ok 4 - l02-a1: honest incorrect answer
+      ---
+      duration_ms: 0.623417
+      type: 'test'
+      location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:129:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+        + [
+        +   'evidence identity is not the fixed l02 v3 verifier contract'
+        + ]
+        - []
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual:
+        0: 'evidence identity is not the fixed l02 v3 verifier contract'
+      operator: 'deepStrictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:134:14)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        TestContext.test (node:internal/test_runner/test:373:20)
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:129:13)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: l02-a2: deterministicChecks changed alone
+    not ok 5 - l02-a2: deterministicChecks changed alone
+      ---
+      duration_ms: 0.634708
+      type: 'test'
+      location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:116:15'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+          [
+        +   'evidence identity is not the fixed l02 v3 verifier contract'
+        -   'producer deterministicChecks does not match independent recomputation'
+          ]
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+        0: 'producer deterministicChecks does not match independent recomputation'
+      actual:
+        0: 'evidence identity is not the fixed l02 v3 verifier contract'
+      operator: 'deepStrictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:126:16)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        TestContext.test (node:internal/test_runner/test:373:20)
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:116:15)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: l02-a2: score changed alone
+    not ok 6 - l02-a2: score changed alone
+      ---
+      duration_ms: 0.605708
+      type: 'test'
+      location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:116:15'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+          [
+        +   'evidence identity is not the fixed l02 v3 verifier contract'
+        -   'producer score does not match independent recomputation'
+          ]
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+        0: 'producer score does not match independent recomputation'
+      actual:
+        0: 'evidence identity is not the fixed l02 v3 verifier contract'
+      operator: 'deepStrictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:126:16)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        TestContext.test (node:internal/test_runner/test:373:20)
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:116:15)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: l02-a2: pass changed alone
+    not ok 7 - l02-a2: pass changed alone
+      ---
+      duration_ms: 0.217083
+      type: 'test'
+      location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:116:15'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+          [
+        +   'evidence identity is not the fixed l02 v3 verifier contract'
+        -   'producer pass does not match independent recomputation'
+          ]
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+        0: 'producer pass does not match independent recomputation'
+      actual:
+        0: 'evidence identity is not the fixed l02 v3 verifier contract'
+      operator: 'deepStrictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:126:16)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        TestContext.test (node:internal/test_runner/test:373:20)
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:116:15)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: l02-a2: honest incorrect answer
+    not ok 8 - l02-a2: honest incorrect answer
+      ---
+      duration_ms: 0.899209
+      type: 'test'
+      location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:129:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+        + [
+        +   'evidence identity is not the fixed l02 v3 verifier contract'
+        + ]
+        - []
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual:
+        0: 'evidence identity is not the fixed l02 v3 verifier contract'
+      operator: 'deepStrictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:134:14)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        TestContext.test (node:internal/test_runner/test:373:20)
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:129:13)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: l02-a3: deterministicChecks changed alone
+    not ok 9 - l02-a3: deterministicChecks changed alone
+      ---
+      duration_ms: 0.262834
+      type: 'test'
+      location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:116:15'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+          [
+        +   'evidence identity is not the fixed l02 v3 verifier contract'
+        -   'producer deterministicChecks does not match independent recomputation'
+          ]
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+        0: 'producer deterministicChecks does not match independent recomputation'
+      actual:
+        0: 'evidence identity is not the fixed l02 v3 verifier contract'
+      operator: 'deepStrictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:126:16)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        TestContext.test (node:internal/test_runner/test:373:20)
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:116:15)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: l02-a3: score changed alone
+    not ok 10 - l02-a3: score changed alone
+      ---
+      duration_ms: 0.110167
+      type: 'test'
+      location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:116:15'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+          [
+        +   'evidence identity is not the fixed l02 v3 verifier contract'
+        -   'producer score does not match independent recomputation'
+          ]
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+        0: 'producer score does not match independent recomputation'
+      actual:
+        0: 'evidence identity is not the fixed l02 v3 verifier contract'
+      operator: 'deepStrictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:126:16)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        TestContext.test (node:internal/test_runner/test:373:20)
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:116:15)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: l02-a3: pass changed alone
+    not ok 11 - l02-a3: pass changed alone
+      ---
+      duration_ms: 0.13175
+      type: 'test'
+      location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:116:15'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+          [
+        +   'evidence identity is not the fixed l02 v3 verifier contract'
+        -   'producer pass does not match independent recomputation'
+          ]
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+        0: 'producer pass does not match independent recomputation'
+      actual:
+        0: 'evidence identity is not the fixed l02 v3 verifier contract'
+      operator: 'deepStrictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:126:16)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        TestContext.test (node:internal/test_runner/test:373:20)
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:116:15)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: l02-a3: honest incorrect answer
+    not ok 12 - l02-a3: honest incorrect answer
+      ---
+      duration_ms: 0.083166
+      type: 'test'
+      location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:129:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+        + [
+        +   'evidence identity is not the fixed l02 v3 verifier contract'
+        + ]
+        - []
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual:
+        0: 'evidence identity is not the fixed l02 v3 verifier contract'
+      operator: 'deepStrictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:134:14)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        TestContext.test (node:internal/test_runner/test:373:20)
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:129:13)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    1..12
+not ok 22 - plan: independent tamper rejection
+  ---
+  duration_ms: 7.449958
+  type: 'test'
+  location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:113:1'
+  failureType: 'subtestsFailed'
+  error: '12 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: plan: invalid identity and legacy contract
+    # Subtest: legacy-v3
+    not ok 1 - legacy-v3
+      ---
+      duration_ms: 0.162625
+      type: 'test'
+      location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:161:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        
+        'PASS' !== 'FAIL'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'FAIL'
+      actual: 'PASS'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:163:14)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        TestContext.test (node:internal/test_runner/test:373:20)
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:161:13)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+        Test.postRun (node:internal/test_runner/test:1173:19)
+      ...
+    # Subtest: schema
+    not ok 2 - schema
+      ---
+      duration_ms: 0.084625
+      type: 'test'
+      location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:161:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+          [
+        +   'evidence identity is not the fixed l02 v3 verifier contract'
+        -   'evidence identity is not the fixed l02 v4 verifier contract'
+          ]
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+        0: 'evidence identity is not the fixed l02 v4 verifier contract'
+      actual:
+        0: 'evidence identity is not the fixed l02 v3 verifier contract'
+      operator: 'deepStrictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:166:14)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        TestContext.test (node:internal/test_runner/test:373:20)
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:161:13)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: source
+    not ok 3 - source
+      ---
+      duration_ms: 0.153666
+      type: 'test'
+      location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:161:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+          [
+        +   'evidence identity is not the fixed l02 v3 verifier contract'
+        -   'evidence identity is not the fixed l02 v4 verifier contract'
+          ]
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+        0: 'evidence identity is not the fixed l02 v4 verifier contract'
+      actual:
+        0: 'evidence identity is not the fixed l02 v3 verifier contract'
+      operator: 'deepStrictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:166:14)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        TestContext.test (node:internal/test_runner/test:373:20)
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:161:13)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: verifierRequired
+    not ok 4 - verifierRequired
+      ---
+      duration_ms: 0.07925
+      type: 'test'
+      location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:161:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+          [
+        +   'evidence identity is not the fixed l02 v3 verifier contract'
+        -   'evidence identity is not the fixed l02 v4 verifier contract'
+          ]
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+        0: 'evidence identity is not the fixed l02 v4 verifier contract'
+      actual:
+        0: 'evidence identity is not the fixed l02 v3 verifier contract'
+      operator: 'deepStrictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:166:14)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        TestContext.test (node:internal/test_runner/test:373:20)
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:161:13)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: lesson
+    not ok 5 - lesson
+      ---
+      duration_ms: 0.071291
+      type: 'test'
+      location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:161:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+          [
+        +   'evidence identity is not the fixed l02 v3 verifier contract'
+        -   'evidence identity is not the fixed l02 v4 verifier contract'
+          ]
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+        0: 'evidence identity is not the fixed l02 v4 verifier contract'
+      actual:
+        0: 'evidence identity is not the fixed l02 v3 verifier contract'
+      operator: 'deepStrictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:166:14)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        TestContext.test (node:internal/test_runner/test:373:20)
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:161:13)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: type
+    not ok 6 - type
+      ---
+      duration_ms: 0.792042
+      type: 'test'
+      location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:161:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+          [
+        +   'evidence identity is not the fixed l02 v3 verifier contract'
+        -   'evidence identity is not the fixed l02 v4 verifier contract'
+          ]
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+        0: 'evidence identity is not the fixed l02 v4 verifier contract'
+      actual:
+        0: 'evidence identity is not the fixed l02 v3 verifier contract'
+      operator: 'deepStrictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:166:14)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        TestContext.test (node:internal/test_runner/test:373:20)
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:161:13)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: unknown-activity
+    not ok 7 - unknown-activity
+      ---
+      duration_ms: 0.634417
+      type: 'test'
+      location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:161:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+          [
+        +   'evidence identity is not the fixed l02 v3 verifier contract'
+        -   'evidence identity is not the fixed l02 v4 verifier contract'
+          ]
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+        0: 'evidence identity is not the fixed l02 v4 verifier contract'
+      actual:
+        0: 'evidence identity is not the fixed l02 v3 verifier contract'
+      operator: 'deepStrictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:166:14)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        TestContext.test (node:internal/test_runner/test:373:20)
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:161:13)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: null-activity
+    not ok 8 - null-activity
+      ---
+      duration_ms: 0.382875
+      type: 'test'
+      location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:161:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+          [
+        +   'evidence identity is not the fixed l02 v3 verifier contract'
+        -   'evidence identity is not the fixed l02 v4 verifier contract'
+          ]
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+        0: 'evidence identity is not the fixed l02 v4 verifier contract'
+      actual:
+        0: 'evidence identity is not the fixed l02 v3 verifier contract'
+      operator: 'deepStrictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:166:14)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        TestContext.test (node:internal/test_runner/test:373:20)
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:161:13)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: numeric-activity
+    not ok 9 - numeric-activity
+      ---
+      duration_ms: 0.112459
+      type: 'test'
+      location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:161:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+          [
+        +   'evidence identity is not the fixed l02 v3 verifier contract'
+        -   'evidence identity is not the fixed l02 v4 verifier contract'
+          ]
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+        0: 'evidence identity is not the fixed l02 v4 verifier contract'
+      actual:
+        0: 'evidence identity is not the fixed l02 v3 verifier contract'
+      operator: 'deepStrictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:166:14)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        TestContext.test (node:internal/test_runner/test:373:20)
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:161:13)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: boolean-activity
+    not ok 10 - boolean-activity
+      ---
+      duration_ms: 0.086458
+      type: 'test'
+      location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:161:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+          [
+        +   'evidence identity is not the fixed l02 v3 verifier contract'
+        -   'evidence identity is not the fixed l02 v4 verifier contract'
+          ]
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+        0: 'evidence identity is not the fixed l02 v4 verifier contract'
+      actual:
+        0: 'evidence identity is not the fixed l02 v3 verifier contract'
+      operator: 'deepStrictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:166:14)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        TestContext.test (node:internal/test_runner/test:373:20)
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:161:13)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: array-activity
+    not ok 11 - array-activity
+      ---
+      duration_ms: 0.080916
+      type: 'test'
+      location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:161:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+          [
+        +   'evidence identity is not the fixed l02 v3 verifier contract'
+        -   'evidence identity is not the fixed l02 v4 verifier contract'
+          ]
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+        0: 'evidence identity is not the fixed l02 v4 verifier contract'
+      actual:
+        0: 'evidence identity is not the fixed l02 v3 verifier contract'
+      operator: 'deepStrictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:166:14)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        TestContext.test (node:internal/test_runner/test:373:20)
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:161:13)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: object-activity
+    not ok 12 - object-activity
+      ---
+      duration_ms: 0.078
+      type: 'test'
+      location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:161:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+          [
+        +   'evidence identity is not the fixed l02 v3 verifier contract'
+        -   'evidence identity is not the fixed l02 v4 verifier contract'
+          ]
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+        0: 'evidence identity is not the fixed l02 v4 verifier contract'
+      actual:
+        0: 'evidence identity is not the fixed l02 v3 verifier contract'
+      operator: 'deepStrictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:166:14)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        TestContext.test (node:internal/test_runner/test:373:20)
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:161:13)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: uncoercible-activity
+    not ok 13 - uncoercible-activity
+      ---
+      duration_ms: 0.073458
+      type: 'test'
+      location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:161:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+          [
+        +   'evidence identity is not the fixed l02 v3 verifier contract'
+        -   'evidence identity is not the fixed l02 v4 verifier contract'
+          ]
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+        0: 'evidence identity is not the fixed l02 v4 verifier contract'
+      actual:
+        0: 'evidence identity is not the fixed l02 v3 verifier contract'
+      operator: 'deepStrictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:166:14)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        TestContext.test (node:internal/test_runner/test:373:20)
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:161:13)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: reordered-skills
+    not ok 14 - reordered-skills
+      ---
+      duration_ms: 0.071833
+      type: 'test'
+      location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:161:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+          [
+        +   'evidence identity is not the fixed l02 v3 verifier contract'
+        -   'evidence identity is not the fixed l02 v4 verifier contract'
+          ]
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+        0: 'evidence identity is not the fixed l02 v4 verifier contract'
+      actual:
+        0: 'evidence identity is not the fixed l02 v3 verifier contract'
+      operator: 'deepStrictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:166:14)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        TestContext.test (node:internal/test_runner/test:373:20)
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:161:13)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: missing-skill
+    not ok 15 - missing-skill
+      ---
+      duration_ms: 0.07
+      type: 'test'
+      location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:161:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+          [
+        +   'evidence identity is not the fixed l02 v3 verifier contract'
+        -   'evidence identity is not the fixed l02 v4 verifier contract'
+          ]
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+        0: 'evidence identity is not the fixed l02 v4 verifier contract'
+      actual:
+        0: 'evidence identity is not the fixed l02 v3 verifier contract'
+      operator: 'deepStrictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:166:14)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        TestContext.test (node:internal/test_runner/test:373:20)
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:161:13)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: extra-skill
+    not ok 16 - extra-skill
+      ---
+      duration_ms: 0.069083
+      type: 'test'
+      location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:161:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+          [
+        +   'evidence identity is not the fixed l02 v3 verifier contract'
+        -   'evidence identity is not the fixed l02 v4 verifier contract'
+          ]
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+        0: 'evidence identity is not the fixed l02 v4 verifier contract'
+      actual:
+        0: 'evidence identity is not the fixed l02 v3 verifier contract'
+      operator: 'deepStrictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:166:14)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        TestContext.test (node:internal/test_runner/test:373:20)
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:161:13)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: nonarray-skills
+    not ok 17 - nonarray-skills
+      ---
+      duration_ms: 0.067083
+      type: 'test'
+      location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:161:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+          [
+        +   'evidence identity is not the fixed l02 v3 verifier contract'
+        -   'evidence identity is not the fixed l02 v4 verifier contract'
+          ]
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+        0: 'evidence identity is not the fixed l02 v4 verifier contract'
+      actual:
+        0: 'evidence identity is not the fixed l02 v3 verifier contract'
+      operator: 'deepStrictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:166:14)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        TestContext.test (node:internal/test_runner/test:373:20)
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:161:13)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: null-skills
+    not ok 18 - null-skills
+      ---
+      duration_ms: 0.1575
+      type: 'test'
+      location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:161:13'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+          [
+        +   'evidence identity is not the fixed l02 v3 verifier contract'
+        -   'evidence identity is not the fixed l02 v4 verifier contract'
+          ]
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+        0: 'evidence identity is not the fixed l02 v4 verifier contract'
+      actual:
+        0: 'evidence identity is not the fixed l02 v3 verifier contract'
+      operator: 'deepStrictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:166:14)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        TestContext.test (node:internal/test_runner/test:373:20)
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:161:13)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: missing-activity
+    not ok 19 - missing-activity
+      ---
+      duration_ms: 0.116666
+      type: 'test'
+      location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:169:11'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly deep-equal:
+        + actual - expected
+        
+          [
+        +   'evidence identity is not the fixed l02 v3 verifier contract'
+        -   'evidence identity is not the fixed l02 v4 verifier contract'
+          ]
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+        0: 'evidence identity is not the fixed l02 v4 verifier contract'
+      actual:
+        0: 'evidence identity is not the fixed l02 v3 verifier contract'
+      operator: 'deepStrictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:176:12)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        TestContext.test (node:internal/test_runner/test:373:20)
+        TestContext.<anonymous> (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:169:11)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    1..19
+not ok 23 - plan: invalid identity and legacy contract
+  ---
+  duration_ms: 3.936375
+  type: 'test'
+  location: '/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs:139:1'
+  failureType: 'subtestsFailed'
+  error: '19 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..23
+# tests 57
+# suites 0
+# pass 3
+# fail 54
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 125.625208

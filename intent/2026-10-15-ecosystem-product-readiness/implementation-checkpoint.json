@@ -1,0 +1,72 @@
+{
+  "base": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+  "checklist": ".checks/product-readiness-20261015.md",
+  "profile": "light",
+  "core657": {
+    "producer": "/root/build_gate657",
+    "focusedPassed": 124,
+    "sharedPassed": 918,
+    "sharedSkipped": 2,
+    "sourcePatch": "exact PR657817b9872",
+    "report": ".scratch/readiness-implementation-20261015/gate/implementation-report.json"
+  },
+  "core656": {
+    "producer": "/root/build_literacy656",
+    "nodePassed": 57,
+    "appUnitPassed": 273,
+    "appUnitSkipped": 1,
+    "browserPassed": 34,
+    "sourcePatch": "exact PR656b29631ee",
+    "report": ".scratch/readiness-implementation-20261015/literacy/implementation-result.json",
+    "C12": "real local HTTP outage/restart passed",
+    "C11": "human renegotiation pending; actualUIonlyfinala3",
+    "C13": "deployedsource binding missing"
+  },
+  "producerPythonEngines": {
+    "passed": 291,
+    "skipped": 1,
+    "report": ".scratch/readiness-implementation-20261015/producers/python-engines.json"
+  },
+  "nodeProducerGates": "9engines all declared lint/unit/typecheck/build steps exit0; see .scratch/readiness-implementation-20261015/producers/*.json",
+  "activeCommands": {},
+  "activeAgents": [],
+  "freshFeatureVerifier": "not dispatched yet; required after qualification artifact commit",
+  "externalWrites": "none",
+  "commits": {
+    "repairs": [
+      "caa6d8bb6a2c61d831df986d6b0b99d69319bff6 fix(literacy): verify all l02 v4 activities with bound receipts",
+      "616eb2302b846d14bade79a53cba38ffe000ffb8 fix(learner-gate): require independent receipts for game passes"
+    ],
+    "qualificationArtifacts": "to be recorded by the next commit"
+  },
+  "authorization656": "owner-approval-pr656.json",
+  "qualification": "in progress; no global readiness granted",
+  "browserExecution": "stopped by root due host contention; unfinished cases unverified",
+  "runtimeReports": {
+    "dashboard": ".scratch/readiness-implementation-20261015/qa-dashboards/latest.json",
+    "mvp": ".scratch/readiness-implementation-20261015/qa-mvp/qa-report.json",
+    "mme": ".scratch/readiness-implementation-20261015/qa-mme/report.json",
+    "pixel": ".scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/report.json",
+    "voxel": ".scratch/readiness-implementation-20261015/qa-voxel/partial-report.json",
+    "learning": ".scratch/readiness-implementation-20261015/qa-learning/qualification-partial.json",
+    "localProducts": ".scratch/readiness-implementation-20261015/qa-local-products/summary.json",
+    "suiteDiagnosis": ".scratch/readiness-implementation-20261015/browser-producers/diagnosis/report.json"
+  },
+  "nativeCleanupLimitation": "C30 own HTTP URL refused; complete native PID bookkeeping missing; Hermes default DB/WAL/SHM changed while other protected snapshots matched",
+  "review": "local Judge round2 APPROVE code only; whole-feature fresh Verifier next",
+  "sourcePublication": "two local repair commits; no push, deploy, comment or merge",
+  "CODEX_THREAD_ID": "01a14031-5cbc-7473-ba2b-b51518a87490",
+  "qualificationCounts": {
+    "pass": 0,
+    "blocked": 3,
+    "unverified": 11
+  },
+  "reportsRetained": "evidence/implementation/retention-manifest.json",
+  "voxelCoverage": {
+    "completeGames": 8,
+    "webglPairsPassed": 32,
+    "webglPairsUnverified": 36,
+    "fallbackPairsPassed": 32
+  },
+  "observerLifecycleFix": "4 unchanged new regression tests failed before and passed after; own child/log cleanup and immediate exit subscription"
+}

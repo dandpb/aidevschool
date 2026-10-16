@@ -1,0 +1,30 @@
+{
+  "engine": "zai-duolingo-like",
+  "argv": [
+    "npx",
+    "playwright",
+    "test",
+    "e2e/smoke.spec.ts",
+    "e2e/navigation.spec.ts",
+    "e2e/lesson-flow.spec.ts",
+    "e2e/playground.spec.ts",
+    "e2e/meta.spec.ts",
+    "--config",
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/browser-producers/zai-duolingo-like.config.ts"
+  ],
+  "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/zai-duolingo-like",
+  "exitCode": 0,
+  "seconds": 58.34,
+  "observedAt": "2026-10-16T01:32:12.568451+00:00",
+  "report": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/browser-producers/zai-duolingo-like.report.json",
+  "media": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/zai-duolingo-like/test-results/readiness-plan-suite",
+  "scope": "selected existing producer tests, partial declared-use coverage; no independent semantic verdict",
+  "stats": {
+    "startTime": "2026-10-16T01:31:15.793Z",
+    "duration": 56737.411,
+    "expected": 29,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

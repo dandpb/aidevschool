@@ -1,0 +1,271 @@
+{
+  "kind": "declared-use-qa-producer-record",
+  "criterion": "C17",
+  "engineId": "aiDevschoolMvp",
+  "declaredUse": "24-concept AI-fluency chat tutor; bundled scripts own gates, scheduling, card and local ledger",
+  "entry": "Hermes native isolated profile with installed aidevschool SKILL",
+  "runtime": {
+    "harness": "Hermes",
+    "version": "Hermes Agent v0.21.5+2295.gc6e0f24 (2026.9.24) \u00b7 upstream c6e0f249\nInstall directory: /Users/danielbarreto/.hermes/hermes-agent\nInstall method: git\nPython: 3.14.7\nOpenAI SDK: 2.24.0\nUpdate available \u2014 run 'hermes update'",
+    "provider": "alibaba",
+    "model": "qwen3.8-max",
+    "profile": "readinessmvp20261015 (removed)",
+    "privateCheckout": "/Users/danielbarreto/.codex/worktrees/readiness-mvp-runtime/aidevschool",
+    "nativeProfileIsFilesystemSandbox": false,
+    "externalOpenClaw": "not exercised; no platform unavailability inferred"
+  },
+  "sourceCommit": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+  "sourceFingerprint": "135731c92847d611b925faa433dcb763e910b6082ee6fcfd3ded5c27ad0d742a",
+  "observedAt": "2026-10-16T01:33:14.854324+00:00",
+  "producerContext": "/root/qa_hermes_mvp: declared-use QA/evidence producer",
+  "verifierContext": null,
+  "independentWholeFeatureVerification": "not performed by this producer",
+  "cases": [
+    {
+      "caseId": "isolated-install-local-scheduler",
+      "status": "pass",
+      "result": "Installer exit0; native private skill discovered; own 30m cron created delivery local and paused immediately; no gateway started.",
+      "promiseSource": "engines/aiDevschoolMvp/aidevschool/install.py:165-193",
+      "evidenceRefs": [
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mvp/install.command.json",
+          "sha256": "3c829ebc6a9e6ecd0990fc5bc7d00fc87df04d4bcc4d1c505f79dd5253fdce9d"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mvp/install.stdout.txt",
+          "sha256": "c32b0d3f80e4f53d1c485ac74066ef0aa8752a6dcc533b3fe756e4f2c8118d32"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mvp/cron-created.json",
+          "sha256": "0070f54bf1f0ea871a2622bb0af2146c43eaca73968fcf1dcf9c3d7880606fd7"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mvp/cleanup.json",
+          "sha256": "1974661fdf1cd27eb99b3a91a737721e6094496c2773db25ffa7e0ff7e8eb31a"
+        }
+      ]
+    },
+    {
+      "caseId": "first-lesson-public-quiz",
+      "status": "pass",
+      "result": "Real configured Alibaba/qwen3.8-max session called next_step, received C01 G3 attempt att_c01_0001 and public drawn prompts; rendered lesson.",
+      "promiseSource": "engines/aiDevschoolMvp/aidevschool/SKILL.md:21-25",
+      "evidenceRefs": [
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mvp/01-start.transcript.json",
+          "sha256": "94af19c65b1aee8ea2b493650ff4877032b5c6d9bd5709b7045f1fccdf30a4e4"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mvp/01-start.command.json",
+          "sha256": "3ae85e4fe241cca448ef7f193585c6fbca4c6db32764c37ee231e5dac166a210"
+        }
+      ]
+    },
+    {
+      "caseId": "G3-raw-reply-pedagogical-negative",
+      "status": "blocked",
+      "result": "Gate call used raw_reply instead of reply_text. Nested script exit1 Missing required argument reply_text.; outer Hermes exit0. No pedagogical verdict or retry was observed.",
+      "promiseSource": "engines/aiDevschoolMvp/aidevschool/SKILL.md:24-34; scripts/gate_check.py:104-110",
+      "evidenceRefs": [
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mvp/02-g3-wrong.tool-evidence.json",
+          "sha256": "8e378532b3fddec297be024f450033382759b01e71c2fcadfddfa7c15fc4e020"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mvp/02-g3-wrong.result.json",
+          "sha256": "2994c93afc400a15fb9203e223e17f9ff4c14c4eee26ae501571833439ff7e4a"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mvp/c01-after-script-error.json",
+          "sha256": "489e71b80281b17a4ea202fadb6cf481583c79ef55dc69bea580b13d1eb91da9"
+        }
+      ]
+    },
+    {
+      "caseId": "G1-raw-reply-pedagogical-negative",
+      "status": "blocked",
+      "result": "Fresh C14 synthetic prerequisite scenario: next_step returned concept/attempt, then gate_check omitted both and used raw_reply. Nested exit1 Missing required argument concept_id.; outer Hermes exit0.",
+      "promiseSource": "engines/aiDevschoolMvp/aidevschool/SKILL.md:24-34; scripts/gate_check.py:104-110",
+      "evidenceRefs": [
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mvp/04-g1-wrong.tool-evidence.json",
+          "sha256": "66bc28a8f9fc674094b8253bf9aa2e0bc1fd86e5f8623dfdfc116d81feb44bc4"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mvp/04-g1-wrong.result.json",
+          "sha256": "4a20f19c89058768bdbf75b9b7ff1dee292c14c5fe2e3657db2ed34b85e91b62"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mvp/C14-fixture-initial.json",
+          "sha256": "a65699faa470629b6bfd15bfc851dca63e4de379e6bd3f47d38b1b5315584aec"
+        }
+      ]
+    },
+    {
+      "caseId": "G4-unrecorded-artifact-stop",
+      "status": "pass",
+      "result": "Fresh C12 synthetic scenario called gate_check with correct fields. Adapter emitted no recorded G4 judgments for rubric c12_prompt_rewrite. Script exit1 is captured by EXIT=1 while shell wrapper exits0. Tutor relayed error literally and stopped; no schedule/recompute. This is fail-closed evidence, not successful G4 qualification.",
+      "promiseSource": "engines/aiDevschoolMvp/aidevschool/scripts/gate_check.py:88-100; SKILL.md:42-50",
+      "evidenceRefs": [
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mvp/07-g4-unrecorded.tool-evidence.json",
+          "sha256": "0f1d326711686d3665b8589c133f48f6e2a40d32c951c42e3021def7ae7ed4af"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mvp/07-g4-unrecorded.result.json",
+          "sha256": "280cfaa689820715a265dcc27b95a76397165b81a4f3cf33f42c036b4f97b858"
+        }
+      ]
+    },
+    {
+      "caseId": "G4-live-primary-teachback-path",
+      "status": "unverified",
+      "result": "A fresh separate model session produced three artifact-digest-linked judgment maps. Two C13 recordings were staged only in the private installed skill but no G4 verdict consumed them before cleanup; sampling temperature was not independently proven. No shipped fixture is called live verification.",
+      "promiseSource": "engines/aiDevschoolMvp/aidevschool/scripts/gate_check.py:88-100",
+      "evidenceRefs": [
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mvp/g4-live-judgment-input.json",
+          "sha256": "8a906907af59d69aa639719d07f06026720df4341951ee967c08da82440fec33"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mvp/g4-live-judgments.json",
+          "sha256": "934f18ddcd0e8fbbe7b559990c54258b3a9b4d8ed8dbd0d403dbfe26b0559f60"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mvp/g4-judge.transcript.json",
+          "sha256": "454407b1fc4e934af2a8d6b6c6bfbf6501a617c7c295a50eb971eef2149f4489"
+        }
+      ]
+    },
+    {
+      "caseId": "G2-redaction-and-scenario",
+      "status": "unverified",
+      "result": "Fixtures/prompts were prepared, not launched. No live G2 assertion.",
+      "promiseSource": "engines/aiDevschoolMvp/aidevschool/gate_registry.json",
+      "evidenceRefs": [
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mvp/concept-gate-census.json",
+          "sha256": "ef5eff11cf6e3d05fa6dca808d1d92964d3136f699957d1388ca8b9d2fcc8a0d"
+        }
+      ]
+    },
+    {
+      "caseId": "schedule-recompute-progress-card-ledger-retry-return",
+      "status": "unverified",
+      "result": "Product gate errors stopped lessons before any verdict, scheduling, recomputation, card or pedagogical retry. Ledger records only entry events. Return after script error was not retried or auto-repaired.",
+      "promiseSource": "engines/aiDevschoolMvp/aidevschool/SKILL.md:21-50",
+      "evidenceRefs": [
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mvp/c01-after-script-error.json",
+          "sha256": "489e71b80281b17a4ea202fadb6cf481583c79ef55dc69bea580b13d1eb91da9"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mvp/private-runtime/aidevschool-state/ledger.jsonl",
+          "sha256": "d5c53e8df5b399976c75a8a22ad8bebd97540c0a314bc3e3f03d0e4aa470c9d0"
+        }
+      ]
+    },
+    {
+      "caseId": "24-concepts-and-platform-variants",
+      "status": "unverified",
+      "result": "All 24 concept gate/teach-back/fallback bindings enumerated. Representative live C01/C14/C12 only; no 24-conversation coverage or G3 24-hour success; external OpenClaw not exercised.",
+      "promiseSource": "engines/aiDevschoolMvp/aidevschool/curriculum.json; gate_registry.json",
+      "evidenceRefs": [
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mvp/concept-gate-census.json",
+          "sha256": "ef5eff11cf6e3d05fa6dca808d1d92964d3136f699957d1388ca8b9d2fcc8a0d"
+        }
+      ]
+    },
+    {
+      "caseId": "isolation-and-cleanup",
+      "status": "unverified",
+      "result": "Own cron removed; explicit list says no scheduled jobs. Own profile directory removed. Native delete exited1 for pending identity purge. Default config/env/auth/MVP state+skill/cron/session files hashes match; default state.db/WAL/SHM changed. Read-only SQL found zero QA session IDs in default sessions/messages, not proof of byte invariance. No restore or destructive cleanup retry.",
+      "promiseSource": "qualification-matrix.md:25; task C17 isolation",
+      "evidenceRefs": [
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mvp/cleanup.json",
+          "sha256": "1974661fdf1cd27eb99b3a91a737721e6094496c2773db25ffa7e0ff7e8eb31a"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mvp/default-before-sha256.json",
+          "sha256": "b743030abf20705d55d483a3109c881b2e3c6c9230187f9fcb882e4941abb4c4"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mvp/default-after-sha256.json",
+          "sha256": "34b8e04cbdf049e2fcdb939d3177cd3a3335a84dbca6befc0deaa6245f69d701"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mvp/default-profile-invariance.json",
+          "sha256": "98c39842d068cffda10ebea45848c731d0f6664e31fb030294d5581b681ef1ac"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mvp/default-db-readonly-diagnostic.json",
+          "sha256": "5ff9cccd5ee67adf99b32fe78f12293d2b8ce7a4f9cd6ac7d94c22075c04a8fb"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mvp/private-checkout-invariance.json",
+          "sha256": "56b764b13705fc8c5d0be579a9809d48dcdbe183bd4b8f16ac1736d14a89d670"
+        }
+      ]
+    }
+  ],
+  "evidenceRefs": [
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mvp/source-sha256.json",
+      "sha256": "2a67577a1b058d7633c3db90327f129ed136b484610cfdaf1717c6ca801f94fe"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mvp/commands.json",
+      "sha256": "9a7430ff11543507c9b48fbb315a53b6db8f82ad6d9dba61b2deed17c9baa4a8"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mvp/finding-c17.md",
+      "sha256": "f2844641253371e9c06806adfeb35f8cdff7032765f03729c9f632bb29e87a6a"
+    }
+  ],
+  "limitations": [
+    "C17 is blocked by observed real harness integration errors; this report grants no ReadinessTier or independent whole-feature verdict.",
+    "G4 model judgment session is distinct from tutoring sessions, but its records were not consumed by product gates and temperature0 was not demonstrated.",
+    "Native profile delete touches shared identity bookkeeping; root DB bytes changed. No QA messages/sessions found in default DB by known QA IDs. Attribution of all byte changes remains unknown.",
+    "No product source changes, frozen-check edits, pushes, deployments, new credentials, real-channel delivery, gateway/daemon, or canonical learner promotion.",
+    "CLI availability and historical contract test success are not treated as live PASS."
+  ],
+  "linkedUseCases": [],
+  "status": "blocked",
+  "findings": [
+    {
+      "id": "MVP-C17-ARGS",
+      "severity": "high",
+      "summary": "Real tutor gate JSON does not match required arguments in two sessions",
+      "evidenceRef": {
+        "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mvp/finding-c17.md",
+        "sha256": "f2844641253371e9c06806adfeb35f8cdff7032765f03729c9f632bb29e87a6a"
+      }
+    },
+    {
+      "id": "MVP-C17-G4-RECORDING",
+      "severity": "qualification-gap",
+      "summary": "Fresh C12 attempt has no recorded G4 judgment; script correctly stops",
+      "evidenceRef": {
+        "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mvp/07-g4-unrecorded.result.json",
+        "sha256": "280cfaa689820715a265dcc27b95a76397165b81a4f3cf33f42c036b4f97b858"
+      }
+    }
+  ],
+  "cleanup": {
+    "cronRemoved": true,
+    "ownCronListEmpty": true,
+    "ownProfileHomeAbsent": true,
+    "deleteExit": 1,
+    "identityPurgePending": true,
+    "backgroundModelJobsRemaining": 0,
+    "defaultProfileAllBytesInvariant": false,
+    "managedWorktreeArchived": true,
+    "archiveArtifactId": "01a14257-90aa-7503-b563-67412326afa3",
+    "archiveEvidenceRef": {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mvp/worktree-archive.json",
+      "sha256": "d0fa47ef7888cef0118c31b0943e8263ddebaac0dec0f0130691167c9c5790c4"
+    }
+  }
+}

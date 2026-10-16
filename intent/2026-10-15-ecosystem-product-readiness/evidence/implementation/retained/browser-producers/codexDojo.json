@@ -1,0 +1,27 @@
+{
+  "engine": "codexDojo",
+  "argv": [
+    "pnpm",
+    "exec",
+    "playwright",
+    "test",
+    "playwright/smoke.spec.ts",
+    "--config",
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/browser-producers/codexDojo.config.ts"
+  ],
+  "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo",
+  "exitCode": 0,
+  "seconds": 8.57,
+  "observedAt": "2026-10-16T01:30:14.261143+00:00",
+  "report": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/browser-producers/codexDojo.report.json",
+  "media": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/test-results/readiness-plan-suite",
+  "scope": "selected existing producer tests, partial declared-use coverage; no independent semantic verdict",
+  "stats": {
+    "startTime": "2026-10-16T01:30:07.334Z",
+    "duration": 6890.267000000001,
+    "expected": 2,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

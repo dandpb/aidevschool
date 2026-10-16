@@ -1,0 +1,15 @@
+{
+  "probe": "l02-producer-v4-vs-verifier-v3",
+  "legacy_v3": {
+    "verdict": "PASS",
+    "errors": []
+  },
+  "current_v4": {
+    "verdict": "FAIL",
+    "errors": [
+      "evidence identity is not the fixed l02 v3 verifier contract"
+    ]
+  },
+  "source_only": true,
+  "remote_deployment_not_probed": true
+}

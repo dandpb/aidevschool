@@ -1,0 +1,48 @@
+{
+  "sdlc_warnings": [
+    {
+      "id": "SDLC-READY-001",
+      "repo": "dandpb/aidevschool",
+      "head": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+      "issue": "Gate de jogos ainda permite pass sem recibo independente.",
+      "evidence": "[evidence/mastery-result.json](/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/mastery-result.json) reproduz f98e7fa3; contrato fonte inalterado no delta até a main observada.",
+      "correction": "Executar critérios 1–7 do plano, reutilizando o PR #657.",
+      "verification": "pytest learner/gate/tests: sem recibo inelegível; válido passa; histórico/NDJSON preservados. Prova no candidato integrado.",
+      "prerequisite": "Plano aceito; verificador distinto e checks correntes, inclusive os cancelados.",
+      "status": "open"
+    },
+    {
+      "id": "SDLC-READY-002",
+      "repo": "dandpb/aidevschool",
+      "head": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+      "issue": "Verificador fonte l02 v3 continua incompatível com conteúdo v4.",
+      "evidence": "[evidence/literacy-result.json](/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/literacy-result.json) reproduz f98e7fa3; fonte do contrato inalterada no delta.",
+      "correction": "Executar critérios 8–15, reutilizando o PR #656.",
+      "verification": "Contratos Node aceitam a1/a2/a3 honestos e recusam adulteração; observar cliente/retry e endpoint oferecido.",
+      "prerequisite": "Aceite rastreável para teste protegido, proveniência real e prova do deploy.",
+      "status": "open"
+    },
+    {
+      "id": "SDLC-READY-003",
+      "repo": "dandpb/aidevschool",
+      "head": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+      "issue": "As seis claims stale da discovery ainda precisam de revalidação independente.",
+      "evidence": "[evidence/readiness-check.json](/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/readiness-check.json) e [CI 38792377959](https://github.com/dandpb/aidevschool/actions/runs/38792377959). Planejar não renova claims.",
+      "correction": "Executar critérios 31–33 com fatos e observações do candidato final.",
+      "verification": "check --require-current retorna 0; assessment independente e lane de main verdes.",
+      "prerequisite": "Fonte estabilizada, bundles canônicos completos e integração single-writer.",
+      "status": "open"
+    },
+    {
+      "id": "SDLC-READY-004",
+      "repo": "dandpb/aidevschool",
+      "head": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+      "issue": "Qualificação completa dos 14 runtimes permanece pendente.",
+      "evidence": "[qualification-matrix.md](/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/qualification-matrix.md) cobre todos os engines, com status planejado; nenhuma execução live realizada nesta etapa.",
+      "correction": "Executar critérios 16–30 e consolidar o critério 34.",
+      "verification": "14/14 pass, sem bloqueio crítico/alto e com provas apropriadas ao uso declarado.",
+      "prerequisite": "Harnesses, DBs/perfis privados e ambientes oferecidos disponíveis; faltas ficam unverified.",
+      "status": "open"
+    }
+  ]
+}

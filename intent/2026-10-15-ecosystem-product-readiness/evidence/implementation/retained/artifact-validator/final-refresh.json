@@ -1,0 +1,953 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Final metadata/reference audit only; not a runtime replay, media judgment or C16 whole-feature PASS",
+  "packet": {
+    "path": "docs/product-readiness/evidence/observations/2026-10-15-ecosystem-beta-readiness/engine-qualification.json",
+    "sha256": "32f80dc3600bf8b44c0792a3a0ec87f776802ad3ce3a15a9dd8434449b55d0aa"
+  },
+  "checks": {
+    "exact14Ids": true,
+    "requiredRuntimeObjects": true,
+    "noTierGrant": true,
+    "distinctVerifierPending": true,
+    "caseIdsUnique": true,
+    "retained14SourceManifestsDigestValid": true,
+    "selectedJsonReportDigestsValid": true,
+    "resultPointersResolved": 263,
+    "mediaRehashed": false,
+    "browserOrRuntimeStarted": false
+  },
+  "statusCounts": {
+    "pass": 0,
+    "blocked": 3,
+    "unverified": 11
+  },
+  "engines": [
+    {
+      "engineId": "aiDevschoolMvp",
+      "status": "blocked",
+      "runtime": {
+        "harness": "Hermes",
+        "version": "Hermes Agent v0.21.5+2295.gc6e0f24 (2026.9.24) · upstream c6e0f249\nInstall directory: /Users/danielbarreto/.hermes/hermes-agent\nInstall method: git\nPython: 3.14.7\nOpenAI SDK: 2.24.0\nUpdate available — run 'hermes update'",
+        "provider": "alibaba",
+        "model": "qwen3.8-max",
+        "profile": "readinessmvp20261015 (removed)",
+        "privateCheckout": "/Users/danielbarreto/.codex/worktrees/readiness-mvp-runtime/aidevschool",
+        "nativeProfileIsFilesystemSandbox": false,
+        "externalOpenClaw": "not exercised; no platform unavailability inferred"
+      },
+      "observedAt": "2026-10-16T01:33:14.854324+00:00",
+      "sourceCommit": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+      "sourceManifest": {
+        "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/source-manifests/aiDevschoolMvp.json",
+        "sha256": "4651339482d174957cbafdd7165f2d9e76a56f9599f835766ba795a270031b44"
+      },
+      "evidence0": {
+        "path": ".scratch/readiness-implementation-20261015/qa-mvp/qa-report.json",
+        "sha256": "9600887c9aee3e8715975f4839cbcfd7b5d0f0163ccc696a2d712960739656f7"
+      },
+      "observedCaseCounts": {
+        "pass": 3,
+        "blocked": 2,
+        "unverified": 5
+      },
+      "topCases": [
+        {
+          "id": "observed/isolated-install-local-scheduler",
+          "status": "pass",
+          "result": "Installer exit0; native private skill discovered; own 30m cron created delivery local and paused immediately; no gateway started.",
+          "resultPointer": "/cases/0"
+        },
+        {
+          "id": "observed/first-lesson-public-quiz",
+          "status": "pass",
+          "result": "Real configured Alibaba/qwen3.8-max session called next_step, received C01 G3 attempt att_c01_0001 and public drawn prompts; rendered lesson.",
+          "resultPointer": "/cases/1"
+        },
+        {
+          "id": "observed/G3-raw-reply-pedagogical-negative",
+          "status": "blocked",
+          "result": "Gate call used raw_reply instead of reply_text. Nested script exit1 Missing required argument reply_text.; outer Hermes exit0. No pedagogical verdict or retry was observed.",
+          "resultPointer": "/cases/2"
+        }
+      ],
+      "offeredVariants": 0
+    },
+    {
+      "engineId": "codexDojo",
+      "status": "unverified",
+      "runtime": {
+        "node": "v22.23.2",
+        "playwright": "1.61.1",
+        "observerPid": 84551,
+        "observerParentPid": 84495,
+        "kind": "fresh local strict-port processes",
+        "viewport": {
+          "width": 1280,
+          "height": 800
+        },
+        "externalModelCalls": 0
+      },
+      "observedAt": "2026-10-16T01:43:35.639Z",
+      "sourceCommit": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+      "sourceManifest": {
+        "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/source-manifests/codexDojo.json",
+        "sha256": "7d87f7544fbd727f0879a4214abefc820b6d8fc322a40fa661fca72d6e34ca5e"
+      },
+      "evidence0": {
+        "path": ".scratch/readiness-implementation-20261015/qa-dashboards/codexDojo-2026-10-16T01-43-34-045Z/report.json",
+        "sha256": "ba9c5bbe8436c095d07421210b9b0d46521f59f88260008ed263fdb83e1dabf7"
+      },
+      "observedCaseCounts": {
+        "pass": 6,
+        "blocked": 0,
+        "unverified": 1
+      },
+      "topCases": [
+        {
+          "id": "observed/C18-projection-next-action",
+          "status": "pass",
+          "result": "{\"activeUnit\": \"U2-key-value-store\", \"reviews\": [\"U0-sonda-rate-limiter-robustness\", \"U2-key-value-store\", \"P-001\"], \"nextAction\": \"Avançar para o próximo ciclo\", \"destination\": \"Ciclo operacional\"}",
+          "resultPointer": "/assertions/0"
+        },
+        {
+          "id": "observed/C18-real-clipboard-prompt",
+          "status": "pass",
+          "result": "{\"actualClipboardRead\": true, \"mockedClipboard\": false, \"expectedSource\": \"engines/minimaxDojo/config/dashboard.yaml\", \"copiedSha256\": \"d179858dc54bccdb82450037d4ca5e92ac2110db2a835623e6cd6e79f67c7caf\"}",
+          "resultPointer": "/assertions/1"
+        },
+        {
+          "id": "observed/C18-configured-actual-os-destination",
+          "status": "pass",
+          "result": "{\"configuredOrigin\": \"http://127.0.0.1:52372\", \"ownOsPid\": 84750, \"noMissionExecuted\": true, \"osPage\": {\"url\": \"http://127.0.0.1:52372/onboarding\", \"title\": \"codexDojo OS\", \"viewport\": {\"width\": 1280, \"height\": 800}, \"body\": \"AI DevSchool\\nescolha sua trilha\\n\\nSEU PRIMEIRO PASSO\\n\\nO que você quer conseguir fazer com IA?\\n\\nLeva menos de um minuto. Escolha IA Prática ou Dev. Sem conta; o progresso fica neste dispositivo.\\n\\nObjetivo\\nUsar IA melhor no trabalho\\nEntender respostas e riscos\\nConstruir sistemas com IA\\nContexto\\nTrabalho\\nEstudos\\nProjeto pessoal\\nConfiança atual\\nEstou começando\\nJá experimentei algumas vezes\\nUso com frequência\\nRECOMENDADA PARA COMEÇAR\\nIA Prática\\nMicrolições no-code hospedadas. Conclusão local neste dispositivo, nunca domínio.\\nPARA PROGRAMADORES\\nDev\\nTrilho guiado: WAREHOUSE → WORMHOLE → RELAY STATION. O Engine Hub abre as outras simulações.\\n\\nSugerimos IA Prática. A trilha Dev permanece clicável.\\n\\nEntrar na escola\\n\\nSem conta: o progresso fica neste dispositivo. Como usamos dados anônimos de uso.\", \"aria\": \"- main:\\n  - strong: AI DevSchool\\n  - text: escolha sua trilha\\n  - region \\\"O que você quer conseguir fazer com IA?\\\":\\n    - paragraph: Seu primeiro passo\\n    - heading \\\"O que você quer conseguir fazer com IA?\\\" [level=1]\\n    - paragraph: Leva menos de um minuto. Escolha IA Prática ou Dev. Sem conta; o progresso fica neste dispositivo.\\n    - text: Objetivo\\n    - combobox \\\"Objetivo\\\":\\n      - option \\\"Usar IA melhor no trabalho\\\" [selected]\\n      - option \\\"Entender respostas e riscos\\\"\\n      - option \\\"Construir sistemas com IA\\\"\\n    - text: Contexto\\n    - combobox \\\"Contexto\\\":\\n      - option \\\"Trabalho\\\" [selected]\\n      - option \\\"Estudos\\\"\\n      - option \\\"Projeto pessoal\\\"\\n    - text: Confiança atual\\n    - combobox \\\"Confiança atual\\\":\\n      - option \\\"Estou começando\\\" [selected]\\n      - option \\\"Já experimentei algumas vezes\\\"\\n      - option \\\"Uso com frequência\\\"\\n    - radiogroup \\\"Trilha\\\":\\n      - button \\\"Recomendada para começar IA Prática Microlições no-code hospedadas. Conclusão local neste dispositivo, nunca domínio.\\\" [pressed]:\\n        - text: Recomendada para começar\\n        - strong: IA Prática\\n        - text: Microlições no-code hospedadas. Conclusão local neste dispositivo, nunca domínio.\\n      - 'button \\\"Para programadores Dev Trilho guiado: WAREHOUSE → WORMHOLE → RELAY STATION. O Engine Hub abre as outras simulações.\\\"':\\n        - text: Para programadores\\n        - strong: Dev\\n        - text: \\\"Trilho guiado: WAREHOUSE → WORMHOLE → RELAY STATION. O Engine Hub abre as outras simulações.\\\"\\n    - status: Sugerimos IA Prática. A trilha Dev permanece clicável.\\n    - button \\\"Entrar na escola\\\"\\n    - paragraph:\\n      - text: \\\"Sem conta: o progresso fica neste dispositivo.\\\"\\n      - link \\\"Como usamos dados anônimos de uso.\\\":\\n        - /url: /privacidade.html\", \"frameworkOverlayCount\": 0}, \"bridgePage\": {\"url\": \"http://127.0.0.1:52385/\", \"title\": \"codexDojo\", \"viewport\": {\"width\": 1280, \"height\": 800}, \"body\": \"Pular para o conteúdo principal\\nCD\\ncodexDojo\\nagent learning lab\\nPainel\\nLinux Lab\\nAgentes\\nCiclo\\nRoadmap\\nProjeto\\n\\nCODEXDOJO OS\\n\\nLinux Lab\\n\\nFull desktop learning workspace lives in the OS prototype. This dashboard only launches it.\\n\\nWorkspace completo\\n\\nContinue no engine de desktop com o mesmo snapshot canônico do learner.\\n\\nAbrir codexDojo OS\\n(abre em nova aba)\", \"aria\": \"- main:\\n  - link \\\"Pular para o conteúdo principal\\\":\\n    - /url: \\\"#main-content\\\"\\n  - complementary \\\"Navegação principal\\\":\\n    - strong: codexDojo\\n    - text: agent learning lab\\n    - navigation:\\n      - button \\\"Ir para Painel\\\"\\n      - button \\\"Ir para Linux Lab\\\"\\n      - button \\\"Ir para Agentes\\\"\\n      - button \\\"Ir para Ciclo\\\"\\n      - button \\\"Ir para Roadmap\\\"\\n      - button \\\"Ir para Projeto\\\"\\n  - region \\\"Linux Lab\\\":\\n    - paragraph: codexDojo OS\\n    - heading \\\"Linux Lab\\\" [level=1]\\n    - paragraph: Full desktop learning workspace lives in the OS prototype. This dashboard only launches it.\\n    - complementary \\\"codexDojo OS workspace\\\":\\n      - strong: Workspace completo\\n      - paragraph: Continue no engine de desktop com o mesmo snapshot canônico do learner.\\n      - link \\\"Abrir codexDojo OS (abre em nova aba)\\\":\\n        - /url: http://127.0.0.1:52372\", \"frameworkOverlayCount\": 0}}",
+          "resultPointer": "/assertions/2"
+        }
+      ],
+      "offeredVariants": 0
+    },
+    {
+      "engineId": "codexdojo-os-prototype",
+      "status": "unverified",
+      "runtime": {
+        "kind": "runtime producer record",
+        "sessions": [
+          {
+            "url": "http://127.0.0.1:54971",
+            "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexdojo-os-prototype",
+            "argv": [
+              "/Users/danielbarreto/.hermes/node/bin/node",
+              "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexdojo-os-prototype/node_modules/vite/bin/vite.js",
+              "--host",
+              "127.0.0.1",
+              "--port",
+              "54971",
+              "--strictPort"
+            ],
+            "pid": 3443,
+            "exitCode": 143
+          },
+          {
+            "url": "http://127.0.0.1:54920",
+            "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/voxelDojo/game-09-docking-bay",
+            "argv": [
+              "/Users/danielbarreto/.hermes/node/bin/node",
+              "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/voxelDojo/node_modules/.pnpm/vite@6.4.3/node_modules/vite/bin/vite.js",
+              "--host",
+              "127.0.0.1",
+              "--port",
+              "54920",
+              "--strictPort"
+            ],
+            "pid": 3224,
+            "exitCode": 143
+          },
+          {
+            "url": "http://127.0.0.1:54869",
+            "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/voxelDojo/game-08-timeline-tower",
+            "argv": [
+              "/Users/danielbarreto/.hermes/node/bin/node",
+              "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/voxelDojo/node_modules/.pnpm/vite@6.4.3/node_modules/vite/bin/vite.js",
+              "--host",
+              "127.0.0.1",
+              "--port",
+              "54869",
+              "--strictPort"
+            ],
+            "pid": 3040,
+            "exitCode": 143
+          },
+          {
+            "url": "http://127.0.0.1:54825",
+            "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/voxelDojo/game-07-checkpoint-city",
+            "argv": [
+              "/Users/danielbarreto/.hermes/node/bin/node",
+              "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/voxelDojo/node_modules/.pnpm/vite@6.4.3/node_modules/vite/bin/vite.js",
+              "--host",
+              "127.0.0.1",
+              "--port",
+              "54825",
+              "--strictPort"
+            ],
+            "pid": 2923,
+            "exitCode": 143
+          },
+          {
+            "url": "http://127.0.0.1:54806",
+            "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/voxelDojo/game-06-pipeline-plant",
+            "argv": [
+              "/Users/danielbarreto/.hermes/node/bin/node",
+              "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/voxelDojo/node_modules/.pnpm/vite@6.4.3/node_modules/vite/bin/vite.js",
+              "--host",
+              "127.0.0.1",
+              "--port",
+              "54806",
+              "--strictPort"
+            ],
+            "pid": 2883,
+            "exitCode": 143
+          },
+          {
+            "url": "http://127.0.0.1:54774",
+            "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/voxelDojo/game-05-relay-station",
+            "argv": [
+              "/Users/danielbarreto/.hermes/node/bin/node",
+              "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/voxelDojo/node_modules/.pnpm/vite@6.4.3/node_modules/vite/bin/vite.js",
+              "--host",
+              "127.0.0.1",
+              "--port",
+              "54774",
+              "--strictPort"
+            ],
+            "pid": 2813,
+            "exitCode": 143
+          },
+          {
+            "url": "http://127.0.0.1:54725",
+            "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/voxelDojo/game-03-wormhole",
+            "argv": [
+              "/Users/danielbarreto/.hermes/node/bin/node",
+              "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/voxelDojo/node_modules/.pnpm/vite@6.4.3/node_modules/vite/bin/vite.js",
+              "--host",
+              "127.0.0.1",
+              "--port",
+              "54725",
+              "--strictPort"
+            ],
+            "pid": 2625,
+            "exitCode": 143
+          },
+          {
+            "url": "http://127.0.0.1:54674",
+            "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/voxelDojo/game-02-warehouse",
+            "argv": [
+              "/Users/danielbarreto/.hermes/node/bin/node",
+              "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/voxelDojo/node_modules/.pnpm/vite@6.4.3/node_modules/vite/bin/vite.js",
+              "--host",
+              "127.0.0.1",
+              "--port",
+              "54674",
+              "--strictPort"
+            ],
+            "pid": 2452,
+            "exitCode": 143
+          },
+          {
+            "url": "http://127.0.0.1:54625",
+            "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo",
+            "argv": [
+              "/Users/danielbarreto/.hermes/node/bin/node",
+              "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/node_modules/vite/bin/vite.js",
+              "--host",
+              "127.0.0.1",
+              "--port",
+              "54625",
+              "--strictPort"
+            ],
+            "pid": 2313,
+            "exitCode": 143
+          }
+        ],
+        "servers": [],
+        "browser": {},
+        "invocation": {
+          "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool",
+          "argv": [
+            "/Users/danielbarreto/.hermes/node/bin/node",
+            "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/learning-runtime.mjs",
+            "codexdojo-os-prototype",
+            "declared-use"
+          ]
+        },
+        "privateStorage": null
+      },
+      "observedAt": "2026-10-16T01:48:39.347Z",
+      "sourceCommit": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+      "sourceManifest": {
+        "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/source-manifests/codexdojo-os-prototype.json",
+        "sha256": "f245b7a748f0135c55bb3a14c6a185d5ffb516da44f837ab56e7c459753176d4"
+      },
+      "evidence0": {
+        "path": ".scratch/readiness-implementation-20261015/qa-learning/qualification-partial.json",
+        "sha256": "e1737c9581e5a4553d6946ae11aa0392153fde98286483548810a80b21fb6481"
+      },
+      "observedCaseCounts": {
+        "pass": 9,
+        "blocked": 0,
+        "unverified": 1
+      },
+      "topCases": [
+        {
+          "id": "observed/fresh-storage-onboarding",
+          "status": "pass",
+          "result": "{\"artifact\": \"engines/codexdojo-os-prototype/test-results/readiness-learning-runtime/2026-10-16T01-48-35.959Z/onboarding-hub.png\"}",
+          "resultPointer": "/engines/1/cases/0"
+        },
+        {
+          "id": "observed/mission-ai-pratica-l01",
+          "status": "pass",
+          "result": "{\"artifact\": \"engines/codexdojo-os-prototype/test-results/readiness-learning-runtime/2026-10-16T01-48-35.959Z/result-l01.png\"}",
+          "resultPointer": "/engines/1/cases/1"
+        },
+        {
+          "id": "observed/mission-ai-pratica-l02",
+          "status": "pass",
+          "result": "{\"artifact\": \"engines/codexdojo-os-prototype/test-results/readiness-learning-runtime/2026-10-16T01-48-35.959Z/result-l02.png\"}",
+          "resultPointer": "/engines/1/cases/2"
+        }
+      ],
+      "offeredVariants": 39
+    },
+    {
+      "engineId": "dojoToday",
+      "status": "blocked",
+      "runtime": {
+        "node": "v22.23.2",
+        "playwright": "1.62.0",
+        "observerPid": 82074,
+        "observerParentPid": 82058,
+        "kind": "fresh local strict-port processes",
+        "viewport": {
+          "width": 1280,
+          "height": 800
+        },
+        "externalModelCalls": 0
+      },
+      "observedAt": "2026-10-16T01:42:51.907Z",
+      "sourceCommit": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+      "sourceManifest": {
+        "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/source-manifests/dojoToday.json",
+        "sha256": "57bcb8d82cb82d350f52cd6d36bd00adc28b6aa36af5ad97a7f8c12bd16a4a1e"
+      },
+      "evidence0": {
+        "path": ".scratch/readiness-implementation-20261015/qa-dashboards/dojoToday-2026-10-16T01-42-51-714Z/report.json",
+        "sha256": "4bf5b243c8bf757479b8f34d4eafcbf17cbd01b9cb7b1d93dc6070f546dad007"
+      },
+      "observedCaseCounts": {
+        "pass": 6,
+        "blocked": 1,
+        "unverified": 2
+      },
+      "topCases": [
+        {
+          "id": "observed/C20-readonly-projection-and-next-action",
+          "status": "pass",
+          "result": "{\"projectionAsOf\": \"2026-08-21\", \"activeUnit\": \"U2-key-value-store\", \"nextProjectNum\": \"03\", \"trackCount\": 18, \"readOnlyCopy\": \"Agendado por FSRS a partir dos seus gates executáveis. Esta página apenas mostra o scheduler — não marca mastered. O verificador independente decide.\"}",
+          "resultPointer": "/assertions/0"
+        },
+        {
+          "id": "observed/C20-offline-socrates",
+          "status": "pass",
+          "result": "{\"browserOffline\": true, \"externalModelCalls\": 0}",
+          "resultPointer": "/assertions/1"
+        },
+        {
+          "id": "observed/C20-byok-empty-clear-recovery",
+          "status": "pass",
+          "result": "{\"blankKeyDoesNotActivate\": true, \"clearedAiConfig\": true, \"conversationStorageKeys\": [], \"localStorageKeyNames\": []}",
+          "resultPointer": "/assertions/2"
+        }
+      ],
+      "offeredVariants": 0
+    },
+    {
+      "engineId": "literacyDojo",
+      "status": "unverified",
+      "runtime": {
+        "kind": "runtime producer record",
+        "sessions": [],
+        "servers": [],
+        "browser": {},
+        "invocation": {
+          "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool",
+          "argv": [
+            "/Users/danielbarreto/.hermes/node/bin/node",
+            "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/learning-runtime.mjs",
+            "literacyDojo",
+            "declared-use"
+          ]
+        },
+        "privateStorage": null
+      },
+      "observedAt": "2026-10-16T01:47:17.977Z",
+      "sourceCommit": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+      "sourceManifest": {
+        "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/source-manifests/literacyDojo.json",
+        "sha256": "76a52326b1a36aa2ef525eb1b144be3b88ede761443bcf986fc9b3594b6da33b"
+      },
+      "evidence0": {
+        "path": ".scratch/readiness-implementation-20261015/qa-learning/qualification-partial.json",
+        "sha256": "e1737c9581e5a4553d6946ae11aa0392153fde98286483548810a80b21fb6481"
+      },
+      "observedCaseCounts": {
+        "pass": 26,
+        "blocked": 0,
+        "unverified": 0
+      },
+      "topCases": [
+        {
+          "id": "observed/fresh-storage-dev-cta",
+          "status": "pass",
+          "result": "{\"artifact\": \"engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/fresh-storage.png\", \"devHref\": \"https://aidevschool-codexdojo-os.netlify.app/?track=dev\"}",
+          "resultPointer": "/engines/0/cases/0"
+        },
+        {
+          "id": "observed/continuous-onboarding-map-initial-result",
+          "status": "pass",
+          "result": "{\"activities\": [{\"activityId\": \"l02-a1\", \"type\": \"output_comparison\", \"status\": \"pass\"}, {\"activityId\": \"l02-a2\", \"type\": \"choice\", \"status\": \"pass\"}, {\"activityId\": \"l02-a3\", \"type\": \"sort\", \"status\": \"pass\"}], \"artifact\": \"engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/continuous-onboarding.png\"}",
+          "resultPointer": "/engines/0/cases/1"
+        },
+        {
+          "id": "observed/lesson-l01",
+          "status": "pass",
+          "result": "{\"activities\": [{\"activityId\": \"l01-a1\", \"type\": \"choice\", \"status\": \"pass\"}, {\"activityId\": \"l01-a2\", \"type\": \"sort\", \"status\": \"pass\"}, {\"activityId\": \"l01-a3\", \"type\": \"missing_context\", \"status\": \"pass\"}], \"evidenceRecords\": 10, \"fixture\": \"Access prerequisite only; target completion came from UI interactions.\", \"artifact\": \"engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l01.png\"}",
+          "resultPointer": "/engines/0/cases/2"
+        }
+      ],
+      "offeredVariants": 23
+    },
+    {
+      "engineId": "miniMaxEvolutionEngine",
+      "status": "blocked",
+      "runtime": {
+        "harness": "native Claude Code",
+        "privateRoot": "/Users/danielbarreto/.codex/worktrees/readiness-mme-runtime/aidevschool",
+        "nativeEntry": "blocked",
+        "cycle": "unverified",
+        "pipelineAtHalt": {
+          "phase": "spec-done",
+          "grade": "verified",
+          "advanced_by": "/devschool-spec"
+        }
+      },
+      "observedAt": "2026-10-16T01:51:24.500555+00:00",
+      "sourceCommit": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+      "sourceManifest": {
+        "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/source-manifests/miniMaxEvolutionEngine.json",
+        "sha256": "ca61cb661336d0a925d7480b2adedf5c67a8c787c7b74f2d655adeefe4098744"
+      },
+      "evidence0": {
+        "path": ".scratch/readiness-implementation-20261015/qa-mme/report.json",
+        "sha256": "e7f2020a4c71eb600e795fca2dfafa52f4ace865c1ab4b810ab8b74b236a11ad"
+      },
+      "observedCaseCounts": {
+        "pass": 2,
+        "blocked": 1,
+        "unverified": 2
+      },
+      "topCases": [
+        {
+          "id": "observed/native-documented-entrypoints",
+          "status": "blocked",
+          "result": "hyphen commands are not registered by observed native CLI; positive native calls supplied PYTHONPATH private root and existing Python dependency runtime",
+          "resultPointer": "/C22"
+        },
+        {
+          "id": "observed/supervised-cycle-successful-stages",
+          "status": "pass",
+          "result": "[\"native status via colon entry\", \"Sonda synthetic attempt evaluation\", \"spec after one explicitly authorized Curator retry and fresh verifier PASS\"]",
+          "resultPointer": "/C22"
+        },
+        {
+          "id": "observed/five-phase-cycle",
+          "status": "unverified",
+          "result": "{\"observed\": \"not completed; halted correctly on independent implementation FAIL\", \"remaining\": [\"passing independent implementation verification\", \"review phase\", \"benchmark phase\", \"optimize phase\", \"actual optional autonomy if offered\"]}",
+          "resultPointer": "/C22"
+        }
+      ],
+      "offeredVariants": 0
+    },
+    {
+      "engineId": "miniTown",
+      "status": "unverified",
+      "runtime": {
+        "node": "v22.23.2",
+        "playwright": "1.61.1",
+        "observerPid": 83262,
+        "observerParentPid": 83245,
+        "kind": "fresh local strict-port processes",
+        "viewport": {
+          "width": 1280,
+          "height": 800
+        },
+        "externalModelCalls": 0
+      },
+      "observedAt": "2026-10-16T01:43:10.310Z",
+      "sourceCommit": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+      "sourceManifest": {
+        "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/source-manifests/miniTown.json",
+        "sha256": "6c941e2b653bed9459c77c015d5545b828fd821e542c569e47fd33bf576e608c"
+      },
+      "evidence0": {
+        "path": ".scratch/readiness-implementation-20261015/qa-dashboards/miniTown-2026-10-16T01-43-10-066Z/report.json",
+        "sha256": "6b3c28c85dd41e1609d787c387668c49e25c7b6edc6a6c6d69671851e640ff87"
+      },
+      "observedCaseCounts": {
+        "pass": 6,
+        "blocked": 0,
+        "unverified": 2
+      },
+      "topCases": [
+        {
+          "id": "observed/C23-entry-hud-exploration",
+          "status": "pass",
+          "result": "{\"actualPointerDrag\": true, \"actualWheelZoom\": true, \"before\": {\"distance\": 35, \"azimuth\": 0, \"polar\": 0.9599310885968813, \"simTime\": 8.00551200000048}, \"after\": {\"distance\": 33.425, \"azimuth\": -0.6394336525569247, \"polar\": 0.8000726754576499, \"simTime\": 8.069560000000465, \"sceneChildren\": 6, \"worldSnapshot\": {\"simTime\": 8.069560000000465, \"phase\": \"morning\", \"zoneCount\": 0, \"roadCount\": 0, \"buildingCount\": 0, \"residentCount\": 0, \"vehicleCount\": 0, \"roofedCount\": 0}}}",
+          "resultPointer": "/assertions/0"
+        },
+        {
+          "id": "observed/C23-declared-town-content",
+          "status": "unverified",
+          "result": "{\"simTime\": 8.085440000000474, \"phase\": \"morning\", \"zoneCount\": 0, \"roadCount\": 0, \"buildingCount\": 0, \"residentCount\": 0, \"vehicleCount\": 0, \"roofedCount\": 0}",
+          "resultPointer": "/assertions/1"
+        },
+        {
+          "id": "observed/C23-day-night-public-tick-and-hud",
+          "status": "pass",
+          "result": "{\"before\": {\"phase\": \"morning\", \"simTime\": 8.085440000000474}, \"after\": {\"phase\": \"night\", \"simTime\": 22.085440000000474}, \"sunIntensity\": 0, \"kind\": \"documented public observation hook manual tick; real animation loop separately observed\"}",
+          "resultPointer": "/assertions/2"
+        }
+      ],
+      "offeredVariants": 0
+    },
+    {
+      "engineId": "minimaxDojo",
+      "status": "unverified",
+      "runtime": {
+        "status": "awaiting-final-report",
+        "expected": "Bootstrap prompts on the declared MiniMax Agent Team platform"
+      },
+      "observedAt": null,
+      "sourceCommit": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+      "sourceManifest": {
+        "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/source-manifests/minimaxDojo.json",
+        "sha256": "1c4982380a834db281035d9202a5e3f4b51a22efc2295c958af7b597cb01a4c1"
+      },
+      "evidence0": {
+        "path": "intent/2026-10-15-ecosystem-product-readiness/qualification-matrix.md",
+        "sha256": "0e9448e46c26d8075831b5215d609bab38a4d052567b04f5e99251019b5f2b35",
+        "locator": "## minimaxDojo — critério 24"
+      },
+      "observedCaseCounts": {
+        "pass": 0,
+        "blocked": 0,
+        "unverified": 0
+      },
+      "topCases": [],
+      "offeredVariants": 0
+    },
+    {
+      "engineId": "openclaw",
+      "status": "unverified",
+      "runtime": {
+        "kind": "real Python CLI in disposable full copy",
+        "truth": "checklist simulate-grade only; no model calls or empirical mastery",
+        "sourceRoot": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool",
+        "temporaryCopyRemovedOnExit": "/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/aidevschool-c25-pkvty89h/aidevschool"
+      },
+      "observedAt": "2026-10-16T01:51:24.500555+00:00",
+      "sourceCommit": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+      "sourceManifest": {
+        "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/source-manifests/openclaw.json",
+        "sha256": "1de03a17c2a42691ef6b0c444d3b880ba6bf8adb1ea9d00694d9f3deac76d5cd"
+      },
+      "evidence0": {
+        "path": ".scratch/readiness-implementation-20261015/qa-mme/openclaw-recipe-replay-v2/report.json",
+        "sha256": "a5e80eb2226868325e719d527e2a2f7db2ab412db6d8a9743f360e50bc729974"
+      },
+      "observedCaseCounts": {
+        "pass": 4,
+        "blocked": 0,
+        "unverified": 0
+      },
+      "topCases": [
+        {
+          "id": "observed/blocked",
+          "status": "pass",
+          "result": "{\"previewReadOnly\": true, \"learnerUnchanged\": true, \"truth\": \"checklist simulate-grade only; no model calls or empirical mastery\"}",
+          "resultPointer": "/cases/0"
+        },
+        {
+          "id": "observed/missing",
+          "status": "pass",
+          "result": "{\"previewReadOnly\": true, \"learnerUnchanged\": true, \"truth\": \"checklist simulate-grade only; no model calls or empirical mastery\"}",
+          "resultPointer": "/cases/1"
+        },
+        {
+          "id": "observed/small",
+          "status": "pass",
+          "result": "{\"previewReadOnly\": true, \"learnerUnchanged\": true, \"truth\": \"checklist simulate-grade only; no model calls or empirical mastery\"}",
+          "resultPointer": "/cases/2"
+        }
+      ],
+      "offeredVariants": 0
+    },
+    {
+      "engineId": "pixelDojo",
+      "status": "unverified",
+      "runtime": {
+        "kind": "real-http",
+        "origin": "http://127.0.0.1:51060",
+        "serverPid": 72203,
+        "serverApi": "vite.createServer",
+        "serverOptions": {
+          "root": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest",
+          "configFile": false,
+          "host": "127.0.0.1",
+          "port": 51060,
+          "strictPort": true
+        },
+        "reusedServer": false,
+        "node": "v22.23.2"
+      },
+      "observedAt": "2026-10-16T01:38:39.290Z",
+      "sourceCommit": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+      "sourceManifest": {
+        "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/source-manifests/pixelDojo.json",
+        "sha256": "475edb4ac9488342d078a54ff68773c05dff18f634f490c1e68910f84916a17d"
+      },
+      "evidence0": {
+        "path": ".scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/report.json",
+        "sha256": "004a74e86eaf4978b45f192b693eeebd9a31e76979d0e54e48443b4bc4874e52"
+      },
+      "observedCaseCounts": {
+        "pass": 18,
+        "blocked": 0,
+        "unverified": 0
+      },
+      "topCases": [
+        {
+          "id": "observed/01_rate_limiter",
+          "status": "pass",
+          "result": "[{\"name\": \"visible-entry-map\", \"passed\": true}, {\"name\": \"visible-briefing-practice-duel-controls\", \"passed\": true}, {\"name\": \"incorrect-actions-emit-fail\", \"passed\": true}, {\"name\": \"retry-correct-actions-emit-pass\", \"passed\": true}, {\"name\": \"journal-and-return-to-map\", \"passed\": true}, {\"name\": \"prior-evidence-prefix-preserved\", \"passed\": true}, {\"name\": \"schema-identity-and-context-bound\", \"passed\": true}, {\"name\": \"no-browser-mastery-state\", \"passed\": true}]",
+          "resultPointer": "/cases/0"
+        },
+        {
+          "id": "observed/02_key_value_store",
+          "status": "pass",
+          "result": "[{\"name\": \"visible-entry-map\", \"passed\": true}, {\"name\": \"visible-briefing-practice-duel-controls\", \"passed\": true}, {\"name\": \"incorrect-actions-emit-fail\", \"passed\": true}, {\"name\": \"retry-correct-actions-emit-pass\", \"passed\": true}, {\"name\": \"journal-and-return-to-map\", \"passed\": true}, {\"name\": \"prior-evidence-prefix-preserved\", \"passed\": true}, {\"name\": \"schema-identity-and-context-bound\", \"passed\": true}, {\"name\": \"no-browser-mastery-state\", \"passed\": true}]",
+          "resultPointer": "/cases/1"
+        },
+        {
+          "id": "observed/03_url_shortener",
+          "status": "pass",
+          "result": "[{\"name\": \"visible-entry-map\", \"passed\": true}, {\"name\": \"visible-briefing-practice-duel-controls\", \"passed\": true}, {\"name\": \"incorrect-actions-emit-fail\", \"passed\": true}, {\"name\": \"retry-correct-actions-emit-pass\", \"passed\": true}, {\"name\": \"journal-and-return-to-map\", \"passed\": true}, {\"name\": \"prior-evidence-prefix-preserved\", \"passed\": true}, {\"name\": \"schema-identity-and-context-bound\", \"passed\": true}, {\"name\": \"no-browser-mastery-state\", \"passed\": true}]",
+          "resultPointer": "/cases/2"
+        }
+      ],
+      "offeredVariants": 18
+    },
+    {
+      "engineId": "school-entry",
+      "status": "unverified",
+      "runtime": {
+        "kind": "runtime producer record",
+        "sessions": [],
+        "servers": [
+          {
+            "engine": "sdlc-quest",
+            "origin": "http://127.0.0.1:51789",
+            "port": 51789,
+            "pid": 79507
+          },
+          {
+            "engine": "school-entry",
+            "origin": "http://127.0.0.1:51794",
+            "port": 51794,
+            "pid": 79509
+          },
+          {
+            "engine": "school-entry",
+            "origin": "http://127.0.0.1:51834",
+            "pid": 79494,
+            "method": "createRuntime in observer, private closed SQLite fault",
+            "stopped": true
+          }
+        ],
+        "browser": {
+          "name": "Chromium",
+          "version": "149.0.7827.55",
+          "routing": "Browser plugin not available; regular Playwright authorized for this observer"
+        },
+        "invocation": {
+          "cwd": null,
+          "argv": null
+        },
+        "privateStorage": {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-local-products/school-entry/2026-10-16T01-41-35-115Z/private-data",
+          "database": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-local-products/school-entry/2026-10-16T01-41-35-115Z/private-data/release.sqlite",
+          "target": "http://127.0.0.1:51789",
+          "providerKey": "absent"
+        }
+      },
+      "observedAt": "2026-10-16T01:41:35.121Z",
+      "sourceCommit": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+      "sourceManifest": {
+        "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/source-manifests/school-entry.json",
+        "sha256": "ef5bfd52573607a5f026df0b01223ad9b31ac16fff91e3266b02df5233333edf"
+      },
+      "evidence0": {
+        "path": ".scratch/readiness-implementation-20261015/qa-local-products/school-entry/2026-10-16T01-41-35-115Z/report.json",
+        "sha256": "06579ba1760a7bc5538f3a30c5b9deafab3f33cb42eb1a79210210213cd410cc"
+      },
+      "observedCaseCounts": {
+        "pass": 2,
+        "blocked": 0,
+        "unverified": 1
+      },
+      "topCases": [
+        {
+          "id": "observed/operator-check-launch",
+          "status": "pass",
+          "result": "Producer recorded pass; inspect full report case operator-check-launch and retained runtime artifacts.",
+          "resultPointer": "/cases/0"
+        },
+        {
+          "id": "observed/recommendation-provider-positive-timeout",
+          "status": "unverified",
+          "result": "Producer recorded unverified; inspect full report case recommendation-provider-positive-timeout and retained runtime artifacts.",
+          "resultPointer": "/cases/1"
+        },
+        {
+          "id": "observed/storage-error",
+          "status": "pass",
+          "result": "Producer recorded pass; inspect full report case storage-error and retained runtime artifacts.",
+          "resultPointer": "/cases/2"
+        }
+      ],
+      "offeredVariants": 0
+    },
+    {
+      "engineId": "sdlc-quest",
+      "status": "unverified",
+      "runtime": {
+        "kind": "runtime producer record",
+        "sessions": [],
+        "servers": [
+          {
+            "engine": "sdlc-quest",
+            "origin": "http://127.0.0.1:51979",
+            "port": 51979,
+            "pid": 81138
+          }
+        ],
+        "browser": {
+          "name": "Chromium",
+          "version": "149.0.7827.55",
+          "routing": "Browser plugin not available; regular Playwright authorized for this observer"
+        },
+        "invocation": {
+          "cwd": null,
+          "argv": null
+        },
+        "privateStorage": null
+      },
+      "observedAt": "2026-10-16T01:42:22.231Z",
+      "sourceCommit": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+      "sourceManifest": {
+        "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/source-manifests/sdlc-quest.json",
+        "sha256": "29c4afbc53427689e5c71f1e36133c2185b7073b4f8ffc7f2f5c21b9ce7b069d"
+      },
+      "evidence0": {
+        "path": ".scratch/readiness-implementation-20261015/qa-local-products/sdlc-quest/2026-10-16T01-42-22-230Z/report.json",
+        "sha256": "715d116d6ef037637f209cc94505007246b2731956309e12bc5519b4e230f096"
+      },
+      "observedCaseCounts": {
+        "pass": 4,
+        "blocked": 0,
+        "unverified": 0
+      },
+      "topCases": [
+        {
+          "id": "observed/http-pt-BR",
+          "status": "pass",
+          "result": "Producer recorded pass; inspect full report case http-pt-BR and retained runtime artifacts.",
+          "resultPointer": "/cases/0"
+        },
+        {
+          "id": "observed/http-en",
+          "status": "pass",
+          "result": "Producer recorded pass; inspect full report case http-en and retained runtime artifacts.",
+          "resultPointer": "/cases/1"
+        },
+        {
+          "id": "observed/native-file-pt-BR",
+          "status": "pass",
+          "result": "Producer recorded pass; inspect full report case native-file-pt-BR and retained runtime artifacts.",
+          "resultPointer": "/cases/2"
+        }
+      ],
+      "offeredVariants": 0
+    },
+    {
+      "engineId": "voxelDojo",
+      "status": "unverified",
+      "runtime": {
+        "kind": "runtime producer record",
+        "sessions": [],
+        "servers": [],
+        "browser": {},
+        "invocation": {
+          "argv": [
+            "/Users/danielbarreto/.hermes/node/bin/node",
+            "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/voxel-runtime.mjs",
+            "declared-use"
+          ],
+          "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool",
+          "pid": 78885,
+          "caseName": "declared-use",
+          "gameIds": [
+            "game-02-warehouse",
+            "game-03-wormhole",
+            "game-04-task-queue",
+            "game-05-relay-station",
+            "game-06-pipeline-plant",
+            "game-07-checkpoint-city",
+            "game-08-timeline-tower",
+            "game-09-docking-bay",
+            "game-10-hash-ring",
+            "game-11-air-traffic",
+            "game-12-mission-control",
+            "game-13-breaker-grid",
+            "game-14-river-delta",
+            "game-15-observatory",
+            "game-16-freight-yard",
+            "game-17-lighthouse-network",
+            "game-18-stacks"
+          ]
+        },
+        "privateStorage": null
+      },
+      "observedAt": "2026-10-16T01:41:18.256Z",
+      "sourceCommit": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+      "sourceManifest": {
+        "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/source-manifests/voxelDojo.json",
+        "sha256": "d1746f854605366543694513d0ecafff5313890ab1e574f397b0169d42df0f05"
+      },
+      "evidence0": {
+        "path": ".scratch/readiness-implementation-20261015/qa-voxel/partial-report.json",
+        "sha256": "ebeb214ada34cf64a7cb3d26488452f4f196d0c73393ecc8935705da8d902fdb"
+      },
+      "observedCaseCounts": {
+        "pass": 51,
+        "blocked": 0,
+        "unverified": 7
+      },
+      "topCases": [
+        {
+          "id": "observed/game-02-warehouse/webgl/L1-negative",
+          "status": "pass",
+          "result": "[\"one actual record appended\", \"previous records unchanged\", \"window and console records identical\", \"identity and raw-envelope fields present\"]",
+          "resultPointer": "/cases/0"
+        },
+        {
+          "id": "observed/game-02-warehouse/webgl/L1-retry",
+          "status": "pass",
+          "result": "[\"one actual record appended\", \"previous records unchanged\", \"window and console records identical\", \"identity and raw-envelope fields present\"]",
+          "resultPointer": "/cases/1"
+        },
+        {
+          "id": "observed/game-02-warehouse/webgl/L2",
+          "status": "pass",
+          "result": "[\"one actual record appended\", \"previous records unchanged\", \"window and console records identical\", \"identity and raw-envelope fields present\"]",
+          "resultPointer": "/cases/2"
+        }
+      ],
+      "offeredVariants": 17,
+      "coverageSummaryCaseCounts": {
+        "pass": 18,
+        "blocked": 0,
+        "unverified": 50
+      },
+      "countingNote": "Coverage matrix summaries reference the same underlying runtime records and are not additional executed cases."
+    },
+    {
+      "engineId": "zai-duolingo-like",
+      "status": "unverified",
+      "runtime": {
+        "kind": "runtime producer record",
+        "sessions": [],
+        "servers": [
+          {
+            "origin": "http://127.0.0.1:53889",
+            "port": 53889,
+            "pid": null,
+            "provenance": "Recovered from own retained command-3.stdout.log",
+            "postStopProbe": {
+              "result": "ECONNREFUSED",
+              "timeoutSeconds": 3
+            }
+          }
+        ],
+        "browser": {},
+        "invocation": {
+          "cwd": null,
+          "argv": null
+        },
+        "privateStorage": {
+          "database": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-local-products/zai-duolingo-like/2026-10-16T01-46-27-742Z/readiness-app.db",
+          "counts": {
+            "modules": 9,
+            "lessons": 27
+          },
+          "preserved": true,
+          "readOnlyInspection": true
+        }
+      },
+      "observedAt": "2026-10-16T01:46:27.742Z",
+      "sourceCommit": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+      "sourceManifest": {
+        "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/source-manifests/zai-duolingo-like.json",
+        "sha256": "34719b17a5691c70efcd6aa6f54d24aedda67670f980472fa425fd0437f4d7d1"
+      },
+      "evidence0": {
+        "path": ".scratch/readiness-implementation-20261015/qa-local-products/zai-duolingo-like/2026-10-16T01-46-27-742Z/report.json",
+        "sha256": "871a65c27dabefd5362a96f89618a9c5d8285eabef3eee5391aef1d626703bfc"
+      },
+      "observedCaseCounts": {
+        "pass": 23,
+        "blocked": 0,
+        "unverified": 10
+      },
+      "topCases": [
+        {
+          "id": "observed/next-lesson-ia-nao-e-magica",
+          "status": "pass",
+          "result": "Producer recorded pass; inspect full report case next-lesson-ia-nao-e-magica and retained runtime artifacts.",
+          "resultPointer": "/cases/0"
+        },
+        {
+          "id": "observed/next-lesson-o-que-e-algoritmo",
+          "status": "pass",
+          "result": "Producer recorded pass; inspect full report case next-lesson-o-que-e-algoritmo and retained runtime artifacts.",
+          "resultPointer": "/cases/1"
+        },
+        {
+          "id": "observed/next-lesson-como-ia-aprende",
+          "status": "pass",
+          "result": "Producer recorded pass; inspect full report case next-lesson-como-ia-aprende and retained runtime artifacts.",
+          "resultPointer": "/cases/2"
+        }
+      ],
+      "offeredVariants": 9
+    }
+  ]
+}

@@ -1,0 +1,1344 @@
+{
+  "schemaVersion": 1,
+  "membership": "git tracked regular files at refresh; excluded dependency/build/test-result outputs",
+  "sourceScope": [
+    "engines/pixelDojo",
+    "learner/gate",
+    "learner/substrate",
+    "engines/shared"
+  ],
+  "files": [
+    {
+      "path": "engines/pixelDojo/.npmrc",
+      "sha256": "4034aa5232596ad95f74ea50265a2bcfbd65e602660bf6b70d5b9384c5286097"
+    },
+    {
+      "path": "engines/pixelDojo/.prompts/8bit-style.md",
+      "sha256": "5f432e7c24a42d0df2e44ec3313d618ec9a5e33e9eaecc2f45a35b132c7bc706"
+    },
+    {
+      "path": "engines/pixelDojo/AGENTS.md",
+      "sha256": "f719eb163bd0797d697e39b2cf687e6c34aa5769f2af1a419690590b9bc0a808"
+    },
+    {
+      "path": "engines/pixelDojo/CLAUDE.md",
+      "sha256": "9f6df092bbe684ab8adb8221e7464d59ec90115424121a2d4812f96b7c6483a0"
+    },
+    {
+      "path": "engines/pixelDojo/CONTEXT.md",
+      "sha256": "a13f95a757673c6cc1f3f0f9eb810bbf5975390d3389ff357876fd74b77dbfff"
+    },
+    {
+      "path": "engines/pixelDojo/EVIDENCE_CONTRACT.md",
+      "sha256": "fc7a6bd8ebf0fb4880faddb709d6863278b90081eb076b034d4b434a2dfeb273"
+    },
+    {
+      "path": "engines/pixelDojo/PLAN.md",
+      "sha256": "39055e0e8d9f6c2d25ecdab1e938f3f8224ab592f8ea98066d6f31720f109fa8"
+    },
+    {
+      "path": "engines/pixelDojo/README.md",
+      "sha256": "1b06a68d1e2fe2875a7b8d8c3df3ef7e9fa1a14fd7be725cf1a6c95065eef346"
+    },
+    {
+      "path": "engines/pixelDojo/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "engines/pixelDojo/biome.jsonc",
+      "sha256": "9bb906ce1a19399e7226cb171135fafd4dc45a5c4d5bda3f10876df129c1bb42"
+    },
+    {
+      "path": "engines/pixelDojo/docs/plans/01_rate_limiter.md",
+      "sha256": "92758ed16931bd9828136ed727169b6e8289f09e3547d0b4dc642c13206d1042"
+    },
+    {
+      "path": "engines/pixelDojo/docs/plans/02_key_value_store.md",
+      "sha256": "bf99435080bf97133b02b669bec8e130717a8483d0d0489f56e8a6f7f0a0e0e2"
+    },
+    {
+      "path": "engines/pixelDojo/docs/plans/03_url_shortener.md",
+      "sha256": "65be67b9acae2acd53e985a8d054c66bd686bcfda83db224cbe5d393642e0da1"
+    },
+    {
+      "path": "engines/pixelDojo/docs/plans/04_concurrent_task_queue.md",
+      "sha256": "6c94d6431dc2cd48f514a852cbe8d45c8b57e6d8e80deb12795e4355b47e483b"
+    },
+    {
+      "path": "engines/pixelDojo/docs/plans/05_websocket_chat.md",
+      "sha256": "0fba29ac0987761a5fdb6e0dab9c2a6eac7eb3d2b301af5f7797dea61d4c5cf9"
+    },
+    {
+      "path": "engines/pixelDojo/docs/plans/06_file_upload_pipeline.md",
+      "sha256": "0b1ca73b2edb835dda733b3d63513a97e688110cb925036d02a76aa8106bf097"
+    },
+    {
+      "path": "engines/pixelDojo/docs/plans/07_rest_api_auth.md",
+      "sha256": "75df8e6056d2d492467218cf9ba9ff4fddd772735e5d2dc82f56ed4d3f2b2d97"
+    },
+    {
+      "path": "engines/pixelDojo/docs/plans/08_event_driven_order_system.md",
+      "sha256": "9840c2443baf6499dd237667be140fd962f4c52b6a548915b90e562221d59b31"
+    },
+    {
+      "path": "engines/pixelDojo/docs/plans/09_plugin_system.md",
+      "sha256": "cbe54b1d8e17b8368f98cf48a039a91fe634c14f63b564d154744cdbc7277cee"
+    },
+    {
+      "path": "engines/pixelDojo/docs/plans/10_distributed_cache.md",
+      "sha256": "1db1c1cf62dde7a53e4e76dd057efe60d7cfb16080503796f232b5d09cdf36ac"
+    },
+    {
+      "path": "engines/pixelDojo/docs/plans/11_load_balancer.md",
+      "sha256": "bd902af666ebc485cba845d12b236674be74a24fd35d453fe03adf2a23791b7d"
+    },
+    {
+      "path": "engines/pixelDojo/docs/plans/12_distributed_job_scheduler.md",
+      "sha256": "b77c8ec4c7053686fd85def71ec6f35ddb9062602955aee799acbae232f0a8ee"
+    },
+    {
+      "path": "engines/pixelDojo/docs/plans/13_api_gateway_circuit_breaker.md",
+      "sha256": "f925eea1cbeb03adbe79f9a34c8935dfb8f02a7a7d4d1f3ba3f4cabd27bd0eca"
+    },
+    {
+      "path": "engines/pixelDojo/docs/plans/14_log_aggregator.md",
+      "sha256": "33ecbca0140fae7a65b25cb6898e7a51fdb909657bb98b07a1dafff3b7a5b85e"
+    },
+    {
+      "path": "engines/pixelDojo/docs/plans/15_metrics_collector.md",
+      "sha256": "6eb737741e01b6ed1d6503413a44736a98a13a2b72a76af1f210251cc7e23acb"
+    },
+    {
+      "path": "engines/pixelDojo/docs/plans/16_mini_message_queue.md",
+      "sha256": "3c745ef1155be25d2123a60c00869313b8d5acd613125c77853d89579d4dc29a"
+    },
+    {
+      "path": "engines/pixelDojo/docs/plans/17_distributed_config_service.md",
+      "sha256": "44de132badfa000cc1e671957817d419e19edbe42379656f4ba75f1b3d29aee5"
+    },
+    {
+      "path": "engines/pixelDojo/docs/plans/18_search_engine.md",
+      "sha256": "5abc6aab0dbfc48836a49ff19d1881d98aee8cd55d976751bb0f993e81874c0c"
+    },
+    {
+      "path": "engines/pixelDojo/package.json",
+      "sha256": "54efe1d7dd93ed90a4f956838508d15b10f8066965981e18b6ad47da0560eafc"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/.gitignore",
+      "sha256": "df595aee1188d86c22b7548f74af62f0ee0e35ed847ad0a0fd3139f1ac835414"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/AGENTS.md",
+      "sha256": "cdc39e8e851daa4d3e52b1567119ba187cf5ed1f5da81988814e81bc6490352f"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/DESIGN.md",
+      "sha256": "5f3f624a8623742b79d2391567dcb417c59618b663be48196c23ce77a52864fe"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/README.md",
+      "sha256": "7191393254fdea7a8b7c50c1173b703ce824c3edbeaef566d7d78a7ca6affd7f"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/docs/content-packs.md",
+      "sha256": "4281519d4e12aab3f909155dcfffb61f695d03d9f6c5b1901eb240cb72712289"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/index.html",
+      "sha256": "e02b057d9a649d00edf5a3bfd043b046e7f3aad0e30d2004f51f35e9c3471bf4"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/package.json",
+      "sha256": "fb59a29ddf72ce33d5a3102017f3d96e7cbf87259587c0b708bd6565b403695c"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/playwright.config.ts",
+      "sha256": "0a66d66a731b6d6ae5cb6c54cc39ca939d5c4a77e83087d0412ae2b8702f4e2f"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/playwright/encounter-evidence-dense.spec.ts",
+      "sha256": "a0b8894d595af415a490517d8581d7f30d6e619875773d35af41966bc1e9694a"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/playwright/error-path.spec.ts",
+      "sha256": "a55988bc4c02e49e3e59d2253e4e5c5de9d534a060c912d9a7cc525c2fd9348a"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/playwright/evidence-append-only.spec.ts",
+      "sha256": "4b73f94d878eb9e773db98a4ffdbb24a3708ccc970520500f90e891bba0fb53a"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/playwright/node-builtins.d.ts",
+      "sha256": "51f06c62f1165087d99a544f751bfdb6ad3b4d7d984625b9995dc28de344e8d2"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/playwright/pixel-quest.spec.ts",
+      "sha256": "6ca95cb53f241bea00f375d2bfb319fcf062c0486812389f7c14bd4033ba0cee"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/playwright/returning.spec.ts",
+      "sha256": "2caa9695d0d75958849fbe146512fdcb65ccf5e6067d2f03b38b5bdce31a153b"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/shots/skill-orbit-qa.json",
+      "sha256": "c9cdaf53c61056becb3a907a78116dfda5c366e4c0eb85428447a4cb40b09efa"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/app/PixelQuestApp.ts",
+      "sha256": "13cd124cf7f1110afbc5804c7791f34a3ef5a8d8537e39a734164feca645f0db"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/app/actionRouter.ts",
+      "sha256": "5188d9ede40749a0a89caf7d72af567428d22adfb533cf4dc9a289c415ec31b8"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/app/commandRunner.ts",
+      "sha256": "434ad826a2b43dfaccd70d4072213b31da0e1d7b71e73275f79cfcfa3bbf202f"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/app/encounterHud.ts",
+      "sha256": "9d3e9c586d0d04d3ac779b43ce3b4c488feba7377095fe76c40259557c6edba0"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/app/interactionFlow.ts",
+      "sha256": "ae983f3331d9df4f687c4cd1be1327d8d5540c618784eb7a46de642fb3289522"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/app/lessonFlow.ts",
+      "sha256": "2f232ba2889904a999d3c4bca5cb76ccc05a08f9c15a8ca04dcd1b0e2ef95b07"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/app/worldView.ts",
+      "sha256": "60e198eb529473d57cca4b514f1c4a2a24ddd17a40c6a34636fefae8643e8087"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/content/curriculumPack.ts",
+      "sha256": "6831cc38b5d620994474e19278983f840ff4cf29959fc3414040c1f1d9e390c5"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/content/loadCorePack.ts",
+      "sha256": "1df8a35afbb8479ded55842e0ac9d9fa1a3942c65e031779f48784aca8f34ac2"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/content/packValidator.ts",
+      "sha256": "70d76373379ed5c0d5e367510eefa7db1a78361ca62777fbfe5622fc775a1283"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/content/packs/core/dialogues/sonda.md",
+      "sha256": "5360d13214cd0d4b93f4a7f0b943fb47f75acf2d6bff7b2964ff56dd85629f00"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/content/packs/core/pack.json",
+      "sha256": "d67b6966c3497fbb0041374e291055d34bc63ddd2fea459c67fa34cabd5216fc"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/content/reviewSlice.ts",
+      "sha256": "8c896d525e0620f8454922fc0de2d5b2d161bc4be5164e07b2dd066cb18d905a"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/content/types.ts",
+      "sha256": "8de5187d4e2c9e1effd617ec3f815df971fd35de8d5947dc4f90508e0e1213ee"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/game/encounters/encounterCore.ts",
+      "sha256": "3da611238b5fb39130d9a239a1762dd5c507c06cc5e5379b47f18c29c8e5af15"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/game/encounters/policyGate.ts",
+      "sha256": "ac2d9999fd3dd4f4baf528fdf32b69b465b9988fd94ba97d0d5da576a5f058d5"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/game/encounters/registry.ts",
+      "sha256": "0bdb7860d395451e0dea0057f7e4a430496e0a5b163087bde00c0284dde2c6b8"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/game/encounters/routeHealth.ts",
+      "sha256": "647e34ae346c08bfd2f4f143d44560b4c8688597bc689bd03e16018a9add66b8"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/game/encounters/sequenceFlow.ts",
+      "sha256": "98becf0574ba91d0229391c2e8229898bfaea926c348744262662082801786cd"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/game/encounters/taskQueue.ts",
+      "sha256": "e51f8321c225c5974265f72546e6282f2c15a809c8d372a78a8eb07d7773bc3e"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/game/encounters/tokenBucket.ts",
+      "sha256": "60530716ee98f543516b1ac2856c9a339739b16c92da00d5d7349347ee162739"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/game/evidence/emitter.ts",
+      "sha256": "8456d3061b5352f8ccb2d9965ca0a0ca4a2c0fa48194a8f8b9fad3c6410ab30e"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/game/evidence/evidence.ts",
+      "sha256": "a570d30a59e705599ab06c92b9658d3d595ce2ca32547653d7fe756f41c60955"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/game/evidence/types.ts",
+      "sha256": "e80e970fcf51b9e5836cea2192d5f71a7dea91e4d7ea62dbd9ced1ee3c47bfad"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/game/input/actions.ts",
+      "sha256": "612c1d682c88113e873c0295fa56f6a94f4ca2e115ed8ec38d416908bf72dbeb"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/game/phases/types.ts",
+      "sha256": "22f5709c47935a763b41862d66e07f7dfca4d4734f0782ded8281044f193848a"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/game/review/reviewTrack.ts",
+      "sha256": "239f329ccdde7b427df38313f600b402c393420f02048157aa633b5517439d61"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/game/review/types.ts",
+      "sha256": "111375a39a54a80d69988464db35ac083c04532064df050b0ad2e7608d096d81"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/game/simulation/skillOrbit.ts",
+      "sha256": "1379de35da90e21ef1be6203674822018b5c8f76db022b3c9580c115489c2e0e"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/game/simulation/types.ts",
+      "sha256": "ebc2cb7924c0ff8236daff6fa907fe1d51ef4c7f9323b5c3a80ae52bf7cf627a"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/game/simulation/world.ts",
+      "sha256": "eafd86affc45dc71d21920d7f049c2bc5abedcf99016e7b74a811092e7791047"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/global.d.ts",
+      "sha256": "620d57dd88dd507711c2e476c47fe2cb583964cdbc4c1ee141563f6b077d4e7e"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/main.ts",
+      "sha256": "5f8202f887a278d9e93275dde12dd8d967f0de1bfa57ef19fe11174f8693c7d4"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/render/app/CircuitBreakerScene.ts",
+      "sha256": "9c7173fb3b3e4b534811abeef4bb302ae384088728472553398b3b029e27f6df"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/render/app/PolicyGateScene.ts",
+      "sha256": "c252727ce3f2ffa6673afa0acf5af72a4dd5c1e0c0bf035fb1135cb4ab0593a4"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/render/app/SkillOrbitScene.ts",
+      "sha256": "bf70a52269ef49611b1cd94d445d5ce79b90e607dee4ac94efc9bd7c7e767a93"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/render/app/WorldRenderer.ts",
+      "sha256": "6b54a0bf720d11501c1753cb92dccaf939a281ec0fc680ea41cd4b13dcc477e8"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/styles.css",
+      "sha256": "35b8b6e48b350e60ecff6cf85c7d54af450e32355904a12e5a1c61f1e25fc7aa"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/tests/actionRouter.test.ts",
+      "sha256": "1bb552c82d7d22449a51b29791c48240edbeaabe385c20e5b23110590d7d07a7"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/tests/circuitBreakerScene.test.ts",
+      "sha256": "2fbe9789fb5c4fd4e23ed6560dfd69066e1522e2d2ed7707ea1ba09e72097f47"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/tests/encounterCore.test.ts",
+      "sha256": "5c44c76a70659f5b0a2726facd7f38f5f70d90936ae0d26c2a46be3e2784d80f"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/tests/evidence.test.ts",
+      "sha256": "53fa3d9485d83354e63c6fc4f2e5026c78ce251b39bd24e6810ff62b2851b02c"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/tests/evidencePolymorphism.test.ts",
+      "sha256": "9bbeb9a007405bb379323168b491fca9b03aa1716797b9b0d45a55f00061082e"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/tests/fixtures/evidence.ts",
+      "sha256": "3efe6a056bee3f805f3613643179c244e6347ad1f2cd9361c530c9da16efef6e"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/tests/hostForwarding.test.ts",
+      "sha256": "4164a729e016078a1c90ee2f2d4dbb7cd3300ecd3561bff34e1d16b7d143cb10"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/tests/packValidator.test.ts",
+      "sha256": "6c567e8d85426ca3f36de07d46a25738ac28fb24d68b8e8330f419a18daf855c"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/tests/policyGate.test.ts",
+      "sha256": "77021cc7f85c3f35f2a0eac598709cc155cc054ab36e63facc42f2db3ffcf63f"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/tests/policyGateScene.test.ts",
+      "sha256": "8e61146860067d72fd631fd389c8365aab00231a7aa2eebc15c07abbe9778d83"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/tests/reviewTrack.test.ts",
+      "sha256": "c49b9cdc87c1946019f0918d36a6457e9ddeb46bfb9cfba6c14f10ee817afcbc"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/tests/routeHealth.test.ts",
+      "sha256": "da920586b3f46bf9cdf9c34eab82797ef35fbd04709924104d221d48c766f890"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/tests/sequenceFlow.test.ts",
+      "sha256": "a3e1ff944adc35c8f415e8a6c2353e153dd21de3cd69a8b72696ef1e9bbca391"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/tests/skillOrbit.test.ts",
+      "sha256": "bb89cdc4d9fdbb7d6e0c74e46dfa3c05e1ec48677259e4778b8ad0fadd44b226"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/tests/taskQueue.test.ts",
+      "sha256": "254bf1e90f41ce394381bcf6244c1ced2b4f79827317c18880fed1cd5a311df2"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/tests/tokenBucket.test.ts",
+      "sha256": "fc46997ee69f073c1ef3b6350a621764d5e01c2f5d71fa9ef9f7ef7f89134495"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/tests/world.test.ts",
+      "sha256": "e432fc74bc0faa7b0c545d1d09781bf88aff2484bb2562de6082e4bbcbaf46b3"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/ui/Hud.ts",
+      "sha256": "4c0732621deb919f2f202502d078983e5d7c02b04d19a44643967b7a9785cac5"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/ui/labels.ts",
+      "sha256": "be5212b4648ce26d3c5b8a545636edfef6925b7bed2e12e5f5d435cab26a002c"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/ui/lessonPanels.ts",
+      "sha256": "2dc653ba4e6f34e750eaf9dba615c6437dcdbed7f9f37c43b03cff1c873419d5"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/ui/orbitPanels.ts",
+      "sha256": "0947f833c57ccc27ee278fb13e844e6f33567e4596119214a206858b46c91af5"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/src/vite-env.d.ts",
+      "sha256": "b5e50c418e1faa83a3d44ad2d0f1ca239d30e47aa675e6ec43c1bccf8f3659c6"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/tsconfig.json",
+      "sha256": "caa5f9ce8b489de8850a86512b32ef131612b65f31e2f706ae5ea35e0b7b7a41"
+    },
+    {
+      "path": "engines/pixelDojo/pixel-quest/vitest.config.ts",
+      "sha256": "2c7b6edf7a85e942cfaafd82cff43eb5ac31213b225cd416c959a82a415b948b"
+    },
+    {
+      "path": "engines/pixelDojo/pnpm-lock.yaml",
+      "sha256": "5ea8e11c6cf6f0ddcd6667588c59332622bdc1d1f91911843801b5e0a6050e95"
+    },
+    {
+      "path": "engines/pixelDojo/pnpm-workspace.yaml",
+      "sha256": "a7e7b2d02c1bfaf64380e44cd5849919ba7432e694ad8d079bf4d727b1b0b41d"
+    },
+    {
+      "path": "engines/pixelDojo/scripts/readiness-report.mjs",
+      "sha256": "962e578b1ef7d0e25ee5db69b352453818e3aaee053dfd750064cf26dabc17a5"
+    },
+    {
+      "path": "engines/pixelDojo/tsconfig.base.json",
+      "sha256": "585f7aa2184ef54308e6ce4600a918bc7989c8cdc148c1def9df17b771b2345a"
+    },
+    {
+      "path": "engines/shared/pilotSupport.ts",
+      "sha256": "8ad29abbf971a33b5c804c478399207c3f265cc58a6f8854a548ece2dd27142d"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/README.md",
+      "sha256": "c45fc5459871ed943979a54a0e0e951b00180f4febd065cbe0115eeb2fb8abe1"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/emit.ts",
+      "sha256": "69164a47d4045714eb9f519acf0b3613ea9c0180660ce319ec90f6b8d9786064"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/evidenceEnvelope.ts",
+      "sha256": "53539456b5ba4ae9ccdd353825c9d67d6299949f9481fcc2e96f6fce5aad6bee"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/evidenceTransport.ts",
+      "sha256": "b42814c0d5c1404b9fe7a5597c515febf96b85ec982b3bdb65faee751f5a70d1"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/funnelCore.ts",
+      "sha256": "65ab2510f90bda0ac0e23f0493511497f658c3c69f74dce6b0b0a0566e6adbad"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/funnelTelemetry.ts",
+      "sha256": "41201edcdc81525b9f60ec074372befa73ee324eaa1ca21b36ade251b61d8b10"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/hostMessageDecoder.ts",
+      "sha256": "cdbf01825c1c8ddb845399bf64a339aa10a20f290f303bc253b43cd3949c8116"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/hostProtocol.ts",
+      "sha256": "7c1d86dd36bf1d20b00f13f358eb88e83a468994e45aebda3045fb7ddde76ba4"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/package.json",
+      "sha256": "225a4df4e5ba11101b1631f6212fbbad60e228abdb7093e03eddfa9974033794"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/tests/emit.test.ts",
+      "sha256": "68f19d92f53f6ddaff6b7b229635d39f25e834bed431b177521d4494bf86c99e"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/tests/evidenceEnvelope.test.ts",
+      "sha256": "e7feb329f14f46f4fa7f46a7b02ae6a51d48f8081cf7c46c568a7b9c34d84e23"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/tests/evidenceTransport.test.ts",
+      "sha256": "453301d7bb2051dcbd615f8a1eb6ab9ce874bd0d1e196717e8edfd19cc455ead"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/tests/funnelCollectorContract.test.ts",
+      "sha256": "c51d7760ef20389e4ec46c8a963ac2c3040805f604f298d23938349bba9fba7f"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/tests/funnelCore.test.ts",
+      "sha256": "72fff69d19895a64d370c5e010e5659014ffc9bd6480a1dbcb212a8076f164a3"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/tests/funnelTelemetry.test.ts",
+      "sha256": "d1540520e8da4d6a3ab8a104729d9e19a72398b5d033183ab7cacef095415d35"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/tests/harness.ts",
+      "sha256": "7ce9ab7adb51d8152b46b7bdace6cf7311b0427124e2e123533b362b570e315f"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/vitest.config.ts",
+      "sha256": "d591182e32770b0f8ade880fa4642fd22378fcf739bc7e15ff3c0d042d26b6b5"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/vocabularies.ts",
+      "sha256": "2016dca12f14698160632355bbacad26540d37e25874eb91d7af1116b9f1fc04"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/vocabularies/literacy.json",
+      "sha256": "c294b3ed73c482c221e2e16cbf7845bdfc1c5837d09d29704523809e70d4d340"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/vocabularies/os.json",
+      "sha256": "42737a25d1d861c3634f08f0b852346d058d92f3eb5a8876307c1f3dce0f21da"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/vocabularies/surfaces.json",
+      "sha256": "52afdf46b27968473689651f06c319265cbe3573e172648e193bb21cb169aeac"
+    },
+    {
+      "path": "learner/gate/AGENTS.md",
+      "sha256": "b7e028db77260e18043dca1eb9c11b039f179d3df5bceb3a90714973ed00a0c9"
+    },
+    {
+      "path": "learner/gate/README.md",
+      "sha256": "b490cb3af093284a3c093082f284dc49b66c42551d817c8d2f5213a02316dad5"
+    },
+    {
+      "path": "learner/gate/__init__.py",
+      "sha256": "ad1b2ee6c2582bcf90f9a3eb312620d4af03bb7bd84afce1773699e3ee021f99"
+    },
+    {
+      "path": "learner/gate/__main__.py",
+      "sha256": "b7e5b624c00b8f6624dcd22bdf3abb75ce229504defb8177c4f204c2ac249c20"
+    },
+    {
+      "path": "learner/gate/air_traffic_evaluator.py",
+      "sha256": "2d7613286ad1a9e85f2ea65aabe0c0000c468d920d547c381e987a2ddeb84e7d"
+    },
+    {
+      "path": "learner/gate/analytics/README.md",
+      "sha256": "82d4fa7470e013d23ff5e1804052b42025147967be16423ed3e6381e449e6625"
+    },
+    {
+      "path": "learner/gate/analytics/aggregate_funnel.mjs",
+      "sha256": "7e3fa643ac02b0a950c402acdbee20a661bd89177f977bb1423df32de53dfbb3"
+    },
+    {
+      "path": "learner/gate/analytics/dojo-analytics-collector.d.mts",
+      "sha256": "2257fd3d3fb9bbceccdc8d56c56a7fa3ecc2befc1455beb5315626a27d551ea7"
+    },
+    {
+      "path": "learner/gate/analytics/ndjson_input.mjs",
+      "sha256": "c59ab207863952ebc32635015e0badd10a63f28979bd1e9ec12349355c5c8247"
+    },
+    {
+      "path": "learner/gate/analytics/probe_collector_export.mjs",
+      "sha256": "74c8d1d3158029991702a76fd81e78e24ae3bcfc6a2166231ed5fc3f09eb5fbe"
+    },
+    {
+      "path": "learner/gate/analytics/refresh_vocabularies.mjs",
+      "sha256": "fb314a06be12883e2871451a28d1cecc6ded34edbf933e71a50349bdc0428551"
+    },
+    {
+      "path": "learner/gate/analytics/schema_drift_monitor.mjs",
+      "sha256": "6c8789c0b34a93d0e938d011acdd443780ee2d22ac8f8d9b3c2c572eb7ec820e"
+    },
+    {
+      "path": "learner/gate/analytics/verify_deployed_blobs.mjs",
+      "sha256": "05d31f422a28131b350fb4b38b66248fa3c9a5c457ae405bd50ad3022cdc07a6"
+    },
+    {
+      "path": "learner/gate/breaker_grid_evaluator.py",
+      "sha256": "7c455a8ab5bca30acf8b2c1219601ed91970d12d1cba5229342512ce15c74e20"
+    },
+    {
+      "path": "learner/gate/canonical_gate.py",
+      "sha256": "717f64f2372ceaebb26942cc96a3672bf51ec341994f6907e8aa41866eb54e76"
+    },
+    {
+      "path": "learner/gate/checkpoint_evaluator.py",
+      "sha256": "1c694e849702ba51a83c61bb646520afe7d80ed443148e43529fdd2b8238b4f1"
+    },
+    {
+      "path": "learner/gate/core.py",
+      "sha256": "4230de9f7ab04199a2a7e9b85cf8b373d2dcb7f8222fc1090980e000bd3e6b72"
+    },
+    {
+      "path": "learner/gate/docking_evaluator.py",
+      "sha256": "9c73241eb07633cc847edfcb16073df99e57ae43da740fe1b7c9989715da75fd"
+    },
+    {
+      "path": "learner/gate/engine.py",
+      "sha256": "364879bde468b5b2d614ce63d782170facec5799e7b9c5e5e075cfc7af28e169"
+    },
+    {
+      "path": "learner/gate/evaluator_primitives.py",
+      "sha256": "249b4127c3b8914f59746633ae3443653fc64ea05774bf5a4f9238d7597b1cc1"
+    },
+    {
+      "path": "learner/gate/evidence_io.py",
+      "sha256": "53146a798b65e71839d4a12e37097f5824c844d7c81fd4236a9a9f310eea2da3"
+    },
+    {
+      "path": "learner/gate/evidence_rubrics.yaml",
+      "sha256": "4aa2224cad2fb9e4afea09ea1d89f018f84273e7f280b748295e02b0d8a09dc1"
+    },
+    {
+      "path": "learner/gate/evidence_schema.py",
+      "sha256": "512face66d6ce9508451987af6f6cabd62df932b4fa1ab77c8c1d2b4b1a2f36c"
+    },
+    {
+      "path": "learner/gate/evidence_validator.py",
+      "sha256": "2b95c18f508f97ea8c1ff25034ac19297b375a01a391d89bca94a56f3e877974"
+    },
+    {
+      "path": "learner/gate/hash_ring_evaluator.py",
+      "sha256": "c4f303cf7a12b86a09c5c9c7fe4a5891c70ae8e8887133e6825d0edec3c8ee4c"
+    },
+    {
+      "path": "learner/gate/literacy.py",
+      "sha256": "cd4e3f13eb7107cf49d74394f000ad1cb1cbc124e6b4149946dbd4614a8cce41"
+    },
+    {
+      "path": "learner/gate/literacy_bridge.py",
+      "sha256": "5647567c191f234d5ea9d48cda2ed697cf697d2f9205149d840367edbbe972dd"
+    },
+    {
+      "path": "learner/gate/literacy_evaluator.py",
+      "sha256": "181b2f9a50daa1c8432d3809e4d4a68a450049f407826d0d0dc93d889f81f3a8"
+    },
+    {
+      "path": "learner/gate/literacy_evidence.schema.json",
+      "sha256": "692290b5065d2872303c7ead5e2b9cd9ef43c899324794009b52e920aab76630"
+    },
+    {
+      "path": "learner/gate/literacy_judgment.py",
+      "sha256": "5e64e6e5d9fcdf7ab9c0799739ffe322dff5b032452c2424bf793050853835ec"
+    },
+    {
+      "path": "learner/gate/literacy_verifier.py",
+      "sha256": "6bc0335fed63ae799f5531745d21536012035bd62ff1336185378d1697c44d49"
+    },
+    {
+      "path": "learner/gate/metric_failure_snapshot.yaml",
+      "sha256": "648375eac496234bc1ed8f83dd4de4b446ff348a9cf72e7e46132497fc3682e8"
+    },
+    {
+      "path": "learner/gate/metric_lint.py",
+      "sha256": "126f2c90955bdfd39d74394069f1db9979a5618a5b572afe12fb5f21f61a7d28"
+    },
+    {
+      "path": "learner/gate/metric_snapshot.py",
+      "sha256": "9e3494afef6d0a7619d0159fe543044544e0e6539f589209e86de475c156a2f8"
+    },
+    {
+      "path": "learner/gate/mission_control_evaluator.py",
+      "sha256": "25f19b491bb2678cf65f55c8e17d0862beaa4abf257129c4ee90b020d714a4ea"
+    },
+    {
+      "path": "learner/gate/netlify-functions/README.md",
+      "sha256": "784bc0fbcda7e1d5cd816e9d778f6e1deddf461ec97fc240e69e835b474805f7"
+    },
+    {
+      "path": "learner/gate/netlify-functions/_shared/literacy-corpus.mjs",
+      "sha256": "491f04f84f6986bfcc88a62ca23123b7869c208b19546c507f2604da6f0f9ee6"
+    },
+    {
+      "path": "learner/gate/netlify-functions/dojo-analytics-collector.mjs",
+      "sha256": "0080d300ef0b782d94ebe7f1dc6fe03f220f0598827289dc54d7d2b36d827b7e"
+    },
+    {
+      "path": "learner/gate/netlify-functions/dojo-verification-bridge.mjs",
+      "sha256": "93e4cb036d84d7776ed23dfa792bb693c306346be8faa0cb87f365653693c663"
+    },
+    {
+      "path": "learner/gate/netlify-functions/literacy-verify.mjs",
+      "sha256": "7d53901ea068302abb91fa07bfa0cb99b3ed7952566a50b4ef9e6dfbf15fa8c3"
+    },
+    {
+      "path": "learner/gate/netlify-functions/netlify-blobs-runtime.mjs",
+      "sha256": "7c33576cb5c98dc4d69891c6382a794bc547d96cbce2371069b7573b368bc0d5"
+    },
+    {
+      "path": "learner/gate/netlify-functions/package-lock.json",
+      "sha256": "14969a3a42235d3f7b3437cf4ed18f90636f2fc08c5eca2eb449a64f6aef5c64"
+    },
+    {
+      "path": "learner/gate/netlify-functions/package.json",
+      "sha256": "8bfe1dd402901fda685150b35b569f763a6b2fb7f95fcd4fc3d9b0f9fbdb8501"
+    },
+    {
+      "path": "learner/gate/no_code.py",
+      "sha256": "06186286d2e09722dc38ec835df4bb0c16db538a8d263dbb76a5034b25e40897"
+    },
+    {
+      "path": "learner/gate/no_code_checklist.py",
+      "sha256": "07bf04e3d5b8941e262ea6d0488b3b3f71f12ff4aabf5360941fb9b73465ba04"
+    },
+    {
+      "path": "learner/gate/pipeline_evaluator.py",
+      "sha256": "c929aa1448c6e524ec800561e48b9034adc25917c887a4dc7c930932a3fbfe60"
+    },
+    {
+      "path": "learner/gate/relay_evaluator.py",
+      "sha256": "eecd885d3f8f9892dc5c32172298282e13926b963bac0e2375384e800937fcf5"
+    },
+    {
+      "path": "learner/gate/river_delta_evaluator.py",
+      "sha256": "644afb5ce2352a0781f2f4e8564606a7785ac5a9d9cbec37c384dfca921b0578"
+    },
+    {
+      "path": "learner/gate/security.py",
+      "sha256": "64d2e85cede2dd1727b2af5d8c4739223ed3db88aebd43501dcb146ad823e738"
+    },
+    {
+      "path": "learner/gate/standards.py",
+      "sha256": "604462cef530acc1c3068e139b426d06e6a154114a99ac81157a347734778d8f"
+    },
+    {
+      "path": "learner/gate/state.py",
+      "sha256": "303b63217e37532032a76c838d8e75953b4663d65dc1ac6c0ea90b82b998a640"
+    },
+    {
+      "path": "learner/gate/state_transitions.py",
+      "sha256": "8903b0ed1c23531db1d17f79925ad2486531b0aeaf3908fb6df174ff379c6248"
+    },
+    {
+      "path": "learner/gate/task_queue_evaluator.py",
+      "sha256": "28a155581af24d6e28505e9c23180872d08f4d877c03d5801e825ade4e45bf65"
+    },
+    {
+      "path": "learner/gate/teaching_game_bridge.py",
+      "sha256": "964c680fd61832353c9e0bf1c7557c556bd40252432835330bb7ac47ca20c92a"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_activation_surfaces.test.mjs",
+      "sha256": "58096960ee152cb898cc6b5d2c3817e84540f68d9695ba5c1817ad6e889a2d19"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_collector_edge_semantics.test.mjs",
+      "sha256": "ef7b9c8b91810a473704e5f474edabb895013e38c2d5bf722cd5537b7df82f54"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_collector_netlify.test.mjs",
+      "sha256": "dbc09a9306846fc0f847f6beab99b6fca3d6e366a06f25ee473f7f121147d11b"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_collector_packaging.test.mjs",
+      "sha256": "2e8a479281ba8d197ddc200d1881aa528b738a14c124b975f68b2d48b3b7b236"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_collector_v2.test.mjs",
+      "sha256": "f721ccf0624203b168161d441a7d126d64ed6c8aff907c7e74677fc3448b8cc0"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_collector_v3.test.mjs",
+      "sha256": "45a3eeb544272b27fc3268e5b6824371e360a010d5d0a109c4ce4d9f463cb2a0"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_collector_v4.test.mjs",
+      "sha256": "bb80ec68d59733d7df004eec4082b38fa3f63384af6bcf81145320bde19ac495"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_funnel_aggregation.test.mjs",
+      "sha256": "ea38d6ed74672ea2b18ca4b916e7fcd19503b7934b1bb8cc4e229034d1d8141f"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_funnel_aggregation_v2.test.mjs",
+      "sha256": "a1a8b712e21c14c2c708f1fbd5427bcf46fbce861dec676238f14c06ec0cc67d"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_funnel_aggregation_v4.test.mjs",
+      "sha256": "fee9cb9f8cc7337b482f89a16b753c502b03c36b077329f136cdcb5d28c15ddc"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_funnel_surfaces_v3.test.mjs",
+      "sha256": "493ea42e889644eb8ad5062878ee10b55dddf473a8e1f2ccdbc18719c8a13bc5"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_schema_drift_monitor.test.mjs",
+      "sha256": "d671f50c1927304643873c2a21fb66cc83efa59c657abc838c88cccc66703073"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_schema_drift_monitor_v2.test.mjs",
+      "sha256": "81832c1586c26206c57f2b53c96139710451e31043431af95f2455a4aeb45acb"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_schema_drift_monitor_v3.test.mjs",
+      "sha256": "25966f0dcd2d967294ab3602a5adfc00184880e9d17cb310df6339d15f9c75a5"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_schema_drift_monitor_v4.test.mjs",
+      "sha256": "a056e4f57cbd45d759d97960628b70094e3e0851b59c5931d0b3e3c5b7b7fce6"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_vocabularies.test.mjs",
+      "sha256": "219062e813ede2f479116a86080cd70367277994b76d685aac29246915f0b59d"
+    },
+    {
+      "path": "learner/gate/tests/dojo_verification_bridge_netlify.test.mjs",
+      "sha256": "b0158b1921561e9f1e2c1436e0daed075786c985566525d680d4e3651ef8f2fc"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/drift-v2/events-2026-09-14.ndjson",
+      "sha256": "8156e88c797b38fbff8e07f5c3bcba498cb2d1f0dafdaf23c61787e7b417c76e"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/drift-v3/events-2026-09-14.ndjson",
+      "sha256": "d200c6ae6ceb618655edc3bebeadb6e3a68aa4b6f330f7ffd259b242db4b04a7"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/drift/events-2026-08-05.ndjson",
+      "sha256": "6368aecffb976dc799fc53784a861331e62ecbb31575c842243a6162cd1d4b17"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/example-funnel-report.json",
+      "sha256": "ffda2e3948b683c7356616d3c00bb3b53f1a30c09c05e2b262a942eb647f346d"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/example-funnel-report.md",
+      "sha256": "6701a4ce6a7030364113d0ff57932412cd1fcc34e5af5a6dc9fef5c3f4c59964"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/load_fixtures.d.mts",
+      "sha256": "d8b89355a0cb984473804dfc5cf406caf242e8b5c59e0a7632117f132243d762"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/load_fixtures.mjs",
+      "sha256": "bc6ffc71e6778c6d8826153e7ed27a710601be6e99c3d8c995c54a19817f4133"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic-v2/events-2026-09-14.ndjson",
+      "sha256": "bc4dab189430c2b9691a470913e15eaad309a0f89cf81948e48dd03d5c07d6c1"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic-v3/events-2026-09-14.ndjson",
+      "sha256": "0ade762461e2520f49839441ba625c674ced8f4e89907043b86aa5ffc27d5470"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic-v4/events-2026-09-16.ndjson",
+      "sha256": "c749d29688e31a708e2dd58bea7272a02db63ee9aaef5a4dd99eac0791e830af"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-13.ndjson",
+      "sha256": "3a9b62556992c8a704f3fe44fdd46321ed7ad159a520e0a449799f6fe3a29535"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-14.ndjson",
+      "sha256": "6226575197e63d71d09bfe231884614393316f613e0bdd69799ac5c406c7229f"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-15.ndjson",
+      "sha256": "cb039195ea1a2f2f51b6f3ae6a2bfa5cb8cd0c6a6794c5324467106d48ec37a7"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-16.ndjson",
+      "sha256": "5b22dd2bf5a8c7879095bbac46c4f14654671c31c2c9ad86878eab2bd00e9337"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-17.ndjson",
+      "sha256": "37db671ec2c60e4e68d6797e05bc5b136d858ffeb3191585d2526db99750f4d3"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-18.ndjson",
+      "sha256": "d075cf05323df31247944b413cfcdfc83e52461c19fd248c83a426dbb2e99f5b"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-21.ndjson",
+      "sha256": "623549191c0d34720040726949418abbb3c6b4ed2ed499141f003fd14044c1d3"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-25.ndjson",
+      "sha256": "fbe785fced0d8813107c201ac4a9044956ad18b005dff571d34665b6d797f007"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-04.ndjson",
+      "sha256": "564c76ab3cebb689c52ed554a12037e8b09ea3142787cc9533b34977e746de1f"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-08.ndjson",
+      "sha256": "528c165faf5228d569393807f6387797acb3ae605ab32becaf57c10e95ac7d5c"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-10.ndjson",
+      "sha256": "18e148a16312afbf1830b6f7b214c74b10d4c3d4af0eb98adfc5a3098d92ca57"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-11.ndjson",
+      "sha256": "a5667740622d258b914aed3eff14fb263c146cd5c8bddbd73d6dbae1ff2002d5"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-12.ndjson",
+      "sha256": "6817107e70a897c3b8ed279eb52ac6a5da2f0ec0a68d79e341b0d7a3be0461bc"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-20.ndjson",
+      "sha256": "c6e31c8b975ffda27ec8f852b3ae9af6fb0db4fe972c6bdeff5402b2711f216a"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-24.ndjson",
+      "sha256": "beddbd3ff568e4c86bffeb66ff867d6ca5f45cdb023541c28e1c50ac14be3deb"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-25.ndjson",
+      "sha256": "2bc6580f78170b13e015227f78ca15c59c36757ffde67c2b2d945c151395ab94"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-26.ndjson",
+      "sha256": "7d31017448ba33bcf44e681d048af1dad556aee9843c425cf5ed9d51864260f3"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-27.ndjson",
+      "sha256": "acdd1035a2b2477b2a9f8c1f7b8baaa2c7375575ccfd744918a539094cf3c2e6"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-28.ndjson",
+      "sha256": "5995aff8a3a6ea3f6fa4ee9eb95bf213307c62ab902f011a6c4b2b1b23a6252d"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-31.ndjson",
+      "sha256": "ce8d5106b04b09b563466df3e4f8cea38fd679583e8e47c74805af9f1937adc3"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-09-02.ndjson",
+      "sha256": "4756943fcd0c4b74a95c661291de41abf3c4624f850cf9420f68e4970ce6afe6"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-09-08.ndjson",
+      "sha256": "76c060c2e5cd631a1b1dea91f586fa9007454585f4cb8a1897818bdcbea3c78a"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-09-09.ndjson",
+      "sha256": "7ef41a3a4679e955bfbcdd2a7c197157afaa769fef322c043de145eea485b5a7"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-09-11.ndjson",
+      "sha256": "78364f0aa5d89125a7b9b0159a816e0af650d7277b7c6fbf31b9f008192587af"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-09-17.ndjson",
+      "sha256": "337780a7f249e43f796f03ea17282ebf5ae1afa4302e5fdef6853f216090b498"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/literacy_producer_payloads.json",
+      "sha256": "23d3a4f8348f6ecdde6ddd9cbcebd11c1fe2bed883f189db958fe0ac7fa3d082"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/teaching_game_producer_payloads.json",
+      "sha256": "b309ad9bf4800a7ac2a1f48ca725d6065850a852d525c9cf36b542a03e8cc6fb"
+    },
+    {
+      "path": "learner/gate/tests/literacy_verifier_records.py",
+      "sha256": "59867766093bc70590bfc8707f9512ce43d5ebdedfa7e222212102d1afa55f72"
+    },
+    {
+      "path": "learner/gate/tests/literacy_verify_netlify.test.mjs",
+      "sha256": "1265169ebd09de19498f5066257763ab714399eb4f670cc73318bd4e0983ed9a"
+    },
+    {
+      "path": "learner/gate/tests/teaching_game_bridge_records.py",
+      "sha256": "b7e7f09ee40d321093fe579a3523a8e8e655e9b6b9ba23b50bcaa0ebb6d23acd"
+    },
+    {
+      "path": "learner/gate/tests/test_air_traffic_evaluator.py",
+      "sha256": "1de26219f0866c4e73aef2f10f222f82606605ede204c895eedc2a290d6f2469"
+    },
+    {
+      "path": "learner/gate/tests/test_breaker_grid_evaluator.py",
+      "sha256": "4859e0b77fa029ca0bfe8207392b64c1bc7685619573e483a0b84ad4c1ada3c2"
+    },
+    {
+      "path": "learner/gate/tests/test_checkpoint_evaluator.py",
+      "sha256": "d4dd7515aec19e769190bff0617d6ad719f198ff8763750cc52660a3f90eb3d9"
+    },
+    {
+      "path": "learner/gate/tests/test_docking_evaluator.py",
+      "sha256": "bbfbaec87246bc97de254a67d09e9d701746e453dafad9a97afef7e333d8236c"
+    },
+    {
+      "path": "learner/gate/tests/test_gate.py",
+      "sha256": "31c138206f811b1e0bd50eabbaaab8b4c8f1962b41887e53d7c510218bb9ca44"
+    },
+    {
+      "path": "learner/gate/tests/test_gate_game_coverage.py",
+      "sha256": "f4e54dd283ad0765e66a80e00eb39ce911acd7d434c461958be5d7e45250ea64"
+    },
+    {
+      "path": "learner/gate/tests/test_hash_ring_evaluator.py",
+      "sha256": "5e3d865aed2d649d30ba150e31cdc469097ea43de6cd10d01aea44d12e3628ef"
+    },
+    {
+      "path": "learner/gate/tests/test_isolated_bridges.py",
+      "sha256": "b4c9d0be5a8b5189297bd3a640c1343489db767b9263133c8cd7579b25423aaa"
+    },
+    {
+      "path": "learner/gate/tests/test_literacy_judgment.py",
+      "sha256": "b6865fa816bc196b79fc7a6f6258cbfee07550deef981d47cd31d94d1946130e"
+    },
+    {
+      "path": "learner/gate/tests/test_literacy_verifier.py",
+      "sha256": "d03edaa06e85b14c4ff01337a34f21aa3e19cb81b2aa62560867a1066b836a97"
+    },
+    {
+      "path": "learner/gate/tests/test_literacy_verifier_producer_contract.py",
+      "sha256": "7758e6801e125ee25aea6ccf6e87b6ca47da20bf060e0ab81aa698067fbfb523"
+    },
+    {
+      "path": "learner/gate/tests/test_literacy_verifier_receipts.py",
+      "sha256": "ad31531fb9d852b613d95afbfa956ff4f7ed4312de4ddd29ca43d236160e92f7"
+    },
+    {
+      "path": "learner/gate/tests/test_manifest_atomic.py",
+      "sha256": "cfbadbd1e747b3c6673081758e9be4fa534d99d2df0d2610fc464da787a7a8c9"
+    },
+    {
+      "path": "learner/gate/tests/test_metric_lint.py",
+      "sha256": "1cf2de709440f71fecc2f2a973774856fd79a155f8be47776893d2e860f84835"
+    },
+    {
+      "path": "learner/gate/tests/test_mission_control_evaluator.py",
+      "sha256": "4b56f795b8fab1433bae451d989c8c1108ef71561d019a7f29c2204419cef9b2"
+    },
+    {
+      "path": "learner/gate/tests/test_no_code_checklist.py",
+      "sha256": "7e2a9d7751a43b4b3080351d0ac3a293471ea8f01e446965ab1d3ef08dce490a"
+    },
+    {
+      "path": "learner/gate/tests/test_no_code_gate.py",
+      "sha256": "348d82cb84dfaa533110794589b3409e6df814ccbb9c41e2647bc12a0594a5e9"
+    },
+    {
+      "path": "learner/gate/tests/test_pipeline_evaluator.py",
+      "sha256": "f804d1ca9da24412ab1feb6dbefdaa8fee45240bdc76d115da1427c63f7dd45a"
+    },
+    {
+      "path": "learner/gate/tests/test_relay_evaluator.py",
+      "sha256": "3281a1d12993f578f15a3a36b634afdc58b0c3d42d733263be4bbcf551ffa932"
+    },
+    {
+      "path": "learner/gate/tests/test_river_delta_evaluator.py",
+      "sha256": "a03362a20a8860d9d298f7349a3b4b4bbc52988ed6c90c6ba73abac15dbc850c"
+    },
+    {
+      "path": "learner/gate/tests/test_standards.py",
+      "sha256": "25dd53628da07e14b442222c5d67905dadacb7de55c05426f04f5333d641877a"
+    },
+    {
+      "path": "learner/gate/tests/test_task_queue_evaluator.py",
+      "sha256": "068e07fafe7a275d844e27bca3950d7d143c2752f83184b193db4c16393013cc"
+    },
+    {
+      "path": "learner/gate/tests/test_teaching_game_bridge.py",
+      "sha256": "a5aaedc7f47ec63e1f338306c702e5d47774c261e0226672e849f5fdd0820955"
+    },
+    {
+      "path": "learner/gate/tests/test_teaching_game_bridge_rejections.py",
+      "sha256": "22244990c6e103dd05766b024b53f345f88b1a3d5b0a0a6e5fc5416e60d4fc4e"
+    },
+    {
+      "path": "learner/gate/tests/test_timeline_evaluator.py",
+      "sha256": "cc2ff42ecb5f42fdf18b12ab047716df1d18ce4007003c8ff301cc2fd54657ca"
+    },
+    {
+      "path": "learner/gate/tests/test_verifier_corpus_drift.py",
+      "sha256": "b4e644fb715737243c55b990432d7ed24c7985f376852fa15d990f45794a6e2e"
+    },
+    {
+      "path": "learner/gate/tests/test_wormhole_evaluator.py",
+      "sha256": "74f6619f1aaf3e01f32ea6176e6970a6d530355db76e6d33ff8690e7a362d4b6"
+    },
+    {
+      "path": "learner/gate/timeline_evaluator.py",
+      "sha256": "0a7883b79a919ba993eb2b872e89810b16edd0d11c15b7d8dcf9074b541945b8"
+    },
+    {
+      "path": "learner/gate/timestamps.py",
+      "sha256": "f435b6be5e498f3b6bc98930c6d60be99aa2adf0405dc54885984da4ea512cac"
+    },
+    {
+      "path": "learner/gate/verifier.py",
+      "sha256": "9be5d56c845a21147fcc71d4eb213e9927cc9a93ba794845226208996588cb5a"
+    },
+    {
+      "path": "learner/gate/verifier_receipt.py",
+      "sha256": "3a5d9145dc919d6ed7ace7494fccf3fcddcb4ae19461c75b8ef47f7b607a1737"
+    },
+    {
+      "path": "learner/gate/warehouse_evaluator.py",
+      "sha256": "aef6b0834504c35bc2ea3b1e76e7665d944c89d91bcdc928b563f1910f7ff605"
+    },
+    {
+      "path": "learner/gate/wormhole_evaluator.py",
+      "sha256": "3c23959525273f3d49a7a19f9d4f9e306a46133cf53ec3219f4ae2f05e2e51af"
+    },
+    {
+      "path": "learner/substrate/AGENTS.md",
+      "sha256": "84c4457bfabe6a379359b2f8b49389883964d8a42a5863e92c2a1864cbb9abf4"
+    },
+    {
+      "path": "learner/substrate/README.md",
+      "sha256": "03d62ff0f57e29efccd0478308f078b3a4a4872f9b105df90211673dd2fd00ca"
+    },
+    {
+      "path": "learner/substrate/__init__.py",
+      "sha256": "067fc498a2d5cd6b6dece6a0175ec445a4dc548e49386ad607f6c0e7c7812f40"
+    },
+    {
+      "path": "learner/substrate/__main__.py",
+      "sha256": "79e210c48675e70807e732d4bde00ed0cd4a3549b3ab98c613adee91d869f553"
+    },
+    {
+      "path": "learner/substrate/adapters/__init__.py",
+      "sha256": "db64e5eaa7e5dd87476ea80ecf810dfebc3b6feb4ee6b76f69b7423fe8f44526"
+    },
+    {
+      "path": "learner/substrate/adapters/dojotoday.py",
+      "sha256": "0efbacf906f636e55499faaefd78367d4accd6e22b8fab2bc6b5b7e623b51a80"
+    },
+    {
+      "path": "learner/substrate/adapters/mavis.py",
+      "sha256": "d776dd20a6bbdc4cb224bae64dcb6164f4a68df6e3f1995d072c72c83c3942c3"
+    },
+    {
+      "path": "learner/substrate/adapters/whiteboard.py",
+      "sha256": "45b81f4eb2fc835b26943d5d89a3af51015433cf60d38acf065846ff2fd9b574"
+    },
+    {
+      "path": "learner/substrate/catalog.py",
+      "sha256": "6455b92eaebc98a4240c140a804948d083df1a4b5dbacfb4a86c62bb1ab72c52"
+    },
+    {
+      "path": "learner/substrate/dashboard_data.py",
+      "sha256": "94a834829ba34ad0c177499fcc85f51b1c89378bc6d060111c383c216379f64e"
+    },
+    {
+      "path": "learner/substrate/dashboard_snapshot.py",
+      "sha256": "6c819806f0eec7cd12e2bea514eeb99b7128e1ba4d901c1312ecb83749f3dd0a"
+    },
+    {
+      "path": "learner/substrate/gate.py",
+      "sha256": "19022c06fabafcb1768ce5d9a16577bfa778178eb61f24bf16cc9896daef5acd"
+    },
+    {
+      "path": "learner/substrate/generated_views.py",
+      "sha256": "2f6c5539807b30d34e7e13a995ee2a1e8d1f100857f95a08363eb340e787a816"
+    },
+    {
+      "path": "learner/substrate/interface.md",
+      "sha256": "05a494203550dcd32ce3c7e959fd21d787058b5a553ba111315c54cc20c6def1"
+    },
+    {
+      "path": "learner/substrate/judgments.py",
+      "sha256": "07321efbce8a9bd0c5d3e771af5d14a283fa680a58a38fc8c821cb8a76eb9fbe"
+    },
+    {
+      "path": "learner/substrate/mission_catalog.py",
+      "sha256": "7ca414d6fd5a69b960d6e25c6815bd378335c26db82c91e52be64a259216ae57"
+    },
+    {
+      "path": "learner/substrate/mission_catalog_bindings.py",
+      "sha256": "f0f390dee94fa971dc5d44b5dff6fa89118d2d65f37478dc757639a0674dc3b0"
+    },
+    {
+      "path": "learner/substrate/mission_catalog_guided_practice.py",
+      "sha256": "847814e6c539864f74e7a0978086380504b6575ecf2e9adc44ac26fed0bb2843"
+    },
+    {
+      "path": "learner/substrate/mission_catalog_rules.py",
+      "sha256": "5bcd82553548b1e78dfc2287dcc1e925df543df23659049bbab79a22d542f16f"
+    },
+    {
+      "path": "learner/substrate/mission_catalog_voxel.py",
+      "sha256": "633608d50afdfb21ca1550c8608088477a810af00982586b703601199296b4c6"
+    },
+    {
+      "path": "learner/substrate/prediction_store.py",
+      "sha256": "abedc4c4999f589d6edf54d76b6749abbb6f636f43ce57b4916e2ea19fc85874"
+    },
+    {
+      "path": "learner/substrate/predictions_summary.py",
+      "sha256": "0a25e488a1271d0d5ca1da08b5f7cd49b908dd8fd9797aef00516de7b6d18262"
+    },
+    {
+      "path": "learner/substrate/projection_clock.py",
+      "sha256": "ca71c00b340d08f6bf6f94214d0ebc18e882778782470424a3e2878cb8762a79"
+    },
+    {
+      "path": "learner/substrate/projection_clock.yaml",
+      "sha256": "aa351d6130ea38d216934d89225f4fd5c360197035121ccc57c91b616deb75a4"
+    },
+    {
+      "path": "learner/substrate/projections.py",
+      "sha256": "5c6a87ada6046bc1b1b092a0b3bcad89e1dc1baa1e53df725172101a7d74ad80"
+    },
+    {
+      "path": "learner/substrate/scheduling.py",
+      "sha256": "55ecb22eaa44a590248c44b8b703c642f024049e8bfa3372c1af61b0d480c9dc"
+    },
+    {
+      "path": "learner/substrate/schema.yaml",
+      "sha256": "03468fba0926e584aab92e33da54b7ee92eaa1591c916084041a544bd0d2dcbd"
+    },
+    {
+      "path": "learner/substrate/snapshot_sources.py",
+      "sha256": "2c7d2a90aba99f6714065394716d02734947ab59b4a6ca9043603bb5f0680f2c"
+    },
+    {
+      "path": "learner/substrate/tests/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "learner/substrate/tests/fixtures/judgments_golden.json",
+      "sha256": "6fea96e48b8020de3f015554328c16c8f3457abf0cc9677bc6c0ce1f68d4e8ae"
+    },
+    {
+      "path": "learner/substrate/tests/judgments_fixture.py",
+      "sha256": "61f08c6be131b508522aaef809004c3dda2cf90f87638113dfe2d3efc596492b"
+    },
+    {
+      "path": "learner/substrate/tests/mission_catalog_fixture.py",
+      "sha256": "1f43f95a5b0ac2dca41601e16ca2b8a42f12355b4024c1201c7aa9f0995635da"
+    },
+    {
+      "path": "learner/substrate/tests/mission_catalog_project_catalog_fixture.py",
+      "sha256": "69b4ab2a5a0adb7f3a603ace6ce6ceab25caa7bca40533d4e183b9894d9e88d3"
+    },
+    {
+      "path": "learner/substrate/tests/test_catalog_level0.py",
+      "sha256": "b3a1105bb6ceddad6e4ce64585256f224b9fd4a01ea20c8e2d0733e303e9abc1"
+    },
+    {
+      "path": "learner/substrate/tests/test_catalog_projections.py",
+      "sha256": "2cc01bf296828789844e4784e2e6f0c2db70924aec6162a56a0a816660a77a4f"
+    },
+    {
+      "path": "learner/substrate/tests/test_codexdojo_os_snapshot.py",
+      "sha256": "295017e6688915036c30988c54914db58fd66f681a4bcaf0a112dfe70aeead6c"
+    },
+    {
+      "path": "learner/substrate/tests/test_dashboard_data.py",
+      "sha256": "3b3576a6bb622894ae077524da84e145f1525623a898f7746e458cafbe4d5744"
+    },
+    {
+      "path": "learner/substrate/tests/test_dojotoday.py",
+      "sha256": "6b32950dad50499290824d15974c99e3422c6d44dd9dc159c6d8f677f020a342"
+    },
+    {
+      "path": "learner/substrate/tests/test_engine_topology.py",
+      "sha256": "b9ebcf7783aac4eb9dd53b327dd7d89078ef24ce1d7699a73c23867f46b67acd"
+    },
+    {
+      "path": "learner/substrate/tests/test_gate.py",
+      "sha256": "6cc795e9a77960a9bc02a8a2409f95519dfce17cc1e8f0ca34f3274b5c292e25"
+    },
+    {
+      "path": "learner/substrate/tests/test_gate_evidence_class.py",
+      "sha256": "eb0a4ca235a58cc183f73afdeaab4e45c2530ec96ca1373620684ada1c3a4103"
+    },
+    {
+      "path": "learner/substrate/tests/test_generated_views.py",
+      "sha256": "81e3772fcc955d9983e5912a279641012333c31b6e970e821a132502271741d1"
+    },
+    {
+      "path": "learner/substrate/tests/test_judgments.py",
+      "sha256": "a74550741f631117d31a9a7d4256b5bc3b9803ab53739869a7797cbaebf5c677"
+    },
+    {
+      "path": "learner/substrate/tests/test_mavis_adapter.py",
+      "sha256": "f784bfc856ed38a38e911ee3dce55d0ec35ea9d540f4170fdfa69bbd0d9f3eb2"
+    },
+    {
+      "path": "learner/substrate/tests/test_mission_catalog_graph_rules.py",
+      "sha256": "643391a8fbb624e3265d87ba89f6ad0977088cb670852d4ef685d3fca68b9cc6"
+    },
+    {
+      "path": "learner/substrate/tests/test_mission_catalog_guided_practice.py",
+      "sha256": "e4934b9f39e3a874ba5f864476ec9b1991a15ef9b9ad8cd4910d426f2b5a2afb"
+    },
+    {
+      "path": "learner/substrate/tests/test_mission_catalog_normalization.py",
+      "sha256": "1dd482ad37799ba7a032f5ce88e35263677bff8ccb3135373c6bb1689ebf4239"
+    },
+    {
+      "path": "learner/substrate/tests/test_mission_catalog_release_order.py",
+      "sha256": "4c59082603afbb6a08060e1423404a759bd52c5e782a9e261fe0726c038e2550"
+    },
+    {
+      "path": "learner/substrate/tests/test_prediction_store.py",
+      "sha256": "5d47026e1e8d06918e5134ca1fc78acbdda5c329d5d2f77f051cf3459bd1f35e"
+    },
+    {
+      "path": "learner/substrate/tests/test_predictions_summary.py",
+      "sha256": "db6b6b4903e31e91d7238015e0823c58bcb147f36c48d40ab195db99d854bb3a"
+    },
+    {
+      "path": "learner/substrate/tests/test_projection_clock.py",
+      "sha256": "0aa35a8ec68ed12114844111e576794089d31a534e9586cdab1d49911e8f9d89"
+    },
+    {
+      "path": "learner/substrate/tests/test_save_canonical.py",
+      "sha256": "50a128e889badee70ba0f0bd0de66c90876ce3a62f3d61062be3557b4cbc8ad9"
+    },
+    {
+      "path": "learner/substrate/tests/test_substrate.py",
+      "sha256": "1ffbc50c2f0df45063146adf29186aaee21192cbae50bd6db1d521649092d66b"
+    },
+    {
+      "path": "learner/substrate/tests/test_substrate_cli.py",
+      "sha256": "71fdeff16a4a8143a67e53051f2459b2e0f29536514840b2ebd9f2eef1ad4c16"
+    },
+    {
+      "path": "learner/substrate/tests/test_ts_render.py",
+      "sha256": "5e8336469f1e02a0cd48f5a180fc7dd900e762bf6322a1fbec25254cf33cf9e0"
+    },
+    {
+      "path": "learner/substrate/tests/test_voxel_slice.py",
+      "sha256": "e70ae1c39854097b0b3f42cb630b25a6cda6fcefb8740b4f64d843816a2d8024"
+    },
+    {
+      "path": "learner/substrate/ts_render.py",
+      "sha256": "605b0cd50226d8de8027a66ea0f3b52fbc457cc1128e6f011ac89a19c4688b09"
+    }
+  ]
+}

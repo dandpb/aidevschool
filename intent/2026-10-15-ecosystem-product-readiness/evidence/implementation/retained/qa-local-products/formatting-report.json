@@ -1,0 +1,109 @@
+{
+  "observedAt": "2026-10-16T01:56:23.204Z",
+  "scope": "formatting only; no product runtime or browser execution",
+  "formatter": {
+    "executable": "rtk",
+    "argv": [
+      "proxy",
+      "biome",
+      "format",
+      "--write",
+      "--indent-style=space",
+      "--indent-width=2",
+      "--line-width=100",
+      "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/local-products-runtime-quest.mjs",
+      "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/local-products-runtime-school.mjs",
+      "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/local-products-runtime-zai.mjs",
+      "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/local-products-runtime.mjs"
+    ],
+    "exitCode": 0
+  },
+  "snapshotManifest": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-local-products/script-snapshots/pre-format-20261016T015603Z/manifest.json",
+  "launchSnapshotLimitation": "Launch-time script snapshots were not retained for earlier runs; especially C30 post-run ownership/signal instrumentation differs from the interrupted executed observer. These snapshots do not claim to repair that gap.",
+  "files": [
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/local-products-runtime-quest.mjs",
+      "beforeSnapshot": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-local-products/script-snapshots/pre-format-20261016T015603Z/local-products-runtime-quest.mjs",
+      "beforeSha256": "54e3a9252c0c41e3027ef54abcb33faa6199db94696b1fe937c2f485a34f0d01",
+      "afterSha256": "dbc161abb9d262a7857b82469d5e2a6baec130b7a9c62a17b0db21da10bffda2",
+      "lines": 322,
+      "astEquivalent": true,
+      "check": {
+        "executable": "rtk",
+        "argv": [
+          "proxy",
+          "node",
+          "--check",
+          "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/local-products-runtime-quest.mjs"
+        ],
+        "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool",
+        "exitCode": 0,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/local-products-runtime-school.mjs",
+      "beforeSnapshot": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-local-products/script-snapshots/pre-format-20261016T015603Z/local-products-runtime-school.mjs",
+      "beforeSha256": "edd2c98285c8b30bc6446d662d61b999adc4286cee79e72b1d887731da2a785c",
+      "afterSha256": "008e2e56638251f2a7028c43bf85740d5a45974c5f9e83cdc89f01ff1b32d8e6",
+      "lines": 210,
+      "astEquivalent": true,
+      "check": {
+        "executable": "rtk",
+        "argv": [
+          "proxy",
+          "node",
+          "--check",
+          "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/local-products-runtime-school.mjs"
+        ],
+        "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool",
+        "exitCode": 0,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/local-products-runtime-zai.mjs",
+      "beforeSnapshot": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-local-products/script-snapshots/pre-format-20261016T015603Z/local-products-runtime-zai.mjs",
+      "beforeSha256": "42a363a80cb9d73dcad7d7a7aa706e255ad9f0817629e529f9fee3af5c5bcccc",
+      "afterSha256": "664b61273bf5a1599cbcfcec97e19036ea3c6ddab98dd24055509b4d5d0bf3e0",
+      "lines": 372,
+      "astEquivalent": true,
+      "check": {
+        "executable": "rtk",
+        "argv": [
+          "proxy",
+          "node",
+          "--check",
+          "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/local-products-runtime-zai.mjs"
+        ],
+        "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool",
+        "exitCode": 0,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/local-products-runtime.mjs",
+      "beforeSnapshot": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-local-products/script-snapshots/pre-format-20261016T015603Z/local-products-runtime.mjs",
+      "beforeSha256": "2aa7bc2d244df1f67ffb7deda785a644f4440ef70aa386f13ddc4ee874fb0491",
+      "afterSha256": "4d1bc03bd5cd6bfe273f22e7a0dff0e196316cda8b8028055e55596873d96e55",
+      "lines": 348,
+      "astEquivalent": true,
+      "check": {
+        "executable": "rtk",
+        "argv": [
+          "proxy",
+          "node",
+          "--check",
+          "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/local-products-runtime.mjs"
+        ],
+        "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool",
+        "exitCode": 0,
+        "stdout": "",
+        "stderr": ""
+      }
+    }
+  ]
+}

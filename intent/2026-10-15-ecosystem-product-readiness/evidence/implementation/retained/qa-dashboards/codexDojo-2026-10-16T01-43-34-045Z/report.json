@@ -1,0 +1,675 @@
+{
+  "engineId": "codexDojo",
+  "caseName": "declared-use",
+  "status": "unverified",
+  "criterion": "C18",
+  "criteriaSource": ".checks/product-readiness-20261015.md",
+  "observedAt": "2026-10-16T01:43:35.639Z",
+  "producerContext": "readiness-dashboard-runtime-producer",
+  "verifierContext": null,
+  "sourceCommit": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+  "sourceFingerprint": "3303fb7e5051cb1a2477b85c723943f772ef7043c2e7fc2fccb70d162137003c",
+  "browserAvailability": "Browser plugin not available; regular installed engine Playwright per frontend-testing-debugging skill and project AGENTS",
+  "runtime": {
+    "node": "v22.23.2",
+    "playwright": "1.61.1",
+    "observerPid": 84551,
+    "observerParentPid": 84495,
+    "kind": "fresh local strict-port processes",
+    "viewport": {
+      "width": 1280,
+      "height": 800
+    },
+    "externalModelCalls": 0
+  },
+  "invocation": {
+    "argv": [
+      "/Users/danielbarreto/.hermes/node/bin/node",
+      "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/dashboard-runtime.mjs",
+      "codexDojo",
+      "declared-use"
+    ],
+    "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool"
+  },
+  "logDir": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/codexDojo-2026-10-16T01-43-34-045Z",
+  "mediaDir": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-34-045Z",
+  "assertions": [
+    {
+      "id": "C18-projection-next-action",
+      "mandatory": true,
+      "promiseSource": "plan.md#18; codexDojo README; generated learner projection",
+      "status": "pass",
+      "startedAt": "2026-10-16T01:43:40.702Z",
+      "observed": {
+        "activeUnit": "U2-key-value-store",
+        "reviews": [
+          "U0-sonda-rate-limiter-robustness",
+          "U2-key-value-store",
+          "P-001"
+        ],
+        "nextAction": "Avançar para o próximo ciclo",
+        "destination": "Ciclo operacional",
+        "page": {
+          "url": "http://127.0.0.1:52385/",
+          "title": "codexDojo",
+          "viewport": {
+            "width": 1280,
+            "height": 800
+          },
+          "body": "Pular para o conteúdo principal\nCD\ncodexDojo\nagent learning lab\nPainel\nLinux Lab\nAgentes\nCiclo\nRoadmap\nProjeto\n\nLOOP CONTÍNUO\n\nPequenos passos, evidência antes de avanço\n01\nDiagnosticar nível\n02\nEscolher conceito\n03\nCriar mini-projeto\n04\nImplementar versão 1\n05\nCriar testes\n06\nRodar métricas\n07\nRevisar código\n08\nRefatorar\n09\nComparar alternativa\n10\nRegistrar aprendizado\nMENTOR\n20% VALIDADO\nDiagnosticar nível\nEvidência exigida\ntentativa curta avaliada\nArtefato gerado\nperfil Dreyfus x Bloom\nConcluir etapa",
+          "aria": "- main:\n  - link \"Pular para o conteúdo principal\":\n    - /url: \"#main-content\"\n  - complementary \"Navegação principal\":\n    - strong: codexDojo\n    - text: agent learning lab\n    - navigation:\n      - button \"Ir para Painel\"\n      - button \"Ir para Linux Lab\"\n      - button \"Ir para Agentes\"\n      - button \"Ir para Ciclo\"\n      - button \"Ir para Roadmap\"\n      - button \"Ir para Projeto\"\n  - region \"Ciclo operacional\":\n    - paragraph: Loop contínuo\n    - heading \"Pequenos passos, evidência antes de avanço\" [level=2]\n    - 'button \"Etapa 1: Diagnosticar nível (concluído, atual)\"'\n    - 'button \"Etapa 2: Escolher conceito (concluído)\"'\n    - 'button \"Etapa 3: Criar mini-projeto (pendente)\"'\n    - 'button \"Etapa 4: Implementar versão 1 (pendente)\"'\n    - 'button \"Etapa 5: Criar testes (pendente)\"'\n    - 'button \"Etapa 6: Rodar métricas (pendente)\"'\n    - 'button \"Etapa 7: Revisar código (pendente)\"'\n    - 'button \"Etapa 8: Refatorar (pendente)\"'\n    - 'button \"Etapa 9: Comparar alternativa (pendente)\"'\n    - 'button \"Etapa 10: Registrar aprendizado (pendente)\"'\n    - article:\n      - text: Mentor 20% validado\n      - heading \"Diagnosticar nível\" [level=3]\n      - term: Evidência exigida\n      - definition: tentativa curta avaliada\n      - term: Artefato gerado\n      - definition: perfil Dreyfus x Bloom\n      - 'button \"Concluir etapa: Diagnosticar nível\"'",
+          "frameworkOverlayCount": 0
+        }
+      },
+      "endedAt": "2026-10-16T01:43:43.396Z"
+    },
+    {
+      "id": "C18-real-clipboard-prompt",
+      "mandatory": true,
+      "promiseSource": "qualification-matrix.md#codexDojo; minimaxDojo/config/dashboard.yaml",
+      "status": "pass",
+      "startedAt": "2026-10-16T01:43:43.396Z",
+      "observed": {
+        "actualClipboardRead": true,
+        "mockedClipboard": false,
+        "expectedSource": "engines/minimaxDojo/config/dashboard.yaml",
+        "copiedSha256": "d179858dc54bccdb82450037d4ca5e92ac2110db2a835623e6cd6e79f67c7caf",
+        "page": {
+          "url": "http://127.0.0.1:52385/",
+          "title": "codexDojo",
+          "viewport": {
+            "width": 1280,
+            "height": 800
+          },
+          "body": "Pular para o conteúdo principal\nCD\ncodexDojo\nagent learning lab\nPainel\nLinux Lab\nAgentes\nCiclo\nRoadmap\nProjeto\n\nEQUIPE MULTIAGENTE\n\nResponsabilidades claras, saídas verificáveis\n\nA superfície de produto expõe 10 agentes para o aprendiz. O tutor core expande essa frente em 14 sub-agentes especializados para execução longa, memória e verificação adversarial.\n\nPRODUTO\n10\nagentes user-facing\nTUTOR CORE\n14\nsub-agentes especializados\nMentor\n\nAdapta explicação e desafio ao nível atual do aprendiz.\n\nEXPANDE PARA: MAESTRO, SONDA, SOCRATES\nCurriculo\n\nMantém trilha progressiva, pré-requisitos e unidades desbloqueadas.\n\nEXPANDE PARA: CARTOGRAFO, MESTRE_CONTEUDO, MNEME\nArquiteto\n\nPropõe arquitetura, alternativas rejeitadas e trade-offs verificáveis.\n\nEXPANDE PARA: CARTOGRAFO, GALILEU\nImplementador\n\nConstrói o menor incremento correto com testes e instruções de execução.\n\nEXPANDE PARA: MESTRE_CONTEUDO, MAESTRO\nRevisor de Codigo\n\nRevisa legibilidade, segurança, performance, manutenção e riscos.\n\nEXPANDE PARA: CRITICO, PROMETOR\nTestes\n\nConverte requisitos em testes unitários, integração, regressão e benchmark.\n\nEXPANDE PARA: PROMETOR, GALILEU\nMetricas\n\nMede qualidade, performance, custo, complexidade e progresso de aprendizado.\n\nEXPANDE PARA: ATENA, GALILEU\nDevOps\n\nEnsina versionamento, CI/CD, containers, deploy, observabilidade e rollback.\n\nEXPANDE PARA: CRONOS, GALILEU\nPesquisador\n\nPesquisa fontes primárias, melhores práticas, bibliotecas e experimentos.\n\nEXPANDE PARA: CARTOGRAFO, GALILEU\nMemoria\n\nPreserva histórico, decisões, erros frequentes, próximos passos e revisão espaçada.\n\nEXPANDE PARA: MNEMOSYNE, OUROBOROS, MNEME\n\nTUTOR CORE\n\n14 papéis operacionais\nMAESTRO\nLeader R/A da unidade inteira\nCRONOS\nLeader de scheduling\nSONDA\nWorker pedagógico de diagnóstico curto\nCARTÓGRAFO\nWorker pedagógico de planejamento de trilha\nMESTRE-CONTEÚDO\nWorker gerador de exercícios\nSÓCRATES\nTutor socrático anti-dependência\nMNEME\nWorker pedagógico de repetição espaçada\nPROMĘTOR\nVerifier adversarial\nCRÍTICO\nRevisor pedagógico\nGALILEU\nLaboratório + arquitetura\nATENA\nPainel de métricas\nMNEMOSYNE\nMemory keeper\nOUROBOROS\nLoop de auto-melhoria contínua\nSÊNECA\nPortão humano no loop\nLEADER\nCopiado\nMAESTRO\n\nDecompor objetivo em trilha, unidades e exercícios com DoD verificável.\n\nENTRADAS\nlearner_profile.md\ntrail.md\nunit_spec.md\nSAÍDAS\nunit_spec.md\nverdict_request.md\ncycle_report.md\nGATE\n\nNunca avança sem veredito PASS do PROMĘTOR.\n\nCoordene a máquina de estados, isole subtarefas e só avance com evidência executável.",
+          "aria": "- main:\n  - link \"Pular para o conteúdo principal\":\n    - /url: \"#main-content\"\n  - complementary \"Navegação principal\":\n    - strong: codexDojo\n    - text: agent learning lab\n    - navigation:\n      - button \"Ir para Painel\"\n      - button \"Ir para Linux Lab\"\n      - button \"Ir para Agentes\"\n      - button \"Ir para Ciclo\"\n      - button \"Ir para Roadmap\"\n      - button \"Ir para Projeto\"\n  - region \"Agentes do codexDojo\":\n    - paragraph: Equipe multiagente\n    - heading \"Responsabilidades claras, saídas verificáveis\" [level=2]\n    - paragraph: A superfície de produto expõe 10 agentes para o aprendiz. O tutor core expande essa frente em 14 sub-agentes especializados para execução longa, memória e verificação adversarial.\n    - article \"Camadas de agentes\":\n      - text: Produto\n      - strong: \"10\"\n      - text: agentes user-facing Tutor core\n      - strong: \"14\"\n      - text: sub-agentes especializados\n      - strong: Mentor\n      - paragraph: Adapta explicação e desafio ao nível atual do aprendiz.\n      - text: \"Expande para: maestro, sonda, socrates\"\n      - strong: Curriculo\n      - paragraph: Mantém trilha progressiva, pré-requisitos e unidades desbloqueadas.\n      - text: \"Expande para: cartografo, mestre_conteudo, mneme\"\n      - strong: Arquiteto\n      - paragraph: Propõe arquitetura, alternativas rejeitadas e trade-offs verificáveis.\n      - text: \"Expande para: cartografo, galileu\"\n      - strong: Implementador\n      - paragraph: Constrói o menor incremento correto com testes e instruções de execução.\n      - text: \"Expande para: mestre_conteudo, maestro\"\n      - strong: Revisor de Codigo\n      - paragraph: Revisa legibilidade, segurança, performance, manutenção e riscos.\n      - text: \"Expande para: critico, prometor\"\n      - strong: Testes\n      - paragraph: Converte requisitos em testes unitários, integração, regressão e benchmark.\n      - text: \"Expande para: prometor, galileu\"\n      - strong: Metricas\n      - paragraph: Mede qualidade, performance, custo, complexidade e progresso de aprendizado.\n      - text: \"Expande para: atena, galileu\"\n      - strong: DevOps\n      - paragraph: Ensina versionamento, CI/CD, containers, deploy, observabilidade e rollback.\n      - text: \"Expande para: cronos, galileu\"\n      - strong: Pesquisador\n      - paragraph: Pesquisa fontes primárias, melhores práticas, bibliotecas e experimentos.\n      - text: \"Expande para: cartografo, galileu\"\n      - strong: Memoria\n      - paragraph: Preserva histórico, decisões, erros frequentes, próximos passos e revisão espaçada.\n      - text: \"Expande para: mnemosyne, ouroboros, mneme\"\n    - paragraph: Tutor core\n    - heading \"14 papéis operacionais\" [level=3]\n    - 'button \"Agente 1: MAESTRO (Leader R/A da unidade inteira), atual\" [pressed]'\n    - 'button \"Agente 2: CRONOS (Leader de scheduling)\"'\n    - 'button \"Agente 3: SONDA (Worker pedagógico de diagnóstico curto)\"'\n    - 'button \"Agente 4: CARTÓGRAFO (Worker pedagógico de planejamento de trilha)\"'\n    - 'button \"Agente 5: MESTRE-CONTEÚDO (Worker gerador de exercícios)\"'\n    - 'button \"Agente 6: SÓCRATES (Tutor socrático anti-dependência)\"'\n    - 'button \"Agente 7: MNEME (Worker pedagógico de repetição espaçada)\"'\n    - 'button \"Agente 8: PROMĘTOR (Verifier adversarial)\"'\n    - 'button \"Agente 9: CRÍTICO (Revisor pedagógico)\"'\n    - 'button \"Agente 10: GALILEU (Laboratório + arquitetura)\"'\n    - 'button \"Agente 11: ATENA (Painel de métricas)\"'\n    - 'button \"Agente 12: MNEMOSYNE (Memory keeper)\"'\n    - 'button \"Agente 13: OUROBOROS (Loop de auto-melhoria contínua)\"'\n    - 'button \"Agente 14: SÊNECA (Portão humano no loop)\"'\n    - article:\n      - text: leader\n      - button \"Prompt de MAESTRO copiado\"\n      - heading \"MAESTRO\" [level=3]\n      - paragraph: Decompor objetivo em trilha, unidades e exercícios com DoD verificável.\n      - heading \"Entradas\" [level=4]\n      - list:\n        - listitem: learner_profile.md\n        - listitem: trail.md\n        - listitem: unit_spec.md\n      - heading \"Saídas\" [level=4]\n      - list:\n        - listitem: unit_spec.md\n        - listitem: verdict_request.md\n        - listitem: cycle_report.md\n      - text: Gate\n      - paragraph: Nunca avança sem veredito PASS do PROMĘTOR.\n      - code: Coordene a máquina de estados, isole subtarefas e só avance com evidência executável.",
+          "frameworkOverlayCount": 0
+        }
+      },
+      "endedAt": "2026-10-16T01:43:45.129Z"
+    },
+    {
+      "id": "C18-configured-actual-os-destination",
+      "mandatory": true,
+      "promiseSource": "codexDojo/AGENTS.md#OS bridge; C18",
+      "status": "pass",
+      "startedAt": "2026-10-16T01:43:45.129Z",
+      "observed": {
+        "configuredOrigin": "http://127.0.0.1:52372",
+        "ownOsPid": 84750,
+        "noMissionExecuted": true,
+        "osPage": {
+          "url": "http://127.0.0.1:52372/onboarding",
+          "title": "codexDojo OS",
+          "viewport": {
+            "width": 1280,
+            "height": 800
+          },
+          "body": "AI DevSchool\nescolha sua trilha\n\nSEU PRIMEIRO PASSO\n\nO que você quer conseguir fazer com IA?\n\nLeva menos de um minuto. Escolha IA Prática ou Dev. Sem conta; o progresso fica neste dispositivo.\n\nObjetivo\nUsar IA melhor no trabalho\nEntender respostas e riscos\nConstruir sistemas com IA\nContexto\nTrabalho\nEstudos\nProjeto pessoal\nConfiança atual\nEstou começando\nJá experimentei algumas vezes\nUso com frequência\nRECOMENDADA PARA COMEÇAR\nIA Prática\nMicrolições no-code hospedadas. Conclusão local neste dispositivo, nunca domínio.\nPARA PROGRAMADORES\nDev\nTrilho guiado: WAREHOUSE → WORMHOLE → RELAY STATION. O Engine Hub abre as outras simulações.\n\nSugerimos IA Prática. A trilha Dev permanece clicável.\n\nEntrar na escola\n\nSem conta: o progresso fica neste dispositivo. Como usamos dados anônimos de uso.",
+          "aria": "- main:\n  - strong: AI DevSchool\n  - text: escolha sua trilha\n  - region \"O que você quer conseguir fazer com IA?\":\n    - paragraph: Seu primeiro passo\n    - heading \"O que você quer conseguir fazer com IA?\" [level=1]\n    - paragraph: Leva menos de um minuto. Escolha IA Prática ou Dev. Sem conta; o progresso fica neste dispositivo.\n    - text: Objetivo\n    - combobox \"Objetivo\":\n      - option \"Usar IA melhor no trabalho\" [selected]\n      - option \"Entender respostas e riscos\"\n      - option \"Construir sistemas com IA\"\n    - text: Contexto\n    - combobox \"Contexto\":\n      - option \"Trabalho\" [selected]\n      - option \"Estudos\"\n      - option \"Projeto pessoal\"\n    - text: Confiança atual\n    - combobox \"Confiança atual\":\n      - option \"Estou começando\" [selected]\n      - option \"Já experimentei algumas vezes\"\n      - option \"Uso com frequência\"\n    - radiogroup \"Trilha\":\n      - button \"Recomendada para começar IA Prática Microlições no-code hospedadas. Conclusão local neste dispositivo, nunca domínio.\" [pressed]:\n        - text: Recomendada para começar\n        - strong: IA Prática\n        - text: Microlições no-code hospedadas. Conclusão local neste dispositivo, nunca domínio.\n      - 'button \"Para programadores Dev Trilho guiado: WAREHOUSE → WORMHOLE → RELAY STATION. O Engine Hub abre as outras simulações.\"':\n        - text: Para programadores\n        - strong: Dev\n        - text: \"Trilho guiado: WAREHOUSE → WORMHOLE → RELAY STATION. O Engine Hub abre as outras simulações.\"\n    - status: Sugerimos IA Prática. A trilha Dev permanece clicável.\n    - button \"Entrar na escola\"\n    - paragraph:\n      - text: \"Sem conta: o progresso fica neste dispositivo.\"\n      - link \"Como usamos dados anônimos de uso.\":\n        - /url: /privacidade.html",
+          "frameworkOverlayCount": 0
+        },
+        "bridgePage": {
+          "url": "http://127.0.0.1:52385/",
+          "title": "codexDojo",
+          "viewport": {
+            "width": 1280,
+            "height": 800
+          },
+          "body": "Pular para o conteúdo principal\nCD\ncodexDojo\nagent learning lab\nPainel\nLinux Lab\nAgentes\nCiclo\nRoadmap\nProjeto\n\nCODEXDOJO OS\n\nLinux Lab\n\nFull desktop learning workspace lives in the OS prototype. This dashboard only launches it.\n\nWorkspace completo\n\nContinue no engine de desktop com o mesmo snapshot canônico do learner.\n\nAbrir codexDojo OS\n(abre em nova aba)",
+          "aria": "- main:\n  - link \"Pular para o conteúdo principal\":\n    - /url: \"#main-content\"\n  - complementary \"Navegação principal\":\n    - strong: codexDojo\n    - text: agent learning lab\n    - navigation:\n      - button \"Ir para Painel\"\n      - button \"Ir para Linux Lab\"\n      - button \"Ir para Agentes\"\n      - button \"Ir para Ciclo\"\n      - button \"Ir para Roadmap\"\n      - button \"Ir para Projeto\"\n  - region \"Linux Lab\":\n    - paragraph: codexDojo OS\n    - heading \"Linux Lab\" [level=1]\n    - paragraph: Full desktop learning workspace lives in the OS prototype. This dashboard only launches it.\n    - complementary \"codexDojo OS workspace\":\n      - strong: Workspace completo\n      - paragraph: Continue no engine de desktop com o mesmo snapshot canônico do learner.\n      - link \"Abrir codexDojo OS (abre em nova aba)\":\n        - /url: http://127.0.0.1:52372",
+          "frameworkOverlayCount": 0
+        }
+      },
+      "endedAt": "2026-10-16T01:44:02.672Z"
+    },
+    {
+      "id": "C18-configured-page-health",
+      "mandatory": true,
+      "promiseSource": "frontend-testing-debugging; C18",
+      "status": "pass",
+      "startedAt": "2026-10-16T01:44:02.672Z",
+      "observed": {
+        "url": "http://127.0.0.1:52385/",
+        "title": "codexDojo",
+        "nonblank": true,
+        "frameworkOverlay": false,
+        "appErrors": 0,
+        "warnings": []
+      },
+      "endedAt": "2026-10-16T01:44:02.696Z"
+    },
+    {
+      "id": "C18-absent-production-url-boundary",
+      "mandatory": true,
+      "promiseSource": "codexDojo/AGENTS.md: production has no implicit remote URL; C18",
+      "status": "pass",
+      "startedAt": "2026-10-16T01:44:08.080Z",
+      "observed": {
+        "buildMode": "production",
+        "VITE_CODEXDOJO_OS_URL": "unset in sanitized child environment",
+        "noLaunchAnchor": true,
+        "page": {
+          "url": "http://127.0.0.1:52610/",
+          "title": "codexDojo",
+          "viewport": {
+            "width": 1280,
+            "height": 800
+          },
+          "body": "Pular para o conteúdo principal\nCD\ncodexDojo\nagent learning lab\nPainel\nLinux Lab\nAgentes\nCiclo\nRoadmap\nProjeto\n\nCODEXDOJO OS\n\nLinux Lab\n\nFull desktop learning workspace lives in the OS prototype. This dashboard only launches it.\n\nWorkspace completo\n\nContinue no engine de desktop com o mesmo snapshot canônico do learner.\n\nConfigure VITE_CODEXDOJO_OS_URL para habilitar o workspace completo.",
+          "aria": "- main:\n  - link \"Pular para o conteúdo principal\":\n    - /url: \"#main-content\"\n  - complementary \"Navegação principal\":\n    - strong: codexDojo\n    - text: agent learning lab\n    - navigation:\n      - button \"Ir para Painel\"\n      - button \"Ir para Linux Lab\"\n      - button \"Ir para Agentes\"\n      - button \"Ir para Ciclo\"\n      - button \"Ir para Roadmap\"\n      - button \"Ir para Projeto\"\n  - region \"Linux Lab\":\n    - paragraph: codexDojo OS\n    - heading \"Linux Lab\" [level=1]\n    - paragraph: Full desktop learning workspace lives in the OS prototype. This dashboard only launches it.\n    - complementary \"codexDojo OS workspace\":\n      - strong: Workspace completo\n      - paragraph: Continue no engine de desktop com o mesmo snapshot canônico do learner.\n      - status:\n        - text: Configure\n        - code: VITE_CODEXDOJO_OS_URL\n        - text: para habilitar o workspace completo.",
+          "frameworkOverlayCount": 0
+        },
+        "health": {
+          "url": "http://127.0.0.1:52610/",
+          "title": "codexDojo",
+          "nonblank": true,
+          "frameworkOverlay": false,
+          "appErrors": 0,
+          "warnings": []
+        }
+      },
+      "endedAt": "2026-10-16T01:44:08.732Z"
+    },
+    {
+      "id": "C18-learner-preserved",
+      "mandatory": true,
+      "promiseSource": "qualification-matrix.md#Protocolo comum; C18/C20/C23",
+      "status": "pass",
+      "observed": {
+        "originalCheckoutAndWorktreeCanonicalFilesUnchanged": true
+      }
+    },
+    {
+      "id": "C18-independent-semantic-image-judgment",
+      "mandatory": true,
+      "promiseSource": "AGENTS.md#Browser-test evidence; engines/shared/playwright/README.md",
+      "status": "unverified",
+      "missingPrerequisites": [
+        "Separate verifier context",
+        "Authorized TypeSafe/Jev credential and semantic judgment receipt"
+      ],
+      "detail": "Functional observations and positive captures are producer evidence. No semantic image judgment or readiness grant is asserted."
+    }
+  ],
+  "commands": [
+    {
+      "executable": "rtk",
+      "argv": [
+        "proxy",
+        "npm",
+        "run",
+        "dev",
+        "--",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "52372",
+        "--strictPort"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexdojo-os-prototype",
+      "envOverrides": {
+        "VITE_LOCAL_ENGINE_BRIDGE": "false",
+        "VITE_ENGINE_LAB_ENABLED": "false"
+      },
+      "startedAt": "2026-10-16T01:43:36.652Z",
+      "pid": 84750,
+      "exitCode": null,
+      "signal": "SIGTERM",
+      "endedAt": "2026-10-16T01:44:06.490Z",
+      "stdout": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/codexDojo-2026-10-16T01-43-34-045Z/command-0-stdout.log",
+      "stderr": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/codexDojo-2026-10-16T01-43-34-045Z/command-0-stderr.log"
+    },
+    {
+      "executable": "rtk",
+      "argv": [
+        "proxy",
+        "pnpm",
+        "run",
+        "dev",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "52385",
+        "--strictPort"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo",
+      "envOverrides": {
+        "VITE_CODEXDOJO_OS_URL": "http://127.0.0.1:52372"
+      },
+      "startedAt": "2026-10-16T01:43:38.100Z",
+      "pid": 84842,
+      "exitCode": null,
+      "signal": "SIGTERM",
+      "endedAt": "2026-10-16T01:44:06.463Z",
+      "stdout": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/codexDojo-2026-10-16T01-43-34-045Z/command-1-stdout.log",
+      "stderr": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/codexDojo-2026-10-16T01-43-34-045Z/command-1-stderr.log"
+    },
+    {
+      "executable": "rtk",
+      "argv": [
+        "proxy",
+        "pnpm",
+        "exec",
+        "vite",
+        "build",
+        "--outDir",
+        "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-34-045Z/production-no-url/dist",
+        "--emptyOutDir"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo",
+      "envOverrides": {},
+      "startedAt": "2026-10-16T01:44:06.491Z",
+      "pid": 86602,
+      "exitCode": 0,
+      "signal": null,
+      "endedAt": "2026-10-16T01:44:07.144Z",
+      "stdout": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/codexDojo-2026-10-16T01-43-34-045Z/command-2-stdout.log",
+      "stderr": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/codexDojo-2026-10-16T01-43-34-045Z/command-2-stderr.log"
+    },
+    {
+      "executable": "rtk",
+      "argv": [
+        "proxy",
+        "pnpm",
+        "run",
+        "preview",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "52610",
+        "--strictPort",
+        "--outDir",
+        "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-34-045Z/production-no-url/dist"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo",
+      "envOverrides": {},
+      "startedAt": "2026-10-16T01:44:07.145Z",
+      "pid": 86671,
+      "exitCode": null,
+      "signal": "SIGTERM",
+      "endedAt": "2026-10-16T01:44:08.904Z",
+      "stdout": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/codexDojo-2026-10-16T01-43-34-045Z/command-3-stdout.log",
+      "stderr": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/codexDojo-2026-10-16T01-43-34-045Z/command-3-stderr.log"
+    }
+  ],
+  "evidenceRefs": [
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/codexDojo-2026-10-16T01-43-34-045Z/command-0-stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/codexDojo-2026-10-16T01-43-34-045Z/command-0-stdout.log",
+      "sha256": "62c90924d08e7055131b09cc5625dbea3ed434687a373ac35d1da1a5617d9580"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/codexDojo-2026-10-16T01-43-34-045Z/command-1-stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/codexDojo-2026-10-16T01-43-34-045Z/command-1-stdout.log",
+      "sha256": "39d599ffee79193f9b9a6ba7181e6225b38f25242bf1e3ca13fd48a4c0e86350"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/codexDojo-2026-10-16T01-43-34-045Z/command-2-stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/codexDojo-2026-10-16T01-43-34-045Z/command-2-stdout.log",
+      "sha256": "7a669bcc9f97244525c5bd41816a7e91977879832e810772550580205cb9b2c3"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/codexDojo-2026-10-16T01-43-34-045Z/command-3-stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/codexDojo-2026-10-16T01-43-34-045Z/command-3-stdout.log",
+      "sha256": "6e006c9a067ae12a293663152c7e7708c20484e58a73509a02b5e2fa3c5e64b1"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-34-045Z/configured-bridge/actual-os-destination.json",
+      "sha256": "31d73a1c464686175e1d7500bf101ef70bf178d09377161940880198616ecf2a"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-34-045Z/configured-bridge/actual-os-destination.png",
+      "sha256": "39009ad312d2244707b1cd77c70d43e6954dcdab4c9c8a2b900efac453ed73f8"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-34-045Z/configured-bridge/configured-bridge.json",
+      "sha256": "38cd8595c906b28252191f9086ca7d49c8c339b3a27dc03c8c15dbab8160dbfa"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-34-045Z/configured-bridge/configured-bridge.png",
+      "sha256": "8ee45fcbc7d2fa2e315e99be545a4bd9eb1c4a50c6fc5bd5092cfb6d2f872d70"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-34-045Z/configured-bridge/console.json",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-34-045Z/configured-bridge/copied-prompt.json",
+      "sha256": "773a3a7e4cf78cfed0dfa5dac9f61009eebe492cf2e27d61e98e5a4533443b2c"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-34-045Z/configured-bridge/copied-prompt.png",
+      "sha256": "1a217d23e588139022b613089e19af2f6341f055415e53839dcc847759036c44"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-34-045Z/configured-bridge/network.json",
+      "sha256": "5981b363cf87d2e939549dd30c19a5f3c7afac8d5d2bcf53fcc49fa98dbb070a"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-34-045Z/configured-bridge/next-action.json",
+      "sha256": "bebcf708a9edaf28b32f3f721081dedbb63121ed3b757afba824a24c505e580c"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-34-045Z/configured-bridge/next-action.png",
+      "sha256": "911b34ddad94c4b27a77364339159d53c0aa7f8e6a0dce5feda31e36d0c201a9"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-34-045Z/configured-bridge/page@338fc92a7642f197c3371cbf751f5a18.webm",
+      "sha256": "5d87f8874dddf2c6038723363788bb4d5f9007d8663888012e0e2f6cf6c06158"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-34-045Z/configured-bridge/page@e8a1e8de6f68b16aa0beee2e8177e3f0.webm",
+      "sha256": "dc98611e74b03610accc20cbc1872a2de35ca93e4bd39f357a9e550721f1c6b5"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-34-045Z/production-no-url/console.json",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-34-045Z/production-no-url/dist/assets/index-D-W_Y8N0.js",
+      "sha256": "c2f974dc44e0ce7f9a179a75dd81422271ca02746ca903286ed0047920ecdbf1"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-34-045Z/production-no-url/dist/assets/index-DHB_ZyMJ.css",
+      "sha256": "93d0c49b4a90806cfc2990a1d0e779fa712d06ab98df839eede56e6d0766539b"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-34-045Z/production-no-url/dist/index.html",
+      "sha256": "2b39be31e0522206827a2b40d723d6a7163e274f17952f63c7bb60b752a73ea8"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-34-045Z/production-no-url/network.json",
+      "sha256": "a738d9be060c8d5e305b714ab5552ccc2083fac8d1dc998a13db977b6f1094a0"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-34-045Z/production-no-url/page@3f284410a0d537da265e4410aefdbb69.webm",
+      "sha256": "a3fd374484c5fffb2d03171823448b456c997ae9f4f8fcf67b15729a70296e37"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-34-045Z/production-no-url/unconfigured-bridge.json",
+      "sha256": "8341cddd21bf414991ab927f2b966801f50dea6839801ef87ab40b794fda275e"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-34-045Z/production-no-url/unconfigured-bridge.png",
+      "sha256": "7f4da6141c6f8281aa73d7ea1a563bb72d7247b54f05790e8ddb82a1660517c3"
+    }
+  ],
+  "limitations": [
+    "No TypeSafe/Jev key was supplied. Independent semantic judgment of captured images remains an explicit prerequisite; no global engineReady claim is made."
+  ],
+  "sourceFiles": [
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/README.md",
+      "sha256": "e6ba0c706d79506a9fc8666a38d4dda777adcb3db95ed767c4c214899c99ec44"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/AGENTS.md",
+      "sha256": "769d6ac5e2a32520ac6f369768468db846dd77d442c786bd8e2c3deda8e4761f"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/DESIGN.md",
+      "sha256": "a3b4d1277d90703f83a709b04ab622bf4a2cbe69d37cf7b0f25f660b6194d7f9"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/package.json",
+      "sha256": "83cd8d4dbcae0c0743c5a612c3c0cf3f51567abebf51bba2bf15f8e8655bdc74"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/src/app.ts",
+      "sha256": "34e46f8d44c29e3f22c31a5d792ed261be0b0c7470a2dabcbf69b0897d32299a"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/src/data/learner.ts",
+      "sha256": "894a7ea824611d0e77361ebc7633501baae7a97a1d2d158a47ba85614a72ef9f"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/src/data/agents.ts",
+      "sha256": "f82933245fff6cf61b1b79f8e2ab1b084118f00755aa50911a6be9a3f0dacab0"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/src/data/osEngine.ts",
+      "sha256": "34e6a9eaea4ae07df53294c5820a8a1ef37d2a43b913b2165f1049b8cb7dda9d"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/src/render/overview.ts",
+      "sha256": "448facb3c6cf1d478c53c6223befc98d07faa89ed7fbac260e060fab9f721383"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/src/render/learner.ts",
+      "sha256": "dfeefb5bf005e5d7592a8ac13e10376766e48be217340469cf5edfd1830a2f46"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/src/render/agents.ts",
+      "sha256": "3802b1192e21c3da8a82efde27de2f55494e64aa1db15a8453686de83ab9fca4"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/src/render/events.ts",
+      "sha256": "8e3017af8a22470d974d138466ce2f7c0606cc68228e52d84ee16db45794dbc9"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/src/linuxLab/render.ts",
+      "sha256": "299fb255e997d92934833a3395029a8121add69aea3dddce33c52a897d67eab1"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.checks/product-readiness-20261015.md",
+      "sha256": "52b0f861cb81849237d09e6cb98ae0c8c154fd09d34325a590d0b45f34ae6c56"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/plan.md",
+      "sha256": "aaa184768897b4863b6cfbc8e36b2513e3212bb02ea496e0f19590a49887af0e"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/design.md",
+      "sha256": "eab37dc1d6f639f358f5e27e6d07719585e0fe1badecfb180b179c8836d3f256"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/qualification-matrix.md",
+      "sha256": "0e9448e46c26d8075831b5215d609bab38a4d052567b04f5e99251019b5f2b35"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/docs/product-readiness/inventory.yaml",
+      "sha256": "9a43d6462ae87239c7c780f0ecdf38f39f9c63030dbf32aae4354472291b7811"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/docs/product-readiness/student-guide.md",
+      "sha256": "27d62eab38efabe9296c5d4bc0a9b44889b78653b3ef27b0ce9d3b4c084fd606"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/docs/product-readiness/facilitator-guide.md",
+      "sha256": "a6d858ccc19ea9afd136da62523b18e617b2eabe70506e22ad34887d407a069a"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/dashboard-runtime.mjs",
+      "sha256": "c21035f43f8d7cec9c43391e5a188ddbb0e2f199f8086b01b2e2eb2f38331543"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/minimaxDojo/config/dashboard.yaml",
+      "sha256": "38934bf6d799bc2e64df0bb8f3719c438b734caf604784c9f20a84952aad9ae1"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexdojo-os-prototype/package.json",
+      "sha256": "71714a477f6b7372454416ccd383c10bd30c2dc3ff0da2fc3ea8a826fabd3eab"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexdojo-os-prototype/index.html",
+      "sha256": "47fe2414826610d1ffe62ac604b6a055f39ce508522df46a7a7692436c03436e"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexdojo-os-prototype/src/App.tsx",
+      "sha256": "5a2fd178ed46469d17abccedb683a67965b01e69fa0ef14f2f26a387ee2d2dbe"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexdojo-os-prototype/AGENTS.md",
+      "sha256": "31bd27335bb5330e99ba8e03d7b5cc4075bacb0b11b013aa2e7856bb6c2a586b"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexdojo-os-prototype/DESIGN.md",
+      "sha256": "c4ca4b04c4a42265b82b2ce3ee526a747713c2aefa5c31767710fa483daa3c33"
+    }
+  ],
+  "evidencePolicy": {
+    "source": {
+      "path": "/Users/danielbarreto/Development/aidevschool/engines/shared/playwright/base.config.ts",
+      "sha256": "5519ac81eac5d277c939da29e816130dd614bf18009a9200263aa9014ae525a7"
+    },
+    "importedOrPromoted": false,
+    "screenshot": "on",
+    "video": "on",
+    "trace": "retain-on-failure",
+    "outputDir": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-34-045Z"
+  },
+  "stateBefore": {
+    "worktree": {
+      "root": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/",
+      "files": [
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/learning_state.yaml",
+          "sha256": "36419ae44e755a9bd8bd049b14d0dee03d8b5937e577285f67ffe730733735e2"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/learner_profile.md",
+          "sha256": "f32b2cf779dab2d2a88057838f0172440e8ba5e5ae8874733ae8609f01653183"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/pitfalls.md",
+          "sha256": "c63fe93060cdc58d97696cad549cf8af2899fd99ca50c94fe6e6fc2d1d0f7405"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/journal.md",
+          "sha256": "60aa71fddacbff585358c8376e0ead77612a4248ab0f1700301c9dc39397ab6f"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/pipeline_status.yaml",
+          "sha256": "668ac80145de042c0bd78dd4210ceccf1dc0ad932770eb4a03f2fd6d886f169a"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/pipeline_status.md",
+          "sha256": "a8fcbcb603f68ddd03ac7f3e6742c5580dae6194b11bd112206a7d7033188b54"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/predictions.yaml",
+          "sha256": "97f010c12e57942419a2a9326f29df792c5039aca3e1c779ed1508a67124eb37"
+        }
+      ],
+      "digest": "0e8e49b105ded1015b28caecd6968df31a5223a17104c2768c262aa8647192b6"
+    },
+    "originalCheckout": {
+      "root": "/Users/danielbarreto/Development/aidevschool",
+      "files": [
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/learning_state.yaml",
+          "sha256": "36419ae44e755a9bd8bd049b14d0dee03d8b5937e577285f67ffe730733735e2"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/learner_profile.md",
+          "sha256": "f32b2cf779dab2d2a88057838f0172440e8ba5e5ae8874733ae8609f01653183"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/pitfalls.md",
+          "sha256": "c63fe93060cdc58d97696cad549cf8af2899fd99ca50c94fe6e6fc2d1d0f7405"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/journal.md",
+          "sha256": "60aa71fddacbff585358c8376e0ead77612a4248ab0f1700301c9dc39397ab6f"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/pipeline_status.yaml",
+          "sha256": "668ac80145de042c0bd78dd4210ceccf1dc0ad932770eb4a03f2fd6d886f169a"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/pipeline_status.md",
+          "sha256": "a8fcbcb603f68ddd03ac7f3e6742c5580dae6194b11bd112206a7d7033188b54"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/predictions.yaml",
+          "sha256": "97f010c12e57942419a2a9326f29df792c5039aca3e1c779ed1508a67124eb37"
+        }
+      ],
+      "digest": "e2df008696e860ba89828c06958b7998b4f9248f52edd1c24169437d3b98a4d2"
+    }
+  },
+  "stateAfter": {
+    "worktree": {
+      "root": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/",
+      "files": [
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/learning_state.yaml",
+          "sha256": "36419ae44e755a9bd8bd049b14d0dee03d8b5937e577285f67ffe730733735e2"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/learner_profile.md",
+          "sha256": "f32b2cf779dab2d2a88057838f0172440e8ba5e5ae8874733ae8609f01653183"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/pitfalls.md",
+          "sha256": "c63fe93060cdc58d97696cad549cf8af2899fd99ca50c94fe6e6fc2d1d0f7405"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/journal.md",
+          "sha256": "60aa71fddacbff585358c8376e0ead77612a4248ab0f1700301c9dc39397ab6f"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/pipeline_status.yaml",
+          "sha256": "668ac80145de042c0bd78dd4210ceccf1dc0ad932770eb4a03f2fd6d886f169a"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/pipeline_status.md",
+          "sha256": "a8fcbcb603f68ddd03ac7f3e6742c5580dae6194b11bd112206a7d7033188b54"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/predictions.yaml",
+          "sha256": "97f010c12e57942419a2a9326f29df792c5039aca3e1c779ed1508a67124eb37"
+        }
+      ],
+      "digest": "0e8e49b105ded1015b28caecd6968df31a5223a17104c2768c262aa8647192b6"
+    },
+    "originalCheckout": {
+      "root": "/Users/danielbarreto/Development/aidevschool",
+      "files": [
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/learning_state.yaml",
+          "sha256": "36419ae44e755a9bd8bd049b14d0dee03d8b5937e577285f67ffe730733735e2"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/learner_profile.md",
+          "sha256": "f32b2cf779dab2d2a88057838f0172440e8ba5e5ae8874733ae8609f01653183"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/pitfalls.md",
+          "sha256": "c63fe93060cdc58d97696cad549cf8af2899fd99ca50c94fe6e6fc2d1d0f7405"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/journal.md",
+          "sha256": "60aa71fddacbff585358c8376e0ead77612a4248ab0f1700301c9dc39397ab6f"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/pipeline_status.yaml",
+          "sha256": "668ac80145de042c0bd78dd4210ceccf1dc0ad932770eb4a03f2fd6d886f169a"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/pipeline_status.md",
+          "sha256": "a8fcbcb603f68ddd03ac7f3e6742c5580dae6194b11bd112206a7d7033188b54"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/predictions.yaml",
+          "sha256": "97f010c12e57942419a2a9326f29df792c5039aca3e1c779ed1508a67124eb37"
+        }
+      ],
+      "digest": "e2df008696e860ba89828c06958b7998b4f9248f52edd1c24169437d3b98a4d2"
+    }
+  },
+  "endedAt": "2026-10-16T01:44:23.285Z"
+}

@@ -1,0 +1,177 @@
+{
+  "schemaVersion": 1,
+  "membership": "git tracked regular files at refresh; excluded dependency/build/test-result outputs",
+  "sourceScope": [
+    "engines/miniTown"
+  ],
+  "files": [
+    {
+      "path": "engines/miniTown/.gitignore",
+      "sha256": "e4a1e0528742f4df5ab568e8ed2e6ecc6eff81d772616f77a5295d860ae91c99"
+    },
+    {
+      "path": "engines/miniTown/DESIGN.md",
+      "sha256": "dccf7e6f0c1bb8d00ddc883d417584cdafd5065f642ea91ee6ddb80dcc7442ea"
+    },
+    {
+      "path": "engines/miniTown/README.md",
+      "sha256": "889415e108b28bd7160961387970e6f2535f3c88b54baf37ae2f53c30f612645"
+    },
+    {
+      "path": "engines/miniTown/biome.json",
+      "sha256": "65f02beb71a92ee547fd173e33c6b922a8f5d74a270667092f491cd365f990ff"
+    },
+    {
+      "path": "engines/miniTown/docs/concepts/CONCEPTS.md",
+      "sha256": "c4c7e5b93c9da369a8d376c9138bde24129d651014a76b21048fe4d218e28a57"
+    },
+    {
+      "path": "engines/miniTown/docs/minitown-empty.png",
+      "sha256": "b76640fde83cfa6d29c489a224d04e9f006eb98119199773c70d4322abd029fd"
+    },
+    {
+      "path": "engines/miniTown/docs/minitown-played.png",
+      "sha256": "22a1077659be524779a344727571a782b45de935fe00cbdb397ba74d56a36224"
+    },
+    {
+      "path": "engines/miniTown/docs/minitown-playwright.png",
+      "sha256": "3878570f4a62a0d65f57cf1754e0269e56ec797f4e36e26b44c172eb6e800401"
+    },
+    {
+      "path": "engines/miniTown/index.html",
+      "sha256": "b34aa0df3b83a7756ea935379a0c952e11eada6cc9379db2b0b163bf6f1ecceb"
+    },
+    {
+      "path": "engines/miniTown/netlify.toml",
+      "sha256": "3ee568bb43a0a70b572874e789dc32a797b58e9410a0aa5ab4e4d65e94c9c16b"
+    },
+    {
+      "path": "engines/miniTown/package.json",
+      "sha256": "b204d69da9ca8d93645800bd268353a41b7f26fa31bfe86c8ebedbf87574bce6"
+    },
+    {
+      "path": "engines/miniTown/playwright.config.ts",
+      "sha256": "3a08b2337100e72d3fc5152ce606406e992e7291a2893828b83d48296686ce08"
+    },
+    {
+      "path": "engines/miniTown/playwright/mini-town.spec.ts",
+      "sha256": "2d4bb1b60c6322761e77634015f822c4a422ce92142001bc3baac080c81590d8"
+    },
+    {
+      "path": "engines/miniTown/pnpm-lock.yaml",
+      "sha256": "0bfe010ee360a0fc61c3092abd92b117e59ddf4b6cf2317c42102edcc9988ca3"
+    },
+    {
+      "path": "engines/miniTown/scripts/readiness-report.mjs",
+      "sha256": "fb95a1d930e9fa700684b23624fbdbfec21dc5161de675ac6bc3870b85edfb86"
+    },
+    {
+      "path": "engines/miniTown/src/evidence/e2e.contract.ts",
+      "sha256": "d26263c54ed662532b0e06339cc13da9a15707a863814568ae81c079417306d3"
+    },
+    {
+      "path": "engines/miniTown/src/game/controller.ts",
+      "sha256": "60606bbbb74912324426c317618ad217b0d651dbc5264cead35302d59ae3fa07"
+    },
+    {
+      "path": "engines/miniTown/src/main.ts",
+      "sha256": "0150feedb728c4a1f6441117ea18630271fcd2333720f0e213b5115ace540a45"
+    },
+    {
+      "path": "engines/miniTown/src/scene/buildings.ts",
+      "sha256": "99f3a3e670ea5bc3ca6c2ff33d9abf8defe5c420c0c360c7fc5f57e48b360317"
+    },
+    {
+      "path": "engines/miniTown/src/scene/camera.ts",
+      "sha256": "04510dad03718a100d53b4b18d8f462d3b8ad804052344beb2f5e401135baf6e"
+    },
+    {
+      "path": "engines/miniTown/src/scene/dayNight.ts",
+      "sha256": "42aadaddd0d5a557e5a6ab7e091861ba31ac17ead417f66cda18532c2421a201"
+    },
+    {
+      "path": "engines/miniTown/src/scene/dispose.ts",
+      "sha256": "8c0c1f2af6391dace9f84ed4d6341a09079780b80f1bf9b6ce30a33953ea3f78"
+    },
+    {
+      "path": "engines/miniTown/src/scene/ground.ts",
+      "sha256": "cc6aaa81162c262dbc96564ccffe921ebbc086f6a7d846e296ca2823b562865d"
+    },
+    {
+      "path": "engines/miniTown/src/scene/roads.ts",
+      "sha256": "43e9b1f51491914c8ddf40762ef7adc321adbf589862b8dddbcbe16f4d429a41"
+    },
+    {
+      "path": "engines/miniTown/src/scene/sceneRoot.ts",
+      "sha256": "d1768d82d28c4f2fef246d215b640bbf8b01839c184bdd0433ddecb6fe190b37"
+    },
+    {
+      "path": "engines/miniTown/src/scene/state.ts",
+      "sha256": "2bb696f58645a23c67e5847314b8029a061dc9c1d3052aa349c359b2dc9b036e"
+    },
+    {
+      "path": "engines/miniTown/src/scene/worldView.ts",
+      "sha256": "caa89bdc79d80acd18c050d2471bc335b214d0935c7380cce6e029e052dcb858"
+    },
+    {
+      "path": "engines/miniTown/src/scene/zones.ts",
+      "sha256": "9037ae606b40c16950f224d419e32ff329b8556d8a91541dee2a6381e6bb9da2"
+    },
+    {
+      "path": "engines/miniTown/src/sim/construction.ts",
+      "sha256": "05cd36761fa769860c4529f8d2f11b78f184921ea49bba53c7b55445d52bfbfc"
+    },
+    {
+      "path": "engines/miniTown/src/sim/grid.ts",
+      "sha256": "5c8d7c667f62fd12de7d15a1100109c35482317174eda1d3398ec9f4cb08a85b"
+    },
+    {
+      "path": "engines/miniTown/src/sim/paths.ts",
+      "sha256": "be39f93872dba59800c61db2ea2fc4e85eea038f9685b8b6da280e3db128cafb"
+    },
+    {
+      "path": "engines/miniTown/src/sim/residents.ts",
+      "sha256": "dd9adaa3e7449a7f9a7ab8919175ea3461f88dd8a196c93beafff1ce148f58c6"
+    },
+    {
+      "path": "engines/miniTown/src/sim/roads.ts",
+      "sha256": "69b7877fb46c2ec73ba7e864d299e012c1c9572763a88dc8f2ab98563ef92090"
+    },
+    {
+      "path": "engines/miniTown/src/sim/schedules.ts",
+      "sha256": "2b48f713bd95aac14ecfbc82b45e93d1c0827f0e827d1121b52d3d2e59a14dfe"
+    },
+    {
+      "path": "engines/miniTown/src/sim/variation.ts",
+      "sha256": "7da8cee90325c1706a7d4c3d1d329144e63b7ebc0f0d03a0c7764403f2c04ed7"
+    },
+    {
+      "path": "engines/miniTown/src/sim/vehicles.ts",
+      "sha256": "4df1aec20974ebf397756066e480dcba7691dbd4ab77c820c74b1450bd64576a"
+    },
+    {
+      "path": "engines/miniTown/tests/agents.test.ts",
+      "sha256": "ae75f8eba393175b0727574092ba917ccf8707281e3d29db7f2871af6c7e879e"
+    },
+    {
+      "path": "engines/miniTown/tests/shopping.test.ts",
+      "sha256": "53fc5ff5bf3fa6e01d4c32d2b9d5a3b17b7ac5c8ae5576c76c025635bcb3422f"
+    },
+    {
+      "path": "engines/miniTown/tests/unit.test.ts",
+      "sha256": "5636b293b8fb48f4274d2d1a6d3420435342885728f0d13790a01fdc89ea97b4"
+    },
+    {
+      "path": "engines/miniTown/tests/world.test.ts",
+      "sha256": "75e666269f8c315a11a15ea2b894d78a084bb6c342b7282c44f0c51551821707"
+    },
+    {
+      "path": "engines/miniTown/tsconfig.json",
+      "sha256": "989d7c54ef9cfee5736ffccf210be347049ce9a3e94660b96558c7ef9d53b006"
+    },
+    {
+      "path": "engines/miniTown/vite.config.ts",
+      "sha256": "f6fed31f49395fc92d7eb40f96bf3c0b167144e68284cea516ff55842e35b5d4"
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "engine": "pixelDojo",
+  "scope": "producer checks only; no declared-use qualification granted",
+  "results": [
+    {
+      "argv": [
+        "pnpm",
+        "run",
+        "lint"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo",
+      "exitCode": 0,
+      "seconds": 3.02,
+      "log": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/producers/pixelDojo-1.log",
+      "observedAt": "2026-10-16T01:23:20.614621+00:00"
+    },
+    {
+      "argv": [
+        "pnpm",
+        "run",
+        "test"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo",
+      "exitCode": 0,
+      "seconds": 3.09,
+      "log": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/producers/pixelDojo-2.log",
+      "observedAt": "2026-10-16T01:23:23.707780+00:00"
+    },
+    {
+      "argv": [
+        "pnpm",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo",
+      "exitCode": 0,
+      "seconds": 3.4,
+      "log": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/producers/pixelDojo-3.log",
+      "observedAt": "2026-10-16T01:23:27.111402+00:00"
+    },
+    {
+      "argv": [
+        "pnpm",
+        "run",
+        "build"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo",
+      "exitCode": 0,
+      "seconds": 8.21,
+      "log": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/producers/pixelDojo-4.log",
+      "observedAt": "2026-10-16T01:23:35.324903+00:00"
+    }
+  ],
+  "allRequestedRan": true
+}

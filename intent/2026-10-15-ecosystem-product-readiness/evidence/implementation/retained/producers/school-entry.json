@@ -1,0 +1,30 @@
+{
+  "engine": "school-entry",
+  "scope": "producer checks only; no declared-use qualification granted",
+  "results": [
+    {
+      "argv": [
+        "npm",
+        "test"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry",
+      "exitCode": 0,
+      "seconds": 41.95,
+      "log": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/producers/school-entry-1.log",
+      "observedAt": "2026-10-16T01:24:09.957363+00:00"
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/school-entry",
+      "exitCode": 0,
+      "seconds": 0.98,
+      "log": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/producers/school-entry-2.log",
+      "observedAt": "2026-10-16T01:24:10.935669+00:00"
+    }
+  ],
+  "allRequestedRan": true
+}

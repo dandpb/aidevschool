@@ -1,0 +1,45 @@
+{
+  "engine": "codexdojo-os-prototype",
+  "scope": "producer checks only; no declared-use qualification granted",
+  "results": [
+    {
+      "argv": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexdojo-os-prototype",
+      "exitCode": 0,
+      "seconds": 1.68,
+      "log": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/producers/codexdojo-os-prototype-1.log",
+      "observedAt": "2026-10-16T01:23:07.125075+00:00"
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "test",
+        "--",
+        "--reporter=verbose"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexdojo-os-prototype",
+      "exitCode": 0,
+      "seconds": 14.8,
+      "log": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/producers/codexdojo-os-prototype-2.log",
+      "observedAt": "2026-10-16T01:23:21.925687+00:00"
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexdojo-os-prototype",
+      "exitCode": 0,
+      "seconds": 1.7,
+      "log": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/producers/codexdojo-os-prototype-3.log",
+      "observedAt": "2026-10-16T01:23:23.621600+00:00"
+    }
+  ],
+  "allRequestedRan": true
+}

@@ -1,0 +1,37 @@
+{
+  "engineId": "literacyDojo",
+  "caseName": "deployed-verifier",
+  "observedAt": "2026-10-16T01:22:37.296Z",
+  "producerContext": "readiness-literacy-build-agent",
+  "verifierContext": null,
+  "sourceCommit": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+  "functionSource": {
+    "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/netlify-functions/literacy-verify.mjs",
+    "sha256": "7d53901ea068302abb91fa07bfa0cb99b3ed7952566a50b4ef9e6dfbf15fa8c3"
+  },
+  "status": "unverified",
+  "evidenceRefs": [],
+  "limitations": [
+    "No exact deployed source SHA/deploy ID was supplied or verified. Local candidate HTTP evidence cannot establish deployment provenance. No deployment or production data write was performed."
+  ],
+  "browserAvailability": "Browser plugin not available; regular Playwright used per frontend-testing-debugging skill",
+  "evidencePolicy": {
+    "source": {
+      "path": "/Users/danielbarreto/Development/aidevschool/engines/shared/playwright/base.config.ts",
+      "sha256": "5519ac81eac5d277c939da29e816130dd614bf18009a9200263aa9014ae525a7"
+    },
+    "importedOrPromoted": false,
+    "screenshot": "on",
+    "video": "on",
+    "trace": "retain-on-failure",
+    "outputDir": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/test-results/readiness-plan-runtime/deployed-verifier-2026-10-16T01-22-37-278Z"
+  },
+  "deployedEndpoint": "https://aidevschool-literacydojo.netlify.app/.netlify/functions/literacy-verify",
+  "missingPrerequisites": [
+    "Verified public deploy ID",
+    "Verified public source SHA matching the offered candidate",
+    "Actual endpoint positives a1/a2/a3 and identity/tamper negatives pinned to that deployment"
+  ],
+  "reportPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime/deployed-verifier-2026-10-16T01-22-37-278Z/report.json",
+  "reportSha256": "52a612223057b95a9d531d7a5830eca851579964ec34051304da83ecd54193e6"
+}

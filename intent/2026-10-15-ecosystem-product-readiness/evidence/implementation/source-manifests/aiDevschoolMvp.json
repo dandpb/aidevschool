@@ -1,0 +1,545 @@
+{
+  "schemaVersion": 1,
+  "membership": "git tracked regular files at refresh; excluded dependency/build/test-result outputs",
+  "sourceScope": [
+    "engines/aiDevschoolMvp"
+  ],
+  "files": [
+    {
+      "path": "engines/aiDevschoolMvp/README.md",
+      "sha256": "d094a306acfb6c58821462e57d9c3d0327818a4ccd396fddc93a68389d3f78df"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/SKILL.md",
+      "sha256": "1827e7d5c351d7b0471ec240c6e29c792fe518578f63d1ab3751112c3050bddd"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/_install_validation.py",
+      "sha256": "40f38cde559cc742d115af11111be4ca9f25e0e874ba1a92b807104e1c36e730"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/config.json",
+      "sha256": "e69c0cc4aea0637e22779b43963a33aa6c18c1f596d04fac55ad17609dd2d938"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C01.l1.md",
+      "sha256": "788e61b0adc15f64448667bc86da66a7721f268c0288eacffa7bfa9dfc553b90"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C01.l2.md",
+      "sha256": "8c4d890be8e6eab6997b81c76e6248662162e0f02b53f81792c8b020bbae8c7d"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C02.l1.md",
+      "sha256": "049cfe28a0fec5035063598c9617ca3b27b63c412313cd7e1865efcf335e89ba"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C02.l2.md",
+      "sha256": "75ab550187fc0bcff49965bb62dd61fc0dbff4b97e10369b43d65a9e16bf9993"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C03.l1.md",
+      "sha256": "823b3b924945d3051ef2a7dde684bedc54eea90ab428f96a3c7524e74c8fcf83"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C03.l2.md",
+      "sha256": "0b15e887d3d12e90466b37de21159dec20aeb96035b935eb2e7c7419772a091f"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C04.l1.md",
+      "sha256": "6bfb47e0b53d5a61db32e5b42db1b6741219a9a742eb96645e8a314042b070eb"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C04.l2.md",
+      "sha256": "1c538d0e924fb5c13b13781ae053fa342db3f1f3df69269812a7f151eb93712b"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C05.l1.md",
+      "sha256": "5d389a01c110c08ca80300cf3c05493c9aa44c9702d5f66e2cefb2b03624e310"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C05.l2.md",
+      "sha256": "6a53a82a2925d8fecf2ac2ae0c941fe56de1b8ae2a04c9c3017e26d1de4519f9"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C06.l1.md",
+      "sha256": "e9f1710a0d5943f15c8156e17005568515afdef2d14510b936b87d82403a86e8"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C06.l2.md",
+      "sha256": "8b9f1b7c546495fe9cfe280c1e03dc05f7c9cc88afe9ac0570616a729b02c441"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C07.l1.md",
+      "sha256": "803785ac191d358288a21fc9dd5ecceb13eef9e2889127a2436d25b9ac26cdce"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C07.l2.md",
+      "sha256": "e4b05e427f41759d2be71823196232ea901fe6cb77fb9961a78ba8c7757a0e41"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C08.l1.md",
+      "sha256": "52e48676fdb22715c61c96bcd69106ed959be3a61ec3a537e31fd7411cbc2424"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C08.l2.md",
+      "sha256": "e8f14f00b995dcf08ca5f3f7cbf80b107adf6c22401304eac8c15bc71a8bb073"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C09.l1.md",
+      "sha256": "6763247b4fdba5c303693aaf80ffbe55f149104c71590d6149d5b86e6ceb3958"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C09.l2.md",
+      "sha256": "258376ac39c04ca73e96c6db59e00a6259cc60b4e9b765b2975e429b66de1830"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C10.l1.md",
+      "sha256": "1e85a7e0956e3d71707dab30be33e07318b318f13f6e480418a3d65137189c77"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C10.l2.md",
+      "sha256": "f2c362122bf484826c9ca31c5d3843f9e6698338d0e5d247a5e882abe17e353b"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C11.l1.md",
+      "sha256": "8fa9d463c6fddebb1b39b6d5d8af407c0a05c63b13ca27e1b2974ffa137ac796"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C11.l2.md",
+      "sha256": "63ee721ea7b29161b69ef9868f61761ecbad548edd1890fc617135823dbaaa8e"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C12.l1.md",
+      "sha256": "41ee584cea61a91f2d9b6e0d091768d01b2cb8c687ac5292472309b3e978e25f"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C12.l2.md",
+      "sha256": "643f430a5e818f065a1fe1c049e084eb947fd96a4d5cbed5794d90f39b083e4f"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C13.l1.md",
+      "sha256": "6cdf1959815ca5ee2c56da6fb2ea981e2ea0478e4f490e9285f34c69d6559125"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C13.l2.md",
+      "sha256": "751c5d6e14efff5845fcd4adbba405cb3d4558ed8507f4bf47c94b2401fa50f4"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C14.l1.md",
+      "sha256": "2f98c2535c4941b81e4e8b8137d83d7e25fd67af9076f7c99c15415eb20a4089"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C14.l2.md",
+      "sha256": "72a059edac82c9346515d1792b60bb74f315c5ecbee0ea152036789988b142b5"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C14.l3.md",
+      "sha256": "0070ef258de4287889db1678764eb1dd6b588be8a5de2cea4550f5725b8b281c"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C15.l1.md",
+      "sha256": "7cf270586e83e4e8be0e1ba866548b1fc36d832a753c39ba54ca7294b97d9fce"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C15.l2.md",
+      "sha256": "bf3f0af5640e4dc72a06d81bc8eec0091066457e3f8fe3a53cebdc45f6abc289"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C16.l1.md",
+      "sha256": "8194cd7aaf4ce0346a183c813253fc36c905c231c65a0441f8307ee9fbb80901"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C16.l2.md",
+      "sha256": "321aec267b1011dba3e235ec8e889698265b19e577fc39b5143c4fbc146e2e7d"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C17.l1.md",
+      "sha256": "3d607a2e87cb9f0271a4d4d31a2ebcc0db49986d4a0305f2e0df2f3920c5dea1"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C17.l2.md",
+      "sha256": "d18d17a878ea653f1f130fc63a07b9925d78dde9ff30963ca03de58bfffd85f0"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C18.l1.md",
+      "sha256": "cbca6d4e249e451323fac7c9eef41a7ea20d6f000afaf6091b77e58e5348005e"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C18.l2.md",
+      "sha256": "085f29db823e9963b62e55771a7edf55094e8ff4bc1041748ad4956d2b2def85"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C19.l1.md",
+      "sha256": "0c6e0cf71b588e0927bf7e0b5aef42451791540dada7f5805f8f50a1b8b6dbe5"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C19.l2.md",
+      "sha256": "0442a8f8f0e9e78449a1c1dd6f88d736c218d052784b3a3afecb85b9e46d9f34"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C20.l1.md",
+      "sha256": "17c9d19ef10c1847105410da4980f9785fc8f5e35c1e338bead5ad37c17ed499"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C20.l2.md",
+      "sha256": "94314309bac8e83039962a2c5dd7ec5377287875276a041b0b68179660138288"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C21.l1.md",
+      "sha256": "e0a8aaf89df7cb42de8fd471aada65ee5146e290b64f25a295c32fe1ef16a6bf"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C21.l2.md",
+      "sha256": "e7e0a83b54c677bbae7a7359f66c91a89af60562df699dbaef39860ce530249a"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C22.l1.md",
+      "sha256": "dd04dfbb987c4b3a181e3abba120366e93be2dddfecc3139d55a7160094681fa"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C22.l2.md",
+      "sha256": "82c694d921b1cdf7d5fc9f1c5d8fdfc56950e33e3ab0f27779a942801d80f784"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C23.l1.md",
+      "sha256": "9ad99c3461070f4fc0f333e9e2c42e171a1d1136389fa663f48cfcc5e2801fdd"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C23.l2.md",
+      "sha256": "c4773a9d4085ee53e89ac20371d0ee2c74c15e8b2f54047ac7f100a21c23601b"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C24.l1.md",
+      "sha256": "541321ead3f1800f03008efb2d82d5ad4582e6285e78b0c965b5733018720f45"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/content/C24.l2.md",
+      "sha256": "a95a4bc4a694720835edd671f8dbb737ebd56349aae8dbb18ce4bacc588a5b21"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/curriculum.json",
+      "sha256": "1cbac96d360ab52aba93464b28251578fda2b80217d6bb29e31360e6fd4c59fb"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/gate_registry.json",
+      "sha256": "01245279ba673bbd8943dff84257b78979ebdb87d6da6897c91201a52692a73d"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/install.py",
+      "sha256": "83f3f57c5d6f71a547115a5bde395a6cd21bb0c658ebc32f0587212a6631ca19"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/keys/.manifest.sha256",
+      "sha256": "4daabd49a3c999baee0270ad598bb9b3b46f045c2e8bbf3b9dd45fac590cca07"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/keys/c01_quiz_bank.json",
+      "sha256": "df3420f10bbe7e46bcd2535ee09d89ea21998b2b3b167a722f6f730edbeeba91"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/keys/c02_quiz_bank.json",
+      "sha256": "5219854f7e12d6f160ef0b518f87c9cb78177ab022d73a4ca4005e7cdc5c90e3"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/keys/c03_quiz_bank.json",
+      "sha256": "33aec2bfc48801f206d6e8c98ba900dc8ff49ba52564ff1573e003a64b2160cd"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/keys/c04_quiz_bank.json",
+      "sha256": "17dee3e1644fdbde96c933924e5b29523ac964df716cbb83b55dd21db4ac2787"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/keys/c05_quiz_bank.json",
+      "sha256": "edd1ddaddc06653efe1c3fb5b5c27382afdfa338d865bf18524ccbc1e9ec0416"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/keys/c06_quiz_bank.json",
+      "sha256": "04fa2faf2b2076000ab064353efbada4eb6c12a06c939f44ea345edcdbe5f286"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/keys/c07_quiz_bank.json",
+      "sha256": "5099688e63eb1d2f937d1758783d2689778694f677c623e7148b273af7fea1a1"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/keys/c08_quiz_bank.json",
+      "sha256": "9ac56b531af81e28c68c06e00a049bdbb37f98f337d89c956d04cb4a03d42875"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/keys/c09_quiz_bank.json",
+      "sha256": "778db5b8a4957b3b77cf5c6eb624b3479709e2376846046fceebb9f120fe795a"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/keys/c10_quiz_bank.json",
+      "sha256": "0de0698f7ce979162f803c80f909296413f401b6398b83e0de6ad78f8a8a79ad"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/keys/c11_quiz_bank.json",
+      "sha256": "e6060f6b4d316b2691d1c97e7c671d18278cd222b890ffbb6370abb2605577ea"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/keys/c12_quiz_bank.json",
+      "sha256": "fdbf74f8edd77880e2dd40cf90ba9dea45ee886aed0bece29d46c838f8becd28"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/keys/c13_quiz_bank.json",
+      "sha256": "429a87f41be73f1cb1f510776ffd7bf16b4d4b0f75d2ac9b90af8fb8c7efa66f"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/keys/c14_seeded_bio.json",
+      "sha256": "3442d7f365fd599e0e799b0546b3f90fd550a2c05d2b61cdb483b9d5e60f1dc3"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/keys/c15_seeded_report.json",
+      "sha256": "8b9380080348557a099f54140be38ac9628f1701ea52405a7cf2a89a8e9c503b"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/keys/c16_quiz_bank.json",
+      "sha256": "11179209dd793749dfbde312dafdaafbf714900f0f5f2f1b0054215068b1a9bd"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/keys/c17_pii_email.json",
+      "sha256": "b29232ba500b0934fd4627ce579198964817f9f2747bf9431a3730f43cbd36d6"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/keys/c18_quiz_bank.json",
+      "sha256": "8f4a0466ab991372f712feb0f7730d0d494d0175ce396fb709d0c54274e837bf"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/keys/c19_quiz_bank.json",
+      "sha256": "def9336c645f27087f9235eb6f6941489b6b33688e2514df4f195504b2ccf244"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/keys/c20_scenario.json",
+      "sha256": "a99f738e1ff6789d46026eb9b82ba84accde893df303f9b58f2d4040c5fc9844"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/keys/c21_scenario.json",
+      "sha256": "fee9f01011025630d8c218cf80ce7a2d4681298098c0cd1630074a8dd91dd83a"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/keys/c22_scenario.json",
+      "sha256": "5d778578a1847bbaa6273fe9cd207fc662801323f1acc4a523eec67e584d2e77"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/keys/c23_quiz_bank.json",
+      "sha256": "e8704e6e545dc15b4387b9d34a0ca7738616e144cff3db6783cf26c3b63f31cc"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/keys/c23_scenario.json",
+      "sha256": "19c2cfcd12988664aed6ded711fecc9e02329c8a7b0bc0a295dc3b73ab6f9a8b"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/keys/c24_quiz_bank.json",
+      "sha256": "cc08aa3be8d1ddc7a9ab721308126019cdfaeeea0a3a9fb11e883572392da604"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/keys/c24_scenario.json",
+      "sha256": "3594c3dfddda6e6c39c094dbebe5172b7d60a23ea0d6585cd0d5d6e8a511e054"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/keys/g4_recordings/c05_teach_back.json",
+      "sha256": "85c41f2683231e498abbe6a748c57f8ec5b2668f428fcd1b78287d4fcf4f6d53"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/keys/g4_recordings/c13_teach_back.json",
+      "sha256": "accb8267b8e9c65e864b88d569ac0be1ee6ba69cced2a5d08f5a983ee2e20b6e"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/prompts/c01_quiz_bank.json",
+      "sha256": "2d3eb8befb9c0aa513276bcbf071adaa699dcfef34ffb4946db3d21aa7580ca8"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/prompts/c02_quiz_bank.json",
+      "sha256": "9f207aefc10288e0698c640e5ee6127e1fa3aeac6039aaae411c19e2d21b28c7"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/prompts/c03_quiz_bank.json",
+      "sha256": "58fe6871e56e15402c9b9a712f494b282554978c69ce2eb439b25d5654d95e84"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/prompts/c04_quiz_bank.json",
+      "sha256": "0d60facd348de710c85976759464a9f20aa59917b714b00112d3ab19b7df0bce"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/prompts/c05_quiz_bank.json",
+      "sha256": "c194495e588506b0116b7996234e16bf05a0b297207a02bdfad63fafd663d70c"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/prompts/c06_quiz_bank.json",
+      "sha256": "3f1f7481021ca09e83344b5267b29ebe36d6532cd9e26ab9c14f9a305b8ad073"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/prompts/c07_quiz_bank.json",
+      "sha256": "79e5705f68b6d344fc47b1f4c482aed8b6e877c909fec43f5d3df3c258feb239"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/prompts/c08_quiz_bank.json",
+      "sha256": "321166566bb81ee26a27ff7195d854f0e5adeaa858a4b9d6592545f801d10593"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/prompts/c09_quiz_bank.json",
+      "sha256": "9c37121b9c7fc8c07c535c35e63f0dc1f94d35fd26066b019041f252e26838a2"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/prompts/c10_quiz_bank.json",
+      "sha256": "bcddea8aca95ef7729901cf3c2525e3082b4bc6d6ee73177e0bd265e1f2ae192"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/prompts/c11_quiz_bank.json",
+      "sha256": "a7af084050f2d018e299f3a483b0c993006644856a016dbc84e4b490a86f0e78"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/prompts/c12_quiz_bank.json",
+      "sha256": "c9e28d716ff54f83aced1685c83cc539f2756f5e78b384dbb4ba75c74e452652"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/prompts/c13_quiz_bank.json",
+      "sha256": "449ce8a71b48701a9370dece3fb71759385368707d09e78876fc97c36840e53d"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/prompts/c16_quiz_bank.json",
+      "sha256": "b8b82647529c5b16bb09f9c08856c0d8a354f515679f4e4a704803d08e507777"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/prompts/c18_quiz_bank.json",
+      "sha256": "e8ec0a3fc541679a0e6a1e0a01b35ab8e75540f8c12361fc3e24ec6adbdb46f0"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/prompts/c19_quiz_bank.json",
+      "sha256": "c7ca00651477d79657298d4c500b709b09fadcb2b8455a9c3370fcec8a12dc5d"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/prompts/c23_quiz_bank.json",
+      "sha256": "b17e9ccf4b7e6f89bcfa2657053332c53a5ebefb3783b6239000ab24859edb80"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/prompts/c24_quiz_bank.json",
+      "sha256": "695d88877e6c1f1273cf63a8d1a362c3febd9e471bd1d9748a4ff3b087dbf88d"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/rubrics/c05_teach_back.json",
+      "sha256": "624a45a70d86567778978af827761ce06286b52ff8d2898132ca6e8bc40afdeb"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/rubrics/c09_teach_back.json",
+      "sha256": "97776e5dfe1249b2b0591736fc4b08e39d0cafe23bc13a85a5cd3f7ffa624d0e"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/rubrics/c12_prompt_rewrite.json",
+      "sha256": "e27419fa753ad38fcc8b5a98ef76fe39198d3dddd4649cc4d5aa896508ed8b26"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/rubrics/c13_prompt_rewrite.json",
+      "sha256": "7d9bd23654d5ba66451a658a515ae73be4788e462ec3548c0729c02874aa6228"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/rubrics/c13_teach_back.json",
+      "sha256": "22a81cf03b378a53d332858207bbc6c993c0b1258de935b05c1b3c757ec8fd3b"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/rubrics/c19_teach_back.json",
+      "sha256": "354f4e33f12c28f5f8fba0fe77dd7388d7a2c68d159b4562ba77ec219885d123"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/rubrics/c23_teach_back.json",
+      "sha256": "7db6a105c1c130c3b9c6e7037bd6b157da91078a5d47ea7d4b2184c763dbf6c7"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/rubrics/c24_teach_back.json",
+      "sha256": "259759bb4c067b978536b7610dc876907abcf5051bbe8426f4c5d5d91d1091f4"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/scripts/_core.py",
+      "sha256": "485b98e0fea2da9782108e4c6a20857904b3bc4445cea61999fe32898e48499a"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/scripts/_engine.py",
+      "sha256": "d72d50cd3d80ef6e7317a680e71044000d6d60551ad55848c89c0d03028b90d4"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/scripts/_runtime.py",
+      "sha256": "0685a8b57804ee9f44b918711bbbd8d48db3f8dd40e75f57032c75e86161bc7f"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/scripts/_state.py",
+      "sha256": "691d7fc4180e64d3e7f3bd47a5cef6c792096877b348a6f30b79157689484eb1"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/scripts/_state_transitions.py",
+      "sha256": "a458194739b0871e517c908296111bf373a9694f17ef3131df141dfc531f6df5"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/scripts/gate_check.py",
+      "sha256": "9eb9d58b82833bfc670739476f01f4e16c52d27f057e57f9a99a90e328c52eea"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/scripts/ledger_verify.py",
+      "sha256": "65b94f332aa53e6c8e6390ec26f9df38f675fc58e682ce7421e388993e81dc23"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/scripts/next_step.py",
+      "sha256": "7b9c7e3f157eb25a3ecef1481e9cf5c26436c8d4b8b6eb622008fe064fd78762"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/scripts/plan_recompute.py",
+      "sha256": "ccd8b756a0cacaf1e15f3fdab90e36c3d3f228d4bea735890b61d81f9003ea65"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/scripts/progress_card.py",
+      "sha256": "ed4f7d712e6d491345bb25962f91b7aecbc5818ac0b8dd1da7de6d5440f1fbd3"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/scripts/replay.py",
+      "sha256": "a189f31f4d883b9b9e26ebac1ba4d1f319355f834e596e43c21ebec028bbee12"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/aidevschool/scripts/schedule.py",
+      "sha256": "a3a8e462534e5e26f961fdadd6649c44e96c2a9fd4ef7b2c62a8ab1b69af8c3a"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/tests/acceptance/conftest.py",
+      "sha256": "f5d259d9fbe7c7b117676258dc54c3d9d15f8c5b14397aeaf1cb4239c82bb201"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/tests/acceptance/test_acceptance_full.py",
+      "sha256": "f74b058b683a551510a7e093b549393b4b72baf69f594ec675ed13df937709b5"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/tests/acceptance/test_deterministic.py",
+      "sha256": "d888cea76b62f1b3dfb4c717e20a0bbdf320290617e3c5b3617c7faadf72eded"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/tests/acceptance/test_full_ledger_replay.py",
+      "sha256": "8399a6eb7cd3717ff2166f9e70ddaa658e533ee7e30ab1ef0ebbafe5c5018b89"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/tests/acceptance/test_g4.py",
+      "sha256": "a11012e722267e49161257398aa460df241a057b520feef9b9a4413dd555a47b"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/tests/acceptance/test_review_ladder.py",
+      "sha256": "181e4ef414d353564ed86ac04f01bdd79d3083115384856bc7efe7b135ffeda5"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/tests/acceptance/test_review_reschedule_aid2687.py",
+      "sha256": "88a560c06bc17339c25bf0ab873a2b67de783e6387c8752f47ace99a2754eb49"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/tests/acceptance/test_security.py",
+      "sha256": "26f929ed9f7fccae0e3dbfb18018648935e149a9dec6e1a44f23b8306ddc3b28"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/tests/acceptance/test_skill_persona.py",
+      "sha256": "7e637baf3fcf81c52403e91d0c7fda2a71403d8b91f76ca52d1f76c4d1163779"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/tests/installer/test_install.py",
+      "sha256": "2b3b04cc7cb21b4ad9e221c403b6000ac6fd1bf4be8f422fc30a846af3eba418"
+    },
+    {
+      "path": "engines/aiDevschoolMvp/tests/installer/test_runtime_parity.py",
+      "sha256": "30d4cd61c8df29e5d37208f278deafe770516598f14dcdaa1162e490a887b433"
+    }
+  ]
+}

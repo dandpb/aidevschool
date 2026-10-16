@@ -1,0 +1,1190 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.13.2, pytest-8.4.2, pluggy-1.7.0 -- /Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/gh-375/venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool
+configfile: pyproject.toml
+collecting ... collected 124 items
+
+learner/gate/tests/test_gate.py::test_public_interface_is_one_gate_operation PASSED [  0%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_fixture_satisfies_canonical_learner_state_contract PASSED [  1%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_valid_evidence_is_eligible PASSED [  2%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_game_pass_without_verifier_receipt_is_not_eligible[gatekeeper] FAILED [  3%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_game_pass_without_verifier_receipt_is_not_eligible[pixelquest] FAILED [  4%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_missing_required_field_rejected PASSED [  4%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_unit_mismatch_rejected PASSED [  5%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_missing_attempt_file_rejected PASSED [  6%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_no_attempt_declared_rejected PASSED [  7%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_wrong_state_rejected PASSED [  8%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_inconsistent_pass_with_abuse_rejected PASSED [  8%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_nested_disqualifying_metric_overrides_producer_pass PASSED [  9%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_producer_pass_without_known_rubric_or_verifier_is_rejected PASSED [ 10%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_embedded_verifier_cannot_override_producer_judgment PASSED [ 11%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_incomplete_verifier_pass_is_rejected PASSED [ 12%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_below_threshold_verifier_pass_is_rejected PASSED [ 12%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_known_rubric_threshold_violation_rejects_producer_pass[metrics0] PASSED [ 13%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_known_rubric_threshold_violation_rejects_producer_pass[metrics1] PASSED [ 14%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_known_rubric_threshold_violation_rejects_producer_pass[metrics2] PASSED [ 15%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_known_rubric_threshold_violation_rejects_producer_pass[metrics3] PASSED [ 16%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_known_rubric_threshold_violation_rejects_producer_pass[metrics4] PASSED [ 16%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_voxel_fleet_requires_separate_independent_verifier_receipt[WAREHOUSE] PASSED [ 17%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_voxel_fleet_requires_separate_independent_verifier_receipt[WORMHOLE] PASSED [ 18%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_voxel_fleet_requires_separate_independent_verifier_receipt[RELAY STATION] PASSED [ 19%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_voxel_fleet_requires_separate_independent_verifier_receipt[PIPELINE PLANT] PASSED [ 20%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_voxel_fleet_requires_separate_independent_verifier_receipt[CHECKPOINT CITY] PASSED [ 20%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_voxel_fleet_requires_separate_independent_verifier_receipt[TIMELINE TOWER] PASSED [ 21%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_voxel_fleet_requires_separate_independent_verifier_receipt[DOCKING BAY] PASSED [ 22%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_voxel_fleet_requires_separate_independent_verifier_receipt[HASH RING] PASSED [ 23%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_voxel_fleet_requires_separate_independent_verifier_receipt[AIR TRAFFIC] PASSED [ 24%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_voxel_fleet_requires_separate_independent_verifier_receipt[MISSION CONTROL] PASSED [ 25%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_voxel_fleet_requires_separate_independent_verifier_receipt[BREAKER GRID] PASSED [ 25%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_voxel_fleet_requires_separate_independent_verifier_receipt[RIVER DELTA] PASSED [ 26%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_voxel_fleet_requires_separate_independent_verifier_receipt[OBSERVATORY] PASSED [ 27%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_voxel_fleet_requires_separate_independent_verifier_receipt[FREIGHT YARD] PASSED [ 28%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_voxel_fleet_requires_separate_independent_verifier_receipt[LIGHTHOUSE NETWORK] PASSED [ 29%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_voxel_fleet_requires_separate_independent_verifier_receipt[STACKS] PASSED [ 29%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_separate_receipt_digest_must_match_producer_evidence PASSED [ 30%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_canonical_digest_excludes_timestamp_and_embedded_verifier PASSED [ 31%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_canonical_digest_binds_arbitrary_voxel_metrics PASSED [ 32%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_substrate_rejects_embedded_verifier_in_producer_artifact PASSED [ 33%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_naive_timestamp_is_rejected PASSED [ 33%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_attempt_outside_learner_attempts_is_rejected PASSED [ 34%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_attempt_symlink_escape_is_rejected PASSED [ 35%]
+learner/gate/tests/test_gate.py::TestCheckEvidence::test_attempt_directory_is_rejected PASSED [ 36%]
+learner/gate/tests/test_gate.py::TestDecide::test_pass_first_try PASSED  [ 37%]
+learner/gate/tests/test_gate.py::TestDecide::test_pass_after_retry PASSED [ 37%]
+learner/gate/tests/test_gate.py::TestDecide::test_failed_run_gates_to_fail PASSED [ 38%]
+learner/gate/tests/test_gate.py::TestDecide::test_forged_pass_without_receipt_never_decides_passed FAILED [ 39%]
+learner/gate/tests/test_gate.py::TestDecide::test_separate_verifier_receipt_controls_outcome PASSED [ 40%]
+learner/gate/tests/test_gate.py::TestApplyGate::test_pass_updates_existing_unit_log_and_masters_unit PASSED [ 41%]
+learner/gate/tests/test_gate.py::TestApplyGate::test_fail_increments_retry_and_keeps_evaluating PASSED [ 41%]
+learner/gate/tests/test_gate.py::TestEndToEnd::test_verify_and_gate_persists_state PASSED [ 42%]
+learner/gate/tests/test_gate.py::TestEndToEnd::test_forged_game_pass_without_receipt_writes_no_mastery FAILED [ 43%]
+learner/gate/tests/test_gate.py::TestEndToEnd::test_pixelquest_pass_with_digest_bound_receipt_masters PASSED [ 44%]
+learner/gate/tests/test_gate.py::TestEndToEnd::test_historical_mastered_without_receipt_still_validates PASSED [ 45%]
+learner/gate/tests/test_gate.py::TestEndToEnd::test_dry_run_writes_nothing PASSED [ 45%]
+learner/gate/tests/test_gate.py::TestEndToEnd::test_rejects_evidence_for_wrong_unit PASSED [ 46%]
+learner/gate/tests/test_gate.py::TestEndToEnd::test_load_evidence_reads_real_shape PASSED [ 47%]
+learner/gate/tests/test_gate.py::TestEndToEnd::test_voxel_pass_requires_receipt_from_confined_directory PASSED [ 48%]
+learner/gate/tests/test_gate.py::TestEndToEnd::test_receipt_outside_confined_directory_is_rejected PASSED [ 49%]
+learner/gate/tests/test_gate.py::TestLoadEvidenceNdjson::test_parses_valid_records_in_order PASSED [ 50%]
+learner/gate/tests/test_gate.py::TestLoadEvidenceNdjson::test_blank_lines_tolerated PASSED [ 50%]
+learner/gate/tests/test_gate.py::TestLoadEvidenceNdjson::test_empty_file_yields_no_records PASSED [ 51%]
+learner/gate/tests/test_gate.py::TestLoadEvidenceNdjson::test_malformed_line_rejects_whole_file PASSED [ 52%]
+learner/gate/tests/test_gate.py::TestLoadEvidenceNdjson::test_non_object_line_rejected PASSED [ 53%]
+learner/gate/tests/test_gate.py::TestSelectEvidence::test_picks_latest_record_for_active_unit PASSED [ 54%]
+learner/gate/tests/test_gate.py::TestSelectEvidence::test_none_when_no_record_matches PASSED [ 54%]
+learner/gate/tests/test_gate.py::TestGateIntegrity::test_stub_attempt_rejected PASSED [ 55%]
+learner/gate/tests/test_gate.py::TestGateIntegrity::test_metrics_flat_without_kind_allowed PASSED [ 56%]
+learner/gate/tests/test_gate.py::TestGateIntegrity::test_metrics_empty_kind_rejected PASSED [ 57%]
+learner/gate/tests/test_gate.py::TestGateIntegrity::test_invalid_ts_rejected PASSED [ 58%]
+learner/gate/tests/test_gate.py::TestGateIntegrity::test_duplicate_evidence_rejected PASSED [ 58%]
+learner/gate/tests/test_gate.py::TestGateIntegrity::test_stale_evidence_rejected PASSED [ 59%]
+learner/gate/tests/test_gate.py::TestGateIntegrity::test_fresh_evidence_after_previous_gate_is_eligible PASSED [ 60%]
+learner/gate/tests/test_gate.py::TestGateIntegrity::test_same_payload_with_bumped_timestamp_is_rejected_by_digest PASSED [ 61%]
+learner/gate/tests/test_gate.py::TestGateIntegrity::test_ignored_producer_nonce_cannot_bypass_consumed_evidence PASSED [ 62%]
+learner/gate/tests/test_gate.py::TestGateIntegrity::test_same_run_id_with_changed_payload_is_rejected PASSED [ 62%]
+learner/gate/tests/test_gate.py::TestNdjsonEndToEnd::test_gates_latest_matching_record FAILED [ 63%]
+learner/gate/tests/test_gate.py::TestNdjsonEndToEnd::test_forged_latest_record_without_receipt_is_not_eligible FAILED [ 64%]
+learner/gate/tests/test_gate.py::TestNdjsonEndToEnd::test_nothing_to_grade_when_no_record_for_unit PASSED [ 65%]
+learner/gate/tests/test_gate.py::TestNdjsonEndToEnd::test_rejects_ndjson_record_without_real_attempt PASSED [ 66%]
+learner/gate/tests/test_gate.py::TestNdjsonEndToEnd::test_rejects_replayed_ndjson_evidence PASSED [ 66%]
+learner/gate/tests/test_gate.py::TestCli::test_no_evidence_file_exits_cleanly PASSED [ 67%]
+learner/gate/tests/test_gate.py::TestCli::test_declared_evidence_file_is_graded_without_explicit_flag PASSED [ 68%]
+learner/gate/tests/test_gate.py::TestCli::test_unit_not_evaluating_exits_cleanly PASSED [ 69%]
+learner/gate/tests/test_gate.py::TestCli::test_mastered_unit_explicit_dry_run_rejects_semantic_disagreement PASSED [ 70%]
+learner/gate/tests/test_gate.py::TestCli::test_mastered_unit_explicit_dry_run_reports_semantic_pass_without_transition PASSED [ 70%]
+learner/gate/tests/test_gate.py::TestCli::test_mastered_unit_dry_run_validates_separate_receipt_digest PASSED [ 71%]
+learner/gate/tests/test_gate.py::TestCli::test_gates_from_default_ndjson_location PASSED [ 72%]
+learner/gate/tests/test_gate.py::TestCli::test_rejected_evidence_exits_1 PASSED [ 73%]
+learner/gate/tests/test_gate.py::TestCli::test_malformed_ndjson_exits_1 PASSED [ 74%]
+learner/gate/tests/test_gate.py::TestCli::test_dry_run_writes_nothing PASSED [ 75%]
+learner/gate/tests/test_gate.py::test_rubric_catalog_loads_and_has_rubrics PASSED [ 75%]
+learner/gate/tests/test_gate.py::test_catalog_covers_all_ts_pixelquest_kinds PASSED [ 76%]
+learner/gate/tests/test_gate.py::test_catalog_covers_all_ts_voxeldojo_games PASSED [ 77%]
+learner/gate/tests/test_gate.py::test_python_gate_recognizes_every_catalog_rubric PASSED [ 78%]
+learner/gate/tests/test_gate_multirecord_receipt_binding.py::TestBoundEvidenceMultirecord::test_matching_record_backs_the_review FAILED [ 79%]
+learner/gate/tests/test_gate_multirecord_receipt_binding.py::TestBoundEvidenceMultirecord::test_no_matching_record_is_rejected PASSED [ 79%]
+learner/gate/tests/test_gate_multirecord_receipt_binding.py::TestBoundEvidenceMultirecord::test_matching_record_with_embedded_verifier_block_is_rejected PASSED [ 80%]
+learner/gate/tests/test_gate_multirecord_receipt_binding.py::TestBoundEvidenceMultirecord::test_corrupt_line_is_rejected FAILED [ 81%]
+learner/gate/tests/test_gate_multirecord_receipt_binding.py::TestMultirecordEndToEnd::test_gates_latest_matching_record_with_receipt FAILED [ 82%]
+learner/gate/tests/test_gate_multirecord_receipt_binding.py::TestMultirecordEndToEnd::test_persisted_multirecord_state_revalidates FAILED [ 83%]
+learner/gate/tests/test_gate_multirecord_receipt_binding.py::TestMultirecordEndToEnd::test_multirecord_without_receipt_is_not_eligible FAILED [ 83%]
+learner/gate/tests/test_gate_multirecord_receipt_binding.py::TestMultirecordEndToEnd::test_multirecord_receipt_for_other_unit_record_is_not_eligible PASSED [ 84%]
+learner/gate/tests/test_readiness_plan_contract.py::test_no_receipt_preserves_state[gatekeeper] FAILED [ 85%]
+learner/gate/tests/test_readiness_plan_contract.py::test_no_receipt_preserves_state[pixelquest] FAILED [ 86%]
+learner/gate/tests/test_readiness_plan_contract.py::test_invalid_receipt_preserves_state[gatekeeper-other_digest-evidence_digest does not match] PASSED [ 87%]
+learner/gate/tests/test_readiness_plan_contract.py::test_invalid_receipt_preserves_state[gatekeeper-outside_path-learner/verifier_receipts] PASSED [ 87%]
+learner/gate/tests/test_readiness_plan_contract.py::test_invalid_receipt_preserves_state[gatekeeper-context_not_isolated-context_isolated is not true] PASSED [ 88%]
+learner/gate/tests/test_readiness_plan_contract.py::test_invalid_receipt_preserves_state[gatekeeper-producer_embedded-embedded verifier] PASSED [ 89%]
+learner/gate/tests/test_readiness_plan_contract.py::test_invalid_receipt_preserves_state[pixelquest-other_digest-evidence_digest does not match] PASSED [ 90%]
+learner/gate/tests/test_readiness_plan_contract.py::test_invalid_receipt_preserves_state[pixelquest-outside_path-learner/verifier_receipts] PASSED [ 91%]
+learner/gate/tests/test_readiness_plan_contract.py::test_invalid_receipt_preserves_state[pixelquest-context_not_isolated-context_isolated is not true] PASSED [ 91%]
+learner/gate/tests/test_readiness_plan_contract.py::test_invalid_receipt_preserves_state[pixelquest-producer_embedded-embedded verifier] PASSED [ 92%]
+learner/gate/tests/test_readiness_plan_contract.py::test_retry_receipt_persists_source PASSED [ 93%]
+learner/gate/tests/test_readiness_plan_contract.py::test_nothing_to_grade_cli_does_not_write PASSED [ 94%]
+learner/gate/tests/test_readiness_plan_contract.py::test_committed_multirecord_backing_revalidates FAILED [ 95%]
+learner/gate/tests/test_readiness_plan_contract.py::test_replay_preserves_consumed_state[same_record-stale or duplicate] PASSED [ 95%]
+learner/gate/tests/test_readiness_plan_contract.py::test_replay_preserves_consumed_state[new_timestamp-digest replay] PASSED [ 96%]
+learner/gate/tests/test_readiness_plan_contract.py::test_replay_preserves_consumed_state[producer_nonce-attempt/scenario replay] FAILED [ 97%]
+learner/gate/tests/test_readiness_plan_contract.py::test_replay_preserves_consumed_state[changed_payload-run_id is immutable] FAILED [ 98%]
+learner/gate/tests/test_readiness_plan_contract.py::test_dry_run_preserves_all_files[positive] PASSED [ 99%]
+learner/gate/tests/test_readiness_plan_contract.py::test_dry_run_preserves_all_files[negative] FAILED [100%]
+
+=================================== FAILURES ===================================
+_ TestCheckEvidence.test_game_pass_without_verifier_receipt_is_not_eligible[gatekeeper] _
+
+self = <test_gate.TestCheckEvidence object at 0x108bf6b10>
+root = PosixPath('/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_game_pass_without_verifie0')
+evidence = {'abusive_admitted': 0, 'abusive_rejected': 8, 'attempt_id': 'learner/attempts/attempt-1.md', 'game': 'GATEKEEPER', ...}
+
+    @pytest.mark.parametrize(
+        "evidence",
+        [
+            make_evidence(),  # legacy GATEKEEPER top-level shape
+            make_evidence(  # pixelquest metrics shape
+                game="PixelDojo Quest",
+                metrics={
+                    "kind": "pixelquest-token-bucket",
+                    "good_admits": 8,
+                    "abusive_admitted": 0,
+                    "overheated": False,
+                },
+            ),
+        ],
+        ids=["gatekeeper", "pixelquest"],
+    )
+    def test_game_pass_without_verifier_receipt_is_not_eligible(
+        self, root: Path, evidence: dict[str, Any]
+    ):
+        # AID-3710 F1 (CP-01): producer-declared pass + self-consistent rubric
+        # metrics prove nothing about execution — the gate fail-closes until a
+        # digest-bound receipt under learner/verifier_receipts is presented.
+        errors = _check_evidence(evidence, make_state()["active_unit"], root)
+>       assert any("digest-bound verifier receipt" in error for error in errors)
+E       assert False
+E        +  where False = any(<generator object TestCheckEvidence.test_game_pass_without_verifier_receipt_is_not_eligible.<locals>.<genexpr> at 0x109838110>)
+
+learner/gate/tests/test_gate.py:234: AssertionError
+_ TestCheckEvidence.test_game_pass_without_verifier_receipt_is_not_eligible[pixelquest] _
+
+self = <test_gate.TestCheckEvidence object at 0x108bf6c40>
+root = PosixPath('/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_game_pass_without_verifie1')
+evidence = {'abusive_admitted': 0, 'abusive_rejected': 8, 'attempt_id': 'learner/attempts/attempt-1.md', 'game': 'PixelDojo Quest', ...}
+
+    @pytest.mark.parametrize(
+        "evidence",
+        [
+            make_evidence(),  # legacy GATEKEEPER top-level shape
+            make_evidence(  # pixelquest metrics shape
+                game="PixelDojo Quest",
+                metrics={
+                    "kind": "pixelquest-token-bucket",
+                    "good_admits": 8,
+                    "abusive_admitted": 0,
+                    "overheated": False,
+                },
+            ),
+        ],
+        ids=["gatekeeper", "pixelquest"],
+    )
+    def test_game_pass_without_verifier_receipt_is_not_eligible(
+        self, root: Path, evidence: dict[str, Any]
+    ):
+        # AID-3710 F1 (CP-01): producer-declared pass + self-consistent rubric
+        # metrics prove nothing about execution — the gate fail-closes until a
+        # digest-bound receipt under learner/verifier_receipts is presented.
+        errors = _check_evidence(evidence, make_state()["active_unit"], root)
+>       assert any("digest-bound verifier receipt" in error for error in errors)
+E       assert False
+E        +  where False = any(<generator object TestCheckEvidence.test_game_pass_without_verifier_receipt_is_not_eligible.<locals>.<genexpr> at 0x109839220>)
+
+learner/gate/tests/test_gate.py:234: AssertionError
+_______ TestDecide.test_forged_pass_without_receipt_never_decides_passed _______
+
+self = <test_gate.TestDecide object at 0x108bf6ea0>
+root = PosixPath('/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_forged_pass_without_recei0')
+
+    def test_forged_pass_without_receipt_never_decides_passed(self, root: Path):
+        # AID-3710 F1: the decision seam itself cannot master from producer
+        # claims — with no receipt the only reachable pass is receipt-carried.
+        d = _decide(make_evidence(), make_state()["active_unit"], root)
+>       assert not d.ok and not d.passed
+E       AssertionError: assert (not True)
+E        +  where True = GateDecision(passed=True, gate_outcome='pass_first_try', rating='good', errors=(), receipt=GateEvidenceReceipt(timestamp='2026-06-09T01:24:09.038Z', digest='ab31a429ddb82c92adb93fd6669e4e7904a9c7ade7fd4be3ecfcff4dc2134cb4', run_id='run-001', attempt_id='learner/attempts/attempt-1.md', attempt_digest='6beb623fe88f5024d63f33d5e130e3ce3e632856844d9097f598710463e00d87', scenario_id='gatekeeper-rate-limiter', verifier_source=None)).ok
+
+learner/gate/tests/test_gate.py:594: AssertionError
+_____ TestEndToEnd.test_forged_game_pass_without_receipt_writes_no_mastery _____
+
+self = <test_gate.TestEndToEnd object at 0x1097c5310>
+root = PosixPath('/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_forged_game_pass_without_0')
+
+    def test_forged_game_pass_without_receipt_writes_no_mastery(self, root: Path):
+        # AID-3710 F1 (CP-01): RC2 e7071035 mastered a hand-typed record on
+        # self-declared metrics alone. With the binding, the same record is
+        # NOT ELIGIBLE: no transition, no gate review, state stays evaluating.
+        state_path = root / "learner" / "learning_state.yaml"
+        original = yaml.safe_dump(make_state(root), sort_keys=False)
+        state_path.write_text(original, encoding="utf-8")
+        evidence_path = root / "evidence.json"
+        evidence_path.write_text(json.dumps(make_evidence()), encoding="utf-8")
+    
+        decision = verify_and_gate(root, evidence_path, today=TODAY)
+    
+>       assert decision is not None and not decision.ok
+E       AssertionError: assert (GateDecision(passed=True, gate_outcome='pass_first_try', rating='good', errors=(), receipt=GateEvidenceReceipt(timestamp='2026-06-09T01:24:09.038Z', digest='ab31a429ddb82c92adb93fd6669e4e7904a9c7ade7fd4be3ecfcff4dc2134cb4', run_id='run-001', attempt_id='learner/attempts/attempt-1.md', attempt_digest='6beb623fe88f5024d63f33d5e130e3ce3e632856844d9097f598710463e00d87', scenario_id='gatekeeper-rate-limiter', verifier_source=None)) is not None and not True)
+E        +  where True = GateDecision(passed=True, gate_outcome='pass_first_try', rating='good', errors=(), receipt=GateEvidenceReceipt(timestamp='2026-06-09T01:24:09.038Z', digest='ab31a429ddb82c92adb93fd6669e4e7904a9c7ade7fd4be3ecfcff4dc2134cb4', run_id='run-001', attempt_id='learner/attempts/attempt-1.md', attempt_digest='6beb623fe88f5024d63f33d5e130e3ce3e632856844d9097f598710463e00d87', scenario_id='gatekeeper-rate-limiter', verifier_source=None)).ok
+
+learner/gate/tests/test_gate.py:712: AssertionError
+_____________ TestNdjsonEndToEnd.test_gates_latest_matching_record _____________
+
+self = <test_gate.TestNdjsonEndToEnd object at 0x1097c5bd0>
+root = PosixPath('/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_gates_latest_matching_rec0')
+
+    def test_gates_latest_matching_record(self, root: Path):
+        # Pixel EVIDENCE_CONTRACT: one record per attempt line; records for
+        # other units are ignored and the gate grades the active unit's
+        # latest record (AID-3710 F1 HOLD: multi-record coverage restored
+        # WITH receipt binding — not the old no-binding behavior).
+        ndjson_path = root / "evidence.ndjson"
+        state_path = self._write_state(root, evidence_file=str(ndjson_path))
+        active = make_ndjson_record()
+        path = write_ndjson(
+            ndjson_path,
+            [
+                make_ndjson_record(
+                    unit_id="U-02_key_value_store", project="02_key_value_store"
+                ),
+                active,
+            ],
+        )
+        receipt_path = write_verifier_receipt(root, active)
+>       decision = verify_and_gate(
+            root, path, today=TODAY, verifier_receipt_path=receipt_path
+        )
+
+learner/gate/tests/test_gate.py:1197: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+learner/gate/canonical_gate.py:309: in verify_and_gate
+    commit_gate_transition(
+learner/substrate/gate.py:147: in commit_gate_transition
+    transitioned = transition_gate(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+state = {'active_unit': {'attempt_file': '/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pyt...easurement_source': 'self_reported', 'threshold_amber': 0.6, ...}, 'id': 'test-learner', 'level': 'intermediate'}, ...}
+
+    def transition_gate(
+        state: dict[str, Any],
+        *,
+        receipt: GateEvidenceReceipt,
+        passed: bool,
+        gate_outcome: str,
+        rating: str,
+        today: date,
+        root: Path | None = None,
+        gate_kind: str | None = None,
+    ) -> dict[str, Any]:
+        expected_rating = RATING_FROM_GATE.get(gate_outcome)
+        if expected_rating is None or expected_rating != rating:
+            raise GateTransitionError(
+                f"gate outcome {gate_outcome!r} requires rating {expected_rating!r}, got {rating!r}"
+            )
+    
+        new_state = deepcopy(state)
+        unit = new_state["active_unit"]
+        gate_review = {
+            "date": today,
+            "event": "gate",
+            "rating": rating,
+            "gate_outcome": gate_outcome,
+            "evidence_ts": receipt.timestamp,
+            "evidence_digest": receipt.digest,
+            "evidence_run_id": receipt.run_id,
+            "evidence_attempt_id": receipt.attempt_id,
+            "evidence_attempt_digest": receipt.attempt_digest,
+            "evidence_scenario_id": receipt.scenario_id,
+        }
+        if receipt.verifier_source is not None:
+            gate_review["evidence_verifier_source"] = receipt.verifier_source
+        if gate_kind is not None:
+            # ADR-0004: evidence classes stay labelled (no_code never carries the
+            # code-gate mutation/coverage metrics).
+            gate_review["gate_kind"] = gate_kind
+        units_log = new_state.setdefault("units_log", [])
+        entry = next((item for item in units_log if item.get("unit_id") == unit["id"]), None)
+        if entry is None:
+            evidence_date = datetime.fromisoformat(receipt.timestamp.replace("Z", "+00:00")).date()
+            new_entry = {
+                "unit_id": unit["id"],
+                "concept": unit.get("title", unit["id"]),
+                "kind": "concept",
+                "project": unit["project"],
+                "mastered": passed,
+                "evidence_file": unit.get("evidence_file"),
+                "attempt_file": unit.get("attempt_file"),
+                "reviews": [
+                    {"date": evidence_date, "event": "presented"},
+                    gate_review,
+                ],
+            }
+            if gate_kind is not None:
+                new_entry["gate_kind"] = gate_kind
+            units_log.append(new_entry)
+        else:
+            entry["mastered"] = passed
+            if gate_kind is not None:
+                entry["gate_kind"] = gate_kind
+            entry.setdefault("reviews", []).append(gate_review)
+    
+        if passed:
+            unit["state"] = "mastered"
+            existing_gate = unit.get("empirical_gate")
+            if gate_kind == "no_code":
+                unit["empirical_gate"] = {"require_executable_evidence": False}
+            elif not isinstance(existing_gate, dict):
+                unit["empirical_gate"] = {
+                    "require_executable_evidence": True,
+                    "min_coverage": 0.0,
+                    "mutation_min": 0.0,
+                }
+            evidence_label = (
+                "independently verified no-code evidence"
+                if gate_kind == "no_code"
+                else "executable evidence"
+            )
+            new_state["next_action"] = {
+                "owner": "leader",
+                "action": (
+                    f"{unit['id']} mastered with {evidence_label}. Pick the next "
+                    "unit (Cartografo) and present it before any implementation."
+                ),
+            }
+        else:
+            unit["retry_count"] = int(unit.get("retry_count", 0)) + 1
+            new_state["next_action"] = {
+                "owner": "learner",
+                "action": (
+                    f"Gate failed for {unit['id']} "
+                    f"(retry {unit['retry_count']}/{unit.get('retry_limit', 3)}). "
+                    "Replay the mission and produce new evidence."
+                ),
+            }
+    
+        new_state["streak"] = record_gate_outcome(new_state.get("streak", {}), passed, today)
+        errors = validate(new_state, root or Path.cwd())
+        if errors:
+>           raise GateTransitionError(f"gated state violates substrate invariants: {errors}")
+E           learner.substrate.gate.GateTransitionError: gated state violates substrate invariants: ["units_log[0].evidence_file is not parseable JSON ('/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_gates_latest_matching_rec0/evidence.ndjson'): Extra data at line 2"]
+
+learner/substrate/gate.py:130: GateTransitionError
+_ TestNdjsonEndToEnd.test_forged_latest_record_without_receipt_is_not_eligible _
+
+self = <test_gate.TestNdjsonEndToEnd object at 0x1097c5d10>
+root = PosixPath('/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_forged_latest_record_with0')
+
+    def test_forged_latest_record_without_receipt_is_not_eligible(self, root: Path):
+        # AID-3710 F1: the NDJSON pixelquest contract is game-shaped too —
+        # self-declared metrics in the latest record never gate to mastery.
+        state_path = self._write_state(root)
+        original = state_path.read_text(encoding="utf-8")
+        path = write_ndjson(root / "evidence.ndjson", [make_ndjson_record()])
+        decision = verify_and_gate(root, path, today=TODAY)
+>       assert decision is not None and not decision.ok
+E       AssertionError: assert (GateDecision(passed=True, gate_outcome='pass_first_try', rating='good', errors=(), receipt=GateEvidenceReceipt(timestamp='2026-07-05T12:00:00.000Z', digest='9a8dcd2742f82a68db2bef48d877bff2b5c58cf389999b166f29b0d222fffb4f', run_id='sha256:9a8dcd2742f82a68db2bef48d877bff2b5c58cf389999b166f29b0d222fffb4f', attempt_id='learner/attempts/attempt-1.md', attempt_digest='6beb623fe88f5024d63f33d5e130e3ce3e632856844d9097f598710463e00d87', scenario_id='encounter-agent-quest-01', verifier_source=None)) is not None and not True)
+E        +  where True = GateDecision(passed=True, gate_outcome='pass_first_try', rating='good', errors=(), receipt=GateEvidenceReceipt(timestamp='2026-07-05T12:00:00.000Z', digest='9a8dcd2742f82a68db2bef48d877bff2b5c58cf389999b166f29b0d222fffb4f', run_id='sha256:9a8dcd2742f82a68db2bef48d877bff2b5c58cf389999b166f29b0d222fffb4f', attempt_id='learner/attempts/attempt-1.md', attempt_digest='6beb623fe88f5024d63f33d5e130e3ce3e632856844d9097f598710463e00d87', scenario_id='encounter-agent-quest-01', verifier_source=None)).ok
+
+learner/gate/tests/test_gate.py:1214: AssertionError
+______ TestBoundEvidenceMultirecord.test_matching_record_backs_the_review ______
+
+self = <test_gate_multirecord_receipt_binding.TestBoundEvidenceMultirecord object at 0x1097c6210>
+root = PosixPath('/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_matching_record_backs_the0')
+
+    def test_matching_record_backs_the_review(self, root: Path):
+        active = tg.make_ndjson_record()
+        path = _two_record_ndjson(root)
+        digest = canonical_evidence_digest(active)
+>       assert bound_evidence_violations(path, digest, root) == []
+E       assert ["evidence_file is not parseable JSON (PosixPath('/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_matching_record_backs_the0/evidence.ndjson')): Extra data at line 2"] == []
+E         
+E         Left contains one more item: "evidence_file is not parseable JSON (PosixPath('/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_matching_record_backs_the0/evidence.ndjson')): Extra data at line 2"
+E         
+E         Full diff:
+E         - []
+E         + [
+E         +     'evidence_file is not parseable JSON '
+E         +     "(PosixPath('/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_matching_record_backs_the0/evidence.ndjson')): "
+E         +     'Extra data at line 2',
+E         + ]
+
+learner/gate/tests/test_gate_multirecord_receipt_binding.py:72: AssertionError
+__________ TestBoundEvidenceMultirecord.test_corrupt_line_is_rejected __________
+
+self = <test_gate_multirecord_receipt_binding.TestBoundEvidenceMultirecord object at 0x109840050>
+root = PosixPath('/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_corrupt_line_is_rejected0')
+
+    def test_corrupt_line_is_rejected(self, root: Path):
+        path = root / "evidence.ndjson"
+        path.write_text(
+            json.dumps(tg.make_ndjson_record()) + "\nnot-json\n", encoding="utf-8"
+        )
+        digest = canonical_evidence_digest(tg.make_ndjson_record())
+        violations = bound_evidence_violations(path, digest, root)
+>       assert any("is not parseable JSON or NDJSON" in v for v in violations)
+E       assert False
+E        +  where False = any(<generator object TestBoundEvidenceMultirecord.test_corrupt_line_is_rejected.<locals>.<genexpr> at 0x1098498a0>)
+
+learner/gate/tests/test_gate_multirecord_receipt_binding.py:101: AssertionError
+____ TestMultirecordEndToEnd.test_gates_latest_matching_record_with_receipt ____
+
+self = <test_gate_multirecord_receipt_binding.TestMultirecordEndToEnd object at 0x1097c6350>
+root = PosixPath('/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_gates_latest_matching_rec1')
+
+    def test_gates_latest_matching_record_with_receipt(self, root: Path):
+        # Selection + binding together: other-unit records are ignored, the
+        # active unit's latest record gates to mastery on its digest-bound
+        # receipt, and the persisted review records that record's timestamp.
+        ndjson_path = root / "evidence.ndjson"
+        state_path = _write_state(root, evidence_file=str(ndjson_path))
+        active = tg.make_ndjson_record()
+        path = tg.write_ndjson(
+            ndjson_path, [tg.make_ndjson_record(**OTHER_UNIT), active]
+        )
+        receipt_path = tg.write_verifier_receipt(root, active)
+>       decision = verify_and_gate(
+            root, path, today=TODAY, verifier_receipt_path=receipt_path
+        )
+
+learner/gate/tests/test_gate_multirecord_receipt_binding.py:116: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+learner/gate/canonical_gate.py:309: in verify_and_gate
+    commit_gate_transition(
+learner/substrate/gate.py:147: in commit_gate_transition
+    transitioned = transition_gate(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+state = {'active_unit': {'attempt_file': '/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pyt...easurement_source': 'self_reported', 'threshold_amber': 0.6, ...}, 'id': 'test-learner', 'level': 'intermediate'}, ...}
+
+    def transition_gate(
+        state: dict[str, Any],
+        *,
+        receipt: GateEvidenceReceipt,
+        passed: bool,
+        gate_outcome: str,
+        rating: str,
+        today: date,
+        root: Path | None = None,
+        gate_kind: str | None = None,
+    ) -> dict[str, Any]:
+        expected_rating = RATING_FROM_GATE.get(gate_outcome)
+        if expected_rating is None or expected_rating != rating:
+            raise GateTransitionError(
+                f"gate outcome {gate_outcome!r} requires rating {expected_rating!r}, got {rating!r}"
+            )
+    
+        new_state = deepcopy(state)
+        unit = new_state["active_unit"]
+        gate_review = {
+            "date": today,
+            "event": "gate",
+            "rating": rating,
+            "gate_outcome": gate_outcome,
+            "evidence_ts": receipt.timestamp,
+            "evidence_digest": receipt.digest,
+            "evidence_run_id": receipt.run_id,
+            "evidence_attempt_id": receipt.attempt_id,
+            "evidence_attempt_digest": receipt.attempt_digest,
+            "evidence_scenario_id": receipt.scenario_id,
+        }
+        if receipt.verifier_source is not None:
+            gate_review["evidence_verifier_source"] = receipt.verifier_source
+        if gate_kind is not None:
+            # ADR-0004: evidence classes stay labelled (no_code never carries the
+            # code-gate mutation/coverage metrics).
+            gate_review["gate_kind"] = gate_kind
+        units_log = new_state.setdefault("units_log", [])
+        entry = next((item for item in units_log if item.get("unit_id") == unit["id"]), None)
+        if entry is None:
+            evidence_date = datetime.fromisoformat(receipt.timestamp.replace("Z", "+00:00")).date()
+            new_entry = {
+                "unit_id": unit["id"],
+                "concept": unit.get("title", unit["id"]),
+                "kind": "concept",
+                "project": unit["project"],
+                "mastered": passed,
+                "evidence_file": unit.get("evidence_file"),
+                "attempt_file": unit.get("attempt_file"),
+                "reviews": [
+                    {"date": evidence_date, "event": "presented"},
+                    gate_review,
+                ],
+            }
+            if gate_kind is not None:
+                new_entry["gate_kind"] = gate_kind
+            units_log.append(new_entry)
+        else:
+            entry["mastered"] = passed
+            if gate_kind is not None:
+                entry["gate_kind"] = gate_kind
+            entry.setdefault("reviews", []).append(gate_review)
+    
+        if passed:
+            unit["state"] = "mastered"
+            existing_gate = unit.get("empirical_gate")
+            if gate_kind == "no_code":
+                unit["empirical_gate"] = {"require_executable_evidence": False}
+            elif not isinstance(existing_gate, dict):
+                unit["empirical_gate"] = {
+                    "require_executable_evidence": True,
+                    "min_coverage": 0.0,
+                    "mutation_min": 0.0,
+                }
+            evidence_label = (
+                "independently verified no-code evidence"
+                if gate_kind == "no_code"
+                else "executable evidence"
+            )
+            new_state["next_action"] = {
+                "owner": "leader",
+                "action": (
+                    f"{unit['id']} mastered with {evidence_label}. Pick the next "
+                    "unit (Cartografo) and present it before any implementation."
+                ),
+            }
+        else:
+            unit["retry_count"] = int(unit.get("retry_count", 0)) + 1
+            new_state["next_action"] = {
+                "owner": "learner",
+                "action": (
+                    f"Gate failed for {unit['id']} "
+                    f"(retry {unit['retry_count']}/{unit.get('retry_limit', 3)}). "
+                    "Replay the mission and produce new evidence."
+                ),
+            }
+    
+        new_state["streak"] = record_gate_outcome(new_state.get("streak", {}), passed, today)
+        errors = validate(new_state, root or Path.cwd())
+        if errors:
+>           raise GateTransitionError(f"gated state violates substrate invariants: {errors}")
+E           learner.substrate.gate.GateTransitionError: gated state violates substrate invariants: ["units_log[0].evidence_file is not parseable JSON ('/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_gates_latest_matching_rec1/evidence.ndjson'): Extra data at line 2"]
+
+learner/substrate/gate.py:130: GateTransitionError
+_____ TestMultirecordEndToEnd.test_persisted_multirecord_state_revalidates _____
+
+self = <test_gate_multirecord_receipt_binding.TestMultirecordEndToEnd object at 0x1097c6490>
+root = PosixPath('/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_persisted_multirecord_sta0')
+
+    def test_persisted_multirecord_state_revalidates(self, root: Path):
+        ndjson_path = root / "evidence.ndjson"
+        state_path = _write_state(root, evidence_file=str(ndjson_path))
+        path = _two_record_ndjson(root)
+        receipt_path = tg.write_verifier_receipt(root, tg.make_ndjson_record())
+>       decision = verify_and_gate(
+            root, path, today=TODAY, verifier_receipt_path=receipt_path
+        )
+
+learner/gate/tests/test_gate_multirecord_receipt_binding.py:131: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+learner/gate/canonical_gate.py:309: in verify_and_gate
+    commit_gate_transition(
+learner/substrate/gate.py:147: in commit_gate_transition
+    transitioned = transition_gate(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+state = {'active_unit': {'attempt_file': '/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pyt...easurement_source': 'self_reported', 'threshold_amber': 0.6, ...}, 'id': 'test-learner', 'level': 'intermediate'}, ...}
+
+    def transition_gate(
+        state: dict[str, Any],
+        *,
+        receipt: GateEvidenceReceipt,
+        passed: bool,
+        gate_outcome: str,
+        rating: str,
+        today: date,
+        root: Path | None = None,
+        gate_kind: str | None = None,
+    ) -> dict[str, Any]:
+        expected_rating = RATING_FROM_GATE.get(gate_outcome)
+        if expected_rating is None or expected_rating != rating:
+            raise GateTransitionError(
+                f"gate outcome {gate_outcome!r} requires rating {expected_rating!r}, got {rating!r}"
+            )
+    
+        new_state = deepcopy(state)
+        unit = new_state["active_unit"]
+        gate_review = {
+            "date": today,
+            "event": "gate",
+            "rating": rating,
+            "gate_outcome": gate_outcome,
+            "evidence_ts": receipt.timestamp,
+            "evidence_digest": receipt.digest,
+            "evidence_run_id": receipt.run_id,
+            "evidence_attempt_id": receipt.attempt_id,
+            "evidence_attempt_digest": receipt.attempt_digest,
+            "evidence_scenario_id": receipt.scenario_id,
+        }
+        if receipt.verifier_source is not None:
+            gate_review["evidence_verifier_source"] = receipt.verifier_source
+        if gate_kind is not None:
+            # ADR-0004: evidence classes stay labelled (no_code never carries the
+            # code-gate mutation/coverage metrics).
+            gate_review["gate_kind"] = gate_kind
+        units_log = new_state.setdefault("units_log", [])
+        entry = next((item for item in units_log if item.get("unit_id") == unit["id"]), None)
+        if entry is None:
+            evidence_date = datetime.fromisoformat(receipt.timestamp.replace("Z", "+00:00")).date()
+            new_entry = {
+                "unit_id": unit["id"],
+                "concept": unit.get("title", unit["id"]),
+                "kind": "concept",
+                "project": unit["project"],
+                "mastered": passed,
+                "evidence_file": unit.get("evidence_file"),
+                "attempt_file": unit.get("attempt_file"),
+                "reviews": [
+                    {"date": evidence_date, "event": "presented"},
+                    gate_review,
+                ],
+            }
+            if gate_kind is not None:
+                new_entry["gate_kind"] = gate_kind
+            units_log.append(new_entry)
+        else:
+            entry["mastered"] = passed
+            if gate_kind is not None:
+                entry["gate_kind"] = gate_kind
+            entry.setdefault("reviews", []).append(gate_review)
+    
+        if passed:
+            unit["state"] = "mastered"
+            existing_gate = unit.get("empirical_gate")
+            if gate_kind == "no_code":
+                unit["empirical_gate"] = {"require_executable_evidence": False}
+            elif not isinstance(existing_gate, dict):
+                unit["empirical_gate"] = {
+                    "require_executable_evidence": True,
+                    "min_coverage": 0.0,
+                    "mutation_min": 0.0,
+                }
+            evidence_label = (
+                "independently verified no-code evidence"
+                if gate_kind == "no_code"
+                else "executable evidence"
+            )
+            new_state["next_action"] = {
+                "owner": "leader",
+                "action": (
+                    f"{unit['id']} mastered with {evidence_label}. Pick the next "
+                    "unit (Cartografo) and present it before any implementation."
+                ),
+            }
+        else:
+            unit["retry_count"] = int(unit.get("retry_count", 0)) + 1
+            new_state["next_action"] = {
+                "owner": "learner",
+                "action": (
+                    f"Gate failed for {unit['id']} "
+                    f"(retry {unit['retry_count']}/{unit.get('retry_limit', 3)}). "
+                    "Replay the mission and produce new evidence."
+                ),
+            }
+    
+        new_state["streak"] = record_gate_outcome(new_state.get("streak", {}), passed, today)
+        errors = validate(new_state, root or Path.cwd())
+        if errors:
+>           raise GateTransitionError(f"gated state violates substrate invariants: {errors}")
+E           learner.substrate.gate.GateTransitionError: gated state violates substrate invariants: ["units_log[0].evidence_file is not parseable JSON ('/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_persisted_multirecord_sta0/evidence.ndjson'): Extra data at line 2"]
+
+learner/substrate/gate.py:130: GateTransitionError
+___ TestMultirecordEndToEnd.test_multirecord_without_receipt_is_not_eligible ___
+
+self = <test_gate_multirecord_receipt_binding.TestMultirecordEndToEnd object at 0x109840180>
+root = PosixPath('/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_multirecord_without_recei0')
+
+    def test_multirecord_without_receipt_is_not_eligible(self, root: Path):
+        # AID-3710 F1 fail-closed: multi-record shape does not soften the
+        # receipt requirement, and other-unit records never satisfy the gate.
+        state_path = _write_state(root)
+        original = state_path.read_text(encoding="utf-8")
+        path = _two_record_ndjson(root)
+>       decision = verify_and_gate(root, path, today=TODAY)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+learner/gate/tests/test_gate_multirecord_receipt_binding.py:143: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+learner/gate/canonical_gate.py:309: in verify_and_gate
+    commit_gate_transition(
+learner/substrate/gate.py:147: in commit_gate_transition
+    transitioned = transition_gate(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+state = {'active_unit': {'attempt_file': '/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pyt...easurement_source': 'self_reported', 'threshold_amber': 0.6, ...}, 'id': 'test-learner', 'level': 'intermediate'}, ...}
+
+    def transition_gate(
+        state: dict[str, Any],
+        *,
+        receipt: GateEvidenceReceipt,
+        passed: bool,
+        gate_outcome: str,
+        rating: str,
+        today: date,
+        root: Path | None = None,
+        gate_kind: str | None = None,
+    ) -> dict[str, Any]:
+        expected_rating = RATING_FROM_GATE.get(gate_outcome)
+        if expected_rating is None or expected_rating != rating:
+            raise GateTransitionError(
+                f"gate outcome {gate_outcome!r} requires rating {expected_rating!r}, got {rating!r}"
+            )
+    
+        new_state = deepcopy(state)
+        unit = new_state["active_unit"]
+        gate_review = {
+            "date": today,
+            "event": "gate",
+            "rating": rating,
+            "gate_outcome": gate_outcome,
+            "evidence_ts": receipt.timestamp,
+            "evidence_digest": receipt.digest,
+            "evidence_run_id": receipt.run_id,
+            "evidence_attempt_id": receipt.attempt_id,
+            "evidence_attempt_digest": receipt.attempt_digest,
+            "evidence_scenario_id": receipt.scenario_id,
+        }
+        if receipt.verifier_source is not None:
+            gate_review["evidence_verifier_source"] = receipt.verifier_source
+        if gate_kind is not None:
+            # ADR-0004: evidence classes stay labelled (no_code never carries the
+            # code-gate mutation/coverage metrics).
+            gate_review["gate_kind"] = gate_kind
+        units_log = new_state.setdefault("units_log", [])
+        entry = next((item for item in units_log if item.get("unit_id") == unit["id"]), None)
+        if entry is None:
+            evidence_date = datetime.fromisoformat(receipt.timestamp.replace("Z", "+00:00")).date()
+            new_entry = {
+                "unit_id": unit["id"],
+                "concept": unit.get("title", unit["id"]),
+                "kind": "concept",
+                "project": unit["project"],
+                "mastered": passed,
+                "evidence_file": unit.get("evidence_file"),
+                "attempt_file": unit.get("attempt_file"),
+                "reviews": [
+                    {"date": evidence_date, "event": "presented"},
+                    gate_review,
+                ],
+            }
+            if gate_kind is not None:
+                new_entry["gate_kind"] = gate_kind
+            units_log.append(new_entry)
+        else:
+            entry["mastered"] = passed
+            if gate_kind is not None:
+                entry["gate_kind"] = gate_kind
+            entry.setdefault("reviews", []).append(gate_review)
+    
+        if passed:
+            unit["state"] = "mastered"
+            existing_gate = unit.get("empirical_gate")
+            if gate_kind == "no_code":
+                unit["empirical_gate"] = {"require_executable_evidence": False}
+            elif not isinstance(existing_gate, dict):
+                unit["empirical_gate"] = {
+                    "require_executable_evidence": True,
+                    "min_coverage": 0.0,
+                    "mutation_min": 0.0,
+                }
+            evidence_label = (
+                "independently verified no-code evidence"
+                if gate_kind == "no_code"
+                else "executable evidence"
+            )
+            new_state["next_action"] = {
+                "owner": "leader",
+                "action": (
+                    f"{unit['id']} mastered with {evidence_label}. Pick the next "
+                    "unit (Cartografo) and present it before any implementation."
+                ),
+            }
+        else:
+            unit["retry_count"] = int(unit.get("retry_count", 0)) + 1
+            new_state["next_action"] = {
+                "owner": "learner",
+                "action": (
+                    f"Gate failed for {unit['id']} "
+                    f"(retry {unit['retry_count']}/{unit.get('retry_limit', 3)}). "
+                    "Replay the mission and produce new evidence."
+                ),
+            }
+    
+        new_state["streak"] = record_gate_outcome(new_state.get("streak", {}), passed, today)
+        errors = validate(new_state, root or Path.cwd())
+        if errors:
+>           raise GateTransitionError(f"gated state violates substrate invariants: {errors}")
+E           learner.substrate.gate.GateTransitionError: gated state violates substrate invariants: ["units_log[0].evidence_file points at a missing path: '/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_multirecord_without_recei0/evidence-artifact.json'", "active_unit.evidence_file='/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_multirecord_without_recei0/evidence-artifact.json' does not exist on disk; mastery requires a real attempt and a real evidence file"]
+
+learner/substrate/gate.py:130: GateTransitionError
+_________________ test_no_receipt_preserves_state[gatekeeper] __________________
+
+root = PosixPath('/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_no_receipt_preserves_stat0')
+evidence_factory = <function make_evidence at 0x108f468e0>
+
+    @pytest.mark.parametrize(
+        "evidence_factory", [tg.make_evidence, tg.make_ndjson_record],
+        ids=["gatekeeper", "pixelquest"],
+    )
+    def test_no_receipt_preserves_state(root: Path, evidence_factory):
+        evidence = evidence_factory()
+        path = tg.write_ndjson(root / "evidence.ndjson", [evidence])
+        state_path = _write_state(root, path)
+        before = _snapshot(root)
+    
+        decision = verify_and_gate(root, path, today=tg.TODAY)
+    
+        assert decision is not None
+>       assert decision.ok is False and decision.passed is False
+E       AssertionError: assert (True is False)
+E        +  where True = GateDecision(passed=True, gate_outcome='pass_first_try', rating='good', errors=(), receipt=GateEvidenceReceipt(timestamp='2026-06-09T01:24:09.038Z', digest='ab31a429ddb82c92adb93fd6669e4e7904a9c7ade7fd4be3ecfcff4dc2134cb4', run_id='run-001', attempt_id='learner/attempts/attempt-1.md', attempt_digest='1665fac2c1d934660236b2df13eb22a214f9596f4902d04d2197c423c9215458', scenario_id='gatekeeper-rate-limiter', verifier_source=None)).ok
+
+learner/gate/tests/test_readiness_plan_contract.py:69: AssertionError
+_________________ test_no_receipt_preserves_state[pixelquest] __________________
+
+root = PosixPath('/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_no_receipt_preserves_stat1')
+evidence_factory = <function make_ndjson_record at 0x1097e2840>
+
+    @pytest.mark.parametrize(
+        "evidence_factory", [tg.make_evidence, tg.make_ndjson_record],
+        ids=["gatekeeper", "pixelquest"],
+    )
+    def test_no_receipt_preserves_state(root: Path, evidence_factory):
+        evidence = evidence_factory()
+        path = tg.write_ndjson(root / "evidence.ndjson", [evidence])
+        state_path = _write_state(root, path)
+        before = _snapshot(root)
+    
+        decision = verify_and_gate(root, path, today=tg.TODAY)
+    
+        assert decision is not None
+>       assert decision.ok is False and decision.passed is False
+E       AssertionError: assert (True is False)
+E        +  where True = GateDecision(passed=True, gate_outcome='pass_first_try', rating='good', errors=(), receipt=GateEvidenceReceipt(timestamp='2026-07-05T12:00:00.000Z', digest='9a8dcd2742f82a68db2bef48d877bff2b5c58cf389999b166f29b0d222fffb4f', run_id='sha256:9a8dcd2742f82a68db2bef48d877bff2b5c58cf389999b166f29b0d222fffb4f', attempt_id='learner/attempts/attempt-1.md', attempt_digest='1665fac2c1d934660236b2df13eb22a214f9596f4902d04d2197c423c9215458', scenario_id='encounter-agent-quest-01', verifier_source=None)).ok
+
+learner/gate/tests/test_readiness_plan_contract.py:69: AssertionError
+________________ test_committed_multirecord_backing_revalidates ________________
+
+root = PosixPath('/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_committed_multirecord_bac0')
+
+    def test_committed_multirecord_backing_revalidates(root: Path):
+        older = tg.make_ndjson_record(ts="2026-07-04T12:00:00Z")
+        active = tg.make_ndjson_record(encounter_id="latest-active-encounter")
+        other = tg.make_ndjson_record(unit_id="other-unit", project="02_key_value_store")
+        path = tg.write_ndjson(root / "evidence.ndjson", [older, active, other])
+        state_path = _write_state(root, path)
+        receipt_path = tg.write_verifier_receipt(root, active)
+>       decision = verify_and_gate(
+            root, path, today=tg.TODAY, verifier_receipt_path=receipt_path
+        )
+
+learner/gate/tests/test_readiness_plan_contract.py:192: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+learner/gate/canonical_gate.py:309: in verify_and_gate
+    commit_gate_transition(
+learner/substrate/gate.py:147: in commit_gate_transition
+    transitioned = transition_gate(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+state = {'active_unit': {'attempt_file': '/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pyt...easurement_source': 'self_reported', 'threshold_amber': 0.6, ...}, 'id': 'test-learner', 'level': 'intermediate'}, ...}
+
+    def transition_gate(
+        state: dict[str, Any],
+        *,
+        receipt: GateEvidenceReceipt,
+        passed: bool,
+        gate_outcome: str,
+        rating: str,
+        today: date,
+        root: Path | None = None,
+        gate_kind: str | None = None,
+    ) -> dict[str, Any]:
+        expected_rating = RATING_FROM_GATE.get(gate_outcome)
+        if expected_rating is None or expected_rating != rating:
+            raise GateTransitionError(
+                f"gate outcome {gate_outcome!r} requires rating {expected_rating!r}, got {rating!r}"
+            )
+    
+        new_state = deepcopy(state)
+        unit = new_state["active_unit"]
+        gate_review = {
+            "date": today,
+            "event": "gate",
+            "rating": rating,
+            "gate_outcome": gate_outcome,
+            "evidence_ts": receipt.timestamp,
+            "evidence_digest": receipt.digest,
+            "evidence_run_id": receipt.run_id,
+            "evidence_attempt_id": receipt.attempt_id,
+            "evidence_attempt_digest": receipt.attempt_digest,
+            "evidence_scenario_id": receipt.scenario_id,
+        }
+        if receipt.verifier_source is not None:
+            gate_review["evidence_verifier_source"] = receipt.verifier_source
+        if gate_kind is not None:
+            # ADR-0004: evidence classes stay labelled (no_code never carries the
+            # code-gate mutation/coverage metrics).
+            gate_review["gate_kind"] = gate_kind
+        units_log = new_state.setdefault("units_log", [])
+        entry = next((item for item in units_log if item.get("unit_id") == unit["id"]), None)
+        if entry is None:
+            evidence_date = datetime.fromisoformat(receipt.timestamp.replace("Z", "+00:00")).date()
+            new_entry = {
+                "unit_id": unit["id"],
+                "concept": unit.get("title", unit["id"]),
+                "kind": "concept",
+                "project": unit["project"],
+                "mastered": passed,
+                "evidence_file": unit.get("evidence_file"),
+                "attempt_file": unit.get("attempt_file"),
+                "reviews": [
+                    {"date": evidence_date, "event": "presented"},
+                    gate_review,
+                ],
+            }
+            if gate_kind is not None:
+                new_entry["gate_kind"] = gate_kind
+            units_log.append(new_entry)
+        else:
+            entry["mastered"] = passed
+            if gate_kind is not None:
+                entry["gate_kind"] = gate_kind
+            entry.setdefault("reviews", []).append(gate_review)
+    
+        if passed:
+            unit["state"] = "mastered"
+            existing_gate = unit.get("empirical_gate")
+            if gate_kind == "no_code":
+                unit["empirical_gate"] = {"require_executable_evidence": False}
+            elif not isinstance(existing_gate, dict):
+                unit["empirical_gate"] = {
+                    "require_executable_evidence": True,
+                    "min_coverage": 0.0,
+                    "mutation_min": 0.0,
+                }
+            evidence_label = (
+                "independently verified no-code evidence"
+                if gate_kind == "no_code"
+                else "executable evidence"
+            )
+            new_state["next_action"] = {
+                "owner": "leader",
+                "action": (
+                    f"{unit['id']} mastered with {evidence_label}. Pick the next "
+                    "unit (Cartografo) and present it before any implementation."
+                ),
+            }
+        else:
+            unit["retry_count"] = int(unit.get("retry_count", 0)) + 1
+            new_state["next_action"] = {
+                "owner": "learner",
+                "action": (
+                    f"Gate failed for {unit['id']} "
+                    f"(retry {unit['retry_count']}/{unit.get('retry_limit', 3)}). "
+                    "Replay the mission and produce new evidence."
+                ),
+            }
+    
+        new_state["streak"] = record_gate_outcome(new_state.get("streak", {}), passed, today)
+        errors = validate(new_state, root or Path.cwd())
+        if errors:
+>           raise GateTransitionError(f"gated state violates substrate invariants: {errors}")
+E           learner.substrate.gate.GateTransitionError: gated state violates substrate invariants: ["units_log[0].evidence_file is not parseable JSON ('/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_committed_multirecord_bac0/evidence.ndjson'): Extra data at line 2"]
+
+learner/substrate/gate.py:130: GateTransitionError
+_ test_replay_preserves_consumed_state[producer_nonce-attempt/scenario replay] _
+
+root = PosixPath('/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_replay_preserves_consumed2')
+replay_kind = 'producer_nonce', expected = 'attempt/scenario replay'
+
+    @pytest.mark.parametrize(
+        "replay_kind,expected",
+        [
+            ("same_record", "stale or duplicate"),
+            ("new_timestamp", "digest replay"),
+            ("producer_nonce", "attempt/scenario replay"),
+            ("changed_payload", "run_id is immutable"),
+        ],
+    )
+    def test_replay_preserves_consumed_state(root: Path, replay_kind: str, expected: str):
+        evidence = tg.make_evidence(**{"pass": False})
+        if replay_kind == "producer_nonce":
+            evidence.pop("run_id")
+        path = root / "evidence.json"
+        path.write_text(json.dumps(evidence), encoding="utf-8")
+        state_path = _write_state(root, path)
+        receipt_path = tg.write_verifier_receipt(root, evidence, verdict="FAIL")
+        first = verify_and_gate(
+            root, path, today=tg.TODAY, verifier_receipt_path=receipt_path
+        )
+        assert first is not None and first.ok and not first.passed
+        consumed_state = state_path.read_bytes()
+    
+        replay = dict(evidence)
+        if replay_kind != "same_record":
+            replay["ts"] = "2026-07-06T13:00:00Z"
+        if replay_kind == "producer_nonce":
+            replay["nonce"] = "producer-controlled"
+            replay["metrics"] = {"nonce": "producer-controlled"}
+        if replay_kind == "changed_payload":
+            replay["good_admits"] = 19
+        path.write_text(json.dumps(replay), encoding="utf-8")
+        receipt_path = tg.write_verifier_receipt(root, replay, verdict="FAIL")
+        before = _snapshot(root)
+    
+>       second = verify_and_gate(
+            root, path, today=tg.TODAY, verifier_receipt_path=receipt_path
+        )
+
+learner/gate/tests/test_readiness_plan_contract.py:248: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+learner/gate/canonical_gate.py:278: in verify_and_gate
+    state = load_and_validate(state_path)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = PosixPath('/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_replay_preserves_consumed2/learner/learning_state.yaml')
+
+    def load_and_validate(path: str | Path = "learner/learning_state.yaml") -> dict[str, Any]:
+        """Load the canonical state and raise on invariant violations."""
+        state = load_canonical(path)
+        state_path = resolve_canonical_path(path).resolve()
+        root = state_path.parent.parent if state_path.parent.name == "learner" else ROOT
+        errors = validate(state, root)
+        if errors:
+>           raise ValueError(f"invalid learner state: {'; '.join(errors)}")
+E           ValueError: invalid learner state: units_log[0].evidence_file does not match the canonical digest recorded by the verifier
+
+learner/substrate/__init__.py:748: ValueError
+__ test_replay_preserves_consumed_state[changed_payload-run_id is immutable] ___
+
+root = PosixPath('/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_replay_preserves_consumed3')
+replay_kind = 'changed_payload', expected = 'run_id is immutable'
+
+    @pytest.mark.parametrize(
+        "replay_kind,expected",
+        [
+            ("same_record", "stale or duplicate"),
+            ("new_timestamp", "digest replay"),
+            ("producer_nonce", "attempt/scenario replay"),
+            ("changed_payload", "run_id is immutable"),
+        ],
+    )
+    def test_replay_preserves_consumed_state(root: Path, replay_kind: str, expected: str):
+        evidence = tg.make_evidence(**{"pass": False})
+        if replay_kind == "producer_nonce":
+            evidence.pop("run_id")
+        path = root / "evidence.json"
+        path.write_text(json.dumps(evidence), encoding="utf-8")
+        state_path = _write_state(root, path)
+        receipt_path = tg.write_verifier_receipt(root, evidence, verdict="FAIL")
+        first = verify_and_gate(
+            root, path, today=tg.TODAY, verifier_receipt_path=receipt_path
+        )
+        assert first is not None and first.ok and not first.passed
+        consumed_state = state_path.read_bytes()
+    
+        replay = dict(evidence)
+        if replay_kind != "same_record":
+            replay["ts"] = "2026-07-06T13:00:00Z"
+        if replay_kind == "producer_nonce":
+            replay["nonce"] = "producer-controlled"
+            replay["metrics"] = {"nonce": "producer-controlled"}
+        if replay_kind == "changed_payload":
+            replay["good_admits"] = 19
+        path.write_text(json.dumps(replay), encoding="utf-8")
+        receipt_path = tg.write_verifier_receipt(root, replay, verdict="FAIL")
+        before = _snapshot(root)
+    
+>       second = verify_and_gate(
+            root, path, today=tg.TODAY, verifier_receipt_path=receipt_path
+        )
+
+learner/gate/tests/test_readiness_plan_contract.py:248: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+learner/gate/canonical_gate.py:278: in verify_and_gate
+    state = load_and_validate(state_path)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = PosixPath('/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_replay_preserves_consumed3/learner/learning_state.yaml')
+
+    def load_and_validate(path: str | Path = "learner/learning_state.yaml") -> dict[str, Any]:
+        """Load the canonical state and raise on invariant violations."""
+        state = load_canonical(path)
+        state_path = resolve_canonical_path(path).resolve()
+        root = state_path.parent.parent if state_path.parent.name == "learner" else ROOT
+        errors = validate(state, root)
+        if errors:
+>           raise ValueError(f"invalid learner state: {'; '.join(errors)}")
+E           ValueError: invalid learner state: units_log[0].evidence_file does not match the canonical digest recorded by the verifier
+
+learner/substrate/__init__.py:748: ValueError
+__________________ test_dry_run_preserves_all_files[negative] __________________
+
+root = PosixPath('/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_dry_run_preserves_all_fil1')
+capsys = <_pytest.capture.CaptureFixture object at 0x10981f150>
+has_receipt = False
+
+    @pytest.mark.parametrize("has_receipt", [True, False], ids=["positive", "negative"])
+    def test_dry_run_preserves_all_files(root: Path, capsys, has_receipt: bool):
+        evidence = tg.make_evidence()
+        path = tg.write_ndjson(root / "evidence.ndjson", [evidence])
+        state_path = _write_state(root, path)
+        argv = ["--root", str(root), "--evidence", str(path), "--dry-run"]
+        if has_receipt:
+            receipt_path = tg.write_verifier_receipt(root, evidence)
+            argv.extend(["--verifier-receipt", str(receipt_path)])
+        before = _snapshot(root)
+    
+>       assert cli_main(argv) == (0 if has_receipt else 1)
+E       AssertionError: assert 0 == 1
+E        +  where 0 = cli_main(['--root', '/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_dry_run_preserves_all_fil1', '--evidence', '/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_dry_run_preserves_all_fil1/evidence.ndjson', '--dry-run'])
+
+learner/gate/tests/test_readiness_plan_contract.py:274: AssertionError
+----------------------------- Captured stdout call -----------------------------
+GATE PASS_FIRST_TRY (rating: good) — outcome would be recorded in learner/learning_state.yaml > units_log (evidence: /private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_dry_run_preserves_all_fil1/evidence.ndjson)
+=========================== short test summary info ============================
+FAILED learner/gate/tests/test_gate.py::TestCheckEvidence::test_game_pass_without_verifier_receipt_is_not_eligible[gatekeeper] - assert False
+ +  where False = any(<generator object TestCheckEvidence.test_game_pass_without_verifier_receipt_is_not_eligible.<locals>.<genexpr> at 0x109838110>)
+FAILED learner/gate/tests/test_gate.py::TestCheckEvidence::test_game_pass_without_verifier_receipt_is_not_eligible[pixelquest] - assert False
+ +  where False = any(<generator object TestCheckEvidence.test_game_pass_without_verifier_receipt_is_not_eligible.<locals>.<genexpr> at 0x109839220>)
+FAILED learner/gate/tests/test_gate.py::TestDecide::test_forged_pass_without_receipt_never_decides_passed - AssertionError: assert (not True)
+ +  where True = GateDecision(passed=True, gate_outcome='pass_first_try', rating='good', errors=(), receipt=GateEvidenceReceipt(timestamp='2026-06-09T01:24:09.038Z', digest='ab31a429ddb82c92adb93fd6669e4e7904a9c7ade7fd4be3ecfcff4dc2134cb4', run_id='run-001', attempt_id='learner/attempts/attempt-1.md', attempt_digest='6beb623fe88f5024d63f33d5e130e3ce3e632856844d9097f598710463e00d87', scenario_id='gatekeeper-rate-limiter', verifier_source=None)).ok
+FAILED learner/gate/tests/test_gate.py::TestEndToEnd::test_forged_game_pass_without_receipt_writes_no_mastery - AssertionError: assert (GateDecision(passed=True, gate_outcome='pass_first_try', rating='good', errors=(), receipt=GateEvidenceReceipt(timestamp='2026-06-09T01:24:09.038Z', digest='ab31a429ddb82c92adb93fd6669e4e7904a9c7ade7fd4be3ecfcff4dc2134cb4', run_id='run-001', attempt_id='learner/attempts/attempt-1.md', attempt_digest='6beb623fe88f5024d63f33d5e130e3ce3e632856844d9097f598710463e00d87', scenario_id='gatekeeper-rate-limiter', verifier_source=None)) is not None and not True)
+ +  where True = GateDecision(passed=True, gate_outcome='pass_first_try', rating='good', errors=(), receipt=GateEvidenceReceipt(timestamp='2026-06-09T01:24:09.038Z', digest='ab31a429ddb82c92adb93fd6669e4e7904a9c7ade7fd4be3ecfcff4dc2134cb4', run_id='run-001', attempt_id='learner/attempts/attempt-1.md', attempt_digest='6beb623fe88f5024d63f33d5e130e3ce3e632856844d9097f598710463e00d87', scenario_id='gatekeeper-rate-limiter', verifier_source=None)).ok
+FAILED learner/gate/tests/test_gate.py::TestNdjsonEndToEnd::test_gates_latest_matching_record - learner.substrate.gate.GateTransitionError: gated state violates substrate invariants: ["units_log[0].evidence_file is not parseable JSON ('/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_gates_latest_matching_rec0/evidence.ndjson'): Extra data at line 2"]
+FAILED learner/gate/tests/test_gate.py::TestNdjsonEndToEnd::test_forged_latest_record_without_receipt_is_not_eligible - AssertionError: assert (GateDecision(passed=True, gate_outcome='pass_first_try', rating='good', errors=(), receipt=GateEvidenceReceipt(timestamp='2026-07-05T12:00:00.000Z', digest='9a8dcd2742f82a68db2bef48d877bff2b5c58cf389999b166f29b0d222fffb4f', run_id='sha256:9a8dcd2742f82a68db2bef48d877bff2b5c58cf389999b166f29b0d222fffb4f', attempt_id='learner/attempts/attempt-1.md', attempt_digest='6beb623fe88f5024d63f33d5e130e3ce3e632856844d9097f598710463e00d87', scenario_id='encounter-agent-quest-01', verifier_source=None)) is not None and not True)
+ +  where True = GateDecision(passed=True, gate_outcome='pass_first_try', rating='good', errors=(), receipt=GateEvidenceReceipt(timestamp='2026-07-05T12:00:00.000Z', digest='9a8dcd2742f82a68db2bef48d877bff2b5c58cf389999b166f29b0d222fffb4f', run_id='sha256:9a8dcd2742f82a68db2bef48d877bff2b5c58cf389999b166f29b0d222fffb4f', attempt_id='learner/attempts/attempt-1.md', attempt_digest='6beb623fe88f5024d63f33d5e130e3ce3e632856844d9097f598710463e00d87', scenario_id='encounter-agent-quest-01', verifier_source=None)).ok
+FAILED learner/gate/tests/test_gate_multirecord_receipt_binding.py::TestBoundEvidenceMultirecord::test_matching_record_backs_the_review - assert ["evidence_file is not parseable JSON (PosixPath('/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_matching_record_backs_the0/evidence.ndjson')): Extra data at line 2"] == []
+  
+  Left contains one more item: "evidence_file is not parseable JSON (PosixPath('/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_matching_record_backs_the0/evidence.ndjson')): Extra data at line 2"
+  
+  Full diff:
+  - []
+  + [
+  +     'evidence_file is not parseable JSON '
+  +     "(PosixPath('/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_matching_record_backs_the0/evidence.ndjson')): "
+  +     'Extra data at line 2',
+  + ]
+FAILED learner/gate/tests/test_gate_multirecord_receipt_binding.py::TestBoundEvidenceMultirecord::test_corrupt_line_is_rejected - assert False
+ +  where False = any(<generator object TestBoundEvidenceMultirecord.test_corrupt_line_is_rejected.<locals>.<genexpr> at 0x1098498a0>)
+FAILED learner/gate/tests/test_gate_multirecord_receipt_binding.py::TestMultirecordEndToEnd::test_gates_latest_matching_record_with_receipt - learner.substrate.gate.GateTransitionError: gated state violates substrate invariants: ["units_log[0].evidence_file is not parseable JSON ('/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_gates_latest_matching_rec1/evidence.ndjson'): Extra data at line 2"]
+FAILED learner/gate/tests/test_gate_multirecord_receipt_binding.py::TestMultirecordEndToEnd::test_persisted_multirecord_state_revalidates - learner.substrate.gate.GateTransitionError: gated state violates substrate invariants: ["units_log[0].evidence_file is not parseable JSON ('/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_persisted_multirecord_sta0/evidence.ndjson'): Extra data at line 2"]
+FAILED learner/gate/tests/test_gate_multirecord_receipt_binding.py::TestMultirecordEndToEnd::test_multirecord_without_receipt_is_not_eligible - learner.substrate.gate.GateTransitionError: gated state violates substrate invariants: ["units_log[0].evidence_file points at a missing path: '/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_multirecord_without_recei0/evidence-artifact.json'", "active_unit.evidence_file='/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_multirecord_without_recei0/evidence-artifact.json' does not exist on disk; mastery requires a real attempt and a real evidence file"]
+FAILED learner/gate/tests/test_readiness_plan_contract.py::test_no_receipt_preserves_state[gatekeeper] - AssertionError: assert (True is False)
+ +  where True = GateDecision(passed=True, gate_outcome='pass_first_try', rating='good', errors=(), receipt=GateEvidenceReceipt(timestamp='2026-06-09T01:24:09.038Z', digest='ab31a429ddb82c92adb93fd6669e4e7904a9c7ade7fd4be3ecfcff4dc2134cb4', run_id='run-001', attempt_id='learner/attempts/attempt-1.md', attempt_digest='1665fac2c1d934660236b2df13eb22a214f9596f4902d04d2197c423c9215458', scenario_id='gatekeeper-rate-limiter', verifier_source=None)).ok
+FAILED learner/gate/tests/test_readiness_plan_contract.py::test_no_receipt_preserves_state[pixelquest] - AssertionError: assert (True is False)
+ +  where True = GateDecision(passed=True, gate_outcome='pass_first_try', rating='good', errors=(), receipt=GateEvidenceReceipt(timestamp='2026-07-05T12:00:00.000Z', digest='9a8dcd2742f82a68db2bef48d877bff2b5c58cf389999b166f29b0d222fffb4f', run_id='sha256:9a8dcd2742f82a68db2bef48d877bff2b5c58cf389999b166f29b0d222fffb4f', attempt_id='learner/attempts/attempt-1.md', attempt_digest='1665fac2c1d934660236b2df13eb22a214f9596f4902d04d2197c423c9215458', scenario_id='encounter-agent-quest-01', verifier_source=None)).ok
+FAILED learner/gate/tests/test_readiness_plan_contract.py::test_committed_multirecord_backing_revalidates - learner.substrate.gate.GateTransitionError: gated state violates substrate invariants: ["units_log[0].evidence_file is not parseable JSON ('/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_committed_multirecord_bac0/evidence.ndjson'): Extra data at line 2"]
+FAILED learner/gate/tests/test_readiness_plan_contract.py::test_replay_preserves_consumed_state[producer_nonce-attempt/scenario replay] - ValueError: invalid learner state: units_log[0].evidence_file does not match the canonical digest recorded by the verifier
+FAILED learner/gate/tests/test_readiness_plan_contract.py::test_replay_preserves_consumed_state[changed_payload-run_id is immutable] - ValueError: invalid learner state: units_log[0].evidence_file does not match the canonical digest recorded by the verifier
+FAILED learner/gate/tests/test_readiness_plan_contract.py::test_dry_run_preserves_all_files[negative] - AssertionError: assert 0 == 1
+ +  where 0 = cli_main(['--root', '/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_dry_run_preserves_all_fil1', '--evidence', '/private/var/folders/bb/bds48zp94bxg0nqpjrhqdn8c0000gn/T/pytest-of-danielbarreto/pytest-2/test_dry_run_preserves_all_fil1/evidence.ndjson', '--dry-run'])
+======================== 17 failed, 107 passed in 2.04s ========================

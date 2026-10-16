@@ -1,0 +1,518 @@
+{
+  "engineId": "dojoToday",
+  "caseName": "declared-use",
+  "status": "blocked",
+  "criterion": "C20",
+  "criteriaSource": ".checks/product-readiness-20261015.md",
+  "observedAt": "2026-10-16T01:42:51.907Z",
+  "producerContext": "readiness-dashboard-runtime-producer",
+  "verifierContext": null,
+  "sourceCommit": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+  "sourceFingerprint": "6fa831591891ad48f9e1ee1c620e206c31e1f860f56264eab3bfeaeb89a48106",
+  "browserAvailability": "Browser plugin not available; regular installed engine Playwright per frontend-testing-debugging skill and project AGENTS",
+  "runtime": {
+    "node": "v22.23.2",
+    "playwright": "1.62.0",
+    "observerPid": 82074,
+    "observerParentPid": 82058,
+    "kind": "fresh local strict-port processes",
+    "viewport": {
+      "width": 1280,
+      "height": 800
+    },
+    "externalModelCalls": 0
+  },
+  "invocation": {
+    "argv": [
+      "/Users/danielbarreto/.hermes/node/bin/node",
+      "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/dashboard-runtime.mjs",
+      "dojoToday",
+      "declared-use"
+    ],
+    "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool"
+  },
+  "logDir": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/dojoToday-2026-10-16T01-42-51-714Z",
+  "mediaDir": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-42-51-714Z",
+  "assertions": [
+    {
+      "id": "C20-readonly-projection-and-next-action",
+      "mandatory": true,
+      "promiseSource": "dojoToday/README.md#Origem dos dados; C20",
+      "status": "pass",
+      "startedAt": "2026-10-16T01:42:53.549Z",
+      "observed": {
+        "projectionAsOf": "2026-08-21",
+        "activeUnit": "U2-key-value-store",
+        "nextProjectNum": "03",
+        "trackCount": 18,
+        "readOnlyCopy": "Agendado por FSRS a partir dos seus gates executáveis. Esta página apenas mostra o scheduler — não marca mastered. O verificador independente decide.",
+        "page": {
+          "url": "http://127.0.0.1:52080/",
+          "title": "dojoToday — sua lição de hoje",
+          "viewport": {
+            "width": 1280,
+            "height": 800
+          },
+          "body": "DEVSCHOOL · PROGRAMADORES\n\nSua lição de hoje\n\nQuinta-Feira, 20 De Agosto\n\n🔥\n\nQuebre o gelo hoje\n\nPasse um gate executável para acender a sequência.\n\nFreezes ··\n\nSua trilha\n\n18 conceitos, um por jogo. A próxima lição fica destacada.\n\n✅\n01\nGATEKEEPER: token-bucket rate limiter robustness\n✅\n02\nKV WAREHOUSE: hash-map-backed CRUD with TTL expiration\n○\n03\nWORMHOLE\n○\n04\nTASK FORGE\n○\n05\nRELAY STATION\n○\n06\nPIPELINE PLANT\n○\n07\nCHECKPOINT CITY\n○\n08\nTIMELINE TOWER\n○\n09\nDOCKING BAY\n○\n10\nHASH RING\n○\n11\nAIR TRAFFIC\n○\n12\nMISSION CONTROL\n○\n13\nBREAKER GRID\n○\n14\nRIVER DELTA\n○\n15\nOBSERVATORY\n○\n16\nFREIGHT YARD\n○\n17\nLIGHTHOUSE NETWORK\n○\n18\nSTACKS\nRetome por aqui\nATRASADA\noverdue 4d\nKV WAREHOUSE: hash-map-backed CRUD with TTL expiration\n\n02_key_value_store\n\nComo jogar\nATRASADA\noverdue 43d\nGATEKEEPER: token-bucket rate limiter robustness\n\n01_rate_limiter\n\nComo jogar\n\nSÓCRATES · SEU TUTOR\n\nSua próxima missão é KV WAREHOUSE: hash-map-backed CRUD with TTL expiration.\n\nComece pelo desafio em curriculum/02_key_value_store/docs/spec.md. Primeiro você tenta — quem avalia a evidência é o verificador independente, não eu.\n\nComo jogar\ncd engines/voxelDojo/game-02-warehouse && pnpm install && pnpm run dev\n\nO jogo emite evidência bruta; um verificador independente decide o gate. (voxelDojo/game-02-warehouse)\n\n▶ Jogar aqui (inline)\nPerguntar\n⚙️ Configurar assistente (opcional)\n2/2 dominadas\nverificadas por gate\n\nAgendado por FSRS a partir dos seus gates executáveis. Esta página apenas mostra o scheduler — não marca mastered. O verificador independente decide.",
+          "aria": "- banner:\n  - paragraph: DevSchool · programadores\n  - heading \"Sua lição de hoje\" [level=1]\n  - paragraph: quinta-feira, 20 de agosto\n- region \"Sequência\":\n  - paragraph: Quebre o gelo hoje\n  - paragraph: Passe um gate executável para acender a sequência.\n  - 'group \"Freezes: 0 equipados de um máximo de 2\"'\n- region \"Sua trilha\":\n  - heading \"Sua trilha\" [level=2]\n  - paragraph: 18 conceitos, um por jogo. A próxima lição fica destacada.\n  - list:\n    - 'listitem \"Lição 01: GATEKEEPER: token-bucket rate limiter robustness (concluída)\"'\n    - 'listitem \"Lição 02: KV WAREHOUSE: hash-map-backed CRUD with TTL expiration (concluída)\"'\n    - 'listitem \"Lição 03: WORMHOLE (disponível)\"'\n    - 'listitem \"Lição 04: TASK FORGE (disponível)\"'\n    - 'listitem \"Lição 05: RELAY STATION (disponível)\"'\n    - 'listitem \"Lição 06: PIPELINE PLANT (disponível)\"'\n    - 'listitem \"Lição 07: CHECKPOINT CITY (disponível)\"'\n    - 'listitem \"Lição 08: TIMELINE TOWER (disponível)\"'\n    - 'listitem \"Lição 09: DOCKING BAY (disponível)\"'\n    - 'listitem \"Lição 10: HASH RING (disponível)\"'\n    - 'listitem \"Lição 11: AIR TRAFFIC (disponível)\"'\n    - 'listitem \"Lição 12: MISSION CONTROL (disponível)\"'\n    - 'listitem \"Lição 13: BREAKER GRID (disponível)\"'\n    - 'listitem \"Lição 14: RIVER DELTA (disponível)\"'\n    - 'listitem \"Lição 15: OBSERVATORY (disponível)\"'\n    - 'listitem \"Lição 16: FREIGHT YARD (disponível)\"'\n    - 'listitem \"Lição 17: LIGHTHOUSE NETWORK (disponível)\"'\n    - 'listitem \"Lição 18: STACKS (disponível)\"'\n- region \"Retome por aqui\":\n  - heading \"Retome por aqui\" [level=2]\n  - article:\n    - text: Atrasada overdue 4d\n    - 'heading \"KV WAREHOUSE: hash-map-backed CRUD with TTL expiration\" [level=3]'\n    - paragraph: 02_key_value_store\n    - group: Como jogar\n  - article:\n    - text: Atrasada overdue 43d\n    - 'heading \"GATEKEEPER: token-bucket rate limiter robustness\" [level=3]'\n    - paragraph: 01_rate_limiter\n    - group: Como jogar\n- region \"Missão do dia\":\n  - paragraph: Sócrates · seu tutor\n  - paragraph:\n    - text: Sua próxima missão é\n    - strong: \"KV WAREHOUSE: hash-map-backed CRUD with TTL expiration\"\n    - text: .\n  - paragraph:\n    - text: Comece pelo desafio em\n    - code: curriculum/02_key_value_store/docs/spec.md\n    - text: . Primeiro você tenta — quem avalia a evidência é o\n    - strong: verificador independente\n    - text: \", não eu.\"\n  - group:\n    - text: Como jogar\n    - code: cd engines/voxelDojo/game-02-warehouse && pnpm install && pnpm run dev\n    - paragraph: O jogo emite evidência bruta; um verificador independente decide o gate. (voxelDojo/game-02-warehouse)\n  - button \"Jogar aqui (inline)\"\n  - textbox \"Pergunta para o Sócrates\":\n    - /placeholder: Pergunte ao Sócrates sobre esta missão…\n  - button \"Perguntar\"\n  - button \"Configurar assistente (opcional)\"\n- region \"Progresso verificado\":\n  - strong: \"2\"\n  - text: /2 dominadas verificadas por gate\n  - progressbar\n- contentinfo:\n  - paragraph:\n    - text: Agendado por\n    - strong: FSRS\n    - text: a partir dos seus gates executáveis. Esta página apenas mostra o scheduler — não marca\n    - emphasis: mastered\n    - text: . O verificador independente decide.",
+          "frameworkOverlayCount": 0
+        }
+      },
+      "endedAt": "2026-10-16T01:42:56.985Z"
+    },
+    {
+      "id": "C20-offline-socrates",
+      "mandatory": true,
+      "promiseSource": "dojoToday/README.md#Sócrates; deterministic default",
+      "status": "pass",
+      "startedAt": "2026-10-16T01:42:56.985Z",
+      "observed": {
+        "browserOffline": true,
+        "externalModelCalls": 0,
+        "page": {
+          "url": "http://127.0.0.1:52080/",
+          "title": "dojoToday — sua lição de hoje",
+          "viewport": {
+            "width": 1280,
+            "height": 800
+          },
+          "body": "DEVSCHOOL · PROGRAMADORES\n\nSua lição de hoje\n\nQuinta-Feira, 20 De Agosto\n\n🔥\n\nQuebre o gelo hoje\n\nPasse um gate executável para acender a sequência.\n\nFreezes ··\n\nSua trilha\n\n18 conceitos, um por jogo. A próxima lição fica destacada.\n\n✅\n01\nGATEKEEPER: token-bucket rate limiter robustness\n✅\n02\nKV WAREHOUSE: hash-map-backed CRUD with TTL expiration\n○\n03\nWORMHOLE\n○\n04\nTASK FORGE\n○\n05\nRELAY STATION\n○\n06\nPIPELINE PLANT\n○\n07\nCHECKPOINT CITY\n○\n08\nTIMELINE TOWER\n○\n09\nDOCKING BAY\n○\n10\nHASH RING\n○\n11\nAIR TRAFFIC\n○\n12\nMISSION CONTROL\n○\n13\nBREAKER GRID\n○\n14\nRIVER DELTA\n○\n15\nOBSERVATORY\n○\n16\nFREIGHT YARD\n○\n17\nLIGHTHOUSE NETWORK\n○\n18\nSTACKS\nRetome por aqui\nATRASADA\noverdue 4d\nKV WAREHOUSE: hash-map-backed CRUD with TTL expiration\n\n02_key_value_store\n\nComo jogar\nATRASADA\noverdue 43d\nGATEKEEPER: token-bucket rate limiter robustness\n\n01_rate_limiter\n\nComo jogar\n\nSÓCRATES · SEU TUTOR\n\nSua próxima missão é KV WAREHOUSE: hash-map-backed CRUD with TTL expiration.\n\nComece pelo desafio em curriculum/02_key_value_store/docs/spec.md. Primeiro você tenta — quem avalia a evidência é o verificador independente, não eu.\n\nComo jogar\ncd engines/voxelDojo/game-02-warehouse && pnpm install && pnpm run dev\n\nO jogo emite evidência bruta; um verificador independente decide o gate. (voxelDojo/game-02-warehouse)\n\n▶ Jogar aqui (inline)\nPerguntar\n⚙️ Configurar assistente (opcional)\n\nExperimental. Sua chave fica só neste navegador e vai apenas para o endpoint configurado. Conversas não são salvas. Opcional e off por padrão.\n\nEndpoint base (compatível com OpenAI)\nChave API\nModelo\nSalvar\nLimpar\nSem IA configurada, eu sigo no modo determinístico: tente primeiro. Escreva, por conta própria, o que você espera que \"KV WAREHOUSE: hash-map-backed CRUD with TTL expiration\" faça em um caso-limite — depois jogue para gerar evidência. Quem avalia é o verificador independente. Para conversar comigo de verdade, configure um assistente (botão acima).\n2/2 dominadas\nverificadas por gate\n\nAgendado por FSRS a partir dos seus gates executáveis. Esta página apenas mostra o scheduler — não marca mastered. O verificador independente decide.",
+          "aria": "- banner:\n  - paragraph: DevSchool · programadores\n  - heading \"Sua lição de hoje\" [level=1]\n  - paragraph: quinta-feira, 20 de agosto\n- region \"Sequência\":\n  - paragraph: Quebre o gelo hoje\n  - paragraph: Passe um gate executável para acender a sequência.\n  - 'group \"Freezes: 0 equipados de um máximo de 2\"'\n- region \"Sua trilha\":\n  - heading \"Sua trilha\" [level=2]\n  - paragraph: 18 conceitos, um por jogo. A próxima lição fica destacada.\n  - list:\n    - 'listitem \"Lição 01: GATEKEEPER: token-bucket rate limiter robustness (concluída)\"'\n    - 'listitem \"Lição 02: KV WAREHOUSE: hash-map-backed CRUD with TTL expiration (concluída)\"'\n    - 'listitem \"Lição 03: WORMHOLE (disponível)\"'\n    - 'listitem \"Lição 04: TASK FORGE (disponível)\"'\n    - 'listitem \"Lição 05: RELAY STATION (disponível)\"'\n    - 'listitem \"Lição 06: PIPELINE PLANT (disponível)\"'\n    - 'listitem \"Lição 07: CHECKPOINT CITY (disponível)\"'\n    - 'listitem \"Lição 08: TIMELINE TOWER (disponível)\"'\n    - 'listitem \"Lição 09: DOCKING BAY (disponível)\"'\n    - 'listitem \"Lição 10: HASH RING (disponível)\"'\n    - 'listitem \"Lição 11: AIR TRAFFIC (disponível)\"'\n    - 'listitem \"Lição 12: MISSION CONTROL (disponível)\"'\n    - 'listitem \"Lição 13: BREAKER GRID (disponível)\"'\n    - 'listitem \"Lição 14: RIVER DELTA (disponível)\"'\n    - 'listitem \"Lição 15: OBSERVATORY (disponível)\"'\n    - 'listitem \"Lição 16: FREIGHT YARD (disponível)\"'\n    - 'listitem \"Lição 17: LIGHTHOUSE NETWORK (disponível)\"'\n    - 'listitem \"Lição 18: STACKS (disponível)\"'\n- region \"Retome por aqui\":\n  - heading \"Retome por aqui\" [level=2]\n  - article:\n    - text: Atrasada overdue 4d\n    - 'heading \"KV WAREHOUSE: hash-map-backed CRUD with TTL expiration\" [level=3]'\n    - paragraph: 02_key_value_store\n    - group: Como jogar\n  - article:\n    - text: Atrasada overdue 43d\n    - 'heading \"GATEKEEPER: token-bucket rate limiter robustness\" [level=3]'\n    - paragraph: 01_rate_limiter\n    - group: Como jogar\n- region \"Missão do dia\":\n  - paragraph: Sócrates · seu tutor\n  - paragraph:\n    - text: Sua próxima missão é\n    - strong: \"KV WAREHOUSE: hash-map-backed CRUD with TTL expiration\"\n    - text: .\n  - paragraph:\n    - text: Comece pelo desafio em\n    - code: curriculum/02_key_value_store/docs/spec.md\n    - text: . Primeiro você tenta — quem avalia a evidência é o\n    - strong: verificador independente\n    - text: \", não eu.\"\n  - group:\n    - text: Como jogar\n    - code: cd engines/voxelDojo/game-02-warehouse && pnpm install && pnpm run dev\n    - paragraph: O jogo emite evidência bruta; um verificador independente decide o gate. (voxelDojo/game-02-warehouse)\n  - button \"Jogar aqui (inline)\"\n  - textbox \"Pergunta para o Sócrates\":\n    - /placeholder: Pergunte ao Sócrates sobre esta missão…\n    - text: Como explorar um caso-limite sem receber a solução?\n  - button \"Perguntar\"\n  - button \"Configurar assistente (opcional)\" [expanded]\n  - paragraph: Experimental. Sua chave fica só neste navegador e vai apenas para o endpoint configurado. Conversas não são salvas. Opcional e off por padrão.\n  - text: Endpoint base (compatível com OpenAI)\n  - textbox \"Endpoint base (compatível com OpenAI)\":\n    - /placeholder: https://api.openai.com/v1\n    - text: https://api.openai.com/v1\n  - text: Chave API\n  - textbox \"Chave API\":\n    - /placeholder: sk-…\n  - text: Modelo\n  - textbox \"Modelo\":\n    - /placeholder: gpt-4o-mini\n    - text: gpt-4o-mini\n  - button \"Salvar\"\n  - button \"Limpar\"\n  - status: \"Sem IA configurada, eu sigo no modo determinístico: tente primeiro. Escreva, por conta própria, o que você espera que \\\"KV WAREHOUSE: hash-map-backed CRUD with TTL expiration\\\" faça em um caso-limite — depois jogue para gerar evidência. Quem avalia é o verificador independente. Para conversar comigo de verdade, configure um assistente (botão acima).\"\n- region \"Progresso verificado\":\n  - strong: \"2\"\n  - text: /2 dominadas verificadas por gate\n  - progressbar\n- contentinfo:\n  - paragraph:\n    - text: Agendado por\n    - strong: FSRS\n    - text: a partir dos seus gates executáveis. Esta página apenas mostra o scheduler — não marca\n    - emphasis: mastered\n    - text: . O verificador independente decide.",
+          "frameworkOverlayCount": 0
+        }
+      },
+      "endedAt": "2026-10-16T01:42:57.817Z"
+    },
+    {
+      "id": "C20-byok-empty-clear-recovery",
+      "mandatory": true,
+      "promiseSource": "dojoToday/README.md#Privacidade/segurança; C20",
+      "status": "pass",
+      "startedAt": "2026-10-16T01:42:57.817Z",
+      "observed": {
+        "blankKeyDoesNotActivate": true,
+        "clearedAiConfig": true,
+        "conversationStorageKeys": [],
+        "localStorageKeyNames": [],
+        "page": {
+          "url": "http://127.0.0.1:52080/",
+          "title": "dojoToday — sua lição de hoje",
+          "viewport": {
+            "width": 1280,
+            "height": 800
+          },
+          "body": "DEVSCHOOL · PROGRAMADORES\n\nSua lição de hoje\n\nQuinta-Feira, 20 De Agosto\n\n🔥\n\nQuebre o gelo hoje\n\nPasse um gate executável para acender a sequência.\n\nFreezes ··\n\nSua trilha\n\n18 conceitos, um por jogo. A próxima lição fica destacada.\n\n✅\n01\nGATEKEEPER: token-bucket rate limiter robustness\n✅\n02\nKV WAREHOUSE: hash-map-backed CRUD with TTL expiration\n○\n03\nWORMHOLE\n○\n04\nTASK FORGE\n○\n05\nRELAY STATION\n○\n06\nPIPELINE PLANT\n○\n07\nCHECKPOINT CITY\n○\n08\nTIMELINE TOWER\n○\n09\nDOCKING BAY\n○\n10\nHASH RING\n○\n11\nAIR TRAFFIC\n○\n12\nMISSION CONTROL\n○\n13\nBREAKER GRID\n○\n14\nRIVER DELTA\n○\n15\nOBSERVATORY\n○\n16\nFREIGHT YARD\n○\n17\nLIGHTHOUSE NETWORK\n○\n18\nSTACKS\nRetome por aqui\nATRASADA\noverdue 4d\nKV WAREHOUSE: hash-map-backed CRUD with TTL expiration\n\n02_key_value_store\n\nComo jogar\nATRASADA\noverdue 43d\nGATEKEEPER: token-bucket rate limiter robustness\n\n01_rate_limiter\n\nComo jogar\n\nSÓCRATES · SEU TUTOR\n\nSua próxima missão é KV WAREHOUSE: hash-map-backed CRUD with TTL expiration.\n\nComece pelo desafio em curriculum/02_key_value_store/docs/spec.md. Primeiro você tenta — quem avalia a evidência é o verificador independente, não eu.\n\nComo jogar\ncd engines/voxelDojo/game-02-warehouse && pnpm install && pnpm run dev\n\nO jogo emite evidência bruta; um verificador independente decide o gate. (voxelDojo/game-02-warehouse)\n\n▶ Jogar aqui (inline)\nPerguntar\n⚙️ Configurar assistente (opcional)\n\nExperimental. Sua chave fica só neste navegador e vai apenas para o endpoint configurado. Conversas não são salvas. Opcional e off por padrão.\n\nEndpoint base (compatível com OpenAI)\nChave API\nModelo\nSalvar\nLimpar\nSem IA configurada, eu sigo no modo determinístico: tente primeiro. Escreva, por conta própria, o que você espera que \"KV WAREHOUSE: hash-map-backed CRUD with TTL expiration\" faça em um caso-limite — depois jogue para gerar evidência. Quem avalia é o verificador independente. Para conversar comigo de verdade, configure um assistente (botão acima).\n2/2 dominadas\nverificadas por gate\n\nAgendado por FSRS a partir dos seus gates executáveis. Esta página apenas mostra o scheduler — não marca mastered. O verificador independente decide.",
+          "aria": "- banner:\n  - paragraph: DevSchool · programadores\n  - heading \"Sua lição de hoje\" [level=1]\n  - paragraph: quinta-feira, 20 de agosto\n- region \"Sequência\":\n  - paragraph: Quebre o gelo hoje\n  - paragraph: Passe um gate executável para acender a sequência.\n  - 'group \"Freezes: 0 equipados de um máximo de 2\"'\n- region \"Sua trilha\":\n  - heading \"Sua trilha\" [level=2]\n  - paragraph: 18 conceitos, um por jogo. A próxima lição fica destacada.\n  - list:\n    - 'listitem \"Lição 01: GATEKEEPER: token-bucket rate limiter robustness (concluída)\"'\n    - 'listitem \"Lição 02: KV WAREHOUSE: hash-map-backed CRUD with TTL expiration (concluída)\"'\n    - 'listitem \"Lição 03: WORMHOLE (disponível)\"'\n    - 'listitem \"Lição 04: TASK FORGE (disponível)\"'\n    - 'listitem \"Lição 05: RELAY STATION (disponível)\"'\n    - 'listitem \"Lição 06: PIPELINE PLANT (disponível)\"'\n    - 'listitem \"Lição 07: CHECKPOINT CITY (disponível)\"'\n    - 'listitem \"Lição 08: TIMELINE TOWER (disponível)\"'\n    - 'listitem \"Lição 09: DOCKING BAY (disponível)\"'\n    - 'listitem \"Lição 10: HASH RING (disponível)\"'\n    - 'listitem \"Lição 11: AIR TRAFFIC (disponível)\"'\n    - 'listitem \"Lição 12: MISSION CONTROL (disponível)\"'\n    - 'listitem \"Lição 13: BREAKER GRID (disponível)\"'\n    - 'listitem \"Lição 14: RIVER DELTA (disponível)\"'\n    - 'listitem \"Lição 15: OBSERVATORY (disponível)\"'\n    - 'listitem \"Lição 16: FREIGHT YARD (disponível)\"'\n    - 'listitem \"Lição 17: LIGHTHOUSE NETWORK (disponível)\"'\n    - 'listitem \"Lição 18: STACKS (disponível)\"'\n- region \"Retome por aqui\":\n  - heading \"Retome por aqui\" [level=2]\n  - article:\n    - text: Atrasada overdue 4d\n    - 'heading \"KV WAREHOUSE: hash-map-backed CRUD with TTL expiration\" [level=3]'\n    - paragraph: 02_key_value_store\n    - group: Como jogar\n  - article:\n    - text: Atrasada overdue 43d\n    - 'heading \"GATEKEEPER: token-bucket rate limiter robustness\" [level=3]'\n    - paragraph: 01_rate_limiter\n    - group: Como jogar\n- region \"Missão do dia\":\n  - paragraph: Sócrates · seu tutor\n  - paragraph:\n    - text: Sua próxima missão é\n    - strong: \"KV WAREHOUSE: hash-map-backed CRUD with TTL expiration\"\n    - text: .\n  - paragraph:\n    - text: Comece pelo desafio em\n    - code: curriculum/02_key_value_store/docs/spec.md\n    - text: . Primeiro você tenta — quem avalia a evidência é o\n    - strong: verificador independente\n    - text: \", não eu.\"\n  - group:\n    - text: Como jogar\n    - code: cd engines/voxelDojo/game-02-warehouse && pnpm install && pnpm run dev\n    - paragraph: O jogo emite evidência bruta; um verificador independente decide o gate. (voxelDojo/game-02-warehouse)\n  - button \"Jogar aqui (inline)\"\n  - textbox \"Pergunta para o Sócrates\":\n    - /placeholder: Pergunte ao Sócrates sobre esta missão…\n    - text: Como explorar um caso-limite sem receber a solução?\n  - button \"Perguntar\"\n  - button \"Configurar assistente (opcional)\" [expanded]\n  - paragraph: Experimental. Sua chave fica só neste navegador e vai apenas para o endpoint configurado. Conversas não são salvas. Opcional e off por padrão.\n  - text: Endpoint base (compatível com OpenAI)\n  - textbox \"Endpoint base (compatível com OpenAI)\":\n    - /placeholder: https://api.openai.com/v1\n    - text: https://api.openai.com/v1\n  - text: Chave API\n  - textbox \"Chave API\":\n    - /placeholder: sk-…\n  - text: Modelo\n  - textbox \"Modelo\":\n    - /placeholder: gpt-4o-mini\n    - text: gpt-4o-mini\n  - button \"Salvar\"\n  - button \"Limpar\"\n  - status: \"Sem IA configurada, eu sigo no modo determinístico: tente primeiro. Escreva, por conta própria, o que você espera que \\\"KV WAREHOUSE: hash-map-backed CRUD with TTL expiration\\\" faça em um caso-limite — depois jogue para gerar evidência. Quem avalia é o verificador independente. Para conversar comigo de verdade, configure um assistente (botão acima).\"\n- region \"Progresso verificado\":\n  - strong: \"2\"\n  - text: /2 dominadas verificadas por gate\n  - progressbar\n- contentinfo:\n  - paragraph:\n    - text: Agendado por\n    - strong: FSRS\n    - text: a partir dos seus gates executáveis. Esta página apenas mostra o scheduler — não marca\n    - emphasis: mastered\n    - text: . O verificador independente decide.",
+          "frameworkOverlayCount": 0
+        }
+      },
+      "endedAt": "2026-10-16T01:42:58.805Z"
+    },
+    {
+      "id": "C20-game02-real-inline-practice",
+      "mandatory": true,
+      "promiseSource": "dojoToday/README.md#Jogar inline; C20",
+      "status": "blocked",
+      "startedAt": "2026-10-16T01:42:58.805Z",
+      "error": {
+        "message": "AssertionError [ERR_ASSERTION]: Advertised game02 did not render; iframe title=dojoToday — sua lição de hoje",
+        "stack": "AssertionError [ERR_ASSERTION]: Advertised game02 did not render; iframe title=dojoToday — sua lição de hoje\n    at file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/dashboard-runtime.mjs:334:16\n    at async assertion (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/dashboard-runtime.mjs:139:26)\n    at async file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/dashboard-runtime.mjs:323:7\n    at async session (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/dashboard-runtime.mjs:178:9)\n    at async dojoToday (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/dashboard-runtime.mjs:277:5)\n    at async run (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/dashboard-runtime.mjs:496:35)\n    at async file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/dashboard-runtime.mjs:517:18"
+      },
+      "endedAt": "2026-10-16T01:42:59.726Z"
+    },
+    {
+      "id": "C20-return-without-conversation-or-canonical-write",
+      "mandatory": true,
+      "promiseSource": "dojoToday/README.md: conversations not persisted; read-only projection",
+      "status": "pass",
+      "startedAt": "2026-10-16T01:42:59.785Z",
+      "observed": {
+        "noConversationRestored": true,
+        "unchangedProjection": true,
+        "lazyFrameNotLoadedOnReturn": true,
+        "page": {
+          "url": "http://127.0.0.1:52080/",
+          "title": "dojoToday — sua lição de hoje",
+          "viewport": {
+            "width": 1280,
+            "height": 800
+          },
+          "body": "DEVSCHOOL · PROGRAMADORES\n\nSua lição de hoje\n\nQuinta-Feira, 20 De Agosto\n\n🔥\n\nQuebre o gelo hoje\n\nPasse um gate executável para acender a sequência.\n\nFreezes ··\n\nSua trilha\n\n18 conceitos, um por jogo. A próxima lição fica destacada.\n\n✅\n01\nGATEKEEPER: token-bucket rate limiter robustness\n✅\n02\nKV WAREHOUSE: hash-map-backed CRUD with TTL expiration\n○\n03\nWORMHOLE\n○\n04\nTASK FORGE\n○\n05\nRELAY STATION\n○\n06\nPIPELINE PLANT\n○\n07\nCHECKPOINT CITY\n○\n08\nTIMELINE TOWER\n○\n09\nDOCKING BAY\n○\n10\nHASH RING\n○\n11\nAIR TRAFFIC\n○\n12\nMISSION CONTROL\n○\n13\nBREAKER GRID\n○\n14\nRIVER DELTA\n○\n15\nOBSERVATORY\n○\n16\nFREIGHT YARD\n○\n17\nLIGHTHOUSE NETWORK\n○\n18\nSTACKS\nRetome por aqui\nATRASADA\noverdue 4d\nKV WAREHOUSE: hash-map-backed CRUD with TTL expiration\n\n02_key_value_store\n\nComo jogar\nATRASADA\noverdue 43d\nGATEKEEPER: token-bucket rate limiter robustness\n\n01_rate_limiter\n\nComo jogar\n\nSÓCRATES · SEU TUTOR\n\nSua próxima missão é KV WAREHOUSE: hash-map-backed CRUD with TTL expiration.\n\nComece pelo desafio em curriculum/02_key_value_store/docs/spec.md. Primeiro você tenta — quem avalia a evidência é o verificador independente, não eu.\n\nComo jogar\n▶ Jogar aqui (inline)\nPerguntar\n⚙️ Configurar assistente (opcional)\n2/2 dominadas\nverificadas por gate\n\nAgendado por FSRS a partir dos seus gates executáveis. Esta página apenas mostra o scheduler — não marca mastered. O verificador independente decide.",
+          "aria": "- banner:\n  - paragraph: DevSchool · programadores\n  - heading \"Sua lição de hoje\" [level=1]\n  - paragraph: quinta-feira, 20 de agosto\n- region \"Sequência\":\n  - paragraph: Quebre o gelo hoje\n  - paragraph: Passe um gate executável para acender a sequência.\n  - 'group \"Freezes: 0 equipados de um máximo de 2\"'\n- region \"Sua trilha\":\n  - heading \"Sua trilha\" [level=2]\n  - paragraph: 18 conceitos, um por jogo. A próxima lição fica destacada.\n  - list:\n    - 'listitem \"Lição 01: GATEKEEPER: token-bucket rate limiter robustness (concluída)\"'\n    - 'listitem \"Lição 02: KV WAREHOUSE: hash-map-backed CRUD with TTL expiration (concluída)\"'\n    - 'listitem \"Lição 03: WORMHOLE (disponível)\"'\n    - 'listitem \"Lição 04: TASK FORGE (disponível)\"'\n    - 'listitem \"Lição 05: RELAY STATION (disponível)\"'\n    - 'listitem \"Lição 06: PIPELINE PLANT (disponível)\"'\n    - 'listitem \"Lição 07: CHECKPOINT CITY (disponível)\"'\n    - 'listitem \"Lição 08: TIMELINE TOWER (disponível)\"'\n    - 'listitem \"Lição 09: DOCKING BAY (disponível)\"'\n    - 'listitem \"Lição 10: HASH RING (disponível)\"'\n    - 'listitem \"Lição 11: AIR TRAFFIC (disponível)\"'\n    - 'listitem \"Lição 12: MISSION CONTROL (disponível)\"'\n    - 'listitem \"Lição 13: BREAKER GRID (disponível)\"'\n    - 'listitem \"Lição 14: RIVER DELTA (disponível)\"'\n    - 'listitem \"Lição 15: OBSERVATORY (disponível)\"'\n    - 'listitem \"Lição 16: FREIGHT YARD (disponível)\"'\n    - 'listitem \"Lição 17: LIGHTHOUSE NETWORK (disponível)\"'\n    - 'listitem \"Lição 18: STACKS (disponível)\"'\n- region \"Retome por aqui\":\n  - heading \"Retome por aqui\" [level=2]\n  - article:\n    - text: Atrasada overdue 4d\n    - 'heading \"KV WAREHOUSE: hash-map-backed CRUD with TTL expiration\" [level=3]'\n    - paragraph: 02_key_value_store\n    - group: Como jogar\n  - article:\n    - text: Atrasada overdue 43d\n    - 'heading \"GATEKEEPER: token-bucket rate limiter robustness\" [level=3]'\n    - paragraph: 01_rate_limiter\n    - group: Como jogar\n- region \"Missão do dia\":\n  - paragraph: Sócrates · seu tutor\n  - paragraph:\n    - text: Sua próxima missão é\n    - strong: \"KV WAREHOUSE: hash-map-backed CRUD with TTL expiration\"\n    - text: .\n  - paragraph:\n    - text: Comece pelo desafio em\n    - code: curriculum/02_key_value_store/docs/spec.md\n    - text: . Primeiro você tenta — quem avalia a evidência é o\n    - strong: verificador independente\n    - text: \", não eu.\"\n  - group: Como jogar\n  - button \"Jogar aqui (inline)\"\n  - textbox \"Pergunta para o Sócrates\":\n    - /placeholder: Pergunte ao Sócrates sobre esta missão…\n  - button \"Perguntar\"\n  - button \"Configurar assistente (opcional)\"\n- region \"Progresso verificado\":\n  - strong: \"2\"\n  - text: /2 dominadas verificadas por gate\n  - progressbar\n- contentinfo:\n  - paragraph:\n    - text: Agendado por\n    - strong: FSRS\n    - text: a partir dos seus gates executáveis. Esta página apenas mostra o scheduler — não marca\n    - emphasis: mastered\n    - text: . O verificador independente decide.",
+          "frameworkOverlayCount": 0
+        }
+      },
+      "endedAt": "2026-10-16T01:43:00.282Z"
+    },
+    {
+      "id": "C20-page-health",
+      "mandatory": true,
+      "promiseSource": "frontend-testing-debugging; C20",
+      "status": "pass",
+      "startedAt": "2026-10-16T01:43:00.282Z",
+      "observed": {
+        "url": "http://127.0.0.1:52080/",
+        "title": "dojoToday — sua lição de hoje",
+        "nonblank": true,
+        "frameworkOverlay": false,
+        "appErrors": 0,
+        "warnings": []
+      },
+      "endedAt": "2026-10-16T01:43:00.290Z"
+    },
+    {
+      "id": "C20-real-byok-provider-error-and-positive",
+      "mandatory": true,
+      "promiseSource": "dojoToday/README.md#Sócrates; qualification-matrix.md#dojoToday",
+      "status": "unverified",
+      "missingPrerequisites": [
+        "Owner-authorized endpoint/model/credential for this app",
+        "Real unavailable-provider/error followed by configured-provider recovery"
+      ],
+      "detail": "No nonempty API-key value, real credential or external model call was used. Blank-key save/clear/offline recovery is separately observed; it cannot exercise the provider branch guarded by isConfigured()."
+    },
+    {
+      "id": "C20-learner-preserved",
+      "mandatory": true,
+      "promiseSource": "qualification-matrix.md#Protocolo comum; C18/C20/C23",
+      "status": "pass",
+      "observed": {
+        "originalCheckoutAndWorktreeCanonicalFilesUnchanged": true
+      }
+    },
+    {
+      "id": "C20-independent-semantic-image-judgment",
+      "mandatory": true,
+      "promiseSource": "AGENTS.md#Browser-test evidence; engines/shared/playwright/README.md",
+      "status": "unverified",
+      "missingPrerequisites": [
+        "Separate verifier context",
+        "Authorized TypeSafe/Jev credential and semantic judgment receipt"
+      ],
+      "detail": "Functional observations and positive captures are producer evidence. No semantic image judgment or readiness grant is asserted."
+    }
+  ],
+  "commands": [
+    {
+      "executable": "rtk",
+      "argv": [
+        "proxy",
+        "npm",
+        "run",
+        "dev",
+        "--",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "52080",
+        "--strictPort"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday",
+      "envOverrides": {},
+      "startedAt": "2026-10-16T01:42:52.474Z",
+      "pid": 82093,
+      "exitCode": null,
+      "signal": "SIGTERM",
+      "endedAt": "2026-10-16T01:43:00.763Z",
+      "stdout": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/dojoToday-2026-10-16T01-42-51-714Z/command-0-stdout.log",
+      "stderr": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/dojoToday-2026-10-16T01-42-51-714Z/command-0-stderr.log"
+    }
+  ],
+  "evidenceRefs": [
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/dojoToday-2026-10-16T01-42-51-714Z/command-0-stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/dojoToday-2026-10-16T01-42-51-714Z/command-0-stdout.log",
+      "sha256": "962d10c36f581e2b1339a50d606ac55dc85b272eea8b794af33f3563830aaf17"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/dojoToday-2026-10-16T01-42-51-714Z/dojoToday-inline-frame.json",
+      "sha256": "8be3923a319496f4a2de6ba2d280cb0a39d3556108ac11c5a1ed8d8e71cf9a80"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-42-51-714Z/daily-guidance/config-cleared-recovery.json",
+      "sha256": "553fcc857a8aaba77df6f3ccf53ad3f80019962676a04c38235f3094bf5eb7bd"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-42-51-714Z/daily-guidance/config-cleared-recovery.png",
+      "sha256": "883cfe93506734a22edf401e925d7ce3a896c645bf54e4cdc5af5a7064cc06d0"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-42-51-714Z/daily-guidance/console.json",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-42-51-714Z/daily-guidance/failure.json",
+      "sha256": "3cab991ce4bb1b64578720cfbdc517b11621993880cb1615bfb91280170e8f98"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-42-51-714Z/daily-guidance/failure.png",
+      "sha256": "03d98ef7dadf724e08d3f2f658d55245014a6ab09304368502b85defa496f01f"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-42-51-714Z/daily-guidance/inline-open.json",
+      "sha256": "a4cbccb1f0bf73a1f8254b87c8d66bbbb7702335be4fce491652e3bcca69bcf9"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-42-51-714Z/daily-guidance/inline-open.png",
+      "sha256": "479fd7f6edd2f0ffd89d1d41a46dbb004391b871f0eb6855b62511b07c80a035"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-42-51-714Z/daily-guidance/network.json",
+      "sha256": "5eb79ff62928aadb1ecff6e0a3e7ed6da964a4a3af2d6095364281aef3d65b99"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-42-51-714Z/daily-guidance/offline-socrates.json",
+      "sha256": "553fcc857a8aaba77df6f3ccf53ad3f80019962676a04c38235f3094bf5eb7bd"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-42-51-714Z/daily-guidance/offline-socrates.png",
+      "sha256": "cd74b83c3df3d6e4a100e3e4159441c5b0471d12baead130a261e52159f9987f"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-42-51-714Z/daily-guidance/page@916b7913c3a4b305c17cfbe5d53d8c09.webm",
+      "sha256": "d151f7b96faed840e9b7abae17b5088fb347f150285a8afa2ab25d62261b0138"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-42-51-714Z/daily-guidance/projection-and-action.json",
+      "sha256": "fa2882f2650921ea6d0743101b71358705632e2d73c3b1e3bf56b271ea86b419"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-42-51-714Z/daily-guidance/projection-and-action.png",
+      "sha256": "da08c3b76f336bf65d8fd63dc1d4a772ec90883ffa0d6e464161f0fa5ddd8c26"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-42-51-714Z/daily-guidance/return.json",
+      "sha256": "3cab991ce4bb1b64578720cfbdc517b11621993880cb1615bfb91280170e8f98"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-42-51-714Z/daily-guidance/return.png",
+      "sha256": "eb2813264c791b3b1e44ff3d6c0b71872d34020e050b5cdfc4a6527c24130eca"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-42-51-714Z/daily-guidance/trace.zip",
+      "sha256": "7e7432293218b01b889108ad59930326739ff8b56e8942071530f30215193905"
+    }
+  ],
+  "limitations": [
+    "The current prepared local route /games/02/index.html returned the daily landing, so inline practice is blocked in this runtime. README describes preparing a relative game bundle; no product source defect or repaired packaging is inferred, and no assets were copied to manufacture a pass.",
+    "Configured BYOK provider positive/error/recovery remains unverified without app-specific credential authorization; no existing Hermes or other account credential was read or reused.",
+    "No TypeSafe/Jev key was supplied. Independent semantic judgment of captured images remains an explicit prerequisite; no global engineReady claim is made."
+  ],
+  "sourceFiles": [
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday/README.md",
+      "sha256": "9e8fd41db0d89cd8bbe29dd7f098a63a4a526e0e7fd267ce04ed488679b82c9a"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday/DESIGN.md",
+      "sha256": "b36c2a0fb4407947b70ad919d515f64c7542970ee7d08f505b5579139937ed50"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday/package.json",
+      "sha256": "b5b9f3643c704f252a0487eadb93a979f7cec7dcacec373062ef334f8fe19ec5"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday/vite.config.ts",
+      "sha256": "4fcee1ba32301256a40f668e54c747f0034aba7e32fe79fae41a8f8744e5e097"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday/src/main.ts",
+      "sha256": "00f0d44a35eaa9f5b39d63ac7000c989d2084278ee84f9fcf45dd6067fed7447"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday/src/assistant.ts",
+      "sha256": "1f1d451383720a048ef6c6f6214871888e78c8bd909ea9d7838d722bf88e2c40"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday/src/data/today.ts",
+      "sha256": "c21aee84ddc67cf8bdcab3a6196227badc595177f449000d78ed8cef3bda4f18"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.checks/product-readiness-20261015.md",
+      "sha256": "52b0f861cb81849237d09e6cb98ae0c8c154fd09d34325a590d0b45f34ae6c56"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/plan.md",
+      "sha256": "aaa184768897b4863b6cfbc8e36b2513e3212bb02ea496e0f19590a49887af0e"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/design.md",
+      "sha256": "eab37dc1d6f639f358f5e27e6d07719585e0fe1badecfb180b179c8836d3f256"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/qualification-matrix.md",
+      "sha256": "0e9448e46c26d8075831b5215d609bab38a4d052567b04f5e99251019b5f2b35"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/docs/product-readiness/inventory.yaml",
+      "sha256": "9a43d6462ae87239c7c780f0ecdf38f39f9c63030dbf32aae4354472291b7811"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/docs/product-readiness/student-guide.md",
+      "sha256": "27d62eab38efabe9296c5d4bc0a9b44889b78653b3ef27b0ce9d3b4c084fd606"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/docs/product-readiness/facilitator-guide.md",
+      "sha256": "a6d858ccc19ea9afd136da62523b18e617b2eabe70506e22ad34887d407a069a"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/dashboard-runtime.mjs",
+      "sha256": "c21035f43f8d7cec9c43391e5a188ddbb0e2f199f8086b01b2e2eb2f38331543"
+    }
+  ],
+  "evidencePolicy": {
+    "source": {
+      "path": "/Users/danielbarreto/Development/aidevschool/engines/shared/playwright/base.config.ts",
+      "sha256": "5519ac81eac5d277c939da29e816130dd614bf18009a9200263aa9014ae525a7"
+    },
+    "importedOrPromoted": false,
+    "screenshot": "on",
+    "video": "on",
+    "trace": "retain-on-failure",
+    "outputDir": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-42-51-714Z"
+  },
+  "stateBefore": {
+    "worktree": {
+      "root": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/",
+      "files": [
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/learning_state.yaml",
+          "sha256": "36419ae44e755a9bd8bd049b14d0dee03d8b5937e577285f67ffe730733735e2"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/learner_profile.md",
+          "sha256": "f32b2cf779dab2d2a88057838f0172440e8ba5e5ae8874733ae8609f01653183"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/pitfalls.md",
+          "sha256": "c63fe93060cdc58d97696cad549cf8af2899fd99ca50c94fe6e6fc2d1d0f7405"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/journal.md",
+          "sha256": "60aa71fddacbff585358c8376e0ead77612a4248ab0f1700301c9dc39397ab6f"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/pipeline_status.yaml",
+          "sha256": "668ac80145de042c0bd78dd4210ceccf1dc0ad932770eb4a03f2fd6d886f169a"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/pipeline_status.md",
+          "sha256": "a8fcbcb603f68ddd03ac7f3e6742c5580dae6194b11bd112206a7d7033188b54"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/predictions.yaml",
+          "sha256": "97f010c12e57942419a2a9326f29df792c5039aca3e1c779ed1508a67124eb37"
+        }
+      ],
+      "digest": "0e8e49b105ded1015b28caecd6968df31a5223a17104c2768c262aa8647192b6"
+    },
+    "originalCheckout": {
+      "root": "/Users/danielbarreto/Development/aidevschool",
+      "files": [
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/learning_state.yaml",
+          "sha256": "36419ae44e755a9bd8bd049b14d0dee03d8b5937e577285f67ffe730733735e2"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/learner_profile.md",
+          "sha256": "f32b2cf779dab2d2a88057838f0172440e8ba5e5ae8874733ae8609f01653183"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/pitfalls.md",
+          "sha256": "c63fe93060cdc58d97696cad549cf8af2899fd99ca50c94fe6e6fc2d1d0f7405"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/journal.md",
+          "sha256": "60aa71fddacbff585358c8376e0ead77612a4248ab0f1700301c9dc39397ab6f"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/pipeline_status.yaml",
+          "sha256": "668ac80145de042c0bd78dd4210ceccf1dc0ad932770eb4a03f2fd6d886f169a"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/pipeline_status.md",
+          "sha256": "a8fcbcb603f68ddd03ac7f3e6742c5580dae6194b11bd112206a7d7033188b54"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/predictions.yaml",
+          "sha256": "97f010c12e57942419a2a9326f29df792c5039aca3e1c779ed1508a67124eb37"
+        }
+      ],
+      "digest": "e2df008696e860ba89828c06958b7998b4f9248f52edd1c24169437d3b98a4d2"
+    }
+  },
+  "stateAfter": {
+    "worktree": {
+      "root": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/",
+      "files": [
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/learning_state.yaml",
+          "sha256": "36419ae44e755a9bd8bd049b14d0dee03d8b5937e577285f67ffe730733735e2"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/learner_profile.md",
+          "sha256": "f32b2cf779dab2d2a88057838f0172440e8ba5e5ae8874733ae8609f01653183"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/pitfalls.md",
+          "sha256": "c63fe93060cdc58d97696cad549cf8af2899fd99ca50c94fe6e6fc2d1d0f7405"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/journal.md",
+          "sha256": "60aa71fddacbff585358c8376e0ead77612a4248ab0f1700301c9dc39397ab6f"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/pipeline_status.yaml",
+          "sha256": "668ac80145de042c0bd78dd4210ceccf1dc0ad932770eb4a03f2fd6d886f169a"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/pipeline_status.md",
+          "sha256": "a8fcbcb603f68ddd03ac7f3e6742c5580dae6194b11bd112206a7d7033188b54"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/predictions.yaml",
+          "sha256": "97f010c12e57942419a2a9326f29df792c5039aca3e1c779ed1508a67124eb37"
+        }
+      ],
+      "digest": "0e8e49b105ded1015b28caecd6968df31a5223a17104c2768c262aa8647192b6"
+    },
+    "originalCheckout": {
+      "root": "/Users/danielbarreto/Development/aidevschool",
+      "files": [
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/learning_state.yaml",
+          "sha256": "36419ae44e755a9bd8bd049b14d0dee03d8b5937e577285f67ffe730733735e2"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/learner_profile.md",
+          "sha256": "f32b2cf779dab2d2a88057838f0172440e8ba5e5ae8874733ae8609f01653183"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/pitfalls.md",
+          "sha256": "c63fe93060cdc58d97696cad549cf8af2899fd99ca50c94fe6e6fc2d1d0f7405"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/journal.md",
+          "sha256": "60aa71fddacbff585358c8376e0ead77612a4248ab0f1700301c9dc39397ab6f"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/pipeline_status.yaml",
+          "sha256": "668ac80145de042c0bd78dd4210ceccf1dc0ad932770eb4a03f2fd6d886f169a"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/pipeline_status.md",
+          "sha256": "a8fcbcb603f68ddd03ac7f3e6742c5580dae6194b11bd112206a7d7033188b54"
+        },
+        {
+          "path": "/Users/danielbarreto/Development/aidevschool/learner/predictions.yaml",
+          "sha256": "97f010c12e57942419a2a9326f29df792c5039aca3e1c779ed1508a67124eb37"
+        }
+      ],
+      "digest": "e2df008696e860ba89828c06958b7998b4f9248f52edd1c24169437d3b98a4d2"
+    }
+  },
+  "endedAt": "2026-10-16T01:43:06.092Z"
+}

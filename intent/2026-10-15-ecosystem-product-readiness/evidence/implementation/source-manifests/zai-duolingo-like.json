@@ -1,0 +1,849 @@
+{
+  "schemaVersion": 1,
+  "membership": "git tracked regular files at refresh; excluded dependency/build/test-result outputs",
+  "sourceScope": [
+    "engines/zai-duolingo-like"
+  ],
+  "files": [
+    {
+      "path": "engines/zai-duolingo-like/.agents/notes/README.md",
+      "sha256": "ae2ed655c5e84ef9104dd218d36a5e391ec52518de367d5effe19c7d49ca0fe9"
+    },
+    {
+      "path": "engines/zai-duolingo-like/.agents/notes/implemented/architecture/2026-08-18-achievement-evaluate-award-split.md",
+      "sha256": "e8bfb434bd5f87433e09ac9ecabf52838f4505af623d4c0c7d913331c06adbf1"
+    },
+    {
+      "path": "engines/zai-duolingo-like/.agents/notes/implemented/architecture/2026-08-18-code-review-followups.md",
+      "sha256": "df2d9354039437b0cdf39472a31d30d138052dd3908863259aaf3f077cda5a7a"
+    },
+    {
+      "path": "engines/zai-duolingo-like/.agents/notes/implemented/architecture/2026-08-18-curriculum-data-grader-split.md",
+      "sha256": "9274316ef627bc3eb889a53515fc738ec238ae4de5abff3eac5cb6eb7e3ef85a"
+    },
+    {
+      "path": "engines/zai-duolingo-like/.agents/notes/implemented/architecture/2026-08-18-game-state-snapshot-seam.md",
+      "sha256": "3e365ee742d9f0b4f53c63f27168954888ca309c2e440943cf5e71100c3ec674"
+    },
+    {
+      "path": "engines/zai-duolingo-like/.agents/notes/implemented/architecture/2026-08-18-lesson-completion-pipeline.md",
+      "sha256": "395d05162c0adaf2fa170872ce537999eb4732d8cca4a0aa23ca0aeefb7c7a1b"
+    },
+    {
+      "path": "engines/zai-duolingo-like/.agents/notes/implemented/architecture/2026-08-18-unify-exercise-items-shape.md",
+      "sha256": "4904cc301ec9a6fcc632ead04e3d630686f6a609f600cffe34bb1f793b23df2d"
+    },
+    {
+      "path": "engines/zai-duolingo-like/.agents/notes/implemented/architecture/2026-08-19-input-hardening-activity-playground.md",
+      "sha256": "a0c4f5d993d688588038df66d285d90d286942e5cce92cd2f957983ee2981cf4"
+    },
+    {
+      "path": "engines/zai-duolingo-like/.agents/notes/implemented/architecture/2026-08-19-lesson-attempt-clock-consistency.md",
+      "sha256": "ccf496c8e7c2e9dcf94c4543b3878fa71dfac5793363703f31cf01719561ce38"
+    },
+    {
+      "path": "engines/zai-duolingo-like/.agents/notes/implemented/process/2026-08-18-playwright-e2e-suite.md",
+      "sha256": "4dd63c7a3809b392c5b53aa0ab0214361c6a8ab8565a0aac1d2a94b7e2aee568"
+    },
+    {
+      "path": "engines/zai-duolingo-like/.agents/notes/implemented/simplification/2026-08-18-collapse-duplicated-game-logic.md",
+      "sha256": "95e1e9afb51003b02b4ac02f1d4ff2f36284a2969792adceb20c72038a401da0"
+    },
+    {
+      "path": "engines/zai-duolingo-like/.agents/notes/implemented/simplification/2026-08-18-drop-shadcn-ui-catalog.md",
+      "sha256": "896d18e1521ae0d34a3c4506bed8e37a78d77898a5a52e0a45bec9b1080b533b"
+    },
+    {
+      "path": "engines/zai-duolingo-like/.agents/notes/implemented/simplification/2026-08-18-prune-unused-template-dependencies.md",
+      "sha256": "55cd236d6dc51ba8f40b0bc67073d4357968e229d8ed5749c40411ea474f233e"
+    },
+    {
+      "path": "engines/zai-duolingo-like/.agents/notes/implemented/simplification/2026-08-18-remove-dead-client-fields-and-error-channel.md",
+      "sha256": "d0114956000c1e257f3ec073242fa6060b9c1e0c16e9fba05977e02e4d873d6f"
+    },
+    {
+      "path": "engines/zai-duolingo-like/.agents/notes/implemented/simplification/2026-08-18-remove-template-leftovers-and-dev-artifacts.md",
+      "sha256": "55dff8de2cbf119f1c1e701873f2dd8af57991d87eef940fcbb6bd44a219c23b"
+    },
+    {
+      "path": "engines/zai-duolingo-like/.agents/notes/implemented/simplification/2026-08-18-remove-unwired-api-surface.md",
+      "sha256": "b0fc080627bc0f137ebed1d113527108def8f158bfb17a34b56374c2acdbaf70"
+    },
+    {
+      "path": "engines/zai-duolingo-like/.agents/notes/implemented/simplification/2026-08-19-single-lesson-unlock-source.md",
+      "sha256": "a9c8c48ba96dc0c873eb129c6dce8ba160da7b02e5f3d5819922b537c024eb93"
+    },
+    {
+      "path": "engines/zai-duolingo-like/.agents/workflows/01-fresh-clone-setup.md",
+      "sha256": "115da3c293fe81304b1deef655ba13ef330e025b0661f03cdafcd18feb474988"
+    },
+    {
+      "path": "engines/zai-duolingo-like/.agents/workflows/02-verify-before-done.md",
+      "sha256": "38727c6022648ada3ce97c6fb16e7a8f591e3daa89492da20c8b697f4773eac7"
+    },
+    {
+      "path": "engines/zai-duolingo-like/.agents/workflows/03-add-lesson-content.md",
+      "sha256": "e260d9e9ea639616bd6cf6faa052ea728640a1a22b52c071efc892f9d81f13c3"
+    },
+    {
+      "path": "engines/zai-duolingo-like/.agents/workflows/04-change-game-logic.md",
+      "sha256": "27d4b00168d03f2b533de79c02a18778e5afb8f84f4811a76c3e385a616f7a53"
+    },
+    {
+      "path": "engines/zai-duolingo-like/.agents/workflows/05-add-api-endpoint.md",
+      "sha256": "2c2e19b58ea108ecdb49c0fa115cb80af88a32cdbb7badddbf5982a3ed03dbd5"
+    },
+    {
+      "path": "engines/zai-duolingo-like/.agents/workflows/06-remove-dead-code.md",
+      "sha256": "6182d9b4b563ddb20bf98c91643f440ad8ead8cbc28057bed155ab49c7d3a828"
+    },
+    {
+      "path": "engines/zai-duolingo-like/.agents/workflows/07-write-e2e-test.md",
+      "sha256": "6abfe3b36d16f83c2ad64c41b66835623540a3fd06dfffe12b6eb9da2feb17cc"
+    },
+    {
+      "path": "engines/zai-duolingo-like/.agents/workflows/08-debug-failing-test.md",
+      "sha256": "6041a064b4a697d0d488184f5a7572ed4591e9cb3b15faec9d5555a226d40d0e"
+    },
+    {
+      "path": "engines/zai-duolingo-like/.agents/workflows/09-mini-service-lifecycle.md",
+      "sha256": "d6109784b9b028a1eb4916e00e2125165a587191f4abe0c0f1ec9462c192a70c"
+    },
+    {
+      "path": "engines/zai-duolingo-like/.agents/workflows/10-write-agent-note.md",
+      "sha256": "6ab0d128f1ef97bbe2aa4ef21b5c433a076fd862b139caf12139dc62ca0826a8"
+    },
+    {
+      "path": "engines/zai-duolingo-like/.agents/workflows/README.md",
+      "sha256": "d9990552a5f525e1f78cde8bd4c2c1cf57cef7457ff8daae6480f151b6db22bc"
+    },
+    {
+      "path": "engines/zai-duolingo-like/.gitignore",
+      "sha256": "bddbda98ac649bfd9d4f027128937f3e19fdaf88efcc4a6b2547453a80693d3d"
+    },
+    {
+      "path": "engines/zai-duolingo-like/.zscripts/build.sh",
+      "sha256": "5339ee44f012d8d59e4f8b394421a862df12babcdb0f4fcd1d0c8617d4aad2ff"
+    },
+    {
+      "path": "engines/zai-duolingo-like/.zscripts/database-runtime-build.sh",
+      "sha256": "08cc5e20d2ed0ceccca5e02cbb2321cd66ecb53e39845a1b6b5afc4bcdbff49d"
+    },
+    {
+      "path": "engines/zai-duolingo-like/.zscripts/dev.sh",
+      "sha256": "00877abea9e13ed7eb181b9749bb1837719ed054cfcd5ea07f9bad7c82548d34"
+    },
+    {
+      "path": "engines/zai-duolingo-like/.zscripts/mini-services-build.sh",
+      "sha256": "c29b8708832fe74eb6bc43c504bd93412177267862d767e0a0981d2cec13c608"
+    },
+    {
+      "path": "engines/zai-duolingo-like/.zscripts/mini-services-install.sh",
+      "sha256": "c4d0ac5a9101e170cf8519de8f629cdf8ca6385ebde24a84681f42ce4794ad7e"
+    },
+    {
+      "path": "engines/zai-duolingo-like/.zscripts/mini-services-start.sh",
+      "sha256": "14d922bdc4b1fba7db13eeaa260957f76cb4fdbe9a249d51a4ae6d2934ae6c98"
+    },
+    {
+      "path": "engines/zai-duolingo-like/.zscripts/python-runtime-build.sh",
+      "sha256": "af96c7fe2533b8df6c0cfb19dcc471f669cf1008a383a2ce9a9ceec402124d57"
+    },
+    {
+      "path": "engines/zai-duolingo-like/.zscripts/start.sh",
+      "sha256": "064d2471ef1fb3d8b2990b568fa0956e56a46ffab329f5334ccd99532b3fd168"
+    },
+    {
+      "path": "engines/zai-duolingo-like/Caddyfile",
+      "sha256": "89b7a9c04929989fb5014e1b5032ecd58df9491a3e3d09d69d62d740f29b0a7b"
+    },
+    {
+      "path": "engines/zai-duolingo-like/QWEN.md",
+      "sha256": "537487d2acd0290d652d382447b5ce0c3f0b424c1e183ea6dae47644b9d63d36"
+    },
+    {
+      "path": "engines/zai-duolingo-like/bun.lock",
+      "sha256": "7b26f9d069950db38d736abf7d15134b469f5f6b5f4c08d77942b2b7544026f4"
+    },
+    {
+      "path": "engines/zai-duolingo-like/db/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "engines/zai-duolingo-like/docs/design-it-twice/A-state-hub.md",
+      "sha256": "4f995972ca1f09efa7750c294caa53850d4b59a8421420a991a3cc9dae66c47f"
+    },
+    {
+      "path": "engines/zai-duolingo-like/docs/design-it-twice/B-snapshot-unico.md",
+      "sha256": "152272ea34711860f249da81a7ea079c1951162a4742d27b79733c5314b2036c"
+    },
+    {
+      "path": "engines/zai-duolingo-like/docs/design-it-twice/C-estado-como-funcao.md",
+      "sha256": "02fe6e795336360fa0e5485bd350479c799744f32b8215b54301258edc31c783"
+    },
+    {
+      "path": "engines/zai-duolingo-like/docs/design-it-twice/D-nucleo-puro-ports.md",
+      "sha256": "14abfba66df515cabd33b9f72ab5f4b7111fd55767e433d14232b5b962cbf24c"
+    },
+    {
+      "path": "engines/zai-duolingo-like/docs/design-it-twice/README.md",
+      "sha256": "6c45c7069f7a483be9e8bd2e8ff3216fb2bd2db2a6190ce19b17e9d2e4f1a01a"
+    },
+    {
+      "path": "engines/zai-duolingo-like/docs/workflow-dev-ia/README.md",
+      "sha256": "01838099a634352456f59ab3c8fd9467344d777d5e92179164bd37a8256368f9"
+    },
+    {
+      "path": "engines/zai-duolingo-like/docs/workflow-dev-ia/aprendizados.md",
+      "sha256": "83e7f908e2765d0bdf82882f5a41f63569e81bbd7313e48d4348f37d9487830c"
+    },
+    {
+      "path": "engines/zai-duolingo-like/docs/workflow-dev-ia/diagrams/arquitetura-sistema.mmd",
+      "sha256": "cc26903a97900753c955066a10373f70a4e6c90b54b92c4447d3ff260f7715ae"
+    },
+    {
+      "path": "engines/zai-duolingo-like/docs/workflow-dev-ia/diagrams/arquitetura-sistema.png",
+      "sha256": "713de005493fc898431b259d6369dedf274b6fe84c9ca5bc2605ca4930b0566e"
+    },
+    {
+      "path": "engines/zai-duolingo-like/docs/workflow-dev-ia/diagrams/arquitetura-sistema.svg",
+      "sha256": "4737e5a5eda22e8c5a2eb78fab404eb59a8c42f691f90e429e6c39470662b4f4"
+    },
+    {
+      "path": "engines/zai-duolingo-like/docs/workflow-dev-ia/diagrams/entregas-timeline.mmd",
+      "sha256": "e1606d8350ae1d98da69fa0d611120f4a1891a2920328b3ff74aad3644c59fa1"
+    },
+    {
+      "path": "engines/zai-duolingo-like/docs/workflow-dev-ia/diagrams/entregas-timeline.png",
+      "sha256": "7984ef75e7522f50102df28ae2776a0672c2861756bd5df6771e38aa995a1fed"
+    },
+    {
+      "path": "engines/zai-duolingo-like/docs/workflow-dev-ia/diagrams/entregas-timeline.svg",
+      "sha256": "24cb322402aca4ecef76a097d181aa8ff9b01b5bb7aa947e3d82d354d61c50f8"
+    },
+    {
+      "path": "engines/zai-duolingo-like/docs/workflow-dev-ia/diagrams/pipeline-licao.mmd",
+      "sha256": "055b337430aa89798217b12b37d9d40f6583a8e617dc57a8882ae1a69a181578"
+    },
+    {
+      "path": "engines/zai-duolingo-like/docs/workflow-dev-ia/diagrams/pipeline-licao.png",
+      "sha256": "7f999ff4295ef09c8b431311bfe81b663df677c84fc867514ac4a2056808c574"
+    },
+    {
+      "path": "engines/zai-duolingo-like/docs/workflow-dev-ia/diagrams/pipeline-licao.svg",
+      "sha256": "2aa8a923bbd7f0bb18189314b07710f7bb7a611e8436bb750804834a04e0a5db"
+    },
+    {
+      "path": "engines/zai-duolingo-like/docs/workflow-dev-ia/examples/spec-meta-semanal.md",
+      "sha256": "ae2743eac948f6f6f2729ad741c1202f9294a917d01001b0d2a162351d676cca"
+    },
+    {
+      "path": "engines/zai-duolingo-like/docs/workflow-dev-ia/examples/w1-bugfix-invariante.md",
+      "sha256": "be0d8cf6e26330426602c406edc70703c429a0e4d070fc7ff85bf60b4fccd02f"
+    },
+    {
+      "path": "engines/zai-duolingo-like/docs/workflow-dev-ia/examples/w10-verify-asset.md",
+      "sha256": "b8f908dda2dbe9673178efc24b86bd007c867f500cfc8ea3b1b6d4af4de5ec55"
+    },
+    {
+      "path": "engines/zai-duolingo-like/docs/workflow-dev-ia/examples/w2-tdd-extracao.md",
+      "sha256": "cea48586ad1e231a111ba531fdf59db67fb03b07eae2cb8bc6c19d891e8f39bf"
+    },
+    {
+      "path": "engines/zai-duolingo-like/docs/workflow-dev-ia/examples/w3-refactor-seguro.md",
+      "sha256": "f7a5b0421ed5754760e2b41f42b39087d6e5d08ff9c26d7c8c7f3a9dbef6f753"
+    },
+    {
+      "path": "engines/zai-duolingo-like/docs/workflow-dev-ia/examples/w4-code-review.md",
+      "sha256": "aec83cc19da2af81e9ac3631673d6ea453bdbb57659a1d7f1ef6d23c21214209"
+    },
+    {
+      "path": "engines/zai-duolingo-like/docs/workflow-dev-ia/examples/w5-e2e-portavel.md",
+      "sha256": "437d470dfabd09a6e78b8ddc38b0dea86db816a6344f686f5f5e3c530985f164"
+    },
+    {
+      "path": "engines/zai-duolingo-like/docs/workflow-dev-ia/examples/w6-delegacao-subagente.md",
+      "sha256": "d0703c284932ee6e20f1d8e2dc914a66563fcf6e22bd889c5bf4e5ec13ef9fcf"
+    },
+    {
+      "path": "engines/zai-duolingo-like/docs/workflow-dev-ia/examples/w7-loop-qualidade.md",
+      "sha256": "5fa00bb65c6dd261a2b1a322e8eb4ebbcc1bcbc83996175b69b1096ffd34e843"
+    },
+    {
+      "path": "engines/zai-duolingo-like/docs/workflow-dev-ia/examples/w8-health-check-deps.md",
+      "sha256": "8c866cfac7d3b3c1ec6cbe675cfd5901fdefa20501db21dfc95aaa6f5cb306ad"
+    },
+    {
+      "path": "engines/zai-duolingo-like/docs/workflow-dev-ia/examples/w9-decision-records.md",
+      "sha256": "08f8526d6dae479b9fa56d43db42fa181c53a6dcf8bdd016439bc100aa8c2aae"
+    },
+    {
+      "path": "engines/zai-duolingo-like/docs/workflow-dev-ia/index.html",
+      "sha256": "ca0ae7750e25e65f71368dc48313b5e5d014129ef556c210ac761152f55c8aef"
+    },
+    {
+      "path": "engines/zai-duolingo-like/docs/workflow-dev-ia/templates/agent-brief.md",
+      "sha256": "e9d43d93e70d0a0f411bca0d3360099df5025ee0607f3ff52e7324aaa6a5b18d"
+    },
+    {
+      "path": "engines/zai-duolingo-like/docs/workflow-dev-ia/templates/loop.md",
+      "sha256": "bf05ddaac74e3789ef88fff05ddbbec3d4b78c894321eab0d077ce9847f4fe97"
+    },
+    {
+      "path": "engines/zai-duolingo-like/docs/workflow-dev-ia/templates/plan.md",
+      "sha256": "421e3dfa61f1ea1f29f044c92e98c8dd7145d60b4979cd2fac947ae2354c6ee1"
+    },
+    {
+      "path": "engines/zai-duolingo-like/docs/workflow-dev-ia/templates/prd.md",
+      "sha256": "02785bc58024d0889205b3227f0830d3cd68e08acae38304a90b394884e6a258"
+    },
+    {
+      "path": "engines/zai-duolingo-like/docs/workflow-dev-ia/templates/spec.md",
+      "sha256": "73a49b66fb57d5b4c7701eebfec3e5ec1a5b458c9dde4932a0c4165cd01f3b21"
+    },
+    {
+      "path": "engines/zai-duolingo-like/e2e/global-setup.ts",
+      "sha256": "e11dd6abb1174b37d72a9cb54b65ddce4a88ff365bf0c519ad8f714392a87208"
+    },
+    {
+      "path": "engines/zai-duolingo-like/e2e/helpers.ts",
+      "sha256": "7c82f8fa0f3efd982e9dfaaf5e4f6578dd60030aac4b67f4361e0324c3139c7c"
+    },
+    {
+      "path": "engines/zai-duolingo-like/e2e/lesson-flow.spec.ts",
+      "sha256": "c7cdb89f2f4a0176dc5a7b5f501c98cb1194289a16e43c4bd1b49b4b0fd02bc9"
+    },
+    {
+      "path": "engines/zai-duolingo-like/e2e/meta.spec.ts",
+      "sha256": "95e91e702e0a33a3ff039e2b447f71e6f10edd2490a3b25b4d9c6c765f94acfc"
+    },
+    {
+      "path": "engines/zai-duolingo-like/e2e/navigation.spec.ts",
+      "sha256": "defdddd3da35772d79eb11685744d2bc8a7b0037dfe690573c9467e6ec2d8616"
+    },
+    {
+      "path": "engines/zai-duolingo-like/e2e/playground.spec.ts",
+      "sha256": "2455a41f0a6b4491736f1f219db73d098a90b8d8fc50d48840e79950df2761f4"
+    },
+    {
+      "path": "engines/zai-duolingo-like/e2e/smoke.spec.ts",
+      "sha256": "9383698b8b320541054cba4d1276652bd320e8e3fd90eb8d2f8a99ea1a4bb28f"
+    },
+    {
+      "path": "engines/zai-duolingo-like/eslint.config.mjs",
+      "sha256": "c65e06a77d2b9196c3a318b6738f36ceb04d52c4ecfeada213b1e029e868765b"
+    },
+    {
+      "path": "engines/zai-duolingo-like/mini-services/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "engines/zai-duolingo-like/mini-services/playground/bun.lock",
+      "sha256": "c1180f7360dd244072ddcec0e0c8e32c9cde7845f95395df77c234a456599064"
+    },
+    {
+      "path": "engines/zai-duolingo-like/mini-services/playground/index.ts",
+      "sha256": "4d1f947e0a8bb73110b6215a1077ea6d5a48048518f0d1e87d0196d176dcf7c4"
+    },
+    {
+      "path": "engines/zai-duolingo-like/mini-services/playground/package.json",
+      "sha256": "214656f3989b7b2720795c6bd47b4d7cc4b3aa953296fcc8cd0c72cbf3a1e0b5"
+    },
+    {
+      "path": "engines/zai-duolingo-like/miro-board-raw.json",
+      "sha256": "a0c0b591930257903f4314f41dccb0baa053fe0339f3afc98a0c54df316e4770"
+    },
+    {
+      "path": "engines/zai-duolingo-like/next.config.ts",
+      "sha256": "6b87a766fe1b6f3abd82cc8305e13f993bfcd619acd2e9f041c5ebef3ce2cc53"
+    },
+    {
+      "path": "engines/zai-duolingo-like/package-lock.json",
+      "sha256": "c056a9ec2cf5b66c46ae4961b6861334c5b594bbe4d3296ec950f263a2a6923c"
+    },
+    {
+      "path": "engines/zai-duolingo-like/package.json",
+      "sha256": "9ac02f9f0b32adbf2bc53102b98ee890c81ff6c3acc3cbcf9751c179f09c900c"
+    },
+    {
+      "path": "engines/zai-duolingo-like/playwright.config.ts",
+      "sha256": "7ccf7277468c46af183cb5b099d67f47945f34a47831233a81abf189a0e150ac"
+    },
+    {
+      "path": "engines/zai-duolingo-like/postcss.config.mjs",
+      "sha256": "141ef24ca27a99d08962210fdf20212d3435fdcfa21b46cd88b44d22f751dfae"
+    },
+    {
+      "path": "engines/zai-duolingo-like/prisma/schema.prisma",
+      "sha256": "d0adea8783e4bfe8d64dfa41c1c0b901c7be4645b6718579012311052b229519"
+    },
+    {
+      "path": "engines/zai-duolingo-like/prisma/seed.ts",
+      "sha256": "e0e6e37e6f1971b7b54dc3d2534eac4a0d736549add9f40fbb4f2383e948ad79"
+    },
+    {
+      "path": "engines/zai-duolingo-like/public/art/akihabara-neon.png",
+      "sha256": "49d438e6b2b47c85947e56d1e37f80f2681d9a1c5f2663aef1f33547d36da202"
+    },
+    {
+      "path": "engines/zai-duolingo-like/public/art/bip-happy.png",
+      "sha256": "b3bb8021eba7fc9443f3a92ca39b30c3dcb61b844abae6c2b09cf204a3678733"
+    },
+    {
+      "path": "engines/zai-duolingo-like/public/art/bip-idle.png",
+      "sha256": "95108d3a01f8ac20f4190e39327d6f897b26fff425d4d1dd9b1596b49bb0ee23"
+    },
+    {
+      "path": "engines/zai-duolingo-like/public/art/bip-sad.png",
+      "sha256": "9e8125f77cd533d170bd2e269c68878dc1082d16fd02849b4ffcaabb10d590c9"
+    },
+    {
+      "path": "engines/zai-duolingo-like/public/art/bip-sleep.png",
+      "sha256": "19a4b678a3ba66f02b5951710a488182861d82060151fda47613aab71364351d"
+    },
+    {
+      "path": "engines/zai-duolingo-like/public/art/bip-thinking.png",
+      "sha256": "3d67e9a0323aada7117cff6f497b1a2de0ad3c448ba4852d6b3368bfde809a00"
+    },
+    {
+      "path": "engines/zai-duolingo-like/public/art/module-ai.png",
+      "sha256": "ed35da648f1f31e6d2be9d0be2ea7f0d3cb9caae760a200a95f6be40605c1e67"
+    },
+    {
+      "path": "engines/zai-duolingo-like/public/art/module-image.png",
+      "sha256": "96b9ad2c90faaec2414472515af5c9a4d1198707be6b0b6c79313b9fb76d2587"
+    },
+    {
+      "path": "engines/zai-duolingo-like/public/art/module-practice.png",
+      "sha256": "5c04970f9f15862456be4a3eebdb9f52f6b70f503713e5eec3648d9157f0ee5d"
+    },
+    {
+      "path": "engines/zai-duolingo-like/public/art/module-prompt.png",
+      "sha256": "67aaeb9a73c3a07d36a1738abaeb92ef9725b8647121e694e7c907b6c9c84b9c"
+    },
+    {
+      "path": "engines/zai-duolingo-like/public/art/module-risk.png",
+      "sha256": "af579a8b5ed6e6b9815966d659e23a4c47356d6a1cf2f33cacf60f9ac1e2f450"
+    },
+    {
+      "path": "engines/zai-duolingo-like/public/art/odaiba-shrine.png",
+      "sha256": "65e7964ea50821b054297fa84cb8e3c37b30e251c986701e9cef7b8d8b248c55"
+    },
+    {
+      "path": "engines/zai-duolingo-like/public/art/tokyo-rain.png",
+      "sha256": "f98a6775d516b254068f11a6e0dfa42e79fca05b36c125cffca5d34e51f3a71f"
+    },
+    {
+      "path": "engines/zai-duolingo-like/public/logo.svg",
+      "sha256": "8506450e8ef647695d218c4b3245ef573f9c6473783f372eef87fdba9bd47eac"
+    },
+    {
+      "path": "engines/zai-duolingo-like/public/robots.txt",
+      "sha256": "a3d27b3ca5ce32341fa9f96f01169b521b1657c05d1860c45d1e53a6258e9e8b"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/app/api/achievements/route.ts",
+      "sha256": "2b71419aee8928d71fcc03fc530d935b556e1a37ecea197c6be8b1ce45a5445f"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/app/api/activity/route.ts",
+      "sha256": "92ec10dc5ebfe35b6e50c909290914418adf2acc7e1320692cf44848d3462df3"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/app/api/chat/route.ts",
+      "sha256": "e874d7be125d7c284d2de7ce764ca416dbeba8eb55287f4519f0eca9a00f20a7"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/app/api/curriculum/route.ts",
+      "sha256": "45198f49d8e0c9a3bfcac9939c112042626a914256bfbeaa3c0e895e66cffb02"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/app/api/daily-challenge/route.ts",
+      "sha256": "d8d7c6987dd50fbf78d7f07863578d1e5200efcd961f382835cb1cb5802c5ddc"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/app/api/heart/refill/route.ts",
+      "sha256": "205447b102286265838cf97e3e1ce69686fb476f421b0cc8e4d360e44d30d7aa"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/app/api/init/route.ts",
+      "sha256": "ccd43a3776a8dec6be39d83249659e8c58f1483d7aaa23f6bcfa162775500eda"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/app/api/leaderboard/route.ts",
+      "sha256": "20ce68c69c8d62e06d5d1a93b2e32ccdeb59b10ccaacd594067d4bd8450e3d52"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/app/api/lesson/[id]/complete/route.ts",
+      "sha256": "247e366cdda33b8d67943bc9678bf1e97f4304bedaf2c1f56f790f2002e60d93"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/app/api/lesson/[id]/practice/route.ts",
+      "sha256": "2a500f848a3acf061deff11465284fcd16da3244b280819d5325cf2668ec93d5"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/app/api/playground/save/route.ts",
+      "sha256": "adaa7bb35341d5f9da07fcb1ccd6173a727f2eb2ad21f356d5b8491a0665b3fa"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/app/api/reset/route.ts",
+      "sha256": "99278c28e9749a9929f9edac5412b3c740bf8b53f4da45b983414404d8f8218a"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/app/api/settings/route.ts",
+      "sha256": "b9c958f40ff3b53c8b13c47e760e2e92581f093f83e400d1c548e0af0a4ba646"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/app/api/shop/route.ts",
+      "sha256": "c7c9496594bb17aff4ddd7edd71b8d44dfc9a91a1504b7a88d55231d321a09a2"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/app/api/state/route.ts",
+      "sha256": "8dd9e311b13abc9fd0dd5b53a1e45e0cc34421007ddd44e1b48b95ad5e480eff"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/app/api/stats/route.ts",
+      "sha256": "49f5e856e265c866735afcc761bd0631deb0aa74bddb08745611034c63c3cde1"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/app/api/streak/goal/route.ts",
+      "sha256": "eed41ad854b9c74b8a279f422c27988e6468118dffac5f0a24e9101f6cc8f68c"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/app/api/streak/milestone/route.ts",
+      "sha256": "2f6ea6670a48b2f802fc5e3ee6871d0ccba253fda1d8ab32848524bb98aa9de0"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/app/globals.css",
+      "sha256": "a4f21e83ae5e2b3a1aeabd1aec4b778e791127568374a9fd02758a1233623d22"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/app/layout.tsx",
+      "sha256": "89fd8d9a7a98fcb3d3393b66f110c0cdd9d177ab69ae0ab17dd80a97c95ccac1"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/app/page.tsx",
+      "sha256": "e350899b9640fd7d0acf24438e0b063786c56c3929555047ad53454d2a223ef0"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/components/game/AchievementToasts.tsx",
+      "sha256": "958c55ad80df1987df48bfa2fa1811c57caf1f86c8ab2fe76cb32dc764c9ad63"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/components/game/Achievements.tsx",
+      "sha256": "08dd45a8c7ed3c46911e51aa3d74b493c9dd7d421c5b5428b31cf830e817731b"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/components/game/ActivityFeed.tsx",
+      "sha256": "31920ea3979a686ec94f640bbc4c91f631dfb129a3cee380b99b3fbe6878e875"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/components/game/Bip.tsx",
+      "sha256": "7f06cdb20e0090d82475a9679288fb2e2ed28b0729846f0bc911ea674eae144d"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/components/game/BottomNav.tsx",
+      "sha256": "b8e379e7a3cce93a752e2f9dab2d147ad80b1d897ef43cb08e43f4216d7d0e63"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/components/game/Cinematic.tsx",
+      "sha256": "17f57bdd23f7eadaefae87d9dd68fc33912fe16f7acd00f4b592fa04053623ee"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/components/game/Confetti.tsx",
+      "sha256": "fafc29b1e952efbf2e363685f44031ace3427299b332d1d159b7ed9c3edb8e22"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/components/game/DailyChallengeCard.tsx",
+      "sha256": "01ba259d4c4f2f5c31c05e8c5d2cd7b1d60fda15eb9f2ca369852f17e5ebe222"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/components/game/ExpandableText.tsx",
+      "sha256": "c31ccb12ec5539d8492748540298dc22083a83d8fe8b820d395677c4287685f5"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/components/game/FreezeToast.tsx",
+      "sha256": "704d6094e6ac14e500f69ac51ee93561a9210532841dd97780bbc2cb73278fce"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/components/game/Home.tsx",
+      "sha256": "cfd003aa9b1fc05e560b1efb68e0e5c671e47ffadc43280cd3a703a8f7ec1dd5"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/components/game/Leaderboard.tsx",
+      "sha256": "e5b2bfe161c7f7b4133fab92d5a060ec5d1a9adaf27ba1a041651240cb3a5294"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/components/game/LeagueResetToast.tsx",
+      "sha256": "b6e348453cf159200e6f32566c465c38ba5ad3f92f3e3abef504a4cc9248b8fb"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/components/game/LessonComplete.tsx",
+      "sha256": "037bbab3882f5cd5b046bd578ad578f5a3fdae3eef76d3912aa7b7738bd4378d"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/components/game/LessonPlayer.tsx",
+      "sha256": "d73514c22f91b2d1e952515dbff87da783c63dde3486139377e2f4d08a628fc5"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/components/game/Onboarding.tsx",
+      "sha256": "55f99811ecc96f12a21b7f2d425fb06e63f20e7e5df8064fba8ff2011188555f"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/components/game/Playground.tsx",
+      "sha256": "9d87d940dfeb9c985246c58d5c632d12dca708d7a79b7498e53cda467723f2d8"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/components/game/Profile.tsx",
+      "sha256": "ebda9d0aae4272e6150a46b6242888dc0638777ce45e5a9ebee0167825b0bc61"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/components/game/ProgressRing.tsx",
+      "sha256": "b191847ffc0859650471bf87b15103577ddc5742f717b5f0e6c0a8bf096fbc50"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/components/game/RainBackground.tsx",
+      "sha256": "d460a4a1eb19897c55d7f7072b60dfc2a789cc0a20051921117e2853fddb7e25"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/components/game/Shop.tsx",
+      "sha256": "ec865dd87aef35c0b1b3209a8825eb03b014e123564a4fd7d7ded161d11067c5"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/components/game/SkillPath.tsx",
+      "sha256": "e4c5de39819bea3777a9fd7371846ffe9ed71232095fbf536bbf5db3de3047da"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/components/game/StreakMilestone.tsx",
+      "sha256": "ac4495e27c76f14371287f34d656096b36239c1d05456f8c7fe2fc4302218b2c"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/components/game/TopBar.tsx",
+      "sha256": "ef11772e23161d3eb88d7808a00feca9feaadd1c6e724388411c3b432c10e7ba"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/components/game/WeatherWidget.tsx",
+      "sha256": "adb4cb9f2247534a068679aecf8d46804f740a0cafef93276d96aa755281b9f9"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/components/game/exercises/FillBlankExercise.tsx",
+      "sha256": "181a33192563d0cca34d1827fa8aad5a757ebca2666a228797bb7d8d30f36222"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/components/game/exercises/MultipleChoiceExercise.tsx",
+      "sha256": "d70d7e50217b0e835aa30bdafcce722bd1cddf19f35dcda64be05ab30436f2cb"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/components/game/exercises/OrderExercise.tsx",
+      "sha256": "6895025a4f1e5899918e5f2a6cfdc137297e26cda76c5bd18161d62cdb0bfc9d"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/components/game/exercises/SwipeExercise.tsx",
+      "sha256": "3e0f0f9f740d2b914e4467f0440f38f454c4e6dd35d4740a586dc23def4a6295"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/components/game/exercises/TrueFalseExercise.tsx",
+      "sha256": "92cd17ce40149f806621e71f31cdcee601a921b5340b3287fc0e326886a2ee34"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/components/game/game-state.ts",
+      "sha256": "27889133f616dca732c5eb6a6c688e5f35990ef553cc3c74b60b819a07e3ad11"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/components/game/leagues.ts",
+      "sha256": "fef6f1fcc944d1c0c88e628fe62bb32c2fd67a8bdde0ae7ddbdb354060b3fe68"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/components/game/store.ts",
+      "sha256": "ce9cd73da952c0b0dc90b0a40b9a311900ded83b2d638991cf5ce1d069f7e357"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/components/game/types.ts",
+      "sha256": "9a8e50d0ba83a867a200195d485d8f6795e56080765e2b72143d0c3655f5fc80"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/components/game/useSound.ts",
+      "sha256": "b2c21497a311a5b19589ed1af9b34eb9ca3138a5df75e6a74c401fe2e8af5858"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/lib/achievement-sync.ts",
+      "sha256": "83a7724dce399f4eed16ed78709b5e55917aa4686fc763c626f38bcbe3620584"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/lib/achievements.ts",
+      "sha256": "65dcf93ba80298a2965808f2c9306444fc9063c53bbb04d4a25fac580c4392c5"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/lib/curriculum-data.ts",
+      "sha256": "5116ab5cbb0805f0ee3d6f696a8893b26f9f5e7e63d4dad9263c59244b2f7835"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/lib/daily-challenge.ts",
+      "sha256": "8af0517c73c4ecbf7287ce30ead077dff3da5089faa264ae1d188fda160a237e"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/lib/db.ts",
+      "sha256": "a043a263d1397a99592e672dd884de090476398eaf197e94d25ad9f28f925bb1"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/lib/game-state/index.ts",
+      "sha256": "46be29b47822c88760b734580efb9bff204ffbd2c20b7c703e93ad949a407468"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/lib/game.ts",
+      "sha256": "d08086ee9825929a9e087b5e7e9b17f16a96b031f8352cc550841e646f88653a"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/lib/grader.ts",
+      "sha256": "01fb0ac27eea7c6cfd999466b98f18987dcbbb41cce2fcbfccf2414f73e880e1"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/lib/league-meta.ts",
+      "sha256": "05357bef536a35ffdc36c163bc7c99345b93c4c2c5251d0c9bdb6597630fffd3"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/lib/league-reset.ts",
+      "sha256": "8f6fe0d551f1c2b5030a2790dcb9d0238ab42365f7e3acf22cfb7575cbc54e0e"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/lib/lesson-completion.ts",
+      "sha256": "cedcd5f7f31fc4df611a64893a89840d193da0b49b7a24dcd4965df556037d38"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/lib/lesson-unlock.ts",
+      "sha256": "7a12c2246e2920eb97b6f23a027cc51e19d1b8033694e49a2aeed0d2dcf3c13b"
+    },
+    {
+      "path": "engines/zai-duolingo-like/src/lib/shop-catalog.ts",
+      "sha256": "a7bf9b9a16e0c66ccf1ff8891b2f4173798ceed87a58098d75419b5b9c6f88f5"
+    },
+    {
+      "path": "engines/zai-duolingo-like/start-services.sh",
+      "sha256": "c90226effe65c919bf871e72fdb9956b03ab416b5283382e6a51ba5ab57a6382"
+    },
+    {
+      "path": "engines/zai-duolingo-like/tests/api/achievements.test.ts",
+      "sha256": "1f2de6846e5dbda05efd54b670afac594813093e0b442b05c6735ced46ab12b2"
+    },
+    {
+      "path": "engines/zai-duolingo-like/tests/api/activity.test.ts",
+      "sha256": "b92716fe6ded469ef3e8761fcadccef187e9eb12be900213928368d04aee2da4"
+    },
+    {
+      "path": "engines/zai-duolingo-like/tests/api/chat.test.ts",
+      "sha256": "908889396c5e7382c4847df53eb0abd501f245d0ccf739ddd54d7b199b400b39"
+    },
+    {
+      "path": "engines/zai-duolingo-like/tests/api/curriculum.test.ts",
+      "sha256": "493fc90b7cef1400ef73a35fed54a6c5605d3f5f81ecad80e84d99c2bf9f29a8"
+    },
+    {
+      "path": "engines/zai-duolingo-like/tests/api/daily-challenge.test.ts",
+      "sha256": "a1fb28958697bc287453ecdfce57a798473e67daf1c63afed6f4dab0ba7e75d2"
+    },
+    {
+      "path": "engines/zai-duolingo-like/tests/api/init-settings-reset.test.ts",
+      "sha256": "54ef22343e3ca30bcebbc1300ae858d6a31d82a92192da2280f0dd27f37bd19a"
+    },
+    {
+      "path": "engines/zai-duolingo-like/tests/api/leaderboard-league-reset.test.ts",
+      "sha256": "d3cced1f7e0d08f2304460825dd41982c1391502ec2719e05cc473e990edbfbc"
+    },
+    {
+      "path": "engines/zai-duolingo-like/tests/api/lesson-complete.test.ts",
+      "sha256": "224d2c0487d469cd35811304cf2ba038fd1f96802f570104556353609fd7482a"
+    },
+    {
+      "path": "engines/zai-duolingo-like/tests/api/playground-save.test.ts",
+      "sha256": "9cbe47d29204b9a7c1223292da0e1def9059ef89159787184090e92410c47c28"
+    },
+    {
+      "path": "engines/zai-duolingo-like/tests/api/practice.test.ts",
+      "sha256": "4b2c4748f8bd4ca4002aa2d0f466e59396b0e690d04c69d02ba639bc1966e209"
+    },
+    {
+      "path": "engines/zai-duolingo-like/tests/api/shop-hearts.test.ts",
+      "sha256": "7bf320aa711f17f4bc041331a7d711b57cb5a763c1f4e8f3c26e666be88d07cc"
+    },
+    {
+      "path": "engines/zai-duolingo-like/tests/api/state.test.ts",
+      "sha256": "7e751e9d36610109a52ac8349b5630ad61bc7302f0ce3ad0d50541a69de52e21"
+    },
+    {
+      "path": "engines/zai-duolingo-like/tests/api/stats.test.ts",
+      "sha256": "657931209d306ba7fa71c8ef3d663c28104993d36c8fdff9ecdf39afbef3b157"
+    },
+    {
+      "path": "engines/zai-duolingo-like/tests/api/streak-goal.test.ts",
+      "sha256": "f3efbb8d9bae23a5a82d4ee5c80a4c18a3be5700b1b530d4ac91b8cc98801bc8"
+    },
+    {
+      "path": "engines/zai-duolingo-like/tests/api/streak-milestone.test.ts",
+      "sha256": "15516fed12a38d5e3bfca9a2245bbbd80cf1bfe57234d83d91feb74d7dc31e69"
+    },
+    {
+      "path": "engines/zai-duolingo-like/tests/global-setup.ts",
+      "sha256": "51df363f8b1d4b7889f00e9666cc52229f9af378af57a73e4b253b4b69445147"
+    },
+    {
+      "path": "engines/zai-duolingo-like/tests/helpers.ts",
+      "sha256": "e4536fca0b28b3cc43a19244399c3e9f8a40c149da4473d9310a0ded26eb4669"
+    },
+    {
+      "path": "engines/zai-duolingo-like/tests/unit/achievement-award.test.ts",
+      "sha256": "aea815129fa34f8e906582f46a8f2245dbcb0b7df2937c73d77b5a3c440f306d"
+    },
+    {
+      "path": "engines/zai-duolingo-like/tests/unit/achievements-eval.test.ts",
+      "sha256": "04e9bed559da4cd1dfc2dbbbd8a77f3592905f6d7e0ae8be74b5b7ed55b91995"
+    },
+    {
+      "path": "engines/zai-duolingo-like/tests/unit/curriculum-integrity.test.ts",
+      "sha256": "a121bcc7b8a734d06b5d35b1a03f0513ab5aece69169c45c93632de3c27b16fc"
+    },
+    {
+      "path": "engines/zai-duolingo-like/tests/unit/curriculum-privacy-lesson.test.ts",
+      "sha256": "885fca585473a785a85a45a03b0133e6a849e4d728c7f9652e90822229aeeb75"
+    },
+    {
+      "path": "engines/zai-duolingo-like/tests/unit/game-state.test.ts",
+      "sha256": "7df0e6eae9a27cb9bd412f2959bad924f6ca3d5cd2dcc1c1e14a36c52e8a9095"
+    },
+    {
+      "path": "engines/zai-duolingo-like/tests/unit/grading.test.ts",
+      "sha256": "4da6159ab715206d20a3e3fd861886ba12068608666f5df9cee3cbfa7d8a318f"
+    },
+    {
+      "path": "engines/zai-duolingo-like/tests/unit/hearts.test.ts",
+      "sha256": "de6b8eaac562fe179cb585e6917ea57500439627672221c136711cd45f918232"
+    },
+    {
+      "path": "engines/zai-duolingo-like/tests/unit/league-meta.test.ts",
+      "sha256": "228ad932c7fea6b629e1a9e835e85d83c19b8ed31e36dd6bf9ad6730bd8da78a"
+    },
+    {
+      "path": "engines/zai-duolingo-like/tests/unit/lesson-completion-clock.test.ts",
+      "sha256": "8265fc7690e77d45b43ed18342318506067126df7d315ea7e2e6b7bf000d5999"
+    },
+    {
+      "path": "engines/zai-duolingo-like/tests/unit/lesson-unlock.test.ts",
+      "sha256": "1ee6a356e3403113a87aa7753bb09cde01af3b6115c0b25768c290eb70fd3851"
+    },
+    {
+      "path": "engines/zai-duolingo-like/tests/unit/streak.test.ts",
+      "sha256": "9e41bc46baa0588afc747165ad0fa5a2f562851c2cfa29e35520ef50016b68ac"
+    },
+    {
+      "path": "engines/zai-duolingo-like/tsconfig.json",
+      "sha256": "5627b3f441adc62af9e6420045fa0452d7c02bfcea664ec5758db46504631609"
+    },
+    {
+      "path": "engines/zai-duolingo-like/vitest.config.ts",
+      "sha256": "0b26b28e03e8b0f02edf390b73e075e1391f4ac2b078159fb2d7b0e98d04f1a5"
+    },
+    {
+      "path": "engines/zai-duolingo-like/worklog.md",
+      "sha256": "91be3c5689e91a6aab5fe76af397c5401571cfaf9bb31d02057bc38d7e2f5e11"
+    }
+  ]
+}

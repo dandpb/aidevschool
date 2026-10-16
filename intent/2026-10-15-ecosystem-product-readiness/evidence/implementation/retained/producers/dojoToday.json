@@ -1,0 +1,43 @@
+{
+  "engine": "dojoToday",
+  "scope": "producer checks only; no declared-use qualification granted",
+  "results": [
+    {
+      "argv": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday",
+      "exitCode": 0,
+      "seconds": 1.27,
+      "log": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/producers/dojoToday-1.log",
+      "observedAt": "2026-10-16T01:23:06.721923+00:00"
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "selfcheck"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday",
+      "exitCode": 0,
+      "seconds": 0.42,
+      "log": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/producers/dojoToday-2.log",
+      "observedAt": "2026-10-16T01:23:07.138924+00:00"
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday",
+      "exitCode": 0,
+      "seconds": 5.58,
+      "log": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/producers/dojoToday-3.log",
+      "observedAt": "2026-10-16T01:23:12.723210+00:00"
+    }
+  ],
+  "allRequestedRan": true
+}

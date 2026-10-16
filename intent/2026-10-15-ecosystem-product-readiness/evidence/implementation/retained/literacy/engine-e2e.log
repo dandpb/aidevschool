@@ -1,0 +1,61 @@
+[WebServer] (node:16317) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:16330) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:16366) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 
+[WebServer] (!) Some chunks are larger than 500 kB after minification. Consider:
+[WebServer] - Using dynamic import() to code-split the application
+[WebServer] - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+[WebServer] - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+[WebServer] (node:16419) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 34 tests using 1 worker
+
+(node:16432) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[axe] onboarding: 1 violação(ões) — color-contrast(serious)×1
+[axe] map: 0 violação(ões)
+[axe] lesson-feedback: 0 violação(ões)
+[axe] result: 1 violação(ões) — aria-prohibited-attr(serious)×1
+[axe] progress: 1 violação(ões) — color-contrast(serious)×21
+  ✓   1 [app] › playwright/a11y-axe-smoke.spec.ts:85:1 › AID-1739: scanner axe-core percorre as telas core (onboarding, mapa, lição+feedback, resultado, progresso) (3.0s)
+  ✓   2 [app] › playwright/a11y-w3-forced-colors.spec.ts:26:3 › AID-1096/W3: forced-colors wave 1 no loop de lição › feedback de falha distinguível sem cor: borda dashed reforçada (827ms)
+  ✓   3 [app] › playwright/a11y-w3-forced-colors.spec.ts:42:3 › AID-1096/W3: forced-colors wave 1 no loop de lição › feedback de acerto distinguível sem cor: borda solid reforçada (1.0s)
+  ✓   4 [app] › playwright/a11y-w3-forced-colors.spec.ts:56:3 › AID-1096/W3: forced-colors wave 1 no loop de lição › outline de foco dos controles do loop sobrevive a system colors (727ms)
+  ✓   5 [app] › playwright/backup-restore.spec.ts:26:1 › export→wipe→import é lossless: backup com sha256 restaura o progresso idêntico (1.5s)
+  ✓   6 [app] › playwright/corridor.spec.ts:56:1 › literacy-corridor-happy-path: corredor completo l01→l11 com os 3 desafios, gate e próxima ação (2.6s)
+  ✓   7 [app] › playwright/corridor.spec.ts:134:1 › literacy-corridor-gate-retry: falha no desafio oferece feedback, dica e retry sem perder conclusões (1.3s)
+  ✓   8 [app] › playwright/corridor.spec.ts:172:1 › literacy-corridor-review-window: janelas [1,7,21] observáveis no storage com tamper controlado (§4.4) (2.2s)
+  ✓   9 [app] › playwright/corridor.spec.ts:241:1 › literacy-corridor-grandfathered-return: progresso pré-bump preservado, desafios opcionais, revisões devidas (553ms)
+  ✓  10 [app] › playwright/corridor.spec.ts:270:1 › literacy-corridor-resume-mid-module: retoma lição em andamento e preserva o resumo do módulo (440ms)
+  ✓  11 [app] › playwright/corridor.spec.ts:293:1 › literacy-corridor rota intermediate: cp-01 abre sem l01 (risco R1 §8) e libera l04 (833ms)
+  ✓  12 [app] › playwright/gamification.spec.ts:12:1 › engajamento após a primeira lição: XP, meta diária, sequência e conquista (1.2s)
+  ✓  13 [app] › playwright/gamification.spec.ts:44:1 › revisão espaçada vencida: refaz a lição, emite evidência de revisão e não muda a trilha (1.7s)
+  ✓  14 [app] › playwright/onboarding-a11y.spec.ts:51:3 › AID-1150: onboarding anuncia mudança de etapa (foco no h1 + status Etapa N de 5) › Etapas 2–5: foco no h1 e contador em role=status após cada transição (782ms)
+  ✓  15 [app] › playwright/onboarding-a11y.spec.ts:71:3 › AID-1150: onboarding anuncia mudança de etapa (foco no h1 + status Etapa N de 5) › Voltar também reposiciona o foco no h1 da etapa anterior (645ms)
+  ✓  16 [app] › playwright/reflow-320.spec.ts:106:1 › Standalone a 320px: sem scroll horizontal essencial do onboarding ao resultado (1.2s)
+  ✓  17 [app] › playwright/reflow-320.spec.ts:134:1 › Missão hospedada em iframe de 298px (paridade host @320): sem scroll horizontal essencial (5.7s)
+  ✓  18 [app] › playwright/reflow-320.spec.ts:176:1 › Controle de regressão: piso de largura não pode voltar a travar reflow (352ms)
+  ✓  19 [app] › playwright/refocus-a11y.spec.ts:67:3 › AID-1755/T3: refocus/anúncio em Checkpoint e Progresso › Desafio: transição de atividade foca o h1 e anuncia 'Atividade N de M' em role=status (669ms)
+  ✓  20 [app] › playwright/refocus-a11y.spec.ts:92:3 › AID-1755/T3: refocus/anúncio em Checkpoint e Progresso › Progresso: foco no h1 da tela ao entrar pela home (524ms)
+  ✓  21 [app] › playwright/vertical-slice.spec.ts:19:1 › readiness literacy-retry: Mapa Inicial encaminha erro, dica e nova tentativa para a rota guiada (1.5s)
+  ✓  22 [app] › playwright/vertical-slice.spec.ts:42:1 › readiness literacy-happy-path and literacy-resume: acerto de primeira encaminha para a rota intermediária (1.5s)
+  ✓  23 [app] › playwright/vertical-slice.spec.ts:68:1 › Mapa Inicial continua utilizável em viewport compacto (1.8s)
+(node:17679) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  24 [pwa] › playwright/escola-entry.spec.ts:10:1 › entrada /escola/ serve a página, os assets diretos e o fallback SPA do build (372ms)
+  ✓  25 [pwa] › playwright/escola-entry.spec.ts:50:1 › jornada real: /escola/ → fundamentos → onboarding → lição concluída com progresso persistido (1.1s)
+  ✓  26 [pwa] › playwright/escola-entry.spec.ts:79:1 › F1 regressão real: retornante SW-controlado raiz → /escola/ → offline → shell da raiz e progresso preservados (1.1s)
+  ✓  27 [pwa] › playwright/escola-entry.spec.ts:113:1 › F2 update real: URL fixa atualiza da rede (network-first) e /assets/ permanece cache-first (271ms)
+  ✓  28 [pwa] › playwright/escola-map-focus.pwa.spec.ts:43:3 › AID-3532 mapa em texto: Enter no link foca #jornada-cotidiano e o foco persiste (306ms)
+  ✓  29 [pwa] › playwright/escola-map-focus.pwa.spec.ts:43:3 › AID-3532 mapa em texto: Enter no link foca #jornada-dev e o foco persiste (277ms)
+  ✓  30 [pwa] › playwright/escola-map-focus.pwa.spec.ts:54:1 › AID-3532 mapa em texto: click no link foca #jornada-dev e o foco persiste (284ms)
+  ✓  31 [pwa] › playwright/escola-map-focus.pwa.spec.ts:62:1 › AID-3532 mapa em texto: ativações repetidas continuam focando o cartão (389ms)
+  ✓  32 [pwa] › playwright/pwa.spec.ts:7:1 › instalável e utilizável offline depois da primeira visita (426ms)
+  ✓  33 [pwa] › playwright/sw-asset-guard.spec.ts:174:1 › guarda de escrita: fallback SPA do host nunca é gravado sob chave de asset; legítimo preservado (747ms)
+  ✓  34 [pwa] › playwright/sw-asset-guard.spec.ts:257:1 › v5 contaminado é invalidado na ativação v6; contaminação semeada na versão efetiva é saneada na leitura (online remove, offline rejeita) (1.4s)
+
+  34 passed (44.4s)

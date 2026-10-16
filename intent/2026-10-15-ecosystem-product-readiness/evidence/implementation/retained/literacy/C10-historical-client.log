@@ -1,0 +1,25 @@
+
+> literacydojo@0.1.0 pretest
+> npm run gen:content
+
+
+> literacydojo@0.1.0 gen:content
+> cd ../.. && python3 curriculum/ai-literacy/tools/validate.py --compile engines/literacyDojo/src/data/generated --compile-competency engines/literacyDojo/src/data/generated
+
+OK: 32 lição(ões) ready validadas: 23 IA na Prática, 9 Dev; 0 planned (sem arquivo exigido).
+Read model gerado: engines/literacyDojo/src/data/generated/lessons.ts
+Competency map gerado: engines/literacyDojo/src/data/generated/competency-map.ts
+
+> literacydojo@0.1.0 test
+> NODE_ENV=development vitest run tests/domain/verification.test.ts
+
+
+ RUN  v3.2.7 /Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo
+
+ ✓ tests/domain/verification.test.ts (5 tests) 13ms
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  22:21:06
+   Duration  700ms (transform 33ms, setup 85ms, collect 19ms, tests 13ms, environment 305ms, prepare 63ms)
+

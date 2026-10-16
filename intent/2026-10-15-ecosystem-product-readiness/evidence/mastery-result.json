@@ -1,0 +1,13 @@
+{
+  "baseline": "f98e7fa32deac836addc348e185e8788fd197627",
+  "probe": "synthetic-game-metrics-without-independent-verifier",
+  "independent_verifier_receipt_supplied": false,
+  "actual_game_execution_performed": false,
+  "decision_ok": true,
+  "passed": true,
+  "errors": [],
+  "gate_outcome": "pass_first_try",
+  "simulated_active_unit_state": "mastered",
+  "temporary_state_was_not_written": true,
+  "canonical_repository_state_untouched": true
+}

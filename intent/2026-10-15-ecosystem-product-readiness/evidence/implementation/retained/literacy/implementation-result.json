@@ -1,0 +1,165 @@
+{
+  "scope": "S2/C8-C13 producer implementation",
+  "sourceCommit": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+  "changedFiles": [
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/netlify-functions/literacy-verify.mjs",
+      "sha256": "7d53901ea068302abb91fa07bfa0cb99b3ed7952566a50b4ef9e6dfbf15fa8c3"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/netlify-functions/README.md",
+      "sha256": "784bc0fbcda7e1d5cd816e9d778f6e1deddf461ec97fc240e69e835b474805f7"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/AGENTS.md",
+      "sha256": "b7e028db77260e18043dca1eb9c11b039f179d3df5bceb3a90714973ed00a0c9"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_netlify.test.mjs",
+      "sha256": "1265169ebd09de19498f5066257763ab714399eb4f670cc73318bd4e0983ed9a"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_identity.test.mjs",
+      "sha256": "040732aa6c6f97b9fefcec30ed31e1437e6ef99ba38bbf977e5cd9743df5c1e6"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs",
+      "sha256": "e4c650828b274acde2cd9bd955e15b623c4ec7b179d64dde7c2dd254facf3ff0"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/literacy-runtime.mjs",
+      "sha256": "075417d19fd26b84977f5bc1ec9da11499aa63a3dbddeab04f65ed6782d22087"
+    }
+  ],
+  "reusedPr656Head": "b29631ee366954803d59691b646c10f0779082ce",
+  "exactReusedFiles": 5,
+  "approvedProtectedTestPatchSha256": "6356f5b8a33f50506ec49ec09e54455d33defa95270744471f7caa2d937940e6",
+  "proofs": {
+    "failingFirst": {
+      "pass": 3,
+      "fail": 54,
+      "exit": 1,
+      "log": {
+        "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/failing-first.log",
+        "sha256": "4373c4f1db5106e8839eeebe2f1f2e35baa2644246c095db56213e8d4e14d5c3"
+      }
+    },
+    "postPatchNode": {
+      "pass": 57,
+      "fail": 0,
+      "exit": 0,
+      "log": {
+        "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/node-suites.log",
+        "sha256": "055a465aa7b73215f3af81b470106589fc324941a1c0b54aea6aba9cb30a1915"
+      }
+    },
+    "named": {
+      "C8": {
+        "tests": 4,
+        "log": {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/C8-named.log",
+          "sha256": "e5983c15ac434f5eb53bc6605f4553a5caf841851ac187ca0b9ed3684c676f2d"
+        }
+      },
+      "C9": {
+        "tests": 13,
+        "log": {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/C9-named.log",
+          "sha256": "c6866238b3527c0a7abbd2d7af0de7915023cf0021add693db11c000ba18d60a"
+        }
+      },
+      "C10": {
+        "tests": 20,
+        "log": {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/C10-named.log",
+          "sha256": "174c2dcabb22d64301793e2a4a01fdd57c0ad297264853673ac30097b60ab198"
+        }
+      }
+    },
+    "historicalClient": {
+      "tests": 5,
+      "log": {
+        "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/C10-historical-client.log",
+        "sha256": "a1adb2072b545d653a8daa6a42bd7bf89e35c66e22c04f1be54ce642ef279231"
+      }
+    },
+    "crossEngine": {
+      "tests": 14,
+      "log": {
+        "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/cross-engine-contracts.log",
+        "sha256": "f63b45a6efa74796b66a1fa715ca4f1296b835780aa7ad2355fc71f6adc80869"
+      }
+    },
+    "content": {
+      "lessons": 32,
+      "log": {
+        "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/content-validation.log",
+        "sha256": "7f82b5326dcc9838fe1602074b099a1805c9e097446c9e42b9ba4dedc24ba33b"
+      }
+    },
+    "lint": {
+      "exit": 0,
+      "log": {
+        "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/engine-lint.log",
+        "sha256": "e80368aff272c619c0df0767774ffe94a1ae631b6471321aee81c48b06cb3781"
+      }
+    },
+    "literacyUnit": {
+      "pass": 273,
+      "skipped": 1,
+      "exit": 0,
+      "log": {
+        "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/engine-tests.log",
+        "sha256": "79e09ca6a776b15baee01c9c0485554adc6025bea9032589167cccff47c7b378"
+      }
+    },
+    "build": {
+      "exit": 0,
+      "limitation": "existing bundle >500kB warning",
+      "log": {
+        "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/engine-build.log",
+        "sha256": "9807fc138c9e7877f90c183b778bfe2853138375e9f5e48b7863232d42b416b5"
+      }
+    },
+    "e2e": {
+      "pass": 34,
+      "exit": 0,
+      "log": {
+        "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/engine-e2e.log",
+        "sha256": "221db1fefba8f4193a381d0e085c95ab877fbe6dbde8b41cc7b1ae8199236615"
+      },
+      "invocation": {
+        "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/engine-e2e-invocation.json",
+        "sha256": "f69c9fc1be923af7d1beda5c7c91f084749decb1385d08875068fe61746878c1"
+      },
+      "limitations": [
+        "Baseline scanner logs existing axe serious items: onboarding color-contrast x1, result aria-prohibited-attr x1, progress color-contrast x21. Passing baseline scanner does not assert zero accessibility violations."
+      ]
+    }
+  },
+  "runtimeReports": [
+    {
+      "criterion": "C11",
+      "status": "unverified",
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime/last-passing-evidence-2026-10-16T01-23-57-368Z/report.json",
+      "sha256": "1fc3bd630c56b865357dc988f0a2646862b619bd7ea6e0b0377bfa6271ef20fc"
+    },
+    {
+      "criterion": "C12",
+      "status": "pass",
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime/verifier-outage-retry-2026-10-16T01-24-04-816Z/report.json",
+      "sha256": "1d34ae833efb9238cfae0da3ee7e4f88c049b90aa1eaa4fee07e2d36077db7c9"
+    },
+    {
+      "criterion": "C13",
+      "status": "unverified",
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime/deployed-verifier-2026-10-16T01-24-10-330Z/report.json",
+      "sha256": "ccc12d501889f38d048acd952a7abcb184df26dee2d478837175ebe1ea9113e9"
+    }
+  ],
+  "limitations": [
+    "C11 initially frozen a1/a2 UI final-selection variants cannot be executed in the current sequential l02 UI; all3 canonical activities required and completion only after a3. Human resolution pending at root; no UI/check changes made.",
+    "C13 public deployment is unverified: missing verified deployed sourceSHA/deployID and endpoint probes pinned to that deployment. No deployment performed.",
+    "All results are producer evidence, pending fresh final independent verification; no whole-feature completion claim."
+  ]
+}

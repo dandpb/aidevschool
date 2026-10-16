@@ -1,0 +1,48 @@
+{
+  "kind": "observer lifecycle repair",
+  "judgeFindings": [
+    "F1",
+    "F2"
+  ],
+  "sourceSnapshotBefore": ".scratch/readiness-implementation-20261015/candidate-owned-files.json",
+  "before": {
+    "tests": 4,
+    "failed": 4,
+    "exitCode": 1
+  },
+  "after": {
+    "tests": 4,
+    "passed": 4,
+    "exitCode": 0
+  },
+  "testShaBeforeAfterUnchanged": "235410bcc45783f6cccc4c1226621e4aa46030d9cd2995534843f6f05093019e",
+  "testMove": "Byte-identical scratch regression file copied into the task scripts/tests directory before production helper edits.",
+  "level": "unit resource-lifecycle probes over actual exported function bodies, with process/I/O substitutes; no browser/server/native process",
+  "changes": [
+    "Learning startup disposes its owned process/log on readiness failure and stop is idempotent.",
+    "Local product command subscribes to exit/error before asynchronous ownership persistence."
+  ],
+  "evidenceRefs": [
+    {
+      "path": ".scratch/readiness-implementation-20261015/lifecycle-repair/before.log",
+      "sha256": "66a113ee413980b4736d79fb07b9951d477585342e291f78c4ddfd933da154f6"
+    },
+    {
+      "path": ".scratch/readiness-implementation-20261015/lifecycle-repair/after.log",
+      "sha256": "efd9c601dc97e9296bc1c0de8d931153ea5f91b2fcdfc172b55e030089599991"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/tests/observer-lifecycle.test.mjs",
+      "sha256": "235410bcc45783f6cccc4c1226621e4aa46030d9cd2995534843f6f05093019e"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/learning-runtime-support.mjs",
+      "sha256": "c141e44d30b7116cc288ad0e755eebcf6fc56987230a49c6a49f5d9b1c7553ed"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/local-products-runtime.mjs",
+      "sha256": "945e889bd0c898c7f6a73fda81429e3820da2fc06db14d745d899f19c0303e98"
+    }
+  ],
+  "wholeFeatureVerdict": null
+}

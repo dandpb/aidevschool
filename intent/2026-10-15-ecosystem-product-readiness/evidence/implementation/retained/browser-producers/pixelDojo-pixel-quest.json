@@ -1,0 +1,31 @@
+{
+  "engine": "pixelDojo/pixel-quest",
+  "argv": [
+    "pnpm",
+    "exec",
+    "playwright",
+    "test",
+    "playwright/pixel-quest.spec.ts",
+    "playwright/encounter-evidence-dense.spec.ts",
+    "playwright/error-path.spec.ts",
+    "playwright/evidence-append-only.spec.ts",
+    "playwright/returning.spec.ts",
+    "--config",
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/browser-producers/pixelDojo-pixel-quest.config.ts"
+  ],
+  "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest",
+  "exitCode": 0,
+  "seconds": 53.02,
+  "observedAt": "2026-10-16T01:31:14.226864+00:00",
+  "report": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/browser-producers/pixelDojo-pixel-quest.report.json",
+  "media": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/pixelDojo/pixel-quest/test-results/readiness-plan-suite",
+  "scope": "selected existing producer tests, partial declared-use coverage; no independent semantic verdict",
+  "stats": {
+    "startTime": "2026-10-16T01:30:23.876Z",
+    "duration": 50315.509,
+    "expected": 5,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

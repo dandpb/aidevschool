@@ -1,0 +1,12 @@
+{
+  "kind": "host-resource-interruption",
+  "observedAt": "2026-10-15T22:49:00-03:00",
+  "timePrecision": "minute; copied from retained uptime output",
+  "loadAverages": [323.09, 192.82, 118.0],
+  "laterLoadAverages": [211.23, 205.41, 133.28],
+  "commands": ["rtk proxy uptime", "rtk proxy vm_stat"],
+  "action": "Root instructed all active browser QA actors to stop launching work, retain completed cases and close only owned browsers, servers and process groups.",
+  "classification": "Interrupted and timing-sensitive cases remain unverified. Host contention does not establish a product defect or authorize changing frozen test expectations.",
+  "limits": "These samples do not attribute all host load to this task and do not justify terminating unrelated processes. Broad retries were cancelled.",
+  "remainingWork": "Resume missing cases serially on a stable host; retain prior failed or interrupted observer evidence. No completed prior result receives a replacement source identity."
+}

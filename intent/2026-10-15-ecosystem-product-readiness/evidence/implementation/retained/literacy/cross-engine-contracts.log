@@ -1,0 +1,23 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.13.2, pytest-8.4.2, pluggy-1.7.0 -- /Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/gh-375/venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool
+configfile: pyproject.toml
+collecting ... collected 14 items
+
+engines/test_engine_contracts.py::TestMiniMaxEvolutionEngineContract::test_cloud_recurring_schedules_require_confirmation PASSED [  7%]
+engines/test_engine_contracts.py::TestMiniMaxEvolutionEngineContract::test_phase_commands_keep_producer_verifier_separation PASSED [ 14%]
+engines/test_engine_contracts.py::TestPolyglotArenaDesignContract::test_current_surface_is_only_proposal_material PASSED [ 21%]
+engines/test_engine_contracts.py::TestPolyglotArenaDesignContract::test_status_stays_proposal_until_runtime_scaffold_exists PASSED [ 28%]
+engines/test_engine_contracts.py::TestPixelDojoContract::test_arcade_academy_root_no_longer_exists PASSED [ 35%]
+engines/test_engine_contracts.py::TestPixelDojoContract::test_playbook_preserves_attempt_surface_verifier_boundary PASSED [ 42%]
+engines/test_engine_contracts.py::TestCodexDojoContract::test_is_a_pnpm_app_with_lint_test_build PASSED [ 50%]
+engines/test_engine_contracts.py::TestMinimaxDojoContract::test_core_and_tests_exist PASSED [ 57%]
+engines/test_engine_contracts.py::TestMinimaxDojoContract::test_thresholds_stay_single_sourced_in_config PASSED [ 64%]
+engines/test_engine_contracts.py::TestOpenclawContract::test_cli_stays_simulate_only_and_offers_read_only_preview PASSED [ 71%]
+engines/test_engine_contracts.py::TestOpenclawContract::test_playbook_denies_mastery_authority PASSED [ 78%]
+engines/test_engine_contracts.py::TestOpenclawContract::test_runner_checklist_status_and_tests_exist PASSED [ 85%]
+engines/test_engine_contracts.py::TestVoxelDojoContract::test_stable_engine_surface_exists PASSED [ 92%]
+engines/test_engine_contracts.py::TestAnalyticsVocabularyContracts::test_analytics_vocabularies_single_sourced PASSED [100%]
+
+============================== 14 passed in 1.79s ==============================

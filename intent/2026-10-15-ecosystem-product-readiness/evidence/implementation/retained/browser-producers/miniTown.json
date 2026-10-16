@@ -1,0 +1,27 @@
+{
+  "engine": "miniTown",
+  "argv": [
+    "pnpm",
+    "exec",
+    "playwright",
+    "test",
+    "playwright/mini-town.spec.ts",
+    "--config",
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/browser-producers/miniTown.config.ts"
+  ],
+  "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown",
+  "exitCode": 0,
+  "seconds": 6.16,
+  "observedAt": "2026-10-16T01:30:21.207555+00:00",
+  "report": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/browser-producers/miniTown.report.json",
+  "media": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/test-results/readiness-plan-suite",
+  "scope": "selected existing producer tests, partial declared-use coverage; no independent semantic verdict",
+  "stats": {
+    "startTime": "2026-10-16T01:30:17.104Z",
+    "duration": 4067.7690000000002,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

@@ -1,0 +1,136 @@
+{
+  "engineId": "literacyDojo",
+  "caseName": "last-passing-evidence",
+  "observedAt": "2026-10-16T01:22:35.104Z",
+  "producerContext": "readiness-literacy-build-agent",
+  "verifierContext": null,
+  "sourceCommit": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+  "functionSource": {
+    "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/netlify-functions/literacy-verify.mjs",
+    "sha256": "7d53901ea068302abb91fa07bfa0cb99b3ed7952566a50b4ef9e6dfbf15fa8c3"
+  },
+  "status": "unverified",
+  "evidenceRefs": [
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime/last-passing-evidence-2026-10-16T01-22-35-077Z/browser-console.json",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime/last-passing-evidence-2026-10-16T01-22-35-077Z/http-requests.json",
+      "sha256": "b5041948e4a358a30f45644b20a225e32f36ab62ec3fa40967e0232d55495661"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime/last-passing-evidence-2026-10-16T01-22-35-077Z/network.json",
+      "sha256": "5da9ae290f1f8a7093b46dccf8d91563a9c00d2e1e309200d5fe56ff7843fef7"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/test-results/readiness-plan-runtime/last-passing-evidence-2026-10-16T01-22-35-077Z/bound-receipt-pass.png",
+      "sha256": "666aef18c977fae35e0a3eb4e55228a98bee5af403870eeb8918f7a0208c2e1f"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/test-results/readiness-plan-runtime/last-passing-evidence-2026-10-16T01-22-35-077Z/page@3706e2febaa6da3cc7c7c09c8a7eba79.webm",
+      "sha256": "66cead6e25f5153c2d2d25b1d219ea3ccc7790ebb185b40f8e16003245dd652e"
+    }
+  ],
+  "limitations": [
+    "Frozen C11 requests UI completion with last passing a1/a2/a3; current sequential l02 requires all three and offers finish only after a3. a1/a2 completion paths do not exist. No UI or criterion was changed by this observation."
+  ],
+  "browserAvailability": "Browser plugin not available; regular Playwright used per frontend-testing-debugging skill",
+  "evidencePolicy": {
+    "source": {
+      "path": "/Users/danielbarreto/Development/aidevschool/engines/shared/playwright/base.config.ts",
+      "sha256": "5519ac81eac5d277c939da29e816130dd614bf18009a9200263aa9014ae525a7"
+    },
+    "importedOrPromoted": false,
+    "screenshot": "on",
+    "video": "on",
+    "trace": "retain-on-failure",
+    "outputDir": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/test-results/readiness-plan-runtime/last-passing-evidence-2026-10-16T01-22-35-077Z"
+  },
+  "page": {
+    "url": "http://127.0.0.1:63013/",
+    "title": "LiteracyDojo — IA com confiança no trabalho",
+    "viewport": {
+      "width": 360,
+      "height": 740
+    },
+    "nonblank": true,
+    "frameworkOverlay": false
+  },
+  "selectedEvidence": {
+    "schemaVersion": 1,
+    "source": "literacydojo",
+    "attemptId": "att-000003",
+    "lessonId": "l02",
+    "lessonVersion": 4,
+    "activityId": "l02-a3",
+    "activityType": "sort",
+    "skillIds": [
+      "entender",
+      "avaliar"
+    ],
+    "deterministicChecks": {
+      "fluxo-resposta": true,
+      "fluxo-afirmacoes": true,
+      "fluxo-fonte": true,
+      "fluxo-conferencia": true,
+      "fluxo-uso": true
+    },
+    "score": 1,
+    "pass": true,
+    "timestamp": "2026-10-16T01:22:36.890Z",
+    "verifierRequired": true,
+    "answer": {
+      "orderedIds": [
+        "fluxo-resposta",
+        "fluxo-afirmacoes",
+        "fluxo-fonte",
+        "fluxo-conferencia",
+        "fluxo-uso"
+      ]
+    },
+    "context": "initial"
+  },
+  "receipt": {
+    "verdict": "PASS",
+    "context_isolated": true,
+    "source": "independent-literacy-verifier",
+    "verifier_version": "1-netlify-l02-v4",
+    "verified_at": "2026-10-16T01:22:36.982Z",
+    "evidence_digest": "a8528669b5c53922cc32bb3b7623f9f84f97d4f80473d38df2a8583ec6ca326c",
+    "lesson_id": "l02",
+    "lesson_version": 4,
+    "activity_id": "l02-a3",
+    "attempt_id": "att-000003",
+    "independent_pass": true,
+    "mastery_eligible": true,
+    "producer_writes_mastered": false,
+    "max_producer_claim": "completed",
+    "errors": []
+  },
+  "functionRequestCount": 2,
+  "localState": {
+    "lessonStatus": "completed",
+    "unchangedByVerification": true,
+    "canonicalBefore": {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/learning_state.yaml",
+      "sha256": "36419ae44e755a9bd8bd049b14d0dee03d8b5937e577285f67ffe730733735e2"
+    }
+  },
+  "transport": {
+    "kind": "real-http",
+    "appOrigin": "http://127.0.0.1:63013",
+    "functionOrigin": "http://127.0.0.1:63012",
+    "defaultHandler": "learner/gate/netlify-functions/literacy-verify.mjs",
+    "mockedResponses": false
+  },
+  "observedLastPassingActivities": [
+    "l02-a3"
+  ],
+  "canonicalAfter": {
+    "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/learning_state.yaml",
+    "sha256": "36419ae44e755a9bd8bd049b14d0dee03d8b5937e577285f67ffe730733735e2"
+  },
+  "reportPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime/last-passing-evidence-2026-10-16T01-22-35-077Z/report.json",
+  "reportSha256": "32bf978941d4a33617fef70f2a5e2353d6071cf51646ab5a3acd6e867705182e"
+}

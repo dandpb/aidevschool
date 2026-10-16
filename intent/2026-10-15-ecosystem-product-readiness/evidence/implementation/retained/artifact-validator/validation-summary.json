@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "role": "artifact producer; no independent feature verdict",
+  "files": [
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/assert-readiness-artifacts.py",
+      "sha256": "45506e6934098d54cb934e4f3f3b3119729c22f4bd5e4cd2991949ccc9f05497"
+    },
+    {
+      "path": "docs/product-readiness/evidence/observations/2026-10-15-ecosystem-beta-readiness/engine-qualification.json",
+      "sha256": "5ce5ed5faced04b6d8d8c7ae9a86e4a4f93eb17ddfc9e678f6b625e84668cbac"
+    }
+  ],
+  "selectedReports": {
+    "codexDojo": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/codexDojo-2026-10-16T01-43-34-045Z/report.json",
+    "dojoToday": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/dojoToday-2026-10-16T01-42-51-714Z/report.json",
+    "miniTown": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/miniTown-2026-10-16T01-43-10-066Z/report.json",
+    "aiDevschoolMvp": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mvp/qa-report.json",
+    "pixelDojo": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/report.json"
+  },
+  "modes": [
+    {
+      "mode": "delivery-heads",
+      "exitCode": 2,
+      "status": "unverified",
+      "validatedShape": true,
+      "report": ".scratch/readiness-implementation-20261015/artifact-validator/delivery-heads.json",
+      "sha256": "57825636fda20e48d1eb1b41c8f9f6e183db4024d1a7d87c8b5354f1388d1722"
+    },
+    {
+      "mode": "merge-records",
+      "exitCode": 2,
+      "status": "unverified",
+      "validatedShape": true,
+      "report": ".scratch/readiness-implementation-20261015/artifact-validator/merge-records.json",
+      "sha256": "86127e321cbd4a76f7ce7d5af9e882762076b5293d6d52621101c218cea64717"
+    },
+    {
+      "mode": "engine-packets",
+      "exitCode": 1,
+      "status": "blocked",
+      "validatedShape": true,
+      "report": ".scratch/readiness-implementation-20261015/artifact-validator/engine-packets.json",
+      "sha256": "9c8bb775f38d850b4815a03d4995dc35084e24157e00ef35a77d46a544342946"
+    },
+    {
+      "mode": "canonical-assessments",
+      "exitCode": 1,
+      "status": "blocked",
+      "validatedShape": true,
+      "report": ".scratch/readiness-implementation-20261015/artifact-validator/canonical-assessments.json",
+      "sha256": "4e6edf92fb94035d4938b4dad664afbf172a59e0c97ea4017817123b652128b4"
+    },
+    {
+      "mode": "authority-separation",
+      "exitCode": 2,
+      "status": "unverified",
+      "validatedShape": true,
+      "report": ".scratch/readiness-implementation-20261015/artifact-validator/authority-separation.json",
+      "sha256": "813337bbaca82cddf43754701c1614a26885e8af57624c4f557706f5d9de5ce7"
+    },
+    {
+      "mode": "main-claims",
+      "exitCode": 2,
+      "status": "unverified",
+      "validatedShape": true,
+      "report": ".scratch/readiness-implementation-20261015/artifact-validator/main-claims.json",
+      "sha256": "ca68d4e776f1fd389926a2a0847ce75fd58989ea187f0354e46e2a22348a343f"
+    },
+    {
+      "mode": "pilot-offer",
+      "exitCode": 1,
+      "status": "blocked",
+      "validatedShape": true,
+      "report": ".scratch/readiness-implementation-20261015/artifact-validator/pilot-offer.json",
+      "sha256": "65559d0d82dbad2a64637aeff61d8908b5ac2f7174620f584f5ae84bfd6e174f"
+    }
+  ],
+  "meaning": "validatedShape is structure/integrity only; obligationProven remains false while real failures or missing prerequisites remain."
+}

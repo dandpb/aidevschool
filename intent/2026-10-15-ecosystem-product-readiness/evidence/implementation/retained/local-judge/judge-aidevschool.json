@@ -1,0 +1,1305 @@
+{
+  "language": "pt",
+  "round": 2,
+  "carryover": {
+    "blocker": 0,
+    "should-fix": 0
+  },
+  "verdict": "APPROVE",
+  "summary": "## TL;DR\nAPPROVE da revisão de código corrente, com a revisão completa da rodada 1 preservada e F1/F2 resolvidos. Nenhum novo finding. Este resultado não é aceite da feature, dos 34 critérios, da prontidão de engine, countersign ou aceite do piloto. A feature permanece não aprovada; a contagem 0 pass, 3 blocked e 11 unverified era o artefato da rodada 1, e a assemblagem de qualificação posterior não recebe aprovação por este resultado.\n\nTask: intent/2026-10-15-ecosystem-product-readiness/plan.md; checklist .checks/product-readiness-20261015.md; HEAD 0a2e2dbeda5e41b00642a5280e40a0d8102d1102. Rodada 2 limitada ao diff dos dois helpers e ao novo teste de ciclo de vida. O snapshot inicial da re-review tinha 121 arquivos: dois helpers alterados, um teste acrescentado e os demais 118 arquivos iguais à rodada 1. Durante o fechamento, o root concluiu a assemblagem de qualificação, alterando o pacote informativo, o assessment e o manifesto de retenção e acrescentando cinco arquivos mecânicos visíveis no Git. O manifesto cresceu de 77 para 84 entradas: prefixo anterior intacto, 84 retidos e 84 vínculos de origem conferidos, sendo dois reconstruídos do diff exato da rodada 1. Nenhum código core adicional mudou. Pacote/assessment novos ficam fora do veredito desta re-review de código e serão examinados pelo verificador final. As obrigações congeladas mantêm os bytes anteriores.\n\n## Resolução\n| ID | Estado | Evidência nova |\n|---|---|---|\n| F1 | resolved | learning-runtime-support.mjs:35 registra término antes de I/O; :40 cria stop idempotente; :69 executa cleanup antes de relançar. Os testes de startup sem prontidão, child já encerrado e stop repetido passaram. |\n| F2 | resolved | local-products-runtime.mjs:91 registra done antes do await de ownership; :102 liga handler imediato à rejeição. O teste emite exit durante a gravação e agora termina com o status real. |\n\nOs mesmos bytes de teste foram executados contra os snapshots exatos dos helpers da rodada 1 em fixture privada do Judge: 4 falhas, exit 1. Contra os helpers corrigidos: 4 passes dentro do lote Node de 61 testes, exit 0. SHA-256 do teste: 235410bcc45783f6cccc4c1226621e4aa46030d9cd2995534843f6f05093019e. Os probes antigos que esperavam a presença dos bugs são evidência histórica, não critérios de regressão.\n\n## Findings\nNovos: blocker=0, should-fix=0, nit=0, pre-existing=0. Carryover: blocker=0, should-fix=0. Nenhuma frente da revisão foi reaberta. As alterações resolvem os caminhos levantados com cleanup local e listeners registrados antes da primeira espera; não mudam código de produto nem assertions congeladas.\n\n## Promote to lint rule\nAs quatro regressões de ciclo de vida permanecem no teste novo; não foi acrescentada regra de lint. Elas verificam comportamento correto, em vez de exigir a presença do defeito.\n\n## Research log\nA pesquisa oficial da rodada 1 permanece no histórico. Para o novo teste, a documentação oficial Node VM foi consultada em https://nodejs.org/api/vm.html. As URLs específicas latest-v22.x não estavam acessíveis pela ferramenta; nenhuma incompatibilidade ou propriedade de segurança do VM foi inferida. Os testes usam funções confiáveis extraídas do próprio candidato com substitutos de I/O/processo e não lançam aplicações.\n\n## Checks run\n- 124 testes Python dos mesmos três arquivos: exit 0, sem skips, judge-round2-pytest.log.\n- 57 contratos Literacy mais 4 regressões novas: 61 passed, zero skips/cancelled, exit 0, judge-round2-node.log.\n- node --check dos dois helpers e do teste: três exits 0.\n- Teste byte-idêntico contra os helpers exatos da rodada 1: quatro falhas esperadas, exit 1, judge-round2-lifecycle-before.log. A fixture foi criada somente no diretório privado de logs do Judge.\n- Detector de aplicabilidade UI: lista vazia. A classificação dos caminhos também confirma backend/gates/testes/observadores/documentação, sem alteração de fonte de UI do produto.\n- Nenhum browser, Vite, modelo, harness nativo ou servidor foi lançado nesta rodada. Todos os subprocessos do Judge foram aguardados.\n\n## Runtime evidence\nnot_required para a revisão de código deste diff: nenhuma fonte de UI de produto foi alterada. A mudança de classificação corrige a mistura anterior entre prova necessária à task de qualificação e aplicabilidade do diff de código. Isso não resolve SDLC-UI-001: observação de runtime atual, julgamento independente/Jev e C11 continuam pendências da feature. Não foi escolhido --skip-e2e.\n\n## Skipped files\nA revisão completa da rodada 1 foi carregada sem reabrir arquivos inalterados. O delta desta rodada contém somente learning-runtime-support.mjs, local-products-runtime.mjs e tests/observer-lifecycle.test.mjs. Os arquivos mecânicos e as cópias de dados de produtor continuam com os limites registrados no relatório preservado da rodada 1. A QA serial externa e a atualização final do pacote/assessment não são resultados desta re-review. O append mecânico de retenção foi auditado por integridade, sem reabrir uma frente de código.\n\n## SDLC warnings\nSDLC-READY-001 a SDLC-READY-005 e SDLC-UI-001 permanecem abertos ou awaiting_prerequisite, sem resolução fabricada. Feature final: não aprovada. O verificador final independente ainda deve examinar o candidato estabilizado depois da última execução/build/commit aplicável. Publicação, merge, countersign e aceite do piloto continuam separados.\n",
+  "findings": [],
+  "review_context": {
+    "repo": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool",
+    "base": "HEAD",
+    "head": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102"
+  },
+  "runtime_evidence": {
+    "state": "not_required",
+    "reason": "Nenhuma fonte de UI de produto mudou; classificação por paths e detector source-derived confirmadas. Os requisitos de runtime da feature permanecem pendentes nos warnings.",
+    "applicability_record": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/codex-product-readiness-discovery-20261015/judge-round2-ui-applicability.json"
+  },
+  "api_parity": {
+    "state": "none applicable"
+  },
+  "sdlc_warnings": [
+    {
+      "id": "SDLC-READY-001",
+      "repo": "dandpb/aidevschool",
+      "head": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+      "issue": "Reparo #657 local passou; ainda não foi integrado.",
+      "evidence": "[implementation-report.json](/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/gate/implementation-report.json)",
+      "correction": "Revisar e publicar o reparo isolado; concluir countersign e merge pela porta canônica.",
+      "verification": "124 testes focados e 918 compartilhados já passaram; exigir revisão/checks no head final.",
+      "prerequisite": "Autorização de publicação e checks atuais do PR.",
+      "status": "awaiting_prerequisite"
+    },
+    {
+      "id": "SDLC-READY-002",
+      "repo": "dandpb/aidevschool",
+      "head": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+      "issue": "Reparo #656 local passou; C11 e deploy continuam pendentes.",
+      "evidence": "[implementation-result.json](/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/implementation-result.json)",
+      "correction": "Resolver C11; publicar o reparo e provar endpoint com source SHA.",
+      "verification": "57 contratos Node e retry HTTP passaram; repetir no endpoint publicado.",
+      "prerequisite": "Resposta C11, publicação e vínculo deploy/fonte.",
+      "status": "awaiting_prerequisite"
+    },
+    {
+      "id": "SDLC-READY-003",
+      "repo": "dandpb/aidevschool",
+      "head": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+      "issue": "Seis claims continuam stale.",
+      "evidence": "[Relatório consolidado](/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/docs/product-readiness/assessments/2026-10-15-ecosystem-beta-readiness.md)",
+      "correction": "Revalidar observações e renovar assessments pelo fluxo canônico.",
+      "verification": "cli.py check --require-current deve retornar 0.",
+      "prerequisite": "Fonte final e observações independentes completas.",
+      "status": "open"
+    },
+    {
+      "id": "SDLC-READY-004",
+      "repo": "dandpb/aidevschool",
+      "head": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+      "issue": "Qualificação dos 14 engines está incompleta.",
+      "evidence": "[Relatório consolidado](/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/docs/product-readiness/assessments/2026-10-15-ecosystem-beta-readiness.md)",
+      "correction": "Retomar casos restantes serialmente e obter verificação independente/Jev.",
+      "verification": "14/14 pass com variantes e limites documentados; aceite separado do piloto.",
+      "prerequisite": "Host estável, credencial Jev e acesso MiniMax Team.",
+      "status": "awaiting_prerequisite"
+    },
+    {
+      "id": "SDLC-READY-005",
+      "repo": "dandpb/aidevschool",
+      "head": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+      "issue": "MVP, entrada MME e jogo inline dojoToday têm bloqueios observados.",
+      "evidence": "[Relatório e intents](/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/docs/product-readiness/assessments/2026-10-15-ecosystem-beta-readiness.md)",
+      "correction": "Planejar os três intents novos; corrigir e reproduzir cada jornada.",
+      "verification": "Gates MVP com argumentos/julgamentos válidos; comando MME documentado resolve; iframe renderiza o jogo real.",
+      "prerequisite": "Planos próprios aceitos; não ampliar silenciosamente o reparo atual.",
+      "status": "open"
+    },
+    {
+      "id": "SDLC-UI-001",
+      "repo": "dandpb/aidevschool",
+      "head": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+      "issue": "Prova de UI atual e julgamento independente continuam ausentes.",
+      "evidence": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/docs/product-readiness/assessments/2026-10-15-ecosystem-beta-readiness.md; /Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/browser-interruption.json",
+      "correction": "Em host estável, retomar casos incompletos serialmente, preservar C11 até decisão humana e obter prova source-bound e julgamento independente/Jev.",
+      "verification": "Recibo atual validado por ui_evidence.py verify e resultado independente por critério; nenhum PASS global enquanto houver blocked/unverified.",
+      "status": "awaiting_prerequisite",
+      "prerequisite": "Host estável, origem/build privados atribuíveis, decisões C11 e credencial Jev autorizada."
+    }
+  ],
+  "research_log": [
+    {
+      "surface": "Node child process",
+      "url": "https://nodejs.org/api/child_process.html"
+    },
+    {
+      "surface": "Node crypto",
+      "url": "https://nodejs.org/api/crypto.html"
+    },
+    {
+      "surface": "Playwright BrowserContext",
+      "url": "https://playwright.dev/docs/api/class-browsercontext"
+    },
+    {
+      "surface": "Vite JavaScript API",
+      "url": "https://vite.dev/guide/api-javascript.html"
+    },
+    {
+      "surface": "Python subprocess",
+      "url": "https://docs.python.org/3/library/subprocess.html"
+    },
+    {
+      "surface": "Python shutil",
+      "url": "https://docs.python.org/3/library/shutil.html"
+    },
+    {
+      "surface": "TypeScript Compiler API",
+      "url": "https://github.com/microsoft/TypeScript/wiki/Using-the-Compiler-API"
+    },
+    {
+      "surface": "Prisma Client",
+      "url": "https://www.prisma.io/docs/orm/v7/reference/prisma-client-reference"
+    },
+    {
+      "surface": "Bun Runtime",
+      "url": "https://bun.sh/docs/runtime"
+    },
+    {
+      "surface": "Node VM for lifecycle unit tests",
+      "url": "https://nodejs.org/api/vm.html",
+      "round": 2
+    }
+  ],
+  "file_classification": [
+    {
+      "path": ".checks/product-readiness-20261015.freeze.json",
+      "bytes": 917,
+      "sha256": "cf93eeabf147e0c84f3e8f647b8273df6a766b2a8f63281c1c15b25e463c2171",
+      "lines": 46,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": ".checks/product-readiness-20261015.md",
+      "bytes": 31671,
+      "sha256": "52b0f861cb81849237d09e6cb98ae0c8c154fd09d34325a590d0b45f34ae6c56",
+      "lines": 250,
+      "classification": "core",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "docs/product-readiness/assessments/2026-10-15-ecosystem-beta-readiness.md",
+      "bytes": 7820,
+      "sha256": "a0428dce66792a7b2edaac879e8466ded073ba8317a9339d8f549fafc5fd7908",
+      "lines": 54,
+      "classification": "core",
+      "review": "concurrent qualification assembly excluded from scoped code verdict"
+    },
+    {
+      "path": "docs/product-readiness/evidence/observations/2026-10-15-ecosystem-beta-readiness/engine-qualification.json",
+      "bytes": 791166,
+      "sha256": "3edc8c7442022eed2a6d7b1429b09eb186f46a4758aa74abdcb1021d75cd3c10",
+      "lines": 13151,
+      "classification": "core",
+      "review": "concurrent qualification assembly excluded from scoped code verdict"
+    },
+    {
+      "path": "engines/codexDojo/ecosystem/MANIFEST.md",
+      "bytes": 40622,
+      "sha256": "719fdb60cb0edef63151d114be3da3aae66144f7dacada13e5df9a8af21bbea2",
+      "lines": 234,
+      "classification": "core",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/design.md",
+      "bytes": 25300,
+      "sha256": "eab37dc1d6f639f358f5e27e6d07719585e0fe1badecfb180b179c8836d3f256",
+      "lines": 168,
+      "classification": "core",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/browser-interruption.json",
+      "bytes": 994,
+      "sha256": "7908b8ec72c3e3c774ae47cf05fffc445610f73335c69ce63c3da93f1ef8576a",
+      "lines": 12,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/findings.json",
+      "bytes": 4097,
+      "sha256": "05602e59db3856952a18749772c7dd77e62786cbc91654bfb63b3a75647d75b3",
+      "lines": 48,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/artifact-validator/final-refresh.json",
+      "bytes": 45839,
+      "sha256": "ecbd852ef051dbbfdbdeff6b03a94e0ca733b547d317c9de0b9d0090b59be583",
+      "lines": 953,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/artifact-validator/validation-summary.json",
+      "bytes": 3814,
+      "sha256": "d60644b6cf726dbcad60626df008a535dd0c2e642ed09cda302ad140c1d6ae4d",
+      "lines": 80,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/browser-producers/codexDojo.json",
+      "bytes": 1070,
+      "sha256": "fa78181e6bb7830bb4630d97e814f57287bd209fbe6aa9dd6b9363e3858ffbd8",
+      "lines": 27,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/browser-producers/codexdojo-os-prototype.diagnosis.json",
+      "bytes": 1058,
+      "sha256": "604615f656e61dd6d47bed8f9b093349a94d80169938f10e507d44807cc63add",
+      "lines": 22,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/browser-producers/codexdojo-os-prototype.json",
+      "bytes": 1309,
+      "sha256": "5bbe38e9b2d266fcc399a80607697043c985a5178e8f391217fd33c28d56a202",
+      "lines": 30,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/browser-producers/diagnosis/REPORT.md",
+      "bytes": 2839,
+      "sha256": "f44de272b585170f09dec5883dacc761549e3bc8fd01c7c3ad90074f2e23434b",
+      "lines": 20,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/browser-producers/diagnosis/report.json",
+      "bytes": 15485,
+      "sha256": "e67904dd2365790f4260b18d32210c645f1e5a790e09bcbe0a5d938dabb10327",
+      "lines": 466,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/browser-producers/dojoToday.diagnosis.json",
+      "bytes": 1042,
+      "sha256": "6a1d8d21c6e024449ef4b9899b93cc2607be8818933906c15dbaa0ff4610a2c3",
+      "lines": 28,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/browser-producers/dojoToday.json",
+      "bytes": 1168,
+      "sha256": "165c328475297c7d68ce8afcf0e71c769fbdfcd51484a5509350547eafa4191c",
+      "lines": 29,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/browser-producers/miniTown.json",
+      "bytes": 1070,
+      "sha256": "e5b01f709e95e0c3dfeb923820db1c8d8f01516b93262186691703d06c53c5a3",
+      "lines": 27,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/browser-producers/pixelDojo-pixel-quest.json",
+      "bytes": 1300,
+      "sha256": "e4ede016fd35ebb14c5cb3c237cfd4c4b8960baf7a829f0896cf59503b4e300f",
+      "lines": 31,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/browser-producers/zai-duolingo-like.json",
+      "bytes": 1199,
+      "sha256": "41e74006d41d61caa839a9426c760c20632c24fe6d0eded919b3ff57e571b856",
+      "lines": 30,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/claims-current-check.json",
+      "bytes": 305,
+      "sha256": "622d26432489d7143680b08eb107cf6bbb1ff5273a702b4ca8a92507a73abf78",
+      "lines": 13,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/gate/criteria-nodes.json",
+      "bytes": 8327,
+      "sha256": "2e231cca30f2a287ff0520a7d8d4af8aa4dc5ce02f2b4f8a5f16e9dc1aa19179",
+      "lines": 120,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/gate/implementation-report.json",
+      "bytes": 15665,
+      "sha256": "f190815dddce90848f8225a9d7195b6156f6b61c6d029dddc60d71269d195612",
+      "lines": 281,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/lifecycle-repair/report.json",
+      "bytes": 1961,
+      "sha256": "579b23548ee2e84e11caff3b605abc42ad7393ef70a8090fa4b7c9e2da836063",
+      "lines": 48,
+      "classification": "mechanical",
+      "review": "round 2 closure: append-only retention and byte/digest integrity audit"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/lifecycle-repair/source-before-learning-runtime-support.mjs.txt",
+      "bytes": 9438,
+      "sha256": "0b90cc2c15f026d1f2c84d4dc8efab07abc6a19972df38dd10c09af59dcdb1a2",
+      "lines": 172,
+      "classification": "mechanical",
+      "review": "round 2 closure: append-only retention and byte/digest integrity audit"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/lifecycle-repair/source-before-local-products-runtime.mjs.txt",
+      "bytes": 11979,
+      "sha256": "4d1bc03bd5cd6bfe273f22e7a0dff0e196316cda8b8028055e55596873d96e55",
+      "lines": 348,
+      "classification": "mechanical",
+      "review": "round 2 closure: append-only retention and byte/digest integrity audit"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/literacy/implementation-result.json",
+      "bytes": 8082,
+      "sha256": "684e5cc2df7f963a9a6af06ce8038914ae49d8a9ad192c9eeb36ecb58e0d7f75",
+      "lines": 165,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/preflight/runtime-prerequisites.json",
+      "bytes": 7986,
+      "sha256": "9d3c39d69672d3cbece59ea90fc3381762107c329e7ecac0607d7d7ee2330898",
+      "lines": 169,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/producers/codexDojo.json",
+      "bytes": 1493,
+      "sha256": "a82f648e4212e13969b30824ae195f9a1a127c120d8471b40a9d698b156fac10",
+      "lines": 44,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/producers/codexdojo-os-prototype.json",
+      "bytes": 1594,
+      "sha256": "38e9435d3d9b27f7e00099a73e76c87d27af84b9f5f44f755397f6cc65883312",
+      "lines": 45,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/producers/dojoToday.json",
+      "bytes": 1465,
+      "sha256": "40725735283cce3f82e99c077c34a54dd0bbbd1c4c32a58372d0e99544cb141f",
+      "lines": 43,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/producers/miniTown.json",
+      "bytes": 1927,
+      "sha256": "d6a84959d42a7bc5f30bb6caca310690f9c1c9ec2ecc668fdf1c72c57a61e64f",
+      "lines": 56,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/producers/pixelDojo.json",
+      "bytes": 1905,
+      "sha256": "ea9e9943270e301ec4c178732137b002d7eba6e5a863e2e452ac8ea6d1bf27a0",
+      "lines": 55,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/producers/python-engines.json",
+      "bytes": 831,
+      "sha256": "283743ffc9990b262d357b5f5ca9a2ff4471a61d7912755ebf13c640639521b2",
+      "lines": 19,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/producers/school-entry.json",
+      "bytes": 1024,
+      "sha256": "944afb798f4284c4a8259f4c8a4b28c188bd1afde8fba30b3f0b6399bda66a63",
+      "lines": 30,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/producers/sdlc-quest.json",
+      "bytes": 1460,
+      "sha256": "c191f4804e49982f1ca6609d52f618068ddf334d1e5561b39abe590a96c8a6a1",
+      "lines": 42,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/producers/voxelDojo.json",
+      "bytes": 1907,
+      "sha256": "8724f3654389505f4be1f7cbc814facc645e97bcb2ec7b6fd3101fdd4938c3c9",
+      "lines": 55,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/producers/zai-duolingo-like.json",
+      "bytes": 1526,
+      "sha256": "7e89170b9deb1105b41c17ec24c90f5c1bb169c776d510a0f8b54ceac7cc4533",
+      "lines": 43,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-dashboards/codexDojo-2026-10-16T01-43-34-045Z/report.json",
+      "bytes": 47670,
+      "sha256": "ba9c5bbe8436c095d07421210b9b0d46521f59f88260008ed263fdb83e1dabf7",
+      "lines": 675,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-dashboards/dojoToday-2026-10-16T01-42-51-714Z/report.json",
+      "bytes": 50043,
+      "sha256": "4bf5b243c8bf757479b8f34d4eafcbf17cbd01b9cb7b1d93dc6070f546dad007",
+      "lines": 518,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-dashboards/latest.json",
+      "bytes": 6879,
+      "sha256": "f3b1869c970e33e3d2d0ad7be4b96c3c268e6b32508588e8611343aebf93dcdd",
+      "lines": 187,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-dashboards/miniTown-2026-10-16T01-43-10-066Z/report.json",
+      "bytes": 32037,
+      "sha256": "6b3c28c85dd41e1609d787c387668c49e25c7b6edc6a6c6d69671851e640ff87",
+      "lines": 657,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-learning/REPORT.md",
+      "bytes": 2627,
+      "sha256": "37df868901003841cbd0d39730fd0330e3eb480eb735dfb4105f8a1e19164b23",
+      "lines": 16,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-learning/qualification-partial.json",
+      "bytes": 73439,
+      "sha256": "e1737c9581e5a4553d6946ae11aa0392153fde98286483548810a80b21fb6481",
+      "lines": 1890,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-local-products/formatting-report.json",
+      "bytes": 5994,
+      "sha256": "712b42b3abe58905a7f590f5980a9b5c9e606478a61b986f35e9cb3f9d01f621",
+      "lines": 109,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-local-products/report-index.json",
+      "bytes": 984,
+      "sha256": "fe106b8a07d9ff6bbb1241d32fc330d1c328ad41658f099a60bb90d88ade2d66",
+      "lines": 17,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-local-products/school-entry/2026-10-16T01-41-35-115Z/report.json",
+      "bytes": 23931,
+      "sha256": "06579ba1760a7bc5538f3a30c5b9deafab3f33cb42eb1a79210210213cd410cc",
+      "lines": 509,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-local-products/sdlc-quest/2026-10-16T01-42-22-230Z/report.json",
+      "bytes": 77609,
+      "sha256": "715d116d6ef037637f209cc94505007246b2731956309e12bc5519b4e230f096",
+      "lines": 2195,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-local-products/summary.json",
+      "bytes": 4221,
+      "sha256": "cdcdfc42c447af3c468e0ee0db5bb7ef3736d5be0a1ae9e7b160cd349a6ce040",
+      "lines": 98,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-local-products/zai-duolingo-like/2026-10-16T01-46-27-742Z/report.json",
+      "bytes": 208219,
+      "sha256": "871a65c27dabefd5362a96f89618a9c5d8285eabef3eee5391aef1d626703bfc",
+      "lines": 4272,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-mme/REPORT.md",
+      "bytes": 9224,
+      "sha256": "7f901e820bd3fc201e680d9d35ece29f60d188eb96c74e08bdcb9297b4cdc97a",
+      "lines": 60,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-mme/openclaw-recipe-replay-v2/report.json",
+      "bytes": 17068,
+      "sha256": "a5e80eb2226868325e719d527e2a2f7db2ab412db6d8a9743f360e50bc729974",
+      "lines": 205,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-mme/report.json",
+      "bytes": 4871,
+      "sha256": "e7f2020a4c71eb600e795fca2dfafa52f4ace865c1ab4b810ab8b74b236a11ad",
+      "lines": 123,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-mvp/REPORT.md",
+      "bytes": 2243,
+      "sha256": "0af4cfdbe3ddc5ac118e52315cff96edbc7a4b1f9f69d2c749e138b8b04c19fc",
+      "lines": 13,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-mvp/qa-report.json",
+      "bytes": 16248,
+      "sha256": "9600887c9aee3e8715975f4839cbcfd7b5d0f0163ccc696a2d712960739656f7",
+      "lines": 271,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/report.json",
+      "bytes": 150251,
+      "sha256": "004a74e86eaf4978b45f192b693eeebd9a31e76979d0e54e48443b4bc4874e52",
+      "lines": 3743,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-voxel/execution-audit.json",
+      "bytes": 1587,
+      "sha256": "07247ecee9cb2902ef0eeb0dc21f9bf829dcc34f24a49a5bf25c80fcdf5f884e",
+      "lines": 36,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-voxel/merge-index.json",
+      "bytes": 358681,
+      "sha256": "d1d73b87bea79b3779d586ed85f11010903076a4e269954055c0dce0cf7a3c6d",
+      "lines": 9392,
+      "classification": "mechanical",
+      "review": "round 2 closure: append-only retention and byte/digest integrity audit"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-voxel/partial-report.json",
+      "bytes": 286103,
+      "sha256": "ebeb214ada34cf64a7cb3d26488452f4f196d0c73393ecc8935705da8d902fdb",
+      "lines": 6615,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-voxel/resume-partial-report.json",
+      "bytes": 204086,
+      "sha256": "7c0bc294f594c6f3e7330f6ae5cd323333b117b8f4a629d8f00b0e03d3c07789",
+      "lines": 4993,
+      "classification": "mechanical",
+      "review": "round 2 closure: append-only retention and byte/digest integrity audit"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retention-manifest.json",
+      "bytes": 41001,
+      "sha256": "0cf6b3ef42cbb4bb3dd37dd6cff4e2bb3a20cc4bd5865ac115afca18338d3ae7",
+      "lines": 594,
+      "classification": "mechanical",
+      "review": "round 2 closure: append-only retention and byte/digest integrity audit"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/source-manifests/aiDevschoolMvp.json",
+      "bytes": 22986,
+      "sha256": "4651339482d174957cbafdd7165f2d9e76a56f9599f835766ba795a270031b44",
+      "lines": 545,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/source-manifests/codexDojo.json",
+      "bytes": 47931,
+      "sha256": "7d87f7544fbd727f0879a4214abefc820b6d8fc322a40fa661fca72d6e34ca5e",
+      "lines": 1208,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/source-manifests/codexdojo-os-prototype.json",
+      "bytes": 84580,
+      "sha256": "f245b7a748f0135c55bb3a14c6a185d5ffb516da44f837ab56e7c459753176d4",
+      "lines": 2001,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/source-manifests/dojoToday.json",
+      "bytes": 41120,
+      "sha256": "57bcb8d82cb82d350f52cd6d36bd00adc28b6aa36af5ad97a7f8c12bd16a4a1e",
+      "lines": 1028,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/source-manifests/literacyDojo.json",
+      "bytes": 73104,
+      "sha256": "76a52326b1a36aa2ef525eb1b144be3b88ede761443bcf986fc9b3594b6da33b",
+      "lines": 1769,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/source-manifests/miniMaxEvolutionEngine.json",
+      "bytes": 50039,
+      "sha256": "ca61cb661336d0a925d7480b2adedf5c67a8c787c7b74f2d655adeefe4098744",
+      "lines": 1220,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/source-manifests/miniTown.json",
+      "bytes": 6471,
+      "sha256": "6c941e2b653bed9459c77c015d5545b828fd821e542c569e47fd33bf576e608c",
+      "lines": 177,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/source-manifests/minimaxDojo.json",
+      "bytes": 46335,
+      "sha256": "1c4982380a834db281035d9202a5e3f4b51a22efc2295c958af7b597cb01a4c1",
+      "lines": 1156,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/source-manifests/openclaw.json",
+      "bytes": 40146,
+      "sha256": "1de03a17c2a42691ef6b0c444d3b880ba6bf8adb1ea9d00694d9f3deac76d5cd",
+      "lines": 1004,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/source-manifests/pixelDojo.json",
+      "bytes": 54623,
+      "sha256": "475edb4ac9488342d078a54ff68773c05dff18f634f490c1e68910f84916a17d",
+      "lines": 1344,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/source-manifests/school-entry.json",
+      "bytes": 5370,
+      "sha256": "ef5bfd52573607a5f026df0b01223ad9b31ac16fff91e3266b02df5233333edf",
+      "lines": 145,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/source-manifests/sdlc-quest.json",
+      "bytes": 38697,
+      "sha256": "29c4afbc53427689e5c71f1e36133c2185b7073b4f8ffc7f2f5c21b9ce7b069d",
+      "lines": 937,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/source-manifests/voxelDojo.json",
+      "bytes": 99087,
+      "sha256": "d1746f854605366543694513d0ecafff5313890ab1e574f397b0169d42df0f05",
+      "lines": 2392,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/source-manifests/zai-duolingo-like.json",
+      "bytes": 37014,
+      "sha256": "34719b17a5691c70efcd6aa6f54d24aedda67670f980472fa425fd0437f4d7d1",
+      "lines": 849,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/literacy-result.json",
+      "bytes": 309,
+      "sha256": "0ae6dfac09c954a6349b47da32370b5d8fb0bf64c2312d1aaaf3910e52d04074",
+      "lines": 15,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/literacy_version.mjs",
+      "bytes": 1049,
+      "sha256": "282fb3587872bd40eddc36f8dc2140cc7fb5d23cc1b5594152da08f13eb6b457",
+      "lines": 18,
+      "classification": "core",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/main-ci-stale.txt",
+      "bytes": 2678,
+      "sha256": "ffccaa76a7cf9071fb9d67926f3ae5bea12ffdcaab8208b7f49def2fd296f4bf",
+      "lines": 11,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/manifest.json",
+      "bytes": 7314,
+      "sha256": "caf73a3712b4e0deed561b4f584581df9532bb7ac3a9d88deec204a8e10842ea",
+      "lines": 199,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/mastery-result.json",
+      "bytes": 450,
+      "sha256": "32542447a95cbc7675fd881c3da938aecc06a6bb1bbccb7c19b58212a5751984",
+      "lines": 13,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/mastery_without_verifier.py",
+      "bytes": 2267,
+      "sha256": "13dba31149c24fff11e29d86fb27f17b54950d509d79494f4b95b0a877525ae8",
+      "lines": 51,
+      "classification": "core",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/operational-notes.json",
+      "bytes": 996,
+      "sha256": "f8e2ab0b12ad859ca59c8129074d4fda9cae0c9611212d9f66f3dcfd17f7822f",
+      "lines": 10,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/pr656-protected-test.patch",
+      "bytes": 8407,
+      "sha256": "6356f5b8a33f50506ec49ec09e54455d33defa95270744471f7caa2d937940e6",
+      "lines": 285,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/readiness-check.json",
+      "bytes": 2190,
+      "sha256": "4cea59924511c07c1a91f63944df4d85fbecbca36948166a53abce54b622fb3c",
+      "lines": 8,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/agent-runtime-openclaw.py",
+      "bytes": 10721,
+      "sha256": "19d0b8fc47c39a18f205d2020f8dd9225d8cdbabbf614829b0d48e6378480260",
+      "lines": 198,
+      "classification": "core",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/assert-readiness-artifacts.py",
+      "bytes": 22598,
+      "sha256": "45506e6934098d54cb934e4f3f3b3119729c22f4bd5e4cd2991949ccc9f05497",
+      "lines": 340,
+      "classification": "core",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/dashboard-runtime.mjs",
+      "bytes": 42543,
+      "sha256": "c21035f43f8d7cec9c43391e5a188ddbb0e2f199f8086b01b2e2eb2f38331543",
+      "lines": 520,
+      "classification": "core",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/learning-runtime-literacy.mjs",
+      "bytes": 6379,
+      "sha256": "661653df0ad882a3dde2414d668f6effdc7096347373e100eb54481b13c53092",
+      "lines": 94,
+      "classification": "core",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/learning-runtime-support.mjs",
+      "bytes": 9852,
+      "sha256": "c141e44d30b7116cc288ad0e755eebcf6fc56987230a49c6a49f5d9b1c7553ed",
+      "lines": 191,
+      "classification": "core",
+      "review": "round 2 scoped code and regression review"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/learning-runtime.mjs",
+      "bytes": 15873,
+      "sha256": "e8f85db123c059d85e4c516415a6beb2d72e7943d4124b48ee01b65ce43ff5ef",
+      "lines": 187,
+      "classification": "core",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/literacy-runtime.mjs",
+      "bytes": 16687,
+      "sha256": "075417d19fd26b84977f5bc1ec9da11499aa63a3dbddeab04f65ed6782d22087",
+      "lines": 300,
+      "classification": "core",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/local-products-runtime-quest.mjs",
+      "bytes": 11783,
+      "sha256": "dbc161abb9d262a7857b82469d5e2a6baec130b7a9c62a17b0db21da10bffda2",
+      "lines": 322,
+      "classification": "core",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/local-products-runtime-school.mjs",
+      "bytes": 7663,
+      "sha256": "008e2e56638251f2a7028c43bf85740d5a45974c5f9e83cdc89f01ff1b32d8e6",
+      "lines": 210,
+      "classification": "core",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/local-products-runtime-zai.mjs",
+      "bytes": 13351,
+      "sha256": "664b61273bf5a1599cbcfcec97e19036ea3c6ddab98dd24055509b4d5d0bf3e0",
+      "lines": 372,
+      "classification": "core",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/local-products-runtime.mjs",
+      "bytes": 12151,
+      "sha256": "945e889bd0c898c7f6a73fda81429e3820da2fc06db14d745d899f19c0303e98",
+      "lines": 351,
+      "classification": "core",
+      "review": "round 2 scoped code and regression review"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/observe-engine.mjs",
+      "bytes": 4715,
+      "sha256": "be8f45281ecd86b909f288b326dadb3bcc376330995d74c0a5eee051537d8609",
+      "lines": 97,
+      "classification": "core",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/pixel-runtime.mjs",
+      "bytes": 24092,
+      "sha256": "8e94aa55c5b97926c3aba287c8046c0b57b02de34d03d852beafebefc3a031f4",
+      "lines": 317,
+      "classification": "core",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/tests/observer-lifecycle.test.mjs",
+      "bytes": 4315,
+      "sha256": "235410bcc45783f6cccc4c1226621e4aa46030d9cd2995534843f6f05093019e",
+      "lines": 101,
+      "classification": "core",
+      "review": "round 2 scoped code and regression review"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/voxel-runtime.mjs",
+      "bytes": 30050,
+      "sha256": "7ad6f01b75e0f2bbb7edf0376cf339b2c765c3c100e7124a8c1997e8da08a502",
+      "lines": 481,
+      "classification": "core",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/situation.json",
+      "bytes": 5999,
+      "sha256": "e4ee6a11f198a55621d7c0bf4d046e5e7c326158a7a33e60b8085a053feaead2",
+      "lines": 133,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/implementation-checkpoint.json",
+      "bytes": 2899,
+      "sha256": "487a635c52dc6a4bc8498e760d04806bd4ecaff222a8694b8dff6d9f1ed959f3",
+      "lines": 59,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/implementation-reading-size.json",
+      "bytes": 7220,
+      "sha256": "4257c78ed78695211264369235733546149c57dbf298540d9a6f0c6c907d3ac1",
+      "lines": 173,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/implementation-warnings.json",
+      "bytes": 3595,
+      "sha256": "aa666871ed7e0a862a01e0cb096a13623c4748c53f8cfab0185254aaf5a9a83f",
+      "lines": 59,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/intent.md",
+      "bytes": 3514,
+      "sha256": "2ad153d4c48752ef2038b8e9a56e7ce5aa6e1b805ed20e2e54c54e36efa798ad",
+      "lines": 35,
+      "classification": "core",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/owner-approval-pr656.json",
+      "bytes": 725,
+      "sha256": "20888a682d8ea0b3ba16765d2bc538a2e14d3673a5d1f4df893b83ac36758d16",
+      "lines": 10,
+      "classification": "core",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/plan.md",
+      "bytes": 37444,
+      "sha256": "aaa184768897b4863b6cfbc8e36b2513e3212bb02ea496e0f19590a49887af0e",
+      "lines": 256,
+      "classification": "core",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/planning-evidence.json",
+      "bytes": 48812,
+      "sha256": "b8e4a4a483a52ef9edc7dfc991c23347355e1e5d663a951fc384876e13ac982f",
+      "lines": 1238,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/planning-warnings.json",
+      "bytes": 3391,
+      "sha256": "b0d626057f3b72b169a34a8efbbc8d400471697cd583c6312146a1f84f23480e",
+      "lines": 48,
+      "classification": "mechanical",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/qualification-matrix.md",
+      "bytes": 22970,
+      "sha256": "0e9448e46c26d8075831b5215d609bab38a4d052567b04f5e99251019b5f2b35",
+      "lines": 175,
+      "classification": "core",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/spec.md",
+      "bytes": 2770,
+      "sha256": "b3bad3d2be6149854b92e47af899dc809a54a5a9cc7f250851418bedb9bc6238",
+      "lines": 30,
+      "classification": "core",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-15-mme-native-entrypoints/intent.md",
+      "bytes": 4716,
+      "sha256": "5d82741e5105b433c75e850abd38b4311deed2fcef0bf82f864cb46cd1c9c08a",
+      "lines": 39,
+      "classification": "core",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-16-dojotoday-inline-game-runtime/intent.md",
+      "bytes": 9350,
+      "sha256": "daf4a4d4ab060a365bdc16eb56e4b020370654b627c87863460855f719359f78",
+      "lines": 81,
+      "classification": "core",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-16-mvp-gate-invocation-contract/intent.md",
+      "bytes": 9960,
+      "sha256": "49609293a6094a7a8fe5b0a750cc3cc79ca070eb47c084983b3d82b8eab7842f",
+      "lines": 77,
+      "classification": "core",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "intent/2026-10-16-os-browser-proof-drift/intent.md",
+      "bytes": 2150,
+      "sha256": "9f8b9c32c6b4e5a68937444fddd6067f352fe1ce29ea0e7cce69ca734ed1ead1",
+      "lines": 13,
+      "classification": "core",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "learner/gate/AGENTS.md",
+      "bytes": 4213,
+      "sha256": "b7e028db77260e18043dca1eb9c11b039f179d3df5bceb3a90714973ed00a0c9",
+      "lines": 53,
+      "classification": "core",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "learner/gate/canonical_gate.py",
+      "bytes": 11927,
+      "sha256": "717f64f2372ceaebb26942cc96a3672bf51ec341994f6907e8aa41866eb54e76",
+      "lines": 325,
+      "classification": "core",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "learner/gate/evidence_io.py",
+      "bytes": 7002,
+      "sha256": "53146a798b65e71839d4a12e37097f5824c844d7c81fd4236a9a9f310eea2da3",
+      "lines": 190,
+      "classification": "core",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "learner/gate/netlify-functions/README.md",
+      "bytes": 2987,
+      "sha256": "784bc0fbcda7e1d5cd816e9d778f6e1deddf461ec97fc240e69e835b474805f7",
+      "lines": 46,
+      "classification": "core",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "learner/gate/netlify-functions/literacy-verify.mjs",
+      "bytes": 6982,
+      "sha256": "7d53901ea068302abb91fa07bfa0cb99b3ed7952566a50b4ef9e6dfbf15fa8c3",
+      "lines": 189,
+      "classification": "core",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "learner/gate/tests/literacy_verify_identity.test.mjs",
+      "bytes": 2908,
+      "sha256": "040732aa6c6f97b9fefcec30ed31e1437e6ef99ba38bbf977e5cd9743df5c1e6",
+      "lines": 85,
+      "classification": "core",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "learner/gate/tests/literacy_verify_netlify.test.mjs",
+      "bytes": 7490,
+      "sha256": "1265169ebd09de19498f5066257763ab714399eb4f670cc73318bd4e0983ed9a",
+      "lines": 277,
+      "classification": "core",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "learner/gate/tests/literacy_verify_readiness_plan.test.mjs",
+      "bytes": 7830,
+      "sha256": "e4c650828b274acde2cd9bd955e15b623c4ec7b179d64dde7c2dd254facf3ff0",
+      "lines": 178,
+      "classification": "core",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "learner/gate/tests/test_gate.py",
+      "bytes": 58922,
+      "sha256": "31c138206f811b1e0bd50eabbaaab8b4c8f1962b41887e53d7c510218bb9ca44",
+      "lines": 1550,
+      "classification": "core",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "learner/gate/tests/test_gate_multirecord_receipt_binding.py",
+      "bytes": 7107,
+      "sha256": "580238074e62bf88425c7ecf86f86613992872d89b1f09944292e49b861f11c2",
+      "lines": 163,
+      "classification": "core",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "learner/gate/tests/test_readiness_plan_contract.py",
+      "bytes": 10800,
+      "sha256": "2ba45c4b5204302edca8f1e5f2ea93e52fed017e25a296ebe99500fa916b51ec",
+      "lines": 280,
+      "classification": "core",
+      "review": "round 1 carried, unchanged"
+    },
+    {
+      "path": "scripts/python_complexity_baseline.txt",
+      "bytes": 6733,
+      "sha256": "26c75455888c10e3b389c3199d237c8e183a40c0c8cdde5d0c7470645036a70e",
+      "lines": 114,
+      "classification": "core",
+      "review": "round 1 carried, unchanged"
+    }
+  ],
+  "scope": {
+    "kind": "scoped re-review after complete round 1",
+    "carried_round1_report": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/codex-product-readiness-discovery-20261015/judge-aidevschool.round1.json",
+    "carried_round1_sha256": "cb96379b6ad64457cabaf85507ee286e62206c79e56fc0d2d1c0258b31c9a981",
+    "files": [
+      "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/learning-runtime-support.mjs",
+      "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/local-products-runtime.mjs",
+      "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/tests/observer-lifecycle.test.mjs"
+    ],
+    "unchanged_prior_files": 118,
+    "feature_verdict": "NOT_PASS",
+    "whole_feature_verifier": false,
+    "concurrent_qualification_assembly_excluded": [
+      "docs/product-readiness/assessments/2026-10-15-ecosystem-beta-readiness.md",
+      "docs/product-readiness/evidence/observations/2026-10-15-ecosystem-beta-readiness/engine-qualification.json"
+    ],
+    "retention_integrity_audit": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/codex-product-readiness-discovery-20261015/judge-round2-retention-refresh-audit.json"
+  },
+  "resolutions": [
+    {
+      "id": "F1",
+      "status": "resolved",
+      "evidence": [
+        "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/learning-runtime-support.mjs:35",
+        "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/learning-runtime-support.mjs:40",
+        "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/learning-runtime-support.mjs:69",
+        "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/codex-product-readiness-discovery-20261015/judge-round2-node.log"
+      ]
+    },
+    {
+      "id": "F2",
+      "status": "resolved",
+      "evidence": [
+        "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/local-products-runtime.mjs:91",
+        "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/local-products-runtime.mjs:102",
+        "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/codex-product-readiness-discovery-20261015/judge-round2-node.log"
+      ]
+    }
+  ],
+  "previous_snapshot": {
+    "manifest": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/candidate-owned-files.json",
+    "manifest_sha256": "040203eed61b2b0f4828b21a50d7240f864cb780f60aca28741d47ebd6c08e93",
+    "complete_diff": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/codex-product-readiness-discovery-20261015/judge-complete.diff",
+    "complete_diff_sha256": "ee5a0736a85fb66aca45ea9dffdd0113c6865d29900e140606a83e9d0ef6b336",
+    "files": 120,
+    "bytes": 3312566,
+    "final_integrity": {
+      "samePaths": true,
+      "sameBytesAndDigests": true,
+      "files": 120
+    }
+  },
+  "snapshot": {
+    "inventory": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/codex-product-readiness-discovery-20261015/judge-round2-final-file-inventory.json",
+    "inventory_sha256": "31d89e0a5b64eeaa68ee3e59c530c2cbe129c7f14d619ad69c0843957a934acb",
+    "scoped_diff": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/codex-product-readiness-discovery-20261015/judge-round2-scoped.diff",
+    "scoped_diff_sha256": "2efb8c76cb690fd3982af5b95fffadfae7a541dee3b171edbe540b28feec1198",
+    "files": 126,
+    "head": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+    "owned_delta": [
+      {
+        "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/learning-runtime-support.mjs",
+        "bytes": 9852,
+        "sha256": "c141e44d30b7116cc288ad0e755eebcf6fc56987230a49c6a49f5d9b1c7553ed"
+      },
+      {
+        "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/local-products-runtime.mjs",
+        "bytes": 12151,
+        "sha256": "945e889bd0c898c7f6a73fda81429e3820da2fc06db14d745d899f19c0303e98"
+      },
+      {
+        "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/tests/observer-lifecycle.test.mjs",
+        "bytes": 4315,
+        "sha256": "235410bcc45783f6cccc4c1226621e4aa46030d9cd2995534843f6f05093019e"
+      }
+    ],
+    "initial_re_review_inventory": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/codex-product-readiness-discovery-20261015/judge-round2-file-inventory.json",
+    "initial_re_review_inventory_sha256": "ba14a20df93760f2299f277f451b554088af2d4251abcae4c613e22099337784",
+    "retention_refresh_audit": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/codex-product-readiness-discovery-20261015/judge-round2-retention-refresh-audit.json"
+  },
+  "checks": [
+    {
+      "name": "judge-round2-pytest",
+      "argv": [
+        "rtk",
+        "proxy",
+        ".scratch/gh-375/venv/bin/python",
+        "-m",
+        "pytest",
+        "learner/gate/tests/test_gate.py",
+        "learner/gate/tests/test_gate_multirecord_receipt_binding.py",
+        "learner/gate/tests/test_readiness_plan_contract.py",
+        "-vv"
+      ],
+      "exitCode": 0,
+      "seconds": 2.157,
+      "timeoutSeconds": 180,
+      "log": ".scratch/codex-product-readiness-discovery-20261015/judge-round2-pytest.log",
+      "sha256": "6d662059e55c135dbddd9a66338fa70fdca1a59d416f102a03a8a5abfe9c4406"
+    },
+    {
+      "name": "judge-round2-node",
+      "argv": [
+        "rtk",
+        "proxy",
+        "node",
+        "--test",
+        "learner/gate/tests/literacy_verify_netlify.test.mjs",
+        "learner/gate/tests/literacy_verify_identity.test.mjs",
+        "learner/gate/tests/literacy_verify_readiness_plan.test.mjs",
+        "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/tests/observer-lifecycle.test.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.418,
+      "timeoutSeconds": 180,
+      "log": ".scratch/codex-product-readiness-discovery-20261015/judge-round2-node.log",
+      "sha256": "0d8b845bd307437fb79825d4de057331483e2e2611a3cb5aa4b2487a374a96c0"
+    },
+    {
+      "name": "node --check",
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/learning-runtime-support.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "node --check",
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/local-products-runtime.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "node --check",
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/tests/observer-lifecycle.test.mjs",
+      "exitCode": 0
+    }
+  ],
+  "historical_bug_probes": {
+    "script": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/codex-product-readiness-discovery-20261015/judge-observer-repros.mjs",
+    "script_sha256": "e3792c2e44a9b0056679e43c40188121888898967af7b67480ab27f7f9b4317b",
+    "log": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/codex-product-readiness-discovery-20261015/judge-observer-repros.log",
+    "log_sha256": "b6017c66883a35f2f4dd2302aa5911c56d90d0a8ac7a7a589179b69d8c138f90",
+    "method": "Exact extracted current function bodies with dependency stubs; no OS child/server/browser started."
+  },
+  "regression_proof": {
+    "current_test": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/tests/observer-lifecycle.test.mjs",
+    "test_sha256": "235410bcc45783f6cccc4c1226621e4aa46030d9cd2995534843f6f05093019e",
+    "before": {
+      "log": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/codex-product-readiness-discovery-20261015/judge-round2-lifecycle-before.log",
+      "sha256": "1f3872547f23d6d8f6d5b11b93ff760f2b8b03b352ed945a3fb0b5f544e3301d",
+      "tests": 4,
+      "fail": 4,
+      "exitCode": 1
+    },
+    "after": {
+      "log": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/codex-product-readiness-discovery-20261015/judge-round2-node.log",
+      "sha256": "0d8b845bd307437fb79825d4de057331483e2e2611a3cb5aa4b2487a374a96c0",
+      "tests": 61,
+      "pass": 61,
+      "lifecycleCases": 4,
+      "exitCode": 0
+    }
+  }
+}

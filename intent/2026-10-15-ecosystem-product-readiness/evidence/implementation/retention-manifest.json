@@ -1,0 +1,622 @@
+{
+  "schemaVersion": 1,
+  "purpose": "artifact retention, not a runtime observation or grant",
+  "entries": [
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/artifact-validator/final-refresh.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/artifact-validator/final-refresh.json",
+      "sha256": "ecbd852ef051dbbfdbdeff6b03a94e0ca733b547d317c9de0b9d0090b59be583",
+      "bytes": 45839,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/artifact-validator/validation-summary.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/artifact-validator/validation-summary.json",
+      "sha256": "d60644b6cf726dbcad60626df008a535dd0c2e642ed09cda302ad140c1d6ae4d",
+      "bytes": 3814,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/browser-producers/codexDojo.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/browser-producers/codexDojo.json",
+      "sha256": "fa78181e6bb7830bb4630d97e814f57287bd209fbe6aa9dd6b9363e3858ffbd8",
+      "bytes": 1070,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/browser-producers/codexdojo-os-prototype.diagnosis.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/browser-producers/codexdojo-os-prototype.diagnosis.json",
+      "sha256": "604615f656e61dd6d47bed8f9b093349a94d80169938f10e507d44807cc63add",
+      "bytes": 1058,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/browser-producers/codexdojo-os-prototype.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/browser-producers/codexdojo-os-prototype.json",
+      "sha256": "5bbe38e9b2d266fcc399a80607697043c985a5178e8f391217fd33c28d56a202",
+      "bytes": 1309,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/browser-producers/diagnosis/REPORT.md",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/browser-producers/diagnosis/REPORT.md",
+      "sha256": "f44de272b585170f09dec5883dacc761549e3bc8fd01c7c3ad90074f2e23434b",
+      "bytes": 2839,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/browser-producers/diagnosis/report.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/browser-producers/diagnosis/report.json",
+      "sha256": "e67904dd2365790f4260b18d32210c645f1e5a790e09bcbe0a5d938dabb10327",
+      "bytes": 15485,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/browser-producers/dojoToday.diagnosis.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/browser-producers/dojoToday.diagnosis.json",
+      "sha256": "6a1d8d21c6e024449ef4b9899b93cc2607be8818933906c15dbaa0ff4610a2c3",
+      "bytes": 1042,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/browser-producers/dojoToday.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/browser-producers/dojoToday.json",
+      "sha256": "165c328475297c7d68ce8afcf0e71c769fbdfcd51484a5509350547eafa4191c",
+      "bytes": 1168,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/browser-producers/miniTown.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/browser-producers/miniTown.json",
+      "sha256": "e5b01f709e95e0c3dfeb923820db1c8d8f01516b93262186691703d06c53c5a3",
+      "bytes": 1070,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/browser-producers/pixelDojo-pixel-quest.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/browser-producers/pixelDojo-pixel-quest.json",
+      "sha256": "e4ede016fd35ebb14c5cb3c237cfd4c4b8960baf7a829f0896cf59503b4e300f",
+      "bytes": 1300,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/browser-producers/zai-duolingo-like.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/browser-producers/zai-duolingo-like.json",
+      "sha256": "41e74006d41d61caa839a9426c760c20632c24fe6d0eded919b3ff57e571b856",
+      "bytes": 1199,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/claims-current-check.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/claims-current-check.json",
+      "sha256": "622d26432489d7143680b08eb107cf6bbb1ff5273a702b4ca8a92507a73abf78",
+      "bytes": 305,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/claims-current-check.log",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/claims-current-check.log",
+      "sha256": "8633abeba3437aabd0aa3dc8c7dd240a9ab405d77b78a4aeed1b98a392527048",
+      "bytes": 1914,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/gate/complexity-ratchet.log",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/gate/complexity-ratchet.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/gate/complexity-self-test.log",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/gate/complexity-self-test.log",
+      "sha256": "15ba17840f184783b9a044c111f9147e6cec68cff1a5d175adb3024af31e0961",
+      "bytes": 361,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/gate/criteria-nodes.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/gate/criteria-nodes.json",
+      "sha256": "2e231cca30f2a287ff0520a7d8d4af8aa4dc5ce02f2b4f8a5f16e9dc1aa19179",
+      "bytes": 8327,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/gate/failing-first-with-fixture-error.log",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/gate/failing-first-with-fixture-error.log",
+      "sha256": "7b15e3f807dd8223a81bd54df6404055b410e4d4655f3d97ec82fd4e601926c0",
+      "bytes": 78194,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/gate/failing-first.log",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/gate/failing-first.log",
+      "sha256": "06a037902deff322b48454a0d4f14aa5a78b253bdf2563bf8b3ec5fa64acfd04",
+      "bytes": 71362,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/gate/focused-after-fix.log",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/gate/focused-after-fix.log",
+      "sha256": "629cac3885b82fc12e09629f8871756322a669611dac4138e20f2880d7669fc6",
+      "bytes": 15334,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/gate/implementation-report.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/gate/implementation-report.json",
+      "sha256": "f190815dddce90848f8225a9d7195b6156f6b61c6d029dddc60d71269d195612",
+      "bytes": 15665,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/gate/shared-regression.log",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/gate/shared-regression.log",
+      "sha256": "8862689d6db9528f09512d0fd483d6dca83200f73a3233eb8fe6fd3bca93def2",
+      "bytes": 1072,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/gate/venv-path-preflight-error.log",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/gate/venv-path-preflight-error.log",
+      "sha256": "f587cc1e6b1e274c361bc19fcbd14a725b6bc960f8edc10013561dea1564b6cf",
+      "bytes": 149,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/C10-historical-client.log",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/literacy/C10-historical-client.log",
+      "sha256": "a1adb2072b545d653a8daa6a42bd7bf89e35c66e22c04f1be54ce642ef279231",
+      "bytes": 947,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/C10-named.log",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/literacy/C10-named.log",
+      "sha256": "174c2dcabb22d64301793e2a4a01fdd57c0ad297264853673ac30097b60ab198",
+      "bytes": 2571,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/C8-named.log",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/literacy/C8-named.log",
+      "sha256": "e5983c15ac434f5eb53bc6605f4553a5caf841851ac187ca0b9ed3684c676f2d",
+      "bytes": 647,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/C9-named.log",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/literacy/C9-named.log",
+      "sha256": "c6866238b3527c0a7abbd2d7af0de7915023cf0021add693db11c000ba18d60a",
+      "bytes": 2160,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/content-validation.log",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/literacy/content-validation.log",
+      "sha256": "7f82b5326dcc9838fe1602074b099a1805c9e097446c9e42b9ba4dedc24ba33b",
+      "bytes": 97,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/cross-engine-contracts.log",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/literacy/cross-engine-contracts.log",
+      "sha256": "f63b45a6efa74796b66a1fa715ca4f1296b835780aa7ad2355fc71f6adc80869",
+      "bytes": 2183,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/engine-build.log",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/literacy/engine-build.log",
+      "sha256": "9807fc138c9e7877f90c183b778bfe2853138375e9f5e48b7863232d42b416b5",
+      "bytes": 1226,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/engine-e2e.log",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/literacy/engine-e2e.log",
+      "sha256": "221db1fefba8f4193a381d0e085c95ab877fbe6dbde8b41cc7b1ae8199236615",
+      "bytes": 7567,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/engine-generation.log",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/literacy/engine-generation.log",
+      "sha256": "b017e778429f2be8901c8a7b6e779cf16952c23c1781032a935ac36f2ae3e69c",
+      "bytes": 457,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/engine-lint.log",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/literacy/engine-lint.log",
+      "sha256": "e80368aff272c619c0df0767774ffe94a1ae631b6471321aee81c48b06cb3781",
+      "bytes": 108,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/engine-tests.log",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/literacy/engine-tests.log",
+      "sha256": "79e09ca6a776b15baee01c9c0485554adc6025bea9032589167cccff47c7b378",
+      "bytes": 35669,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/failing-first.log",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/literacy/failing-first.log",
+      "sha256": "4373c4f1db5106e8839eeebe2f1f2e35baa2644246c095db56213e8d4e14d5c3",
+      "bytes": 77640,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/implementation-result.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/literacy/implementation-result.json",
+      "sha256": "684e5cc2df7f963a9a6af06ce8038914ae49d8a9ad192c9eeb36ecb58e0d7f75",
+      "bytes": 8082,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/node-suites.log",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/literacy/node-suites.log",
+      "sha256": "055a465aa7b73215f3af81b470106589fc324941a1c0b54aea6aba9cb30a1915",
+      "bytes": 8892,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime-deployed-verifier-current-source.log",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/literacy/runtime-deployed-verifier-current-source.log",
+      "sha256": "03a7fd7460d4d4f93af173ed069e35c860cfb87c3de1c28c2adc416f67201d95",
+      "bytes": 2712,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime-deployed-verifier-final-command.log",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/literacy/runtime-deployed-verifier-final-command.log",
+      "sha256": "d8e2fa62559f84bf23e10b97f817ed3b148a539e6247e883384ca52008ab1e41",
+      "bytes": 2038,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime-last-passing-evidence-command.log",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/literacy/runtime-last-passing-evidence-command.log",
+      "sha256": "bda135000a402c8dabbcbe230ebff2e329a46e9289a6084b9f82c08d42b80ff6",
+      "bytes": 4345,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime-last-passing-evidence-current-source.log",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/literacy/runtime-last-passing-evidence-current-source.log",
+      "sha256": "ef5df61048934b8045f2cd73767a2d8cd5d0368dc246238b37d394cef590405b",
+      "bytes": 6595,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime-last-passing-evidence-final-command.log",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/literacy/runtime-last-passing-evidence-final-command.log",
+      "sha256": "1075ddb19b151bb57583b54ddf78bafaa86722e6607d1d71e5df9a5659ff438d",
+      "bytes": 5748,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime-outage-command-2.log",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/literacy/runtime-outage-command-2.log",
+      "sha256": "a01e373e1627a4382bed5df89d0e77b2bd95ff5dc13c416b868d3c2682c79af6",
+      "bytes": 6555,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime-outage-command.log",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/literacy/runtime-outage-command.log",
+      "sha256": "055bfad33900e8c3e9e26d3ccee3061937848874bd5c32be95467e8094883992",
+      "bytes": 5182,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime-verifier-outage-retry-current-source.log",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/literacy/runtime-verifier-outage-retry-current-source.log",
+      "sha256": "d25494fded02004cc04bdc1c2d2b704f6559f2fdf9a4977168d85c2b3e65bdca",
+      "bytes": 7433,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime-verifier-outage-retry-final-command.log",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/literacy/runtime-verifier-outage-retry-final-command.log",
+      "sha256": "cb1cd25fafd4508b2047632e544c0488e4d6cc712a670837d611fb53e9f9142e",
+      "bytes": 6586,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/preflight/runtime-prerequisites.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/preflight/runtime-prerequisites.json",
+      "sha256": "9d3c39d69672d3cbece59ea90fc3381762107c329e7ecac0607d7d7ee2330898",
+      "bytes": 7986,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/producers/codexDojo.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/producers/codexDojo.json",
+      "sha256": "a82f648e4212e13969b30824ae195f9a1a127c120d8471b40a9d698b156fac10",
+      "bytes": 1493,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/producers/codexdojo-os-prototype.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/producers/codexdojo-os-prototype.json",
+      "sha256": "38e9435d3d9b27f7e00099a73e76c87d27af84b9f5f44f755397f6cc65883312",
+      "bytes": 1594,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/producers/dojoToday.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/producers/dojoToday.json",
+      "sha256": "40725735283cce3f82e99c077c34a54dd0bbbd1c4c32a58372d0e99544cb141f",
+      "bytes": 1465,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/producers/miniTown.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/producers/miniTown.json",
+      "sha256": "d6a84959d42a7bc5f30bb6caca310690f9c1c9ec2ecc668fdf1c72c57a61e64f",
+      "bytes": 1927,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/producers/pixelDojo.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/producers/pixelDojo.json",
+      "sha256": "ea9e9943270e301ec4c178732137b002d7eba6e5a863e2e452ac8ea6d1bf27a0",
+      "bytes": 1905,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/producers/python-engines.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/producers/python-engines.json",
+      "sha256": "283743ffc9990b262d357b5f5ca9a2ff4471a61d7912755ebf13c640639521b2",
+      "bytes": 831,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/producers/school-entry.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/producers/school-entry.json",
+      "sha256": "944afb798f4284c4a8259f4c8a4b28c188bd1afde8fba30b3f0b6399bda66a63",
+      "bytes": 1024,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/producers/sdlc-quest.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/producers/sdlc-quest.json",
+      "sha256": "c191f4804e49982f1ca6609d52f618068ddf334d1e5561b39abe590a96c8a6a1",
+      "bytes": 1460,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/producers/voxelDojo.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/producers/voxelDojo.json",
+      "sha256": "8724f3654389505f4be1f7cbc814facc645e97bcb2ec7b6fd3101fdd4938c3c9",
+      "bytes": 1907,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/producers/zai-duolingo-like.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/producers/zai-duolingo-like.json",
+      "sha256": "7e89170b9deb1105b41c17ec24c90f5c1bb169c776d510a0f8b54ceac7cc4533",
+      "bytes": 1526,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/codexDojo-2026-10-16T01-43-34-045Z/report.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-dashboards/codexDojo-2026-10-16T01-43-34-045Z/report.json",
+      "sha256": "ba9c5bbe8436c095d07421210b9b0d46521f59f88260008ed263fdb83e1dabf7",
+      "bytes": 47670,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/dojoToday-2026-10-16T01-42-51-714Z/report.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-dashboards/dojoToday-2026-10-16T01-42-51-714Z/report.json",
+      "sha256": "4bf5b243c8bf757479b8f34d4eafcbf17cbd01b9cb7b1d93dc6070f546dad007",
+      "bytes": 50043,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/latest.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-dashboards/latest.json",
+      "sha256": "f3b1869c970e33e3d2d0ad7be4b96c3c268e6b32508588e8611343aebf93dcdd",
+      "bytes": 6879,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/miniTown-2026-10-16T01-43-10-066Z/report.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-dashboards/miniTown-2026-10-16T01-43-10-066Z/report.json",
+      "sha256": "6b3c28c85dd41e1609d787c387668c49e25c7b6edc6a6c6d69671851e640ff87",
+      "bytes": 32037,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-learning/REPORT.md",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-learning/REPORT.md",
+      "sha256": "37df868901003841cbd0d39730fd0330e3eb480eb735dfb4105f8a1e19164b23",
+      "bytes": 2627,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-learning/qualification-partial.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-learning/qualification-partial.json",
+      "sha256": "e1737c9581e5a4553d6946ae11aa0392153fde98286483548810a80b21fb6481",
+      "bytes": 73439,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-local-products/formatting-report.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-local-products/formatting-report.json",
+      "sha256": "712b42b3abe58905a7f590f5980a9b5c9e606478a61b986f35e9cb3f9d01f621",
+      "bytes": 5994,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-local-products/report-index.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-local-products/report-index.json",
+      "sha256": "fe106b8a07d9ff6bbb1241d32fc330d1c328ad41658f099a60bb90d88ade2d66",
+      "bytes": 984,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-local-products/school-entry/2026-10-16T01-41-35-115Z/report.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-local-products/school-entry/2026-10-16T01-41-35-115Z/report.json",
+      "sha256": "06579ba1760a7bc5538f3a30c5b9deafab3f33cb42eb1a79210210213cd410cc",
+      "bytes": 23931,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-local-products/sdlc-quest/2026-10-16T01-42-22-230Z/report.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-local-products/sdlc-quest/2026-10-16T01-42-22-230Z/report.json",
+      "sha256": "715d116d6ef037637f209cc94505007246b2731956309e12bc5519b4e230f096",
+      "bytes": 77609,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-local-products/summary.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-local-products/summary.json",
+      "sha256": "cdcdfc42c447af3c468e0ee0db5bb7ef3736d5be0a1ae9e7b160cd349a6ce040",
+      "bytes": 4221,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-local-products/zai-duolingo-like/2026-10-16T01-46-27-742Z/report.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-local-products/zai-duolingo-like/2026-10-16T01-46-27-742Z/report.json",
+      "sha256": "871a65c27dabefd5362a96f89618a9c5d8285eabef3eee5391aef1d626703bfc",
+      "bytes": 208219,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mme/REPORT.md",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-mme/REPORT.md",
+      "sha256": "7f901e820bd3fc201e680d9d35ece29f60d188eb96c74e08bdcb9297b4cdc97a",
+      "bytes": 9224,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mme/openclaw-recipe-replay-v2/report.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-mme/openclaw-recipe-replay-v2/report.json",
+      "sha256": "a5e80eb2226868325e719d527e2a2f7db2ab412db6d8a9743f360e50bc729974",
+      "bytes": 17068,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mme/report.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-mme/report.json",
+      "sha256": "e7f2020a4c71eb600e795fca2dfafa52f4ace865c1ab4b810ab8b74b236a11ad",
+      "bytes": 4871,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mvp/REPORT.md",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-mvp/REPORT.md",
+      "sha256": "0af4cfdbe3ddc5ac118e52315cff96edbc7a4b1f9f69d2c749e138b8b04c19fc",
+      "bytes": 2243,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-mvp/qa-report.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-mvp/qa-report.json",
+      "sha256": "9600887c9aee3e8715975f4839cbcfd7b5d0f0163ccc696a2d712960739656f7",
+      "bytes": 16248,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/report.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-pixel/declared-use-2026-10-16T01-38-39-258Z/report.json",
+      "sha256": "004a74e86eaf4978b45f192b693eeebd9a31e76979d0e54e48443b4bc4874e52",
+      "bytes": 150251,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-voxel/execution-audit.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-voxel/execution-audit.json",
+      "sha256": "07247ecee9cb2902ef0eeb0dc21f9bf829dcc34f24a49a5bf25c80fcdf5f884e",
+      "bytes": 1587,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-voxel/partial-report.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-voxel/partial-report.json",
+      "sha256": "ebeb214ada34cf64a7cb3d26488452f4f196d0c73393ecc8935705da8d902fdb",
+      "bytes": 286103,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/lifecycle-repair/after.log",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/lifecycle-repair/after.log",
+      "sha256": "efd9c601dc97e9296bc1c0de8d931153ea5f91b2fcdfc172b55e030089599991",
+      "bytes": 949,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/lifecycle-repair/before.log",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/lifecycle-repair/before.log",
+      "sha256": "66a113ee413980b4736d79fb07b9951d477585342e291f78c4ddfd933da154f6",
+      "bytes": 3998,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/lifecycle-repair/report.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/lifecycle-repair/report.json",
+      "sha256": "579b23548ee2e84e11caff3b605abc42ad7393ef70a8090fa4b7c9e2da836063",
+      "bytes": 1961,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": ".scratch/codex-product-readiness-discovery-20261015/judge-complete.diff#intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/learning-runtime-support.mjs",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/lifecycle-repair/source-before-learning-runtime-support.mjs.txt",
+      "sha256": "0b90cc2c15f026d1f2c84d4dc8efab07abc6a19972df38dd10c09af59dcdb1a2",
+      "bytes": 9438,
+      "transformation": "Reconstructed complete added-file bytes from original Judge diff; exact match with original candidate manifest. Pre-lifecycle-repair snapshot, not a claim about runtime-launch source."
+    },
+    {
+      "originalPath": ".scratch/codex-product-readiness-discovery-20261015/judge-complete.diff#intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/local-products-runtime.mjs",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/lifecycle-repair/source-before-local-products-runtime.mjs.txt",
+      "sha256": "4d1bc03bd5cd6bfe273f22e7a0dff0e196316cda8b8028055e55596873d96e55",
+      "bytes": 11979,
+      "transformation": "Reconstructed complete added-file bytes from original Judge diff; exact match with original candidate manifest. Pre-lifecycle-repair snapshot, not a claim about runtime-launch source."
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-voxel/merge-index.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-voxel/merge-index.json",
+      "sha256": "d1d73b87bea79b3779d586ed85f11010903076a4e269954055c0dce0cf7a3c6d",
+      "bytes": 358681,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-voxel/resume-partial-report.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-voxel/resume-partial-report.json",
+      "sha256": "7c0bc294f594c6f3e7330f6ae5cd323333b117b8f4a629d8f00b0e03d3c07789",
+      "bytes": 204086,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/codex-product-readiness-discovery-20261015/judge-aidevschool.round1.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/local-judge/judge-aidevschool.round1.json",
+      "sha256": "cb96379b6ad64457cabaf85507ee286e62206c79e56fc0d2d1c0258b31c9a981",
+      "bytes": 59646,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/codex-product-readiness-discovery-20261015/judge-aidevschool.json",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/local-judge/judge-aidevschool.json",
+      "sha256": "b4d1920410b8d4d1d96e2afbcee75c1b4b392ab385169007bb95c97cf0c24d9e",
+      "bytes": 62194,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/codex-product-readiness-discovery-20261015/judge-observer-repros.mjs",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/local-judge/judge-observer-repros.mjs",
+      "sha256": "e3792c2e44a9b0056679e43c40188121888898967af7b67480ab27f7f9b4317b",
+      "bytes": 3037,
+      "transformation": "none; byte-identical copy"
+    },
+    {
+      "originalPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/codex-product-readiness-discovery-20261015/judge-observer-repros.log",
+      "retainedPath": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/local-judge/judge-observer-repros.log",
+      "sha256": "b6017c66883a35f2f4dd2302aa5911c56d90d0a8ac7a7a589179b69d8c138f90",
+      "bytes": 535,
+      "transformation": "none; byte-identical copy"
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "engineId": "literacyDojo",
+  "caseName": "last-passing-evidence",
+  "observedAt": "2026-10-16T01:22:04.202Z",
+  "producerContext": "readiness-literacy-build-agent",
+  "verifierContext": null,
+  "sourceCommit": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+  "functionSource": {
+    "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/netlify-functions/literacy-verify.mjs",
+    "sha256": "7d53901ea068302abb91fa07bfa0cb99b3ed7952566a50b4ef9e6dfbf15fa8c3"
+  },
+  "status": "blocked",
+  "evidenceRefs": [
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime/last-passing-evidence-2026-10-16T01-22-04-177Z/browser-console.json",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime/last-passing-evidence-2026-10-16T01-22-04-177Z/http-requests.json",
+      "sha256": "0f937690ae3e04602ce8f5e7935e10660749546e95cf85bae5ebb32202cf656f"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime/last-passing-evidence-2026-10-16T01-22-04-177Z/network.json",
+      "sha256": "d5e312625ee311eaddb811bd971315e0d5412fda45fd0dd2070f847ffa625a43"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/test-results/readiness-plan-runtime/last-passing-evidence-2026-10-16T01-22-04-177Z/failure.png",
+      "sha256": "69886dbea60b7e1a215e89767606f57ab6d65357109cc783aa87c58401bf833b"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/test-results/readiness-plan-runtime/last-passing-evidence-2026-10-16T01-22-04-177Z/page@125f98340bd2067caa6f78855952ca4b.webm",
+      "sha256": "25dad6f1c63480856fa341c8251f58fbf6e8adfaa10b71afff3a5259acd31060"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/test-results/readiness-plan-runtime/last-passing-evidence-2026-10-16T01-22-04-177Z/trace.zip",
+      "sha256": "5494d6fb7e41ed072031f781478627682aa68b7bce53de9ba3a901ff6f778ab2"
+    }
+  ],
+  "limitations": [],
+  "browserAvailability": "Browser plugin not available; regular Playwright used per frontend-testing-debugging skill",
+  "evidencePolicy": {
+    "source": {
+      "path": "/Users/danielbarreto/Development/aidevschool/engines/shared/playwright/base.config.ts",
+      "sha256": "5519ac81eac5d277c939da29e816130dd614bf18009a9200263aa9014ae525a7"
+    },
+    "importedOrPromoted": false,
+    "screenshot": "on",
+    "video": "on",
+    "trace": "retain-on-failure",
+    "outputDir": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/test-results/readiness-plan-runtime/last-passing-evidence-2026-10-16T01-22-04-177Z"
+  },
+  "error": {
+    "message": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n2 !== 1\n",
+    "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n2 !== 1\n\n    at browserCase (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/literacy-runtime.mjs:207:14)\n    at async run (file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/literacy-runtime.mjs:275:10)\n    at async file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/literacy-runtime.mjs:288:18"
+  },
+  "canonicalAfter": {
+    "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/learning_state.yaml",
+    "sha256": "36419ae44e755a9bd8bd049b14d0dee03d8b5937e577285f67ffe730733735e2"
+  },
+  "reportPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime/last-passing-evidence-2026-10-16T01-22-04-177Z/report.json",
+  "reportSha256": "3fe92e99fea06c32ac80b4884d3c5ce58e6913c358b1f01abbde4798aa30b43d"
+}

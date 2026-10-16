@@ -1,0 +1,70 @@
+{
+  "sdlc_warnings": [
+    {
+      "id": "SDLC-READY-001",
+      "repo": "dandpb/aidevschool",
+      "head": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+      "issue": "Reparo #657 local passou; ainda não foi integrado.",
+      "evidence": "[implementation-report.json](/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/gate/implementation-report.json)",
+      "correction": "Revisar e publicar o reparo isolado; concluir countersign e merge pela porta canônica.",
+      "verification": "124 testes focados e 918 compartilhados já passaram; exigir revisão/checks no head final.",
+      "prerequisite": "Autorização de publicação e checks atuais do PR.",
+      "status": "awaiting_prerequisite"
+    },
+    {
+      "id": "SDLC-READY-002",
+      "repo": "dandpb/aidevschool",
+      "head": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+      "issue": "Reparo #656 local passou; C11 e deploy continuam pendentes.",
+      "evidence": "[implementation-result.json](/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/implementation-result.json)",
+      "correction": "Resolver C11; publicar o reparo e provar endpoint com source SHA.",
+      "verification": "57 contratos Node e retry HTTP passaram; repetir no endpoint publicado.",
+      "prerequisite": "Resposta C11, publicação e vínculo deploy/fonte.",
+      "status": "awaiting_prerequisite"
+    },
+    {
+      "id": "SDLC-READY-003",
+      "repo": "dandpb/aidevschool",
+      "head": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+      "issue": "Seis claims continuam stale.",
+      "evidence": "[Relatório consolidado](/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/docs/product-readiness/assessments/2026-10-15-ecosystem-beta-readiness.md)",
+      "correction": "Revalidar observações e renovar assessments pelo fluxo canônico.",
+      "verification": "cli.py check --require-current deve retornar 0.",
+      "prerequisite": "Fonte final e observações independentes completas.",
+      "status": "open"
+    },
+    {
+      "id": "SDLC-READY-004",
+      "repo": "dandpb/aidevschool",
+      "head": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+      "issue": "Qualificação dos 14 engines está incompleta.",
+      "evidence": "[Relatório consolidado](/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/docs/product-readiness/assessments/2026-10-15-ecosystem-beta-readiness.md)",
+      "correction": "Retomar casos restantes serialmente e obter verificação independente/Jev.",
+      "verification": "14/14 pass com variantes e limites documentados; aceite separado do piloto.",
+      "prerequisite": "Host estável, credencial Jev e acesso MiniMax Team.",
+      "status": "awaiting_prerequisite"
+    },
+    {
+      "id": "SDLC-READY-005",
+      "repo": "dandpb/aidevschool",
+      "head": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+      "issue": "MVP, entrada MME e jogo inline dojoToday têm bloqueios observados.",
+      "evidence": "[Relatório e intents](/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/docs/product-readiness/assessments/2026-10-15-ecosystem-beta-readiness.md)",
+      "correction": "Planejar os três intents novos; corrigir e reproduzir cada jornada.",
+      "verification": "Gates MVP com argumentos/julgamentos válidos; comando MME documentado resolve; iframe renderiza o jogo real.",
+      "prerequisite": "Planos próprios aceitos; não ampliar silenciosamente o reparo atual.",
+      "status": "open"
+    },
+    {
+      "id": "SDLC-UI-001",
+      "repo": "dandpb/aidevschool",
+      "head": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+      "issue": "Prova de UI atual e julgamento independente continuam ausentes.",
+      "evidence": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/docs/product-readiness/assessments/2026-10-15-ecosystem-beta-readiness.md; /Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/browser-interruption.json",
+      "correction": "Em host estável, retomar casos incompletos serialmente, preservar C11 até decisão humana e obter prova source-bound e julgamento independente/Jev.",
+      "verification": "Recibo atual validado por ui_evidence.py verify e resultado independente por critério; nenhum PASS global enquanto houver blocked/unverified.",
+      "status": "awaiting_prerequisite",
+      "prerequisite": "Host estável, origem/build privados atribuíveis, decisões C11 e credencial Jev autorizada."
+    }
+  ]
+}

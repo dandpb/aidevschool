@@ -1,0 +1,10 @@
+{
+  "kind": "execution-incident",
+  "scope": "local runtime qualification tooling",
+  "reportedBy": ["qa_dashboard_runtime", "qa_voxel_runtime", "qa_local_products"],
+  "observed": "Three runtime actors reported overly broad read-only process diagnostics that displayed unrelated sensitive command-line arguments in tool output.",
+  "containment": "Root prohibited generic process enumeration, including enumeration filtered after capture. Subsequent checks and cleanup are restricted to numeric child PIDs/process groups already retained by the observer.",
+  "artifactPolicy": "Do not reproduce values, unrelated service names or argument strings. Actor reports state that unrelated values were not saved in their evidence files or reused.",
+  "limitation": "This sanitized record does not erase earlier native tool output or prove that values disappeared from the conversation history. No credential restoration, rotation or unrelated process mutation was attempted.",
+  "userInformed": true
+}

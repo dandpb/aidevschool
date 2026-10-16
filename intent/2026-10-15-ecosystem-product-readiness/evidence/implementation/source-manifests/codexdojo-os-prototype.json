@@ -1,0 +1,2001 @@
+{
+  "schemaVersion": 1,
+  "membership": "git tracked regular files at refresh; excluded dependency/build/test-result outputs",
+  "sourceScope": [
+    "engines/codexdojo-os-prototype",
+    "learner/gate",
+    "learner/substrate",
+    "engines/shared",
+    "curriculum/ai-literacy"
+  ],
+  "files": [
+    {
+      "path": "curriculum/ai-literacy/README.md",
+      "sha256": "00925d2b79362770dc827620cf4cd30692e9203bfcfaaf8e1d9fbe1f562e0de1"
+    },
+    {
+      "path": "curriculum/ai-literacy/catalog.yaml",
+      "sha256": "8377ffc0a91f068c37f160ddb28a05b463cee0f70f684b5fa8907827fddd8918"
+    },
+    {
+      "path": "curriculum/ai-literacy/modules/01-ai-sem-misterio/l01-sua-primeira-conversa-com-uma-ia.yaml",
+      "sha256": "7c01b5eb877ef24fab10df92df35aed928ff606205407ecd2415828705fe44a9"
+    },
+    {
+      "path": "curriculum/ai-literacy/modules/01-ai-sem-misterio/l02-ia-nao-e-fonte-de-verdade.yaml",
+      "sha256": "5f6f7fd81aa3ede7c4364e6d9ffc4de18cd8d0549efcb4324e61fcbed7f7f454"
+    },
+    {
+      "path": "curriculum/ai-literacy/modules/01-ai-sem-misterio/l03-o-que-a-ia-faz-bem.yaml",
+      "sha256": "57247144b277d18c6419b4c1175fdccb81074cb8d9879ff57a6b6c4966b251e9"
+    },
+    {
+      "path": "curriculum/ai-literacy/modules/02-pedir-bem/l04-de-um-objetivo-claro.yaml",
+      "sha256": "71ccf2e4980964e9aeeac43f1363c27a9a856e51f787ac866d2560705edcb980"
+    },
+    {
+      "path": "curriculum/ai-literacy/modules/02-pedir-bem/l05-de-contexto-para-obter-resposta-util.yaml",
+      "sha256": "7c1682d9e19df75486bf1e5c48aa1725caba537430947757f9f5a89f91514b51"
+    },
+    {
+      "path": "curriculum/ai-literacy/modules/02-pedir-bem/l06-defina-publico-tom-e-formato.yaml",
+      "sha256": "1908a0021f4ea4d0bc4dba221ded3f15590bd74309f150dbc2a9294f4c15c112"
+    },
+    {
+      "path": "curriculum/ai-literacy/modules/02-pedir-bem/l07-melhore-a-resposta-em-etapas.yaml",
+      "sha256": "78d3759fa37620d884d609dee23169b8d8a83cecb0cd4893dcd749712c3d2dba"
+    },
+    {
+      "path": "curriculum/ai-literacy/modules/03-avaliar-e-verificar/.gitkeep",
+      "sha256": "3ab81a65fe9da7fd908a94918e06a61b73a90ad2ca4f728e24bf37ee355bebc5"
+    },
+    {
+      "path": "curriculum/ai-literacy/modules/03-avaliar-e-verificar/l08-a-primeira-resposta-nao-e-a-melhor.yaml",
+      "sha256": "fd3aad7153451ee410742a90940a2776265caa6a399198cb4d709e5be3fcd677"
+    },
+    {
+      "path": "curriculum/ai-literacy/modules/03-avaliar-e-verificar/l09-como-reconhecer-resposta-inventada.yaml",
+      "sha256": "dfd511deefc537c2003ea0cb19957ee080a278f27df32e6226c3072dbe8b8842"
+    },
+    {
+      "path": "curriculum/ai-literacy/modules/03-avaliar-e-verificar/l10-quando-procurar-fontes-externas.yaml",
+      "sha256": "f40918856d7dafb22f6cd35614ed4f5279aeb88d6ffddd441147c37b2c8576a2"
+    },
+    {
+      "path": "curriculum/ai-literacy/modules/03-avaliar-e-verificar/l11-como-comparar-alternativas.yaml",
+      "sha256": "8cc3e7bf4dfb42dab5d03461be689bec09817edb63363dbdcd698e80f3674326"
+    },
+    {
+      "path": "curriculum/ai-literacy/modules/04-seguranca-e-aplicacao/l12-proteja-suas-informacoes.yaml",
+      "sha256": "5bcd96b7d673f5b34b7933cc00b4a07f05d8104080e9b5361ce75f24aa860916"
+    },
+    {
+      "path": "curriculum/ai-literacy/modules/04-seguranca-e-aplicacao/l13-use-ia-para-tarefa-real.yaml",
+      "sha256": "a4ab0a8a6e644380f453ed964afaa2672addef6b0a38071a538d44b27594713d"
+    },
+    {
+      "path": "curriculum/ai-literacy/modules/04-seguranca-e-aplicacao/l14-desafio-final.yaml",
+      "sha256": "b725f670b80291d8812c1ebb151863e1371bd46e7776da26a7cddaff1bbc1d75"
+    },
+    {
+      "path": "curriculum/ai-literacy/modules/05-dev-contexto-e-escolha/l15-quando-usar-ia.yaml",
+      "sha256": "02649a211b27b641e33758506fcb6e3c09468341240f57482569f3f0af05f127"
+    },
+    {
+      "path": "curriculum/ai-literacy/modules/05-dev-contexto-e-escolha/l16-primeiro-codigo-com-assistente.yaml",
+      "sha256": "79a967e09096a5e2b4ed1bd2239b8088e7f5b51eae8ae7a9c2eacc8f574ad180"
+    },
+    {
+      "path": "curriculum/ai-literacy/modules/05-dev-contexto-e-escolha/l17-integre-api-de-ia.yaml",
+      "sha256": "a099a688cda3381300f38dc02fe509560c093bff720b073528ccd1c280ec5a4f"
+    },
+    {
+      "path": "curriculum/ai-literacy/modules/05-dev-contexto-e-escolha/l21-peca-testes-que-valham-a-pena.yaml",
+      "sha256": "fd2a5661b568ff058a730c91f22a091087e203e609848b130d25fc7631be2fbe"
+    },
+    {
+      "path": "curriculum/ai-literacy/modules/05-dev-contexto-e-escolha/l22-revise-o-codigo-sugerido.yaml",
+      "sha256": "31330145f00bd9a699cae8fde0b65d3ed693f58d30cab95f152dc4e4e930824a"
+    },
+    {
+      "path": "curriculum/ai-literacy/modules/05-dev-contexto-e-escolha/l23-o-que-aceitar-limites-do-assistente.yaml",
+      "sha256": "6d4eaa96aff550b3f58726c0540d1160871dfa539a8de400dbca78e796baef18"
+    },
+    {
+      "path": "curriculum/ai-literacy/modules/05-dev-contexto-e-escolha/l27-debug-com-assistente-reproduza-antes-de-perguntar.yaml",
+      "sha256": "a2c6374509b6596125fec5d475d4737a6a8e7bf13b272a1d52b766b5d442492c"
+    },
+    {
+      "path": "curriculum/ai-literacy/modules/05-dev-contexto-e-escolha/l28-refatore-com-assistente-sem-quebrar-comportamento.yaml",
+      "sha256": "2a09dd9a6acf0eae74d61e7e4bd8777791739822ba9eb7da214f61959cd1654f"
+    },
+    {
+      "path": "curriculum/ai-literacy/modules/05-dev-contexto-e-escolha/l29-avalie-as-dependencias-sugeridas.yaml",
+      "sha256": "9a07865aafc62523600b50deb4d44349a9d0b0ea00ed43ea3c0e0051995c61f1"
+    },
+    {
+      "path": "curriculum/ai-literacy/modules/06-rotina-com-ia/l18-biblioteca-de-pedidos.yaml",
+      "sha256": "2ec391dd323e25b50e6a97a62d93222f8ba1788083ac31b701b61e5e3b83ea47"
+    },
+    {
+      "path": "curriculum/ai-literacy/modules/06-rotina-com-ia/l19-conversas-longas.yaml",
+      "sha256": "4ced7ea2947faf2dc9df5f26e414578a39d17921c60c1cff042c31d9b63a892a"
+    },
+    {
+      "path": "curriculum/ai-literacy/modules/06-rotina-com-ia/l20-numeros-e-fatos.yaml",
+      "sha256": "fca77cdbe65ff66c3313414f8687e582366218005f56dd36566dfd9d14ebd212"
+    },
+    {
+      "path": "curriculum/ai-literacy/modules/07-ia-alem-do-texto/l24-anexe-cole-ou-descreva.yaml",
+      "sha256": "5834e251dba332a2dd77ce6564b50f7a36ec4c4c6b6c08d9acbb7b455842cc0b"
+    },
+    {
+      "path": "curriculum/ai-literacy/modules/07-ia-alem-do-texto/l25-anexos-seguros.yaml",
+      "sha256": "2b63643095f5d79760a13ffad140e883172a8d08d066ca504ddd5ec18d93d949"
+    },
+    {
+      "path": "curriculum/ai-literacy/modules/07-ia-alem-do-texto/l26-confira-o-que-a-ia-extraiu.yaml",
+      "sha256": "ca102f9227a8bb6bba4d7727950e243d61bf78c7bbd176c2d9d7a03169d46983"
+    },
+    {
+      "path": "curriculum/ai-literacy/modules/08-rotina-com-ia-ii/l30-rotinas-repetitivas.yaml",
+      "sha256": "908caef8ca1c989c388562d0024d94de3718b4d8f179d96fcb01f21bd87acfeb"
+    },
+    {
+      "path": "curriculum/ai-literacy/modules/08-rotina-com-ia-ii/l31-pequenas-automacoes.yaml",
+      "sha256": "52b526b281c65358b2bac997ad1316ffd1b542a2eb3fde26addf6d15a73c49f7"
+    },
+    {
+      "path": "curriculum/ai-literacy/modules/08-rotina-com-ia-ii/l32-quando-a-automacao-erra.yaml",
+      "sha256": "f7b79149b5393339c487bfccb48a7f6a3b63e38c826544ccae56c54a2cd8e1ec"
+    },
+    {
+      "path": "curriculum/ai-literacy/schemas/lesson.schema.json",
+      "sha256": "53223a31b7d8a655272b7aca5cfa6f61e5b6a0d207583eac57a6ddf4b3f3087d"
+    },
+    {
+      "path": "curriculum/ai-literacy/schemas/rubric.schema.json",
+      "sha256": "fd2a4a984171359c3045de07c494ae7c351577cf9e67101d1660969689f57c29"
+    },
+    {
+      "path": "curriculum/ai-literacy/tools/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "curriculum/ai-literacy/tools/activity_rules.py",
+      "sha256": "14f02c4e6e52b0907254e8e8511ac47edf44726aea8682cf7050253dfb866fe5"
+    },
+    {
+      "path": "curriculum/ai-literacy/tools/catalog_rules.py",
+      "sha256": "a0aeb6dcc1fbe423877b71060acd33de30a715e315efe9e8637d358edf0e56b0"
+    },
+    {
+      "path": "curriculum/ai-literacy/tools/competency_projection.py",
+      "sha256": "c0fb4074c485bb74b0ffcc05dcf1b6ef72e22daa96ee505ead63c350eea90635"
+    },
+    {
+      "path": "curriculum/ai-literacy/tools/compiler.py",
+      "sha256": "b9940b384109fdd68bc24e3c9f81a7611bb17b1596e3fe9844fcc2a78729b43e"
+    },
+    {
+      "path": "curriculum/ai-literacy/tools/schema.py",
+      "sha256": "48ecdba2fba5c941850153bc9dfc3b2b53677d3396d01b2571d095db1a0b47f1"
+    },
+    {
+      "path": "curriculum/ai-literacy/tools/semantic.py",
+      "sha256": "8ac10ca3e2db54ebcaaf8ceb3377d463720a6123652480ff87a1c4a56a985c60"
+    },
+    {
+      "path": "curriculum/ai-literacy/tools/tests/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "curriculum/ai-literacy/tools/tests/content_contract_fixtures.py",
+      "sha256": "d5b6fbaa2c605fec6ec37136f16037b62121f074bac0853ce7a22e7af14a5465"
+    },
+    {
+      "path": "curriculum/ai-literacy/tools/tests/test_competency_field_contract.py",
+      "sha256": "58937476fda45153d6741dc1a2bf85093fa42bcba6fef0b8bb403b17a119fd85"
+    },
+    {
+      "path": "curriculum/ai-literacy/tools/tests/test_competency_read_model_contract.py",
+      "sha256": "a97ae0160207f80cac3b172e8b9139a0b5c55c5c440b644c4efe0600a367fc22"
+    },
+    {
+      "path": "curriculum/ai-literacy/tools/tests/test_competency_read_seam.py",
+      "sha256": "2d1a30e5282108f2a5849b60ceecece49e37c6f9be124d85388c6bed061950e0"
+    },
+    {
+      "path": "curriculum/ai-literacy/tools/tests/test_content_compiler_contract.py",
+      "sha256": "fd73ec3bc4ee04d0dbb667d694b3bf0dfda6fc73149b0c1e8b8e2cc703a703fa"
+    },
+    {
+      "path": "curriculum/ai-literacy/tools/tests/test_content_contract.py",
+      "sha256": "09d2568298a02e53abe67f83051f44cc15951ca4863a9a6fb44b865dc16af173"
+    },
+    {
+      "path": "curriculum/ai-literacy/tools/tests/test_content_schema_contract.py",
+      "sha256": "93530a8885ad320c5efe5d56080e33528c36217fd254ce033c14ddad0c91a94f"
+    },
+    {
+      "path": "curriculum/ai-literacy/tools/tests/test_facade_contract.py",
+      "sha256": "97e347c111049d7eda83f857ae5b3a21b5cdcaa7f1dacc173bf512c77ceac793"
+    },
+    {
+      "path": "curriculum/ai-literacy/tools/tests/test_journey_rules.py",
+      "sha256": "c0c41545b1beee7770b0e35881c62f5bf60178ac8778b90bfa646689951eb966"
+    },
+    {
+      "path": "curriculum/ai-literacy/tools/tests/test_module_shape.py",
+      "sha256": "8eddc1fecdae3033dfb05226944ef3b611a11818567f3551d2738cb8057cb196"
+    },
+    {
+      "path": "curriculum/ai-literacy/tools/tests/test_operational_docs_contract.py",
+      "sha256": "418a48f058ac5bd611875d049e9c437e2fe4b66cd7db81441bec3c385e8617b0"
+    },
+    {
+      "path": "curriculum/ai-literacy/tools/tests/test_os_bindings_crosswalk.py",
+      "sha256": "8484aaeb61fd728752bfccd8e4a7cace7632748efeb5b5d8696208177a198787"
+    },
+    {
+      "path": "curriculum/ai-literacy/tools/tests/test_ratified_competency_metadata.py",
+      "sha256": "e954595357227e8190a87c5f56ff61223ff104d624e23e11179c59e81b7801d0"
+    },
+    {
+      "path": "curriculum/ai-literacy/tools/tests/test_schema_branches.py",
+      "sha256": "3bea12234c97edae06ab8c8421dfe0145a4f1afa3066ec219f86159685e9e452"
+    },
+    {
+      "path": "curriculum/ai-literacy/tools/tests/test_semantic_branches.py",
+      "sha256": "b8c81edb0fe947b9e38aac5d584abd9964d1e4814ec780e485d514beb3d5a4a3"
+    },
+    {
+      "path": "curriculum/ai-literacy/tools/validate.py",
+      "sha256": "a0daa9594826d3a7eaf380ba0db69a49c80282f6756d0dbfa48a7979540ab1d7"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/.env.pilot",
+      "sha256": "3b87b0cc006db9df7d683a55b331c332f44d392f87f922cfbb4937fc3a745023"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/.gitignore",
+      "sha256": "4d2ff0c9faee0a3b1c757ab5a9c740fd7473aea27a720e235059747581e7279e"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/AGENTS.md",
+      "sha256": "31bd27335bb5330e99ba8e03d7b5cc4075bacb0b11b013aa2e7856bb6c2a586b"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/DESIGN.md",
+      "sha256": "c4ca4b04c4a42265b82b2ce3ee526a747713c2aefa5c31767710fa483daa3c33"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/README.md",
+      "sha256": "322ac70e93a4a23156bc9967b7b47e514f60b2557de6bd31fc99288b9e8a97b5"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/biome.json",
+      "sha256": "a765e91eedeba525d4c7884af7ababdf5108b9f65aba3d9b1e960518e1a2ba12"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/bridge/actions.test.ts",
+      "sha256": "8b9cf15d210a5560d11b4cce6a2a59287a4a8afdbe4fb2db798ec2a3f7ff1947"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/bridge/actions.ts",
+      "sha256": "0b28bbacbba37bea65b2d6f1058e0ce261e0393dfd0844a92826f71ab5d06015"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/bridge/analytics.test.ts",
+      "sha256": "ec208bca2188767b325a6dfbb2ba7fd2f424e233e7ed1876f43e87a626029b0e"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/bridge/analytics.ts",
+      "sha256": "9a9d4d55d073c993f18abcf3dd338cc9a5d337c89a8d484b990af8e18f9ea0d8"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/bridge/plugin.test.ts",
+      "sha256": "2a0d0cb614b4d8bf76cbedffed46e1a21850381881744bc3a7fc64d5faa7614c"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/bridge/plugin.ts",
+      "sha256": "0cc90ca2fc75da72d7f351fd46dd670a3d27c35b985de980cb31ec3fd206efaa"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/bridge/processRunner.test.ts",
+      "sha256": "6b8b2eec14571c89020704a457f8b8f72d8896631153547d298026908225375f"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/bridge/processRunner.ts",
+      "sha256": "45d297747ea5ce45b893156f6d5613d9e7c13360ecb04f611c3baf3308291976"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/bridge/router.test.ts",
+      "sha256": "319ab6563d64c4bb10ed9ab80177b00999dd91f94788800c92701430a7d76972"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/bridge/router.ts",
+      "sha256": "1d6be1233a6c2c08eb606a51d7cb3bfe6c27f5d7afb2c52370a2e1942396f7d9"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/bridge/routerVerificationDispatch.test.ts",
+      "sha256": "d7d0013fe7d696e6f5b90d8dba18fd48ed25fa9de3d348fdb00c17321bddfaca"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/bridge/routerVerificationRecords.ts",
+      "sha256": "19c4fa3df5976d124b940d18fe85e276c8c8c77cb482724700bd4cc6115000fb"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/bridge/routerVerificationRejections.test.ts",
+      "sha256": "71422487a10fcefba82caf56da341d57706dfea3179113f78fb1022835d35af1"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/bridge/verification.ts",
+      "sha256": "972835fbffbec3c4130cb076b8b7f218d4facf642b0431a67405986630ee99dc"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/config/mission-bindings.yaml",
+      "sha256": "3bf1a47ea8d8c0cd3df7f06169579e652708fc2e84ca62a70bfdf18f9e281119"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/docs/PLANO_INICIAL.md",
+      "sha256": "7503d24fc2e4efc4787688e78337c9e150d5909e0b45705d57626f3a3acce114"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/docs/engine-lab-run.schema.json",
+      "sha256": "f3f549b5868dd4f1c0c520ae8e710e31323694298a3d6265a506edb33b09b4b5"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/index.html",
+      "sha256": "47fe2414826610d1ffe62ac604b6a055f39ce508522df46a7a7692436c03436e"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/netlify.toml",
+      "sha256": "a9be141988a96d6b7f3ede053c16b9110c2e913407057cf2aa7511ab81a29d60"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/package-lock.json",
+      "sha256": "cfe8d55156c27735ae6fdcd719f6158cbb9846016cf6727b50b79c69a6865b25"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/package.json",
+      "sha256": "71714a477f6b7372454416ccd383c10bd30c2dc3ff0da2fc3ea8a826fabd3eab"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/playwright.config.ts",
+      "sha256": "10638c76db85a741c6ce1ec459c01993585f0fac315b16f5dfa25d59330222ab"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/playwright.pilot.config.ts",
+      "sha256": "e5f817bd55bab718c598e06cdbeb992557c811f954c6d60231c1ddf2a96c1104"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/playwright.remote.config.ts",
+      "sha256": "e0a140f954aecbb738e8aea95462126d30b0ddbab588a1c4c36719a88b0dbed4"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/public/beta-hub.html",
+      "sha256": "dc86dc9c51d4db6547af8515ba3ea0b9c9b7f488ce594e6f4d9a396a4c6afeb1"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/public/dojo-wallpaper.png",
+      "sha256": "3e328ee0942d16f3ee2afd4f9eb0509390a6f8770cce784da21de2f67d3134b8"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/public/icon-64.png",
+      "sha256": "521deb769f776891067537a05a12fbfccaee8359220bb5ff592dbd7e58e1a927"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/public/og.jpg",
+      "sha256": "92a0209905b63b8bfb9d981ead550eb84e23efccd0cb579174363caaa3ffa9fa"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/public/privacidade.html",
+      "sha256": "283011de3a9ab4ad59dc5fbe4116dcbd4b48556157ddc801820d04f321ddda65"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/public/robots.txt",
+      "sha256": "75d4cd0764771828eae02f87e14201901ef95ac76912fb46ed04c34c198ea622"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/public/sitemap.xml",
+      "sha256": "793d4d8c18376f60a62ad0bfe3a46e3a4cb7f792b103a9cf149de329b680b005"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/scripts/build-pilot-bundle.mjs",
+      "sha256": "baa8f8c39e03e27bb076f38aace450589ea31e02f933ee21946b10f83c50e19d"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/scripts/bundle-missions.mjs",
+      "sha256": "9a936000d39ca4c7fc73f028401aea8036af4d92268de4ca6180ee91c2f97ecd"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/scripts/check-ts-complexity.mjs",
+      "sha256": "fb8241fcd3df38068dad01a5aa6be0f89eba235b3b28abd116b8d6e8446569de"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/scripts/check-ts-complexity.test.mjs",
+      "sha256": "c056b03da024646a256f609121459d962a5200ff4e5029db1d7dc25064b1f266"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/scripts/deploy-pilot-bundle.mjs",
+      "sha256": "c0c326ea6f4706b4b97972acb78ddb819bc637980eda89fd6c852d775e18c9d0"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/scripts/pilot-bundle-lib.mjs",
+      "sha256": "e01d08cdd9d65c279728c7a4dda7db5641dd9f3b627bfafe0d35ae7afb4aee99"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/scripts/pilot-bundle-lib.test.mjs",
+      "sha256": "b89f0a2a6bcd28571895f9ccea97a6460de958a2f85e517324109454d9e7ab7f"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/scripts/public-literacy-origin-smoke.mjs",
+      "sha256": "8dbbec5f16abc711378d088b1cca8a351673a82d0c83123c04adc8b31eb68e21"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/scripts/readiness-report.mjs",
+      "sha256": "da5f51d346957e87b88ab0ac2b37ba8ffceebc6c2df244a8213899e5aff7a9cb"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/scripts/run-engine-lab.mjs",
+      "sha256": "a4ef7f9071ba4187545ffeccf13e7dedc95c294207522c373a4607c74e602ccd"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/App.characterization.test.tsx",
+      "sha256": "0cc60b03508fd74f1b8fe3e6fc6cdb811d055d9877ca806e60e4da19832227d9"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/App.engines.test.tsx",
+      "sha256": "2e546015632b615546b1301cf641cec09aa86cbdc51353d63752491781d50933"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/App.learner.test.tsx",
+      "sha256": "8e3e541c88e2424660f580b7986b5be23de52fdbd36663bbac1e2a42e7c2dc93"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/App.tsx",
+      "sha256": "5a2fd178ed46469d17abccedb683a67965b01e69fa0ef14f2f26a387ee2d2dbe"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/analytics/batcher.test.ts",
+      "sha256": "85d0612d8bc16bdb4be335382f83adb03b6768931ab411d628baa5ab4b8dbaec"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/analytics/batcher.ts",
+      "sha256": "1eea616ee10e4b46a49b43c816a25ee05b6046cdfc941e2cf6389dfed88c18df"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/analytics/collector.test.ts",
+      "sha256": "5c8b91c87ff756096026fe9e632440512009ecc64bcb65b2706f94ec86ed8e34"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/analytics/collector.ts",
+      "sha256": "a338ae90a4eed7df82967962bfeb88a495e4c012530445223e2c644a9442f38d"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/analytics/collectorParity.test.ts",
+      "sha256": "9488ac4646f6807bcf22ca318b8743b23d119e3a3ff1fb1d547fd192cddf90a2"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/analytics/events.test.ts",
+      "sha256": "9f7bdfe9da700cefeed56a72e08d7ba7a8a3d7ef1a34bb2bc33580fce4a58b42"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/analytics/events.ts",
+      "sha256": "63519ee883fd5ab7cde75615d347e88f805961682989356044c382f387c0819c"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/analytics/eventsExposure.test.ts",
+      "sha256": "7595f639510065cb76b401b01bd3d208ad625247e53de48fd25b271146bc20cc"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/analytics/fixtureSchemaDrift.test.ts",
+      "sha256": "104b1899855963e9f31ca214a38650fe34ab76f001f380293a3bad7eca61f723"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/analytics/transports.test.ts",
+      "sha256": "b6796597d05c4a20f30838a7707974d2353ce41cf2ea66f68aa5f745bdd6b81b"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/analytics/transports.ts",
+      "sha256": "17d8dbc7a1cc8e48f3ec0bf0f64acb48db11a70ca7fba10a24e4809a02270897"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/app/ServicesProvider.tsx",
+      "sha256": "845ad888625b30df88ec8753728c4c8c07e12a1134a22d08fba2f49ea49af118"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/app/createServices.analytics.test.ts",
+      "sha256": "f7f095237633aea7777bfca252fba69a3c19536eef043f394b4c67eb145101d1"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/app/createServices.ts",
+      "sha256": "3b59db48a4a49595be370c069ac917bb8752c1f3b073123c8431a8a97b61dcd9"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/app/routes.ts",
+      "sha256": "8bd70b7a1942733b97517abab03ab8d89ed936343e7fff54d9a3cf351f0ebddb"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/apps/AppContent.tsx",
+      "sha256": "cd72776030ce9c1d5976e8f2923764d5d217a16ae1ab6ed057d59ac5cc522cf0"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/apps/AppIcon.tsx",
+      "sha256": "34ad2198954d92dd038c1dfbd7b2672859614ae3c43960c3e287f16fc704cde2"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/apps/DojoApp.tsx",
+      "sha256": "c896d4a1a2d2cca10231ea71ca6d2c2ce172fb0b91b1b775ac0c409f39f53bb7"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/apps/SystemApps.tsx",
+      "sha256": "4773ae9a84d9cbc73f7fa6040a796f27231298e78792277e60f771a1ffc05802"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/apps/TerminalFilesApps.tsx",
+      "sha256": "079004af246f96001e672a8b7c19c584987f213b5529d7da0596aded092da9aa"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/apps/appCatalog.ts",
+      "sha256": "e81bb5117577aa9b736a583649153e61d1a0900635bd3e3dbac262a26fbf7c91"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/apps/studentCatalog.test.ts",
+      "sha256": "57556121f8a138677474becc2ee0dfd66f33c9ac65ec708b4e4c9d1d76b633ed"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/apps/studentCatalog.ts",
+      "sha256": "812b6a8d2188d826adef79643e85469d05e62e5401cc526bee5e71fbe8cedf46"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/data/anonymousLearner.ts",
+      "sha256": "467c33925ce8894b6f02f2d90c6da790c07165e3db6b76dab6dfa564cb48f78e"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/data/learner.ts",
+      "sha256": "894a7ea824611d0e77361ebc7633501baae7a97a1d2d158a47ba85614a72ef9f"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/data/missions.ts",
+      "sha256": "e3238b1bad2b4c22e740bda211a7e42b2c759699250b1b7175d2519ab4e65ea1"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/desktop/DesktopApp.test.tsx",
+      "sha256": "959b1d5404fe0211e6cf2be2bf249822153d58d4ee934694191f41979be39c8c"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/desktop/DesktopApp.tsx",
+      "sha256": "ac53ea36e08fe1f42cc7833f9f5785c139b14d7d961cac0aa5314866dd8e7a9c"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/desktop/DesktopChrome.tsx",
+      "sha256": "6a63ca1359a6bf31e524e59c7b7a02af30f694f1dbd375440faaf4df67bb394b"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/devInstrumentation.test.ts",
+      "sha256": "9715c4e0625a72587f513d79312de36c8d0678f2be2b37e66d4997fe7f553951"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/devInstrumentation.ts",
+      "sha256": "52db76ebe437de1631dad1ad83f7545c8f869fe06b58e8387ac3e925a38cbd65"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/domain.ts",
+      "sha256": "56a69d6ea8db4cd5e2bb8b7d4627610a1de071496492277eae0d71cdfb9cbe97"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/engines/EmbeddedEngine.tsx",
+      "sha256": "e30a6b9e676fd001d936ac99f8167128d32c72b18429eded5cd9d93b71dd5569"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/engines/EngineHubApp.test.tsx",
+      "sha256": "305516f6f8f5688652ca660cd544ee90baaad578813709e451802193df5f53a0"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/engines/EngineHubApp.tsx",
+      "sha256": "7694a23a31c178dcf8b0b715e6c6613f8d75ea910e401d73f797df54a252d19a"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/engines/LocalEngineAction.tsx",
+      "sha256": "833bc6cc0263c85254e1d1ebf299f91e797f4cce30c19dc9cb76949d6f2b8b67"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/engines/StaticEngineEvaluation.tsx",
+      "sha256": "dfef1276b29f30f55206775a77040e04297307c598a38b195e5448994f1c75a7"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/engines/VoxelEngine.tsx",
+      "sha256": "cee02a5d83c085ce4f56eb158be53f808f81336602557978db71d5b0f47f8655"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/engines/VoxelGamePicker.tsx",
+      "sha256": "54246ba840e7468d69ea861fb4c60fa0ae88cfb76026101ab8ce078993058683"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/engines/client.test.ts",
+      "sha256": "e9352ab47ca5b9603d962991ca7b03a887d102467b973fa5b9fdd27a2e208cbf"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/engines/client.ts",
+      "sha256": "359bd1cfad30174f32fa2ef320adebfee20a0698e4f4ee6989acbfc980e97747"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/engines/protocol.ts",
+      "sha256": "c0b1056cf1d13a480005d83fe4b85f7e459bb0a89fe912cf2a4237f57e04f8b4"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/engines/registry.test.ts",
+      "sha256": "dcbb2e4fb3221d6206ebbfb9a790df08dd47bdc9fad8fa2077bf2ee8c202845a"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/engines/registry.ts",
+      "sha256": "7e35a6d9b27bdaab8b12b6fbd253e66aa09a0f02875602880371b0a386d4d997"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/engines/voxelCatalog.test.ts",
+      "sha256": "975d949208b4ddac28d7abb45189208013ed4225e6246303f50b6e067255fd87"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/engines/voxelCatalog.ts",
+      "sha256": "ed63d68dd40da5e467d82ed9be7d40882508553da53520a5c256c2fb29aab530"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/host/MissionSessionController.protocol.test.ts",
+      "sha256": "a5b541b6d3734bb36418e63e6ff3280eeeeaa3901f7bd93624217cde5803706c"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/host/MissionSessionController.renderer.test.ts",
+      "sha256": "4dac7ad9f5bce63a6ec27e1ca3885c38aab6cb8fcef853a84b2ea8c46aaeaec1"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/host/MissionSessionController.test.ts",
+      "sha256": "6a537a40270aef21d00b77daf372e779db252d6cb0568409fae855393da88ea1"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/host/MissionSessionController.ts",
+      "sha256": "c655b108611303361f69d966767c604277efcca3097bf32eddd5b335f0f8dd22"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/host/MissionShell.test.tsx",
+      "sha256": "f3106f720e1ea32344e047b97d8b9d5afdbfe6ebb6822437d3a2df6f8e0ef694"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/host/MissionShell.tsx",
+      "sha256": "c1a100dc11439160445d76f0d319190df039350406a346c256f19cba70084ef1"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/host/MissionStatusControls.stateContract.test.tsx",
+      "sha256": "bc2e3baffa09f9897f4be5e104e4bc03290b7daceedf48bf8ff842f7c257544f"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/host/MissionStatusControls.tsx",
+      "sha256": "9451c9dd56db8040bac7aee811352a7b453168c7ef444fc7188f8421fd92f04d"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/host/legacyEvidenceAdapter.ts",
+      "sha256": "3e26776d22c544a96478ce40ce00f4adf4ae62f5fdd6f024d8998eb5aa2c7469"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/host/missionExposureForwarding.test.ts",
+      "sha256": "0e271cc7cbcf7fc36cc8b7465bd7ee958cf66c04862a4b294e90b3a03dd3bec5"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/host/missionSessionTestKit.ts",
+      "sha256": "9771b1b372947222e40c37075315669b849e3f67362cdee1749422774986c91b"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/host/missionSessionTransitions.ts",
+      "sha256": "56f4360783191b5df0a922a716ecf34ebe41e035aae962dd16306287ffd308ac"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/host/protocol.ts",
+      "sha256": "608710b7e4b95a3126db18dbcaa3f2e6e7d46a5f6f6ac9362fa11307a241c766"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/host/validation.test.ts",
+      "sha256": "d1c394c454b83235193068b13d34e3a00c4a18ef0731980190646293033bbd3b"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/host/validation.ts",
+      "sha256": "ddf70c53d2a235e0e77a3f8d5268528cccef7a02ad981955b615b52426868180"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/journey/Hub.test.tsx",
+      "sha256": "8f9815a8bbbb3725ad57fcd5e568fd6d9049e0ea9ed48f9a0c51997fcb05039c"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/journey/Hub.tsx",
+      "sha256": "6c08bc3941a103dbe22c66d0749776bc49b0a962729f45f38fc7ea5ec84bcb1c"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/journey/JourneyApp.test.tsx",
+      "sha256": "e38f6ae533b436ae1976c78e583e2716aeab68a5c957833587437a4d2c9c239d"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/journey/JourneyApp.tsx",
+      "sha256": "37952aefb67e8ad1a48542e54a49b4eedc854ffa0a2e18b1cd878a7a10c7d6d1"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/journey/MapScreen.test.tsx",
+      "sha256": "4739d5316c515baa376483413867df4557be480d5048c0fc60618fa9e4b735a2"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/journey/MapScreen.tsx",
+      "sha256": "a6fd9dc4db8616fa111189ab479a04874f052a2d9d26a3d96a7c4de0137b6ce2"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/journey/Onboarding.privacy.test.tsx",
+      "sha256": "355a6c1f6ff56ccd9f275ba05ffc9d39022142d6e035c92c035e9fb807aca5c6"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/journey/Onboarding.test.tsx",
+      "sha256": "54501c642de05f12a63ebb91f1272772cfd53b8b16f1a961628359c23d721720"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/journey/Onboarding.tsx",
+      "sha256": "d6794a3c12ebbe25ffca5f7a174a1261742ddd5eede7a8392d69184fa36494af"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/journey/ProgressScreen.test.tsx",
+      "sha256": "12e5779ca1a5cb23126777e3986e59b0c6940a68f1ede827b963b6d4f4915ae3"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/journey/ProgressScreen.tsx",
+      "sha256": "7a763a0f49d5e624b03d671e28897eac4a8640590fcdafcab77815b66c707d54"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/journey/ResultScreen.test.tsx",
+      "sha256": "810476ccea84f81c03d1e10aedcd1a46c63be3022cce3c30c592f6ada1df405d"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/journey/ResultScreen.tsx",
+      "sha256": "e5b0c30335433e299a462138123df1761cc3d98a3175a7ef744b544b1764b8d1"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/journey/SupportCta.test.tsx",
+      "sha256": "95e8582f5fcb94e551530697e9989876fa6fb3cd76b480b666d3996795030a73"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/journey/SupportCta.tsx",
+      "sha256": "452bc6afc3fa4479b65a3425d1514fa0505a8329d1eab834004a36f604eac02e"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/journey/journeyReducer.ts",
+      "sha256": "fdf26ae2910633cdcf8058eebc390a51c07cc087125e999cb37117d12d82688b"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/journey/studentPath.test.ts",
+      "sha256": "f41c28a77a8f6c708cf62f3b6c9fc65fafbb7bad60d53173811c4eea73b4b7f2"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/journey/studentPath.ts",
+      "sha256": "65144778450f9a7b5496c8ed0826faf4859d1de1c009569ef28dd2c22ce896ac"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/journey/useJourneyController.test.tsx",
+      "sha256": "f687056150873bcf26863fdd2c51f8bd22cc3f6197ababcfca79d5eaacdc2273"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/journey/useJourneyController.ts",
+      "sha256": "cc3d4d2a1ffe06ee6b6684b1848bbaad15250f6fbb51ae481ea7b3a5cdafbe05"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/journey/useVerificationByMission.test.tsx",
+      "sha256": "6f2cf7a0eda303774f867789c40bd94d967d9c22bc6d3a15e028eb93d1ea430e"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/journey/useVerificationByMission.ts",
+      "sha256": "987958d9ebea215fc20ae3f97a0cad26378090616920f6cffba0fcd5cc603477"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/launcher/Launcher.tsx",
+      "sha256": "d8e0d95c6eb71d00eea6df80bae1e7ab0b93b8925c7a02a46e556fc7449eca57"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/learning/LearningRail.tsx",
+      "sha256": "0f73f8baa51a0f6f2a987726808a9b2a1c05ccc232283434b933cc7af53edd37"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/learning/learningContexts.ts",
+      "sha256": "0630002e0e3631a0dbdda0cedea5fbccf902bc8a2a95e94a51a4bf15cf002c9c"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/main.tsx",
+      "sha256": "53aff618df3155526e8c5072ca7fe412ad49437c3a0e4608c466acacc79d18ef"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/mentor/MentorPanel.test.tsx",
+      "sha256": "f488f77795683dea5edd023ad079ee7701df8f1a103aacdbfbeb3b7f0311492c"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/mentor/MentorPanel.tsx",
+      "sha256": "ba750e8761178e5cc868e20f47f86b5e9ea06b59dc22a043785b2ff2ab464574"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/mentor/context.test.ts",
+      "sha256": "ae7e719a971c0e1a4041d3665a3ccbd83f83839c87668981121ea4f31d746949"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/mentor/context.ts",
+      "sha256": "0b3723ce6dce61ce0992d31270580b4db61f3b3baa378b52c2c3b547ad5125b0"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/mentor/contracts.ts",
+      "sha256": "6c106357f838337ac7eea5baced2fb23b11123b90023938989dbbd1b8ddde470"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/mentor/deterministicFallback.test.ts",
+      "sha256": "c374915b4992bf371e3a894e7c0ec39d654cdea181d40526a1d96ec1d6fb7f12"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/mentor/deterministicFallback.ts",
+      "sha256": "04a65ecd63b6ecf8b9a0d92ad2faa3da324d358a53196d5db493fb8278cb123d"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/mentor/mentorController.test.ts",
+      "sha256": "605a1dbd1a4178b5539d1c10907c314da022e2a8540faa6e234aca583feae108"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/mentor/mentorController.ts",
+      "sha256": "d105fa0e9fe449ecbdf2e16b0574ac4c6beab5cbd4d0cd54ca1583d424b28f6e"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/mentor/policy.test.ts",
+      "sha256": "9b28853e8c11a84b4c2cf23aa3b78661635d111e1c717596f9fa32d96f8e3735"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/mentor/policy.ts",
+      "sha256": "6d5d54d0713849526bd4a3109f2b949425c737be893c82c34e4767d18e3b3dd2"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/mentor/provider.test.ts",
+      "sha256": "6794a1d7bcd8d7850c7174862a30a3eeb97f77fc08166c9c7c082a8cf870380c"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/mentor/provider.ts",
+      "sha256": "6739c0fc6deee9a5da3a8d573ed6f8f4a577564a7450e150bbe423838ba13357"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/missions/catalog.ts",
+      "sha256": "f16ca51c97b4c0c023b7226c7ff044cc8870cf791795393a015a9bbf8a785076"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/missions/recommendation.forward-over-recovery.test.ts",
+      "sha256": "cb8392ef770d84c6b3adef8d7dabadb375f41649613ae3ee6769515dfd55a314"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/missions/recommendation.test.ts",
+      "sha256": "24f1a4bbe8b40c8dff78569742a29e99acb5f5aac3a6dbeb72555935ef816e24"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/missions/recommendation.ts",
+      "sha256": "e4c540619fa89765c86ef61a6ff2d5fa18b48a6434711a67d7edbd626fa92766"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/missions/reviewMapping.ts",
+      "sha256": "7784ba30962a5573bfaae7e692865fce7c6a4e6efc5ad524ab1f5d4cefa7c8df"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/progress/domain.test.ts",
+      "sha256": "bf236aa075504dcbc51b83a9aebeed5835823cdf4d9feb874df5888fd2e955c7"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/progress/domain.ts",
+      "sha256": "3bf33f083006b56f1e1229c754e24be69e1fea3ddc6658a7eaa4fdc92ac8d8d2"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/progress/engagement.ts",
+      "sha256": "1534782f4aa9306cf600b9e4821694e4c8a9c9e50669e5c4056d4c478c7138ca"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/progress/engagementRewards.ts",
+      "sha256": "6e0a8be55e0bb0b0bd812c5a680f3e409a9e361f1e4583f61f1273617560ad61"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/progress/indexedDbProgressRepository.ts",
+      "sha256": "7186f392ff9825360d63431891b8b67999406d8c437c756167c49028ba1c1f56"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/progress/migration.test.ts",
+      "sha256": "b982513488a5b89a006ed565e9ad1665763ef78f724f80b60cffc16aa08f0df4"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/progress/migration.ts",
+      "sha256": "19d1d4e82f235747077cd2813f07e62a65d823de1ba1430fb8da6cb4d2ef396b"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/rendering/domain.ts",
+      "sha256": "9fdda6d5bb522f884f8b862728715d513f22ccf9fa405648ef668b2222b2af70"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/root.test.ts",
+      "sha256": "55de790938e48104e542451da3ea8e3dc269c0ea974a36efc9b2b6dc63f1db3d"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/root.ts",
+      "sha256": "aeddab6c250b36406f39623afbfce147aa5437dd923c4bb8173f907c94c5e504"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/sameOrigin.ts",
+      "sha256": "944ebefce36844a2106fcc6df141c989bbe3f8178228b93276d6ac5854a3e388"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/styles.css",
+      "sha256": "9cd5d116259a8622c466f64281373ad7ab8748807e23362538d6b0faaf21638d"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/styles/core-apps.css",
+      "sha256": "676aa120964c715f6ada254de185b5ccc8276f031c9732e25a35dd5bfd0f61ad"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/styles/desktop.css",
+      "sha256": "c5fbc9255d5e700bb00b9a710e0aaaaa0579457a3a0b41a201dc081faf0140ab"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/styles/engine-hub.css",
+      "sha256": "4bea9ba65e46a3bdfa6dd0fd95aad7c5a39d546ac91b28d81fe184a12a235e57"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/styles/foundation.css",
+      "sha256": "2a9135789dbf7a5c6cad3b9a4f0ebf4dd28237c4ebf901fec2bdde602712440b"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/styles/journey.css",
+      "sha256": "b02345063f3c20a77cdb196f1d7a6a9d5aa92de0d2f118f9df5feeff2c4d49a1"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/styles/overlays.css",
+      "sha256": "bb587720c0652d436468b8286f3777ab256e6a1ef0e6328192672b377cef7e98"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/styles/responsive.css",
+      "sha256": "83e6642e92a8cfeaafa652b61ff83b5bc1f2a828896c4c62867682b8ba1f00e6"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/supportContact.ts",
+      "sha256": "6dc73668b680f24cf528aa3502b6cae1364d8d8172ff7cca506888fb7c09b222"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/surface/operatorSurface.test.ts",
+      "sha256": "710944410ab08d05df67584820e26cb42d50be6951a970114450bf1a9a5424ff"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/surface/operatorSurface.ts",
+      "sha256": "b28cbb1e5bc67e9e3b4be45b7cccd240f5ddebc7f7a189308531de9ccc1f9d5c"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/test/learnerFixtures.ts",
+      "sha256": "658d34673e4a5b00be4fa5101748903340e2cbcec1cac86eb9dc90dd9cd8b097"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/testEnvironment.canary.test.ts",
+      "sha256": "a6b5670441bbfdfb550984803d5f6592a6c555b957b4f0aeb8f84c062a651bd8"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/verification/evidenceIntake.test.ts",
+      "sha256": "ed73fe31aec5a2d1bc63e8abfc30b6f497973c2fd841caf02830cd4c8c4b8fda"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/verification/evidenceIntake.ts",
+      "sha256": "6567cba05d2f55162f3c6b6c6288be048e849f053826ed24e22e2e3eb872e85a"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/verification/evidenceIntakePersistence.test.ts",
+      "sha256": "60c3783aeadcc83eaa45744dc3e8a48d87244d8a21c1d5b18cd5158d04d3cb31"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/verification/evidenceIntakeTeachingGame.test.ts",
+      "sha256": "c59f86afb9da4b8fcc8a70341c1a3416332b9c3cac5ac1c98d4f625f3f445f5c"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/verification/evidenceIntakeTestFixtures.ts",
+      "sha256": "c47726cec47dff5c591dcadc0b343092d278a8056bcfb64b6a48266c47ad9f96"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/verification/indexedDbEvidenceRepositories.test.ts",
+      "sha256": "fd61e57857b2eece42019e6a3b96875802a3aaa6551d2e7eb859eb038011abab"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/verification/indexedDbEvidenceRepositories.ts",
+      "sha256": "674df318157c4f04bb9ead6dd6e4a4dd46279dd98ec87835b60755f4083ca459"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/verification/localBridgeGateway.test.ts",
+      "sha256": "3c6ffd04fe9960e6e473381f2e9d6f2d472194e9d04f10ab9229595009c38cec"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/verification/localBridgeGateway.ts",
+      "sha256": "50c77ea6b28715756d97daaa2406e34d2f3b8acfa263c7e35c107cbbf1c6c088"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/verification/ports.ts",
+      "sha256": "1deb8125b02cbb4d89599a6736cc11ebd1de30b194b6390af55aa06f5d308cb1"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/verification/receiptContract.ts",
+      "sha256": "817a017f8143346c72e364e043c911207ed09fad84242e65af4b56bf7529a312"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/src/vite-env.d.ts",
+      "sha256": "5527ecd30138367760cbb0ac1bc83ff3fd41206ee726b87602826e0be79940d4"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/tests-pilot/a11y-w3-forced-colors.spec.ts",
+      "sha256": "cf7b9a63457f6f56da53cf803c31c15c4bec988a9d4275b5204d430390b267a6"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/tests-pilot/pilot-build.smoke.spec.ts",
+      "sha256": "18c931e0f3a91818abb8e1339fb7b19baaccd862ba78d46b05db2671dfe236dd"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/tests-remote/release-journeys.remote.smoke.spec.ts",
+      "sha256": "e6879d2af1be57803489a6e61fdd5e006fa2f03f7ad0bdbea0c952c7271c42fa"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/tests/accessibility.smoke.spec.ts",
+      "sha256": "f17717ce8d76b39e45d92b4c920252cd655525d19d15250a447087309a29253e"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/tests/activation-funnel.smoke.spec.ts",
+      "sha256": "ce3e8fe30513c8a03715bac3265c73e478ec955b1fb7d765c1b5a0bd30eab638"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/tests/chapter-continuity.smoke.spec.ts",
+      "sha256": "a0495300b8afee5829d05d6bafc7065a83f03ca5c2a1de8a016e40d2684b146c"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/tests/dev-learning-slice.smoke.spec.ts",
+      "sha256": "88bc1ff50166f3e4474a2b75f3170ec482aacc54e025b8d754ef5aa3006595d0"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/tests/engines.smoke.spec.ts",
+      "sha256": "d7f094c00df5340639f71aa5871cbe45eee55a6aa446e6aea57ef90610d52b9d"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/tests/learning-slice.smoke.spec.ts",
+      "sha256": "f2c364ebf7f95bcdd2beceac6b2705df8107a8accd2fa16474eecf150f7f3e6e"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/tests/mentor.smoke.spec.ts",
+      "sha256": "f732ebcaffb2fe493aee8e83144b7766f549a76db4355fae5a7cd3b46f9cac65"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/tests/offline.smoke.spec.ts",
+      "sha256": "715ef05bd661f10c684986b5b199f20ab53530a074fff393aa0337bc810f8c8d"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/tests/os.smoke.spec.ts",
+      "sha256": "0c2a92fb7df36ddd2d4e7e70ba27f4e84d341cfa810b9c9bdcffb0c4060b306c"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/tests/progression.smoke.spec.ts",
+      "sha256": "e49401ef9d4fda100803c2fbc4da458d3ebbf10aeea96242025e9aaf16e93837"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/tests/readiness-recovery.smoke.spec.ts",
+      "sha256": "6a5f97a178d969f1c239be3c80dcb4a06f5c34f27abcc1a8a94da009a86881ec"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/tests/release-journeys.smoke.spec.ts",
+      "sha256": "509a59a54379220153794b75b7dc328d232417ec02b8e7a814586831fe8bef95"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/tests/renderer-fallback.smoke.spec.ts",
+      "sha256": "234d41ef0ec2f5bdb564b4353bb10d91dfe692c27efa75d12e4d51e12c170f70"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/tests/security.smoke.spec.ts",
+      "sha256": "3c6cf76e40fdbd50b62f7263a61d04082ce9558a8ccb5aa1a597e0a909bfaa3d"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/tests/support/literacyMission.ts",
+      "sha256": "a565f3e56e9fd6fb0d7654ddaf282478b4dab8465858405833736200989e1fd4"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/tsconfig.json",
+      "sha256": "92b2645a24a90bbc3ff773abcebbf2f53ff5b64540f17fe9166fbd3b326364a8"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/vite.config.ts",
+      "sha256": "46cb092479aabec841ec0c71f052178a9e0ddc8872dc087b764d8b7a3e0b7e6a"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/warehouse-retry-pass.png",
+      "sha256": "1e068d539895eb1aa8c3209796d313df2709a153bb351617d7b8ec1c5df74990"
+    },
+    {
+      "path": "engines/shared/pilotSupport.ts",
+      "sha256": "8ad29abbf971a33b5c804c478399207c3f265cc58a6f8854a548ece2dd27142d"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/README.md",
+      "sha256": "c45fc5459871ed943979a54a0e0e951b00180f4febd065cbe0115eeb2fb8abe1"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/emit.ts",
+      "sha256": "69164a47d4045714eb9f519acf0b3613ea9c0180660ce319ec90f6b8d9786064"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/evidenceEnvelope.ts",
+      "sha256": "53539456b5ba4ae9ccdd353825c9d67d6299949f9481fcc2e96f6fce5aad6bee"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/evidenceTransport.ts",
+      "sha256": "b42814c0d5c1404b9fe7a5597c515febf96b85ec982b3bdb65faee751f5a70d1"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/funnelCore.ts",
+      "sha256": "65ab2510f90bda0ac0e23f0493511497f658c3c69f74dce6b0b0a0566e6adbad"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/funnelTelemetry.ts",
+      "sha256": "41201edcdc81525b9f60ec074372befa73ee324eaa1ca21b36ade251b61d8b10"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/hostMessageDecoder.ts",
+      "sha256": "cdbf01825c1c8ddb845399bf64a339aa10a20f290f303bc253b43cd3949c8116"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/hostProtocol.ts",
+      "sha256": "7c1d86dd36bf1d20b00f13f358eb88e83a468994e45aebda3045fb7ddde76ba4"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/package.json",
+      "sha256": "225a4df4e5ba11101b1631f6212fbbad60e228abdb7093e03eddfa9974033794"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/tests/emit.test.ts",
+      "sha256": "68f19d92f53f6ddaff6b7b229635d39f25e834bed431b177521d4494bf86c99e"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/tests/evidenceEnvelope.test.ts",
+      "sha256": "e7feb329f14f46f4fa7f46a7b02ae6a51d48f8081cf7c46c568a7b9c34d84e23"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/tests/evidenceTransport.test.ts",
+      "sha256": "453301d7bb2051dcbd615f8a1eb6ab9ce874bd0d1e196717e8edfd19cc455ead"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/tests/funnelCollectorContract.test.ts",
+      "sha256": "c51d7760ef20389e4ec46c8a963ac2c3040805f604f298d23938349bba9fba7f"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/tests/funnelCore.test.ts",
+      "sha256": "72fff69d19895a64d370c5e010e5659014ffc9bd6480a1dbcb212a8076f164a3"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/tests/funnelTelemetry.test.ts",
+      "sha256": "d1540520e8da4d6a3ab8a104729d9e19a72398b5d033183ab7cacef095415d35"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/tests/harness.ts",
+      "sha256": "7ce9ab7adb51d8152b46b7bdace6cf7311b0427124e2e123533b362b570e315f"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/vitest.config.ts",
+      "sha256": "d591182e32770b0f8ade880fa4642fd22378fcf739bc7e15ff3c0d042d26b6b5"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/vocabularies.ts",
+      "sha256": "2016dca12f14698160632355bbacad26540d37e25874eb91d7af1116b9f1fc04"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/vocabularies/literacy.json",
+      "sha256": "c294b3ed73c482c221e2e16cbf7845bdfc1c5837d09d29704523809e70d4d340"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/vocabularies/os.json",
+      "sha256": "42737a25d1d861c3634f08f0b852346d058d92f3eb5a8876307c1f3dce0f21da"
+    },
+    {
+      "path": "engines/shared/teaching-evidence/vocabularies/surfaces.json",
+      "sha256": "52afdf46b27968473689651f06c319265cbe3573e172648e193bb21cb169aeac"
+    },
+    {
+      "path": "learner/gate/AGENTS.md",
+      "sha256": "b7e028db77260e18043dca1eb9c11b039f179d3df5bceb3a90714973ed00a0c9"
+    },
+    {
+      "path": "learner/gate/README.md",
+      "sha256": "b490cb3af093284a3c093082f284dc49b66c42551d817c8d2f5213a02316dad5"
+    },
+    {
+      "path": "learner/gate/__init__.py",
+      "sha256": "ad1b2ee6c2582bcf90f9a3eb312620d4af03bb7bd84afce1773699e3ee021f99"
+    },
+    {
+      "path": "learner/gate/__main__.py",
+      "sha256": "b7e5b624c00b8f6624dcd22bdf3abb75ce229504defb8177c4f204c2ac249c20"
+    },
+    {
+      "path": "learner/gate/air_traffic_evaluator.py",
+      "sha256": "2d7613286ad1a9e85f2ea65aabe0c0000c468d920d547c381e987a2ddeb84e7d"
+    },
+    {
+      "path": "learner/gate/analytics/README.md",
+      "sha256": "82d4fa7470e013d23ff5e1804052b42025147967be16423ed3e6381e449e6625"
+    },
+    {
+      "path": "learner/gate/analytics/aggregate_funnel.mjs",
+      "sha256": "7e3fa643ac02b0a950c402acdbee20a661bd89177f977bb1423df32de53dfbb3"
+    },
+    {
+      "path": "learner/gate/analytics/dojo-analytics-collector.d.mts",
+      "sha256": "2257fd3d3fb9bbceccdc8d56c56a7fa3ecc2befc1455beb5315626a27d551ea7"
+    },
+    {
+      "path": "learner/gate/analytics/ndjson_input.mjs",
+      "sha256": "c59ab207863952ebc32635015e0badd10a63f28979bd1e9ec12349355c5c8247"
+    },
+    {
+      "path": "learner/gate/analytics/probe_collector_export.mjs",
+      "sha256": "74c8d1d3158029991702a76fd81e78e24ae3bcfc6a2166231ed5fc3f09eb5fbe"
+    },
+    {
+      "path": "learner/gate/analytics/refresh_vocabularies.mjs",
+      "sha256": "fb314a06be12883e2871451a28d1cecc6ded34edbf933e71a50349bdc0428551"
+    },
+    {
+      "path": "learner/gate/analytics/schema_drift_monitor.mjs",
+      "sha256": "6c8789c0b34a93d0e938d011acdd443780ee2d22ac8f8d9b3c2c572eb7ec820e"
+    },
+    {
+      "path": "learner/gate/analytics/verify_deployed_blobs.mjs",
+      "sha256": "05d31f422a28131b350fb4b38b66248fa3c9a5c457ae405bd50ad3022cdc07a6"
+    },
+    {
+      "path": "learner/gate/breaker_grid_evaluator.py",
+      "sha256": "7c455a8ab5bca30acf8b2c1219601ed91970d12d1cba5229342512ce15c74e20"
+    },
+    {
+      "path": "learner/gate/canonical_gate.py",
+      "sha256": "717f64f2372ceaebb26942cc96a3672bf51ec341994f6907e8aa41866eb54e76"
+    },
+    {
+      "path": "learner/gate/checkpoint_evaluator.py",
+      "sha256": "1c694e849702ba51a83c61bb646520afe7d80ed443148e43529fdd2b8238b4f1"
+    },
+    {
+      "path": "learner/gate/core.py",
+      "sha256": "4230de9f7ab04199a2a7e9b85cf8b373d2dcb7f8222fc1090980e000bd3e6b72"
+    },
+    {
+      "path": "learner/gate/docking_evaluator.py",
+      "sha256": "9c73241eb07633cc847edfcb16073df99e57ae43da740fe1b7c9989715da75fd"
+    },
+    {
+      "path": "learner/gate/engine.py",
+      "sha256": "364879bde468b5b2d614ce63d782170facec5799e7b9c5e5e075cfc7af28e169"
+    },
+    {
+      "path": "learner/gate/evaluator_primitives.py",
+      "sha256": "249b4127c3b8914f59746633ae3443653fc64ea05774bf5a4f9238d7597b1cc1"
+    },
+    {
+      "path": "learner/gate/evidence_io.py",
+      "sha256": "53146a798b65e71839d4a12e37097f5824c844d7c81fd4236a9a9f310eea2da3"
+    },
+    {
+      "path": "learner/gate/evidence_rubrics.yaml",
+      "sha256": "4aa2224cad2fb9e4afea09ea1d89f018f84273e7f280b748295e02b0d8a09dc1"
+    },
+    {
+      "path": "learner/gate/evidence_schema.py",
+      "sha256": "512face66d6ce9508451987af6f6cabd62df932b4fa1ab77c8c1d2b4b1a2f36c"
+    },
+    {
+      "path": "learner/gate/evidence_validator.py",
+      "sha256": "2b95c18f508f97ea8c1ff25034ac19297b375a01a391d89bca94a56f3e877974"
+    },
+    {
+      "path": "learner/gate/hash_ring_evaluator.py",
+      "sha256": "c4f303cf7a12b86a09c5c9c7fe4a5891c70ae8e8887133e6825d0edec3c8ee4c"
+    },
+    {
+      "path": "learner/gate/literacy.py",
+      "sha256": "cd4e3f13eb7107cf49d74394f000ad1cb1cbc124e6b4149946dbd4614a8cce41"
+    },
+    {
+      "path": "learner/gate/literacy_bridge.py",
+      "sha256": "5647567c191f234d5ea9d48cda2ed697cf697d2f9205149d840367edbbe972dd"
+    },
+    {
+      "path": "learner/gate/literacy_evaluator.py",
+      "sha256": "181b2f9a50daa1c8432d3809e4d4a68a450049f407826d0d0dc93d889f81f3a8"
+    },
+    {
+      "path": "learner/gate/literacy_evidence.schema.json",
+      "sha256": "692290b5065d2872303c7ead5e2b9cd9ef43c899324794009b52e920aab76630"
+    },
+    {
+      "path": "learner/gate/literacy_judgment.py",
+      "sha256": "5e64e6e5d9fcdf7ab9c0799739ffe322dff5b032452c2424bf793050853835ec"
+    },
+    {
+      "path": "learner/gate/literacy_verifier.py",
+      "sha256": "6bc0335fed63ae799f5531745d21536012035bd62ff1336185378d1697c44d49"
+    },
+    {
+      "path": "learner/gate/metric_failure_snapshot.yaml",
+      "sha256": "648375eac496234bc1ed8f83dd4de4b446ff348a9cf72e7e46132497fc3682e8"
+    },
+    {
+      "path": "learner/gate/metric_lint.py",
+      "sha256": "126f2c90955bdfd39d74394069f1db9979a5618a5b572afe12fb5f21f61a7d28"
+    },
+    {
+      "path": "learner/gate/metric_snapshot.py",
+      "sha256": "9e3494afef6d0a7619d0159fe543044544e0e6539f589209e86de475c156a2f8"
+    },
+    {
+      "path": "learner/gate/mission_control_evaluator.py",
+      "sha256": "25f19b491bb2678cf65f55c8e17d0862beaa4abf257129c4ee90b020d714a4ea"
+    },
+    {
+      "path": "learner/gate/netlify-functions/README.md",
+      "sha256": "784bc0fbcda7e1d5cd816e9d778f6e1deddf461ec97fc240e69e835b474805f7"
+    },
+    {
+      "path": "learner/gate/netlify-functions/_shared/literacy-corpus.mjs",
+      "sha256": "491f04f84f6986bfcc88a62ca23123b7869c208b19546c507f2604da6f0f9ee6"
+    },
+    {
+      "path": "learner/gate/netlify-functions/dojo-analytics-collector.mjs",
+      "sha256": "0080d300ef0b782d94ebe7f1dc6fe03f220f0598827289dc54d7d2b36d827b7e"
+    },
+    {
+      "path": "learner/gate/netlify-functions/dojo-verification-bridge.mjs",
+      "sha256": "93e4cb036d84d7776ed23dfa792bb693c306346be8faa0cb87f365653693c663"
+    },
+    {
+      "path": "learner/gate/netlify-functions/literacy-verify.mjs",
+      "sha256": "7d53901ea068302abb91fa07bfa0cb99b3ed7952566a50b4ef9e6dfbf15fa8c3"
+    },
+    {
+      "path": "learner/gate/netlify-functions/netlify-blobs-runtime.mjs",
+      "sha256": "7c33576cb5c98dc4d69891c6382a794bc547d96cbce2371069b7573b368bc0d5"
+    },
+    {
+      "path": "learner/gate/netlify-functions/package-lock.json",
+      "sha256": "14969a3a42235d3f7b3437cf4ed18f90636f2fc08c5eca2eb449a64f6aef5c64"
+    },
+    {
+      "path": "learner/gate/netlify-functions/package.json",
+      "sha256": "8bfe1dd402901fda685150b35b569f763a6b2fb7f95fcd4fc3d9b0f9fbdb8501"
+    },
+    {
+      "path": "learner/gate/no_code.py",
+      "sha256": "06186286d2e09722dc38ec835df4bb0c16db538a8d263dbb76a5034b25e40897"
+    },
+    {
+      "path": "learner/gate/no_code_checklist.py",
+      "sha256": "07bf04e3d5b8941e262ea6d0488b3b3f71f12ff4aabf5360941fb9b73465ba04"
+    },
+    {
+      "path": "learner/gate/pipeline_evaluator.py",
+      "sha256": "c929aa1448c6e524ec800561e48b9034adc25917c887a4dc7c930932a3fbfe60"
+    },
+    {
+      "path": "learner/gate/relay_evaluator.py",
+      "sha256": "eecd885d3f8f9892dc5c32172298282e13926b963bac0e2375384e800937fcf5"
+    },
+    {
+      "path": "learner/gate/river_delta_evaluator.py",
+      "sha256": "644afb5ce2352a0781f2f4e8564606a7785ac5a9d9cbec37c384dfca921b0578"
+    },
+    {
+      "path": "learner/gate/security.py",
+      "sha256": "64d2e85cede2dd1727b2af5d8c4739223ed3db88aebd43501dcb146ad823e738"
+    },
+    {
+      "path": "learner/gate/standards.py",
+      "sha256": "604462cef530acc1c3068e139b426d06e6a154114a99ac81157a347734778d8f"
+    },
+    {
+      "path": "learner/gate/state.py",
+      "sha256": "303b63217e37532032a76c838d8e75953b4663d65dc1ac6c0ea90b82b998a640"
+    },
+    {
+      "path": "learner/gate/state_transitions.py",
+      "sha256": "8903b0ed1c23531db1d17f79925ad2486531b0aeaf3908fb6df174ff379c6248"
+    },
+    {
+      "path": "learner/gate/task_queue_evaluator.py",
+      "sha256": "28a155581af24d6e28505e9c23180872d08f4d877c03d5801e825ade4e45bf65"
+    },
+    {
+      "path": "learner/gate/teaching_game_bridge.py",
+      "sha256": "964c680fd61832353c9e0bf1c7557c556bd40252432835330bb7ac47ca20c92a"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_activation_surfaces.test.mjs",
+      "sha256": "58096960ee152cb898cc6b5d2c3817e84540f68d9695ba5c1817ad6e889a2d19"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_collector_edge_semantics.test.mjs",
+      "sha256": "ef7b9c8b91810a473704e5f474edabb895013e38c2d5bf722cd5537b7df82f54"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_collector_netlify.test.mjs",
+      "sha256": "dbc09a9306846fc0f847f6beab99b6fca3d6e366a06f25ee473f7f121147d11b"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_collector_packaging.test.mjs",
+      "sha256": "2e8a479281ba8d197ddc200d1881aa528b738a14c124b975f68b2d48b3b7b236"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_collector_v2.test.mjs",
+      "sha256": "f721ccf0624203b168161d441a7d126d64ed6c8aff907c7e74677fc3448b8cc0"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_collector_v3.test.mjs",
+      "sha256": "45a3eeb544272b27fc3268e5b6824371e360a010d5d0a109c4ce4d9f463cb2a0"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_collector_v4.test.mjs",
+      "sha256": "bb80ec68d59733d7df004eec4082b38fa3f63384af6bcf81145320bde19ac495"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_funnel_aggregation.test.mjs",
+      "sha256": "ea38d6ed74672ea2b18ca4b916e7fcd19503b7934b1bb8cc4e229034d1d8141f"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_funnel_aggregation_v2.test.mjs",
+      "sha256": "a1a8b712e21c14c2c708f1fbd5427bcf46fbce861dec676238f14c06ec0cc67d"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_funnel_aggregation_v4.test.mjs",
+      "sha256": "fee9cb9f8cc7337b482f89a16b753c502b03c36b077329f136cdcb5d28c15ddc"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_funnel_surfaces_v3.test.mjs",
+      "sha256": "493ea42e889644eb8ad5062878ee10b55dddf473a8e1f2ccdbc18719c8a13bc5"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_schema_drift_monitor.test.mjs",
+      "sha256": "d671f50c1927304643873c2a21fb66cc83efa59c657abc838c88cccc66703073"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_schema_drift_monitor_v2.test.mjs",
+      "sha256": "81832c1586c26206c57f2b53c96139710451e31043431af95f2455a4aeb45acb"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_schema_drift_monitor_v3.test.mjs",
+      "sha256": "25966f0dcd2d967294ab3602a5adfc00184880e9d17cb310df6339d15f9c75a5"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_schema_drift_monitor_v4.test.mjs",
+      "sha256": "a056e4f57cbd45d759d97960628b70094e3e0851b59c5931d0b3e3c5b7b7fce6"
+    },
+    {
+      "path": "learner/gate/tests/dojo_analytics_vocabularies.test.mjs",
+      "sha256": "219062e813ede2f479116a86080cd70367277994b76d685aac29246915f0b59d"
+    },
+    {
+      "path": "learner/gate/tests/dojo_verification_bridge_netlify.test.mjs",
+      "sha256": "b0158b1921561e9f1e2c1436e0daed075786c985566525d680d4e3651ef8f2fc"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/drift-v2/events-2026-09-14.ndjson",
+      "sha256": "8156e88c797b38fbff8e07f5c3bcba498cb2d1f0dafdaf23c61787e7b417c76e"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/drift-v3/events-2026-09-14.ndjson",
+      "sha256": "d200c6ae6ceb618655edc3bebeadb6e3a68aa4b6f330f7ffd259b242db4b04a7"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/drift/events-2026-08-05.ndjson",
+      "sha256": "6368aecffb976dc799fc53784a861331e62ecbb31575c842243a6162cd1d4b17"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/example-funnel-report.json",
+      "sha256": "ffda2e3948b683c7356616d3c00bb3b53f1a30c09c05e2b262a942eb647f346d"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/example-funnel-report.md",
+      "sha256": "6701a4ce6a7030364113d0ff57932412cd1fcc34e5af5a6dc9fef5c3f4c59964"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/load_fixtures.d.mts",
+      "sha256": "d8b89355a0cb984473804dfc5cf406caf242e8b5c59e0a7632117f132243d762"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/load_fixtures.mjs",
+      "sha256": "bc6ffc71e6778c6d8826153e7ed27a710601be6e99c3d8c995c54a19817f4133"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic-v2/events-2026-09-14.ndjson",
+      "sha256": "bc4dab189430c2b9691a470913e15eaad309a0f89cf81948e48dd03d5c07d6c1"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic-v3/events-2026-09-14.ndjson",
+      "sha256": "0ade762461e2520f49839441ba625c674ced8f4e89907043b86aa5ffc27d5470"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic-v4/events-2026-09-16.ndjson",
+      "sha256": "c749d29688e31a708e2dd58bea7272a02db63ee9aaef5a4dd99eac0791e830af"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-13.ndjson",
+      "sha256": "3a9b62556992c8a704f3fe44fdd46321ed7ad159a520e0a449799f6fe3a29535"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-14.ndjson",
+      "sha256": "6226575197e63d71d09bfe231884614393316f613e0bdd69799ac5c406c7229f"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-15.ndjson",
+      "sha256": "cb039195ea1a2f2f51b6f3ae6a2bfa5cb8cd0c6a6794c5324467106d48ec37a7"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-16.ndjson",
+      "sha256": "5b22dd2bf5a8c7879095bbac46c4f14654671c31c2c9ad86878eab2bd00e9337"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-17.ndjson",
+      "sha256": "37db671ec2c60e4e68d6797e05bc5b136d858ffeb3191585d2526db99750f4d3"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-18.ndjson",
+      "sha256": "d075cf05323df31247944b413cfcdfc83e52461c19fd248c83a426dbb2e99f5b"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-21.ndjson",
+      "sha256": "623549191c0d34720040726949418abbb3c6b4ed2ed499141f003fd14044c1d3"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-25.ndjson",
+      "sha256": "fbe785fced0d8813107c201ac4a9044956ad18b005dff571d34665b6d797f007"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-04.ndjson",
+      "sha256": "564c76ab3cebb689c52ed554a12037e8b09ea3142787cc9533b34977e746de1f"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-08.ndjson",
+      "sha256": "528c165faf5228d569393807f6387797acb3ae605ab32becaf57c10e95ac7d5c"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-10.ndjson",
+      "sha256": "18e148a16312afbf1830b6f7b214c74b10d4c3d4af0eb98adfc5a3098d92ca57"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-11.ndjson",
+      "sha256": "a5667740622d258b914aed3eff14fb263c146cd5c8bddbd73d6dbae1ff2002d5"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-12.ndjson",
+      "sha256": "6817107e70a897c3b8ed279eb52ac6a5da2f0ec0a68d79e341b0d7a3be0461bc"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-20.ndjson",
+      "sha256": "c6e31c8b975ffda27ec8f852b3ae9af6fb0db4fe972c6bdeff5402b2711f216a"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-24.ndjson",
+      "sha256": "beddbd3ff568e4c86bffeb66ff867d6ca5f45cdb023541c28e1c50ac14be3deb"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-25.ndjson",
+      "sha256": "2bc6580f78170b13e015227f78ca15c59c36757ffde67c2b2d945c151395ab94"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-26.ndjson",
+      "sha256": "7d31017448ba33bcf44e681d048af1dad556aee9843c425cf5ed9d51864260f3"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-27.ndjson",
+      "sha256": "acdd1035a2b2477b2a9f8c1f7b8baaa2c7375575ccfd744918a539094cf3c2e6"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-28.ndjson",
+      "sha256": "5995aff8a3a6ea3f6fa4ee9eb95bf213307c62ab902f011a6c4b2b1b23a6252d"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-31.ndjson",
+      "sha256": "ce8d5106b04b09b563466df3e4f8cea38fd679583e8e47c74805af9f1937adc3"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-09-02.ndjson",
+      "sha256": "4756943fcd0c4b74a95c661291de41abf3c4624f850cf9420f68e4970ce6afe6"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-09-08.ndjson",
+      "sha256": "76c060c2e5cd631a1b1dea91f586fa9007454585f4cb8a1897818bdcbea3c78a"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-09-09.ndjson",
+      "sha256": "7ef41a3a4679e955bfbcdd2a7c197157afaa769fef322c043de145eea485b5a7"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-09-11.ndjson",
+      "sha256": "78364f0aa5d89125a7b9b0159a816e0af650d7277b7c6fbf31b9f008192587af"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/analytics/synthetic/events-2026-09-17.ndjson",
+      "sha256": "337780a7f249e43f796f03ea17282ebf5ae1afa4302e5fdef6853f216090b498"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/literacy_producer_payloads.json",
+      "sha256": "23d3a4f8348f6ecdde6ddd9cbcebd11c1fe2bed883f189db958fe0ac7fa3d082"
+    },
+    {
+      "path": "learner/gate/tests/fixtures/teaching_game_producer_payloads.json",
+      "sha256": "b309ad9bf4800a7ac2a1f48ca725d6065850a852d525c9cf36b542a03e8cc6fb"
+    },
+    {
+      "path": "learner/gate/tests/literacy_verifier_records.py",
+      "sha256": "59867766093bc70590bfc8707f9512ce43d5ebdedfa7e222212102d1afa55f72"
+    },
+    {
+      "path": "learner/gate/tests/literacy_verify_netlify.test.mjs",
+      "sha256": "1265169ebd09de19498f5066257763ab714399eb4f670cc73318bd4e0983ed9a"
+    },
+    {
+      "path": "learner/gate/tests/teaching_game_bridge_records.py",
+      "sha256": "b7e7f09ee40d321093fe579a3523a8e8e655e9b6b9ba23b50bcaa0ebb6d23acd"
+    },
+    {
+      "path": "learner/gate/tests/test_air_traffic_evaluator.py",
+      "sha256": "1de26219f0866c4e73aef2f10f222f82606605ede204c895eedc2a290d6f2469"
+    },
+    {
+      "path": "learner/gate/tests/test_breaker_grid_evaluator.py",
+      "sha256": "4859e0b77fa029ca0bfe8207392b64c1bc7685619573e483a0b84ad4c1ada3c2"
+    },
+    {
+      "path": "learner/gate/tests/test_checkpoint_evaluator.py",
+      "sha256": "d4dd7515aec19e769190bff0617d6ad719f198ff8763750cc52660a3f90eb3d9"
+    },
+    {
+      "path": "learner/gate/tests/test_docking_evaluator.py",
+      "sha256": "bbfbaec87246bc97de254a67d09e9d701746e453dafad9a97afef7e333d8236c"
+    },
+    {
+      "path": "learner/gate/tests/test_gate.py",
+      "sha256": "31c138206f811b1e0bd50eabbaaab8b4c8f1962b41887e53d7c510218bb9ca44"
+    },
+    {
+      "path": "learner/gate/tests/test_gate_game_coverage.py",
+      "sha256": "f4e54dd283ad0765e66a80e00eb39ce911acd7d434c461958be5d7e45250ea64"
+    },
+    {
+      "path": "learner/gate/tests/test_hash_ring_evaluator.py",
+      "sha256": "5e3d865aed2d649d30ba150e31cdc469097ea43de6cd10d01aea44d12e3628ef"
+    },
+    {
+      "path": "learner/gate/tests/test_isolated_bridges.py",
+      "sha256": "b4c9d0be5a8b5189297bd3a640c1343489db767b9263133c8cd7579b25423aaa"
+    },
+    {
+      "path": "learner/gate/tests/test_literacy_judgment.py",
+      "sha256": "b6865fa816bc196b79fc7a6f6258cbfee07550deef981d47cd31d94d1946130e"
+    },
+    {
+      "path": "learner/gate/tests/test_literacy_verifier.py",
+      "sha256": "d03edaa06e85b14c4ff01337a34f21aa3e19cb81b2aa62560867a1066b836a97"
+    },
+    {
+      "path": "learner/gate/tests/test_literacy_verifier_producer_contract.py",
+      "sha256": "7758e6801e125ee25aea6ccf6e87b6ca47da20bf060e0ab81aa698067fbfb523"
+    },
+    {
+      "path": "learner/gate/tests/test_literacy_verifier_receipts.py",
+      "sha256": "ad31531fb9d852b613d95afbfa956ff4f7ed4312de4ddd29ca43d236160e92f7"
+    },
+    {
+      "path": "learner/gate/tests/test_manifest_atomic.py",
+      "sha256": "cfbadbd1e747b3c6673081758e9be4fa534d99d2df0d2610fc464da787a7a8c9"
+    },
+    {
+      "path": "learner/gate/tests/test_metric_lint.py",
+      "sha256": "1cf2de709440f71fecc2f2a973774856fd79a155f8be47776893d2e860f84835"
+    },
+    {
+      "path": "learner/gate/tests/test_mission_control_evaluator.py",
+      "sha256": "4b56f795b8fab1433bae451d989c8c1108ef71561d019a7f29c2204419cef9b2"
+    },
+    {
+      "path": "learner/gate/tests/test_no_code_checklist.py",
+      "sha256": "7e2a9d7751a43b4b3080351d0ac3a293471ea8f01e446965ab1d3ef08dce490a"
+    },
+    {
+      "path": "learner/gate/tests/test_no_code_gate.py",
+      "sha256": "348d82cb84dfaa533110794589b3409e6df814ccbb9c41e2647bc12a0594a5e9"
+    },
+    {
+      "path": "learner/gate/tests/test_pipeline_evaluator.py",
+      "sha256": "f804d1ca9da24412ab1feb6dbefdaa8fee45240bdc76d115da1427c63f7dd45a"
+    },
+    {
+      "path": "learner/gate/tests/test_relay_evaluator.py",
+      "sha256": "3281a1d12993f578f15a3a36b634afdc58b0c3d42d733263be4bbcf551ffa932"
+    },
+    {
+      "path": "learner/gate/tests/test_river_delta_evaluator.py",
+      "sha256": "a03362a20a8860d9d298f7349a3b4b4bbc52988ed6c90c6ba73abac15dbc850c"
+    },
+    {
+      "path": "learner/gate/tests/test_standards.py",
+      "sha256": "25dd53628da07e14b442222c5d67905dadacb7de55c05426f04f5333d641877a"
+    },
+    {
+      "path": "learner/gate/tests/test_task_queue_evaluator.py",
+      "sha256": "068e07fafe7a275d844e27bca3950d7d143c2752f83184b193db4c16393013cc"
+    },
+    {
+      "path": "learner/gate/tests/test_teaching_game_bridge.py",
+      "sha256": "a5aaedc7f47ec63e1f338306c702e5d47774c261e0226672e849f5fdd0820955"
+    },
+    {
+      "path": "learner/gate/tests/test_teaching_game_bridge_rejections.py",
+      "sha256": "22244990c6e103dd05766b024b53f345f88b1a3d5b0a0a6e5fc5416e60d4fc4e"
+    },
+    {
+      "path": "learner/gate/tests/test_timeline_evaluator.py",
+      "sha256": "cc2ff42ecb5f42fdf18b12ab047716df1d18ce4007003c8ff301cc2fd54657ca"
+    },
+    {
+      "path": "learner/gate/tests/test_verifier_corpus_drift.py",
+      "sha256": "b4e644fb715737243c55b990432d7ed24c7985f376852fa15d990f45794a6e2e"
+    },
+    {
+      "path": "learner/gate/tests/test_wormhole_evaluator.py",
+      "sha256": "74f6619f1aaf3e01f32ea6176e6970a6d530355db76e6d33ff8690e7a362d4b6"
+    },
+    {
+      "path": "learner/gate/timeline_evaluator.py",
+      "sha256": "0a7883b79a919ba993eb2b872e89810b16edd0d11c15b7d8dcf9074b541945b8"
+    },
+    {
+      "path": "learner/gate/timestamps.py",
+      "sha256": "f435b6be5e498f3b6bc98930c6d60be99aa2adf0405dc54885984da4ea512cac"
+    },
+    {
+      "path": "learner/gate/verifier.py",
+      "sha256": "9be5d56c845a21147fcc71d4eb213e9927cc9a93ba794845226208996588cb5a"
+    },
+    {
+      "path": "learner/gate/verifier_receipt.py",
+      "sha256": "3a5d9145dc919d6ed7ace7494fccf3fcddcb4ae19461c75b8ef47f7b607a1737"
+    },
+    {
+      "path": "learner/gate/warehouse_evaluator.py",
+      "sha256": "aef6b0834504c35bc2ea3b1e76e7665d944c89d91bcdc928b563f1910f7ff605"
+    },
+    {
+      "path": "learner/gate/wormhole_evaluator.py",
+      "sha256": "3c23959525273f3d49a7a19f9d4f9e306a46133cf53ec3219f4ae2f05e2e51af"
+    },
+    {
+      "path": "learner/substrate/AGENTS.md",
+      "sha256": "84c4457bfabe6a379359b2f8b49389883964d8a42a5863e92c2a1864cbb9abf4"
+    },
+    {
+      "path": "learner/substrate/README.md",
+      "sha256": "03d62ff0f57e29efccd0478308f078b3a4a4872f9b105df90211673dd2fd00ca"
+    },
+    {
+      "path": "learner/substrate/__init__.py",
+      "sha256": "067fc498a2d5cd6b6dece6a0175ec445a4dc548e49386ad607f6c0e7c7812f40"
+    },
+    {
+      "path": "learner/substrate/__main__.py",
+      "sha256": "79e210c48675e70807e732d4bde00ed0cd4a3549b3ab98c613adee91d869f553"
+    },
+    {
+      "path": "learner/substrate/adapters/__init__.py",
+      "sha256": "db64e5eaa7e5dd87476ea80ecf810dfebc3b6feb4ee6b76f69b7423fe8f44526"
+    },
+    {
+      "path": "learner/substrate/adapters/dojotoday.py",
+      "sha256": "0efbacf906f636e55499faaefd78367d4accd6e22b8fab2bc6b5b7e623b51a80"
+    },
+    {
+      "path": "learner/substrate/adapters/mavis.py",
+      "sha256": "d776dd20a6bbdc4cb224bae64dcb6164f4a68df6e3f1995d072c72c83c3942c3"
+    },
+    {
+      "path": "learner/substrate/adapters/whiteboard.py",
+      "sha256": "45b81f4eb2fc835b26943d5d89a3af51015433cf60d38acf065846ff2fd9b574"
+    },
+    {
+      "path": "learner/substrate/catalog.py",
+      "sha256": "6455b92eaebc98a4240c140a804948d083df1a4b5dbacfb4a86c62bb1ab72c52"
+    },
+    {
+      "path": "learner/substrate/dashboard_data.py",
+      "sha256": "94a834829ba34ad0c177499fcc85f51b1c89378bc6d060111c383c216379f64e"
+    },
+    {
+      "path": "learner/substrate/dashboard_snapshot.py",
+      "sha256": "6c819806f0eec7cd12e2bea514eeb99b7128e1ba4d901c1312ecb83749f3dd0a"
+    },
+    {
+      "path": "learner/substrate/gate.py",
+      "sha256": "19022c06fabafcb1768ce5d9a16577bfa778178eb61f24bf16cc9896daef5acd"
+    },
+    {
+      "path": "learner/substrate/generated_views.py",
+      "sha256": "2f6c5539807b30d34e7e13a995ee2a1e8d1f100857f95a08363eb340e787a816"
+    },
+    {
+      "path": "learner/substrate/interface.md",
+      "sha256": "05a494203550dcd32ce3c7e959fd21d787058b5a553ba111315c54cc20c6def1"
+    },
+    {
+      "path": "learner/substrate/judgments.py",
+      "sha256": "07321efbce8a9bd0c5d3e771af5d14a283fa680a58a38fc8c821cb8a76eb9fbe"
+    },
+    {
+      "path": "learner/substrate/mission_catalog.py",
+      "sha256": "7ca414d6fd5a69b960d6e25c6815bd378335c26db82c91e52be64a259216ae57"
+    },
+    {
+      "path": "learner/substrate/mission_catalog_bindings.py",
+      "sha256": "f0f390dee94fa971dc5d44b5dff6fa89118d2d65f37478dc757639a0674dc3b0"
+    },
+    {
+      "path": "learner/substrate/mission_catalog_guided_practice.py",
+      "sha256": "847814e6c539864f74e7a0978086380504b6575ecf2e9adc44ac26fed0bb2843"
+    },
+    {
+      "path": "learner/substrate/mission_catalog_rules.py",
+      "sha256": "5bcd82553548b1e78dfc2287dcc1e925df543df23659049bbab79a22d542f16f"
+    },
+    {
+      "path": "learner/substrate/mission_catalog_voxel.py",
+      "sha256": "633608d50afdfb21ca1550c8608088477a810af00982586b703601199296b4c6"
+    },
+    {
+      "path": "learner/substrate/prediction_store.py",
+      "sha256": "abedc4c4999f589d6edf54d76b6749abbb6f636f43ce57b4916e2ea19fc85874"
+    },
+    {
+      "path": "learner/substrate/predictions_summary.py",
+      "sha256": "0a25e488a1271d0d5ca1da08b5f7cd49b908dd8fd9797aef00516de7b6d18262"
+    },
+    {
+      "path": "learner/substrate/projection_clock.py",
+      "sha256": "ca71c00b340d08f6bf6f94214d0ebc18e882778782470424a3e2878cb8762a79"
+    },
+    {
+      "path": "learner/substrate/projection_clock.yaml",
+      "sha256": "aa351d6130ea38d216934d89225f4fd5c360197035121ccc57c91b616deb75a4"
+    },
+    {
+      "path": "learner/substrate/projections.py",
+      "sha256": "5c6a87ada6046bc1b1b092a0b3bcad89e1dc1baa1e53df725172101a7d74ad80"
+    },
+    {
+      "path": "learner/substrate/scheduling.py",
+      "sha256": "55ecb22eaa44a590248c44b8b703c642f024049e8bfa3372c1af61b0d480c9dc"
+    },
+    {
+      "path": "learner/substrate/schema.yaml",
+      "sha256": "03468fba0926e584aab92e33da54b7ee92eaa1591c916084041a544bd0d2dcbd"
+    },
+    {
+      "path": "learner/substrate/snapshot_sources.py",
+      "sha256": "2c7d2a90aba99f6714065394716d02734947ab59b4a6ca9043603bb5f0680f2c"
+    },
+    {
+      "path": "learner/substrate/tests/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "learner/substrate/tests/fixtures/judgments_golden.json",
+      "sha256": "6fea96e48b8020de3f015554328c16c8f3457abf0cc9677bc6c0ce1f68d4e8ae"
+    },
+    {
+      "path": "learner/substrate/tests/judgments_fixture.py",
+      "sha256": "61f08c6be131b508522aaef809004c3dda2cf90f87638113dfe2d3efc596492b"
+    },
+    {
+      "path": "learner/substrate/tests/mission_catalog_fixture.py",
+      "sha256": "1f43f95a5b0ac2dca41601e16ca2b8a42f12355b4024c1201c7aa9f0995635da"
+    },
+    {
+      "path": "learner/substrate/tests/mission_catalog_project_catalog_fixture.py",
+      "sha256": "69b4ab2a5a0adb7f3a603ace6ce6ceab25caa7bca40533d4e183b9894d9e88d3"
+    },
+    {
+      "path": "learner/substrate/tests/test_catalog_level0.py",
+      "sha256": "b3a1105bb6ceddad6e4ce64585256f224b9fd4a01ea20c8e2d0733e303e9abc1"
+    },
+    {
+      "path": "learner/substrate/tests/test_catalog_projections.py",
+      "sha256": "2cc01bf296828789844e4784e2e6f0c2db70924aec6162a56a0a816660a77a4f"
+    },
+    {
+      "path": "learner/substrate/tests/test_codexdojo_os_snapshot.py",
+      "sha256": "295017e6688915036c30988c54914db58fd66f681a4bcaf0a112dfe70aeead6c"
+    },
+    {
+      "path": "learner/substrate/tests/test_dashboard_data.py",
+      "sha256": "3b3576a6bb622894ae077524da84e145f1525623a898f7746e458cafbe4d5744"
+    },
+    {
+      "path": "learner/substrate/tests/test_dojotoday.py",
+      "sha256": "6b32950dad50499290824d15974c99e3422c6d44dd9dc159c6d8f677f020a342"
+    },
+    {
+      "path": "learner/substrate/tests/test_engine_topology.py",
+      "sha256": "b9ebcf7783aac4eb9dd53b327dd7d89078ef24ce1d7699a73c23867f46b67acd"
+    },
+    {
+      "path": "learner/substrate/tests/test_gate.py",
+      "sha256": "6cc795e9a77960a9bc02a8a2409f95519dfce17cc1e8f0ca34f3274b5c292e25"
+    },
+    {
+      "path": "learner/substrate/tests/test_gate_evidence_class.py",
+      "sha256": "eb0a4ca235a58cc183f73afdeaab4e45c2530ec96ca1373620684ada1c3a4103"
+    },
+    {
+      "path": "learner/substrate/tests/test_generated_views.py",
+      "sha256": "81e3772fcc955d9983e5912a279641012333c31b6e970e821a132502271741d1"
+    },
+    {
+      "path": "learner/substrate/tests/test_judgments.py",
+      "sha256": "a74550741f631117d31a9a7d4256b5bc3b9803ab53739869a7797cbaebf5c677"
+    },
+    {
+      "path": "learner/substrate/tests/test_mavis_adapter.py",
+      "sha256": "f784bfc856ed38a38e911ee3dce55d0ec35ea9d540f4170fdfa69bbd0d9f3eb2"
+    },
+    {
+      "path": "learner/substrate/tests/test_mission_catalog_graph_rules.py",
+      "sha256": "643391a8fbb624e3265d87ba89f6ad0977088cb670852d4ef685d3fca68b9cc6"
+    },
+    {
+      "path": "learner/substrate/tests/test_mission_catalog_guided_practice.py",
+      "sha256": "e4934b9f39e3a874ba5f864476ec9b1991a15ef9b9ad8cd4910d426f2b5a2afb"
+    },
+    {
+      "path": "learner/substrate/tests/test_mission_catalog_normalization.py",
+      "sha256": "1dd482ad37799ba7a032f5ce88e35263677bff8ccb3135373c6bb1689ebf4239"
+    },
+    {
+      "path": "learner/substrate/tests/test_mission_catalog_release_order.py",
+      "sha256": "4c59082603afbb6a08060e1423404a759bd52c5e782a9e261fe0726c038e2550"
+    },
+    {
+      "path": "learner/substrate/tests/test_prediction_store.py",
+      "sha256": "5d47026e1e8d06918e5134ca1fc78acbdda5c329d5d2f77f051cf3459bd1f35e"
+    },
+    {
+      "path": "learner/substrate/tests/test_predictions_summary.py",
+      "sha256": "db6b6b4903e31e91d7238015e0823c58bcb147f36c48d40ab195db99d854bb3a"
+    },
+    {
+      "path": "learner/substrate/tests/test_projection_clock.py",
+      "sha256": "0aa35a8ec68ed12114844111e576794089d31a534e9586cdab1d49911e8f9d89"
+    },
+    {
+      "path": "learner/substrate/tests/test_save_canonical.py",
+      "sha256": "50a128e889badee70ba0f0bd0de66c90876ce3a62f3d61062be3557b4cbc8ad9"
+    },
+    {
+      "path": "learner/substrate/tests/test_substrate.py",
+      "sha256": "1ffbc50c2f0df45063146adf29186aaee21192cbae50bd6db1d521649092d66b"
+    },
+    {
+      "path": "learner/substrate/tests/test_substrate_cli.py",
+      "sha256": "71fdeff16a4a8143a67e53051f2459b2e0f29536514840b2ebd9f2eef1ad4c16"
+    },
+    {
+      "path": "learner/substrate/tests/test_ts_render.py",
+      "sha256": "5e8336469f1e02a0cd48f5a180fc7dd900e762bf6322a1fbec25254cf33cf9e0"
+    },
+    {
+      "path": "learner/substrate/tests/test_voxel_slice.py",
+      "sha256": "e70ae1c39854097b0b3f42cb630b25a6cda6fcefb8740b4f64d843816a2d8024"
+    },
+    {
+      "path": "learner/substrate/ts_render.py",
+      "sha256": "605b0cd50226d8de8027a66ea0f3b52fbc457cc1128e6f011ac89a19c4688b09"
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+
+> literacydojo@0.1.0 lint
+> biome check src tests playwright
+
+Checked 116 files in 78ms. No fixes applied.

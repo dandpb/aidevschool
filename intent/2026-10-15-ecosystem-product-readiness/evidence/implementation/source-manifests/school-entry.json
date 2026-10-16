@@ -1,0 +1,145 @@
+{
+  "schemaVersion": 1,
+  "membership": "git tracked regular files at refresh; excluded dependency/build/test-result outputs",
+  "sourceScope": [
+    "engines/school-entry"
+  ],
+  "files": [
+    {
+      "path": "engines/school-entry/.dockerignore",
+      "sha256": "4175b1a2b3cf0a50ef62c702f1afbbf8673e7060695014f5ba30b718f4126b5b"
+    },
+    {
+      "path": "engines/school-entry/.gitignore",
+      "sha256": "5879a63f45536fe2dc2f75d1b0b320d92de7f0d6656f2ce3bb64f78863284e6e"
+    },
+    {
+      "path": "engines/school-entry/DESIGN.md",
+      "sha256": "8ba493c2904d83c2d799b2a7528bdd9b78016a8dcc99287cbf0f63742954376b"
+    },
+    {
+      "path": "engines/school-entry/Dockerfile",
+      "sha256": "588f5970469c93dcde08392b7caa536c48ced3cff5f2fcf0bcd09919246fecd6"
+    },
+    {
+      "path": "engines/school-entry/README.md",
+      "sha256": "223eee7cc6d7017904b7e0fa81fdc6b3a373e103d25426cecf3be041b22e50d9"
+    },
+    {
+      "path": "engines/school-entry/docs/VALIDATION.md",
+      "sha256": "61b10d1c1789df28f67c56f9abf038bfb21575c196b4501e2ae3840e727c58a2"
+    },
+    {
+      "path": "engines/school-entry/docs/entry-concept.png",
+      "sha256": "1dcc1a9a4c1d625710200ac1bf2847f2b80aa8f5da87973964671797385535a9"
+    },
+    {
+      "path": "engines/school-entry/package-lock.json",
+      "sha256": "1e45f83b0ca4839d767da326aba0d5399263b314caef0fdf24f4645e47a9c355"
+    },
+    {
+      "path": "engines/school-entry/package.json",
+      "sha256": "561031524771b8f5bf16b4d63d65a9054f1ae2ac36ced6006c04c502663fb755"
+    },
+    {
+      "path": "engines/school-entry/public/admin.html",
+      "sha256": "4d377e1b1e7e2f1ca7efceac4d08835dfa161dfdc8e0c5b5547679f233040707"
+    },
+    {
+      "path": "engines/school-entry/public/admin.js",
+      "sha256": "0994821c8c330c1722b4e30861c3a1c3124245b751be54cfa487b91b6ecdb1ca"
+    },
+    {
+      "path": "engines/school-entry/public/api.js",
+      "sha256": "9c6ab123aa9c294dd3ac51f3f38be227707136dd29da0bc6b93198020f353ca9"
+    },
+    {
+      "path": "engines/school-entry/public/app.js",
+      "sha256": "4473d73f658c1927093c56579050bdfb3ee65dde1108060b8ff9ba2d5782db7e"
+    },
+    {
+      "path": "engines/school-entry/public/index.html",
+      "sha256": "4567a2476a3d69419d514ab1c8082c78b7ec6e3caa0994751ebf8bf4c5d5fa65"
+    },
+    {
+      "path": "engines/school-entry/public/styles.css",
+      "sha256": "27181e1328874b4eb69f4d7edfe63cb9ef523f0fe242cc4a654985b3a996c4bb"
+    },
+    {
+      "path": "engines/school-entry/scripts/check.mjs",
+      "sha256": "05012c7e330e06ec46389bc57093e18490244dbb2744afeb5c08d38d0bff66b4"
+    },
+    {
+      "path": "engines/school-entry/scripts/hash-password.mjs",
+      "sha256": "0af517de445ef246bdd1592fc7d6fa531f336d1e38bd3496823d6837e52deda8"
+    },
+    {
+      "path": "engines/school-entry/scripts/live-api.mjs",
+      "sha256": "b1a51b4da6a5fe123d7e08a4207b54ef91e89784dc0c2bc6d58e99b1821c66d8"
+    },
+    {
+      "path": "engines/school-entry/server/app.mjs",
+      "sha256": "c00cc6f612ba23c5f90bffe4a6e2c616e0c92dedc71e6a0f68382ac60d613912"
+    },
+    {
+      "path": "engines/school-entry/server/auth.mjs",
+      "sha256": "449ba589db7c408e9132734aeb1104a092c1b83a31f98b4bdf08b2ad1be59b10"
+    },
+    {
+      "path": "engines/school-entry/server/catalog.mjs",
+      "sha256": "53ce862fc91b5b44ef883a7c41d742753e500cc53c9b0caa9c8d6bc0ac30e1ac"
+    },
+    {
+      "path": "engines/school-entry/server/health.mjs",
+      "sha256": "2028c1e7e47f7a17db11199ed54cfb67cad0a3bd32464c6560f56d867b3a893c"
+    },
+    {
+      "path": "engines/school-entry/server/main.mjs",
+      "sha256": "d6ee67f4f0644f1b9e66d6279345a9e9e556ab0fdab2546049aba29baabd7444"
+    },
+    {
+      "path": "engines/school-entry/server/model.mjs",
+      "sha256": "ce983576ca6a18bdab7fbe67fdbb626214f8e37a82923425afafc033e15947e9"
+    },
+    {
+      "path": "engines/school-entry/server/runtime.mjs",
+      "sha256": "3e5fb79a91c754f45a10be39c000ed537e3e070b8bbbaef686c3aa7a02177f36"
+    },
+    {
+      "path": "engines/school-entry/server/static.mjs",
+      "sha256": "b68f7f685cc0b518efc3e3f476292c00fa0234db4a6ab1093df0ca794c4a6a50"
+    },
+    {
+      "path": "engines/school-entry/server/store.mjs",
+      "sha256": "1a7d7d345b2ddc5282a81bec58b6ce55320aac315a453b10a6cb0211869340d0"
+    },
+    {
+      "path": "engines/school-entry/targets.example.json",
+      "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
+    },
+    {
+      "path": "engines/school-entry/tests/backend.test.mjs",
+      "sha256": "75494d50da96b837b408661091fac1641f0e58f9cdd0e0c50794effc2fca7acb"
+    },
+    {
+      "path": "engines/school-entry/tests/browser.spec.mjs",
+      "sha256": "426607fbf8b09e46b3b10f08cf260354cc828a592090fe21a0f2a6b401141b2c"
+    },
+    {
+      "path": "engines/school-entry/tests/concurrency.test.mjs",
+      "sha256": "a5d719d8cd65cd7d693f5cf89881cd23ce659cbbddde3c5e25db6383fd3ca486"
+    },
+    {
+      "path": "engines/school-entry/tests/health.test.mjs",
+      "sha256": "7b5aaee85106045f41f2c58bcde9f92715fe5e48e5050b66ce35213d4c82f99d"
+    },
+    {
+      "path": "engines/school-entry/tests/model.test.mjs",
+      "sha256": "22e467487d2a1441dec3b62c503abb43195ba5797be91b4541c36dfcc9037000"
+    },
+    {
+      "path": "engines/school-entry/tests/review-regressions.test.mjs",
+      "sha256": "d1183254e9164a98d2354ccb7823a4236fb7949e9a15952303319680e7bb9242"
+    }
+  ]
+}

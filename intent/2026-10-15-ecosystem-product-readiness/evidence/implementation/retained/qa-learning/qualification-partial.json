@@ -1,0 +1,1890 @@
+{
+  "status": "unverified",
+  "informativeOnly": true,
+  "engines": [
+    {
+      "engineId": "literacyDojo",
+      "caseName": "declared-use",
+      "sourceCommit": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+      "sourceFingerprint": "f77e62d3f514e0c7f976c4f9cbc4b0b5595d85e547689bf9dbd0f26ad8ec38cd",
+      "sourceFiles": [
+        {
+          "path": "engines/codexdojo-os-prototype/src/data/missions.ts",
+          "sha256": "e3238b1bad2b4c22e740bda211a7e42b2c759699250b1b7175d2519ab4e65ea1"
+        },
+        {
+          "path": "engines/literacyDojo/src/data/generated/lessons.ts",
+          "sha256": "ef3c35409a808511b1832af192eda60a014130f01ebc943dc93b64ce0144784f"
+        },
+        {
+          "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/learning-runtime.mjs",
+          "sha256": "42db458fd9da58dab02670326e44f12acf858cc9d6458605569cd315c9ff3e15"
+        },
+        {
+          "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/learning-runtime-support.mjs",
+          "sha256": "b6827b2207ef75b7457d22bd17821b6c30876ecb84fce23909c29848181bcb07"
+        }
+      ],
+      "observedAt": "2026-10-16T01:47:17.977Z",
+      "producerContext": "readiness-qa-learning-runtime-agent",
+      "verifierContext": null,
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool",
+      "argv": [
+        "/Users/danielbarreto/.hermes/node/bin/node",
+        "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/learning-runtime.mjs",
+        "literacyDojo",
+        "declared-use"
+      ],
+      "status": "unverified",
+      "cases": [
+        {
+          "id": "fresh-storage-dev-cta",
+          "status": "pass",
+          "devHref": "https://aidevschool-codexdojo-os.netlify.app/?track=dev",
+          "artifact": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/fresh-storage.png"
+        },
+        {
+          "id": "continuous-onboarding-map-initial-result",
+          "status": "pass",
+          "activities": [
+            {
+              "activityId": "l02-a1",
+              "type": "output_comparison",
+              "status": "pass"
+            },
+            {
+              "activityId": "l02-a2",
+              "type": "choice",
+              "status": "pass"
+            },
+            {
+              "activityId": "l02-a3",
+              "type": "sort",
+              "status": "pass"
+            }
+          ],
+          "artifact": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/continuous-onboarding.png"
+        },
+        {
+          "id": "lesson-l01",
+          "status": "pass",
+          "activities": [
+            {
+              "activityId": "l01-a1",
+              "type": "choice",
+              "status": "pass"
+            },
+            {
+              "activityId": "l01-a2",
+              "type": "sort",
+              "status": "pass"
+            },
+            {
+              "activityId": "l01-a3",
+              "type": "missing_context",
+              "status": "pass"
+            }
+          ],
+          "evidenceRecords": 10,
+          "artifact": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l01.png",
+          "fixture": "Access prerequisite only; target completion came from UI interactions."
+        },
+        {
+          "id": "lesson-l02",
+          "status": "pass",
+          "activities": [
+            {
+              "activityId": "l02-a1",
+              "type": "output_comparison",
+              "status": "pass"
+            },
+            {
+              "activityId": "l02-a2",
+              "type": "choice",
+              "status": "pass"
+            },
+            {
+              "activityId": "l02-a3",
+              "type": "sort",
+              "status": "pass"
+            }
+          ],
+          "evidenceRecords": 13,
+          "artifact": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l02.png",
+          "fixture": "Access prerequisite only; target completion came from UI interactions."
+        },
+        {
+          "id": "lesson-l03",
+          "status": "pass",
+          "activities": [
+            {
+              "activityId": "l03-a1",
+              "type": "choice",
+              "status": "pass"
+            },
+            {
+              "activityId": "l03-a2",
+              "type": "choice",
+              "status": "pass"
+            },
+            {
+              "activityId": "l03-a3",
+              "type": "output_comparison",
+              "status": "pass"
+            }
+          ],
+          "evidenceRecords": 16,
+          "artifact": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l03.png",
+          "fixture": "Access prerequisite only; target completion came from UI interactions."
+        },
+        {
+          "id": "lesson-l04",
+          "status": "pass",
+          "activities": [
+            {
+              "activityId": "l04-a1",
+              "type": "choice",
+              "status": "pass"
+            },
+            {
+              "activityId": "l04-a2",
+              "type": "prompt_builder",
+              "status": "pass"
+            },
+            {
+              "activityId": "l04-a3",
+              "type": "missing_context",
+              "status": "pass"
+            }
+          ],
+          "evidenceRecords": 20,
+          "artifact": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l04.png",
+          "fixture": "Access prerequisite only; target completion came from UI interactions."
+        },
+        {
+          "id": "lesson-l05",
+          "status": "pass",
+          "activities": [
+            {
+              "activityId": "l05-a1",
+              "type": "prompt_builder",
+              "status": "pass"
+            },
+            {
+              "activityId": "l05-a2",
+              "type": "choice",
+              "status": "pass"
+            },
+            {
+              "activityId": "l05-a3",
+              "type": "output_comparison",
+              "status": "pass"
+            }
+          ],
+          "evidenceRecords": 23,
+          "artifact": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l05.png",
+          "fixture": "Access prerequisite only; target completion came from UI interactions."
+        },
+        {
+          "id": "lesson-l06",
+          "status": "pass",
+          "activities": [
+            {
+              "activityId": "l06-a1",
+              "type": "missing_context",
+              "status": "pass"
+            },
+            {
+              "activityId": "l06-a2",
+              "type": "prompt_builder",
+              "status": "pass"
+            },
+            {
+              "activityId": "l06-a3",
+              "type": "choice",
+              "status": "pass"
+            }
+          ],
+          "evidenceRecords": 26,
+          "artifact": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l06.png",
+          "fixture": "Access prerequisite only; target completion came from UI interactions."
+        },
+        {
+          "id": "lesson-l07",
+          "status": "pass",
+          "activities": [
+            {
+              "activityId": "l07-a1",
+              "type": "sort",
+              "status": "pass"
+            },
+            {
+              "activityId": "l07-a2",
+              "type": "choice",
+              "status": "pass"
+            },
+            {
+              "activityId": "l07-a3",
+              "type": "prompt_builder",
+              "status": "pass"
+            }
+          ],
+          "evidenceRecords": 29,
+          "artifact": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l07.png",
+          "fixture": "Access prerequisite only; target completion came from UI interactions."
+        },
+        {
+          "id": "lesson-l08",
+          "status": "pass",
+          "activities": [
+            {
+              "activityId": "l08-a1",
+              "type": "output_comparison",
+              "status": "pass"
+            },
+            {
+              "activityId": "l08-a2",
+              "type": "choice",
+              "status": "pass"
+            },
+            {
+              "activityId": "l08-a3",
+              "type": "missing_context",
+              "status": "pass"
+            }
+          ],
+          "evidenceRecords": 32,
+          "artifact": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l08.png",
+          "fixture": "Access prerequisite only; target completion came from UI interactions."
+        },
+        {
+          "id": "lesson-l09",
+          "status": "pass",
+          "activities": [
+            {
+              "activityId": "l09-a1",
+              "type": "rubric_review",
+              "status": "pass"
+            },
+            {
+              "activityId": "l09-a2",
+              "type": "choice",
+              "status": "pass"
+            },
+            {
+              "activityId": "l09-a3",
+              "type": "choice",
+              "status": "pass"
+            }
+          ],
+          "evidenceRecords": 36,
+          "artifact": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l09.png",
+          "fixture": "Access prerequisite only; target completion came from UI interactions."
+        },
+        {
+          "id": "lesson-l10",
+          "status": "pass",
+          "activities": [
+            {
+              "activityId": "l10-a1",
+              "type": "choice",
+              "status": "pass"
+            },
+            {
+              "activityId": "l10-a2",
+              "type": "choice",
+              "status": "pass"
+            },
+            {
+              "activityId": "l10-a3",
+              "type": "missing_context",
+              "status": "pass"
+            }
+          ],
+          "evidenceRecords": 39,
+          "artifact": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l10.png",
+          "fixture": "Access prerequisite only; target completion came from UI interactions."
+        },
+        {
+          "id": "lesson-l11",
+          "status": "pass",
+          "activities": [
+            {
+              "activityId": "l11-a1",
+              "type": "sort",
+              "status": "pass"
+            },
+            {
+              "activityId": "l11-a2",
+              "type": "missing_context",
+              "status": "pass"
+            },
+            {
+              "activityId": "l11-a3",
+              "type": "rubric_review",
+              "status": "pass"
+            }
+          ],
+          "evidenceRecords": 42,
+          "artifact": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l11.png",
+          "fixture": "Access prerequisite only; target completion came from UI interactions."
+        },
+        {
+          "id": "lesson-l12",
+          "status": "pass",
+          "activities": [
+            {
+              "activityId": "l12-a1",
+              "type": "safety_classification",
+              "status": "pass"
+            },
+            {
+              "activityId": "l12-a2",
+              "type": "safety_classification",
+              "status": "pass"
+            },
+            {
+              "activityId": "l12-a3",
+              "type": "choice",
+              "status": "pass"
+            }
+          ],
+          "evidenceRecords": 46,
+          "artifact": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l12.png",
+          "fixture": "Access prerequisite only; target completion came from UI interactions."
+        },
+        {
+          "id": "lesson-l13",
+          "status": "pass",
+          "activities": [
+            {
+              "activityId": "l13-a1",
+              "type": "prompt_builder",
+              "status": "pass"
+            },
+            {
+              "activityId": "l13-a2",
+              "type": "choice",
+              "status": "pass"
+            },
+            {
+              "activityId": "l13-a3",
+              "type": "sort",
+              "status": "pass"
+            }
+          ],
+          "evidenceRecords": 49,
+          "artifact": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l13.png",
+          "fixture": "Access prerequisite only; target completion came from UI interactions."
+        },
+        {
+          "id": "lesson-l14",
+          "status": "pass",
+          "activities": [
+            {
+              "activityId": "l14-a1",
+              "type": "prompt_builder",
+              "status": "pass"
+            },
+            {
+              "activityId": "l14-a2",
+              "type": "safety_classification",
+              "status": "pass"
+            },
+            {
+              "activityId": "l14-a3",
+              "type": "output_comparison",
+              "status": "pass"
+            }
+          ],
+          "evidenceRecords": 52,
+          "artifact": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l14.png",
+          "fixture": "Access prerequisite only; target completion came from UI interactions."
+        },
+        {
+          "id": "lesson-l18",
+          "status": "pass",
+          "activities": [
+            {
+              "activityId": "l18-a1",
+              "type": "prompt_builder",
+              "status": "pass"
+            },
+            {
+              "activityId": "l18-a2",
+              "type": "output_comparison",
+              "status": "pass"
+            },
+            {
+              "activityId": "l18-a3",
+              "type": "choice",
+              "status": "pass"
+            }
+          ],
+          "evidenceRecords": 55,
+          "artifact": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l18.png",
+          "fixture": "Access prerequisite only; target completion came from UI interactions."
+        },
+        {
+          "id": "lesson-l19",
+          "status": "pass",
+          "activities": [
+            {
+              "activityId": "l19-a1",
+              "type": "missing_context",
+              "status": "pass"
+            },
+            {
+              "activityId": "l19-a2",
+              "type": "sort",
+              "status": "pass"
+            },
+            {
+              "activityId": "l19-a3",
+              "type": "choice",
+              "status": "pass"
+            }
+          ],
+          "evidenceRecords": 58,
+          "artifact": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l19.png",
+          "fixture": "Access prerequisite only; target completion came from UI interactions."
+        },
+        {
+          "id": "lesson-l20",
+          "status": "pass",
+          "activities": [
+            {
+              "activityId": "l20-a1",
+              "type": "choice",
+              "status": "pass"
+            },
+            {
+              "activityId": "l20-a2",
+              "type": "sort",
+              "status": "pass"
+            },
+            {
+              "activityId": "l20-a3",
+              "type": "missing_context",
+              "status": "pass"
+            }
+          ],
+          "evidenceRecords": 61,
+          "artifact": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l20.png",
+          "fixture": "Access prerequisite only; target completion came from UI interactions."
+        },
+        {
+          "id": "lesson-l24",
+          "status": "pass",
+          "activities": [
+            {
+              "activityId": "l24-a1",
+              "type": "choice",
+              "status": "pass"
+            },
+            {
+              "activityId": "l24-a2",
+              "type": "prompt_builder",
+              "status": "pass"
+            },
+            {
+              "activityId": "l24-a3",
+              "type": "missing_context",
+              "status": "pass"
+            }
+          ],
+          "evidenceRecords": 64,
+          "artifact": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l24.png",
+          "fixture": "Access prerequisite only; target completion came from UI interactions."
+        },
+        {
+          "id": "lesson-l25",
+          "status": "pass",
+          "activities": [
+            {
+              "activityId": "l25-a1",
+              "type": "safety_classification",
+              "status": "pass"
+            },
+            {
+              "activityId": "l25-a2",
+              "type": "choice",
+              "status": "pass"
+            },
+            {
+              "activityId": "l25-a3",
+              "type": "missing_context",
+              "status": "pass"
+            }
+          ],
+          "evidenceRecords": 67,
+          "artifact": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l25.png",
+          "fixture": "Access prerequisite only; target completion came from UI interactions."
+        },
+        {
+          "id": "lesson-l26",
+          "status": "pass",
+          "activities": [
+            {
+              "activityId": "l26-a1",
+              "type": "output_comparison",
+              "status": "pass"
+            },
+            {
+              "activityId": "l26-a2",
+              "type": "choice",
+              "status": "pass"
+            },
+            {
+              "activityId": "l26-a3",
+              "type": "sort",
+              "status": "pass"
+            }
+          ],
+          "evidenceRecords": 70,
+          "artifact": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l26.png",
+          "fixture": "Access prerequisite only; target completion came from UI interactions."
+        },
+        {
+          "id": "lesson-l30",
+          "status": "pass",
+          "activities": [
+            {
+              "activityId": "l30-a1",
+              "type": "choice",
+              "status": "pass"
+            },
+            {
+              "activityId": "l30-a2",
+              "type": "prompt_builder",
+              "status": "pass"
+            },
+            {
+              "activityId": "l30-a3",
+              "type": "output_comparison",
+              "status": "pass"
+            }
+          ],
+          "evidenceRecords": 73,
+          "artifact": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l30.png",
+          "fixture": "Access prerequisite only; target completion came from UI interactions."
+        },
+        {
+          "id": "lesson-l31",
+          "status": "pass",
+          "activities": [
+            {
+              "activityId": "l31-a1",
+              "type": "safety_classification",
+              "status": "pass"
+            },
+            {
+              "activityId": "l31-a2",
+              "type": "missing_context",
+              "status": "pass"
+            },
+            {
+              "activityId": "l31-a3",
+              "type": "sort",
+              "status": "pass"
+            }
+          ],
+          "evidenceRecords": 76,
+          "artifact": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l31.png",
+          "fixture": "Access prerequisite only; target completion came from UI interactions."
+        },
+        {
+          "id": "lesson-l32",
+          "status": "pass",
+          "activities": [
+            {
+              "activityId": "l32-a1",
+              "type": "choice",
+              "status": "pass"
+            },
+            {
+              "activityId": "l32-a2",
+              "type": "output_comparison",
+              "status": "pass"
+            },
+            {
+              "activityId": "l32-a3",
+              "type": "missing_context",
+              "status": "pass"
+            }
+          ],
+          "evidenceRecords": 79,
+          "artifact": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l32.png",
+          "fixture": "Access prerequisite only; target completion came from UI interactions."
+        },
+        {
+          "id": "reload-discards-transient-answers",
+          "status": "pass",
+          "artifact": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/reload-restarts.png"
+        }
+      ],
+      "inventory": {
+        "standalone": [
+          "l01",
+          "l02",
+          "l03",
+          "l04",
+          "l05",
+          "l06",
+          "l07",
+          "l08",
+          "l09",
+          "l10",
+          "l11",
+          "l12",
+          "l13",
+          "l14",
+          "l18",
+          "l19",
+          "l20",
+          "l24",
+          "l25",
+          "l26",
+          "l30",
+          "l31",
+          "l32"
+        ],
+        "devCtaLessons": [
+          "l15",
+          "l16",
+          "l17",
+          "l21",
+          "l22",
+          "l23",
+          "l27",
+          "l28",
+          "l29"
+        ],
+        "source": "src/data/generated/lessons.ts modules.journey/availability"
+      },
+      "evidenceRefs": [
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/literacyDojo-2026-10-16T01-47-16.317Z/l26.json",
+          "sha256": "8d64a16769f1393974e511aab1f0820b9de5b7d628c651f9dd1c8e904c16b328",
+          "bytes": 55891
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/literacyDojo-2026-10-16T01-47-16.317Z/l30.json",
+          "sha256": "93f1a5625283bb4aa0e8ae0e03bd0906459aecadf01f81351e297e93d4f643af",
+          "bytes": 58246
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/literacyDojo-2026-10-16T01-47-16.317Z/l10.json",
+          "sha256": "fee87cb45f031fadf0934e91eb2f7299ca27256625c4810069f0037f33c921ce",
+          "bytes": 31577
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/literacyDojo-2026-10-16T01-47-16.317Z/l06.json",
+          "sha256": "a39e17b2f64335f7b2ebc0771111e881e2c1acba800a5aafc009307af955e72d",
+          "bytes": 22255
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/literacyDojo-2026-10-16T01-47-16.317Z/l07.json",
+          "sha256": "d041694226689dd3ab18848e2f0c6b09da135a66e80e098c204425573ab09c52",
+          "bytes": 24793
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/literacyDojo-2026-10-16T01-47-16.317Z/report.json",
+          "sha256": "52457fa20716b58120bd6865067ac89d6135209799b5edca0813a301cf079346",
+          "bytes": 19523
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/literacyDojo-2026-10-16T01-47-16.317Z/l11.json",
+          "sha256": "85558c9036b96f126284e05768482b2894e66540f54eb0d2a2153223d821990f",
+          "bytes": 33752
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/literacyDojo-2026-10-16T01-47-16.317Z/l31.json",
+          "sha256": "ff68d392a603b21e40b58acb656149a45e5863a6dc727e643d1fccd0ec961e55",
+          "bytes": 60697
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/literacyDojo-2026-10-16T01-47-16.317Z/l20.json",
+          "sha256": "e8258ee010e84610634d19367b6178e20e849f6dbabbb040172c7a3d0ec6ef2c",
+          "bytes": 48683
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/literacyDojo-2026-10-16T01-47-16.317Z/l01.json",
+          "sha256": "a4d5f31e551a95282b3612bb4552b39d45ffa11487c6d770585ed9b9f8e9b2a1",
+          "bytes": 10181
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/literacyDojo-2026-10-16T01-47-16.317Z/l02.json",
+          "sha256": "82000d6be2728548b5161178ecfd0d4a8aa9bcdfe21feec3cd3f8d0f194f8155",
+          "bytes": 12825
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/literacyDojo-2026-10-16T01-47-16.317Z/l14.json",
+          "sha256": "b7c5d3ef1a274d77dc89c9571f8035096ed06ca1c826b7551bdfba2e32cdd733",
+          "bytes": 42845
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/literacyDojo-2026-10-16T01-47-16.317Z/l18.json",
+          "sha256": "7e4234dc1c5a9cde5a6ab500933e70a1682557337beee7eb10d3cf65ecaaeb6b",
+          "bytes": 44691
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/literacyDojo-2026-10-16T01-47-16.317Z/l19.json",
+          "sha256": "34fc372572d3dfc52d253b7bda2555e164751103319ba5e05e52a352cb52c242",
+          "bytes": 46800
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/literacyDojo-2026-10-16T01-47-16.317Z/l03.json",
+          "sha256": "b2c3c0cb9fca5cdc58c767721c4df232ffa880165dae78604c72212183d511c4",
+          "bytes": 14554
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/literacyDojo-2026-10-16T01-47-16.317Z/l32.json",
+          "sha256": "e491be3b9505d2bd5daa795b3f89881b4276d02cae915dbfc25bd73a2430fff5",
+          "bytes": 62479
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/literacyDojo-2026-10-16T01-47-16.317Z/l24.json",
+          "sha256": "9a2f1629574185d12c48d007c9d0c6de543a0a5b4e94f89e10f41c65cd3ca9a1",
+          "bytes": 51259
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/literacyDojo-2026-10-16T01-47-16.317Z/l08.json",
+          "sha256": "3cdc19ccbdaf397bcb4660949156d89e50a0068f281792b61e445d20d9789031",
+          "bytes": 26680
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/literacyDojo-2026-10-16T01-47-16.317Z/l04.json",
+          "sha256": "6d2534fddacf0c8f29c451a8e2a8cd245f45d64c6f389f5ca0b95ae3432f216e",
+          "bytes": 17481
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/literacyDojo-2026-10-16T01-47-16.317Z/l12.json",
+          "sha256": "8c0603eef606479d905085db9f7e7a095260fd892cd7a52633b80804de522449",
+          "bytes": 37125
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/literacyDojo-2026-10-16T01-47-16.317Z/literacyDojo-54186.log",
+          "sha256": "4f96f1b0c22b03e8558893dbfafea001eb1f48c43757daf69d13de930c7622a6",
+          "bytes": 74
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/literacyDojo-2026-10-16T01-47-16.317Z/l13.json",
+          "sha256": "d2237fd8366b4dfe79679cbfddb49c874180f35aa3b19aec742a1bd6b9fd3142",
+          "bytes": 39466
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/literacyDojo-2026-10-16T01-47-16.317Z/l05.json",
+          "sha256": "f4b0d2ac9ed127154bf7cca884d5b23adf39b9ce56e86cafe4a58b060b7089b7",
+          "bytes": 19982
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/literacyDojo-2026-10-16T01-47-16.317Z/l09.json",
+          "sha256": "fabaf00082e4ecd9cd0665a530be5b6011aa9f84a2e8e1bf93d02874a7745948",
+          "bytes": 29521
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/literacyDojo-2026-10-16T01-47-16.317Z/l25.json",
+          "sha256": "ce045916a0f041df498f2b7689119af1125af1d33e06615af32cc860e1597ab8",
+          "bytes": 53323
+        },
+        {
+          "path": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l08.png",
+          "sha256": "930c10112fa301ebd2f951210637260bd777e76d9a0b3dd3cf3ebf5f9a0cff68",
+          "bytes": 325999
+        },
+        {
+          "path": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l20.png",
+          "sha256": "04f049eb4a1d4830e09ac8ceea026a806f38793f7d5682cb79a86ee243afbec7",
+          "bytes": 317350
+        },
+        {
+          "path": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l09.png",
+          "sha256": "191fa60e952b853491b3f1b7dd896af8f4f6cc312cb70026aae96e179b86885f",
+          "bytes": 317291
+        },
+        {
+          "path": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l25.png",
+          "sha256": "93cb38499f3b7d6e5fb9bc820fddac89f6eb3a34a4edc4a3e07d35772e5e0c2a",
+          "bytes": 321929
+        },
+        {
+          "path": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l31.png",
+          "sha256": "2cf3f9328fc1050470c8d8dcff72ab6552977e17be65d48a3212c26028c06573",
+          "bytes": 321897
+        },
+        {
+          "path": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l19.png",
+          "sha256": "b9a54cc64cc87cee5451dea45ceb135f1592a5a108c98c3bd4a254d3cb848a9d",
+          "bytes": 321302
+        },
+        {
+          "path": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l18.png",
+          "sha256": "e8e1111885e80bd7affd3fd51c883899e427885fa0a82a3dd7841fe9f3f41f55",
+          "bytes": 319810
+        },
+        {
+          "path": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l30.png",
+          "sha256": "e72cb72d0878c86987b227bc4cccd3b4fb104af2697cbe89414aa1481ad68f62",
+          "bytes": 319561
+        },
+        {
+          "path": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l24.png",
+          "sha256": "e50369edd01ea71b20e35912d64dfd20c22b69e29db9d03a2fb6605982cf2e60",
+          "bytes": 317905
+        },
+        {
+          "path": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l32.png",
+          "sha256": "c4e913cf372e220a8187969765a3bea18bbeb39f5bb97449459d1a1bc597b6c9",
+          "bytes": 314869
+        },
+        {
+          "path": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l26.png",
+          "sha256": "4e22722f05cc5304e962453e11a27157e22fac680efdccfa4c5add7d8d923fb8",
+          "bytes": 313759
+        },
+        {
+          "path": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/l02-choice-retry.png",
+          "sha256": "79103adb6fd043f61320cb2d2dd26718de364f32c255a7d2b6e7377f329791e5",
+          "bytes": 329201
+        },
+        {
+          "path": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/l04-prompt_builder-retry.png",
+          "sha256": "99ff23d920b8f4fb050a2e5380dd49f05b57008edfcbf20ba8b1056bbeb2a390",
+          "bytes": 364900
+        },
+        {
+          "path": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/fresh-storage.png",
+          "sha256": "f3a30f70a3a0401fefc30d0002188a56c4fe6e2595fa16435468209684527b33",
+          "bytes": 435553
+        },
+        {
+          "path": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/reload-restarts.png",
+          "sha256": "edf7b4102b30626e6c2368dae0df7f89bccda72f86794cdc80ea08dad4de9d5d",
+          "bytes": 370275
+        },
+        {
+          "path": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/trace.zip",
+          "sha256": "90744629523775f21bf6d0923bc09d97baa4ccf20673383f7f96a2208bc8762f",
+          "bytes": 141838980
+        },
+        {
+          "path": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/l12-safety_classification-retry.png",
+          "sha256": "2ae9ea9a850948e423a501610587cf71c5648e25411e5d16293621d8774472af",
+          "bytes": 374885
+        },
+        {
+          "path": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/continuous-onboarding.png",
+          "sha256": "311622af1034546761d88ad3c6e8504573ff6a8a49955cf93c2f636298251561",
+          "bytes": 319193
+        },
+        {
+          "path": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l02.png",
+          "sha256": "0cb7a37766529beb194030a40b3e8f7182bc32bb31466d4110553c82c8761f19",
+          "bytes": 317547
+        },
+        {
+          "path": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l03.png",
+          "sha256": "0ff8856df06f82f951c7fcd5312278beda4953ac3421bbcd62a995295fdd6ccb",
+          "bytes": 318065
+        },
+        {
+          "path": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l01.png",
+          "sha256": "b6121ee024f0cd91dad29d1fd2143f75a255d5ab6843aa467d8855ef30f5b445",
+          "bytes": 315449
+        },
+        {
+          "path": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l14.png",
+          "sha256": "a3af1c20d56a7913804c0a724d5b27aeb4320a0c732de8c878e35b289ef2a259",
+          "bytes": 320587
+        },
+        {
+          "path": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l04.png",
+          "sha256": "511a1d8e618d558fbea7aea46206d7122eca0d732e99d05014e9f2e113eeb7c6",
+          "bytes": 312721
+        },
+        {
+          "path": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l10.png",
+          "sha256": "a0a516bfecfe97fbbcd8a27436f2dd3bb12eb7b65d9ba61b82487fcaf92a67f1",
+          "bytes": 314230
+        },
+        {
+          "path": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l11.png",
+          "sha256": "ef7c53fe69b3bbfe333ab8ae41e84f0c947cc447728dd9c3daec4975dd4a4184",
+          "bytes": 319940
+        },
+        {
+          "path": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l05.png",
+          "sha256": "e4074661f0263f8af2447084954311d04cdcb2a85a68ea98b083247d42e70cd5",
+          "bytes": 317763
+        },
+        {
+          "path": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/l09-rubric_review-retry.png",
+          "sha256": "d3143b59f825999ed58cc23dc36a3b21f3a4ec597b784cc4e6e1dfb398e9c722",
+          "bytes": 321805
+        },
+        {
+          "path": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/l01-missing_context-retry.png",
+          "sha256": "13a1065c3a74b8f232b3685b389a5fcdedc6bafd3a2db9a314455450d83180d1",
+          "bytes": 369311
+        },
+        {
+          "path": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/l02-output_comparison-retry.png",
+          "sha256": "f8ab7039dc323f5b6416d20083db5c66422b8648a9ad832e32cf053265aad67f",
+          "bytes": 392040
+        },
+        {
+          "path": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l13.png",
+          "sha256": "84beda3a18ca07665af859d1736c2ca0689e87d438ffc9e82aebf373520d5e0b",
+          "bytes": 314572
+        },
+        {
+          "path": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l07.png",
+          "sha256": "133b9b6e53e51a78f437a95bd10fbc0a23bcd575d89b0058dcbcfa0081067b8b",
+          "bytes": 315792
+        },
+        {
+          "path": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/l02-sort-retry.png",
+          "sha256": "ca4850df584720c1fc43c5e54f653ab7625d0dc187bf392cc500230e5b7e6f6a",
+          "bytes": 302993
+        },
+        {
+          "path": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l06.png",
+          "sha256": "6832a218e7f9eb8ad87a672488c7d3c04e95b5e8ec2cfa58974bb68b05d5de37",
+          "bytes": 311869
+        },
+        {
+          "path": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/result-l12.png",
+          "sha256": "7200b0d6a9ba978323e6611984976eb7e65df1a6c078ef20c172e313bb15206c",
+          "bytes": 317199
+        },
+        {
+          "path": "engines/literacyDojo/test-results/readiness-learning-runtime/2026-10-16T01-47-16.317Z/page@70074afbe6fc2d139823c77affc3fe63.webm",
+          "sha256": "c626d34ddafee77864c5843caa2db945b29fbdba7739c3782cfbbfc8b76ede97",
+          "bytes": 18087936
+        }
+      ],
+      "limitations": [
+        "Real DOM interactions driven by read-only canonical answer data are functional observations, not a pedagogical or semantic judgment.",
+        "TypeSafe/Jev semantic verification and fresh whole-feature verifier remain pending.",
+        "Local Vite origins only; no deployed claim.",
+        "Run stopped by parent at high machine load; no final rerun was authorized. Remaining cases are unverified, not product failures.",
+        "Helper implementation was refined after this run: current helper and historical executed helper fingerprints differ. Raw report sourceFiles preserve the executed version.",
+        "No checks or production files were changed."
+      ],
+      "canonicalBefore": {
+        "learner/learning_state.yaml": "36419ae44e755a9bd8bd049b14d0dee03d8b5937e577285f67ffe730733735e2",
+        "learner/pipeline_status.yaml": "668ac80145de042c0bd78dd4210ceccf1dc0ad932770eb4a03f2fd6d886f169a",
+        "learner/profile.yaml": null,
+        "learner/journal.md": "60aa71fddacbff585358c8376e0ead77612a4248ab0f1700301c9dc39397ab6f"
+      },
+      "cleanup": {
+        "complete": true,
+        "method": "Parent-directed containment; own server listener PIDs, their known parent helpers and numeric descendants only. Post-stop scoped checks report all owned PIDs absent. No broad process arguments were read.",
+        "reference": ".scratch/readiness-implementation-20261015/qa-learning/load-containment.json"
+      },
+      "runtime": [],
+      "correctedAt": "2026-10-16T01:52:03.241267+00:00",
+      "rawReport": {
+        "path": ".scratch/readiness-implementation-20261015/qa-learning/literacyDojo-2026-10-16T01-47-16.317Z/report.json",
+        "sha256": "52457fa20716b58120bd6865067ac89d6135209799b5edca0813a301cf079346"
+      },
+      "canonicalAfter": {
+        "learner/learning_state.yaml": "36419ae44e755a9bd8bd049b14d0dee03d8b5937e577285f67ffe730733735e2",
+        "learner/pipeline_status.yaml": "668ac80145de042c0bd78dd4210ceccf1dc0ad932770eb4a03f2fd6d886f169a",
+        "learner/profile.yaml": null,
+        "learner/journal.md": "60aa71fddacbff585358c8376e0ead77612a4248ab0f1700301c9dc39397ab6f"
+      },
+      "canonicalUnchanged": true,
+      "remainingCases": [
+        "3 module checkpoints",
+        "Due reviews and spacing",
+        "Fresh whole-feature independent verifier",
+        "TypeSafe/Jev captured-evidence semantics",
+        "C11 frozen contract awaiting human renegotiation"
+      ]
+    },
+    {
+      "engineId": "codexdojo-os-prototype",
+      "caseName": "declared-use",
+      "sourceCommit": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+      "sourceFingerprint": "be6b1ea8f6fa3dfba0742913c42b3a2d54df46085440de9cbb5d0e99e80ceaea",
+      "sourceFiles": [
+        {
+          "path": "engines/codexdojo-os-prototype/src/data/missions.ts",
+          "sha256": "e3238b1bad2b4c22e740bda211a7e42b2c759699250b1b7175d2519ab4e65ea1"
+        },
+        {
+          "path": "engines/literacyDojo/src/data/generated/lessons.ts",
+          "sha256": "ef3c35409a808511b1832af192eda60a014130f01ebc943dc93b64ce0144784f"
+        },
+        {
+          "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/learning-runtime.mjs",
+          "sha256": "5935858cf3eac2f368e38691808432d3e8f1449ccc5504cb9137b349677c5f6d"
+        },
+        {
+          "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/learning-runtime-support.mjs",
+          "sha256": "b6827b2207ef75b7457d22bd17821b6c30876ecb84fce23909c29848181bcb07"
+        }
+      ],
+      "observedAt": "2026-10-16T01:48:39.347Z",
+      "producerContext": "readiness-qa-learning-runtime-agent",
+      "verifierContext": null,
+      "originEngineProducer": "repository-source",
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool",
+      "argv": [
+        "/Users/danielbarreto/.hermes/node/bin/node",
+        "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/learning-runtime.mjs",
+        "codexdojo-os-prototype",
+        "declared-use"
+      ],
+      "status": "unverified",
+      "cases": [
+        {
+          "id": "fresh-storage-onboarding",
+          "status": "pass",
+          "artifact": "engines/codexdojo-os-prototype/test-results/readiness-learning-runtime/2026-10-16T01-48-35.959Z/onboarding-hub.png"
+        },
+        {
+          "id": "mission-ai-pratica-l01",
+          "status": "pass",
+          "outcome": {
+            "activities": [
+              {
+                "activityId": "l01-a1",
+                "type": "choice",
+                "status": "pass"
+              },
+              {
+                "activityId": "l01-a2",
+                "type": "sort",
+                "status": "pass"
+              },
+              {
+                "activityId": "l01-a3",
+                "type": "missing_context",
+                "status": "pass"
+              }
+            ]
+          },
+          "artifact": "engines/codexdojo-os-prototype/test-results/readiness-learning-runtime/2026-10-16T01-48-35.959Z/result-l01.png",
+          "entry": "/mission/ai-pratica/l01",
+          "prerequisite": "Public direct mission route; no completion or OS status seeded."
+        },
+        {
+          "id": "mission-ai-pratica-l02",
+          "status": "pass",
+          "outcome": {
+            "activities": [
+              {
+                "activityId": "l02-a1",
+                "type": "output_comparison",
+                "status": "pass"
+              },
+              {
+                "activityId": "l02-a2",
+                "type": "choice",
+                "status": "pass"
+              },
+              {
+                "activityId": "l02-a3",
+                "type": "sort",
+                "status": "pass"
+              }
+            ]
+          },
+          "artifact": "engines/codexdojo-os-prototype/test-results/readiness-learning-runtime/2026-10-16T01-48-35.959Z/result-l02.png",
+          "entry": "/mission/ai-pratica/l02",
+          "prerequisite": "Public direct mission route; no completion or OS status seeded."
+        },
+        {
+          "id": "mission-ai-pratica-l03",
+          "status": "pass",
+          "outcome": {
+            "activities": [
+              {
+                "activityId": "l03-a1",
+                "type": "choice",
+                "status": "pass"
+              },
+              {
+                "activityId": "l03-a2",
+                "type": "choice",
+                "status": "pass"
+              },
+              {
+                "activityId": "l03-a3",
+                "type": "output_comparison",
+                "status": "pass"
+              }
+            ]
+          },
+          "artifact": "engines/codexdojo-os-prototype/test-results/readiness-learning-runtime/2026-10-16T01-48-35.959Z/result-l03.png",
+          "entry": "/mission/ai-pratica/l03",
+          "prerequisite": "Public direct mission route; no completion or OS status seeded."
+        },
+        {
+          "id": "mission-ai-pratica-l04",
+          "status": "pass",
+          "outcome": {
+            "activities": [
+              {
+                "activityId": "l04-a1",
+                "type": "choice",
+                "status": "pass"
+              },
+              {
+                "activityId": "l04-a2",
+                "type": "prompt_builder",
+                "status": "pass"
+              },
+              {
+                "activityId": "l04-a3",
+                "type": "missing_context",
+                "status": "pass"
+              }
+            ]
+          },
+          "artifact": "engines/codexdojo-os-prototype/test-results/readiness-learning-runtime/2026-10-16T01-48-35.959Z/result-l04.png",
+          "entry": "/mission/ai-pratica/l04",
+          "prerequisite": "Public direct mission route; no completion or OS status seeded."
+        },
+        {
+          "id": "mission-dev-l15",
+          "status": "pass",
+          "outcome": {
+            "activities": [
+              {
+                "activityId": "l15-a1",
+                "type": "choice",
+                "status": "pass"
+              },
+              {
+                "activityId": "l15-a2",
+                "type": "output_comparison",
+                "status": "pass"
+              },
+              {
+                "activityId": "l15-a3",
+                "type": "missing_context",
+                "status": "pass"
+              }
+            ]
+          },
+          "artifact": "engines/codexdojo-os-prototype/test-results/readiness-learning-runtime/2026-10-16T01-48-35.959Z/result-l15.png",
+          "entry": "/mission/dev/l15",
+          "prerequisite": "Public direct mission route; no completion or OS status seeded."
+        },
+        {
+          "id": "mission-ai-pratica-l05",
+          "status": "pass",
+          "outcome": {
+            "activities": [
+              {
+                "activityId": "l05-a1",
+                "type": "prompt_builder",
+                "status": "pass"
+              },
+              {
+                "activityId": "l05-a2",
+                "type": "choice",
+                "status": "pass"
+              },
+              {
+                "activityId": "l05-a3",
+                "type": "output_comparison",
+                "status": "pass"
+              }
+            ]
+          },
+          "artifact": "engines/codexdojo-os-prototype/test-results/readiness-learning-runtime/2026-10-16T01-48-35.959Z/result-l05.png",
+          "entry": "/mission/ai-pratica/l05",
+          "prerequisite": "Public direct mission route; no completion or OS status seeded."
+        },
+        {
+          "id": "mission-dev-l16",
+          "status": "pass",
+          "outcome": {
+            "activities": [
+              {
+                "activityId": "l16-a1",
+                "type": "prompt_builder",
+                "status": "pass"
+              },
+              {
+                "activityId": "l16-a2",
+                "type": "rubric_review",
+                "status": "pass"
+              },
+              {
+                "activityId": "l16-a3",
+                "type": "output_comparison",
+                "status": "pass"
+              }
+            ]
+          },
+          "artifact": "engines/codexdojo-os-prototype/test-results/readiness-learning-runtime/2026-10-16T01-48-35.959Z/result-l16.png",
+          "entry": "/mission/dev/l16",
+          "prerequisite": "Public direct mission route; no completion or OS status seeded."
+        },
+        {
+          "id": "mission-ai-pratica-l06",
+          "status": "pass",
+          "outcome": {
+            "activities": [
+              {
+                "activityId": "l06-a1",
+                "type": "missing_context",
+                "status": "pass"
+              },
+              {
+                "activityId": "l06-a2",
+                "type": "prompt_builder",
+                "status": "pass"
+              },
+              {
+                "activityId": "l06-a3",
+                "type": "choice",
+                "status": "pass"
+              }
+            ]
+          },
+          "artifact": "engines/codexdojo-os-prototype/test-results/readiness-learning-runtime/2026-10-16T01-48-35.959Z/result-l06.png",
+          "entry": "/mission/ai-pratica/l06",
+          "prerequisite": "Public direct mission route; no completion or OS status seeded."
+        },
+        {
+          "id": "runtime-supervision",
+          "status": "unverified",
+          "error": "Error: page.screenshot: Target page, context or browser has been closed",
+          "artifact": null,
+          "classification": "owner-directed-resource-containment",
+          "note": "The browser was deliberately terminated under parent instruction; raw error is retained as execution evidence, not a product defect."
+        }
+      ],
+      "inventory": {
+        "missions": [
+          {
+            "id": "l01",
+            "trackId": "ai-pratica",
+            "runtime": "literacyDojo"
+          },
+          {
+            "id": "l02",
+            "trackId": "ai-pratica",
+            "runtime": "literacyDojo"
+          },
+          {
+            "id": "l03",
+            "trackId": "ai-pratica",
+            "runtime": "literacyDojo"
+          },
+          {
+            "id": "l04",
+            "trackId": "ai-pratica",
+            "runtime": "literacyDojo"
+          },
+          {
+            "id": "l05",
+            "trackId": "ai-pratica",
+            "runtime": "literacyDojo"
+          },
+          {
+            "id": "l06",
+            "trackId": "ai-pratica",
+            "runtime": "literacyDojo"
+          },
+          {
+            "id": "l07",
+            "trackId": "ai-pratica",
+            "runtime": "literacyDojo"
+          },
+          {
+            "id": "l08",
+            "trackId": "ai-pratica",
+            "runtime": "literacyDojo"
+          },
+          {
+            "id": "l09",
+            "trackId": "ai-pratica",
+            "runtime": "literacyDojo"
+          },
+          {
+            "id": "l10",
+            "trackId": "ai-pratica",
+            "runtime": "literacyDojo"
+          },
+          {
+            "id": "l11",
+            "trackId": "ai-pratica",
+            "runtime": "literacyDojo"
+          },
+          {
+            "id": "l12",
+            "trackId": "ai-pratica",
+            "runtime": "literacyDojo"
+          },
+          {
+            "id": "l13",
+            "trackId": "ai-pratica",
+            "runtime": "literacyDojo"
+          },
+          {
+            "id": "l14",
+            "trackId": "ai-pratica",
+            "runtime": "literacyDojo"
+          },
+          {
+            "id": "l18",
+            "trackId": "ai-pratica",
+            "runtime": "literacyDojo"
+          },
+          {
+            "id": "l19",
+            "trackId": "ai-pratica",
+            "runtime": "literacyDojo"
+          },
+          {
+            "id": "l20",
+            "trackId": "ai-pratica",
+            "runtime": "literacyDojo"
+          },
+          {
+            "id": "l24",
+            "trackId": "ai-pratica",
+            "runtime": "literacyDojo"
+          },
+          {
+            "id": "l25",
+            "trackId": "ai-pratica",
+            "runtime": "literacyDojo"
+          },
+          {
+            "id": "l26",
+            "trackId": "ai-pratica",
+            "runtime": "literacyDojo"
+          },
+          {
+            "id": "l30",
+            "trackId": "ai-pratica",
+            "runtime": "literacyDojo"
+          },
+          {
+            "id": "l31",
+            "trackId": "ai-pratica",
+            "runtime": "literacyDojo"
+          },
+          {
+            "id": "l32",
+            "trackId": "ai-pratica",
+            "runtime": "literacyDojo"
+          },
+          {
+            "id": "game-02-warehouse",
+            "trackId": "dev",
+            "runtime": "voxelDojo"
+          },
+          {
+            "id": "game-03-wormhole",
+            "trackId": "dev",
+            "runtime": "voxelDojo"
+          },
+          {
+            "id": "game-05-relay-station",
+            "trackId": "dev",
+            "runtime": "voxelDojo"
+          },
+          {
+            "id": "l15",
+            "trackId": "dev",
+            "runtime": "literacyDojo"
+          },
+          {
+            "id": "l16",
+            "trackId": "dev",
+            "runtime": "literacyDojo"
+          },
+          {
+            "id": "l17",
+            "trackId": "dev",
+            "runtime": "literacyDojo"
+          },
+          {
+            "id": "game-06-pipeline-plant",
+            "trackId": "dev",
+            "runtime": "voxelDojo"
+          },
+          {
+            "id": "game-07-checkpoint-city",
+            "trackId": "dev",
+            "runtime": "voxelDojo"
+          },
+          {
+            "id": "game-08-timeline-tower",
+            "trackId": "dev",
+            "runtime": "voxelDojo"
+          },
+          {
+            "id": "game-09-docking-bay",
+            "trackId": "dev",
+            "runtime": "voxelDojo"
+          },
+          {
+            "id": "l21",
+            "trackId": "dev",
+            "runtime": "literacyDojo"
+          },
+          {
+            "id": "l22",
+            "trackId": "dev",
+            "runtime": "literacyDojo"
+          },
+          {
+            "id": "l23",
+            "trackId": "dev",
+            "runtime": "literacyDojo"
+          },
+          {
+            "id": "l27",
+            "trackId": "dev",
+            "runtime": "literacyDojo"
+          },
+          {
+            "id": "l28",
+            "trackId": "dev",
+            "runtime": "literacyDojo"
+          },
+          {
+            "id": "l29",
+            "trackId": "dev",
+            "runtime": "literacyDojo"
+          }
+        ],
+        "note": "39 mission catalog entries; each outcome below is a separately observed mission. Engine Hub registry and 16-game bundle are different sets."
+      },
+      "evidenceRefs": [
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/codexdojo-os-prototype-2026-10-16T01-48-35.959Z/voxelDojo-game-06-pipeline-plant-54806.log",
+          "sha256": "8ded8d1a8c8f84106fe470372441d9801588422f0e4b7fcf531a2e984eba8a0b",
+          "bytes": 74
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/codexdojo-os-prototype-2026-10-16T01-48-35.959Z/voxelDojo-game-03-wormhole-54725.log",
+          "sha256": "7bdcc615c5696305a16da4192aa3806bdbd3522c34e4e420bd766f50ad7dd707",
+          "bytes": 74
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/codexdojo-os-prototype-2026-10-16T01-48-35.959Z/ai-pratica-l04.json",
+          "sha256": "2bac9deeda3454d0a79e746294c0117c7864e109aef99ab9f5ff96caa6786ef1",
+          "bytes": 22294
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/codexdojo-os-prototype-2026-10-16T01-48-35.959Z/ai-pratica-l05.json",
+          "sha256": "7b2ba3bb15e5430ee14a41d439931133066d5f34330932d0facd7219c1d0ea5f",
+          "bytes": 22501
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/codexdojo-os-prototype-2026-10-16T01-48-35.959Z/report.json",
+          "sha256": "1d68f0cc663ae0615d04a1fae8e172f69d6547ed7137edd466997e5723929074",
+          "bytes": 27031
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/codexdojo-os-prototype-2026-10-16T01-48-35.959Z/voxelDojo-game-05-relay-station-54774.log",
+          "sha256": "3b05f289f0b4f7beea55831d37e3948780588dc6eee73a08f0147948c5320819",
+          "bytes": 74
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/codexdojo-os-prototype-2026-10-16T01-48-35.959Z/ai-pratica-l02.json",
+          "sha256": "dc969ffcf537035c2fd82c4d2028051e396e14df8992e98dac4f49d8856532df",
+          "bytes": 22072
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/codexdojo-os-prototype-2026-10-16T01-48-35.959Z/codexdojo-os-prototype-54971.log",
+          "sha256": "8208d157c2a154ded07b222f87cd618ece3b6932952b5ab4ce191d6e9e5abf2d",
+          "bytes": 74
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/codexdojo-os-prototype-2026-10-16T01-48-35.959Z/dev-l15.json",
+          "sha256": "f1c89ca92daf9a5f4f9a9e2f1e2167faecc2f389ae9621e3378c83222f43561b",
+          "bytes": 22437
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/codexdojo-os-prototype-2026-10-16T01-48-35.959Z/ai-pratica-l03.json",
+          "sha256": "df6e4322d61353642facf96ec8b16a68726afe1e116fe507bd417c5cac2c7d08",
+          "bytes": 22197
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/codexdojo-os-prototype-2026-10-16T01-48-35.959Z/voxelDojo-game-09-docking-bay-54920.log",
+          "sha256": "dcc14b743a0d18c019ff33fbaa152a8a763f1e6be186d01d1b5b521a19e9c7c3",
+          "bytes": 74
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/codexdojo-os-prototype-2026-10-16T01-48-35.959Z/voxelDojo-game-08-timeline-tower-54869.log",
+          "sha256": "96823b88d192ddd277b4d2df51c53fecd5fdeea6d30f2f0f6475da548677efb2",
+          "bytes": 74
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/codexdojo-os-prototype-2026-10-16T01-48-35.959Z/dev-l16.json",
+          "sha256": "14ffb174da9dcc75bb60012e2da43754428f1387091f758d716c25813d0244a9",
+          "bytes": 22558
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/codexdojo-os-prototype-2026-10-16T01-48-35.959Z/voxelDojo-game-02-warehouse-54674.log",
+          "sha256": "e2beb7deef7949f0cddb7b15bb5fb48a6f9dfe3314393d227235316e74610c04",
+          "bytes": 74
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/codexdojo-os-prototype-2026-10-16T01-48-35.959Z/ai-pratica-l01.json",
+          "sha256": "6fadee51584bb555b2dc88cff31e7430cc0839c678d45ba310609532e460de90",
+          "bytes": 22012
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/codexdojo-os-prototype-2026-10-16T01-48-35.959Z/ai-pratica-l06.json",
+          "sha256": "321b4d780c6c01f4051dd9b20e2cea5164d6c47220ff062eb216ed73242262e4",
+          "bytes": 22614
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/codexdojo-os-prototype-2026-10-16T01-48-35.959Z/voxelDojo-game-07-checkpoint-city-54825.log",
+          "sha256": "3627d3dd9bfd309be11add9aee7d459607ae5c54a0a76c4d4bcbbb0a9ce77c89",
+          "bytes": 74
+        },
+        {
+          "path": ".scratch/readiness-implementation-20261015/qa-learning/codexdojo-os-prototype-2026-10-16T01-48-35.959Z/literacyDojo-54625.log",
+          "sha256": "c0881b97740ca43014943c96ed8cd4a53a006f271b91122c2329f1d168a26768",
+          "bytes": 74
+        },
+        {
+          "path": "engines/codexdojo-os-prototype/test-results/readiness-learning-runtime/2026-10-16T01-48-35.959Z/l04-prompt_builder-retry.png",
+          "sha256": "2ba861a70f624cdb56dec48bcbc69401f90f99d174d1185955ea2da919742ba6",
+          "bytes": 466607
+        },
+        {
+          "path": "engines/codexdojo-os-prototype/test-results/readiness-learning-runtime/2026-10-16T01-48-35.959Z/page@9d379a9423261f3be93dc6985d6dbf72.webm",
+          "sha256": "f200cd351fe79fca20fd01221ba6a892628c92d5346e26e25085e86523ce9a41",
+          "bytes": 4194304
+        },
+        {
+          "path": "engines/codexdojo-os-prototype/test-results/readiness-learning-runtime/2026-10-16T01-48-35.959Z/onboarding-hub.png",
+          "sha256": "56ffd855e9f0af745fce15e8b76acf479a01d5f5a4df9e8751607750074ebad1",
+          "bytes": 342241
+        },
+        {
+          "path": "engines/codexdojo-os-prototype/test-results/readiness-learning-runtime/2026-10-16T01-48-35.959Z/l16-rubric_review-retry.png",
+          "sha256": "a5ea9f0b4667d8a434dd5f8e1dd0de1d8ea67bbd69414bf877dbd7e5fcb6b880",
+          "bytes": 422321
+        },
+        {
+          "path": "engines/codexdojo-os-prototype/test-results/readiness-learning-runtime/2026-10-16T01-48-35.959Z/l01-sort-retry.png",
+          "sha256": "44af0cd573fa399d76a583748633a207aeee2996a31da77831d08bb12d5f15bb",
+          "bytes": 488067
+        },
+        {
+          "path": "engines/codexdojo-os-prototype/test-results/readiness-learning-runtime/2026-10-16T01-48-35.959Z/result-l16.png",
+          "sha256": "f90343385c0be7034441b80c93f9686c265ab9a909cb68a8c9a04f9ef5c4206e",
+          "bytes": 386787
+        },
+        {
+          "path": "engines/codexdojo-os-prototype/test-results/readiness-learning-runtime/2026-10-16T01-48-35.959Z/result-l02.png",
+          "sha256": "01e8ef09fbbc97960fff4b570ed725eece6887c6b8ca5c912be201b3e34f0176",
+          "bytes": 388241
+        },
+        {
+          "path": "engines/codexdojo-os-prototype/test-results/readiness-learning-runtime/2026-10-16T01-48-35.959Z/result-l03.png",
+          "sha256": "2577e442cb71da46c191aed7d83dace0c62819064c00cfcbaeb337d7d23fc509",
+          "bytes": 398176
+        },
+        {
+          "path": "engines/codexdojo-os-prototype/test-results/readiness-learning-runtime/2026-10-16T01-48-35.959Z/result-l01.png",
+          "sha256": "6468a3286b82e1e116366aa1fb6c9773b60a31b040c482a76c2365602e80d2cc",
+          "bytes": 386304
+        },
+        {
+          "path": "engines/codexdojo-os-prototype/test-results/readiness-learning-runtime/2026-10-16T01-48-35.959Z/result-l15.png",
+          "sha256": "cacdc0608b83dd4ba8d0b3bcf27e0755cadf2224843825e6594d440894727263",
+          "bytes": 392354
+        },
+        {
+          "path": "engines/codexdojo-os-prototype/test-results/readiness-learning-runtime/2026-10-16T01-48-35.959Z/result-l04.png",
+          "sha256": "2a181e8a65e0892af333218c9f6c7802f4324ce6e76284f8447049f62bb13b67",
+          "bytes": 376115
+        },
+        {
+          "path": "engines/codexdojo-os-prototype/test-results/readiness-learning-runtime/2026-10-16T01-48-35.959Z/result-l05.png",
+          "sha256": "816bf48b11dd61d0e872166b448b7ad0b5889a0807e55a805f3127270fd9bfa3",
+          "bytes": 336787
+        },
+        {
+          "path": "engines/codexdojo-os-prototype/test-results/readiness-learning-runtime/2026-10-16T01-48-35.959Z/l01-choice-retry.png",
+          "sha256": "535d190d52e884108e9fb1f0423318ec8137c464f6fffcf86ed4b46ef323ec8d",
+          "bytes": 483140
+        },
+        {
+          "path": "engines/codexdojo-os-prototype/test-results/readiness-learning-runtime/2026-10-16T01-48-35.959Z/l01-missing_context-retry.png",
+          "sha256": "bd4d3cc98c54eb0d2840356f286912173df4e92398eac7767451ed2666af521e",
+          "bytes": 462879
+        },
+        {
+          "path": "engines/codexdojo-os-prototype/test-results/readiness-learning-runtime/2026-10-16T01-48-35.959Z/l02-output_comparison-retry.png",
+          "sha256": "25d510fd1c1027804d2bfa275ace3e9313ebd4c7cb633fd3d9e2631beebaa457",
+          "bytes": 461733
+        },
+        {
+          "path": "engines/codexdojo-os-prototype/test-results/readiness-learning-runtime/2026-10-16T01-48-35.959Z/result-l06.png",
+          "sha256": "0f52f080c664bb5901ea289508df7eafab7ecc739040c187b7a938a07a2b47a4",
+          "bytes": 382858
+        }
+      ],
+      "limitations": [
+        "Real DOM interactions driven by read-only canonical answer data are functional observations, not a pedagogical or semantic judgment.",
+        "TypeSafe/Jev semantic verification and fresh whole-feature verifier remain pending.",
+        "Local Vite origins only; no deployed claim.",
+        "Run stopped by parent at high machine load; no final rerun was authorized. Remaining cases are unverified, not product failures.",
+        "Helper implementation was refined after this run: current helper and historical executed helper fingerprints differ. Raw report sourceFiles preserve the executed version.",
+        "No checks or production files were changed."
+      ],
+      "canonicalBefore": {
+        "learner/learning_state.yaml": "36419ae44e755a9bd8bd049b14d0dee03d8b5937e577285f67ffe730733735e2",
+        "learner/pipeline_status.yaml": "668ac80145de042c0bd78dd4210ceccf1dc0ad932770eb4a03f2fd6d886f169a",
+        "learner/profile.yaml": null,
+        "learner/journal.md": "60aa71fddacbff585358c8376e0ead77612a4248ab0f1700301c9dc39397ab6f"
+      },
+      "cleanup": {
+        "complete": true,
+        "method": "Parent-directed containment; own server listener PIDs, their known parent helpers and numeric descendants only. Post-stop scoped checks report all owned PIDs absent. No broad process arguments were read.",
+        "reference": ".scratch/readiness-implementation-20261015/qa-learning/load-containment.json"
+      },
+      "runtime": [
+        {
+          "url": "http://127.0.0.1:54971",
+          "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexdojo-os-prototype",
+          "argv": [
+            "/Users/danielbarreto/.hermes/node/bin/node",
+            "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexdojo-os-prototype/node_modules/vite/bin/vite.js",
+            "--host",
+            "127.0.0.1",
+            "--port",
+            "54971",
+            "--strictPort"
+          ],
+          "pid": 3443,
+          "exitCode": 143
+        },
+        {
+          "url": "http://127.0.0.1:54920",
+          "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/voxelDojo/game-09-docking-bay",
+          "argv": [
+            "/Users/danielbarreto/.hermes/node/bin/node",
+            "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/voxelDojo/node_modules/.pnpm/vite@6.4.3/node_modules/vite/bin/vite.js",
+            "--host",
+            "127.0.0.1",
+            "--port",
+            "54920",
+            "--strictPort"
+          ],
+          "pid": 3224,
+          "exitCode": 143
+        },
+        {
+          "url": "http://127.0.0.1:54869",
+          "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/voxelDojo/game-08-timeline-tower",
+          "argv": [
+            "/Users/danielbarreto/.hermes/node/bin/node",
+            "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/voxelDojo/node_modules/.pnpm/vite@6.4.3/node_modules/vite/bin/vite.js",
+            "--host",
+            "127.0.0.1",
+            "--port",
+            "54869",
+            "--strictPort"
+          ],
+          "pid": 3040,
+          "exitCode": 143
+        },
+        {
+          "url": "http://127.0.0.1:54825",
+          "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/voxelDojo/game-07-checkpoint-city",
+          "argv": [
+            "/Users/danielbarreto/.hermes/node/bin/node",
+            "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/voxelDojo/node_modules/.pnpm/vite@6.4.3/node_modules/vite/bin/vite.js",
+            "--host",
+            "127.0.0.1",
+            "--port",
+            "54825",
+            "--strictPort"
+          ],
+          "pid": 2923,
+          "exitCode": 143
+        },
+        {
+          "url": "http://127.0.0.1:54806",
+          "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/voxelDojo/game-06-pipeline-plant",
+          "argv": [
+            "/Users/danielbarreto/.hermes/node/bin/node",
+            "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/voxelDojo/node_modules/.pnpm/vite@6.4.3/node_modules/vite/bin/vite.js",
+            "--host",
+            "127.0.0.1",
+            "--port",
+            "54806",
+            "--strictPort"
+          ],
+          "pid": 2883,
+          "exitCode": 143
+        },
+        {
+          "url": "http://127.0.0.1:54774",
+          "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/voxelDojo/game-05-relay-station",
+          "argv": [
+            "/Users/danielbarreto/.hermes/node/bin/node",
+            "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/voxelDojo/node_modules/.pnpm/vite@6.4.3/node_modules/vite/bin/vite.js",
+            "--host",
+            "127.0.0.1",
+            "--port",
+            "54774",
+            "--strictPort"
+          ],
+          "pid": 2813,
+          "exitCode": 143
+        },
+        {
+          "url": "http://127.0.0.1:54725",
+          "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/voxelDojo/game-03-wormhole",
+          "argv": [
+            "/Users/danielbarreto/.hermes/node/bin/node",
+            "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/voxelDojo/node_modules/.pnpm/vite@6.4.3/node_modules/vite/bin/vite.js",
+            "--host",
+            "127.0.0.1",
+            "--port",
+            "54725",
+            "--strictPort"
+          ],
+          "pid": 2625,
+          "exitCode": 143
+        },
+        {
+          "url": "http://127.0.0.1:54674",
+          "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/voxelDojo/game-02-warehouse",
+          "argv": [
+            "/Users/danielbarreto/.hermes/node/bin/node",
+            "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/voxelDojo/node_modules/.pnpm/vite@6.4.3/node_modules/vite/bin/vite.js",
+            "--host",
+            "127.0.0.1",
+            "--port",
+            "54674",
+            "--strictPort"
+          ],
+          "pid": 2452,
+          "exitCode": 143
+        },
+        {
+          "url": "http://127.0.0.1:54625",
+          "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo",
+          "argv": [
+            "/Users/danielbarreto/.hermes/node/bin/node",
+            "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/node_modules/vite/bin/vite.js",
+            "--host",
+            "127.0.0.1",
+            "--port",
+            "54625",
+            "--strictPort"
+          ],
+          "pid": 2313,
+          "exitCode": 143
+        }
+      ],
+      "canonicalAfter": {
+        "learner/learning_state.yaml": "36419ae44e755a9bd8bd049b14d0dee03d8b5937e577285f67ffe730733735e2",
+        "learner/pipeline_status.yaml": "668ac80145de042c0bd78dd4210ceccf1dc0ad932770eb4a03f2fd6d886f169a",
+        "learner/profile.yaml": null,
+        "learner/journal.md": "60aa71fddacbff585358c8376e0ead77612a4248ab0f1700301c9dc39397ab6f"
+      },
+      "canonicalUnchanged": true,
+      "correctedAt": "2026-10-16T01:52:03.342410+00:00",
+      "rawReport": {
+        "path": ".scratch/readiness-implementation-20261015/qa-learning/codexdojo-os-prototype-2026-10-16T01-48-35.959Z/report.json",
+        "sha256": "1d68f0cc663ae0615d04a1fae8e172f69d6547ed7137edd466997e5723929074"
+      },
+      "remainingCases": [
+        "31 of39 mission variants not executed before interruption",
+        "Engine Hub adapter variants",
+        "Host/verifier interruption and recovery",
+        "Cleared storage after populated profile",
+        "Fresh whole-feature independent verifier",
+        "TypeSafe/Jev captured-evidence semantics"
+      ]
+    }
+  ],
+  "containment": {
+    "reason": "Owner-directed load containment; remaining runtime cases unverified due shared machine resource pressure, not product failure.",
+    "observedAt": "2026-10-16T01:50:59Z",
+    "serverPids": [
+      2313,
+      2452,
+      2625,
+      2813,
+      2883,
+      2923,
+      3040,
+      3224,
+      3443,
+      99105
+    ],
+    "helperPids": [
+      1988,
+      98817
+    ],
+    "ownedDescendantPids": [
+      1988,
+      2287,
+      2302,
+      2303,
+      2306,
+      2307,
+      2313,
+      2452,
+      2625,
+      2813,
+      2883,
+      2923,
+      3040,
+      3224,
+      3443,
+      98817,
+      99064,
+      99080,
+      99081,
+      99084,
+      99085,
+      99105
+    ],
+    "scopedPostStopStates": {
+      "1988": "absent",
+      "2287": "absent",
+      "2302": "absent",
+      "2303": "absent",
+      "2306": "absent",
+      "2307": "absent",
+      "2313": "absent",
+      "2452": "absent",
+      "2625": "absent",
+      "2813": "absent",
+      "2883": "absent",
+      "2923": "absent",
+      "3040": "absent",
+      "3224": "absent",
+      "3443": "absent",
+      "98817": "absent",
+      "99064": "absent",
+      "99080": "absent",
+      "99081": "absent",
+      "99084": "absent",
+      "99085": "absent",
+      "99105": "absent"
+    },
+    "sigkillRemainingOwnedPids": [],
+    "checkedAt": "2026-10-16T01:51:18Z"
+  },
+  "preliminaryObserverIssues": [
+    "First run literacyDojo-2026-10-16T01-46-15.523Z used availability instead of status and enumerated zero lessons; retained as a harness mistake, not full coverage. Guard23 and status/hasContent fixed before the second run.",
+    "An initial unexecuted OS game09 observer used nonexistent predictions map; corrected to real DOM actions for all pods. It was not reached in the interrupted run.",
+    "Helpers now stop owned children on SIGTERM/SIGINT and start hosted game servers sequentially; no new browser run has been started."
+  ]
+}

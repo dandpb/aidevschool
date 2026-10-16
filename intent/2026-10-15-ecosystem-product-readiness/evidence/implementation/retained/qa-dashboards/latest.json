@@ -1,0 +1,187 @@
+{
+  "schemaVersion": 1,
+  "producerOnly": true,
+  "engines": [
+    {
+      "engineId": "codexDojo",
+      "criterion": "C18",
+      "status": "unverified",
+      "report": {
+        "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/codexDojo-2026-10-16T01-43-34-045Z/report.json",
+        "sha256": "ba9c5bbe8436c095d07421210b9b0d46521f59f88260008ed263fdb83e1dabf7"
+      },
+      "cleanup": {
+        "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/codexDojo-2026-10-16T01-43-34-045Z/cleanup-check.json",
+        "sha256": "2dd023bb65efe71e7fd3cfaac9f8d219e6fef81e94f26d8d5ca82d1249d67c97"
+      },
+      "sourceRefsCurrent": true,
+      "allEvidenceHashesValid": true,
+      "videos": 3,
+      "assertions": [
+        {
+          "id": "C18-projection-next-action",
+          "status": "pass"
+        },
+        {
+          "id": "C18-real-clipboard-prompt",
+          "status": "pass"
+        },
+        {
+          "id": "C18-configured-actual-os-destination",
+          "status": "pass"
+        },
+        {
+          "id": "C18-configured-page-health",
+          "status": "pass"
+        },
+        {
+          "id": "C18-absent-production-url-boundary",
+          "status": "pass"
+        },
+        {
+          "id": "C18-learner-preserved",
+          "status": "pass"
+        },
+        {
+          "id": "C18-independent-semantic-image-judgment",
+          "status": "unverified"
+        }
+      ],
+      "limitations": [
+        "No TypeSafe/Jev key was supplied. Independent semantic judgment of captured images remains an explicit prerequisite; no global engineReady claim is made."
+      ],
+      "screenshots": 5,
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      }
+    },
+    {
+      "engineId": "dojoToday",
+      "criterion": "C20",
+      "status": "blocked",
+      "report": {
+        "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/dojoToday-2026-10-16T01-42-51-714Z/report.json",
+        "sha256": "4bf5b243c8bf757479b8f34d4eafcbf17cbd01b9cb7b1d93dc6070f546dad007"
+      },
+      "cleanup": {
+        "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/dojoToday-2026-10-16T01-42-51-714Z/cleanup-check.json",
+        "sha256": "c6a1fcbd02823578e8ef8fd42003c5067b0d5588b0924eaca5a304e85a0e1694"
+      },
+      "sourceRefsCurrent": true,
+      "allEvidenceHashesValid": true,
+      "videos": 1,
+      "assertions": [
+        {
+          "id": "C20-readonly-projection-and-next-action",
+          "status": "pass"
+        },
+        {
+          "id": "C20-offline-socrates",
+          "status": "pass"
+        },
+        {
+          "id": "C20-byok-empty-clear-recovery",
+          "status": "pass"
+        },
+        {
+          "id": "C20-game02-real-inline-practice",
+          "status": "blocked"
+        },
+        {
+          "id": "C20-return-without-conversation-or-canonical-write",
+          "status": "pass"
+        },
+        {
+          "id": "C20-page-health",
+          "status": "pass"
+        },
+        {
+          "id": "C20-real-byok-provider-error-and-positive",
+          "status": "unverified"
+        },
+        {
+          "id": "C20-learner-preserved",
+          "status": "pass"
+        },
+        {
+          "id": "C20-independent-semantic-image-judgment",
+          "status": "unverified"
+        }
+      ],
+      "limitations": [
+        "The current prepared local route /games/02/index.html returned the daily landing, so inline practice is blocked in this runtime. README describes preparing a relative game bundle; no product source defect or repaired packaging is inferred, and no assets were copied to manufacture a pass.",
+        "Configured BYOK provider positive/error/recovery remains unverified without app-specific credential authorization; no existing Hermes or other account credential was read or reused.",
+        "No TypeSafe/Jev key was supplied. Independent semantic judgment of captured images remains an explicit prerequisite; no global engineReady claim is made."
+      ],
+      "screenshots": 6,
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      }
+    },
+    {
+      "engineId": "miniTown",
+      "criterion": "C23",
+      "status": "unverified",
+      "report": {
+        "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/miniTown-2026-10-16T01-43-10-066Z/report.json",
+        "sha256": "6b3c28c85dd41e1609d787c387668c49e25c7b6edc6a6c6d69671851e640ff87"
+      },
+      "cleanup": {
+        "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-dashboards/miniTown-2026-10-16T01-43-10-066Z/cleanup-check.json",
+        "sha256": "959b6cb52b2b32517e4ab38c5ba5abdfd2a73027044825e4e2f328d46d13851f"
+      },
+      "sourceRefsCurrent": true,
+      "allEvidenceHashesValid": true,
+      "videos": 3,
+      "assertions": [
+        {
+          "id": "C23-entry-hud-exploration",
+          "status": "pass"
+        },
+        {
+          "id": "C23-declared-town-content",
+          "status": "unverified"
+        },
+        {
+          "id": "C23-day-night-public-tick-and-hud",
+          "status": "pass"
+        },
+        {
+          "id": "C23-exit-reopen-no-persistence-promise",
+          "status": "pass"
+        },
+        {
+          "id": "C23-renderer-unavailable-reload-and-exit",
+          "status": "pass"
+        },
+        {
+          "id": "C23-route-unavailable-one-retry-exit-and-reopen",
+          "status": "pass"
+        },
+        {
+          "id": "C23-learner-preserved",
+          "status": "pass"
+        },
+        {
+          "id": "C23-independent-semantic-image-judgment",
+          "status": "unverified"
+        }
+      ],
+      "limitations": [
+        "Normal entry has zero zones, buildings, residents and vehicles; the capture shows ground only. The populated-town description in the current student guide remains unverified, without reducing the frozen promise or injecting debug content.",
+        "No TypeSafe/Jev key was supplied. Independent semantic judgment of captured images remains an explicit prerequisite; no global engineReady claim is made."
+      ],
+      "screenshots": 6,
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      }
+    }
+  ],
+  "helper": {
+    "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/dashboard-runtime.mjs",
+    "sha256": "c21035f43f8d7cec9c43391e5a188ddbb0e2f199f8086b01b2e2eb2f38331543"
+  }
+}

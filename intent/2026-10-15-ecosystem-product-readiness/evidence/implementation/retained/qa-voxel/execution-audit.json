@@ -1,0 +1,36 @@
+{
+  "at": "2026-10-16T01:51:44.268Z",
+  "commands": [
+    {
+      "command": "rtk proxy node --check intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/voxel-runtime.mjs",
+      "exitCode": 0
+    },
+    {
+      "command": "rtk proxy node intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/voxel-runtime.mjs declared-use > .scratch/readiness-implementation-20261015/qa-voxel/full-run.log 2>&1",
+      "exitCode": 137,
+      "reason": "Parent-directed resource stop"
+    }
+  ],
+  "report": {
+    "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-voxel/partial-report.json",
+    "sha256": "ebeb214ada34cf64a7cb3d26488452f4f196d0c73393ecc8935705da8d902fdb"
+  },
+  "immutableRunHelper": {
+    "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/qa-voxel/voxel-runtime-at-full-run.mjs",
+    "sha256": "f63dc27cb8df9559a7643ea11ab129b11d10ab7875ba18daba0c6a9bb256b8d1"
+  },
+  "currentCorrectedHelper": {
+    "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/voxel-runtime.mjs",
+    "sha256": "7ad6f01b75e0f2bbb7edf0376cf339b2c765c3c100e7124a8c1997e8da08a502"
+  },
+  "cleanupVerified": true,
+  "counts": {
+    "catalogGames": 17,
+    "completedGameContexts": 6,
+    "primaryLevelPairsPassed": 18,
+    "primaryLevelPairsUnverified": 50,
+    "fallbackLevelPairsPassed": 24,
+    "completedCasesPassed": 51,
+    "inFlightCapturedCases": 3
+  }
+}
