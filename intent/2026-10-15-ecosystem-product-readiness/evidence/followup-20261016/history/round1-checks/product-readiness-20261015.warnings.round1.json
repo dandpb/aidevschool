@@ -1,0 +1,88 @@
+{
+  "sourceCommit": "528a56c847ec50276ed9d2dab2c7247584c567c3",
+  "featureVerdict": "FAIL",
+  "criteria": {
+    "pass": 10,
+    "fail": 2,
+    "unverified": 22
+  },
+  "sdlc_warnings": [
+    {
+      "id": "SDLC-READY-001",
+      "repo": "dandpb/aidevschool",
+      "head": "528a56c847ec50276ed9d2dab2c7247584c567c3",
+      "issue": "Reparo #657 validado localmente; entrega remota pendente.",
+      "evidence": "[Verificação independente](/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.checks/product-readiness-20261015.verified.md)",
+      "correction": "Publicar o reparo isolado e revalidar o head do PR.",
+      "verification": "C1–7 e checks atuais/cancelados verdes; countersign e merge pela porta canônica.",
+      "prerequisite": "Autorização de publicação.",
+      "status": "awaiting_prerequisite"
+    },
+    {
+      "id": "SDLC-READY-002",
+      "repo": "dandpb/aidevschool",
+      "head": "528a56c847ec50276ed9d2dab2c7247584c567c3",
+      "issue": "Reparo #656 validado; C11, prova UI e deploy pendentes.",
+      "evidence": "[Verificação independente](/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.checks/product-readiness-20261015.verified.md)",
+      "correction": "Resolver C11 e comprovar cliente/endpoint oferecido.",
+      "verification": "C8–13 provados no candidato e no deploy identificado.",
+      "prerequisite": "Decisão C11; host estável; deploy ID/source SHA.",
+      "status": "awaiting_prerequisite"
+    },
+    {
+      "id": "SDLC-READY-003",
+      "repo": "dandpb/aidevschool",
+      "head": "528a56c847ec50276ed9d2dab2c7247584c567c3",
+      "issue": "Seis claims continuam stale.",
+      "evidence": "[Verificação independente](/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.checks/product-readiness-20261015.verified.md)",
+      "correction": "Renovar observações e assessments independentes.",
+      "verification": "cli.py check --require-current com exit 0.",
+      "prerequisite": "Fonte final e observações completas.",
+      "status": "open"
+    },
+    {
+      "id": "SDLC-READY-004",
+      "repo": "dandpb/aidevschool",
+      "head": "528a56c847ec50276ed9d2dab2c7247584c567c3",
+      "issue": "14 engines: 0 pass, 3 blocked, 11 unverified.",
+      "evidence": "[Verificação independente](/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.checks/product-readiness-20261015.verified.md)",
+      "correction": "Concluir variantes e verificação independente.",
+      "verification": "14/14 pass antes do aceite global.",
+      "prerequisite": "Host estável e acesso MiniMax Agent Team.",
+      "status": "awaiting_prerequisite"
+    },
+    {
+      "id": "SDLC-READY-005",
+      "repo": "dandpb/aidevschool",
+      "head": "528a56c847ec50276ed9d2dab2c7247584c567c3",
+      "issue": "MVP, entrada MME e inline dojoToday têm bloqueios observados.",
+      "evidence": "[Verificação independente](/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.checks/product-readiness-20261015.verified.md)",
+      "correction": "Executar planos próprios dos intents registrados.",
+      "verification": "Repetir gates MVP, entrada MME e jogo inline real após o reparo.",
+      "prerequisite": "Aceite dos planos próprios.",
+      "status": "open"
+    },
+    {
+      "id": "SDLC-UI-001",
+      "repo": "dandpb/aidevschool",
+      "head": "528a56c847ec50276ed9d2dab2c7247584c567c3",
+      "issue": "Casos de UI e julgamento semântico permanecem incompletos.",
+      "evidence": "[Verificação independente](/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.checks/product-readiness-20261015.verified.md)",
+      "correction": "Retomar os casos e obter parecer separado com Jev.",
+      "verification": "Evidências atuais e recibos independentes por critério.",
+      "status": "awaiting_prerequisite",
+      "prerequisite": "Host estável e credencial Jev por canal local seguro."
+    },
+    {
+      "id": "SDLC-VERIFY-001",
+      "repo": "dandpb/aidevschool",
+      "head": "528a56c847ec50276ed9d2dab2c7247584c567c3",
+      "issue": "Guard SDLC completo sem resultado após limites de 180 e 600 segundos.",
+      "evidence": "[Verificação independente](/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.checks/product-readiness-20261015.verified.md)",
+      "correction": "Reexecutar em host estável; avaliar custo por linha se persistir.",
+      "verification": "scripts/sdlc_guard_check.sh no range completo com exit 0.",
+      "status": "awaiting_prerequisite",
+      "prerequisite": "Host estável; preservar todas as verificações."
+    }
+  ]
+}

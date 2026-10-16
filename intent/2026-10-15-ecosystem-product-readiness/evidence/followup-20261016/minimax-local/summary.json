@@ -1,0 +1,75 @@
+{
+  "schema": "readiness.minimax.local-scope-analysis.v1",
+  "observedAt": "2026-10-16T10:41:01.294139+00:00",
+  "head": "528a56c847ec50276ed9d2dab2c7247584c567c3",
+  "humanSteering": "use a aplicacao localmente",
+  "frozenC24Unchanged": true,
+  "entry": {
+    "cli": "python3 -m engines.minimaxDojo.os_adapter",
+    "cwd": "repository root",
+    "app": "codexDojo OS → Activities → Engine Hub → minimaxDojo Tutor Core → Preparar sessão de tutoria",
+    "bridgeAction": "POST /__dojo/bridge/v1/engines/minimaxDojo/actions/prepare-tutor-session",
+    "kind": "read-only source-labelled tutor briefing",
+    "localCliFunctionalStatus": "pass",
+    "browserStatus": "not run - reserved by root"
+  },
+  "prerequisites": {
+    "cli": [
+      "Python 3",
+      "PyYAML",
+      "checkout root import path",
+      "learner/learning_state.yaml mapping",
+      "config/learner.yaml"
+    ],
+    "app": [
+      "existing OS npm dependencies and Vite server",
+      "local authenticated bridge session token",
+      "Python interpreter with PyYAML on server PATH"
+    ],
+    "model": [
+      "none for local adapter or static demonstration",
+      "MiniMax Agent Team or an explicitly designed and authorized replacement runtime for the full tutor cycle"
+    ]
+  },
+  "phases": [
+    {
+      "phase": "bootstrap/Sonda/Cartografo",
+      "localCapability": "prompt documents only; no local orchestration launcher found",
+      "status": "unverified"
+    },
+    {
+      "phase": "attempt",
+      "localCapability": "adapter checks whether the canonical attempt_file currently exists; no submission UI or runner inside minimaxDojo",
+      "status": "read-only"
+    },
+    {
+      "phase": "Prometor/Crítico isolated contexts",
+      "localCapability": "prompt instructions and reference state-machine events; no local model/process scheduler",
+      "status": "unverified"
+    },
+    {
+      "phase": "report/whiteboard/reflection",
+      "localCapability": "templates, derived whiteboard snapshots and EventStore API; no local cycle coordinator writes a live report/reflection",
+      "status": "unverified"
+    },
+    {
+      "phase": "error/retry/resume via Maestro",
+      "localCapability": "deterministic reference contract only; supplied metrics and temporary event store pass the existing tests",
+      "status": "contract-pass-only"
+    }
+  ],
+  "evidence": {
+    "cli": "probe.json",
+    "contracts": "contract-tests.json",
+    "source": "source-manifest.json",
+    "invariance": "protected-source-before.json and protected-source-after.json: all 313 compared files unchanged"
+  },
+  "suggestedC24LocalScope": "Qualify the existing local read-only tutor entry: CLI plus OS bridge prepare-tutor-session read canonical snapshot/config, label sources, require attempt/confusion when not mastered, request a new presentation when mastered, preserve authority and zero canonical writes. Keep bootstrap→attempt→Prometor/Crítico→report/whiteboard/reflection→retry as a distinct unverified full-cycle obligation unless the owner explicitly accepts the narrower local contract.",
+  "c24Verdict": "unverified",
+  "reason": "Human selected local environment. Existing local surface does not implement the frozen full-cycle claim. No requirement edit or substitution of contract fixtures for real runtime was made.",
+  "changes": "Only ignored scratch reports and exact private input/source copies. No product files, frozen checklist or canonical learner data edited. No browser, model, credentials, external publication or process enumeration used.",
+  "processes": {
+    "allOwnedSubprocessesCompleted": true,
+    "leftRunning": []
+  }
+}

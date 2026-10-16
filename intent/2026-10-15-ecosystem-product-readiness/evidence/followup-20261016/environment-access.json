@@ -1,0 +1,16 @@
+{
+  "scope": "TypeSafe/Jev verification access authorized by direct human reply",
+  "inheritedExecEnvironment": {
+    "TYPESAFE_API_KEY": false
+  },
+  "interactiveZshEnvironment": {
+    "TYPESAFE_API_KEY": true,
+    "JEV_API_KEY": true
+  },
+  "launchEnvironment": {
+    "TYPESAFE_API_KEY": false
+  },
+  "validation": "Independent Jev observer completed HTTP200 using configured interactive-shell environment",
+  "secretPolicy": "No credential value, length, prefix or hash is recorded; shell startup output was captured in memory and not emitted.",
+  "evidence": ".scratch/readiness-c11-followup-20261016/jev/REPORT.json"
+}

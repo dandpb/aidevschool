@@ -1,0 +1,105 @@
+{
+  "model": "jev-1.13.0",
+  "answers": {
+    "pixel_14_log_aggregator_fail_surface": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "pixel_14_log_aggregator_fail_legibility": {
+      "type": "noul",
+      "noul": 0.97
+    },
+    "pixel_14_log_aggregator_fail_framework_error": {
+      "type": "noul",
+      "noul": 0.06
+    },
+    "pixel_14_log_aggregator_fail_lab_identity": {
+      "type": "noul",
+      "noul": 0.96
+    },
+    "pixel_14_log_aggregator_fail_result_copy": {
+      "type": "noul",
+      "noul": 0.93
+    },
+    "pixel_14_log_aggregator_fail_return_controls": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "pixel_15_metrics_collector_fail_surface": {
+      "type": "noul",
+      "noul": 0.97
+    },
+    "pixel_15_metrics_collector_fail_legibility": {
+      "type": "noul",
+      "noul": 0.97
+    },
+    "pixel_15_metrics_collector_fail_framework_error": {
+      "type": "noul",
+      "noul": 0.05
+    },
+    "pixel_15_metrics_collector_fail_lab_identity": {
+      "type": "noul",
+      "noul": 0.97
+    },
+    "pixel_15_metrics_collector_fail_result_copy": {
+      "type": "noul",
+      "noul": 0.92
+    },
+    "pixel_15_metrics_collector_fail_return_controls": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "pixel_16_mini_message_queue_fail_surface": {
+      "type": "noul",
+      "noul": 0.97
+    },
+    "pixel_16_mini_message_queue_fail_legibility": {
+      "type": "noul",
+      "noul": 0.97
+    },
+    "pixel_16_mini_message_queue_fail_framework_error": {
+      "type": "noul",
+      "noul": 0.05
+    },
+    "pixel_16_mini_message_queue_fail_lab_identity": {
+      "type": "noul",
+      "noul": 0.97
+    },
+    "pixel_16_mini_message_queue_fail_result_copy": {
+      "type": "noul",
+      "noul": 0.92
+    },
+    "pixel_16_mini_message_queue_fail_return_controls": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "pixel_17_distributed_config_service_fail_surface": {
+      "type": "noul",
+      "noul": 0.97
+    },
+    "pixel_17_distributed_config_service_fail_legibility": {
+      "type": "noul",
+      "noul": 0.97
+    },
+    "pixel_17_distributed_config_service_fail_framework_error": {
+      "type": "noul",
+      "noul": 0.05
+    },
+    "pixel_17_distributed_config_service_fail_lab_identity": {
+      "type": "noul",
+      "noul": 0.97
+    },
+    "pixel_17_distributed_config_service_fail_result_copy": {
+      "type": "noul",
+      "noul": 0.92
+    },
+    "pixel_17_distributed_config_service_fail_return_controls": {
+      "type": "noul",
+      "noul": 0.98
+    }
+  },
+  "usage": {
+    "input_tokens": 13381,
+    "output_tokens": 640
+  }
+}

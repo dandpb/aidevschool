@@ -1,0 +1,354 @@
+{
+  "recordedAt": "2026-10-16T10:45:18.595241+00:00",
+  "head": "528a56c847ec50276ed9d2dab2c7247584c567c3",
+  "checklistSha256": "be2f4cbd87841b05ad0f770dc5391a9a0c840a3e0b3a98c881a9e872eeeeed83",
+  "totalBrowserElapsedSeconds": 5.979741040995577,
+  "fingerprintsBefore": [
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.checks/product-readiness-20261015.md",
+      "sha256": "be2f4cbd87841b05ad0f770dc5391a9a0c840a3e0b3a98c881a9e872eeeeed83"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.checks/product-readiness-20261015.freeze.v2.json",
+      "sha256": "94204f5409c594661911d463c5cc26b0463092e297137a073b2da67ed9831592"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/plan.md",
+      "sha256": "bc5d155666014c6fb600637c2c3315eff011628fe864b039035d616216be3079"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/owner-decisions-20261016.json",
+      "sha256": "8c6e3c5e63b120760124f683c136e82ca68e70f6dd934138af87ea2577fe05dc"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/literacy-runtime.mjs",
+      "sha256": "6cdc8bd1e143d40a3da2f96c06b861a07129d7d707fb7accac85b5e9a0793aa5"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/observe-engine.mjs",
+      "sha256": "be8f45281ecd86b909f288b326dadb3bcc376330995d74c0a5eee051537d8609"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/netlify-functions/literacy-verify.mjs",
+      "sha256": "7d53901ea068302abb91fa07bfa0cb99b3ed7952566a50b4ef9e6dfbf15fa8c3"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_netlify.test.mjs",
+      "sha256": "1265169ebd09de19498f5066257763ab714399eb4f670cc73318bd4e0983ed9a"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_identity.test.mjs",
+      "sha256": "040732aa6c6f97b9fefcec30ed31e1437e6ef99ba38bbf977e5cd9743df5c1e6"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs",
+      "sha256": "e4c650828b274acde2cd9bd955e15b623c4ec7b179d64dde7c2dd254facf3ff0"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/src/screens/LessonScreen.tsx",
+      "sha256": "04befd5c9f1193275f3ad9b316219d74190bf8dfe8e5c51b0522c0a1eee076f3"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/src/screens/ResultScreen.tsx",
+      "sha256": "e3073b140d2064f16d996d4d24b5d075895ef3627e6efda4419ce3d6354528dd"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/src/domain/verification.ts",
+      "sha256": "22cc919241d2944a96c3371a754cba3d8c6c194e39ed0e34ea97bb207e9e6ba2"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/src/data/generated/lessons.ts",
+      "sha256": "ef3c35409a808511b1832af192eda60a014130f01ebc943dc93b64ce0144784f"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/learning_state.yaml",
+      "sha256": "36419ae44e755a9bd8bd049b14d0dee03d8b5937e577285f67ffe730733735e2"
+    }
+  ],
+  "fingerprintsAfter": [
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.checks/product-readiness-20261015.md",
+      "sha256": "be2f4cbd87841b05ad0f770dc5391a9a0c840a3e0b3a98c881a9e872eeeeed83"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.checks/product-readiness-20261015.freeze.v2.json",
+      "sha256": "94204f5409c594661911d463c5cc26b0463092e297137a073b2da67ed9831592"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/plan.md",
+      "sha256": "bc5d155666014c6fb600637c2c3315eff011628fe864b039035d616216be3079"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/owner-decisions-20261016.json",
+      "sha256": "8c6e3c5e63b120760124f683c136e82ca68e70f6dd934138af87ea2577fe05dc"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/literacy-runtime.mjs",
+      "sha256": "6cdc8bd1e143d40a3da2f96c06b861a07129d7d707fb7accac85b5e9a0793aa5"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/observe-engine.mjs",
+      "sha256": "be8f45281ecd86b909f288b326dadb3bcc376330995d74c0a5eee051537d8609"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/netlify-functions/literacy-verify.mjs",
+      "sha256": "7d53901ea068302abb91fa07bfa0cb99b3ed7952566a50b4ef9e6dfbf15fa8c3"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_netlify.test.mjs",
+      "sha256": "1265169ebd09de19498f5066257763ab714399eb4f670cc73318bd4e0983ed9a"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_identity.test.mjs",
+      "sha256": "040732aa6c6f97b9fefcec30ed31e1437e6ef99ba38bbf977e5cd9743df5c1e6"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs",
+      "sha256": "e4c650828b274acde2cd9bd955e15b623c4ec7b179d64dde7c2dd254facf3ff0"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/src/screens/LessonScreen.tsx",
+      "sha256": "04befd5c9f1193275f3ad9b316219d74190bf8dfe8e5c51b0522c0a1eee076f3"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/src/screens/ResultScreen.tsx",
+      "sha256": "e3073b140d2064f16d996d4d24b5d075895ef3627e6efda4419ce3d6354528dd"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/src/domain/verification.ts",
+      "sha256": "22cc919241d2944a96c3371a754cba3d8c6c194e39ed0e34ea97bb207e9e6ba2"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/src/data/generated/lessons.ts",
+      "sha256": "ef3c35409a808511b1832af192eda60a014130f01ebc943dc93b64ce0144784f"
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/learning_state.yaml",
+      "sha256": "36419ae44e755a9bd8bd049b14d0dee03d8b5937e577285f67ffe730733735e2"
+    }
+  ],
+  "sourceUnchangedDuringObservations": true,
+  "cases": [
+    {
+      "criterion": "C11",
+      "caseName": "last-passing-evidence",
+      "argv": [
+        "node",
+        "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/observe-engine.mjs",
+        "literacyDojo",
+        "last-passing-evidence"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool",
+      "pid": 60640,
+      "startedAt": "2026-10-16T10:45:12.615497+00:00",
+      "endedAt": "2026-10-16T10:45:16.046924+00:00",
+      "elapsedSeconds": 3.431453832992702,
+      "loadBefore": [
+        14.58349609375,
+        18.7939453125,
+        23.64501953125
+      ],
+      "exitCode": 0,
+      "ownNodeProcessReaped": true,
+      "log": {
+        "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-c11-followup-20261016/literacy/C11-last-passing-evidence.log",
+        "sha256": "3ec446ced0426665e79a712799b80bf41efc58ec0ce3c666de12187fafd0b9b5"
+      },
+      "summary": {
+        "engineId": "literacyDojo",
+        "caseName": "last-passing-evidence",
+        "status": "pass",
+        "reportPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime/last-passing-evidence-2026-10-16T10-45-12-670Z/report.json"
+      },
+      "report": {
+        "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime/last-passing-evidence-2026-10-16T10-45-12-670Z/report.json",
+        "sha256": "b0b594eb88b81758574879ef6a896d1a3fdaf70fd2a7ed1cbad70dba6852264e"
+      },
+      "viewportPngs": [
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/test-results/readiness-plan-runtime/last-passing-evidence-2026-10-16T10-45-12-670Z/bound-receipt-pass-viewport.png",
+          "sha256": "39603670efba7472a5358ea7dcf97e8f348ebbc16fa79b7eebc99a4d37f5f8b4",
+          "width": 360,
+          "height": 740,
+          "resized": false
+        }
+      ],
+      "originalFullPagePngs": [
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/test-results/readiness-plan-runtime/last-passing-evidence-2026-10-16T10-45-12-670Z/bound-receipt-pass.png",
+          "sha256": "5998096a416909457bf54b203e16d757a32ed65e2e2e874b173ea96f1a4155ce",
+          "width": 360,
+          "height": 3167,
+          "resized": false
+        }
+      ]
+    },
+    {
+      "criterion": "C12",
+      "caseName": "verifier-outage-retry",
+      "argv": [
+        "node",
+        "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/observe-engine.mjs",
+        "literacyDojo",
+        "verifier-outage-retry"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool",
+      "pid": 60669,
+      "startedAt": "2026-10-16T10:45:16.048494+00:00",
+      "endedAt": "2026-10-16T10:45:18.592222+00:00",
+      "elapsedSeconds": 5.976722499995958,
+      "loadBefore": [
+        13.89599609375,
+        18.58154296875,
+        23.54150390625
+      ],
+      "exitCode": 0,
+      "ownNodeProcessReaped": true,
+      "log": {
+        "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-c11-followup-20261016/literacy/C12-verifier-outage-retry.log",
+        "sha256": "a066cbe5a19d93939bbae70d773dfa11009a7cfe6f6f6261054dd8e93d52efc4"
+      },
+      "summary": {
+        "engineId": "literacyDojo",
+        "caseName": "verifier-outage-retry",
+        "status": "pass",
+        "reportPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime/verifier-outage-retry-2026-10-16T10-45-16-101Z/report.json"
+      },
+      "report": {
+        "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime/verifier-outage-retry-2026-10-16T10-45-16-101Z/report.json",
+        "sha256": "d2fa53e7b47a380386e7086b82eab4859ada7cde51986bf3b7fad349aa6f2899"
+      },
+      "viewportPngs": [
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/test-results/readiness-plan-runtime/verifier-outage-retry-2026-10-16T10-45-16-101Z/bound-receipt-pass-viewport.png",
+          "sha256": "a6a0a486d5b3f630f65fc7f9830a8825622be2ad2b7f4415bbb706c78cedaceb",
+          "width": 360,
+          "height": 740,
+          "resized": false
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/test-results/readiness-plan-runtime/verifier-outage-retry-2026-10-16T10-45-16-101Z/endpoint-outage-viewport.png",
+          "sha256": "0e9c7ef1f61c94fcfc1f2aa96cb64f1e55d1ec5027b7e2dca763280207e4037c",
+          "width": 360,
+          "height": 740,
+          "resized": false
+        }
+      ],
+      "originalFullPagePngs": [
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/test-results/readiness-plan-runtime/verifier-outage-retry-2026-10-16T10-45-16-101Z/bound-receipt-pass.png",
+          "sha256": "6df8cb4e72defd6e00221aaf2436d65900687dee7d10513cecb23472d7d29ac8",
+          "width": 360,
+          "height": 3167,
+          "resized": false
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/test-results/readiness-plan-runtime/verifier-outage-retry-2026-10-16T10-45-16-101Z/endpoint-outage.png",
+          "sha256": "cf07c331e1bbfe274f8b116102960d804cb40009ce0848ed53298025b5de493f",
+          "width": 360,
+          "height": 3147,
+          "resized": false
+        }
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "label": "node-check-helper",
+      "argv": [
+        "node",
+        "--check",
+        "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/literacy-runtime.mjs"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool",
+      "startedAt": "2026-10-16T10:43:45.226346+00:00",
+      "endedAt": "2026-10-16T10:43:45.261504+00:00",
+      "exitCode": 0,
+      "log": {
+        "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-c11-followup-20261016/literacy/node-check-helper.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "node-check-dispatcher",
+      "argv": [
+        "node",
+        "--check",
+        "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/observe-engine.mjs"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool",
+      "startedAt": "2026-10-16T10:43:45.261656+00:00",
+      "endedAt": "2026-10-16T10:43:45.296573+00:00",
+      "exitCode": 0,
+      "log": {
+        "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-c11-followup-20261016/literacy/node-check-dispatcher.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "node-contracts57",
+      "argv": [
+        "node",
+        "--test",
+        "learner/gate/tests/literacy_verify_netlify.test.mjs",
+        "learner/gate/tests/literacy_verify_identity.test.mjs",
+        "learner/gate/tests/literacy_verify_readiness_plan.test.mjs"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool",
+      "startedAt": "2026-10-16T10:43:45.296685+00:00",
+      "endedAt": "2026-10-16T10:43:45.436008+00:00",
+      "exitCode": 0,
+      "log": {
+        "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-c11-followup-20261016/literacy/node-contracts57.log",
+        "sha256": "5ee64cf54cc3d0f72f47d4a9730f5409bb228f4d93733bd252516e93c643f52e"
+      }
+    },
+    {
+      "label": "client5",
+      "argv": [
+        "npm",
+        "run",
+        "test",
+        "--",
+        "tests/domain/verification.test.ts"
+      ],
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo",
+      "startedAt": "2026-10-16T10:43:45.436155+00:00",
+      "endedAt": "2026-10-16T10:43:48.180337+00:00",
+      "exitCode": 0,
+      "log": {
+        "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-c11-followup-20261016/literacy/client5.log",
+        "sha256": "1d1d1901fd1c0ac0fdc5fdbf65aa7f9490a2e2c204aad99b16936bf078505878"
+      }
+    }
+  ],
+  "observerAmendment": {
+    "recordedAt": "2026-10-16T10:44:39.280168+00:00",
+    "helperPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/literacy-runtime.mjs",
+    "beforeHelperSha256": "61c6b2a342b2dd635749d46a69fd1c3387e2bd6f58fca45d841bf6bd86e69504",
+    "authorization": "Root directly authorized observation-only extra viewport screenshots and own-handle cleanup facts/closed-port probes before this edit.",
+    "reason": "Full-page PNG dimensions exceed Jev 1568px ceiling; preserve originals and add native viewport PNGs without resizing. Existing helper closes handles but lacks retained own-handle cleanup proof.",
+    "fixturesChanged": false,
+    "productOrTestAssertionsChanged": false,
+    "afterHelperSha256": "6cdc8bd1e143d40a3da2f96c06b861a07129d7d707fb7accac85b5e9a0793aa5"
+  },
+  "limitations": [
+    "Producer runtime assertions and captures; independent TypeSafe/Jev semantics are delegated separately by root.",
+    "C13 remote deployment was not invoked in this followup.",
+    "Full-page originals intentionally remain larger than1568px; semantic-input viewport PNGs are native360x740 and were not resized."
+  ],
+  "postObserverNodeSyntax": {
+    "argv": [
+      "node",
+      "--check",
+      "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/literacy-runtime.mjs"
+    ],
+    "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool",
+    "exitCode": 0,
+    "helperSha256": "6cdc8bd1e143d40a3da2f96c06b861a07129d7d707fb7accac85b5e9a0793aa5",
+    "log": {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-c11-followup-20261016/literacy/node-check-helper-after.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  }
+}

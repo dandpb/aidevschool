@@ -1,0 +1,3 @@
+{
+  "text": "Ação concluída\nminimaxDojo tutor session (read-only)\nSource: /Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/learning_state.yaml\nTutor config: /Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/minimaxDojo/config/learner.yaml\nLearner: daniel-barreto · language: TypeScript\nActive unit: U2-key-value-store · KV WAREHOUSE: hash-map-backed CRUD with TTL expiration · state=mastered\nGate: implementation_blocked=false\nRecorded attempt available: true\nSocratic daily quota: 15\nNext tutor move: This unit is already mastered. Ask Cartografo to select and present the next unit before requesting implementation help.\nAuthority: this briefing cannot mark mastery or write canonical learner state.\n"
+}

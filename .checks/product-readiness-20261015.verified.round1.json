@@ -1,0 +1,333 @@
+{
+  "schemaVersion": 1,
+  "verdict": "FAIL",
+  "profile": "light",
+  "diffRange": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102..528a56c847ec50276ed9d2dab2c7247584c567c3",
+  "round": "1-full",
+  "verifier": "/root/verify_readiness_final",
+  "counts": {
+    "pass": 10,
+    "fail": 2,
+    "unverified": 22
+  },
+  "criteria": [
+    {
+      "id": "C1",
+      "claim": "Pass de jogo sem recibo: inelegível e zero escrita",
+      "proofRun": "PY shared 0; G/TestCheckEvidence + G/TestDecide; R/test_no_receipt_preserves_state (2 variantes)",
+      "evidence": "R:69–72: `assert decision.ok is False and decision.passed is False`; `assert decision.receipt is None`; `assert _snapshot(root) == before`. R:50–53 exige evaluating/retry0/mastered False/reviews [].",
+      "result": "PASS",
+      "limit": "",
+      "reportRow": "| C1 | Pass de jogo sem recibo: inelegível e zero escrita | PY shared 0; G/TestCheckEvidence + G/TestDecide; R/test_no_receipt_preserves_state (2 variantes) | R:69–72: `assert decision.ok is False and decision.passed is False`; `assert decision.receipt is None`; `assert _snapshot(root) == before`. R:50–53 exige evaluating/retry0/mastered False/reviews []. | PASS |"
+    },
+    {
+      "id": "C2",
+      "claim": "Recibo com digest/contexto/caminho/bloco inválidos não promove",
+      "proofRun": "PY shared 0; 8 casos R/test_invalid_receipt_preserves_state + G e M nomeados",
+      "evidence": "R:79–82 fixa as quatro violações; R:112 `with pytest.raises(ValueError, match=expected)`; R:120–124 `assert decision is not None and not decision.ok and not decision.passed`; `assert _snapshot(root) == before`. M:161–163 recusa recibo da outra unidade.",
+      "result": "PASS",
+      "limit": "",
+      "reportRow": "| C2 | Recibo com digest/contexto/caminho/bloco inválidos não promove | PY shared 0; 8 casos R/test_invalid_receipt_preserves_state + G e M nomeados | R:79–82 fixa as quatro violações; R:112 `with pytest.raises(ValueError, match=expected)`; R:120–124 `assert decision is not None and not decision.ok and not decision.passed`; `assert _snapshot(root) == before`. M:161–163 recusa recibo da outra unidade. | PASS |"
+    },
+    {
+      "id": "C3",
+      "claim": "Recibo válido permite pass_first_try/pass_retried e audita fonte",
+      "proofRun": "PY shared 0; G/TestDecide/test_pass_first_try, test_pass_after_retry; G/TestEndToEnd/test_pixelquest_pass_with_digest_bound_receipt_masters; R/test_retry_receipt_persists_source",
+      "evidence": "G:573 `assert d.gate_outcome == \"pass_first_try\" and d.rating == \"good\"`; R:156–163 `assert decision.gate_outcome == \"pass_retried\"`; `assert persisted[\"active_unit\"][\"state\"] == \"mastered\"`; review source literal `\"readiness-independent-retry-verifier\"`.",
+      "result": "PASS",
+      "limit": "",
+      "reportRow": "| C3 | Recibo válido permite pass_first_try/pass_retried e audita fonte | PY shared 0; G/TestDecide/test_pass_first_try, test_pass_after_retry; G/TestEndToEnd/test_pixelquest_pass_with_digest_bound_receipt_masters; R/test_retry_receipt_persists_source | G:573 `assert d.gate_outcome == \"pass_first_try\" and d.rating == \"good\"`; R:156–163 `assert decision.gate_outcome == \"pass_retried\"`; `assert persisted[\"active_unit\"][\"state\"] == \"mastered\"`; review source literal `\"readiness-independent-retry-verifier\"`. | PASS |"
+    },
+    {
+      "id": "C4",
+      "claim": "Fail pedagógico continua elegível, evaluating, retry+1",
+      "proofRun": "PY shared 0; G/TestDecide/test_failed_run_gates_to_fail e G/TestApplyGate/test_fail_increments_retry_and_keeps_evaluating",
+      "evidence": "G:587–588 `assert d.ok and not d.passed`; `assert d.gate_outcome == \"fail\" and d.rating == \"again\"`; G:677–678 `assert new_state[\"active_unit\"][\"state\"] == \"evaluating\"`; `assert new_state[\"active_unit\"][\"retry_count\"] == 1`.",
+      "result": "PASS",
+      "limit": "",
+      "reportRow": "| C4 | Fail pedagógico continua elegível, evaluating, retry+1 | PY shared 0; G/TestDecide/test_failed_run_gates_to_fail e G/TestApplyGate/test_fail_increments_retry_and_keeps_evaluating | G:587–588 `assert d.ok and not d.passed`; `assert d.gate_outcome == \"fail\" and d.rating == \"again\"`; G:677–678 `assert new_state[\"active_unit\"][\"state\"] == \"evaluating\"`; `assert new_state[\"active_unit\"][\"retry_count\"] == 1`. | PASS |"
+    },
+    {
+      "id": "C5",
+      "claim": "NDJSON seleciona unidade, persiste backing após commit, nothing-to-grade e parsing",
+      "proofRun": "PY shared 0; todos os 5 nodes congelados + R/test_committed_multirecord_backing_revalidates",
+      "evidence": "M:119–124 `assert decision is not None and decision.ok and decision.passed`; `assert gate_review[\"evidence_ts\"] == active[\"ts\"]`; R:197–207 commit temporário seguido de `assert persisted[\"active_unit\"][\"state\"] == \"mastered\"`; R:178–181 CLI0/NOTHING TO GRADE/snapshot; G:927/933 `pytest.raises(ValueError, match=\"line 2\")` / `match=\"not a JSON object\"`.",
+      "result": "PASS",
+      "limit": "",
+      "reportRow": "| C5 | NDJSON seleciona unidade, persiste backing após commit, nothing-to-grade e parsing | PY shared 0; todos os 5 nodes congelados + R/test_committed_multirecord_backing_revalidates | M:119–124 `assert decision is not None and decision.ok and decision.passed`; `assert gate_review[\"evidence_ts\"] == active[\"ts\"]`; R:197–207 commit temporário seguido de `assert persisted[\"active_unit\"][\"state\"] == \"mastered\"`; R:178–181 CLI0/NOTHING TO GRADE/snapshot; G:927/933 `pytest.raises(ValueError, match=\"line 2\")` / `match=\"not a JSON object\"`. | PASS |"
+    },
+    {
+      "id": "C6",
+      "claim": "Histórico mastered sem receipt é preservado; standards/rubrica não burlados",
+      "proofRun": "PY shared 0 + historical-no-change 0, log vazio",
+      "evidence": "G:774 `assert validate(state, root) == []` em test_historical_mastered_without_receipt_still_validates; diff BASE..HEAD vazio para standards.py, evidence_rubrics.yaml, learning_state.yaml e results.ndjson.",
+      "result": "PASS",
+      "limit": "",
+      "reportRow": "| C6 | Histórico mastered sem receipt é preservado; standards/rubrica não burlados | PY shared 0 + historical-no-change 0, log vazio | G:774 `assert validate(state, root) == []` em test_historical_mastered_without_receipt_still_validates; diff BASE..HEAD vazio para standards.py, evidence_rubrics.yaml, learning_state.yaml e results.ndjson. | PASS |"
+    },
+    {
+      "id": "C7",
+      "claim": "Replay não consome/revisa de novo; dry-run positivo e negativo readonly",
+      "proofRun": "PY shared 0; 5 nodes congelados + R/test_dry_run_preserves_all_files[positive/negative]",
+      "evidence": "R:253–261 `assert second is not None and not second.ok and not second.passed`; `assert state_path.read_bytes() == consumed_state`; `assert len(persisted[\"units_log\"][0][\"reviews\"]) == 1`; R:275–279 `assert cli_main(argv) == (0 if has_receipt else 1)`; `assert _snapshot(root) == before`.",
+      "result": "PASS",
+      "limit": "",
+      "reportRow": "| C7 | Replay não consome/revisa de novo; dry-run positivo e negativo readonly | PY shared 0; 5 nodes congelados + R/test_dry_run_preserves_all_files[positive/negative] | R:253–261 `assert second is not None and not second.ok and not second.passed`; `assert state_path.read_bytes() == consumed_state`; `assert len(persisted[\"units_log\"][0][\"reviews\"]) == 1`; R:275–279 `assert cli_main(argv) == (0 if has_receipt else 1)`; `assert _snapshot(root) == before`. | PASS |"
+    },
+    {
+      "id": "C8",
+      "claim": "A1/A2/A3 v4 honestas recebem PASS com binding exato",
+      "proofRun": "NODE61 exit0, plan: complete v4 receipt binding (3 subtests) + literal-probe exit0",
+      "evidence": "V4:92–104: `assert.equal(receipt.verdict, \"PASS\")`; `assert.equal(receipt.verifier_version, \"1-netlify-l02-v4\")`; `assert.equal(receipt.evidence_digest, expectedDigest(evidence))`; `assert.equal(receipt.producer_writes_mastered, false)`. LOG/receipt-literal-probe.mjs:5,11,17 compara três digests hex literais produzidos independentemente por Python hashlib.",
+      "result": "PASS",
+      "limit": "",
+      "reportRow": "| C8 | A1/A2/A3 v4 honestas recebem PASS com binding exato | NODE61 exit0, plan: complete v4 receipt binding (3 subtests) + literal-probe exit0 | V4:92–104: `assert.equal(receipt.verdict, \"PASS\")`; `assert.equal(receipt.verifier_version, \"1-netlify-l02-v4\")`; `assert.equal(receipt.evidence_digest, expectedDigest(evidence))`; `assert.equal(receipt.producer_writes_mastered, false)`. LOG/receipt-literal-probe.mjs:5,11,17 compara três digests hex literais produzidos independentemente por Python hashlib. | PASS |"
+    },
+    {
+      "id": "C9",
+      "claim": "Recomputação independente recusa adulteração e aceita FAIL pedagógico honesto",
+      "proofRun": "NODE61 exit0, plan: independent tamper rejection (9 adulterações + 3 incorretas); suíte Netlify completa",
+      "evidence": "V4:123–126 `assert.equal(receipt.verdict, \"FAIL\")`; `assert.equal(receipt.mastery_eligible, false)`; `assert.deepEqual(receipt.errors, [`producer ${field} does not match independent recomputation`])`; V4:131–134 FAIL honesto e `assert.deepEqual(receipt.errors, [])`. Valores fixos a1/a2/a3 em V4:10–42; casos de fronteira presentes e ran em NODE61.",
+      "result": "PASS",
+      "limit": "",
+      "reportRow": "| C9 | Recomputação independente recusa adulteração e aceita FAIL pedagógico honesto | NODE61 exit0, plan: independent tamper rejection (9 adulterações + 3 incorretas); suíte Netlify completa | V4:123–126 `assert.equal(receipt.verdict, \"FAIL\")`; `assert.equal(receipt.mastery_eligible, false)`; ``assert.deepEqual(receipt.errors, [`producer ${field} does not match independent recomputation`])``; V4:131–134 FAIL honesto e `assert.deepEqual(receipt.errors, [])`. Valores fixos a1/a2/a3 em V4:10–42; casos de fronteira presentes e ran em NODE61. | PASS |"
+    },
+    {
+      "id": "C10",
+      "claim": "Identidades inválidas/v3 FAIL sem coerção/throw; cliente histórico compatível",
+      "proofRun": "NODE61 exit0; 9 identity + 19 plan-invalid subtests; CLIENT5 exit0",
+      "evidence": "V4:163–166 `assert.equal(receipt.verdict, \"FAIL\")`; `assert.equal(receipt.mastery_eligible, false)` e erro literal de contrato v4; identity:37–40 mesmas rejeições. CLIENT:48–51 aceita receipt ligado; CLIENT:14 usa `lessonVersion: 2`, CLIENT:31 `verifier_version: \"1\"`; CLIENT:58/64 rejeita mismatch e produtor-mastered.",
+      "result": "PASS",
+      "limit": "",
+      "reportRow": "| C10 | Identidades inválidas/v3 FAIL sem coerção/throw; cliente histórico compatível | NODE61 exit0; 9 identity + 19 plan-invalid subtests; CLIENT5 exit0 | V4:163–166 `assert.equal(receipt.verdict, \"FAIL\")`; `assert.equal(receipt.mastery_eligible, false)` e erro literal de contrato v4; identity:37–40 mesmas rejeições. CLIENT:48–51 aceita receipt ligado; CLIENT:14 usa `lessonVersion: 2`, CLIENT:31 `verifier_version: \"1\"`; CLIENT:58/64 rejeita mismatch e produtor-mastered. | PASS |"
+    },
+    {
+      "id": "C11",
+      "claim": "Última passante a1/a2/a3 da UI chega ao resultado com recibo válido",
+      "proofRun": "Não executado: comando last-passing-evidence abre Vite/browser; bloqueio operacional vigente",
+      "evidence": "OBS/literacy-runtime.mjs:130,135 `assert.equal(await page.getByTestId(\"finish-lesson\").count(), 0)` antes de a3; :212 `assert.equal(selected.activityId, \"l02-a3\")`. Fonte LessonScreen.tsx:458 `attempt?.evaluation.pass && lastActivity`, :463 `disabled={!requiredPassed || submitting}`.",
+      "result": "unverified",
+      "limit": "C11 congelado pede UI a1/a2/a3; a fonte oferece concluir só após a última atividade. Histórico a3 é parcial. Renegociação humana pendente; nenhum check/código foi alterado.",
+      "reportRow": "| C11 | Última passante a1/a2/a3 da UI chega ao resultado com recibo válido | Não executado: comando last-passing-evidence abre Vite/browser; bloqueio operacional vigente — C11 congelado pede UI a1/a2/a3; a fonte oferece concluir só após a última atividade. Histórico a3 é parcial. Renegociação humana pendente; nenhum check/código foi alterado. | OBS/literacy-runtime.mjs:130,135 `assert.equal(await page.getByTestId(\"finish-lesson\").count(), 0)` antes de a3; :212 `assert.equal(selected.activityId, \"l02-a3\")`. Fonte engines/literacyDojo/src/screens/LessonScreen.tsx:458 `attempt?.evaluation.pass && lastActivity`, :463 `disabled={!requiredPassed \\|\\| submitting}`. | unverified |"
+    },
+    {
+      "id": "C12",
+      "claim": "Outage real preserva progresso/evidência; retry recebe recibo ligado",
+      "proofRun": "Não executado: verifier-outage-retry abre Vite/browser; stop por recursos",
+      "evidence": "OBS/literacy-runtime.mjs:197 `assert.deepEqual(beforeRetry, completed)`; :201 espera `\"Recibo independente: PASS\"`; :202 `assert.deepEqual(await readLocal(page), beforeRetry)`; :203 `assert.equal(requests.length, 1)`.",
+      "result": "unverified",
+      "limit": "Retained literacy runtime-outage/retry relata HTTP real, mas é prova do produtor em outra rodada. Não substitui execução independente neste HEAD.",
+      "reportRow": "| C12 | Outage real preserva progresso/evidência; retry recebe recibo ligado | Não executado: verifier-outage-retry abre Vite/browser; stop por recursos — Retained literacy runtime-outage/retry relata HTTP real, mas é prova do produtor em outra rodada. Não substitui execução independente neste HEAD. | OBS/literacy-runtime.mjs:197 `assert.deepEqual(beforeRetry, completed)`; :201 espera `\"Recibo independente: PASS\"`; :202 `assert.deepEqual(await readLocal(page), beforeRetry)`; :203 `assert.equal(requests.length, 1)`. | unverified |"
+    },
+    {
+      "id": "C13",
+      "claim": "Deploy real tem ID/SHA/version e casos positivos/negativos do endpoint",
+      "proofRun": "Não executado: faltam deploy ID e source SHA atribuíveis",
+      "evidence": "OBS/literacy-runtime.mjs:35–43 contém asserções de receipt local; :280–283 no branch deployed-verifier apenas registra URL e missingPrerequisites, sem chamar endpoint.",
+      "result": "unverified",
+      "limit": "O comando congelado hoje é prereq-only para deploy; não há assertion executada no limite remoto. Nenhum merge, URL ou handler local é prova de publicação.",
+      "reportRow": "| C13 | Deploy real tem ID/SHA/version e casos positivos/negativos do endpoint | Não executado: faltam deploy ID e source SHA atribuíveis — O comando congelado hoje é prereq-only para deploy; não há assertion executada no limite remoto. Nenhum merge, URL ou handler local é prova de publicação. | OBS/literacy-runtime.mjs:35–43 contém asserções de receipt local; :280–283 no branch deployed-verifier apenas registra URL e missingPrerequisites, sem chamar endpoint. | unverified |"
+    },
+    {
+      "id": "C14",
+      "claim": "PRs sincronizados/revistos com required green; 3 cancelados refeitos e proteção/proveniência resolvidas",
+      "proofRun": "GH657 required exit0; GH656 required exit1; ambos metadata exit0; artifact-delivery-heads exit2",
+      "evidence": "AUDIT:193 exige main sincronizada; :205 `check.get(\"conclusion\") == \"success\" and check.get(\"sha\") in {head, row.get(\"mergeRefSha\")}`; :208 exige 3 cancelados substituídos. Logs remotos: #656 SDLC guardrails e countersign FAILURE; #657 codexDojo, Voxel08 e Voxel11 CANCELLED.",
+      "result": "FAIL",
+      "limit": "Heads remotos ainda 817b9872/b29631ee, distintos do candidato local 528a56c8. Sem entrega renovada no candidato. Patch protegido local corresponde exatamente a 6356f5b8..., mas isso não atualiza checks/proveniência remotos.",
+      "reportRow": "| C14 | PRs sincronizados/revistos com required green; 3 cancelados refeitos e proteção/proveniência resolvidas | GH657 required exit0; GH656 required exit1; ambos metadata exit0; artifact-delivery-heads exit2 — Heads remotos ainda 817b9872/b29631ee, distintos do candidato local 528a56c8. Sem entrega renovada no candidato. Patch protegido local corresponde exatamente a 6356f5b8..., mas isso não atualiza checks/proveniência remotos. | AUDIT:193 exige main sincronizada; :205 `check.get(\"conclusion\") == \"success\" and check.get(\"sha\") in {head, row.get(\"mergeRefSha\")}`; :208 exige 3 cancelados substituídos. Logs remotos: #656 SDLC guardrails e countersign FAILURE; #657 codexDojo, Voxel08 e Voxel11 CANCELLED. | FAIL |"
+    },
+    {
+      "id": "C15",
+      "claim": "MANIFEST, countersign/merge-door e re-grant emparceirado correntes",
+      "proofRun": "artifact-merge-records exit2; MANIFEST no diff; guard inicial timeout180 s; única repetição timeout600 s (unverified)",
+      "evidence": "AUDIT:303 `proof.get(\"headSha\") == row.get(\"headSha\")`; :305 exige argv terminando `scripts/merge_pr.sh` e exit0. REGRANT-RUNBOOK:65–80 exige observação independente e lane main verde no mesmo lote.",
+      "result": "unverified",
+      "limit": "A repetição autorizada de600 s também expirou (exit -15), sem diagnóstico final de violação. O grupo próprio 84959 recebeu cancelamento e o processo foi esperado. Guard completo permanece unverified; não houve terceira tentativa. C15 continua sem merge/countersign/regrant.",
+      "reportRow": "| C15 | MANIFEST, countersign/merge-door e re-grant emparceirado correntes | artifact-merge-records exit2; MANIFEST no diff; guard inicial timeout 180 s; única repetição timeout 600 s (unverified) — merge-records.json ausente; nenhum countersign/merge foi realizado nesta verificação. A repetição autorizada de 600 s também expirou (exit -15), sem diagnóstico final de violação. O grupo próprio 84959 recebeu cancelamento e o processo foi esperado. Guard completo permanece unverified; não houve terceira tentativa. | AUDIT:303 `proof.get(\"headSha\") == row.get(\"headSha\")`; :305 exige argv terminando `scripts/merge_pr.sh` e exit0. REGRANT-RUNBOOK:65–80 exige observação independente e lane main verde no mesmo lote. | unverified |"
+    },
+    {
+      "id": "C16",
+      "claim": "Pacote de 14 IDs/campos/casos/digests e contextos independentes",
+      "proofRun": "artifact-engine-packets exit1, validatedShape=true, obligationProven=false; integrity own",
+      "evidence": "AUDIT:120 `len(rows) == 14 ... set(ids) == set(ENGINES) ... len(set(ids)) == 14`; :151 compara sourceFingerprint; :178–180 exige contexto e status coerentes. Execução: 0 pass/3 blocked/11 unverified; 14 independent-review-pending, 117 case-pending, 4 observed-case-failure.",
+      "result": "unverified",
+      "limit": "IDs, formatos e refs incluídas são válidos. Os 14 verifierContext são null, um observedAt falta, e casos obrigatórios continuam pendentes. Formato e digest não demonstram uso completo.",
+      "reportRow": "| C16 | Pacote de 14 IDs/campos/casos/digests e contextos independentes | artifact-engine-packets exit1, validatedShape=true, obligationProven=false; integrity own — IDs, formatos e refs incluídas são válidos. Os 14 verifierContext são null, um observedAt falta, e casos obrigatórios continuam pendentes. Formato e digest não demonstram uso completo. | AUDIT:120 `len(rows) == 14 ... set(ids) == set(ENGINES) ... len(set(ids)) == 14`; :151 compara sourceFingerprint; :178–180 exige contexto e status coerentes. Execução: 0 pass/3 blocked/11 unverified; 14 independent-review-pending, 117 case-pending, 4 observed-case-failure. | unverified |"
+    },
+    {
+      "id": "C17",
+      "claim": "MVP real: gates, agenda/card/ledger, 24 conceitos e recovery",
+      "proofRun": "PY shared nomeados PASS; native-aiDevschoolMvp exit2 (prereq-only), sem sessão live",
+      "evidence": "MVP acceptance:71 `assert out == (\"moved\", (\"ATTEMPTED\", \"MASTERED\"))`; :105 `assert out[\"nudge_payloads\"] == []`; installer:51 `assert digest_tree(source) == before`; OBS/observe-engine.mjs:72–77 literal `runtimeExecuted: false`.",
+      "result": "unverified",
+      "limit": "Core/instalador não comprovam harness. Histórico Hermes bloqueou G1/G3 por argumentos; G4 sem julgamento; 24 variantes, agenda/card/retry/retorno pendentes. Nenhum live model foi iniciado.",
+      "reportRow": "| C17 | MVP real: gates, agenda/card/ledger, 24 conceitos e recovery | PY shared nomeados PASS; native-aiDevschoolMvp exit2 (prereq-only), sem sessão live — Core/instalador não comprovam harness. Histórico Hermes bloqueou G1/G3 por argumentos; G4 sem julgamento; 24 variantes, agenda/card/retry/retorno pendentes. Nenhum live model foi iniciado. | engines/aiDevschoolMvp/tests/acceptance/test_acceptance_full.py:71 `assert out == (\"moved\", (\"ATTEMPTED\", \"MASTERED\"))`; :105 `assert out[\"nudge_payloads\"] == []`; engines/aiDevschoolMvp/tests/installer/test_install.py:51 `assert digest_tree(source) == before`; OBS/observe-engine.mjs:72–77 literal `runtimeExecuted: false`. | unverified |"
+    },
+    {
+      "id": "C18",
+      "claim": "codexDojo projeção/clipboard/bridge OS configurada e ausente readonly",
+      "proofRun": "Browser producer e observer não executados nesta rodada",
+      "evidence": "OBS/dashboard-runtime.mjs:231 `assert.equal(copied, canonicalPrompt)`; :237 `assert.equal(await launch.getAttribute(\"href\"), os.origin)`; :264 conta controles de launch =0 sem config.",
+      "result": "unverified",
+      "limit": "Histórico produtor cobriu projeção/clipboard/OS/config ausente; faltam própria rodada e julgamento independente/semântico. Zero write canônico não foi inferido de UI apenas.",
+      "reportRow": "| C18 | codexDojo projeção/clipboard/bridge OS configurada e ausente readonly | Browser producer e observer não executados nesta rodada — Histórico produtor cobriu projeção/clipboard/OS/config ausente; faltam própria rodada e julgamento independente/semântico. Zero write canônico não foi inferido de UI apenas. | OBS/dashboard-runtime.mjs:231 `assert.equal(copied, canonicalPrompt)`; :237 `assert.equal(await launch.getAttribute(\"href\"), os.origin)`; :264 conta controles de launch =0 sem config. | unverified |"
+    },
+    {
+      "id": "C19",
+      "claim": "OS onboarding/missões/adaptadores/recovery/retorno sem mastery",
+      "proofRun": "5 arquivos Playwright e observer suspensos por recursos",
+      "evidence": "OBS/learning-runtime.mjs:145 `await expect(progress.missionStatusByKey[`${mission.trackId}:${mission.id}`]).toBe(\"completed\")`; :156 `await expect(afterReload.missionStatusByKey).toEqual(beforeReload.missionStatusByKey)`.",
+      "result": "unverified",
+      "limit": "Histórico 8/39 missões, 31 pendentes; Hub/recovery sem prova. Browser inicial 22 pass/8 skip/6 fail, drift Orbita/Órbita e timeout, repetição interrompida; não atribuído a defeito de produto sem prova própria.",
+      "reportRow": "| C19 | OS onboarding/missões/adaptadores/recovery/retorno sem mastery | 5 arquivos Playwright e observer suspensos por recursos — Histórico 8/39 missões, 31 pendentes; Hub/recovery sem prova. Browser inicial 22 pass/8 skip/6 fail, drift Orbita/Órbita e timeout, repetição interrompida; não atribuído a defeito de produto sem prova própria. | OBS/learning-runtime.mjs:145 ``await expect(progress.missionStatusByKey[`${mission.trackId}:${mission.id}`]).toBe(\"completed\")``; :156 `await expect(afterReload.missionStatusByKey).toEqual(beforeReload.missionStatusByKey)`. | unverified |"
+    },
+    {
+      "id": "C20",
+      "claim": "dojoToday projeção/prática02/offline/BYOK/recovery e readonly",
+      "proofRun": "Playwright e observer suspensos",
+      "evidence": "OBS/dashboard-runtime.mjs:334 `assert.ok(iframeObservation.canvasCount > 0 || /WAREHOUSE/i.test(iframeObservation.title), ...)`; :316 `assert.equal(await page.evaluate(() => localStorage.getItem(\"dojoToday:aiConfig\")), null)`.",
+      "result": "unverified",
+      "limit": "Produtor registrou iframe da própria página em vez do jogo02; BYOK real e semântica pendentes. Fallback/offline não prova provider. Achado em intent draft, sem correção desta feature.",
+      "reportRow": "| C20 | dojoToday projeção/prática02/offline/BYOK/recovery e readonly | Playwright e observer suspensos — Produtor registrou iframe da própria página em vez do jogo02; BYOK real e semântica pendentes. Fallback/offline não prova provider. Achado em intent draft, sem correção desta feature. | OBS/dashboard-runtime.mjs:334 `assert.ok(iframeObservation.canvasCount > 0 \\|\\| /WAREHOUSE/i.test(iframeObservation.title), ...)`; :316 `assert.equal(await page.evaluate(() => localStorage.getItem(\"dojoToday:aiConfig\")), null)`. | unverified |"
+    },
+    {
+      "id": "C21",
+      "claim": "Literacy 23 lições/tipos, feedback/reviews/retorno e C8–12",
+      "proofRun": "Só CLIENT5 e contratos/content próprios executados; browser suspenso",
+      "evidence": "OBS/learning-runtime.mjs:66 `await expect(offered).toHaveLength(23)`; :93 `await expect(progress.lessonStatus[id]).toBe(\"completed\")`; :105–106 inputs não checked após reload.",
+      "result": "unverified",
+      "limit": "Histórico 23/23,69 atividades; 3 desafios/reviews e semântica pendentes. C11/C12 permanecem sem prova própria; C8–10 verdes não fecham a jornada.",
+      "reportRow": "| C21 | Literacy 23 lições/tipos, feedback/reviews/retorno e C8–12 | Só CLIENT5 e contratos/content próprios executados; browser suspenso — Histórico 23/23,69 atividades; 3 desafios/reviews e semântica pendentes. C11/C12 permanecem sem prova própria; C8–10 verdes não fecham a jornada. | OBS/learning-runtime.mjs:66 `await expect(offered).toHaveLength(23)`; :93 `await expect(progress.lessonStatus[id]).toBe(\"completed\")`; :105–106 inputs não checked após reload. | unverified |"
+    },
+    {
+      "id": "C22",
+      "claim": "MME nativo cinco fases/contextos separados e recovery explícito",
+      "proofRun": "PY tracer nomeados PASS; native-miniMaxEvolutionEngine exit2 prereq-only",
+      "evidence": "supervisor_tracer.py:119–120 `assert [role for role, _ in calls] == [\"producer\", \"verifier\"]`; `assert len({context for _, context in calls}) == 2`; :127 só `(\"spec-done\", \"implementation\")`; :227 `assert restarted == []`.",
+      "result": "unverified",
+      "limit": "Fixture prova spec e recovery no modelo, não cinco fases Claude. Histórico documentou comando nativo inexistente, spec PASS e impl rejeitada; ciclo/autonomia não fechados.",
+      "reportRow": "| C22 | MME nativo cinco fases/contextos separados e recovery explícito | PY tracer nomeados PASS; native-miniMaxEvolutionEngine exit2 prereq-only — Fixture prova spec e recovery no modelo, não cinco fases Claude. Histórico documentou comando nativo inexistente, spec PASS e impl rejeitada; ciclo/autonomia não fechados. | engines/miniMaxEvolutionEngine/tests/test_supervisor_tracer.py:119–120 `assert [role for role, _ in calls] == [\"producer\", \"verifier\"]`; `assert len({context for _, context in calls}) == 2`; :127 só `(\"spec-done\", \"implementation\")`; :227 `assert restarted == []`. | unverified |"
+    },
+    {
+      "id": "C23",
+      "claim": "miniTown explorar/dia-noite/HUD/reabrir/recovery experimental",
+      "proofRun": "Playwright e observer suspensos",
+      "evidence": "OBS/dashboard-runtime.mjs:404–406 `assert.equal(observed.after.phase, \"night\")`; `assert.equal(observed.sunIntensity, 0)`; HUD inclui night; :417–418 storage vazio.",
+      "result": "unverified",
+      "limit": "Histórico tem câmera/relógio/reentrada/recovery, mas entrada/conteúdo da cidade e semântica sem prova (contadores de conteúdo zero). Não foi criada exigência de persistência/maestria.",
+      "reportRow": "| C23 | miniTown explorar/dia-noite/HUD/reabrir/recovery experimental | Playwright e observer suspensos — Histórico tem câmera/relógio/reentrada/recovery, mas entrada/conteúdo da cidade e semântica sem prova (contadores de conteúdo zero). Não foi criada exigência de persistência/maestria. | OBS/dashboard-runtime.mjs:404–406 `assert.equal(observed.after.phase, \"night\")`; `assert.equal(observed.sunIntensity, 0)`; HUD inclui night; :417–418 storage vazio. | unverified |"
+    },
+    {
+      "id": "C24",
+      "claim": "MiniMax Agent Team real bootstrap/Prometor/Crítico/whiteboard/retry",
+      "proofRun": "PY core nomeados PASS; native-minimaxDojo exit2 prereq-only",
+      "evidence": "test_learning_unit_e2e_contract.py:60 `self.assertEqual(machine.state, \"DOMINADO\")`; :103–105 `self.assertEqual(machine.state, \"FALHA_BLOQUEIO\")`; `self.assertNotEqual(machine.state, \"DOMINADO\")`.",
+      "result": "unverified",
+      "limit": "URL/app e acesso isolado ao Team não fornecidos. Núcleo Python não executa plataforma externa. Sem chamada live nesta rodada.",
+      "reportRow": "| C24 | MiniMax Agent Team real bootstrap/Prometor/Crítico/whiteboard/retry | PY core nomeados PASS; native-minimaxDojo exit2 prereq-only — URL/app e acesso isolado ao Team não fornecidos. Núcleo Python não executa plataforma externa. Sem chamada live nesta rodada. | engines/minimaxDojo/tests/test_learning_unit_e2e_contract.py:60 `self.assertEqual(machine.state, \"DOMINADO\")`; :103–105 `self.assertEqual(machine.state, \"FALHA_BLOQUEIO\")`; `self.assertNotEqual(machine.state, \"DOMINADO\")`. | unverified |"
+    },
+    {
+      "id": "C25",
+      "claim": "OpenClaw preview readonly e CLI isolada simulate-grade/bloqueios/retomada",
+      "proofRun": "PY 4 nodes nomeados PASS; observe-engine openclaw não lançado por host instável",
+      "evidence": "test_cli_preview.py:33 `assert {path: path.read_bytes() for path in CANONICAL_PATHS} == before`; test_scheduler.py:202–203 halted/spec. OBS/agent-runtime-openclaw.py:151–155 recusa preview mutante/exit inesperado; :170 exige cycle-complete + simulate.",
+      "result": "unverified",
+      "limit": "Receita retida comprova execução anterior privada; não é rodada própria. Load oscilou acima de60 durante a QA e despacho mantém runtime suspenso. Nenhum advance foi executado no checkout compartilhado.",
+      "reportRow": "| C25 | OpenClaw preview readonly e CLI isolada simulate-grade/bloqueios/retomada | PY 4 nodes nomeados PASS; observe-engine openclaw não lançado por host instável — Receita retida comprova execução anterior privada; não é rodada própria. Load oscilou acima de60 durante a QA e despacho mantém runtime suspenso. Nenhum advance foi executado no checkout compartilhado. | engines/openclaw/tests/test_cli_preview.py:33 `assert {path: path.read_bytes() for path in CANONICAL_PATHS} == before`; engines/openclaw/tests/test_scheduler.py:202–203 halted/spec. OBS/agent-runtime-openclaw.py:151–155 recusa preview mutante/exit inesperado; :170 exige cycle-complete + simulate. | unverified |"
+    },
+    {
+      "id": "C26",
+      "claim": "Pixel 18 labs, negativo/retry/retorno, NDJSON append-only e handoff",
+      "proofRun": "5 arquivos Playwright e observer suspensos",
+      "evidence": "OBS/pixel-runtime.mjs:112–113 `assert.equal(channel.length, before.length + 1, ...)`; `assert.deepEqual(channel.slice(0, -1), before, ...)`; :167–170 exige os18 projetos.",
+      "result": "unverified",
+      "limit": "Histórico18/18 fail→retry/PASS,18replays/raw NDJSON; própria rodada e semântica independente faltam. Debug hook de entrada declarado não é auto-pass; não concede mastery.",
+      "reportRow": "| C26 | Pixel 18 labs, negativo/retry/retorno, NDJSON append-only e handoff | 5 arquivos Playwright e observer suspensos — Histórico18/18 fail→retry/PASS,18 replays/raw NDJSON; própria rodada e semântica independente faltam. Debug hook de entrada declarado não é auto-pass; não concede mastery. | OBS/pixel-runtime.mjs:112–113 `assert.equal(channel.length, before.length + 1, ...)`; `assert.deepEqual(channel.slice(0, -1), before, ...)`; :167–170 exige os18 projetos. | unverified |"
+    },
+    {
+      "id": "C27",
+      "claim": "School-entry operador/recomenda≤3/lança, anônimo/fallback/storage/rede",
+      "proofRun": "Node proof completo não executado: inclui browser.spec e servidores; observer suspenso",
+      "evidence": "OBS/local-products-runtime-school.mjs:67 `check(r, \"Anonymous release denied\", anon.status() === 401, { httpStatus: anon.status() })`; :136–139 caso configured-provider/timeout marcado unverified.",
+      "result": "unverified",
+      "limit": "Histórico SQLite privado/checker/destino real/401/503/fallback; provider positivo/timeout e semântica pendentes. Checker não concede tier ao destino.",
+      "reportRow": "| C27 | School-entry operador/recomenda≤3/lança, anônimo/fallback/storage/rede | Node proof completo não executado: inclui browser.spec e servidores; observer suspenso — Histórico SQLite privado/checker/destino real/401/503/fallback; provider positivo/timeout e semântica pendentes. Checker não concede tier ao destino. | OBS/local-products-runtime-school.mjs:67 `check(r, \"Anonymous release denied\", anon.status() === 401, { httpStatus: anon.status() })`; :136–139 caso configured-provider/timeout marcado unverified. | unverified |"
+    },
+    {
+      "id": "C28",
+      "claim": "Quest HTTP/file, modos/idiomas, salvar/retomar/import-preview",
+      "proofRun": "Node proof completo não executado: local-package cria servidor; observer/browser suspenso",
+      "evidence": "OBS/local-products-runtime-quest.mjs:304 `check(r, \"No browser page errors across HTTP and native file modes\", r.errors.length === 0)`; :161 download lab enabled.",
+      "result": "unverified",
+      "limit": "Histórico HTTP/file,pt-BR/en,18campanha+16TLC+6lab/composição e import/retorno; semântica e própria rodada faltam. set_content/storage simulado não foi promovido a HTTP/file real.",
+      "reportRow": "| C28 | Quest HTTP/file, modos/idiomas, salvar/retomar/import-preview | Node proof completo não executado: local-package cria servidor; observer/browser suspenso — Histórico HTTP/file,pt-BR/en,18 campanha + 16 TLC + 6 lab por composição e import/retorno; semântica e própria rodada faltam. set_content/storage simulado não foi promovido a HTTP/file real. | OBS/local-products-runtime-quest.mjs:304 `check(r, \"No browser page errors across HTTP and native file modes\", r.errors.length === 0)`; :161 download lab enabled. | unverified |"
+    },
+    {
+      "id": "C29",
+      "claim": "Voxel17 jogos L1–L4/renderer/raw handoff/retry por jogo",
+      "proofRun": "Playwright/observer suspensos; sem novo WebGL",
+      "evidence": "OBS/voxel-runtime.mjs:306–310 `assert.deepEqual(after.slice(0, before.length), before, ...)`; `assert.equal(after.length, before.length + 1, ...)`; dual channels iguais; :406–407 catálogo17.",
+      "result": "unverified",
+      "limit": "Histórico8 jogos completos=32/68 WebGL +32fallback,8retries/reentradas;36 pares WebGL pendentes; Hash Ring captura incompleta. LocalStorage e jogo10 isolados não aprovam catálogo.",
+      "reportRow": "| C29 | Voxel17 jogos L1–L4/renderer/raw handoff/retry por jogo | Playwright/observer suspensos; sem novo WebGL — Histórico8 jogos completos=32/68 WebGL +32 fallback,8 retries/reentradas;36 pares WebGL pendentes; Hash Ring captura incompleta. LocalStorage e jogo10 isolados não aprovam catálogo. | OBS/voxel-runtime.mjs:306–310 `assert.deepEqual(after.slice(0, before.length), before, ...)`; `assert.equal(after.length, before.length + 1, ...)`; dual channels iguais; :406–407 catálogo17. | unverified |"
+    },
+    {
+      "id": "C30",
+      "claim": "Zai 2onboardings/27lições/prática/review/chat/Next+Bun/DBs privados",
+      "proofRun": "Playwright e observer suspensos",
+      "evidence": "OBS/local-products-runtime-zai.mjs:246 `check(r, `Persisted visible lesson completion ${l.slug}`, progress === finished, ...)`; :347–349 Bun é caso próprio.",
+      "result": "unverified",
+      "limit": "Histórico23/27 conclusões persistidas;4lições, segunda entrada, review, chat, Bun e closure dos PIDs incompletos após interrupção. Nenhum DB real/reset nesta rodada.",
+      "reportRow": "| C30 | Zai 2 onboardings / 27 lições/prática/review/chat/Next+Bun/DBs privados | Playwright e observer suspensos — Histórico23/27 conclusões persistidas;4 lições, segunda entrada, review, chat, Bun e closure dos PIDs incompletos após interrupção. Nenhum DB real/reset nesta rodada. | OBS/local-products-runtime-zai.mjs:246 ``check(r, `Persisted visible lesson completion ${l.slug}`, progress === finished, ...)``; :347–349 Bun é caso próprio. | unverified |"
+    },
+    {
+      "id": "C31",
+      "claim": "Claims renovadas/fonte corrente e histórico imutável",
+      "proofRun": "claims-current exit1; artifact-canonical-assessments exit1; readiness tests59PASS",
+      "evidence": "AUDIT:219 `audit.require(result.returncode == 0, \"claims-not-current\", ...)`; :227 exige bytes dos assessments históricos iguais; :230 exige results prefix preservado. LOG/claims-current.log:1–6 contém seis STALE-WINDOW.",
+      "result": "FAIL",
+      "limit": "Os seis casos stale continuam sem novos assessments aplicáveis. Testes59PASS validam ferramentas, não renovam claims; histórico permanece intocado.",
+      "reportRow": "| C31 | Claims renovadas/fonte corrente e histórico imutável | claims-current exit1; artifact-canonical-assessments exit1; readiness tests59 PASS — Os seis casos stale continuam sem novos assessments aplicáveis. Testes59 PASS validam ferramentas, não renovam claims; histórico permanece intocado. | AUDIT:219 `audit.require(result.returncode == 0, \"claims-not-current\", ...)`; :227 exige bytes dos assessments históricos iguais; :230 exige results prefix preservado. LOG/claims-current.log:1–6 contém seis STALE-WINDOW. | FAIL |"
+    },
+    {
+      "id": "C32",
+      "claim": "Pacote informativo sem tier; aggregate só bundles canônicos corretos",
+      "proofRun": "artifact-authority-separation exit2; packet boundary confirmado",
+      "evidence": "AUDIT:245 `packet.get(\"informational\") is True and packet.get(\"grantsReadinessTier\") is False`; :260 exige aggregate actual exit0; :271 exige chaves exatas e observerContext independent-readiness-observer.",
+      "result": "unverified",
+      "limit": "Declaração sem grant confere; claims-flow.json/aggregate atual bem-sucedido ausente. Não criei bundles fictícios nem executei assess com escrita.",
+      "reportRow": "| C32 | Pacote informativo sem tier; aggregate só bundles canônicos corretos | artifact-authority-separation exit2; packet boundary confirmado — Declaração sem grant confere; claims-flow.json/aggregate atual bem-sucedido ausente. Não criei bundles fictícios nem executei assess com escrita. | AUDIT:245 `packet.get(\"informational\") is True and packet.get(\"grantsReadinessTier\") is False`; :260 exige aggregate actual exit0; :271 exige chaves exatas e observerContext independent-readiness-observer. | unverified |"
+    },
+    {
+      "id": "C33",
+      "claim": "Merge previsto + main push lane claims verdes e re-grant independente",
+      "proofRun": "artifact-main-claims exit2",
+      "evidence": "AUDIT:285 exige conclusion success/jobName product readiness (claims); :288 exige SHA origin/main; :289 exige regrantStatus written/exit0.",
+      "result": "unverified",
+      "limit": "main-claims.json ausente, nenhuma integração/push-run novo deste candidato. Producer CI/pending-observation não encerra lote; regra single-writer relida.",
+      "reportRow": "| C33 | Merge previsto + main push lane claims verdes e re-grant independente | artifact-main-claims exit2 — main-claims.json ausente, nenhuma integração/push-run novo deste candidato. Producer CI/pending-observation não encerra lote; regra single-writer relida. | AUDIT:285 exige conclusion success/jobName product readiness (claims); :288 exige SHA origin/main; :289 exige regrantStatus written/exit0. | unverified |"
+    },
+    {
+      "id": "C34",
+      "claim": "Oferta fiel:14/14pass/zeroalto/claims/ambiente e aceite separado",
+      "proofRun": "artifact-pilot-offer exit1; relatório informativo relido",
+      "evidence": "AUDIT:315 `all(item.get(\"status\") == \"pass\" for item in packet.get(\"engines\", []))`; :320 rejeita critical/high; :324 exige Daniel/accepted true/scope observed-pilot-offer. Report humano:3 e52 mantém conclusão pendente.",
+      "result": "unverified",
+      "limit": "Texto é conservador e não inventa14ready. Condições de conclusão e aceite do piloto não estão cumpridas; apresentar este FAIL não é aceite de Daniel nem aprovação de merge.",
+      "reportRow": "| C34 | Oferta fiel:14/14 pass, zero alto, claims e ambiente e aceite separado | artifact-pilot-offer exit1; relatório informativo relido — Texto é conservador e não inventa14 prontos. Condições de conclusão e aceite do piloto não estão cumpridas; apresentar este FAIL não é aceite de Daniel nem aprovação de merge. | AUDIT:315 `all(item.get(\"status\") == \"pass\" for item in packet.get(\"engines\", []))`; :320 rejeita critical/high; :324 exige Daniel/accepted true/scope observed-pilot-offer. Report humano:3 e52 mantém conclusão pendente. | unverified |"
+    }
+  ],
+  "commands": ".scratch/gh-375/final-verifier-528a56c8/commands.json",
+  "commandsSha256": "2b5d8df9448c441db275ad3c918a02f9d2bcfd187779b41c8020e83f5e527a90",
+  "reportSha256": "66a0862f12e78680d85991ba86a329768c6c39f6c2aae75f6d3694881a0a39de",
+  "allProofProcessesAwaited": true,
+  "guardCleanup": {
+    "processGroup": 84959,
+    "rootWaitCompleted": true,
+    "rootExitCode": -15,
+    "timeoutSeconds": 600,
+    "groupAbsentAtCheck": true
+  },
+  "sourceDiffAfterVerification": ""
+}

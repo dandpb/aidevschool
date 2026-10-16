@@ -31,7 +31,7 @@ Reuse the actual PR657 and PR656 code and tests, existing gate/receipt/NDJSON se
 
 Nothing else in this change is hard to reverse. Existing README contracts are the durable log; no new ADR or authority is introduced.
 
-Initial Status lines are extraction state; live results are recorded in the implementation report and independent verified report. Checks and proofs are frozen before product edits.
+Initial Status lines are extraction state; live results are recorded in the implementation report and independent verified report. Checks and proofs are frozen before product edits. Revision2 records the explicit human C11/C24 environment decisions from 16/10/2026; initial freeze remains immutable.
 
 ## Checks
 
@@ -82,7 +82,7 @@ Proof: `node --test --test-name-pattern="plan: invalid identity and legacy contr
 Proof: `(cwd engines/literacyDojo) npm run test -- tests/domain/verification.test.ts`
 Status: unverified.
 
-**C11** — Na lição real, a última evidência passante selecionada por `LessonScreen` chega a `ResultScreen` e recebe recibo válido correspondente, seja a1, a2 ou a3. O resultado continua progresso local; zero escrita de `mastered` no aprendiz canônico.
+**C11** — Na lição real l02 v4, o fluxo sequencial conclui em a3: a última evidência passante selecionada por `LessonScreen` chega a `ResultScreen` e recebe recibo válido ligado à tentativa a3. Os contratos independentes a1/a2/a3 continuam exigidos pelos critérios 8–10. O resultado continua progresso local; zero escrita de `mastered` no aprendiz canônico.
 Proof: `node intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/observe-engine.mjs literacyDojo last-passing-evidence`
 Status: unverified.
 
@@ -154,7 +154,7 @@ Proof: `pnpm exec playwright test playwright/mini-town.spec.ts --grep "loads the
 Proof: `node intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/observe-engine.mjs miniTown declared-use`
 Status: unverified.
 
-**C24** — `minimaxDojo`: bootstrap no MiniMax Agent Team → tentativa → Prometor e Crítico em contextos separados → relatório/whiteboard/reflexão funciona, com erro/retry/retomada pelo Maestro. Teste do núcleo Python não substitui a execução da plataforma real, e o whiteboard local não vira autoridade global.
+**C24** — `minimaxDojo`: entrada local existente e bootstrap → tentativa → Prometor e Crítico em contextos separados → relatório/whiteboard/reflexão funciona, com erro/retry/retomada pelo Maestro. Teste do núcleo Python não substitui a execução do fluxo local oferecido, e o whiteboard local não vira autoridade global.
 Existing producer tests below are partial evidence only; full declared-use proof also requires the observation command and all frozen variants.
 Proof: `python3 -m pytest engines/minimaxDojo/tests/test_learning_unit_e2e_contract.py::TestLearningUnitE2EContract::test_verifier_pass_is_the_only_path_to_dominado_and_is_audited engines/minimaxDojo/tests/test_learning_unit_e2e_contract.py::TestLearningUnitE2EContract::test_failed_gate_retries_then_blocks_without_mastery -vv`
 Proof: `node intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/observe-engine.mjs minimaxDojo declared-use`
@@ -248,3 +248,7 @@ No batch has landed yet. Orchestrator owns all checks and dispatches a fresh-con
 - Plan/spec/intent accepted for local execution by direct skill invocation. No new question about that accepted scope.
 - PR656 protected test edit explicitly approved by Daniel, exact patch6356f5b8…; no other protected-test weakening authorized.
 - If a proof contradicts the source or needs changing, stop that work and renegotiate; do not edit checks or weaken expected values. App/harness absence already named in Unresolved is a prerequisite, not an invented product failure.
+
+### Human renegotiation — revision 2
+
+C11: final UI a3; independent a1/a2/a3 contracts unchanged. C24: existing local entry replaces the external-platform prerequisite, preserving the full attempt/producer/verifier/report/reflection obligations. Owner record: `intent/2026-10-15-ecosystem-product-readiness/owner-decisions-20261016.json`. No other check or assertion changed. Current freeze: `.checks/product-readiness-20261015.freeze.v2.json`.

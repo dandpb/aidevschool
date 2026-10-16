@@ -1,0 +1,45 @@
+{
+  "batch": 15,
+  "startedAt": "2026-10-16T10:53:22.079447+00:00",
+  "automaticRetries": 0,
+  "readinessOrMasteryGranted": false,
+  "httpStatus": 200,
+  "responseHeaderNames": [
+    "Date",
+    "Content-Type",
+    "Transfer-Encoding",
+    "Connection",
+    "x-typesafe-request-id",
+    "Server",
+    "cf-cache-status",
+    "set-cookie",
+    "CF-RAY",
+    "alt-svc"
+  ],
+  "requestId": null,
+  "result": "observed",
+  "responseContractValid": true,
+  "resolvedModel": "jev-1.13.0",
+  "usage": {
+    "input_tokens": 13172,
+    "output_tokens": 570
+  },
+  "imageCount": 4,
+  "questionCount": 24,
+  "elapsedSeconds": 1.599,
+  "allSelectedBytesPreserved": true,
+  "requestBodySha256": "c3a7fd049a30e48db5b5cc6504324e78d4adcdfd282e7796593c2a98f4320256",
+  "responseFileSha256": "6681520d3c8740d0a59a028b6a5cd4184319d3046eae336dda38c3a52c57d391",
+  "caseIds": [
+    "quest_http_en_imported",
+    "quest_http_pt_BR_imported",
+    "quest_http_en_campaign_wrong",
+    "quest_http_pt_BR_campaign_wrong"
+  ],
+  "cumulativeUsage": {
+    "input_tokens": 193774,
+    "output_tokens": 9141
+  },
+  "phaseBudgetExceeded": false,
+  "endedAt": "2026-10-16T10:53:23.701625+00:00"
+}

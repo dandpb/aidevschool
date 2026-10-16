@@ -1,0 +1,123 @@
+{
+  "startedAt": "2026-10-16T10:44:09.011738+00:00",
+  "endpoint": "https://api.typesafe.ai/v1/systemone",
+  "requestedModel": "jev-latest",
+  "authSource": "inherited TYPESAFE_API_KEY",
+  "keyPresent": true,
+  "jeVCompatibilityKeyPresent": true,
+  "automaticRetries": 0,
+  "scope": "four retained screenshots, independent advisory semantic observation only",
+  "httpStatus": 200,
+  "result": "observed",
+  "responseContractValid": true,
+  "resolvedModel": "jev-1.13.0",
+  "usage": {
+    "input_tokens": 13478,
+    "output_tokens": 406
+  },
+  "requestId": null,
+  "responseHeaderNames": [
+    "Date",
+    "Content-Type",
+    "Transfer-Encoding",
+    "Connection",
+    "x-typesafe-request-id",
+    "Server",
+    "set-cookie",
+    "cf-cache-status",
+    "CF-RAY",
+    "alt-svc"
+  ],
+  "responseBytes": 1045,
+  "safeResponseSha256": "2a16ea5627216641d9ee1131ef73f28918edf7ccfbd853fae96eb69a1d60e120",
+  "requestMetadataSha256": "df17b74498d286a309f085a1d9530dd732a95d2d4aa273d1fc6376a25c020a59",
+  "elapsedSeconds": 1.52,
+  "imageCount": 4,
+  "questionCount": 18,
+  "sampleIntegrityAfter": [
+    {
+      "caseId": "c18_cycle",
+      "engineId": "codexDojo",
+      "assertionIds": [
+        "C18-projection-next-action"
+      ],
+      "promiseSource": "plan.md criterion 18; qa-dashboards report C18-projection-next-action; dashboard-runtime.mjs screenshot next-action after the next-action navigation",
+      "imagePath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-34-045Z/configured-bridge/next-action.png",
+      "imageSha256Before": "911b34ddad94c4b27a77364339159d53c0aa7f8e6a0dce5feda31e36d0c201a9",
+      "width": 1280,
+      "height": 800,
+      "bytes": 70851,
+      "reportPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-dashboards/codexDojo-2026-10-16T01-43-34-045Z/report.json",
+      "reportSha256Before": "ba9c5bbe8436c095d07421210b9b0d46521f59f88260008ed263fdb83e1dabf7",
+      "producerSourceCommit": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+      "producerSourceFingerprint": "3303fb7e5051cb1a2477b85c723943f772ef7043c2e7fc2fccb70d162137003c",
+      "assetReference": "5045b816-9a25-4ca7-ae77-af35b3168cbc",
+      "imageSha256After": "911b34ddad94c4b27a77364339159d53c0aa7f8e6a0dce5feda31e36d0c201a9",
+      "reportSha256After": "ba9c5bbe8436c095d07421210b9b0d46521f59f88260008ed263fdb83e1dabf7"
+    },
+    {
+      "caseId": "c20_mission",
+      "engineId": "dojoToday",
+      "assertionIds": [
+        "C20-readonly-projection-and-next-action"
+      ],
+      "promiseSource": "plan.md criterion 20; dojoToday README Origem dos dados and Sócrates; qa-dashboards report C20-readonly-projection-and-next-action",
+      "imagePath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-42-51-714Z/daily-guidance/projection-and-action.png",
+      "imageSha256Before": "da08c3b76f336bf65d8fd63dc1d4a772ec90883ffa0d6e464161f0fa5ddd8c26",
+      "width": 1280,
+      "height": 800,
+      "bytes": 292533,
+      "reportPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-dashboards/dojoToday-2026-10-16T01-42-51-714Z/report.json",
+      "reportSha256Before": "4bf5b243c8bf757479b8f34d4eafcbf17cbd01b9cb7b1d93dc6070f546dad007",
+      "producerSourceCommit": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+      "producerSourceFingerprint": "6fa831591891ad48f9e1ee1c620e206c31e1f860f56264eab3bfeaeb89a48106",
+      "assetReference": "a2688903-0883-4d4f-be58-34e7473f2346",
+      "imageSha256After": "da08c3b76f336bf65d8fd63dc1d4a772ec90883ffa0d6e464161f0fa5ddd8c26",
+      "reportSha256After": "4bf5b243c8bf757479b8f34d4eafcbf17cbd01b9cb7b1d93dc6070f546dad007"
+    },
+    {
+      "caseId": "c20_inline",
+      "engineId": "dojoToday",
+      "assertionIds": [
+        "C20-game02-real-inline-practice"
+      ],
+      "promiseSource": "plan.md criterion 20; dojoToday README Jogar inline promises the active game 02 bundle inside an iframe; qa-dashboards report C20-game02-real-inline-practice",
+      "imagePath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-42-51-714Z/daily-guidance/inline-open.png",
+      "imageSha256Before": "479fd7f6edd2f0ffd89d1d41a46dbb004391b871f0eb6855b62511b07c80a035",
+      "width": 1280,
+      "height": 800,
+      "bytes": 307947,
+      "reportPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-dashboards/dojoToday-2026-10-16T01-42-51-714Z/report.json",
+      "reportSha256Before": "4bf5b243c8bf757479b8f34d4eafcbf17cbd01b9cb7b1d93dc6070f546dad007",
+      "producerSourceCommit": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+      "producerSourceFingerprint": "6fa831591891ad48f9e1ee1c620e206c31e1f860f56264eab3bfeaeb89a48106",
+      "assetReference": "cf8d5aaf-5b5d-4af7-b755-4868ac091d4c",
+      "imageSha256After": "479fd7f6edd2f0ffd89d1d41a46dbb004391b871f0eb6855b62511b07c80a035",
+      "reportSha256After": "4bf5b243c8bf757479b8f34d4eafcbf17cbd01b9cb7b1d93dc6070f546dad007"
+    },
+    {
+      "caseId": "c23_morning",
+      "engineId": "miniTown",
+      "assertionIds": [
+        "C23-entry-hud-exploration",
+        "C23-declared-town-content"
+      ],
+      "promiseSource": "plan.md criterion 23; miniTown README first paragraph; student-guide.md Experimental miniTown step 2 promises observing zones, residents, vehicles and day/night",
+      "imagePath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-10-066Z/explore-day-night-return/explored-morning.png",
+      "imageSha256Before": "02ee5393dbee40e06da5717b5641897229637c7942cb8abcf54e26b54f4c8c8e",
+      "width": 1280,
+      "height": 800,
+      "bytes": 35331,
+      "reportPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retained/qa-dashboards/miniTown-2026-10-16T01-43-10-066Z/report.json",
+      "reportSha256Before": "6b3c28c85dd41e1609d787c387668c49e25c7b6edc6a6c6d69671851e640ff87",
+      "producerSourceCommit": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102",
+      "producerSourceFingerprint": "c88424a0bbf2cbbe824487ccda251d370fad970564f99c5bd8346bcc37313e1f",
+      "assetReference": "5398548e-9c21-4ee0-8f89-2b207707e2a8",
+      "imageSha256After": "02ee5393dbee40e06da5717b5641897229637c7942cb8abcf54e26b54f4c8c8e",
+      "reportSha256After": "6b3c28c85dd41e1609d787c387668c49e25c7b6edc6a6c6d69671851e640ff87"
+    }
+  ],
+  "allImageAndReportDigestsPreserved": true,
+  "endedAt": "2026-10-16T10:44:10.540431+00:00",
+  "readinessOrMasteryGranted": false
+}

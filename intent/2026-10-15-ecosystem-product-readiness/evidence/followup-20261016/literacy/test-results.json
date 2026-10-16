@@ -1,0 +1,70 @@
+[
+  {
+    "label": "node-check-helper",
+    "argv": [
+      "node",
+      "--check",
+      "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/literacy-runtime.mjs"
+    ],
+    "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool",
+    "startedAt": "2026-10-16T10:43:45.226346+00:00",
+    "endedAt": "2026-10-16T10:43:45.261504+00:00",
+    "exitCode": 0,
+    "log": {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-c11-followup-20261016/literacy/node-check-helper.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  {
+    "label": "node-check-dispatcher",
+    "argv": [
+      "node",
+      "--check",
+      "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/observe-engine.mjs"
+    ],
+    "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool",
+    "startedAt": "2026-10-16T10:43:45.261656+00:00",
+    "endedAt": "2026-10-16T10:43:45.296573+00:00",
+    "exitCode": 0,
+    "log": {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-c11-followup-20261016/literacy/node-check-dispatcher.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  {
+    "label": "node-contracts57",
+    "argv": [
+      "node",
+      "--test",
+      "learner/gate/tests/literacy_verify_netlify.test.mjs",
+      "learner/gate/tests/literacy_verify_identity.test.mjs",
+      "learner/gate/tests/literacy_verify_readiness_plan.test.mjs"
+    ],
+    "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool",
+    "startedAt": "2026-10-16T10:43:45.296685+00:00",
+    "endedAt": "2026-10-16T10:43:45.436008+00:00",
+    "exitCode": 0,
+    "log": {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-c11-followup-20261016/literacy/node-contracts57.log",
+      "sha256": "5ee64cf54cc3d0f72f47d4a9730f5409bb228f4d93733bd252516e93c643f52e"
+    }
+  },
+  {
+    "label": "client5",
+    "argv": [
+      "npm",
+      "run",
+      "test",
+      "--",
+      "tests/domain/verification.test.ts"
+    ],
+    "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo",
+    "startedAt": "2026-10-16T10:43:45.436155+00:00",
+    "endedAt": "2026-10-16T10:43:48.180337+00:00",
+    "exitCode": 0,
+    "log": {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-c11-followup-20261016/literacy/client5.log",
+      "sha256": "1d1d1901fd1c0ac0fdc5fdbf65aa7f9490a2e2c204aad99b16936bf078505878"
+    }
+  }
+]

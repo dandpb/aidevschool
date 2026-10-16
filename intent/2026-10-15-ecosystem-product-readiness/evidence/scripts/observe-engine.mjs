@@ -28,10 +28,6 @@ const LIVE_PREREQUISITES = {
     "Five supervised phases with distinct producer/verifier contexts and explicit recovery",
     "The documented command surface must resolve in the native harness",
   ],
-  minimaxDojo: [
-    "The MiniMax Agent Team platform URL or app and authorized isolated session access",
-    "A real bootstrap/attempt and distinct Prometor/Crítico contexts, not Python-core fixtures",
-  ],
 };
 
 // This command executes observations. It never promotes a retained producer report
@@ -53,6 +49,7 @@ export async function run(engineId, caseName = "declared-use") {
   }
   if (engineId === "pixelDojo") return (await import("./pixel-runtime.mjs")).run(caseName);
   if (engineId === "voxelDojo") return (await import("./voxel-runtime.mjs")).run(caseName);
+  if (engineId === "minimaxDojo") return (await import("./minimax-local-runtime.mjs")).run(caseName);
   if (engineId === "openclaw") {
     const localPython = path.join(ROOT, ".scratch/gh-375/venv/bin/python");
     const python = process.env.READINESS_PYTHON ?? (existsSync(localPython) ? localPython : "python3");

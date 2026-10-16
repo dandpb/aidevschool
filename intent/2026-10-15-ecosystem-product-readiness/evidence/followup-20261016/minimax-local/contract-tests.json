@@ -1,0 +1,19 @@
+{
+  "kind": "existing-reference-contract-tests",
+  "startedAt": "2026-10-16T10:40:17.918164+00:00",
+  "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool",
+  "argv": [
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/gh-375/venv/bin/python",
+    "-m",
+    "pytest",
+    "engines/minimaxDojo/tests/test_os_adapter.py",
+    "engines/minimaxDojo/tests/test_learning_unit_e2e_contract.py",
+    "-vv",
+    "-p",
+    "no:cacheprovider"
+  ],
+  "exitCode": 0,
+  "log": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-c11-followup-20261016/minimax-local/contract-tests.log",
+  "logSha256": "6db55d42717f5c5e32f9741a4c22d7b26b1740dfc741d1a4e2b9aef0a70b470f",
+  "limits": "Reference contract tests use supplied metrics and tempfile state. They do not execute the platform, producer/verifier contexts, or a real learner cycle."
+}

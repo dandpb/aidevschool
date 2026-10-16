@@ -1,0 +1,355 @@
+TAP version 13
+# Subtest: array activityId never passes via key coercion (was PASS with empty activity_id)
+ok 1 - array activityId never passes via key coercion (was PASS with empty activity_id)
+  ---
+  duration_ms: 9.298417
+  type: 'test'
+  ...
+# Subtest: array activityId for other contract activities also fails closed
+ok 2 - array activityId for other contract activities also fails closed
+  ---
+  duration_ms: 0.170583
+  type: 'test'
+  ...
+# Subtest: object activityId with null toString returns a FAIL receipt instead of throwing
+ok 3 - object activityId with null toString returns a FAIL receipt instead of throwing
+  ---
+  duration_ms: 0.090167
+  type: 'test'
+  ...
+# Subtest: plain object activityId fails closed
+ok 4 - plain object activityId fails closed
+  ---
+  duration_ms: 0.079625
+  type: 'test'
+  ...
+# Subtest: null activityId fails closed
+ok 5 - null activityId fails closed
+  ---
+  duration_ms: 0.143666
+  type: 'test'
+  ...
+# Subtest: numeric activityId fails closed
+ok 6 - numeric activityId fails closed
+  ---
+  duration_ms: 0.073667
+  type: 'test'
+  ...
+# Subtest: boolean activityId fails closed
+ok 7 - boolean activityId fails closed
+  ---
+  duration_ms: 0.069666
+  type: 'test'
+  ...
+# Subtest: missing activityId fails closed
+ok 8 - missing activityId fails closed
+  ---
+  duration_ms: 0.077583
+  type: 'test'
+  ...
+# Subtest: string activityId still passes the v4 contract (guard did not overreach)
+ok 9 - string activityId still passes the v4 contract (guard did not overreach)
+  ---
+  duration_ms: 1.075166
+  type: 'test'
+  ...
+# Subtest: accepts the independently recomputed l02 v4 a1 output_comparison attempt
+ok 10 - accepts the independently recomputed l02 v4 a1 output_comparison attempt
+  ---
+  duration_ms: 9.679917
+  type: 'test'
+  ...
+# Subtest: fails closed when producer claims drift from the structured answer (a1)
+ok 11 - fails closed when producer claims drift from the structured answer (a1)
+  ---
+  duration_ms: 0.24325
+  type: 'test'
+  ...
+# Subtest: fails closed outside the fixed canonical lesson contract
+ok 12 - fails closed outside the fixed canonical lesson contract
+  ---
+  duration_ms: 0.09175
+  type: 'test'
+  ...
+# Subtest: fails closed on legacy l02 v3 records (superseded contract)
+ok 13 - fails closed on legacy l02 v3 records (superseded contract)
+  ---
+  duration_ms: 0.097708
+  type: 'test'
+  ...
+# Subtest: accepts the independently recomputed l02 v4 a2 choice attempt
+ok 14 - accepts the independently recomputed l02 v4 a2 choice attempt
+  ---
+  duration_ms: 0.223291
+  type: 'test'
+  ...
+# Subtest: fails closed on a2 wrong selection even with honest producer claims
+ok 15 - fails closed on a2 wrong selection even with honest producer claims
+  ---
+  duration_ms: 0.105833
+  type: 'test'
+  ...
+# Subtest: accepts the independently recomputed l02 v4 a3 sort attempt
+ok 16 - accepts the independently recomputed l02 v4 a3 sort attempt
+  ---
+  duration_ms: 0.19675
+  type: 'test'
+  ...
+# Subtest: fails closed on a3 with swapped positions (3/5 = 0.6 below threshold)
+ok 17 - fails closed on a3 with swapped positions (3/5 = 0.6 below threshold)
+  ---
+  duration_ms: 0.114625
+  type: 'test'
+  ...
+# Subtest: accepts a3 at the inclusive pass boundary (4/5 = 0.8 >= 0.75)
+ok 18 - accepts a3 at the inclusive pass boundary (4/5 = 0.8 >= 0.75)
+  ---
+  duration_ms: 0.426333
+  type: 'test'
+  ...
+# Subtest: fails closed on a3 with tampered score and checks (recomputation error)
+ok 19 - fails closed on a3 with tampered score and checks (recomputation error)
+  ---
+  duration_ms: 0.512625
+  type: 'test'
+  ...
+# Subtest: fails closed for lessons and activities outside the l02 v4 contract
+ok 20 - fails closed for lessons and activities outside the l02 v4 contract
+  ---
+  duration_ms: 0.219042
+  type: 'test'
+  ...
+# Subtest: plan: complete v4 receipt binding
+    # Subtest: l02-a1/output_comparison
+    ok 1 - l02-a1/output_comparison
+      ---
+      duration_ms: 10.887125
+      type: 'test'
+      ...
+    # Subtest: l02-a2/choice
+    ok 2 - l02-a2/choice
+      ---
+      duration_ms: 0.328292
+      type: 'test'
+      ...
+    # Subtest: l02-a3/sort
+    ok 3 - l02-a3/sort
+      ---
+      duration_ms: 0.965167
+      type: 'test'
+      ...
+    1..3
+ok 21 - plan: complete v4 receipt binding
+  ---
+  duration_ms: 12.929833
+  type: 'test'
+  ...
+# Subtest: plan: independent tamper rejection
+    # Subtest: l02-a1: deterministicChecks changed alone
+    ok 1 - l02-a1: deterministicChecks changed alone
+      ---
+      duration_ms: 0.1675
+      type: 'test'
+      ...
+    # Subtest: l02-a1: score changed alone
+    ok 2 - l02-a1: score changed alone
+      ---
+      duration_ms: 0.118709
+      type: 'test'
+      ...
+    # Subtest: l02-a1: pass changed alone
+    ok 3 - l02-a1: pass changed alone
+      ---
+      duration_ms: 0.131792
+      type: 'test'
+      ...
+    # Subtest: l02-a1: honest incorrect answer
+    ok 4 - l02-a1: honest incorrect answer
+      ---
+      duration_ms: 0.243375
+      type: 'test'
+      ...
+    # Subtest: l02-a2: deterministicChecks changed alone
+    ok 5 - l02-a2: deterministicChecks changed alone
+      ---
+      duration_ms: 0.196333
+      type: 'test'
+      ...
+    # Subtest: l02-a2: score changed alone
+    ok 6 - l02-a2: score changed alone
+      ---
+      duration_ms: 0.228042
+      type: 'test'
+      ...
+    # Subtest: l02-a2: pass changed alone
+    ok 7 - l02-a2: pass changed alone
+      ---
+      duration_ms: 0.217166
+      type: 'test'
+      ...
+    # Subtest: l02-a2: honest incorrect answer
+    ok 8 - l02-a2: honest incorrect answer
+      ---
+      duration_ms: 0.096958
+      type: 'test'
+      ...
+    # Subtest: l02-a3: deterministicChecks changed alone
+    ok 9 - l02-a3: deterministicChecks changed alone
+      ---
+      duration_ms: 0.081541
+      type: 'test'
+      ...
+    # Subtest: l02-a3: score changed alone
+    ok 10 - l02-a3: score changed alone
+      ---
+      duration_ms: 0.05975
+      type: 'test'
+      ...
+    # Subtest: l02-a3: pass changed alone
+    ok 11 - l02-a3: pass changed alone
+      ---
+      duration_ms: 0.06175
+      type: 'test'
+      ...
+    # Subtest: l02-a3: honest incorrect answer
+    ok 12 - l02-a3: honest incorrect answer
+      ---
+      duration_ms: 0.061709
+      type: 'test'
+      ...
+    1..12
+ok 22 - plan: independent tamper rejection
+  ---
+  duration_ms: 2.753917
+  type: 'test'
+  ...
+# Subtest: plan: invalid identity and legacy contract
+    # Subtest: legacy-v3
+    ok 1 - legacy-v3
+      ---
+      duration_ms: 0.141417
+      type: 'test'
+      ...
+    # Subtest: schema
+    ok 2 - schema
+      ---
+      duration_ms: 0.046583
+      type: 'test'
+      ...
+    # Subtest: source
+    ok 3 - source
+      ---
+      duration_ms: 0.044167
+      type: 'test'
+      ...
+    # Subtest: verifierRequired
+    ok 4 - verifierRequired
+      ---
+      duration_ms: 0.099375
+      type: 'test'
+      ...
+    # Subtest: lesson
+    ok 5 - lesson
+      ---
+      duration_ms: 0.086416
+      type: 'test'
+      ...
+    # Subtest: type
+    ok 6 - type
+      ---
+      duration_ms: 0.106291
+      type: 'test'
+      ...
+    # Subtest: unknown-activity
+    ok 7 - unknown-activity
+      ---
+      duration_ms: 0.076375
+      type: 'test'
+      ...
+    # Subtest: null-activity
+    ok 8 - null-activity
+      ---
+      duration_ms: 0.055792
+      type: 'test'
+      ...
+    # Subtest: numeric-activity
+    ok 9 - numeric-activity
+      ---
+      duration_ms: 0.052083
+      type: 'test'
+      ...
+    # Subtest: boolean-activity
+    ok 10 - boolean-activity
+      ---
+      duration_ms: 0.055292
+      type: 'test'
+      ...
+    # Subtest: array-activity
+    ok 11 - array-activity
+      ---
+      duration_ms: 0.045292
+      type: 'test'
+      ...
+    # Subtest: object-activity
+    ok 12 - object-activity
+      ---
+      duration_ms: 0.051
+      type: 'test'
+      ...
+    # Subtest: uncoercible-activity
+    ok 13 - uncoercible-activity
+      ---
+      duration_ms: 0.049459
+      type: 'test'
+      ...
+    # Subtest: reordered-skills
+    ok 14 - reordered-skills
+      ---
+      duration_ms: 0.046875
+      type: 'test'
+      ...
+    # Subtest: missing-skill
+    ok 15 - missing-skill
+      ---
+      duration_ms: 0.04475
+      type: 'test'
+      ...
+    # Subtest: extra-skill
+    ok 16 - extra-skill
+      ---
+      duration_ms: 0.046958
+      type: 'test'
+      ...
+    # Subtest: nonarray-skills
+    ok 17 - nonarray-skills
+      ---
+      duration_ms: 0.041291
+      type: 'test'
+      ...
+    # Subtest: null-skills
+    ok 18 - null-skills
+      ---
+      duration_ms: 0.041208
+      type: 'test'
+      ...
+    # Subtest: missing-activity
+    ok 19 - missing-activity
+      ---
+      duration_ms: 0.077959
+      type: 'test'
+      ...
+    1..19
+ok 23 - plan: invalid identity and legacy contract
+  ---
+  duration_ms: 2.136541
+  type: 'test'
+  ...
+1..23
+# tests 57
+# suites 0
+# pass 57
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 93.596125

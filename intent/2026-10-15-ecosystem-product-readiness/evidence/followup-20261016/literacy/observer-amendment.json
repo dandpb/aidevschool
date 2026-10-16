@@ -1,0 +1,10 @@
+{
+  "recordedAt": "2026-10-16T10:44:39.280168+00:00",
+  "helperPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/literacy-runtime.mjs",
+  "beforeHelperSha256": "61c6b2a342b2dd635749d46a69fd1c3387e2bd6f58fca45d841bf6bd86e69504",
+  "authorization": "Root directly authorized observation-only extra viewport screenshots and own-handle cleanup facts/closed-port probes before this edit.",
+  "reason": "Full-page PNG dimensions exceed Jev 1568px ceiling; preserve originals and add native viewport PNGs without resizing. Existing helper closes handles but lacks retained own-handle cleanup proof.",
+  "fixturesChanged": false,
+  "productOrTestAssertionsChanged": false,
+  "afterHelperSha256": "6cdc8bd1e143d40a3da2f96c06b861a07129d7d707fb7accac85b5e9a0793aa5"
+}

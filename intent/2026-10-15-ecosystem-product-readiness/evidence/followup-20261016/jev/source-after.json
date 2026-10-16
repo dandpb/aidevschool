@@ -1,0 +1,142 @@
+{
+  "observedAt": "2026-10-16T10:44:45.793217+00:00",
+  "sourceFiles": {
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/README.md": {
+      "sha256": "e6ba0c706d79506a9fc8666a38d4dda777adcb3db95ed767c4c214899c99ec44"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/AGENTS.md": {
+      "sha256": "769d6ac5e2a32520ac6f369768468db846dd77d442c786bd8e2c3deda8e4761f"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/DESIGN.md": {
+      "sha256": "a3b4d1277d90703f83a709b04ab622bf4a2cbe69d37cf7b0f25f660b6194d7f9"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/package.json": {
+      "sha256": "83cd8d4dbcae0c0743c5a612c3c0cf3f51567abebf51bba2bf15f8e8655bdc74"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/src/app.ts": {
+      "sha256": "34e46f8d44c29e3f22c31a5d792ed261be0b0c7470a2dabcbf69b0897d32299a"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/src/data/learner.ts": {
+      "sha256": "894a7ea824611d0e77361ebc7633501baae7a97a1d2d158a47ba85614a72ef9f"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/src/data/agents.ts": {
+      "sha256": "f82933245fff6cf61b1b79f8e2ab1b084118f00755aa50911a6be9a3f0dacab0"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/src/data/osEngine.ts": {
+      "sha256": "34e6a9eaea4ae07df53294c5820a8a1ef37d2a43b913b2165f1049b8cb7dda9d"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/src/render/overview.ts": {
+      "sha256": "448facb3c6cf1d478c53c6223befc98d07faa89ed7fbac260e060fab9f721383"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/src/render/learner.ts": {
+      "sha256": "dfeefb5bf005e5d7592a8ac13e10376766e48be217340469cf5edfd1830a2f46"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/src/render/agents.ts": {
+      "sha256": "3802b1192e21c3da8a82efde27de2f55494e64aa1db15a8453686de83ab9fca4"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/src/render/events.ts": {
+      "sha256": "8e3017af8a22470d974d138466ce2f7c0606cc68228e52d84ee16db45794dbc9"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/src/linuxLab/render.ts": {
+      "sha256": "299fb255e997d92934833a3395029a8121add69aea3dddce33c52a897d67eab1"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.checks/product-readiness-20261015.md": {
+      "sha256": "be2f4cbd87841b05ad0f770dc5391a9a0c840a3e0b3a98c881a9e872eeeeed83"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/plan.md": {
+      "sha256": "bc5d155666014c6fb600637c2c3315eff011628fe864b039035d616216be3079"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/design.md": {
+      "sha256": "eab37dc1d6f639f358f5e27e6d07719585e0fe1badecfb180b179c8836d3f256"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/qualification-matrix.md": {
+      "sha256": "0e9448e46c26d8075831b5215d609bab38a4d052567b04f5e99251019b5f2b35"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/docs/product-readiness/inventory.yaml": {
+      "sha256": "9a43d6462ae87239c7c780f0ecdf38f39f9c63030dbf32aae4354472291b7811"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/docs/product-readiness/student-guide.md": {
+      "sha256": "27d62eab38efabe9296c5d4bc0a9b44889b78653b3ef27b0ce9d3b4c084fd606"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/docs/product-readiness/facilitator-guide.md": {
+      "sha256": "a6d858ccc19ea9afd136da62523b18e617b2eabe70506e22ad34887d407a069a"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/dashboard-runtime.mjs": {
+      "sha256": "c21035f43f8d7cec9c43391e5a188ddbb0e2f199f8086b01b2e2eb2f38331543"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/minimaxDojo/config/dashboard.yaml": {
+      "sha256": "38934bf6d799bc2e64df0bb8f3719c438b734caf604784c9f20a84952aad9ae1"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexdojo-os-prototype/package.json": {
+      "sha256": "71714a477f6b7372454416ccd383c10bd30c2dc3ff0da2fc3ea8a826fabd3eab"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexdojo-os-prototype/index.html": {
+      "sha256": "47fe2414826610d1ffe62ac604b6a055f39ce508522df46a7a7692436c03436e"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexdojo-os-prototype/src/App.tsx": {
+      "sha256": "5a2fd178ed46469d17abccedb683a67965b01e69fa0ef14f2f26a387ee2d2dbe"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexdojo-os-prototype/AGENTS.md": {
+      "sha256": "31bd27335bb5330e99ba8e03d7b5cc4075bacb0b11b013aa2e7856bb6c2a586b"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexdojo-os-prototype/DESIGN.md": {
+      "sha256": "c4ca4b04c4a42265b82b2ce3ee526a747713c2aefa5c31767710fa483daa3c33"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday/README.md": {
+      "sha256": "9e8fd41db0d89cd8bbe29dd7f098a63a4a526e0e7fd267ce04ed488679b82c9a"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday/DESIGN.md": {
+      "sha256": "b36c2a0fb4407947b70ad919d515f64c7542970ee7d08f505b5579139937ed50"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday/package.json": {
+      "sha256": "b5b9f3643c704f252a0487eadb93a979f7cec7dcacec373062ef334f8fe19ec5"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday/vite.config.ts": {
+      "sha256": "4fcee1ba32301256a40f668e54c747f0034aba7e32fe79fae41a8f8744e5e097"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday/src/main.ts": {
+      "sha256": "00f0d44a35eaa9f5b39d63ac7000c989d2084278ee84f9fcf45dd6067fed7447"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday/src/assistant.ts": {
+      "sha256": "1f1d451383720a048ef6c6f6214871888e78c8bd909ea9d7838d722bf88e2c40"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday/src/data/today.ts": {
+      "sha256": "c21aee84ddc67cf8bdcab3a6196227badc595177f449000d78ed8cef3bda4f18"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/README.md": {
+      "sha256": "889415e108b28bd7160961387970e6f2535f3c88b54baf37ae2f53c30f612645"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/DESIGN.md": {
+      "sha256": "dccf7e6f0c1bb8d00ddc883d417584cdafd5065f642ea91ee6ddb80dcc7442ea"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/package.json": {
+      "sha256": "b204d69da9ca8d93645800bd268353a41b7f26fa31bfe86c8ebedbf87574bce6"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/src/main.ts": {
+      "sha256": "0150feedb728c4a1f6441117ea18630271fcd2333720f0e213b5115ace540a45"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/src/evidence/e2e.contract.ts": {
+      "sha256": "d26263c54ed662532b0e06339cc13da9a15707a863814568ae81c079417306d3"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/src/game/controller.ts": {
+      "sha256": "60606bbbb74912324426c317618ad217b0d651dbc5264cead35302d59ae3fa07"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/src/scene/camera.ts": {
+      "sha256": "04510dad03718a100d53b4b18d8f462d3b8ad804052344beb2f5e401135baf6e"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/src/scene/dayNight.ts": {
+      "sha256": "42aadaddd0d5a557e5a6ab7e091861ba31ac17ead417f66cda18532c2421a201"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/src/scene/sceneRoot.ts": {
+      "sha256": "d1768d82d28c4f2fef246d215b640bbf8b01839c184bdd0433ddecb6fe190b37"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/src/scene/state.ts": {
+      "sha256": "2bb696f58645a23c67e5847314b8029a061dc9c1d3052aa349c359b2dc9b036e"
+    },
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/docs/concepts/CONCEPTS.md": {
+      "sha256": "c4c7e5b93c9da369a8d376c9138bde24129d651014a76b21048fe4d218e28a57"
+    }
+  },
+  "changedSinceBefore": [],
+  "allSelectedSourceFilesPreserved": true
+}

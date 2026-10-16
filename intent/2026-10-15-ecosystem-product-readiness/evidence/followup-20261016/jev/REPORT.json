@@ -1,0 +1,184 @@
+{
+  "role": "independent-semantic-observer-not-final-feature-verifier",
+  "observedAt": "2026-10-16T10:44:45.795307+00:00",
+  "worktreeHeadObservedBefore": "528a56c847ec50276ed9d2dab2c7247584c567c3",
+  "producerSourceCommitUnchanged": true,
+  "sampleResult": "observed",
+  "contract": {
+    "transport": "Python standard-library urllib.request; no SDK installation",
+    "endpoint": "https://api.typesafe.ai/v1/systemone",
+    "requestShape": "model, state, questions and assets keyed by UUID; each image referenced once as a whole state value",
+    "noulAnswerShape": "answers[questionId].type=noul; answers[questionId].noul in [0,1]",
+    "modelRequested": "jev-latest",
+    "modelResolved": "jev-1.13.0",
+    "httpStatus": 200,
+    "experimentalImageOptIn": true,
+    "authentication": "inherited TYPESAFE_API_KEY from interactive zsh; API accepted it; no credential value or auth header retained",
+    "automaticRetries": 0
+  },
+  "usage": {
+    "input_tokens": 13478,
+    "output_tokens": 406
+  },
+  "elapsedSeconds": 1.52,
+  "requestId": null,
+  "requestFingerprint": "74f0a3eb45dd3c71b5b9c957c0ece1069f52fba2b51d05ace18b310ad3076696",
+  "coverage": [
+    {
+      "engineId": "codexDojo",
+      "criterion": "C18",
+      "selectedImages": 1,
+      "retainedImages": 5,
+      "unreviewedImagePaths": [
+        "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-34-045Z/configured-bridge/actual-os-destination.png",
+        "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-34-045Z/configured-bridge/configured-bridge.png",
+        "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-34-045Z/configured-bridge/copied-prompt.png",
+        "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexDojo/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-34-045Z/production-no-url/unconfigured-bridge.png"
+      ],
+      "caseCompleteness": "not-established-by-sample"
+    },
+    {
+      "engineId": "dojoToday",
+      "criterion": "C20",
+      "selectedImages": 2,
+      "retainedImages": 6,
+      "unreviewedImagePaths": [
+        "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-42-51-714Z/daily-guidance/config-cleared-recovery.png",
+        "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-42-51-714Z/daily-guidance/failure.png",
+        "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-42-51-714Z/daily-guidance/offline-socrates.png",
+        "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/dojoToday/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-42-51-714Z/daily-guidance/return.png"
+      ],
+      "caseCompleteness": "not-established-by-sample"
+    },
+    {
+      "engineId": "miniTown",
+      "criterion": "C23",
+      "selectedImages": 1,
+      "retainedImages": 6,
+      "unreviewedImagePaths": [
+        "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-10-066Z/explore-day-night-return/night-hud.png",
+        "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-10-066Z/explore-day-night-return/reopened.png",
+        "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-10-066Z/renderer-unavailable-exit/renderer-unavailable.png",
+        "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-10-066Z/route-unavailable-recovery/route-restored.png",
+        "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/miniTown/test-results/readiness-plan-runtime/declared-use-2026-10-16T01-43-10-066Z/route-unavailable-recovery/route-unavailable.png"
+      ],
+      "caseCompleteness": "not-established-by-sample"
+    }
+  ],
+  "semanticObservations": [
+    {
+      "caseId": "c18_cycle",
+      "imageMeaning": "The next-action destination visibly shows the cycle list, Diagnosticar nível, evidence/artifact fields and Concluir etapa.",
+      "jevNoul": {
+        "surface": 0.99,
+        "legibility": 0.97,
+        "frameworkError": 0.02,
+        "expectedState": 0.98
+      },
+      "assessment": "Supports these screenshot-visible elements only; projection correctness, clipboard and configured/absent OS bridge remain outside this image."
+    },
+    {
+      "caseId": "c20_mission",
+      "imageMeaning": "The visible Sócrates mission card names KV WAREHOUSE and shows the expected practice/tutor controls.",
+      "jevNoul": {
+        "surface": 0.98,
+        "legibility": 0.95,
+        "frameworkError": 0.05,
+        "expectedState": 0.98
+      },
+      "assessment": "Supports visible mission/control labels. This scrolled capture does not establish streak/reviews above the viewport, fixture equality, provider execution or readonly preservation."
+    },
+    {
+      "caseId": "c20_inline",
+      "imageMeaning": "The embedded area visibly shows Sua lição de hoje / Quebre o gelo hoje instead of identifiable warehouse practice.",
+      "jevNoul": {
+        "surface": 0.96,
+        "legibility": 0.94,
+        "frameworkError": 0.03,
+        "warehouseGame": 0.04,
+        "dailyLanding": 0.97
+      },
+      "assessment": "Corroborates the retained runtime gap for C20-game02-real-inline-practice. Rendered UI alone does not satisfy the inline game promise; no product repair or packaging inference is made."
+    },
+    {
+      "caseId": "c23_morning",
+      "imageMeaning": "A ground plane and readable morning/time HUD are visible; buildings, residents and vehicles are not visible in this capture.",
+      "jevNoul": {
+        "surface": 0.91,
+        "legibility": 0.96,
+        "frameworkError": 0.03,
+        "hud": 0.98,
+        "townEntities": 0.05
+      },
+      "assessment": "Supports scene/HUD presence and absence of advertised entities in this single view. The source report separately records zero entity counts; the capture does not establish the whole runtime or satisfy the advertised town-content promise."
+    }
+  ],
+  "integrity": {
+    "allSelectedSourceFilesPreserved": true,
+    "allImageAndReportDigestsPreserved": true,
+    "historicalManifestMismatches": [
+      {
+        "engineId": "codexDojo",
+        "mismatches": [
+          {
+            "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.checks/product-readiness-20261015.md",
+            "expected": "52b0f861cb81849237d09e6cb98ae0c8c154fd09d34325a590d0b45f34ae6c56",
+            "actual": "be2f4cbd87841b05ad0f770dc5391a9a0c840a3e0b3a98c881a9e872eeeeed83"
+          },
+          {
+            "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/plan.md",
+            "expected": "aaa184768897b4863b6cfbc8e36b2513e3212bb02ea496e0f19590a49887af0e",
+            "actual": "bc5d155666014c6fb600637c2c3315eff011628fe864b039035d616216be3079"
+          }
+        ]
+      },
+      {
+        "engineId": "dojoToday",
+        "mismatches": [
+          {
+            "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.checks/product-readiness-20261015.md",
+            "expected": "52b0f861cb81849237d09e6cb98ae0c8c154fd09d34325a590d0b45f34ae6c56",
+            "actual": "be2f4cbd87841b05ad0f770dc5391a9a0c840a3e0b3a98c881a9e872eeeeed83"
+          },
+          {
+            "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/plan.md",
+            "expected": "aaa184768897b4863b6cfbc8e36b2513e3212bb02ea496e0f19590a49887af0e",
+            "actual": "bc5d155666014c6fb600637c2c3315eff011628fe864b039035d616216be3079"
+          }
+        ]
+      },
+      {
+        "engineId": "miniTown",
+        "mismatches": [
+          {
+            "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.checks/product-readiness-20261015.md",
+            "expected": "52b0f861cb81849237d09e6cb98ae0c8c154fd09d34325a590d0b45f34ae6c56",
+            "actual": "be2f4cbd87841b05ad0f770dc5391a9a0c840a3e0b3a98c881a9e872eeeeed83"
+          },
+          {
+            "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/plan.md",
+            "expected": "aaa184768897b4863b6cfbc8e36b2513e3212bb02ea496e0f19590a49887af0e",
+            "actual": "bc5d155666014c6fb600637c2c3315eff011628fe864b039035d616216be3079"
+          }
+        ]
+      }
+    ],
+    "historicalManifestExplanation": "Product files listed in these manifests match. Checklist and plan differ from their producer-time digest; original report source SHA, fingerprint, timestamps and verdicts remain unchanged."
+  },
+  "limitations": [
+    "Images are experimental/dreamer-ready in the live API docs; this small domain sample is not a validated visual grader.",
+    "Probabilities are retained as advisory values; no automatic threshold or PASS aggregation is defined.",
+    "Four images out of 17 retained across C18/C20/C23 are sampled; unreviewed screenshots and cases remain unverified.",
+    "C19/C21/C26/C27/C28/C29/C30 have not been sent in this first batch.",
+    "Screenshot absence cannot establish console health, interaction behavior, storage, canonical-state preservation or a full journey.",
+    "No ReadinessTier, mastery, engine-level pass or global feature pass is granted.",
+    "Awaiting root authorization before any further paid API request."
+  ],
+  "artifacts": {
+    "requestMetadata": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-c11-followup-20261016/jev/sample-request-metadata.json",
+    "response": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-c11-followup-20261016/jev/sample-response.json",
+    "status": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-c11-followup-20261016/jev/sample-status.json",
+    "sourceBefore": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-c11-followup-20261016/jev/source-before.json",
+    "sourceAfter": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-c11-followup-20261016/jev/source-after.json"
+  }
+}

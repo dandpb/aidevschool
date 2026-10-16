@@ -1,0 +1,28 @@
+{
+  "recordedAt": "2026-10-16T10:42:32.068301+00:00",
+  "source": "direct human reply in this conversation",
+  "decisions": [
+    {
+      "questionItemId": "request_user_input_async/call_a087080bbf7b4f0584ba13930a709f53/0",
+      "criterion": "C11",
+      "answer": "Corrigir C11 para o fluxo real",
+      "acceptedShape": "UI l02 completes with a3; independent a1/a2/a3 receipt contracts C8-C10 remain unchanged."
+    },
+    {
+      "questionItemId": "request_user_input_async/call_a04111a3949742beaa567f9009f32c50/0",
+      "criterion": "C24 environment",
+      "answer": "use a aplicacao localmente",
+      "acceptedShape": "Observe the existing local minimaxDojo entry. Preserve attempt/independent verification/report/reflection requirements; no new local runtime or fixture substitution authorized."
+    },
+    {
+      "questionItemId": "request_user_input_async/call_fc92210828cc4f5aa180b59162973b80/0",
+      "scope": "TypeSafe/Jev access",
+      "answer": "use as variavel de ambiente ..",
+      "acceptedShape": "Use configured environment variables without recording secrets. Presence confirmed only in interactive zsh; no credential value retained."
+    }
+  ],
+  "previousChecklistSha256": "52b0f861cb81849237d09e6cb98ae0c8c154fd09d34325a590d0b45f34ae6c56",
+  "previousTaskSha256": "aaa184768897b4863b6cfbc8e36b2513e3212bb02ea496e0f19590a49887af0e",
+  "previousFreeze": ".checks/product-readiness-20261015.freeze.json",
+  "publicationAuthorization": "unchanged; local work only"
+}

@@ -1,0 +1,77 @@
+{
+  "schema": "readiness.minimax.local-entry.v1",
+  "startedAt": "2026-10-16T10:39:51.108467+00:00",
+  "head": "528a56c847ec50276ed9d2dab2c7247584c567c3",
+  "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-c11-followup-20261016/minimax-local/private-root",
+  "argv": [
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/gh-375/venv/bin/python",
+    "-m",
+    "engines.minimaxDojo.os_adapter"
+  ],
+  "exitCode": 0,
+  "stdout": {
+    "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-c11-followup-20261016/minimax-local/local-cli.stdout.txt",
+    "sha256": "5a261cfba2485fb2e6dfbe560bfdb84452b7bb0f8f5d4279c746cd38d6ceee0c"
+  },
+  "stderr": {
+    "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-c11-followup-20261016/minimax-local/local-cli.stderr.txt",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "sourceCopies": [
+    {
+      "source": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/minimaxDojo/os_adapter.py",
+      "copy": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-c11-followup-20261016/minimax-local/private-root/engines/minimaxDojo/os_adapter.py",
+      "sha256": "0040326899f3ff36d647cc39a72a14fae7137d776ad77a209d49a4d9eeae259a"
+    },
+    {
+      "source": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/minimaxDojo/__init__.py",
+      "copy": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-c11-followup-20261016/minimax-local/private-root/engines/minimaxDojo/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/minimaxDojo/core/__init__.py",
+      "copy": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-c11-followup-20261016/minimax-local/private-root/engines/minimaxDojo/core/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/minimaxDojo/core/config.py",
+      "copy": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-c11-followup-20261016/minimax-local/private-root/engines/minimaxDojo/core/config.py",
+      "sha256": "ea965d03225b6870f55d6997a0b7b2b8b3c76d55e50e62e02e0aab07c0318508"
+    },
+    {
+      "source": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/minimaxDojo/config/learner.yaml",
+      "copy": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-c11-followup-20261016/minimax-local/private-root/engines/minimaxDojo/config/learner.yaml",
+      "sha256": "d7d01d87cc5ab3ff4da36f6ada76660241f656af4b0d6b9165b419a40d860496"
+    },
+    {
+      "source": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/learning_state.yaml",
+      "copy": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-c11-followup-20261016/minimax-local/private-root/learner/learning_state.yaml",
+      "sha256": "36419ae44e755a9bd8bd049b14d0dee03d8b5937e577285f67ffe730733735e2"
+    }
+  ],
+  "sourceFilesCompared": 313,
+  "sourceChanged": [],
+  "assertions": {
+    "exit_zero": true,
+    "readonly_identity": true,
+    "source_labelled": true,
+    "config_labelled": true,
+    "authority_boundary": true,
+    "source_learner_and_engine_unchanged": true,
+    "mastered_unit_requests_next_presentation": true
+  },
+  "localEntryStatus": "pass",
+  "c24Status": "unverified",
+  "limits": [
+    "Runs the actual local read-only adapter against an exact private source and state snapshot.",
+    "No MiniMax Agent Team invoked, no producer/verifier or Critico context instantiated.",
+    "No attempt generated, empirical metrics supplied, cycle report produced, reflection evaluated, whiteboard updated, or canonical state advanced.",
+    "Input state and config are copied snapshots, not evidence of a live tutor cycle.",
+    "Local app entry is a bounded OS bridge action and CLI; the local static evaluation UI explicitly does not execute the Python motor."
+  ],
+  "observerCorrection": {
+    "priorReport": "probe-v1-observer-assumption.json",
+    "reason": "Exact copied input has active_unit.state=mastered. The correct documented adapter branch asks Cartografo to select/present the next unit, not practicing STAP. Initial observer assumption was invalid; no source/requirement changed.",
+    "correctedObservation": "Mastered branch is actually exercised. Practicing branch remains a contract-test assertion, not live tutor execution."
+  }
+}

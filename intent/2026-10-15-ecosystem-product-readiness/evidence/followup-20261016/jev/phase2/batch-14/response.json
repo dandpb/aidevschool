@@ -1,0 +1,105 @@
+{
+  "model": "jev-1.13.0",
+  "answers": {
+    "quest_http_en_import_preview_surface": {
+      "type": "noul",
+      "noul": 0.99
+    },
+    "quest_http_en_import_preview_legibility": {
+      "type": "noul",
+      "noul": 0.97
+    },
+    "quest_http_en_import_preview_framework_error": {
+      "type": "noul",
+      "noul": 0.03
+    },
+    "quest_http_en_import_preview_language": {
+      "type": "noul",
+      "noul": 0.99
+    },
+    "quest_http_en_import_preview_import_confirmation": {
+      "type": "noul",
+      "noul": 0.99
+    },
+    "quest_http_en_import_preview_approval_reset": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "quest_http_pt_BR_import_preview_surface": {
+      "type": "noul",
+      "noul": 0.99
+    },
+    "quest_http_pt_BR_import_preview_legibility": {
+      "type": "noul",
+      "noul": 0.97
+    },
+    "quest_http_pt_BR_import_preview_framework_error": {
+      "type": "noul",
+      "noul": 0.03
+    },
+    "quest_http_pt_BR_import_preview_language": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "quest_http_pt_BR_import_preview_import_confirmation": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "quest_http_pt_BR_import_preview_approval_reset": {
+      "type": "noul",
+      "noul": 0.97
+    },
+    "quest_native_file_en_import_preview_surface": {
+      "type": "noul",
+      "noul": 0.99
+    },
+    "quest_native_file_en_import_preview_legibility": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "quest_native_file_en_import_preview_framework_error": {
+      "type": "noul",
+      "noul": 0.03
+    },
+    "quest_native_file_en_import_preview_language": {
+      "type": "noul",
+      "noul": 0.99
+    },
+    "quest_native_file_en_import_preview_import_confirmation": {
+      "type": "noul",
+      "noul": 0.99
+    },
+    "quest_native_file_en_import_preview_approval_reset": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "quest_native_file_pt_BR_import_preview_surface": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "quest_native_file_pt_BR_import_preview_legibility": {
+      "type": "noul",
+      "noul": 0.97
+    },
+    "quest_native_file_pt_BR_import_preview_framework_error": {
+      "type": "noul",
+      "noul": 0.03
+    },
+    "quest_native_file_pt_BR_import_preview_language": {
+      "type": "noul",
+      "noul": 0.96
+    },
+    "quest_native_file_pt_BR_import_preview_import_confirmation": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "quest_native_file_pt_BR_import_preview_approval_reset": {
+      "type": "noul",
+      "noul": 0.97
+    }
+  },
+  "usage": {
+    "input_tokens": 13208,
+    "output_tokens": 560
+  }
+}

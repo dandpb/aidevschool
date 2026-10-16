@@ -1,0 +1,105 @@
+{
+  "model": "jev-1.13.0",
+  "answers": {
+    "pixel_08_event_driven_order_system_retry_pass_surface": {
+      "type": "noul",
+      "noul": 0.96
+    },
+    "pixel_08_event_driven_order_system_retry_pass_legibility": {
+      "type": "noul",
+      "noul": 0.96
+    },
+    "pixel_08_event_driven_order_system_retry_pass_framework_error": {
+      "type": "noul",
+      "noul": 0.03
+    },
+    "pixel_08_event_driven_order_system_retry_pass_lab_identity": {
+      "type": "noul",
+      "noul": 0.89
+    },
+    "pixel_08_event_driven_order_system_retry_pass_result_copy": {
+      "type": "noul",
+      "noul": 0.85
+    },
+    "pixel_08_event_driven_order_system_retry_pass_return_controls": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "pixel_09_plugin_system_retry_pass_surface": {
+      "type": "noul",
+      "noul": 0.95
+    },
+    "pixel_09_plugin_system_retry_pass_legibility": {
+      "type": "noul",
+      "noul": 0.96
+    },
+    "pixel_09_plugin_system_retry_pass_framework_error": {
+      "type": "noul",
+      "noul": 0.03
+    },
+    "pixel_09_plugin_system_retry_pass_lab_identity": {
+      "type": "noul",
+      "noul": 0.93
+    },
+    "pixel_09_plugin_system_retry_pass_result_copy": {
+      "type": "noul",
+      "noul": 0.83
+    },
+    "pixel_09_plugin_system_retry_pass_return_controls": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "pixel_10_distributed_cache_retry_pass_surface": {
+      "type": "noul",
+      "noul": 0.95
+    },
+    "pixel_10_distributed_cache_retry_pass_legibility": {
+      "type": "noul",
+      "noul": 0.96
+    },
+    "pixel_10_distributed_cache_retry_pass_framework_error": {
+      "type": "noul",
+      "noul": 0.03
+    },
+    "pixel_10_distributed_cache_retry_pass_lab_identity": {
+      "type": "noul",
+      "noul": 0.89
+    },
+    "pixel_10_distributed_cache_retry_pass_result_copy": {
+      "type": "noul",
+      "noul": 0.83
+    },
+    "pixel_10_distributed_cache_retry_pass_return_controls": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "pixel_11_load_balancer_retry_pass_surface": {
+      "type": "noul",
+      "noul": 0.95
+    },
+    "pixel_11_load_balancer_retry_pass_legibility": {
+      "type": "noul",
+      "noul": 0.95
+    },
+    "pixel_11_load_balancer_retry_pass_framework_error": {
+      "type": "noul",
+      "noul": 0.03
+    },
+    "pixel_11_load_balancer_retry_pass_lab_identity": {
+      "type": "noul",
+      "noul": 0.88
+    },
+    "pixel_11_load_balancer_retry_pass_result_copy": {
+      "type": "noul",
+      "noul": 0.82
+    },
+    "pixel_11_load_balancer_retry_pass_return_controls": {
+      "type": "noul",
+      "noul": 0.97
+    }
+  },
+  "usage": {
+    "input_tokens": 14015,
+    "output_tokens": 646
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "engines/minimaxDojo/AGENTS.md": {
+    "sha256": "1b1ac4bb4146b96aa3bd3da74018030112843f4472260955291343796ae3ef16",
+    "bytes": 2272
+  },
+  "engines/minimaxDojo/README.md": {
+    "sha256": "cfaddb0a22fd56e3fbe95c0491be851040bb6d78b63404ccbaa05725de66bc87",
+    "bytes": 11064
+  },
+  "engines/minimaxDojo/INDEX.md": {
+    "sha256": "d907e88bda889d23504b50572972eaf38fd04638fbfbf7d8e3e298811b3975b6",
+    "bytes": 4301
+  },
+  "engines/minimaxDojo/docs/QUICK_START.md": {
+    "sha256": "a4b761d270b0ddf060694ccff62d79d0e9c2b47a2427b5811618c2b7872ac371",
+    "bytes": 4869
+  },
+  "engines/minimaxDojo/core/README.md": {
+    "sha256": "b8a8e8e7b1b61278e4addd2da0496ac5ed4e2f241cd7405a67db7d24e6d4b4ae",
+    "bytes": 1930
+  },
+  "engines/minimaxDojo/core/state_machine.py": {
+    "sha256": "cdb1db8a3fc11b9b25aedf5284893e27277f271af2552b2634f34ad759bab5a8",
+    "bytes": 5221
+  },
+  "engines/minimaxDojo/core/gates.py": {
+    "sha256": "abfd8b129e7a6e6cde2a105e36be813e71ec227c4da375107cd48bb522073186",
+    "bytes": 1831
+  },
+  "engines/minimaxDojo/core/memory.py": {
+    "sha256": "a098608d152b1d3f7a839297783dbf967ef6f9a82b97a491e8a59d061bb32cdd",
+    "bytes": 2402
+  },
+  "engines/minimaxDojo/os_adapter.py": {
+    "sha256": "0040326899f3ff36d647cc39a72a14fae7137d776ad77a209d49a4d9eeae259a",
+    "bytes": 2695
+  },
+  "engines/minimaxDojo/tests/test_os_adapter.py": {
+    "sha256": "a139f05f4441b64ea22c419df33c6ee3460449fc2c8b662ffa68042644bb37b3",
+    "bytes": 1358
+  },
+  "engines/minimaxDojo/tests/test_learning_unit_e2e_contract.py": {
+    "sha256": "c05a182329456547aa19c0e6dbe4ea89f4dc47b4743080a1a5084e87802b66f7",
+    "bytes": 3809
+  },
+  "engines/minimaxDojo/whiteboard/README.md": {
+    "sha256": "438e97e5fb7526814bcb6242b7b630d0941c8511febef0b0783bb02cbb44ded6",
+    "bytes": 1992
+  },
+  "engines/minimaxDojo/prompts/bootstrap/00_system.md": {
+    "sha256": "a32bc8778c260a75a5dd472aec39d5369a50f1197da712f7e4eb204b5983d055",
+    "bytes": 8405
+  },
+  "engines/minimaxDojo/prompts/bootstrap/01_first_cycle.md": {
+    "sha256": "7db7254285e94f6553366ff5f7cb7976305f33f97bf4aacda926d34741b77f20",
+    "bytes": 6467
+  },
+  "engines/codexdojo-os-prototype/README.md": {
+    "sha256": "322ac70e93a4a23156bc9967b7b47e514f60b2557de6bd31fc99288b9e8a97b5",
+    "bytes": 5821
+  },
+  "engines/codexdojo-os-prototype/bridge/actions.ts": {
+    "sha256": "0b28bbacbba37bea65b2d6f1058e0ce261e0393dfd0844a92826f71ab5d06015",
+    "bytes": 1718
+  },
+  "engines/codexdojo-os-prototype/src/engines/registry.ts": {
+    "sha256": "7e35a6d9b27bdaab8b12b6fbd253e66aa09a0f02875602880371b0a386d4d997",
+    "bytes": 10458
+  },
+  "engines/codexdojo-os-prototype/src/engines/StaticEngineEvaluation.tsx": {
+    "sha256": "dfef1276b29f30f55206775a77040e04297307c598a38b195e5448994f1c75a7",
+    "bytes": 3467
+  },
+  ".checks/product-readiness-20261015.md": {
+    "sha256": "52b0f861cb81849237d09e6cb98ae0c8c154fd09d34325a590d0b45f34ae6c56",
+    "bytes": 31671
+  },
+  "intent/2026-10-15-ecosystem-product-readiness/qualification-matrix.md": {
+    "sha256": "0e9448e46c26d8075831b5215d609bab38a4d052567b04f5e99251019b5f2b35",
+    "bytes": 22970
+  }
+}

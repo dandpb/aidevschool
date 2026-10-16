@@ -1,0 +1,14 @@
+7:45:18 AM [vite] http proxy error: /.netlify/functions/literacy-verify
+Error: connect ECONNREFUSED 127.0.0.1:64338
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1638:16)
+    at TCPConnectWrap.callbackTrampoline (node:internal/async_hooks:130:17)
+7:45:18 AM [vite] http proxy error: /.netlify/functions/literacy-verify
+Error: connect ECONNREFUSED 127.0.0.1:64338
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1638:16)
+    at TCPConnectWrap.callbackTrampoline (node:internal/async_hooks:130:17)
+{
+  "engineId": "literacyDojo",
+  "caseName": "verifier-outage-retry",
+  "status": "pass",
+  "reportPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime/verifier-outage-retry-2026-10-16T10-45-16-101Z/report.json"
+}

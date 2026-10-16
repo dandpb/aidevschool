@@ -28,3 +28,7 @@ Root `AGENTS.md`, engine/learner AGENTS aplicáveis, `docs/sdlc/README.md`, `REV
 Os itens de [plan.md — Out of scope](plan.md#out-of-scope) são vinculantes: nenhuma plataforma nova, unificação de progresso, autonomia adicional ou correção não planejada de um incidente futuro está incluída.
 
 > Aceite de execução local: Daniel invocou explicitamente `heropa:sdlc-implement` para este plano nesta conversa. Exceção delimitada do teste #656: [registro humano](owner-approval-pr656.json). Publicação, push, deploy e merge permanecem ações separadas.
+
+## Decisões humanas de 16/10/2026
+
+[Registro direto](owner-decisions-20261016.json): C11 passa a provar o único final UI oferecido (a3), preservando todos os contratos a1/a2/a3 de C8–10. Para C24, o alvo é a aplicação/entrada local existente; briefing somente leitura e núcleo de referência não substituem o ciclo completo exigido. Nenhum runtime novo ou promoção de mastery é autorizado por essa orientação. Jev usa as variáveis de ambiente configuradas, sem registrar seus valores. O freeze e o relatório da rodada1 permanecem históricos.

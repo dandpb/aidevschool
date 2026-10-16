@@ -1,0 +1,252 @@
+{
+  "phase": "phase2",
+  "budget": {
+    "maxImages": 60,
+    "maxRequests": 15,
+    "maxInputTokens": 200000,
+    "maxOutputTokens": 10000
+  },
+  "cases": {
+    "c11_pass": {
+      "imagePath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/test-results/readiness-plan-runtime/last-passing-evidence-2026-10-16T10-45-12-670Z/bound-receipt-pass-viewport.png",
+      "imageSha256": "39603670efba7472a5358ea7dcf97e8f348ebbc16fa79b7eebc99a4d37f5f8b4",
+      "aliasImagePaths": [
+        "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/test-results/readiness-plan-runtime/last-passing-evidence-2026-10-16T10-45-12-670Z/bound-receipt-pass-viewport.png"
+      ],
+      "aliases": [
+        {
+          "criterion": "C11",
+          "caseName": "last-passing-evidence",
+          "state": "bound-receipt-pass"
+        }
+      ],
+      "reportRefs": [
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-c11-followup-20261016/literacy/followup-report.json",
+          "sha256": "4fe6d7e584f742dd4943d28945472c63621b1600e8fb57ea5fb39dd55c7f6be1"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime/last-passing-evidence-2026-10-16T10-45-12-670Z/report.json",
+          "sha256": "b0b594eb88b81758574879ef6a896d1a3fdaf70fd2a7ed1cbad70dba6852264e"
+        }
+      ],
+      "promiseSources": [
+        "plan.md criteria 11-12 under the accepted revision; literacyDojo ResultScreen.tsx verification-status and completion-distinction; followup-report.json case last-passing-evidence"
+      ],
+      "expectation": "ResultScreen must show the current verification state, preserve device-local completion and provide retry when unavailable. Visible PASS text is not cryptographic proof. The screenshot contains actual app copy, which may be inconsistent and must be observed as it is.",
+      "questions": [
+        {
+          "id": "surface",
+          "question": "Is an application result/status surface visibly rendered?",
+          "yes": "A result/status application surface is visible.",
+          "no": "The capture is blank or shows only a browser error."
+        },
+        {
+          "id": "legibility",
+          "question": "Are the visible main status labels and controls readable without obvious overlapping text obscuring their meaning?",
+          "yes": "The visible status labels and controls are readable.",
+          "no": "Main labels or controls are obscured or unreadable."
+        },
+        {
+          "id": "framework_error",
+          "question": "Is a framework exception overlay, unhandled-error screen or stack trace visibly present?",
+          "yes": "A framework error overlay or stack trace is visible.",
+          "no": "No framework error presentation is visible; console health is not established."
+        },
+        {
+          "id": "receipt_pass",
+          "question": "Does the verification section visibly state Recibo independente: PASS?",
+          "yes": "The independent receipt PASS text is visible.",
+          "no": "No independent receipt PASS text can be read."
+        },
+        {
+          "id": "canonical_limit",
+          "question": "Does the visible receipt copy state that completion is only on this device and the receipt does not change canonical mastery?",
+          "yes": "The device-only and unchanged canonical-domain limitation is explicitly visible.",
+          "no": "That limitation is absent or cannot be read."
+        },
+        {
+          "id": "local_progress_distinction",
+          "question": "Does the visible note distinguish lesson completion on this device from verified competence?",
+          "yes": "The local completion versus verified competence distinction is visible.",
+          "no": "That distinction is absent or unreadable."
+        },
+        {
+          "id": "verification_not_part_copy",
+          "question": "Does the visible note say that independent verification ainda não faz parte deste aplicativo?",
+          "yes": "The note explicitly contains that statement.",
+          "no": "The statement is absent or unreadable."
+        }
+      ]
+    },
+    "c12_recovered": {
+      "imagePath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/test-results/readiness-plan-runtime/verifier-outage-retry-2026-10-16T10-45-16-101Z/bound-receipt-pass-viewport.png",
+      "imageSha256": "a6a0a486d5b3f630f65fc7f9830a8825622be2ad2b7f4415bbb706c78cedaceb",
+      "aliasImagePaths": [
+        "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/test-results/readiness-plan-runtime/verifier-outage-retry-2026-10-16T10-45-16-101Z/bound-receipt-pass-viewport.png"
+      ],
+      "aliases": [
+        {
+          "criterion": "C12",
+          "caseName": "verifier-outage-retry",
+          "state": "bound-receipt-pass"
+        }
+      ],
+      "reportRefs": [
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-c11-followup-20261016/literacy/followup-report.json",
+          "sha256": "4fe6d7e584f742dd4943d28945472c63621b1600e8fb57ea5fb39dd55c7f6be1"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime/verifier-outage-retry-2026-10-16T10-45-16-101Z/report.json",
+          "sha256": "d2fa53e7b47a380386e7086b82eab4859ada7cde51986bf3b7fad349aa6f2899"
+        }
+      ],
+      "promiseSources": [
+        "plan.md criteria 11-12 under the accepted revision; literacyDojo ResultScreen.tsx verification-status and completion-distinction; followup-report.json case verifier-outage-retry"
+      ],
+      "expectation": "ResultScreen must show the current verification state, preserve device-local completion and provide retry when unavailable. Visible PASS text is not cryptographic proof. The screenshot contains actual app copy, which may be inconsistent and must be observed as it is.",
+      "questions": [
+        {
+          "id": "surface",
+          "question": "Is an application result/status surface visibly rendered?",
+          "yes": "A result/status application surface is visible.",
+          "no": "The capture is blank or shows only a browser error."
+        },
+        {
+          "id": "legibility",
+          "question": "Are the visible main status labels and controls readable without obvious overlapping text obscuring their meaning?",
+          "yes": "The visible status labels and controls are readable.",
+          "no": "Main labels or controls are obscured or unreadable."
+        },
+        {
+          "id": "framework_error",
+          "question": "Is a framework exception overlay, unhandled-error screen or stack trace visibly present?",
+          "yes": "A framework error overlay or stack trace is visible.",
+          "no": "No framework error presentation is visible; console health is not established."
+        },
+        {
+          "id": "receipt_pass",
+          "question": "Does the verification section visibly state Recibo independente: PASS?",
+          "yes": "The independent receipt PASS text is visible.",
+          "no": "No independent receipt PASS text can be read."
+        },
+        {
+          "id": "canonical_limit",
+          "question": "Does the visible receipt copy state that completion is only on this device and the receipt does not change canonical mastery?",
+          "yes": "The device-only and unchanged canonical-domain limitation is explicitly visible.",
+          "no": "That limitation is absent or cannot be read."
+        },
+        {
+          "id": "local_progress_distinction",
+          "question": "Does the visible note distinguish lesson completion on this device from verified competence?",
+          "yes": "The local completion versus verified competence distinction is visible.",
+          "no": "That distinction is absent or unreadable."
+        },
+        {
+          "id": "verification_not_part_copy",
+          "question": "Does the visible note say that independent verification ainda não faz parte deste aplicativo?",
+          "yes": "The note explicitly contains that statement.",
+          "no": "The statement is absent or unreadable."
+        }
+      ]
+    },
+    "c12_outage": {
+      "imagePath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/test-results/readiness-plan-runtime/verifier-outage-retry-2026-10-16T10-45-16-101Z/endpoint-outage-viewport.png",
+      "imageSha256": "0e9c7ef1f61c94fcfc1f2aa96cb64f1e55d1ec5027b7e2dca763280207e4037c",
+      "aliasImagePaths": [
+        "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/test-results/readiness-plan-runtime/verifier-outage-retry-2026-10-16T10-45-16-101Z/endpoint-outage-viewport.png"
+      ],
+      "aliases": [
+        {
+          "criterion": "C12",
+          "caseName": "verifier-outage-retry",
+          "state": "endpoint-outage"
+        }
+      ],
+      "reportRefs": [
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-c11-followup-20261016/literacy/followup-report.json",
+          "sha256": "4fe6d7e584f742dd4943d28945472c63621b1600e8fb57ea5fb39dd55c7f6be1"
+        },
+        {
+          "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime/verifier-outage-retry-2026-10-16T10-45-16-101Z/report.json",
+          "sha256": "d2fa53e7b47a380386e7086b82eab4859ada7cde51986bf3b7fad349aa6f2899"
+        }
+      ],
+      "promiseSources": [
+        "plan.md criteria 11-12 under the accepted revision; literacyDojo ResultScreen.tsx verification-status and completion-distinction; followup-report.json case verifier-outage-retry"
+      ],
+      "expectation": "ResultScreen must show the current verification state, preserve device-local completion and provide retry when unavailable. Visible PASS text is not cryptographic proof. The screenshot contains actual app copy, which may be inconsistent and must be observed as it is.",
+      "questions": [
+        {
+          "id": "surface",
+          "question": "Is an application result/status surface visibly rendered?",
+          "yes": "A result/status application surface is visible.",
+          "no": "The capture is blank or shows only a browser error."
+        },
+        {
+          "id": "legibility",
+          "question": "Are the visible main status labels and controls readable without obvious overlapping text obscuring their meaning?",
+          "yes": "The visible status labels and controls are readable.",
+          "no": "Main labels or controls are obscured or unreadable."
+        },
+        {
+          "id": "framework_error",
+          "question": "Is a framework exception overlay, unhandled-error screen or stack trace visibly present?",
+          "yes": "A framework error overlay or stack trace is visible.",
+          "no": "No framework error presentation is visible; console health is not established."
+        },
+        {
+          "id": "outage_message",
+          "question": "Is the message O verificador está indisponível. Tente novamente visibly present?",
+          "yes": "The verification-unavailable retry message is visible.",
+          "no": "That message is absent or unreadable."
+        },
+        {
+          "id": "retry_control",
+          "question": "Is a visible Tentar verificação novamente action offered?",
+          "yes": "The named retry action is visible.",
+          "no": "No readable retry action is visible."
+        },
+        {
+          "id": "local_progress_distinction",
+          "question": "Does the visible note distinguish lesson completion on this device from verified competence?",
+          "yes": "The local completion versus verified competence distinction is visible.",
+          "no": "That distinction is absent or unreadable."
+        },
+        {
+          "id": "verification_not_part_copy",
+          "question": "Does the visible note say that independent verification ainda não faz parte deste aplicativo?",
+          "yes": "The note explicitly contains that statement.",
+          "no": "The statement is absent or unreadable."
+        }
+      ]
+    }
+  },
+  "batches": [
+    [
+      "c11_pass",
+      "c12_recovered",
+      "c12_outage"
+    ]
+  ],
+  "protectedSources": [
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.checks/product-readiness-20261015.md",
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.checks/product-readiness-20261015.freeze.v2.json",
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/plan.md",
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/owner-decisions-20261016.json",
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/literacy-runtime.mjs",
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/observe-engine.mjs",
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/netlify-functions/literacy-verify.mjs",
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_netlify.test.mjs",
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_identity.test.mjs",
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs",
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/src/screens/LessonScreen.tsx",
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/src/screens/ResultScreen.tsx",
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/src/domain/verification.ts",
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/src/data/generated/lessons.ts",
+    "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/learning_state.yaml"
+  ],
+  "firstReportImmutable": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-c11-followup-20261016/jev/REPORT.json"
+}

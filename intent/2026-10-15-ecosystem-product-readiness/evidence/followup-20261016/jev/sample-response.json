@@ -1,0 +1,81 @@
+{
+  "model": "jev-1.13.0",
+  "answers": {
+    "c18_cycle_surface": {
+      "type": "noul",
+      "noul": 0.99
+    },
+    "c18_cycle_legibility": {
+      "type": "noul",
+      "noul": 0.97
+    },
+    "c18_cycle_framework_error": {
+      "type": "noul",
+      "noul": 0.02
+    },
+    "c20_mission_surface": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "c20_mission_legibility": {
+      "type": "noul",
+      "noul": 0.95
+    },
+    "c20_mission_framework_error": {
+      "type": "noul",
+      "noul": 0.05
+    },
+    "c20_inline_surface": {
+      "type": "noul",
+      "noul": 0.96
+    },
+    "c20_inline_legibility": {
+      "type": "noul",
+      "noul": 0.94
+    },
+    "c20_inline_framework_error": {
+      "type": "noul",
+      "noul": 0.03
+    },
+    "c23_morning_surface": {
+      "type": "noul",
+      "noul": 0.91
+    },
+    "c23_morning_legibility": {
+      "type": "noul",
+      "noul": 0.96
+    },
+    "c23_morning_framework_error": {
+      "type": "noul",
+      "noul": 0.03
+    },
+    "c18_cycle_expected_state": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "c20_mission_expected_state": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "c20_inline_warehouse_game": {
+      "type": "noul",
+      "noul": 0.04
+    },
+    "c20_inline_daily_landing": {
+      "type": "noul",
+      "noul": 0.97
+    },
+    "c23_morning_hud": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "c23_morning_town_entities": {
+      "type": "noul",
+      "noul": 0.05
+    }
+  },
+  "usage": {
+    "input_tokens": 13478,
+    "output_tokens": 406
+  }
+}

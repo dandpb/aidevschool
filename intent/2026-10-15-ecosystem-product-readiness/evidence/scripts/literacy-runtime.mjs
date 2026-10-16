@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { createServer } from "node:http";
 import { createRequire } from "node:module";
+import { createConnection } from "node:net";
 import { mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -90,6 +91,20 @@ async function availablePort() {
   return port;
 }
 
+async function probeClosedPort(port) {
+  return new Promise((resolve) => {
+    const connection = createConnection({ host: "127.0.0.1", port });
+    const finish = (result) => {
+      connection.destroy();
+      resolve({ port, ...result });
+    };
+    connection.setTimeout(1_000);
+    connection.once("connect", () => finish({ closed: false, result: "connected" }));
+    connection.once("error", (error) => finish({ closed: error.code === "ECONNREFUSED", result: error.code }));
+    connection.once("timeout", () => finish({ closed: false, result: "timeout" }));
+  });
+}
+
 async function readLocal(page) {
   return page.evaluate(async () => {
     const progress = await new Promise((resolve, reject) => {
@@ -152,6 +167,7 @@ async function browserCase(caseName, report, mediaDir, logDir, options) {
   let browser;
   let context;
   let page;
+  let viteHttpServer;
   let failed = false;
   try {
     api = await startFunction(requests);
@@ -163,7 +179,9 @@ async function browserCase(caseName, report, mediaDir, logDir, options) {
       server: { host: "127.0.0.1", port: appPort, strictPort: true, proxy: { [endpointPath]: `http://127.0.0.1:${api.port}` } },
     });
     await vite.listen();
+    viteHttpServer = vite.httpServer;
     const appOrigin = `http://127.0.0.1:${vite.httpServer.address().port}`;
+    report.ownPorts = { functionHttp: api.port, viteHttp: appPort };
     browser = await chromium.launch({ headless: true });
     context = await browser.newContext({ viewport: { width: 360, height: 740 }, baseURL: appOrigin, recordVideo: { dir: mediaDir, size: { width: 360, height: 740 } } });
     await context.tracing.start({ screenshots: true, snapshots: true, sources: true });
@@ -193,6 +211,8 @@ async function browserCase(caseName, report, mediaDir, logDir, options) {
       await expect(page.getByTestId("verification-status")).toContainText("indisponível");
       assert.equal(requests.length, 0);
       await page.screenshot({ path: path.join(mediaDir, "endpoint-outage.png"), fullPage: true });
+      await page.getByTestId("verification-status").scrollIntoViewIfNeeded();
+      await page.screenshot({ path: path.join(mediaDir, "endpoint-outage-viewport.png"), fullPage: false });
       const beforeRetry = await readLocal(page);
       assert.deepEqual(beforeRetry, completed);
       api = await startFunction(requests, api.port);
@@ -216,6 +236,8 @@ async function browserCase(caseName, report, mediaDir, logDir, options) {
     }
     await expect(page.getByTestId("verification-status")).toContainText(selected.attemptId);
     await page.screenshot({ path: path.join(mediaDir, "bound-receipt-pass.png"), fullPage: true });
+    await page.getByTestId("verification-status").scrollIntoViewIfNeeded();
+    await page.screenshot({ path: path.join(mediaDir, "bound-receipt-pass-viewport.png"), fullPage: false });
     assert.equal(await page.locator("vite-error-overlay").count(), 0);
     assert.ok((await page.locator("body").innerText()).length > 300);
     assert.equal(new URL(page.url()).origin, appOrigin);
@@ -227,13 +249,11 @@ async function browserCase(caseName, report, mediaDir, logDir, options) {
     report.localState = { lessonStatus: completed.progress.lessonStatus.l02, unchangedByVerification: true, canonicalBefore };
     report.transport = { kind: "real-http", appOrigin, functionOrigin: `http://127.0.0.1:${api.port}`, defaultHandler: "learner/gate/netlify-functions/literacy-verify.mjs", mockedResponses: false };
     report.observedLastPassingActivities = ["l02-a3"];
-    const requested = ["l02-a1", "l02-a2", "l02-a3"];
-    report.requiredLastPassingActivities = requested;
-    report.criteriaSource = ".checks/product-readiness-20261015.md#C11 (initial freeze)";
-    if (caseName === "last-passing-evidence" && requested.some((id) => id !== "l02-a3")) {
-      report.status = "unverified";
-      report.limitations.push("Frozen C11 requests UI completion with last passing a1/a2/a3; current sequential l02 requires all three and offers finish only after a3. a1/a2 completion paths do not exist. No UI or criterion was changed by this observation.");
-    } else report.status = "pass";
+    report.requiredLastPassingActivities = ["l02-a3"];
+    report.requiredVerifierContractActivities = ["l02-a1", "l02-a2", "l02-a3"];
+    report.criteriaSource = ".checks/product-readiness-20261015.md#C11 (owner revision 2)";
+    report.criterionRevision = ".checks/product-readiness-20261015.freeze.v2.json";
+    report.status = "pass";
     const unexpected = consoleMessages.filter((entry) => !(caseName === "verifier-outage-retry" && entry.type === "error" && entry.text.includes("500")));
     assert.deepEqual(unexpected, [], "Unexpected browser error/warning");
   } catch (error) {
@@ -242,13 +262,35 @@ async function browserCase(caseName, report, mediaDir, logDir, options) {
     report.error = { message: String(error), stack: error?.stack };
     if (page) await page.screenshot({ path: path.join(mediaDir, "failure.png"), fullPage: true }).catch(() => {});
   } finally {
+    report.cleanup = { nodePid: process.pid, browserPid: null, browserPidObservation: "unknown; no browser process API or process inventory used" };
     if (context) {
       await context.tracing.stop(failed ? { path: path.join(mediaDir, "trace.zip") } : {});
       await context.close();
+      report.cleanup.contextCloseAwaited = true;
     }
-    if (browser) await browser.close();
-    if (vite) await vite.close();
-    if (api) await stopFunction(api.server);
+    if (browser) {
+      await browser.close();
+      report.cleanup.browser = { closeAwaited: true, isConnected: browser.isConnected() };
+      assert.equal(report.cleanup.browser.isConnected, false);
+    }
+    if (vite) {
+      await vite.close();
+      report.cleanup.vite = { closeAwaited: true, listening: viteHttpServer?.listening ?? false };
+      assert.equal(report.cleanup.vite.listening, false);
+    }
+    if (api) {
+      await stopFunction(api.server);
+      report.cleanup.functionHttp = { closeAwaited: true, listening: api.server.listening };
+      assert.equal(report.cleanup.functionHttp.listening, false);
+    }
+    if (report.ownPorts) {
+      report.cleanup.portProbes = [];
+      for (const port of Object.values(report.ownPorts)) {
+        const probe = await probeClosedPort(port);
+        report.cleanup.portProbes.push(probe);
+        assert.equal(probe.result, "ECONNREFUSED", `Own HTTP port ${port} remained reachable after close`);
+      }
+    }
     report.canonicalAfter = await fileRef(path.join(ROOT, "learner/learning_state.yaml"));
     assert.equal(report.canonicalAfter.sha256, canonicalBefore.sha256, "canonical learner changed");
     await writeFile(path.join(logDir, "http-requests.json"), JSON.stringify(requests, null, 2));
@@ -270,7 +312,7 @@ export async function run(caseName, options = {}) {
     engineId: "literacyDojo", caseName, observedAt: new Date().toISOString(),
     producerContext: "readiness-literacy-build-agent", verifierContext: null,
     sourceCommit: git("rev-parse", "HEAD"),
-    invocation: { argv: process.argv, cwd: process.cwd(), caseName },
+    invocation: { argv: process.argv, cwd: process.cwd(), pid: process.pid, caseName },
     helperSource: await fileRef(fileURLToPath(import.meta.url)),
     functionSource: await fileRef(path.join(ROOT, "learner/gate/netlify-functions/literacy-verify.mjs")),
     status: "unverified", evidenceRefs: [], limitations: [],

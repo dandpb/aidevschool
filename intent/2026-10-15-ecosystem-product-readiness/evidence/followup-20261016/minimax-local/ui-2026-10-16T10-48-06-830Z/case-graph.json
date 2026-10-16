@@ -1,0 +1,148 @@
+{
+  "schema": "readiness.minimax.local-ui-index.v1",
+  "currentUiReport": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-c11-followup-20261016/minimax-local/ui-2026-10-16T10-48-06-830Z/report.json",
+  "currentUiReportSha256": "f87af0c23e5be2885f75353ecd7d31bca2c5058c1aa8020450ed0a748e8e19b4",
+  "priorUiRunRetained": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-c11-followup-20261016/minimax-local/ui-2026-10-16T10-47-37-932Z/report.json",
+  "priorRunReason": "Second run adds user scrolling to expose the complete authority receipt and explicitly awaits the second HTTP response. Both reports retained.",
+  "priorCliArtifactsUnmodified": true,
+  "cliCopyLimit": "Earlier CLI snapshot copied source/config/state but did not copy the referenced attempt file. Its attempt-available=false is limited to that private fixture. Real OS bridge reads the actual private worktree and reports attempt-available=true. Neither proves a tutor cycle.",
+  "media": [
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexdojo-os-prototype/test-results/readiness-c11-followup-minimax/2026-10-16T10-48-06-830Z/01-engine-hub.png",
+      "sha256": "7aba8e95479566ab86ddec59acc6f174f253d018db94e4a498590a15fae1e5b9",
+      "bytes": 281312,
+      "dimensions": {
+        "width": 1280,
+        "height": 800
+      },
+      "typesafeDimensionRangeSatisfied": true
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexdojo-os-prototype/test-results/readiness-c11-followup-minimax/2026-10-16T10-48-06-830Z/02-local-tutor-before.png",
+      "sha256": "f8d4ab854e05170ed0153971bbea9db5ce04370e0a80830ff0075ceb8a581ad7",
+      "bytes": 310829,
+      "dimensions": {
+        "width": 1280,
+        "height": 800
+      },
+      "typesafeDimensionRangeSatisfied": true
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexdojo-os-prototype/test-results/readiness-c11-followup-minimax/2026-10-16T10-48-06-830Z/03-real-briefing.png",
+      "sha256": "1a14249c98788d93b04d22c22a8c954834cf63a90b8ce2171f71daf83f1a4b0e",
+      "bytes": 342751,
+      "dimensions": {
+        "width": 1280,
+        "height": 800
+      },
+      "typesafeDimensionRangeSatisfied": true
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexdojo-os-prototype/test-results/readiness-c11-followup-minimax/2026-10-16T10-48-06-830Z/03b-authority-after-user-scroll.png",
+      "sha256": "18542437883eacf15c10728ea40d842abdde7043c85f429d62a122a8ea01e189",
+      "bytes": 341978,
+      "dimensions": {
+        "width": 1280,
+        "height": 800
+      },
+      "typesafeDimensionRangeSatisfied": true
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexdojo-os-prototype/test-results/readiness-c11-followup-minimax/2026-10-16T10-48-06-830Z/04-after-repeat.png",
+      "sha256": "a4928c3e5530a655f32e1aa51fad605283ccc24c668eedb8077972d43dbe12e9",
+      "bytes": 316323,
+      "dimensions": {
+        "width": 1280,
+        "height": 800
+      },
+      "typesafeDimensionRangeSatisfied": true
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexdojo-os-prototype/test-results/readiness-c11-followup-minimax/2026-10-16T10-48-06-830Z/page@4800ebdfa3b9835a20441ceee63ce532.webm",
+      "sha256": "f8b35ce521f2d58396ff16589562f9b22ef33aa186deeb620967f3be8373a3c7",
+      "bytes": 330080
+    }
+  ],
+  "caseGraph": [
+    {
+      "id": "C24-L1",
+      "case": "operator local entry",
+      "status": "pass",
+      "observation": "OS desktop rendered; Atividades launcher found actual Engine Hub and minimaxDojo local action."
+    },
+    {
+      "id": "C24-L2",
+      "case": "real adapter invocation",
+      "status": "pass",
+      "observation": "Real same-origin session and POST returned HTTP200 ok with source-labelled read-only adapter output. No browser route stubs, fabricated response or model request."
+    },
+    {
+      "id": "C24-L3",
+      "case": "current learner/config projection",
+      "status": "pass",
+      "observation": "Actual worktree active unit is mastered and attempt file exists; local adapter asks Cartografo to present a next unit. No promotion or reset performed."
+    },
+    {
+      "id": "C24-L4",
+      "case": "authority and persistence boundary",
+      "status": "pass",
+      "observation": "Visible disclaimer says execution does not grant mastery or write canonical state; real returned output repeats this authority limit. Hashes of 313 protected source/learner files unchanged after two requests."
+    },
+    {
+      "id": "C24-L5",
+      "case": "unauthorized request rejection",
+      "status": "pass",
+      "observation": "No Origin request blocked403 origin-forbidden; same-origin no-token request blocked403 invalid-token."
+    },
+    {
+      "id": "C24-L6",
+      "case": "repeat local entry",
+      "status": "pass",
+      "observation": "Second actual UI click awaited a separate real HTTP200 ok response; no protected source changes."
+    },
+    {
+      "id": "C24-F1",
+      "case": "bootstrap/Sonda/trilha/tentativa",
+      "status": "unverified",
+      "observation": "No such orchestration capability is offered by the existing local entry; documented prompt flow requires MiniMax Agent Team."
+    },
+    {
+      "id": "C24-F2",
+      "case": "fresh Prometor and Critico",
+      "status": "unverified",
+      "observation": "No model/provider called or fresh agent contexts invoked; reference tests do not substitute this proof."
+    },
+    {
+      "id": "C24-F3",
+      "case": "report/whiteboard/reflection",
+      "status": "unverified",
+      "observation": "Local briefing does not produce a tutor cycle report, evaluate reflection or update derived canonical state."
+    },
+    {
+      "id": "C24-F4",
+      "case": "Maestro error/retry/resume",
+      "status": "unverified",
+      "observation": "Repeated readonly action is tested; it is not the full tutor retry/recovery protocol."
+    },
+    {
+      "id": "C24-S1",
+      "case": "independent semantic capture judgment",
+      "status": "unverified",
+      "observation": "Media ready for separate TypeSafe/Jev context; this producer does not judge its own screenshots."
+    }
+  ],
+  "fullCriterionStatus": "unverified",
+  "currentLocalEntryStatus": "pass",
+  "remaining": [
+    "single desktop viewport only",
+    "no local outage/recovery proof",
+    "no new tutor runtime implemented",
+    "full cycle and independent semantic judgments remain pending"
+  ],
+  "cleanup": {
+    "protectedFilesCompared": 313,
+    "protectedSourceUnchanged": true,
+    "changed": [],
+    "allOwnedProcessesStopped": true
+  }
+}

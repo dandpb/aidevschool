@@ -1,0 +1,591 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Artifact retention/reference validation only; no readiness grant or fresh whole-feature verdict",
+  "packet": {
+    "path": "docs/product-readiness/evidence/observations/2026-10-15-ecosystem-beta-readiness/engine-qualification.json",
+    "sha256": "de5967451af1f54d90382480b63561a48d5001e75e6e5690b63a7cac6099db0f"
+  },
+  "counts": {
+    "pass": 0,
+    "blocked": 3,
+    "unverified": 11
+  },
+  "retention": {
+    "manifest": {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retention-manifest.json",
+      "sha256": "560ccf9595f383f8c765a0310015c6860e80dc58e87b31efae3c27fa6ca7d7df"
+    },
+    "previousEntries": 88,
+    "appendedEntries": 136,
+    "totalEntries": 224,
+    "previousEntriesPreserved": true
+  },
+  "previous88EntriesUnchanged": true,
+  "copiedRefs": [
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/history/qualification-before-followup.json",
+      "sha256": "3edc8c7442022eed2a6d7b1429b09eb186f46a4758aa74abdcb1021d75cd3c10"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/history/retention-manifest-before-followup.json",
+      "sha256": "1bcb027dabc28d7076df57998f9e72a2c197600d9451fcce947d775b62f14503"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/history/prior-task/plan.md",
+      "sha256": "aaa184768897b4863b6cfbc8e36b2513e3212bb02ea496e0f19590a49887af0e"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/history/prior-task/spec.md",
+      "sha256": "b3bad3d2be6149854b92e47af899dc809a54a5a9cc7f250851418bedb9bc6238"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/history/prior-task/qualification-matrix.md",
+      "sha256": "0e9448e46c26d8075831b5215d609bab38a4d052567b04f5e99251019b5f2b35"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/history/round1-checks/product-readiness-20261015.freeze.json",
+      "sha256": "cf93eeabf147e0c84f3e8f647b8273df6a766b2a8f63281c1c15b25e463c2171"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/history/round1-checks/product-readiness-20261015.md",
+      "sha256": "52b0f861cb81849237d09e6cb98ae0c8c154fd09d34325a590d0b45f34ae6c56"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/environment-access.json",
+      "sha256": "6b6125c9878168d9177798459808123196eb9bd2c477f222b7004ddcfc608058"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/REPORT.json",
+      "sha256": "595f4ef93839eaec493a745163e423508ca9c0d679e8e99132682abf09889cbc"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/REPORT.md",
+      "sha256": "296d2e1771385ff6de5ef9d4a9fbd24d2bcbe39a9515c804508aa3fa3417cf5e"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/REPORT.json",
+      "sha256": "8d85b53c153faeed198e4a650da223692cd84b1c44d6c9a7191faf22b73de5eb"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/REPORT.md",
+      "sha256": "edfda2a94a194e3df241b17d225623829fd571cbded9c0c94d21c42c52f3771a"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-01/request-metadata.json",
+      "sha256": "fbd7dc08519012d826a65941f396d241c168c87e8d9f47f22cb9e9be856a4a16"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-01/response.json",
+      "sha256": "e9abd7032fb0da1677c76932c4bea2cd60a437c233cc422138abfcac33b54966"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-01/source-after.json",
+      "sha256": "a5b065801110db893dd395e7b7de94529c1982b9830e0c37c615b9683f4e6776"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-01/source-before.json",
+      "sha256": "a5b065801110db893dd395e7b7de94529c1982b9830e0c37c615b9683f4e6776"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-01/status.json",
+      "sha256": "b7500432b84bac3979a8139d026c52e778f8263f84abdc86847fb09e881a8db6"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-02/request-metadata.json",
+      "sha256": "f5664816ae5730af1204e7dd1d7a6f4fcfeb4124d88640734595f5c80a36364c"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-02/response.json",
+      "sha256": "debde693c4315570aa7e861ff3014128c2d7772090964cc493d28bf7b77b0b53"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-02/source-after.json",
+      "sha256": "6bcac679d0dd29428f58e896d1fa5018883989eda2156b5477f64b5d9c078157"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-02/source-before.json",
+      "sha256": "6bcac679d0dd29428f58e896d1fa5018883989eda2156b5477f64b5d9c078157"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-02/status.json",
+      "sha256": "115ca9778d18e333a8bc28efb7346dd9b4f7868a4917a110444a9cb7c96504d0"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-03/request-metadata.json",
+      "sha256": "3b30acf719c4c0d833dfbd66cb97b817917ec4649cac6b947ee64b5597383263"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-03/response.json",
+      "sha256": "cff507baa3047c2410d0637965de3c637d522c22672f5fb814dbfef5b0aa553c"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-03/source-after.json",
+      "sha256": "f013a075ebb271f2b3ad35b764ea5b263edbbf7f941032d49efa6ee237e8823a"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-03/source-before.json",
+      "sha256": "f013a075ebb271f2b3ad35b764ea5b263edbbf7f941032d49efa6ee237e8823a"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-03/status.json",
+      "sha256": "ec09798eb3118291c8f0f3b55105f5b0da07135f8c90b738b20185f5cf40da8e"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-04/request-metadata.json",
+      "sha256": "156445565214ebc796dc79c3ec43fd508825f9b93ad55ad21d10cad0183a0581"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-04/response.json",
+      "sha256": "e272ac5396f16ba84c1fb7c5e0597a302655d1f1f1e616ed38b34189f4a3d1d9"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-04/source-after.json",
+      "sha256": "f808b0fef13f9ecbaae5fe30c5214ddc7029cd8c1c47ad2370e7d8e3a7a448e7"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-04/source-before.json",
+      "sha256": "f808b0fef13f9ecbaae5fe30c5214ddc7029cd8c1c47ad2370e7d8e3a7a448e7"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-04/status.json",
+      "sha256": "6574af3cf8d2b52485b28e80bc54b514c6f6915db47adf766ea0c40049fbe472"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-05/request-metadata.json",
+      "sha256": "cea5e0bf5462d20f6ccec96bb23955e2124ff3da9819a53397b54939c6d9dace"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-05/response.json",
+      "sha256": "82a53962b7690a8e0d08f2dc7d9346eb1f4cf529ccce992cfc70244fbab91099"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-05/source-after.json",
+      "sha256": "193cd652de6dcaa66f0f591c2acb9700d8826a3c8a3b6812d8ddb7f5fad3d25f"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-05/source-before.json",
+      "sha256": "193cd652de6dcaa66f0f591c2acb9700d8826a3c8a3b6812d8ddb7f5fad3d25f"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-05/status.json",
+      "sha256": "5039d39e53066288a1e917badab568c57aea2d1c2ee35286b6636fafc46a736a"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-06/request-metadata.json",
+      "sha256": "77c0ebc8cb1abe3c90320e9f557d99f913cc9ce52f9a9ac707b9d86d4fb3e2e2"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-06/response.json",
+      "sha256": "cf17f62486855cd82719402652cc88e7a9d5218bd00936aba98a17c871c6072a"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-06/source-after.json",
+      "sha256": "063fffeffd4ac0ff663902b62e24a572340c58be7f525c16a20a36607aeafa1d"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-06/source-before.json",
+      "sha256": "063fffeffd4ac0ff663902b62e24a572340c58be7f525c16a20a36607aeafa1d"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-06/status.json",
+      "sha256": "ef240fde416ea409cbddee34a2af2b8407f9e55409b2b955e91128c01e56961b"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-07/request-metadata.json",
+      "sha256": "835f76d29b8fcc265d930cef22821d9c4f688ecb10d12cb6539e30e5705a4faf"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-07/response.json",
+      "sha256": "c03a4ddd869c6f875bf2e4ff4b2d4c8dc0efe6e9c18dcf108cd71a644a0bf5ba"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-07/source-after.json",
+      "sha256": "065f1a896cfbd76c0908dcf66c4437a86647c63fef3a8a99db3a9bddb6282f8a"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-07/source-before.json",
+      "sha256": "065f1a896cfbd76c0908dcf66c4437a86647c63fef3a8a99db3a9bddb6282f8a"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-07/status.json",
+      "sha256": "f1dc8d4f31f473af9f85a2b61042ccb294b4f85a7c63d73c79fa91d9d6b55a87"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-08/request-metadata.json",
+      "sha256": "6c812d5f47dfed5606951c45e6d28c353cd9d4c2f98f9f2d5e61859a8a9ff4fa"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-08/response.json",
+      "sha256": "d9046483d3f9b75b1aee993c29c9c98156155443b95db19ffa345b2d7bae2ee8"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-08/source-after.json",
+      "sha256": "4972367c99397f840917fa5cd7a12bc4bf94c0930b795ceb97e24beaf95bf31a"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-08/source-before.json",
+      "sha256": "4972367c99397f840917fa5cd7a12bc4bf94c0930b795ceb97e24beaf95bf31a"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-08/status.json",
+      "sha256": "cd0ecd9e74e0356c18cb57b7ad1904a4a0d2b7c034e1b1ed7b4d558743e5e590"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-09/request-metadata.json",
+      "sha256": "828637b8837dc4a171f5921e0bc0c6fbd7b4ce65effd3116c8d1d402302a3a9a"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-09/response.json",
+      "sha256": "8c10e5ff295210415d9ad765e16cf8e3a7fcaa2e1d056b44564f338d0297827c"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-09/source-after.json",
+      "sha256": "1fd826730d41720477ba7e014ae1bd00c2a8fefbd5887921cc1ed77e97146faf"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-09/source-before.json",
+      "sha256": "1fd826730d41720477ba7e014ae1bd00c2a8fefbd5887921cc1ed77e97146faf"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-09/status.json",
+      "sha256": "a1713ea24631efa9dc0eb5b3ec8ddffa1ad03dbd305e7ef617c0bf0c7572215f"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-10/request-metadata.json",
+      "sha256": "7ef3d696011d836d1a24adeeebe4b56088643515460ecf77adb62895cdc73293"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-10/response.json",
+      "sha256": "6ca59fdebfda373ebeb8027427207009ddb2ceff31616d138aae95749dad3ff5"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-10/source-after.json",
+      "sha256": "eedef24f0f5468f2b4343ac84bdce8bce70408cf2880625da29a39f48dbf65f8"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-10/source-before.json",
+      "sha256": "eedef24f0f5468f2b4343ac84bdce8bce70408cf2880625da29a39f48dbf65f8"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-10/status.json",
+      "sha256": "da8c7ab90452dcd7229138178718999238d2f09c8274ffd511a813b46bd0e5a9"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-11/request-metadata.json",
+      "sha256": "5216bfd4441a5b42c13596fe84af6f4540819f1a8911a663f1cbfdd2149431ea"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-11/response.json",
+      "sha256": "ef40d4ae6a83c2b8266b5e5262414b2eaeab0cf052b0a09537c2092d8ebf7e2f"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-11/source-after.json",
+      "sha256": "d385e3f5bb0203aa52d0bf3da56f16561bfa379de531271d46b4e7bb91830426"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-11/source-before.json",
+      "sha256": "d385e3f5bb0203aa52d0bf3da56f16561bfa379de531271d46b4e7bb91830426"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-11/status.json",
+      "sha256": "7b8370699fcfa9b39b381c3b4ad354bb3a75bad0837a0db63bd04d6b7dad3420"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-12/request-metadata.json",
+      "sha256": "e2de8ab1c4fe36b130678cd3c87fd46592468f8a1c2e7578b3e5636fe95bc73b"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-12/response.json",
+      "sha256": "4e770e366f25881254c764a3a8964485ec5abd76f29b097f4753b226e1746f46"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-12/source-after.json",
+      "sha256": "ec3b951c990091123672d24ee809c39498a19a646155b7a04010906e8358501a"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-12/source-before.json",
+      "sha256": "ec3b951c990091123672d24ee809c39498a19a646155b7a04010906e8358501a"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-12/status.json",
+      "sha256": "400bcd8fcb6b0d2a1f1e8733007b40e698ad23eec86b06135e818bdd5a11bec5"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-13/request-metadata.json",
+      "sha256": "45e507143c5443f2039d3a7ee3781b0d93f4773aaf454bb0727a42cd6e535371"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-13/response.json",
+      "sha256": "c488683febac27b12156ef474c2e02e8613714e85f5d812da506efb43fbd34da"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-13/source-after.json",
+      "sha256": "0cf2c2f364389622254c7dae7264e3f66a2d3ee372afc7e5ebd5813336b24d75"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-13/source-before.json",
+      "sha256": "0cf2c2f364389622254c7dae7264e3f66a2d3ee372afc7e5ebd5813336b24d75"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-13/status.json",
+      "sha256": "a1b3d35955bd59ca4067ffe532cd5fcb4c65d5105dd8194edda9de99b474696d"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-14/request-metadata.json",
+      "sha256": "9ca3000a1f8305759ead2fb2708dfd33cc97fcecdc6d6b5f28d39b40d124b4e8"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-14/response.json",
+      "sha256": "928b62fe8963aa736805d1062c70b004c2dff77cd9e219e826ec65bf26613c8e"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-14/source-after.json",
+      "sha256": "8d4cf203d6ad83b1135ef85ae2f25c8de14e3e2d1f340b10d96d17bedab94ca3"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-14/source-before.json",
+      "sha256": "8d4cf203d6ad83b1135ef85ae2f25c8de14e3e2d1f340b10d96d17bedab94ca3"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-14/status.json",
+      "sha256": "51008f5fa65f3ef43bfa3081d0f6567b022fcbe14d7214a50144691e4c885aab"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-15/request-metadata.json",
+      "sha256": "cd3b532f24819159a4d7de7050c5800ede3557afc09a3eb4ae5349e05c718bbc"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-15/response.json",
+      "sha256": "6681520d3c8740d0a59a028b6a5cd4184319d3046eae336dda38c3a52c57d391"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-15/source-after.json",
+      "sha256": "1a2ca9e2d1c5439580c12adefd80cd3c0f651e228e43f71931d40ee75077b15e"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-15/source-before.json",
+      "sha256": "1a2ca9e2d1c5439580c12adefd80cd3c0f651e228e43f71931d40ee75077b15e"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/batch-15/status.json",
+      "sha256": "2fddce62abf8c532e1f7584e7113beacf4d954aff6b69da23c3d141ad2999d36"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/instruction-compaction-amendment.json",
+      "sha256": "9c1aed577181227aacdf2bb2ef3b45a4e0991363d0a3a88e6e98099843618d45"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/manifest-before-expansion.json",
+      "sha256": "e7b51fd63fea07281e9745472e06f9382f922a86a046f6883ec30ab8473d87a9"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/manifest-before-mode-priority.json",
+      "sha256": "8d37fde20fbcac474685684729c4886172e084386f091020c4f2df4b7762dd5f"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/manifest.json",
+      "sha256": "a96d81a6cf7a3bebdf7596903adabe3c2240de328b15fc759ed4cdb924e789be"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/sample-request-metadata.json",
+      "sha256": "df17b74498d286a309f085a1d9530dd732a95d2d4aa273d1fc6376a25c020a59"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/sample-response.json",
+      "sha256": "2a16ea5627216641d9ee1131ef73f28918edf7ccfbd853fae96eb69a1d60e120"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/sample-status.json",
+      "sha256": "6f0bd1664df54d60421453e7f33e9daa673ccdbebe9a0540d1d1d257fa18a977"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/source-after.json",
+      "sha256": "ced2c7fb13a2f717fd9fe453b45af98c9b0dd8bcb2c34b69d63ec20b1f54777c"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/source-before.json",
+      "sha256": "7a1a0b8fa14084d877df8833d708767f4c815587f65abd4113a0b7dc94fdb505"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/literacy/C11-last-passing-evidence.log",
+      "sha256": "3ec446ced0426665e79a712799b80bf41efc58ec0ce3c666de12187fafd0b9b5"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/literacy/C12-verifier-outage-retry.log",
+      "sha256": "a066cbe5a19d93939bbae70d773dfa11009a7cfe6f6f6261054dd8e93d52efc4"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/literacy/client5.log",
+      "sha256": "1d1d1901fd1c0ac0fdc5fdbf65aa7f9490a2e2c204aad99b16936bf078505878"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/literacy/followup-report.json",
+      "sha256": "4fe6d7e584f742dd4943d28945472c63621b1600e8fb57ea5fb39dd55c7f6be1"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/literacy/node-check-dispatcher.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/literacy/node-check-helper-after.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/literacy/node-check-helper.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/literacy/node-contracts57.log",
+      "sha256": "5ee64cf54cc3d0f72f47d4a9730f5409bb228f4d93733bd252516e93c643f52e"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/literacy/observer-amendment.json",
+      "sha256": "dd836c982d75ef9186f8500c00089547a0e278f662993d2a1c76ec64323c37e6"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/literacy/test-results.json",
+      "sha256": "d7c57a0e08cfc236895ba00683e524c24d053d525e71dd6d10a5faf358866a78"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/minimax-local/REPORT.md",
+      "sha256": "7e32aad5afb9102c5fff9326cf65bd44c3a7a747f7c486a15db81935aef5d50c"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/minimax-local/contract-tests.json",
+      "sha256": "4030e0d11697e79c4592625821f5f19a28bc6242f7bdcd60f48797622706a62b"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/minimax-local/contract-tests.log",
+      "sha256": "6db55d42717f5c5e32f9741a4c22d7b26b1740dfc741d1a4e2b9aef0a70b470f"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/minimax-local/helper-static-check.json",
+      "sha256": "4abe061f1d0d7c6e8c3c3f42c10bb69b61796c4ee3ed7d020f243d7ed33770b6"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/minimax-local/probe-v1-observer-assumption.json",
+      "sha256": "4cd26ac57f54a91e132705f053da6c3215fb86df3b5078fc844c660d0b08919e"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/minimax-local/probe.json",
+      "sha256": "290577c2811c206cc4daac76cbaa1cd1d4a26df51c36518931cfbcd4abcd3fcd"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/minimax-local/protected-source-after.json",
+      "sha256": "e98dd480fbefc43544d6419211766ece2fe332e0e66f8536fa66aadd7eb38c66"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/minimax-local/protected-source-before.json",
+      "sha256": "e98dd480fbefc43544d6419211766ece2fe332e0e66f8536fa66aadd7eb38c66"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/minimax-local/source-manifest.json",
+      "sha256": "7daa7ea01848425f77d421ebfc27c897e7c1910389b0df881aff3736ec352096"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/minimax-local/summary.json",
+      "sha256": "4c6f521b113aa5cc7dd8e0921a6579e2d6f7dcf63db11ccff14f9d990f6abf75"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/minimax-local/ui-2026-10-16T10-47-37-932Z/report.json",
+      "sha256": "d9f5ec897f562293d2b470e09c771d6ffbaa2761b975410f69f310f43f79c874"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/minimax-local/ui-2026-10-16T10-48-06-830Z/actual-bridge-response.json",
+      "sha256": "e18b1737d8d5514393abe3c69a17f6de1db8b3bef6215df9b132eb20a089c3fe"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/minimax-local/ui-2026-10-16T10-48-06-830Z/browser-console.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/minimax-local/ui-2026-10-16T10-48-06-830Z/browser-errors.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/minimax-local/ui-2026-10-16T10-48-06-830Z/case-graph.json",
+      "sha256": "98417112969974b3069f2ff59e546318722efec65539308f319d64459c33152a"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/minimax-local/ui-2026-10-16T10-48-06-830Z/report.json",
+      "sha256": "f87af0c23e5be2885f75353ecd7d31bca2c5058c1aa8020450ed0a748e8e19b4"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/minimax-local/ui-2026-10-16T10-48-06-830Z/source-after.json",
+      "sha256": "e98dd480fbefc43544d6419211766ece2fe332e0e66f8536fa66aadd7eb38c66"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/minimax-local/ui-2026-10-16T10-48-06-830Z/source-before.json",
+      "sha256": "e98dd480fbefc43544d6419211766ece2fe332e0e66f8536fa66aadd7eb38c66"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/minimax-local/ui-2026-10-16T10-48-06-830Z/visible-receipt.json",
+      "sha256": "4f707e8bfb20f269de2171932b243306827d0643ef84c4398544d9858ec4a5d6"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/literacy/runtime/C11-last-passing-evidence.json",
+      "sha256": "b0b594eb88b81758574879ef6a896d1a3fdaf70fd2a7ed1cbad70dba6852264e"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/literacy/runtime/C12-verifier-outage-retry.json",
+      "sha256": "d2fa53e7b47a380386e7086b82eab4859ada7cde51986bf3b7fad349aa6f2899"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/governance-v2/plan.md",
+      "sha256": "bc5d155666014c6fb600637c2c3315eff011628fe864b039035d616216be3079"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/governance-v2/spec.md",
+      "sha256": "1cceb202a7aa03be2db94bd289afe6fc5b17c0e3b0782e4d3177d01f79280e3d"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/governance-v2/qualification-matrix.md",
+      "sha256": "78adc2baccd205b59c5509a7af05161df7ec94302c4bfa8fb0d01a7990ccd2b0"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/governance-v2/owner-decisions-20261016.json",
+      "sha256": "8c6e3c5e63b120760124f683c136e82ca68e70f6dd934138af87ea2577fe05dc"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/governance-v2/product-readiness-20261015.md",
+      "sha256": "be2f4cbd87841b05ad0f770dc5391a9a0c840a3e0b3a98c881a9e872eeeeed83"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/governance-v2/product-readiness-20261015.freeze.v2.json",
+      "sha256": "94204f5409c594661911d463c5cc26b0463092e297137a073b2da67ed9831592"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/history/round1-checks/product-readiness-20261015.verified.round1.md",
+      "sha256": "66a0862f12e78680d85991ba86a329768c6c39f6c2aae75f6d3694881a0a39de"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/history/round1-checks/product-readiness-20261015.verified.round1.json",
+      "sha256": "5cd29f1e062c1ab04a54ecfda0597bfbdc607717fc977b2d0a2cc774c601c32c"
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/history/round1-checks/product-readiness-20261015.warnings.round1.json",
+      "sha256": "0bd4cbeae69e32d1e32305d84ab18fe7034dd36ab4769e7a6c746ca2e6edcdec"
+    }
+  ],
+  "protectedPlanChecklistSpecMatrixUnchanged": true,
+  "caseIdsUnique": true,
+  "verifierContextRemainsPending": true,
+  "packetReferences": {
+    "unique": 554,
+    "nonMediaDigestsChecked": 312,
+    "mediaFilesExistWithoutRehash": 242,
+    "missing": [],
+    "digestMismatches": []
+  },
+  "round1CheckSnapshots": [
+    "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/history/round1-checks/product-readiness-20261015.freeze.json",
+    "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/history/round1-checks/product-readiness-20261015.md",
+    "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/history/round1-checks/product-readiness-20261015.verified.round1.md",
+    "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/history/round1-checks/product-readiness-20261015.verified.round1.json",
+    "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/history/round1-checks/product-readiness-20261015.warnings.round1.json"
+  ],
+  "runtimeBrowserOrApiCallsStarted": false,
+  "secretValuesOrBase64Retained": false,
+  "allRetainedCopyDigestsValid": true,
+  "allNewCopiesByteIdentical": true
+}

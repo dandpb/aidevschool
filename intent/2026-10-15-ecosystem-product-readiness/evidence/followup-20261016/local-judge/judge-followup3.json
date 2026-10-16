@@ -1,0 +1,265 @@
+{
+  "language": "pt",
+  "round": 1,
+  "review_sequence": 3,
+  "review_kind": "Novo follow-up local sobre HEAD já commitado; terceira sequência de revisão.",
+  "carryover": {
+    "blocker": 0,
+    "should-fix": 0
+  },
+  "verdict": "APPROVE",
+  "summary": "## TL;DR\nAPPROVE da revisão de código e dos contratos de decisão deste follow-up sobre HEAD 528a56c847ec50276ed9d2dab2c7247584c567c3. Nenhum finding aberto. Este é o terceiro acompanhamento, mas round=1 no schema local: novo HEAD e novo diff recebem primeira revisão completa, conforme a skill. A revisão anterior permanece byte-idêntica em judge-aidevschool.round2.json.\n\nTask: intent/2026-10-15-ecosystem-product-readiness/plan.md; checklist .checks/product-readiness-20261015.md; freeze vigente .checks/product-readiness-20261015.freeze.v2.json. A casa local intent/ continua sendo a adaptação documentada para o resolver Heropa ausente neste layout. Nenhuma task foi inferida por busca. O veredito cobre os dez arquivos explicitamente relacionados em reviewed_scope; o pacote/assessment e novas cópias de qualificação em montagem ficam fora do aceite semântico/global deste Judge.\n\n## Findings\nblocker=0, should-fix=0, nit=0, pre-existing=0. A única imprecisão triada foi corrigida antes da entrega: browserAvailability no novo helper agora explica a escolha do Playwright pelo AGENTS, sem alegar ausência do plugin. SHA atual do helper: 7bebb8a06a7677c4b70aeecb805357c45eca1eb2e22239860dcbf826fe20c858.\n\nPasses A-F e REVIEW.md concluídos no código/contratos novos. C11 foi renegociado pelo owner para o único final UI a3; os textos C8-C10 permanecem exatamente iguais ao HEAD. C24 mudou o alvo para a entrada local existente e preservou tentativa, produtor/verificador distintos, relatório, reflexão e recovery. O novo observer declara essas capacidades como ausentes e mantém status unverified, ainda que a entrada local tenha runtimeStatus pass. Não concede tier ou mastery.\n\nO dispatcher chama o novo helper somente para minimaxDojo/declared-use. O helper usa o CLI/bridge existentes, compara a saída real do adapter e inclui negativos de origem/token ausentes, repetição e limites de autoridade. O adapter e os handlers diretos foram lidos. O logger retém método/path/status sem token; o trace bruto é descartado sem path por poder conter o handshake efêmero. Isso limita reuso como prova source-bound e não foi convertido em uma exceção de prontidão.\n\nLifecycle: listeners do child são registrados antes da escrita de ownership; startup tem deadline e fetch abortável; o stop é idempotente e fecha o log. O browser tem PID retornado pela API, diagnóstico pgid numérico apenas desse PID e fallback de término confinado ao grupo próprio confirmado. Encerramentos têm limites e erros de cleanup entram no resultado. Não há enumeração genérica de processos. O observer registra invariância e lacunas; esta análise estática não comprova execução integral do helper novo nem sua sobrevivência a qualquer interrupção externa.\n\nSimplificação: o módulo novo tem 381 linhas e separa fonte, ownership, caso UI e cleanup; a orquestração não altera o domínio nem acrescenta um runtime de tutoria. Nenhum arquivo novo de código passa de 1000 linhas. Não há app ou teste protegido alterado. Os dois catches do scanner são seleção de Python com fallback e polling limitado com falha explícita, não sucesso fabricado.\n\n## Promote to lint rule\nNenhuma regra nova nesta rodada. As regressões de lifecycle existentes continuam passando; o import do novo observer foi validado sem chamar run(). Provas futuras devem distinguir a execução do helper atual da coleta histórica que o originou.\n\n## Research log\nDocumentação oficial Playwright BrowserType.launchServer/connect, BrowserServer.process/close/kill, Tracing.stop e Node child_process/detached consultada nesta rodada. Tracing.stop sem path não exporta o trace. O script usa a mesma instalação Playwright para launch/connect. URLs em research_log. Nenhuma incompatibilidade externa foi inferida por memória. Context7 permanece excluído pela instrução local de code review.\n\n## Checks run\n124 testes Python focados passaram; 57 contratos Node e quatro regressões de lifecycle passaram, total 61, sem skips/cancelled. Três node --check e três imports passaram, com run() não invocado. Após a correção textual de browserAvailability, syntax/import do novo helper foram repetidos e passaram. Todos os subprocessos foram aguardados, com limite de 180 segundos nos checks.\n\nFreeze inicial igual ao HEAD; freeze v2 confere com os SHA-256 da task e checklist; C8-C10 byte-idênticos. Diff de engines/ e learner/gate/tests vazio. Scan de formatos conhecidos de segredo nos arquivos iniciais do follow-up: zero hits; apenas paths/linhas/categorias são retidos. As novas cópias de reports da assemblagem não estão abrangidas por esse scan de código. scan_api_parity retornou none. Não foi executado browser, Vite, servidor, modelo ou harness nativo pelo Judge.\n\ncheck --require-current saiu 1 pelas seis claims stale; esse resultado é pendência de qualificação, não finding de código. O guard integral não foi repetido neste escopo e mantém seu warning histórico.\n\n## Runtime evidence\nnot_required para o diff de código: nenhuma fonte de UI de produto mudou; o detector source-derived devolveu lista vazia. Os relatórios C11/C12, os nove checks históricos da entrada local minimax e as fases Jev são evidências de seus próprios produtores e fontes. Foram lidos como contexto, sem retagging para o helper novo, sem novo juízo global e sem concessão de readiness. A prova histórica minimax declara C24 completo unverified; a fase Jev explicita limites de imagem/coverage. No followup.md, digests e contadores citados foram conferidos.\n\n## Skipped files\nSnapshots .checks/*.verified.* e warnings da primeira verificação são mecânicos/históricos, preservados sem reatribuição. Novos reports/copias, source-manifests, retention-manifest e o pacote/assessment de qualificação em montagem não recebem aceite de produto neste relatório. Logs ignorados foram tratados somente por metadados/digests quando referenciados; o diff inicial não os inclui automaticamente e o verificador final verá os arquivos que o root decidir versionar. Não foi inferida equivalência entre integridade de cópia e prova independente de comportamento.\n\n## SDLC warnings\nMantidos os IDs anteriores e SDLC-VERIFY-001. Decisão C11, pedido de URL externa do MiniMax e ausência de credencial Jev foram retirados dos pré-requisitos atuais. Continuam pendentes deployment/publicação/claims, ciclo local C24 completo, cobertura restante, guard integral e verificador final em contexto fresco depois do último build/commit. Não há aceite do piloto ou countersign por este Judge. Os warnings pinam somente o HEAD atual; não inventam o SHA de um commit futuro.\n",
+  "findings": [],
+  "review_context": {
+    "repo": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool",
+    "head": "528a56c847ec50276ed9d2dab2c7247584c567c3",
+    "base": "HEAD"
+  },
+  "runtime_evidence": {
+    "state": "not_required",
+    "reason": "Nenhuma fonte de UI de produto mudou; somente observers, contratos e documentação. O detector de UI source-derived retornou lista vazia."
+  },
+  "api_parity": {
+    "state": "none applicable"
+  },
+  "sdlc_warnings": [
+    {
+      "id": "SDLC-READY-001",
+      "repo": "dandpb/aidevschool",
+      "head": "528a56c847ec50276ed9d2dab2c7247584c567c3",
+      "issue": "Entrega remota de #657 permanece pendente.",
+      "evidence": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.checks/product-readiness-20261015.verified.round1.md",
+      "correction": "Publicar somente quando autorizado e revalidar o head do PR.",
+      "verification": "Checks requeridos atuais, countersign distinto e merge pela porta canônica.",
+      "status": "awaiting_prerequisite",
+      "prerequisite": "Autorização de publicação e checks no head final."
+    },
+    {
+      "id": "SDLC-READY-002",
+      "repo": "dandpb/aidevschool",
+      "head": "528a56c847ec50276ed9d2dab2c7247584c567c3",
+      "issue": "A decisão humana C11 foi resolvida; C11/C12 têm novas provas de produtor e parecer semântico limitado. Verificação final e deploy continuam pendentes.",
+      "evidence": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/owner-decisions-20261016.json; /Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/followup-20261016.md",
+      "correction": "Verificar C11/C12 no candidato estabilizado e obter prova do endpoint efetivamente oferecido.",
+      "verification": "C8-C10 preservados; C11/C12 atribuíveis à fonte; C13 com deploy ID/source SHA e positivos/negativos reais.",
+      "status": "awaiting_prerequisite",
+      "prerequisite": "Candidato final e prova do deployment. Não requer nova decisão C11."
+    },
+    {
+      "id": "SDLC-READY-003",
+      "repo": "dandpb/aidevschool",
+      "head": "528a56c847ec50276ed9d2dab2c7247584c567c3",
+      "issue": "Seis claims continuam stale; check --require-current saiu 1 nesta rodada.",
+      "evidence": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/codex-product-readiness-discovery-20261015/judge-followup3-claims-current.log",
+      "correction": "Renovar observações e assessments pelo fluxo canônico.",
+      "verification": "cli.py check --require-current deve sair 0, preservando histórico.",
+      "status": "open",
+      "prerequisite": "Fonte final e observações independentes completas."
+    },
+    {
+      "id": "SDLC-READY-004",
+      "repo": "dandpb/aidevschool",
+      "head": "528a56c847ec50276ed9d2dab2c7247584c567c3",
+      "issue": "Qualificação integral dos engines e ciclo completo local de C24 continuam incompletos.",
+      "evidence": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/followup-20261016.md",
+      "correction": "Concluir variantes pendentes e o ciclo local de tentativa, Prometor/Crítico, relatório, reflexão e recovery.",
+      "verification": "14/14 pass independentes antes de aceite global; briefing local não encerra C24.",
+      "status": "awaiting_prerequisite",
+      "prerequisite": "Prova dos casos restantes na aplicação local. URL/acesso MiniMax Team externo não é o alvo vigente."
+    },
+    {
+      "id": "SDLC-READY-005",
+      "repo": "dandpb/aidevschool",
+      "head": "528a56c847ec50276ed9d2dab2c7247584c567c3",
+      "issue": "MVP, entrada MME e inline dojoToday mantêm os bloqueios registrados.",
+      "evidence": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.checks/product-readiness-20261015.verified.round1.md",
+      "correction": "Executar somente os planos próprios aceitos para esses incidentes.",
+      "verification": "Reproduzir as jornadas afetadas depois dos respectivos reparos.",
+      "status": "open",
+      "prerequisite": "Aceite dos planos próprios, sem ampliar este follow-up."
+    },
+    {
+      "id": "SDLC-UI-001",
+      "repo": "dandpb/aidevschool",
+      "head": "528a56c847ec50276ed9d2dab2c7247584c567c3",
+      "issue": "O acesso Jev foi utilizado em fases concluídas; a cobertura de UI/semântica e o veredito integral ainda têm limites.",
+      "evidence": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/followup-20261016.md; /Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-c11-followup-20261016/jev/phase2/REPORT.json",
+      "correction": "Concluir capturas/casos ausentes e submeter o candidato final à verificação independente.",
+      "verification": "Pareceres e evidências atuais por critério, preservando atribuição e limites das fases anteriores.",
+      "status": "awaiting_prerequisite",
+      "prerequisite": "Casos/capturas restantes e fonte final. Não solicitar nova credencial Jev como se estivesse ausente."
+    },
+    {
+      "id": "SDLC-VERIFY-001",
+      "repo": "dandpb/aidevschool",
+      "head": "528a56c847ec50276ed9d2dab2c7247584c567c3",
+      "issue": "O guard SDLC do range integral permanece sem resultado completo na verificação histórica.",
+      "evidence": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.checks/product-readiness-20261015.verified.round1.md",
+      "correction": "Reexecutar o guard aplicável no candidato final em host estável.",
+      "verification": "scripts/sdlc_guard_check.sh no range completo com exit 0.",
+      "status": "awaiting_prerequisite",
+      "prerequisite": "Host estável e todas as verificações preservadas."
+    }
+  ],
+  "research_log": [
+    {
+      "surface": "Playwright BrowserType launchServer/connect",
+      "url": "https://playwright.dev/docs/api/class-browsertype"
+    },
+    {
+      "surface": "Playwright BrowserServer",
+      "url": "https://playwright.dev/docs/api/class-browserserver"
+    },
+    {
+      "surface": "Playwright trace discard",
+      "url": "https://playwright.dev/docs/api/class-tracing"
+    },
+    {
+      "surface": "Node child process ownership",
+      "url": "https://nodejs.org/api/child_process.html"
+    }
+  ],
+  "reviewed_scope": [
+    {
+      "path": ".checks/product-readiness-20261015.md",
+      "bytes": 32357,
+      "sha256": "be2f4cbd87841b05ad0f770dc5391a9a0c840a3e0b3a98c881a9e872eeeeed83",
+      "lines": 254
+    },
+    {
+      "path": ".checks/product-readiness-20261015.freeze.v2.json",
+      "bytes": 1239,
+      "sha256": "94204f5409c594661911d463c5cc26b0463092e297137a073b2da67ed9831592",
+      "lines": 53
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/plan.md",
+      "bytes": 38124,
+      "sha256": "bc5d155666014c6fb600637c2c3315eff011628fe864b039035d616216be3079",
+      "lines": 260
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/spec.md",
+      "bytes": 3330,
+      "sha256": "1cceb202a7aa03be2db94bd289afe6fc5b17c0e3b0782e4d3177d01f79280e3d",
+      "lines": 34
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/qualification-matrix.md",
+      "bytes": 23670,
+      "sha256": "78adc2baccd205b59c5509a7af05161df7ec94302c4bfa8fb0d01a7990ccd2b0",
+      "lines": 179
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/owner-decisions-20261016.json",
+      "bytes": 1493,
+      "sha256": "8c6e3c5e63b120760124f683c136e82ca68e70f6dd934138af87ea2577fe05dc",
+      "lines": 28
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/followup-20261016.md",
+      "bytes": 3798,
+      "sha256": "ea659c909c97e8f234c0794b6ca8b7961809d3af76a4c24c97b6b22e1903ecbf",
+      "lines": 56
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/literacy-runtime.mjs",
+      "bytes": 18599,
+      "sha256": "6cdc8bd1e143d40a3da2f96c06b861a07129d7d707fb7accac85b5e9a0793aa5",
+      "lines": 342
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/minimax-local-runtime.mjs",
+      "bytes": 21970,
+      "sha256": "7bebb8a06a7677c4b70aeecb805357c45eca1eb2e22239860dcbf826fe20c858",
+      "lines": 381
+    },
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/observe-engine.mjs",
+      "bytes": 4608,
+      "sha256": "a2c77b7caed82903c78ff858e3615a2b13d014073a5f8176fe1b5fac76c0bcb5",
+      "lines": 94
+    }
+  ],
+  "snapshot": {
+    "initial_diff": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/codex-product-readiness-discovery-20261015/judge-followup3-complete.diff",
+    "final_diff": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/codex-product-readiness-discovery-20261015/judge-followup3-final-complete.diff",
+    "final_diff_sha256": "e4ec8b2dd75d5b269484c64233038de0ff1b9ae4d33071e892f207384f05dd54",
+    "inventory": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/codex-product-readiness-discovery-20261015/judge-followup3-final-file-inventory.json",
+    "inventory_sha256": "26d6dc71a25b60d08a52169132f26e4b6233538fd27b2f116d5c0a66a9315c46",
+    "reviewed_scope_sha256": "6b033a717cdf8c493fcd7bbf42fff5b0da6f5a547c46ee433068e0957902325d",
+    "scope_is_code_and_decision_contracts_only": true
+  },
+  "previous_review": {
+    "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/codex-product-readiness-discovery-20261015/judge-aidevschool.round2.json",
+    "sha256": "b4d1920410b8d4d1d96e2afbcee75c1b4b392ab385169007bb95c97cf0c24d9e"
+  },
+  "checks": [
+    {
+      "name": "judge-followup3-pytest",
+      "argv": [
+        "rtk",
+        "proxy",
+        ".scratch/gh-375/venv/bin/python",
+        "-m",
+        "pytest",
+        "learner/gate/tests/test_gate.py",
+        "learner/gate/tests/test_gate_multirecord_receipt_binding.py",
+        "learner/gate/tests/test_readiness_plan_contract.py",
+        "-vv"
+      ],
+      "exitCode": 0,
+      "seconds": 1.969,
+      "log": ".scratch/codex-product-readiness-discovery-20261015/judge-followup3-pytest.log",
+      "sha256": "35fd89d63b507ae6ce2639a5df1986903c100298560dd645cce9456929fdd121"
+    },
+    {
+      "name": "judge-followup3-node",
+      "argv": [
+        "rtk",
+        "proxy",
+        "node",
+        "--test",
+        "learner/gate/tests/literacy_verify_netlify.test.mjs",
+        "learner/gate/tests/literacy_verify_identity.test.mjs",
+        "learner/gate/tests/literacy_verify_readiness_plan.test.mjs",
+        "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/tests/observer-lifecycle.test.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.367,
+      "log": ".scratch/codex-product-readiness-discovery-20261015/judge-followup3-node.log",
+      "sha256": "2530fa0f29ba8066ea6d45996f165e06f11cf65eac3204e3731f405fa7e09ad5"
+    },
+    {
+      "name": "node --check",
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/literacy-runtime.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "node --check",
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/minimax-local-runtime.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "node --check",
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/observe-engine.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "module import only",
+      "exitCode": 0,
+      "log": ".scratch/codex-product-readiness-discovery-20261015/judge-followup3-import.log",
+      "sha256": "6b95a2527ce1d0ecf3f28292f5f292160afd4070963c0cbff39a0d0611d97c93"
+    }
+  ],
+  "informal_nits_resolved_before_delivery": [
+    {
+      "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/minimax-local-runtime.mjs",
+      "line": 360,
+      "issue": "Texto de proveniência corrigido para a escolha do Playwright pelo repositório.",
+      "current_sha256": "7bebb8a06a7677c4b70aeecb805357c45eca1eb2e22239860dcbf826fe20c858"
+    }
+  ],
+  "feature_verdict": "NOT_PASS",
+  "whole_feature_verifier": false
+}

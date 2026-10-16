@@ -1,0 +1,43 @@
+{
+  "schema": "readiness.minimax.local-helper-static.v1",
+  "observedAt": "2026-10-16T10:52:59.374224+00:00",
+  "sourceFile": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/minimax-local-runtime.mjs",
+  "sourceSha256": "6f62e1a48d3a22145398053035d989f3b5a7bac0a74a653312a6d80d2d2b6c03",
+  "lines": 381,
+  "results": [
+    {
+      "name": "syntax",
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool",
+      "argv": [
+        "node",
+        "--check",
+        "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/minimax-local-runtime.mjs"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "import-no-execution",
+      "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool",
+      "argv": [
+        "node",
+        "--input-type=module",
+        "-e",
+        "const m=await import(\"file:///Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/minimax-local-runtime.mjs\");if(typeof m.run!==\"function\")throw Error(\"run missing\");console.log(JSON.stringify({runExport:typeof m.run,observationExecuted:false}));"
+      ],
+      "exitCode": 0,
+      "stdout": "{\"runExport\":\"function\",\"observationExecuted\":false}\n",
+      "stderr": ""
+    }
+  ],
+  "whitespaceIssues": [],
+  "scope": [
+    "new minimax-local-runtime.mjs only; dispatcher/root docs not edited by this agent"
+  ],
+  "runtimeExecuted": false,
+  "browserExecuted": false,
+  "freshRuntimeProof": "none: promoted helper is a changed observer and has not been run. Earlier real UI reports retain their old observer binding and remain historical.",
+  "priorSummarySha256": "4c6f521b113aa5cc7dd8e0921a6579e2d6f7dcf63db11ccff14f9d990f6abf75",
+  "traceLimitation": "Raw traces discarded to prevent the ephemeral bridge token from entering persisted evidence. Retained media and sanitized HTTP metadata remain available on failures."
+}

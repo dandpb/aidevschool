@@ -1,0 +1,23 @@
+{
+  "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.checks/product-readiness-20261015.freeze.v2.json": "94204f5409c594661911d463c5cc26b0463092e297137a073b2da67ed9831592",
+  "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.checks/product-readiness-20261015.md": "be2f4cbd87841b05ad0f770dc5391a9a0c840a3e0b3a98c881a9e872eeeeed83",
+  "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-c11-followup-20261016/literacy/followup-report.json": "4fe6d7e584f742dd4943d28945472c63621b1600e8fb57ea5fb39dd55c7f6be1",
+  "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime/last-passing-evidence-2026-10-16T10-45-12-670Z/report.json": "b0b594eb88b81758574879ef6a896d1a3fdaf70fd2a7ed1cbad70dba6852264e",
+  "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-implementation-20261015/literacy/runtime/verifier-outage-retry-2026-10-16T10-45-16-101Z/report.json": "d2fa53e7b47a380386e7086b82eab4859ada7cde51986bf3b7fad349aa6f2899",
+  "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/src/data/generated/lessons.ts": "ef3c35409a808511b1832af192eda60a014130f01ebc943dc93b64ce0144784f",
+  "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/src/domain/verification.ts": "22cc919241d2944a96c3371a754cba3d8c6c194e39ed0e34ea97bb207e9e6ba2",
+  "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/src/screens/LessonScreen.tsx": "04befd5c9f1193275f3ad9b316219d74190bf8dfe8e5c51b0522c0a1eee076f3",
+  "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/src/screens/ResultScreen.tsx": "e3073b140d2064f16d996d4d24b5d075895ef3627e6efda4419ce3d6354528dd",
+  "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/test-results/readiness-plan-runtime/last-passing-evidence-2026-10-16T10-45-12-670Z/bound-receipt-pass-viewport.png": "39603670efba7472a5358ea7dcf97e8f348ebbc16fa79b7eebc99a4d37f5f8b4",
+  "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/test-results/readiness-plan-runtime/verifier-outage-retry-2026-10-16T10-45-16-101Z/bound-receipt-pass-viewport.png": "a6a0a486d5b3f630f65fc7f9830a8825622be2ad2b7f4415bbb706c78cedaceb",
+  "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/literacyDojo/test-results/readiness-plan-runtime/verifier-outage-retry-2026-10-16T10-45-16-101Z/endpoint-outage-viewport.png": "0e9c7ef1f61c94fcfc1f2aa96cb64f1e55d1ec5027b7e2dca763280207e4037c",
+  "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/literacy-runtime.mjs": "6cdc8bd1e143d40a3da2f96c06b861a07129d7d707fb7accac85b5e9a0793aa5",
+  "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/observe-engine.mjs": "be8f45281ecd86b909f288b326dadb3bcc376330995d74c0a5eee051537d8609",
+  "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/owner-decisions-20261016.json": "8c6e3c5e63b120760124f683c136e82ca68e70f6dd934138af87ea2577fe05dc",
+  "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/intent/2026-10-15-ecosystem-product-readiness/plan.md": "bc5d155666014c6fb600637c2c3315eff011628fe864b039035d616216be3079",
+  "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/netlify-functions/literacy-verify.mjs": "7d53901ea068302abb91fa07bfa0cb99b3ed7952566a50b4ef9e6dfbf15fa8c3",
+  "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_identity.test.mjs": "040732aa6c6f97b9fefcec30ed31e1437e6ef99ba38bbf977e5cd9743df5c1e6",
+  "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_netlify.test.mjs": "1265169ebd09de19498f5066257763ab714399eb4f670cc73318bd4e0983ed9a",
+  "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/gate/tests/literacy_verify_readiness_plan.test.mjs": "e4c650828b274acde2cd9bd955e15b623c4ec7b179d64dde7c2dd254facf3ff0",
+  "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/learning_state.yaml": "36419ae44e755a9bd8bd049b14d0dee03d8b5937e577285f67ffe730733735e2"
+}

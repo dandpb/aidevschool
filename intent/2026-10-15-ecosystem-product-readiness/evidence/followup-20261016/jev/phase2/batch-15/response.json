@@ -1,0 +1,105 @@
+{
+  "model": "jev-1.13.0",
+  "answers": {
+    "quest_http_en_imported_surface": {
+      "type": "noul",
+      "noul": 0.99
+    },
+    "quest_http_en_imported_legibility": {
+      "type": "noul",
+      "noul": 0.95
+    },
+    "quest_http_en_imported_framework_error": {
+      "type": "noul",
+      "noul": 0.04
+    },
+    "quest_http_en_imported_language": {
+      "type": "noul",
+      "noul": 0.99
+    },
+    "quest_http_en_imported_approval_absent": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "quest_http_en_imported_authority_limit": {
+      "type": "noul",
+      "noul": 0.99
+    },
+    "quest_http_pt_BR_imported_surface": {
+      "type": "noul",
+      "noul": 0.99
+    },
+    "quest_http_pt_BR_imported_legibility": {
+      "type": "noul",
+      "noul": 0.95
+    },
+    "quest_http_pt_BR_imported_framework_error": {
+      "type": "noul",
+      "noul": 0.04
+    },
+    "quest_http_pt_BR_imported_language": {
+      "type": "noul",
+      "noul": 0.99
+    },
+    "quest_http_pt_BR_imported_approval_absent": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "quest_http_pt_BR_imported_authority_limit": {
+      "type": "noul",
+      "noul": 0.99
+    },
+    "quest_http_en_campaign_wrong_surface": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "quest_http_en_campaign_wrong_legibility": {
+      "type": "noul",
+      "noul": 0.89
+    },
+    "quest_http_en_campaign_wrong_framework_error": {
+      "type": "noul",
+      "noul": 0.04
+    },
+    "quest_http_en_campaign_wrong_language": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "quest_http_en_campaign_wrong_rejection_feedback": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "quest_http_en_campaign_wrong_title_clipping": {
+      "type": "noul",
+      "noul": 0.92
+    },
+    "quest_http_pt_BR_campaign_wrong_surface": {
+      "type": "noul",
+      "noul": 0.99
+    },
+    "quest_http_pt_BR_campaign_wrong_legibility": {
+      "type": "noul",
+      "noul": 0.96
+    },
+    "quest_http_pt_BR_campaign_wrong_framework_error": {
+      "type": "noul",
+      "noul": 0.03
+    },
+    "quest_http_pt_BR_campaign_wrong_language": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "quest_http_pt_BR_campaign_wrong_rejection_feedback": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "quest_http_pt_BR_campaign_wrong_title_clipping": {
+      "type": "noul",
+      "noul": 0.82
+    }
+  },
+  "usage": {
+    "input_tokens": 13172,
+    "output_tokens": 570
+  }
+}

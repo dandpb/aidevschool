@@ -1,0 +1,93 @@
+{
+  "model": "jev-1.13.0",
+  "answers": {
+    "c11_pass_surface": {
+      "type": "noul",
+      "noul": 0.97
+    },
+    "c11_pass_legibility": {
+      "type": "noul",
+      "noul": 0.97
+    },
+    "c11_pass_framework_error": {
+      "type": "noul",
+      "noul": 0.03
+    },
+    "c11_pass_receipt_pass": {
+      "type": "noul",
+      "noul": 0.99
+    },
+    "c11_pass_canonical_limit": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "c11_pass_local_progress_distinction": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "c11_pass_verification_not_part_copy": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "c12_recovered_surface": {
+      "type": "noul",
+      "noul": 0.97
+    },
+    "c12_recovered_legibility": {
+      "type": "noul",
+      "noul": 0.97
+    },
+    "c12_recovered_framework_error": {
+      "type": "noul",
+      "noul": 0.03
+    },
+    "c12_recovered_receipt_pass": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "c12_recovered_canonical_limit": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "c12_recovered_local_progress_distinction": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "c12_recovered_verification_not_part_copy": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "c12_outage_surface": {
+      "type": "noul",
+      "noul": 0.96
+    },
+    "c12_outage_legibility": {
+      "type": "noul",
+      "noul": 0.97
+    },
+    "c12_outage_framework_error": {
+      "type": "noul",
+      "noul": 0.04
+    },
+    "c12_outage_outage_message": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "c12_outage_retry_control": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "c12_outage_local_progress_distinction": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "c12_outage_verification_not_part_copy": {
+      "type": "noul",
+      "noul": 0.97
+    }
+  },
+  "usage": {
+    "input_tokens": 4856,
+    "output_tokens": 509
+  }
+}

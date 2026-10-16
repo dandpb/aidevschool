@@ -1,0 +1,101 @@
+{
+  "model": "jev-1.13.0",
+  "answers": {
+    "quest_http_pt_BR_tlc_complete_surface": {
+      "type": "noul",
+      "noul": 0.99
+    },
+    "quest_http_pt_BR_tlc_complete_legibility": {
+      "type": "noul",
+      "noul": 0.96
+    },
+    "quest_http_pt_BR_tlc_complete_framework_error": {
+      "type": "noul",
+      "noul": 0.04
+    },
+    "quest_http_pt_BR_tlc_complete_language": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "quest_http_pt_BR_tlc_complete_workshop_summary": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "quest_http_en_lab_package_surface": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "quest_http_en_lab_package_legibility": {
+      "type": "noul",
+      "noul": 0.97
+    },
+    "quest_http_en_lab_package_framework_error": {
+      "type": "noul",
+      "noul": 0.04
+    },
+    "quest_http_en_lab_package_language": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "quest_http_en_lab_package_local_package": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "quest_http_en_lab_package_authority_limit": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "quest_http_pt_BR_lab_package_surface": {
+      "type": "noul",
+      "noul": 0.99
+    },
+    "quest_http_pt_BR_lab_package_legibility": {
+      "type": "noul",
+      "noul": 0.8
+    },
+    "quest_http_pt_BR_lab_package_framework_error": {
+      "type": "noul",
+      "noul": 0.04
+    },
+    "quest_http_pt_BR_lab_package_language": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "quest_http_pt_BR_lab_package_local_package": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "quest_http_pt_BR_lab_package_authority_limit": {
+      "type": "noul",
+      "noul": 0.94
+    },
+    "quest_native_file_en_lab_package_surface": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "quest_native_file_en_lab_package_legibility": {
+      "type": "noul",
+      "noul": 0.97
+    },
+    "quest_native_file_en_lab_package_framework_error": {
+      "type": "noul",
+      "noul": 0.04
+    },
+    "quest_native_file_en_lab_package_language": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "quest_native_file_en_lab_package_local_package": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "quest_native_file_en_lab_package_authority_limit": {
+      "type": "noul",
+      "noul": 0.98
+    }
+  },
+  "usage": {
+    "input_tokens": 13121,
+    "output_tokens": 537
+  }
+}

@@ -173,3 +173,7 @@ O resultado da execução será o pacote informativo definido em Shape da discov
 Para grants, criar bundles canônicos **em subdiretório dedicado `claims/`**, abaixo da pasta de observações da iniciativa. O loader atual faz `glob("*.json")` e exige chaves exatas; passar a pasta que contém `engine-qualification.json` causaria erro de shape. Também filtrar producer reports para os use cases revalidados: incluir casos alheios sem observação pode rebaixar claims.
 
 No encerramento, executar a prova de claims do plano e verificar a lane de main; revisão independente e decisão de Daniel seguem separadas. A descoberta de uma lacuna preserva seu ID e sua evidência, sem fabricar sucesso para fechar a tabela.
+
+## Orientação humana de 16/10/2026 — aplicação local
+
+O alvo atual de C24 é a entrada local existente, conforme `owner-decisions-20261016.json`. A entrada executável é `python3 -m engines.minimaxDojo.os_adapter` e o OS a expõe em Engine Hub → minimaxDojo → Preparar sessão de tutoria. O adapter prepara briefing somente leitura. O ciclo completo de bootstrap/tentativa/Promotor/Crítico/relatório/reflexão continua exigido por C24; testes de referência e briefing não comprovam esse ciclo. A antiga solicitação de URL da plataforma externa deixa de ser o próximo pré-requisito. A falta do ciclo local completo permanece explícita, sem adicionar runtime novo por suposição.

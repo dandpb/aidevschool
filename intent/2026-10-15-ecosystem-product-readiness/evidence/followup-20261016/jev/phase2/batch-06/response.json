@@ -1,0 +1,105 @@
+{
+  "model": "jev-1.13.0",
+  "answers": {
+    "pixel_16_mini_message_queue_retry_pass_surface": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "pixel_16_mini_message_queue_retry_pass_legibility": {
+      "type": "noul",
+      "noul": 0.97
+    },
+    "pixel_16_mini_message_queue_retry_pass_framework_error": {
+      "type": "noul",
+      "noul": 0.04
+    },
+    "pixel_16_mini_message_queue_retry_pass_lab_identity": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "pixel_16_mini_message_queue_retry_pass_result_copy": {
+      "type": "noul",
+      "noul": 0.95
+    },
+    "pixel_16_mini_message_queue_retry_pass_return_controls": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "pixel_17_distributed_config_service_retry_pass_surface": {
+      "type": "noul",
+      "noul": 0.97
+    },
+    "pixel_17_distributed_config_service_retry_pass_legibility": {
+      "type": "noul",
+      "noul": 0.96
+    },
+    "pixel_17_distributed_config_service_retry_pass_framework_error": {
+      "type": "noul",
+      "noul": 0.04
+    },
+    "pixel_17_distributed_config_service_retry_pass_lab_identity": {
+      "type": "noul",
+      "noul": 0.97
+    },
+    "pixel_17_distributed_config_service_retry_pass_result_copy": {
+      "type": "noul",
+      "noul": 0.93
+    },
+    "pixel_17_distributed_config_service_retry_pass_return_controls": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "pixel_18_search_engine_retry_pass_surface": {
+      "type": "noul",
+      "noul": 0.97
+    },
+    "pixel_18_search_engine_retry_pass_legibility": {
+      "type": "noul",
+      "noul": 0.97
+    },
+    "pixel_18_search_engine_retry_pass_framework_error": {
+      "type": "noul",
+      "noul": 0.04
+    },
+    "pixel_18_search_engine_retry_pass_lab_identity": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "pixel_18_search_engine_retry_pass_result_copy": {
+      "type": "noul",
+      "noul": 0.92
+    },
+    "pixel_18_search_engine_retry_pass_return_controls": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "pixel_01_rate_limiter_fail_surface": {
+      "type": "noul",
+      "noul": 0.97
+    },
+    "pixel_01_rate_limiter_fail_legibility": {
+      "type": "noul",
+      "noul": 0.97
+    },
+    "pixel_01_rate_limiter_fail_framework_error": {
+      "type": "noul",
+      "noul": 0.04
+    },
+    "pixel_01_rate_limiter_fail_lab_identity": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "pixel_01_rate_limiter_fail_result_copy": {
+      "type": "noul",
+      "noul": 0.94
+    },
+    "pixel_01_rate_limiter_fail_return_controls": {
+      "type": "noul",
+      "noul": 0.98
+    }
+  },
+  "usage": {
+    "input_tokens": 13374,
+    "output_tokens": 634
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "model": "jev-1.13.0",
+  "answers": {
+    "pixel_04_concurrent_task_queue_retry_pass_surface": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "pixel_04_concurrent_task_queue_retry_pass_legibility": {
+      "type": "noul",
+      "noul": 0.97
+    },
+    "pixel_04_concurrent_task_queue_retry_pass_framework_error": {
+      "type": "noul",
+      "noul": 0.03
+    },
+    "pixel_04_concurrent_task_queue_retry_pass_lab_identity": {
+      "type": "noul",
+      "noul": 0.95
+    },
+    "pixel_04_concurrent_task_queue_retry_pass_result_copy": {
+      "type": "noul",
+      "noul": 0.86
+    },
+    "pixel_04_concurrent_task_queue_retry_pass_return_controls": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "pixel_05_websocket_chat_retry_pass_surface": {
+      "type": "noul",
+      "noul": 0.97
+    },
+    "pixel_05_websocket_chat_retry_pass_legibility": {
+      "type": "noul",
+      "noul": 0.97
+    },
+    "pixel_05_websocket_chat_retry_pass_framework_error": {
+      "type": "noul",
+      "noul": 0.04
+    },
+    "pixel_05_websocket_chat_retry_pass_lab_identity": {
+      "type": "noul",
+      "noul": 0.95
+    },
+    "pixel_05_websocket_chat_retry_pass_result_copy": {
+      "type": "noul",
+      "noul": 0.86
+    },
+    "pixel_05_websocket_chat_retry_pass_return_controls": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "pixel_06_file_upload_pipeline_retry_pass_surface": {
+      "type": "noul",
+      "noul": 0.97
+    },
+    "pixel_06_file_upload_pipeline_retry_pass_legibility": {
+      "type": "noul",
+      "noul": 0.96
+    },
+    "pixel_06_file_upload_pipeline_retry_pass_framework_error": {
+      "type": "noul",
+      "noul": 0.03
+    },
+    "pixel_06_file_upload_pipeline_retry_pass_lab_identity": {
+      "type": "noul",
+      "noul": 0.93
+    },
+    "pixel_06_file_upload_pipeline_retry_pass_result_copy": {
+      "type": "noul",
+      "noul": 0.85
+    },
+    "pixel_06_file_upload_pipeline_retry_pass_return_controls": {
+      "type": "noul",
+      "noul": 0.98
+    },
+    "pixel_07_rest_api_auth_retry_pass_surface": {
+      "type": "noul",
+      "noul": 0.96
+    },
+    "pixel_07_rest_api_auth_retry_pass_legibility": {
+      "type": "noul",
+      "noul": 0.95
+    },
+    "pixel_07_rest_api_auth_retry_pass_framework_error": {
+      "type": "noul",
+      "noul": 0.03
+    },
+    "pixel_07_rest_api_auth_retry_pass_lab_identity": {
+      "type": "noul",
+      "noul": 0.94
+    },
+    "pixel_07_rest_api_auth_retry_pass_result_copy": {
+      "type": "noul",
+      "noul": 0.86
+    },
+    "pixel_07_rest_api_auth_retry_pass_return_controls": {
+      "type": "noul",
+      "noul": 0.98
+    }
+  },
+  "usage": {
+    "input_tokens": 14010,
+    "output_tokens": 646
+  }
+}

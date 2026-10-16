@@ -1,0 +1,145 @@
+{
+  "schema": "readiness.minimax.local-ui.v1",
+  "createdAt": "2026-10-16T10:48:10.467Z",
+  "head": "528a56c847ec50276ed9d2dab2c7247584c567c3",
+  "url": "http://127.0.0.1:64602",
+  "flow": "OS /desktop?operator=1 → Atividades → Engine Hub → minimaxDojo → Preparar sessão de tutoria → real adapter briefing",
+  "browserAvailability": "Browser plugin not available; repository Playwright used as mandated by engine evidence policy",
+  "viewport": {
+    "width": 1280,
+    "height": 800
+  },
+  "server": {
+    "cwd": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexdojo-os-prototype",
+    "executable": "/Users/danielbarreto/.hermes/node/bin/node",
+    "argv": [
+      "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexdojo-os-prototype/node_modules/vite/bin/vite.js",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "64602",
+      "--strictPort"
+    ],
+    "pid": 64135,
+    "exitCode": 143,
+    "aliveAfterCleanup": false,
+    "pythonPath": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool",
+    "venvBin": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/gh-375/venv/bin"
+  },
+  "results": [
+    {
+      "name": "startup",
+      "status": "pass",
+      "detail": {
+        "status": 200
+      }
+    },
+    {
+      "name": "unauthenticated action blocked",
+      "status": "pass",
+      "detail": {
+        "status": 403,
+        "error": "origin-forbidden"
+      }
+    },
+    {
+      "name": "same-origin action without token blocked",
+      "status": "pass",
+      "detail": {
+        "status": 403,
+        "error": "invalid-token"
+      }
+    },
+    {
+      "name": "page identity and visible desktop",
+      "status": "pass",
+      "detail": {
+        "url": "http://127.0.0.1:64602/desktop?operator=1",
+        "title": "codexDojo OS"
+      }
+    },
+    {
+      "name": "operator opens real Engine Hub",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "selects real local tutor capability",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "real authenticated bridge returns adapter briefing",
+      "status": "pass",
+      "detail": {
+        "status": 200,
+        "ok": true,
+        "source": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/learner/learning_state.yaml",
+        "branch": "mastered"
+      }
+    },
+    {
+      "name": "local repeated entry is read-only",
+      "status": "pass",
+      "detail": {
+        "protectedFiles": 313
+      }
+    },
+    {
+      "name": "framework overlay and runtime console health",
+      "status": "pass",
+      "detail": {
+        "pageErrors": 0,
+        "consoleWarnings": 0
+      }
+    }
+  ],
+  "errors": [],
+  "assertions": {
+    "protectedFilesCompared": 313,
+    "protectedSourceUnchanged": true,
+    "changed": [],
+    "allOwnedProcessesStopped": true
+  },
+  "status": "pass",
+  "c24Status": "unverified",
+  "media": [
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexdojo-os-prototype/test-results/readiness-c11-followup-minimax/2026-10-16T10-48-06-830Z/01-engine-hub.png",
+      "sha256": "7aba8e95479566ab86ddec59acc6f174f253d018db94e4a498590a15fae1e5b9",
+      "bytes": 281312
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexdojo-os-prototype/test-results/readiness-c11-followup-minimax/2026-10-16T10-48-06-830Z/02-local-tutor-before.png",
+      "sha256": "f8d4ab854e05170ed0153971bbea9db5ce04370e0a80830ff0075ceb8a581ad7",
+      "bytes": 310829
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexdojo-os-prototype/test-results/readiness-c11-followup-minimax/2026-10-16T10-48-06-830Z/03-real-briefing.png",
+      "sha256": "1a14249c98788d93b04d22c22a8c954834cf63a90b8ce2171f71daf83f1a4b0e",
+      "bytes": 342751
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexdojo-os-prototype/test-results/readiness-c11-followup-minimax/2026-10-16T10-48-06-830Z/03b-authority-after-user-scroll.png",
+      "sha256": "18542437883eacf15c10728ea40d842abdde7043c85f429d62a122a8ea01e189",
+      "bytes": 341978
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexdojo-os-prototype/test-results/readiness-c11-followup-minimax/2026-10-16T10-48-06-830Z/04-after-repeat.png",
+      "sha256": "a4928c3e5530a655f32e1aa51fad605283ccc24c668eedb8077972d43dbe12e9",
+      "bytes": 316323
+    },
+    {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/engines/codexdojo-os-prototype/test-results/readiness-c11-followup-minimax/2026-10-16T10-48-06-830Z/page@4800ebdfa3b9835a20441ceee63ce532.webm",
+      "sha256": "f8b35ce521f2d58396ff16589562f9b22ef33aa186deeb620967f3be8373a3c7",
+      "bytes": 330080
+    }
+  ],
+  "remaining": [
+    "Only existing read-only entry exercised. Full C24 bootstrap/attempt/Prometor/Critico/report/whiteboard/reflection/retry is not performed by this local capability.",
+    "No model/provider called, no fresh producer/verifier role pair instantiated.",
+    "Semantic image judgment left to independent TypeSafe/Jev context.",
+    "Single 1280x800 desktop viewport; no mobile qualification."
+  ],
+  "elapsedMs": 3591
+}

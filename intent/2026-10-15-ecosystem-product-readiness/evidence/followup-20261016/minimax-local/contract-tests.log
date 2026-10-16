@@ -1,0 +1,11 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.13.2, pytest-8.4.2, pluggy-1.7.0 -- /Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/gh-375/venv/bin/python
+rootdir: /Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool
+configfile: pyproject.toml
+collecting ... collected 3 items
+
+engines/minimaxDojo/tests/test_os_adapter.py::TutorOsAdapterTest::test_prepares_a_source_labelled_socratic_entrypoint_without_writes PASSED [ 33%]
+engines/minimaxDojo/tests/test_learning_unit_e2e_contract.py::TestLearningUnitE2EContract::test_failed_gate_retries_then_blocks_without_mastery PASSED [ 66%]
+engines/minimaxDojo/tests/test_learning_unit_e2e_contract.py::TestLearningUnitE2EContract::test_verifier_pass_is_the_only_path_to_dominado_and_is_audited PASSED [100%]
+
+============================== 3 passed in 0.05s ===============================

@@ -1,0 +1,9 @@
+{
+  "recordedAt": "2026-10-16T10:52:19.557644+00:00",
+  "appliesFromBatch": 6,
+  "beforeWorkerSha256": "4023af3c4123a786454b62d8d22da75396616bdd4bfc53c2708603cf316d0740",
+  "afterWorkerSha256": "5faafc847b0293576c1fbc18e69bdc4e9e30f7e59309dc90ff84bf2be0a75b0d",
+  "change": "Move common untrusted-image/offscreen instructions from each question to shared observerPolicy; preserve question meanings and retain exact sent metadata. Prioritize Quest mode endpoints before secondary state images if budget becomes tight.",
+  "paidRequestsChanged": false,
+  "firstFiveReceiptsUnmodified": true
+}
