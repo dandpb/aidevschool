@@ -1,0 +1,22 @@
+{
+  "meta": {
+    "pacote": "pg-e01-evals-offline (AID-3648) — EXEMPLO TRABALHADO",
+    "conjunto": "base (desenvolvimento)",
+    "aviso": "DADOS 100% SINTETICOS: issues ficticias do app TrilhaFit (inexistente). Nenhum modelo de IA real foi executado; saidas autoralmente fixadas para o exemplo. Nao medem eficacia real.",
+    "rotulo_sintetico": true
+  },
+  "casos": [
+    { "id": "TF-001", "texto": "O treino de HIIT fecha o app no 3o exercicio (Android 14)", "area": "bug" },
+    { "id": "TF-002", "texto": "Mapa do percurso nao carrega com GPS desligado", "area": "bug" },
+    { "id": "TF-003", "texto": "Sincronizacao com a balanca perde a ultima mediacao", "area": "bug" },
+    { "id": "TF-004", "texto": "Plano semanal some ao rotacionar a tela", "area": "bug" },
+    { "id": "TF-005", "texto": "Notificacao do treino chega 1h atrasada", "area": "bug" },
+    { "id": "TF-006", "texto": "Da para exportar o historico para o Apple Saude?", "area": "duvida" },
+    { "id": "TF-007", "texto": "Grafico de carga aguda aparece em vermelho — e bug?", "area": "duvida" },
+    { "id": "TF-008", "texto": "Consigo usar os treinos guiados sem assinatura premium?", "area": "duvida" },
+    { "id": "TF-009", "texto": "Tem versao web ou so o app do celular?", "area": "duvida" },
+    { "id": "TF-010", "texto": "Queria modo escuro nos relatorios semanais", "area": "melhoria" },
+    { "id": "TF-011", "texto": "Adicionem integracao com corrida ao ar livre", "area": "melhoria" },
+    { "id": "TF-012", "texto": "Seria otimo ter widget do treino do dia na tela inicial", "area": "melhoria" }
+  ]
+}

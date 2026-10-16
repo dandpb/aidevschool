@@ -24,6 +24,36 @@ from pathlib import Path
 from typing import Callable
 
 
+def _parse_args(argv: list[str]) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        prog="aidevschool-install",
+        description="Validate and install the AI DevSchool skill for Hermes or OpenClaw.",
+    )
+    parser.add_argument(
+        "skill_src",
+        nargs="?",
+        type=Path,
+        default=Path(__file__).resolve().parent,
+        help="skill source directory (defaults to the bundled aidevschool directory)",
+    )
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="validate curriculum and manifests without changing the platform",
+    )
+    parser.add_argument(
+        "--deliver",
+        default="all",
+        help="Hermes cron delivery target (default: all connected home channels)",
+    )
+    return parser.parse_args(argv)
+
+
+# argparse exits for help before a local import can write bytecode in the bundle.
+if __name__ == "__main__":
+    _cli_args = _parse_args(sys.argv[1:])
+
+
 # install.py runs as a standalone script, so its own directory is not always
 # already on sys.path (it is when invoked directly, not when imported by path).
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -227,29 +257,7 @@ def install(
     print("Next steps: send 'start' -> the tutor opens concept C01.")
 
 
-def main(argv: list[str] | None = None) -> None:
-    parser = argparse.ArgumentParser(
-        prog="aidevschool-install",
-        description="Validate and install the AI DevSchool skill for Hermes or OpenClaw.",
-    )
-    parser.add_argument(
-        "skill_src",
-        nargs="?",
-        type=Path,
-        default=Path(__file__).resolve().parent,
-        help="skill source directory (defaults to the bundled aidevschool directory)",
-    )
-    parser.add_argument(
-        "--check",
-        action="store_true",
-        help="validate curriculum and manifests without changing the platform",
-    )
-    parser.add_argument(
-        "--deliver",
-        default="all",
-        help="Hermes cron delivery target (default: all connected home channels)",
-    )
-    args = parser.parse_args(sys.argv[1:] if argv is None else argv)
+def _run_from_args(args: argparse.Namespace) -> None:
     skill_src = args.skill_src.resolve()
 
     try:
@@ -266,5 +274,9 @@ def main(argv: list[str] | None = None) -> None:
         raise SystemExit(1) from exc
 
 
+def main(argv: list[str] | None = None) -> None:
+    _run_from_args(_parse_args(sys.argv[1:] if argv is None else argv))
+
+
 if __name__ == "__main__":
-    main()
+    _run_from_args(_cli_args)

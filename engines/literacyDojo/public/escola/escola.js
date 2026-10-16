@@ -111,9 +111,11 @@ for (const selector of ["#jornada-cotidiano", "#jornada-dev"]) {
       event.preventDefault();
       const target = document.querySelector(selector);
       if (!target) return;
+      // AID-3532: tabindex="-1" stays on the card — Chromium drops focus to
+      // BODY when the attribute is removed from the focused element. Same
+      // pattern as the static skip-link target #etapa-atual (index.html).
       target.setAttribute("tabindex", "-1");
       target.focus();
-      target.removeAttribute("tabindex");
     });
 }
 

@@ -11,6 +11,9 @@ from learner.substrate.mission_catalog_bindings import (
     normalize_bindings,
     validate_tracks,
 )
+from learner.substrate.mission_catalog_guided_practice import (
+    load_guided_practice_catalog,
+)
 from learner.substrate.mission_catalog_rules import TRACK_ORDER, finalize_missions
 from learner.substrate.mission_catalog_voxel import (
     MissionCatalogError,
@@ -103,10 +106,15 @@ def load_mission_catalog(
         for project in load_catalog(source_root / "curriculum" / "catalog.md")
     }
     voxel_games = load_voxel_catalog(source_root / "engines" / "voxelDojo" / "catalog.json")
+    guided_practices = load_guided_practice_catalog(
+        source_root / "curriculum" / "sequencia-dev-guiada"
+    )
 
     records, lesson_to_mission = normalize_bindings(
         raw_bindings,
-        BindingSources(lessons, projects, voxel_games, literacy_content_version),
+        BindingSources(
+            lessons, projects, voxel_games, literacy_content_version, guided_practices
+        ),
     )
     missions = finalize_missions(records, lessons, lesson_to_mission, tracks)
 
