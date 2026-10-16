@@ -613,10 +613,9 @@ class TestDashboardSnapshot(unittest.TestCase):
 
     def test_build_snapshot_picks_up_backlog_counts(self):
         snapshot = build_snapshot()
-        # 01/02 certified + 05/12/18 Node-verified; 14 remain scaffolded.
-        # Mastery comes from canonical units_log, independently of backlog status.
+        # BACKLOG_STATUS.md: 01 + 02 implemented; 00 + 03-18 scaffolded (17).
         self.assertEqual(snapshot["masteredCount"], 2)
-        self.assertEqual(snapshot["scaffoldedCount"], 14)
+        self.assertEqual(snapshot["scaffoldedCount"], 17)
 
     def test_build_snapshot_includes_typed_challenge_statuses(self):
         snapshot = build_snapshot()
@@ -931,7 +930,7 @@ class TestMemoryContract(unittest.TestCase):
 class TestBacklogStatusDrift(unittest.TestCase):
     """Verify BACKLOG_STATUS.md rows match the filesystem for scaffolded projects.
 
-    Status truth comes from catalog.md, projected into BACKLOG_STATUS.md.
+    Status truth lives in BACKLOG_STATUS.md (01+02 are implemented; 03-18 scaffolded).
     This suite does not hardcode those counts — it re-reads the backlog and checks
     that every `scaffolded` row still has the expected skeleton artifacts.
     """
@@ -998,10 +997,10 @@ class TestBacklogStatusDrift(unittest.TestCase):
 
     def test_scaffolded_count_matches_dashboard_snapshot(self):
         from learner.substrate.dashboard_snapshot import build_snapshot
-        from learner.substrate.snapshot_sources import count_mastered
 
         statuses = self._parse_backlog()
         scaffolded_n = sum(1 for st in statuses.values() if st == "scaffolded")
+        implemented_n = sum(1 for st in statuses.values() if st == "implemented")
         snapshot = build_snapshot()
         self.assertEqual(
             snapshot["scaffoldedCount"],
@@ -1010,8 +1009,8 @@ class TestBacklogStatusDrift(unittest.TestCase):
         )
         self.assertEqual(
             snapshot["masteredCount"],
-            count_mastered(load_canonical().get("units_log")),
-            "dashboard masteredCount must match canonical units_log",
+            implemented_n,
+            "dashboard masteredCount must match BACKLOG implemented rows",
         )
 
 

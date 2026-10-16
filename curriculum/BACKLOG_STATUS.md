@@ -11,20 +11,20 @@ Canonical source: [catalog.md](./catalog.md). This operational view preserves th
 | `02_key_value_store` | `implemented` | Node.js has executable spec, tests, review, benchmark, evolution, and verifier evidence. Certification caveat: this is Node.js-only; the earlier ungated Go/Rust backfill directories were removed in commit `1b0a309` and no longer exist on disk. |
 | `03_url_shortener` | `scaffolded` | Project artifacts exist; catalog verification is pending. |
 | `04_concurrent_task_queue` | `scaffolded` | Project artifacts exist; catalog verification is pending. |
-| `05_websocket_chat` | `implemented` | Node.js implementation verified 2026-09-13 @ `05fca349` (`npm install`/`lint`/`build`/`test` exit 0; 10/10 tests passing across 2 files: `chatHub`, `config`) with `docs/{spec,code_review,evolution_report,benchmark_results,status}.md` present on disk. Caveat: Node.js-only (`go-impl/` and `rust-impl/` were removed in `1b0a309` and do not exist on disk). |
+| `05_websocket_chat` | `scaffolded` | Project artifacts exist; catalog verification is pending. |
 | `06_file_upload_pipeline` | `scaffolded` | Project artifacts exist; catalog verification is pending. |
 | `07_rest_api_auth` | `scaffolded` | Project artifacts exist; catalog verification is pending. |
 | `08_event_driven_order_system` | `scaffolded` | Project artifacts exist; catalog verification is pending. |
 | `09_plugin_system` | `scaffolded` | Project artifacts exist; catalog verification is pending. |
 | `10_distributed_cache` | `scaffolded` | Project artifacts exist; catalog verification is pending. |
 | `11_load_balancer` | `scaffolded` | Project artifacts exist; catalog verification is pending. |
-| `12_distributed_job_scheduler` | `implemented` | Node.js implementation verified 2026-09-13 @ `05fca349` (`npm install`/`lint`/`build`/`test` exit 0; 7/7 tests passing in 1 file; v8 All files coverage 91.2% stmts / 83.33% branch / 96.42% funcs / 91.2% lines) with `docs/{spec,code_review,evolution_report,benchmark_results,status}.md` present on disk. Caveat: Node.js-only (`go-impl/` and `rust-impl/` were removed in `1b0a309` and do not exist on disk). |
+| `12_distributed_job_scheduler` | `scaffolded` | Project artifacts exist; catalog verification is pending. |
 | `13_api_gateway_circuit_breaker` | `scaffolded` | Project artifacts exist; catalog verification is pending. |
 | `14_log_aggregator` | `scaffolded` | Project artifacts exist; catalog verification is pending. |
 | `15_metrics_collector` | `scaffolded` | Project artifacts exist; catalog verification is pending. |
 | `16_mini_message_queue` | `scaffolded` | Project artifacts exist; catalog verification is pending. |
 | `17_distributed_config_service` | `scaffolded` | Project artifacts exist; catalog verification is pending. |
-| `18_search_engine` | `implemented` | Node.js implementation verified 2026-09-13 @ `05fca349` (`npm install`/`lint`/`build`/`test` exit 0, `lint` = `tsc --noEmit`; 10/10 tests passing in 1 file: `tests/search.test.ts`) with `docs/{spec,code_review,evolution_report,benchmark_results,status}.md` present on disk. Caveat: Node.js-only (`go-impl/` and `rust-impl/` were removed in `1b0a309` and do not exist on disk). |
+| `18_search_engine` | `scaffolded` | Project artifacts exist; catalog verification is pending. |
 
 ## Update rule
 

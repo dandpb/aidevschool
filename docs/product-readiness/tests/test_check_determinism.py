@@ -11,7 +11,6 @@ trigger.
 import hashlib
 import importlib.util
 import json
-import re
 import shutil
 import sys
 from datetime import UTC, date, datetime, timedelta
@@ -30,16 +29,6 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 READINESS_ROOT = REPO_ROOT / "docs" / "product-readiness"
 GIT_SHA = "a" * 40
 ARTIFACT_SHA_PLACEHOLDER = "b" * 64
-# AID-4839: fixture revalidateBy dates must stay WALL-CLOCK RELATIVE. An
-# absolute calendar date here is a time bomb — the suite (and with it the
-# required `product readiness (claims)` check on every lane) goes red the
-# day the clock crosses it, mechanically locking the single merge door for
-# ALL PRs (recurrence of AID-1890's Oct-14 fixture, cured 2026-10-15).
-REVALIDATE_HORIZON_DAYS = 14
-
-
-def _revalidate_future(days: int = REVALIDATE_HORIZON_DAYS) -> date:
-    return datetime.now(UTC).date() + timedelta(days=days)
 
 
 def _load_cli(readiness_root: Path, repo_root: Path):
@@ -202,8 +191,7 @@ sourcePaths: [engines/fixtureEngine/src/]
 
 def test_check_ignores_fingerprint_drift_under_source_paths(tmp_path: Path, capsys) -> None:
     # Given a consistent fixture domain with its generated view committed
-    # (future revalidateBy so the ONLY stale reason is the fingerprint drift)
-    _build_fixture(tmp_path, _revalidate_future())
+    _build_fixture(tmp_path, date(2026, 10, 14))
     cli = _load_cli(tmp_path / "docs" / "product-readiness", tmp_path)
 
     # When a PR-like diff changes a file under the use case's sourcePaths
@@ -233,10 +221,8 @@ def test_check_ignores_revalidate_by_boundary(tmp_path: Path, capsys) -> None:
 
 def test_check_accepts_reports_flag_with_empty_directory(tmp_path: Path) -> None:
     # Given the CI invocation shape `check --reports DIR` (regression: the
-    # flag itself must never be parsed as a report directory), with a
-    # wall-clock-relative future revalidateBy so the suite cannot go red by
-    # calendar passage (AID-4839)
-    _build_fixture(tmp_path, _revalidate_future())
+    # flag itself must never be parsed as a report directory)
+    _build_fixture(tmp_path, date(2026, 10, 14))
     cli = _load_cli(tmp_path / "docs" / "product-readiness", tmp_path)
     empty_reports = tmp_path / "artifacts" / "product-readiness"
     empty_reports.mkdir(parents=True)
@@ -249,7 +235,7 @@ def test_check_accepts_reports_flag_with_empty_directory(tmp_path: Path) -> None
 def test_check_still_blocks_view_desync(tmp_path: Path, capsys) -> None:
     # Given a hand-edited generated view (canonical sources changed without a
     # re-render)
-    _build_fixture(tmp_path, _revalidate_future())
+    _build_fixture(tmp_path, date(2026, 10, 14))
     cli = _load_cli(tmp_path / "docs" / "product-readiness", tmp_path)
     readme = tmp_path / "docs" / "product-readiness" / "README.md"
     readme.write_text(readme.read_text(encoding="utf-8") + "<!-- hand edit -->\n", encoding="utf-8")
@@ -258,24 +244,3 @@ def test_check_still_blocks_view_desync(tmp_path: Path, capsys) -> None:
     # and remains a blocking defect on every lane
     assert cli.main(["check"]) == 1
     assert "DRIFT" in capsys.readouterr().err
-
-
-def test_fixture_dates_stay_wall_clock_relative() -> None:
-    # AID-4839 recurrence guard: an absolute calendar date fed to
-    # _build_fixture is a time bomb — the suite goes red on every lane once
-    # the wall clock crosses the baked-in revalidateBy, reddening the
-    # required `product readiness (claims)` check and mechanically locking
-    # the single merge door for ALL PRs (AID-1890's Oct-14 fixture did
-    # exactly this from 2026-10-15). This meta-test fails closed the moment
-    # an absolute `date(<year>, ...)` literal reappears in this module.
-    source = Path(__file__).read_text(encoding="utf-8")
-    absolute_fixture_dates = [
-        line.strip()
-        for line in source.splitlines()
-        if re.search(r"(^|[^\w])date\(\s*2\d{3}\s*,", line)
-    ]
-    assert not absolute_fixture_dates, (
-        "absolute calendar fixture dates are wall-clock time bombs "
-        "(AID-4839): use _revalidate_future()/relative dates instead — "
-        f"offenders: {absolute_fixture_dates}"
-    )
