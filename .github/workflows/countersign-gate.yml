@@ -31,10 +31,12 @@ name: countersign-gate
 #   8. SESSION ANCHOR (AID-4898): the citation's run= resolves in the run
 #      registry (PAPERCLIP_API_URL/TOKEN), has SUCCEEDED, and the effective
 #      session= matches one of its registered session ids. A mid-run
-#      countersign whose trailer session is a placeholder is anchored by a
-#      later provenance ADDENDUM (same agent/task/run, real session, no new
-#      'Countersign:' line; pre-merge only in audit mode). Unconfigured
-#      registry credentials / transport / auth failures fail CLOSED.
+#      countersign whose trailer session is a placeholder — or a
+#      hand-transcribed id with a typo — is anchored/corrected by a later
+#      provenance ADDENDUM (same agent/task/run, real session, no new
+#      'Countersign:' line; latest wins; pre-merge only in audit mode).
+#      Unconfigured registry credentials / transport / auth failures fail
+#      CLOSED.
 #
 # Triggers — two authority tiers, same check-run name:
 #   pull_request (opened/synchronize/reopened/ready_for_review): runs the

@@ -62,11 +62,13 @@ ACCEPTANCE CONTRACT (all must hold; fail-closed in every ambiguity):
       the REAL session of its run=, proven against the run registry
       (PAPERCLIP_API_URL + PAPERCLIP_API_TOKEN/KEY):
         a. ADDENDUM PATH (conformant mid-run countersigns): a mid-run
-           comment cannot know its own closing session id, so a LATER
-           comment (pre-merge only in audit mode) carrying a trailer with
-           the SAME agent=/task=/run= and a non-placeholder session= anchors
-           the citation (no new 'Countersign:' line — the operative citation
-           is untouched).
+           comment cannot know its own closing session id, and a
+           hand-transcribed id can carry a typo (observed 1st hand:
+           ses_ebbc4d26… vs registry ses_ebbb4d26…), so a LATER comment
+           (pre-merge only in audit mode) carrying a trailer with the SAME
+           agent=/task=/run= and a non-placeholder session= anchors the
+           citation (no new 'Countersign:' line — the operative citation
+           is untouched; latest addendum wins).
         b. REGISTRY: the cited run must EXIST, must have SUCCEEDED, and the
            effective session (trailer's, or the addendum's) must match one
            of the run's registered session ids (sessionIdBefore /
@@ -475,29 +477,35 @@ def evaluate(ctx, timeline, head, resolver):
 
     # SESSION ANCHOR (AID-4898). A mid-run comment cannot know its own
     # closing session id (the structural cause behind session=opencode_local,
-    # audit AID-4897 §4), so the conformant path is an ADDENDUM: a comment
+    # audit AID-4897 §4), and a hand-transcribed id can carry a typo —
+    # observed 1st hand on the very first countersign under this contract
+    # (trailer ses_ebbc4d26… vs registry ses_ebbb4d26…). The REGISTRY is the
+    # arbiter (§8b); the ADDENDUM is the conformant repair path: a comment
     # posted AFTER the operative citation (pre-merge only in audit mode — the
     # anchor must exist at the merge decision, same ordering rule as §6/§7)
     # carrying a trailer with the SAME agent=/task=/run= and a non-placeholder
     # session=. No new 'Countersign:' line: the operative citation is
-    # untouched, only its session gets anchored. Latest addendum wins.
+    # untouched, only its session gets anchored. A placeholder operative
+    # session REQUIRES an addendum; a non-placeholder one may be superseded
+    # by a later addendum (latest wins — e.g. correcting a transcribed id);
+    # every candidate still has to match the registry in §8b.
+    anchor_pool = []
+    for c, sbody in scanned:
+        cwhen = c.get("createdAt") or ""
+        if not (when and cwhen > when):
+            continue  # strictly after the operative citation
+        if merged_at and not (cwhen and cwhen < merged_at):
+            continue  # audit mode: anchor must be pre-merge
+        am = PROVENANCE_RE.search(sbody)
+        if not am:
+            continue
+        if (am.group("agent") == countersign_agent
+                and am.group("task") == m.group("task")
+                and am.group("run") == countersign_run
+                and not is_placeholder(am.group("session"))):
+            anchor_pool.append((cwhen, am.group("session")))
     effective_session = cite_session
     if is_placeholder(cite_session):
-        anchor_pool = []
-        for c, sbody in scanned:
-            cwhen = c.get("createdAt") or ""
-            if not (when and cwhen > when):
-                continue  # strictly after the operative citation
-            if merged_at and not (cwhen and cwhen < merged_at):
-                continue  # audit mode: anchor must be pre-merge
-            am = PROVENANCE_RE.search(sbody)
-            if not am:
-                continue
-            if (am.group("agent") == countersign_agent
-                    and am.group("task") == m.group("task")
-                    and am.group("run") == countersign_run
-                    and not is_placeholder(am.group("session"))):
-                anchor_pool.append((cwhen, am.group("session")))
         if not anchor_pool:
             raise Violation(
                 "operative citation trailer session=%r is a placeholder, not a "
@@ -506,6 +514,11 @@ def evaluate(ctx, timeline, head, resolver):
                 "'Countersign:' line) after the countersign run completes, or "
                 "re-countersign with the real session (AID-4898 §8a)" % cite_session
             )
+        effective_session = max(anchor_pool)[1]
+    elif anchor_pool:
+        # Latest addendum wins (registry-checked below): corrects a
+        # mis-transcribed non-placeholder id without disturbing the citation.
+        # An addendum can only redden, never green-wash: §8b still decides.
         effective_session = max(anchor_pool)[1]
 
     # REGISTRY ANCHOR (AID-4898 §8b): the cited run must be a real, SUCCEEDED
@@ -527,7 +540,7 @@ def evaluate(ctx, timeline, head, resolver):
             "(registry: %s) — the countersign must anchor the run's REAL "
             "session (audit AID-4897 §4, AID-4898 §8b)"
             % (effective_session, countersign_run,
-               ", ".join(registered) if registered else "none registered")
+               ", ".join(sorted(set(registered))) if registered else "none registered")
         )
 
     # Not superseded: VOID/HELD after the operative citation (F3 merged 94s
@@ -1114,6 +1127,27 @@ def self_test():
         _ctx("producer body\n" + prod_trailer,
              [_comment("2026-09-26T04:59:00Z", addendum),
               _comment("2026-09-26T05:02:00Z", cite_line + "\n" + ve_placeholder)]),
+    ))
+    # 48–49. transcription-typo session (observed 1st hand on the first
+    # countersign under this contract: trailer ses_ebbc4d26… vs registry
+    # ses_ebbb4d26…). A non-placeholder id that simply does not match the
+    # registry fails §8b; the ADDENDUM is the repair path (latest wins,
+    # registry-checked) — same mechanism as the placeholder case.
+    typo_trailer = ("Provenance: agent=qa-lead task=AID-9006 run=w4898ve "
+                    "session=ses_transcribedtypo0000000000000X")
+    # 48. mis-transcribed session, no addendum -> fail (§8b mismatch)
+    cases.append(scenario(
+        "transcription-typo session fails without addendum", 1,
+        _ctx("producer body\n" + prod_trailer,
+             [_comment(T, cite_line + "\n" + typo_trailer)]),
+    ))
+    # 49. mis-transcribed session + later addendum with the registry
+    # session -> pass (the observed incident's remediation shape)
+    cases.append(scenario(
+        "addendum corrects mis-transcribed session (AID-4898 §8a)", 0,
+        _ctx("producer body\n" + prod_trailer,
+             [_comment(T, cite_line + "\n" + typo_trailer),
+              _comment("2026-09-26T05:05:00Z", addendum)]),
     ))
 
     passed = sum(cases)

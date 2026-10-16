@@ -494,12 +494,15 @@ comentário com linha `Countersign:`) satisfaz TUDO:
    sessão efetiva precisa casar com uma das sessões registradas do run
    (`sessionIdBefore`/`sessionIdAfter`/`usageJson.persistedSessionId`).
    **Caminho conformante para countersigns mid-run** (causa estrutural do
-   achado: comentário mid-run não conhece o próprio `sessionIdAfter`): um
-   **adendo de provenância** posterior — mesmo `agent=`/`task=`/`run=`,
-   `session=` REAL, SEM nova linha `Countersign:` (não perturba a citação
-   operativa) — ancora a sessão (em modo auditoria, só adendos pré-merge
-   contam). Credenciais do registro ausentes, erro de transporte ou rejeição
-   de auth → vermelho (fail-closed, mesma doutrina do resolver §2).
+   achado: comentário mid-run não conhece o próprio `sessionIdAfter`) e para
+   **ids transcritos à mão com typo** (observado 1ª mão: `ses_ebbc4d26…` vs
+   registro `ses_ebbb4d26…`): um **adendo de provenância** posterior — mesmo
+   `agent=`/`task=`/`run=`, `session=` REAL, SEM nova linha `Countersign:`
+   (não perturba a citação operativa) — ancora/corrige a sessão (último
+   adendo vence; em modo auditoria, só adendos pré-merge contam). O registro
+   é o árbitro: sem casamento, vermelho. Credenciais do registro ausentes,
+   erro de transporte ou rejeição de auth → vermelho (fail-closed, mesma
+   doutrina do resolver §2).
 
 Linhas dentro de **code fences** (blocos cercados por ```/~~~, AID-2824 — achado
 AID-2818) são template/documentação e **não contam** em nenhum scan de citação
