@@ -2,11 +2,11 @@
 
 ## Phase
 
-phase: cycle-complete
+phase: impl
 
 # Status — Project 07 · REST API with Auth
 
-> Phase: **cycle-complete**
+> Phase: **impl**
 > Implementations reviewed: Go, Node/TypeScript
 > Source status: all present implementations are done for the current learning cycle.
 

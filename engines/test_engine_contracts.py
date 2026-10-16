@@ -182,7 +182,8 @@ class TestAnalyticsVocabularyContracts(unittest.TestCase):
     }
     PRUNED_DIRS = {
         ".git", "node_modules", "__pycache__", "dist", "test-results",
-        ".netlify", ".venv", "coverage",
+        ".netlify", ".venv", ".venv-linux", "venv", "coverage",
+        ".scratch", ".loops", ".lavish", ".codegraph",
     }
     SCANNED_SUFFIXES = {".ts", ".tsx", ".mts", ".cts", ".js", ".jsx", ".mjs", ".cjs", ".py", ".md"}
 

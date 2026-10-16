@@ -44,6 +44,7 @@ testpaths = [
   "engines/miniMaxEvolutionEngine/tests",
   "engines/test_engine_contracts.py",
   "learner/tests",
+  "learner/analytics_events/tests",
   "curriculum/_shared/tests",
   "shared/tests",
   # AI Literacy content-contract suite (unittest-style, also runs standalone).

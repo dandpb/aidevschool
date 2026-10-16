@@ -28,7 +28,7 @@ const AUTHORIZED = new Set([
 async function* findNetlifyTomls(dir) {
   for (const entry of await readdir(dir, { withFileTypes: true })) {
     if (entry.isDirectory()) {
-      if (["node_modules", "dist", ".git", "test-results", ".netlify"].includes(entry.name)) continue;
+      if (["node_modules", "dist", ".git", "test-results", ".netlify", ".scratch", ".lavish", ".loops"].includes(entry.name)) continue;
       yield* findNetlifyTomls(join(dir, entry.name));
     } else if (entry.name === "netlify.toml") {
       yield join(dir, entry.name);

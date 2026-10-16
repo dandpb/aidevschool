@@ -1,5 +1,6 @@
 """Learner-state substrate: single source of truth and derived-view adapters."""
 
+import json
 import os
 import re
 from datetime import date
@@ -520,8 +521,56 @@ def _validate_evidence_files(state: dict[str, Any], root: Path = ROOT) -> list[s
                 evidence_path, expected_digest, root
             )
         )
+        errors.extend(
+            _verifier_receipt_file_violations(
+                index,
+                str(receipt_review.get("evidence_verifier_source", "")),
+                expected_digest,
+                root,
+            )
+        )
 
     return errors
+
+
+def _find_receipt_by_source(receipts_dir: Path, source: str) -> Path | None:
+    if not receipts_dir.is_dir():
+        return None
+    for candidate in sorted(receipts_dir.glob("*.json")):
+        try:
+            raw = json.loads(candidate.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        if isinstance(raw, dict) and raw.get("source") == source:
+            return candidate
+    return None
+
+
+def _verifier_receipt_file_violations(
+    index: int, source: str, expected_digest: str, root: Path
+) -> list[str]:
+    from learner.gate.security import GateSecurityError
+    from learner.gate.standards import load_thresholds
+    from learner.gate.verifier_receipt import load_verifier_receipt
+
+    receipt_path = _find_receipt_by_source(root / "learner" / "verifier_receipts", source)
+    if receipt_path is None:
+        return []
+    try:
+        receipt = load_verifier_receipt(
+            receipt_path.relative_to(root.resolve()), root
+        )
+    except GateSecurityError as exc:
+        return [f"units_log[{index}].verifier_receipt invalid: {exc}"]
+    th = load_thresholds()
+    violations: list[str] = []
+    if not receipt.passed:
+        violations.append(f"units_log[{index}].verifier_receipt verdict is {receipt.verdict!r}, not PASS")
+    if receipt.evidence_digest != expected_digest:
+        violations.append(f"units_log[{index}].verifier_receipt evidence_digest mismatch")
+    if receipt.mutation_score < th.mutation_min or receipt.coverage_core < th.coverage_min:
+        violations.append(f"units_log[{index}].verifier_receipt scores below threshold")
+    return violations
 
 
 # Well-known role names. Sorted for human-readable error messages.
