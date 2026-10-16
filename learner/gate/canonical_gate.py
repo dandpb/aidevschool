@@ -186,6 +186,19 @@ def _check_evidence_semantics(
                 "claimed-versus-verified disagreement: " + violation
                 for violation in violations
             )
+        else:
+            # AID-3710 F1 (PO decision 2026-10-02: "mastery só com execução
+            # verificada"): a matching game rubric only proves the producer's
+            # numbers are self-consistent — ``pass`` and rubric metrics are
+            # producer-declared, so they can characterize a run but can never
+            # prove one happened. Mastery for game-shaped evidence requires a
+            # digest-bound verifier receipt under ``learner/verifier_receipts``
+            # (the same contract voxeldojo already used). Fail closed.
+            errors.append(
+                "producer-declared game pass/metrics are not execution evidence: "
+                "mastery requires a digest-bound verifier receipt under "
+                "learner/verifier_receipts (AID-3710)"
+            )
     return errors
 
 
@@ -212,17 +225,11 @@ def _decide(
             errors=tuple(errors),
         )
 
-    producer_evidence = {
-        field_name: value
-        for field_name, value in evidence.items()
-        if field_name != "verifier"
-    }
-    rubric_pass, _ = independently_verified_pass(producer_evidence)
-    passed = (
-        verifier_receipt.passed
-        if verifier_receipt is not None
-        else bool(evidence["pass"]) and rubric_pass is True
-    )
+    # AID-3710 F1: mastery never derives from producer-declared pass/metrics.
+    # The eligibility seam above already rejects receipt-less game passes as
+    # NOT ELIGIBLE; this decision fallback stays structurally fail-closed too,
+    # so no future seam change can silently re-enable self-declared mastery.
+    passed = verifier_receipt.passed if verifier_receipt is not None else False
     attempt_path, _ = secure_attempt_path(root, str(active_unit["attempt_file"]))
     if attempt_path is None:
         return GateDecision(

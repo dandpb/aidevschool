@@ -52,7 +52,6 @@ learner/gate/air_traffic_evaluator.py:_replay
 learner/gate/air_traffic_evaluator.py:evaluate_air_traffic
 learner/gate/canonical_gate.py:_check_evidence
 learner/gate/canonical_gate.py:_check_evidence_semantics
-learner/gate/canonical_gate.py:_decide
 learner/gate/checkpoint_evaluator.py:_prediction_wave_result
 learner/gate/docking_evaluator.py:_dock_wave_result
 learner/gate/docking_evaluator.py:_mismatch_wave_result
