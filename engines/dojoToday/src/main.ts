@@ -186,26 +186,26 @@ function statusGlyph(status: TrackNode["status"]): string {
 }
 
 function trackSection(nodes: readonly TrackNode[], nextNum: string | null): string {
-  const rows = nodes
-    .map((n) => {
-      const isNext = n.num === nextNum && n.status === "active";
-      const cls = `track-node is-${n.status}${isNext ? " is-next" : ""}`;
-      const stateText =
-        n.status === "mastered" ? "concluída" : n.status === "active" ? "ativa" : "disponível";
-      const ariaLabel = `Lição ${n.num}: ${n.title} (${stateText})`;
-      const play =
-        isNext && n.gameDir
-          ? `<details class="play-how track-play"><summary>Jogar agora</summary><code>cd ${escapeHtml(n.gameDir)} &amp;&amp; pnpm install &amp;&amp; pnpm run dev</code></details>`
-          : "";
-      return `
+  let rows = "";
+  for (let i = 0; i < nodes.length; i++) {
+    const n = nodes[i];
+    const isNext = n.num === nextNum && n.status === "active";
+    const cls = `track-node is-${n.status}${isNext ? " is-next" : ""}`;
+    const stateText =
+      n.status === "mastered" ? "concluída" : n.status === "active" ? "ativa" : "disponível";
+    const ariaLabel = `Lição ${n.num}: ${n.title} (${stateText})`;
+    const play =
+      isNext && n.gameDir
+        ? `<details class="play-how track-play"><summary>Jogar agora</summary><code>cd ${escapeHtml(n.gameDir)} &amp;&amp; pnpm install &amp;&amp; pnpm run dev</code></details>`
+        : "";
+    rows += `
         <li class="${cls}" aria-label="${escapeHtml(ariaLabel)}">
           <span class="track-glyph" aria-hidden="true">${statusGlyph(n.status)}</span>
           <span class="track-num" aria-hidden="true">${escapeHtml(n.num)}</span>
           <span class="track-title" aria-hidden="true">${escapeHtml(n.title)}</span>
           ${play}
         </li>`;
-    })
-    .join("");
+  }
   return `
     <section class="card track-card" aria-labelledby="track-h">
       <h2 id="track-h">Sua trilha</h2>
@@ -242,9 +242,14 @@ function demoNotice(): string {
 }
 
 function render(s: TodaySnapshot): string {
-  const overdue = [...s.reviews].sort((a, b) =>
-    a.reason === "overdue" ? -1 : b.reason === "overdue" ? 1 : 0,
-  );
+  const overdue: DueReview[] = [];
+  const others: DueReview[] = [];
+  for (let i = 0; i < s.reviews.length; i++) {
+    const r = s.reviews[i];
+    if (r.reason === "overdue") overdue.push(r);
+    else others.push(r);
+  }
+  const sortedReviews = overdue.concat(others);
   const dateLabel = new Date(s.asOf).toLocaleDateString("pt-BR", {
     weekday: "long",
     day: "numeric",
@@ -265,8 +270,8 @@ function render(s: TodaySnapshot): string {
     ${trackSection(s.track, s.nextProjectNum)}
 
     <section class="lessons" aria-labelledby="lessons-h">
-      <h2 id="lessons-h">${overdue.length > 0 ? "Retome por aqui" : "Tudo em dia"}</h2>
-      ${overdue.length > 0 ? overdue.map((r, i) => reviewCard(r, i)).join("") : '<p class="muted">Nenhuma revisão vencida. Bom trabalho.</p>'}
+      <h2 id="lessons-h">${sortedReviews.length > 0 ? "Retome por aqui" : "Tudo em dia"}</h2>
+      ${sortedReviews.length > 0 ? sortedReviews.map((r, i) => reviewCard(r, i)).join("") : '<p class="muted">Nenhuma revisão vencida. Bom trabalho.</p>'}
     </section>
 
     ${missionCard(s.activeUnit)}

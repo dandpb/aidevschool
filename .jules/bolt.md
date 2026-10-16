@@ -63,3 +63,7 @@
 ## 2026-10-13 - Prevent Set Allocations in Continuous Sync Loops
 **Learning:** In 60-FPS environments like `miniTown`, using `new Set()` inside the `sync()` loop on every frame to identify removed items causes excessive garbage collection pressure. This can be mitigated by guarding the cleanup with a size check (e.g. `map.size > source.length`) so the set is only allocated when items are actually removed, which is rare.
 **Action:** Use an indexed loop instead of `for...of` for the main sync, and wrap the cleanup block (including the `seen` Set allocation) inside an `if (currentSize > targetLength)` condition.
+
+## 2026-10-16 - Avoid array allocations and sorting overhead in render paths
+**Learning:** Using O(N log N) `.sort()` to partition arrays and chaining `.map().join("")` for HTML string templates introduces unnecessary intermediate array allocations, increasing GC pressure and slowing down the initial render phase.
+**Action:** Use an O(N) linear scan to partition binary states, and prefer standard `for` loops with string concatenation instead of array derivations for rendering HTML lists.
