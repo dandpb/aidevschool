@@ -1,0 +1,999 @@
+{
+  "schemaVersion": 2,
+  "verdict": "FAIL",
+  "profile": "light",
+  "profileSource": "default; no applicable AGENTS declaration",
+  "diffRange": "0a2e2dbeda5e41b00642a5280e40a0d8102d1102..375aacb33b9f3ce6451c979995d7c238b0972308",
+  "round": "2 - scoped by diff since 528a56c847ec50276ed9d2dab2c7247584c567c3 and every non-PASS; accounts for whole feature/all 34; final proofs rerun full",
+  "verifier": "fresh independent sub-agent /root/verify_readiness_followup, dispatched by root after last feature commit; author != verifier",
+  "verifiedAt": "2026-10-16T11:22:06.150732+00:00",
+  "task": "intent/2026-10-15-ecosystem-product-readiness/plan.md",
+  "freeze": ".checks/product-readiness-20261015.freeze.v2.json",
+  "counts": {
+    "pass": 13,
+    "fail": 2,
+    "unverified": 19,
+    "total": 34
+  },
+  "criteria": [
+    {
+      "id": "C1",
+      "claim": "Dado um aprendiz temporário em `evaluating` e evidência GATEKEEPER ou Pixel com `pass:true` e métricas autoconsistentes, quando falta recibo independente, a decisão é inelegível (`ok=false`, `passed=false`, sem receipt): zero transição, zero review e zero consumo de `evidence_ts`; o estado permanece byte a byte igual.",
+      "proofRun": "Own full batched proofs at 375aacb33b9f3ce6451c979995d7c238b0972308: Python shared exit0 (1209 PASS/3 SKIP); Node exit0 (61 PASS); client exit0 (5 PASS) as applicable.",
+      "evidence": "learner/gate/tests/test_readiness_plan_contract.py:68 `assert decision is not None;     assert decision.ok is False and decision.passed is False;     assert decision.receipt is None;     assert any(\"digest-bound verifier receipt\" in error for error in decision.errors);     assert _snapshot(root) == before;     _assert_unconsumed(state_path)`; learner/gate/tests/test_readiness_plan_contract.py:48 `def _assert_unconsumed(path: Path) -> None:;     state = yaml.safe_load(path.read_text(encoding=\"utf-8\"));     assert state[\"active_unit\"][\"state\"] == \"evaluating\";     assert state[\"active_unit\"][\"retry_count\"] == 0;     assert state[\"units_log\"][0][\"mastered\"] is False`",
+      "result": "PASS",
+      "limit": "Gate/handler/client contract layer; isolated fixtures do not establish a real game, canonical mastery, deployment or whole-engine readiness. No faults injected under light.",
+      "proofCommands": [
+        "python -m pytest learner/gate/tests/test_gate.py::TestCheckEvidence::test_game_pass_without_verifier_receipt_is_not_eligible learner/gate/tests/test_gate.py::TestDecide::test_forged_pass_without_receipt_never_decides_passed learner/gate/tests/test_readiness_plan_contract.py::test_no_receipt_preserves_state -vv"
+      ],
+      "sourceAssertionStatus": "verified at 375aacb33b9f3ce6451c979995d7c238b0972308; source location is not proof of execution",
+      "carriedResultFrom": null,
+      "assertions": [
+        {
+          "check": "C1",
+          "file": "learner/gate/tests/test_readiness_plan_contract.py",
+          "line": 68,
+          "endLine": 73,
+          "literal": "    assert decision is not None\n    assert decision.ok is False and decision.passed is False\n    assert decision.receipt is None\n    assert any(\"digest-bound verifier receipt\" in error for error in decision.errors)\n    assert _snapshot(root) == before\n    _assert_unconsumed(state_path)",
+          "matchesCurrent": true
+        },
+        {
+          "check": "C1",
+          "file": "learner/gate/tests/test_readiness_plan_contract.py",
+          "line": 48,
+          "endLine": 52,
+          "literal": "def _assert_unconsumed(path: Path) -> None:\n    state = yaml.safe_load(path.read_text(encoding=\"utf-8\"))\n    assert state[\"active_unit\"][\"state\"] == \"evaluating\"\n    assert state[\"active_unit\"][\"retry_count\"] == 0\n    assert state[\"units_log\"][0][\"mastered\"] is False",
+          "matchesCurrent": true
+        },
+        {
+          "check": "C1",
+          "file": "learner/gate/tests/test_gate.py",
+          "line": 234,
+          "endLine": 234,
+          "literal": "        assert any(\"digest-bound verifier receipt\" in error for error in errors)",
+          "matchesCurrent": true
+        },
+        {
+          "check": "C1",
+          "file": "learner/gate/tests/test_gate.py",
+          "line": 594,
+          "endLine": 595,
+          "literal": "        assert not d.ok and not d.passed\n        assert d.receipt is None",
+          "matchesCurrent": true
+        }
+      ]
+    },
+    {
+      "id": "C2",
+      "claim": "Dado recibo com digest de outro registro, caminho fora de `learner/verifier_receipts`, contexto não isolado ou bloco `verifier` embutido pelo produtor, a tentativa não promove `mastered`; cada rejeição conserva o estado e identifica a violação do vínculo existente.",
+      "proofRun": "Own full batched proofs at 375aacb33b9f3ce6451c979995d7c238b0972308: Python shared exit0 (1209 PASS/3 SKIP); Node exit0 (61 PASS); client exit0 (5 PASS) as applicable.",
+      "evidence": "learner/gate/tests/test_readiness_plan_contract.py:79 `(\"other_digest\", \"evidence_digest does not match\"),;         (\"outside_path\", \"learner/verifier_receipts\"),;         (\"context_not_isolated\", \"context_isolated is not true\"),;         (\"producer_embedded\", \"embedded verifier\"),;     ],`; learner/gate/tests/test_readiness_plan_contract.py:120 `assert decision is not None and not decision.ok and not decision.passed;         assert decision.receipt is None;         assert any(expected in error for error in decision.errors); ;     assert _snapshot(root) == before;     _assert_unconsumed(state_path)`",
+      "result": "PASS",
+      "limit": "Gate/handler/client contract layer; isolated fixtures do not establish a real game, canonical mastery, deployment or whole-engine readiness. No faults injected under light.",
+      "proofCommands": [
+        "python -m pytest learner/gate/tests/test_gate.py::TestCheckEvidence::test_embedded_verifier_cannot_override_producer_judgment learner/gate/tests/test_gate_multirecord_receipt_binding.py::TestMultirecordEndToEnd::test_multirecord_receipt_for_other_unit_record_is_not_eligible learner/gate/tests/test_readiness_plan_contract.py::test_invalid_receipt_preserves_state -vv"
+      ],
+      "sourceAssertionStatus": "verified at 375aacb33b9f3ce6451c979995d7c238b0972308; source location is not proof of execution",
+      "carriedResultFrom": null,
+      "assertions": [
+        {
+          "check": "C2",
+          "file": "learner/gate/tests/test_readiness_plan_contract.py",
+          "line": 79,
+          "endLine": 83,
+          "literal": "        (\"other_digest\", \"evidence_digest does not match\"),\n        (\"outside_path\", \"learner/verifier_receipts\"),\n        (\"context_not_isolated\", \"context_isolated is not true\"),\n        (\"producer_embedded\", \"embedded verifier\"),\n    ],",
+          "matchesCurrent": true
+        },
+        {
+          "check": "C2",
+          "file": "learner/gate/tests/test_readiness_plan_contract.py",
+          "line": 112,
+          "endLine": 115,
+          "literal": "        with pytest.raises(ValueError, match=expected):\n            verify_and_gate(\n                root, path, today=tg.TODAY, verifier_receipt_path=receipt_path\n            )",
+          "matchesCurrent": true
+        },
+        {
+          "check": "C2",
+          "file": "learner/gate/tests/test_readiness_plan_contract.py",
+          "line": 120,
+          "endLine": 125,
+          "literal": "        assert decision is not None and not decision.ok and not decision.passed\n        assert decision.receipt is None\n        assert any(expected in error for error in decision.errors)\n\n    assert _snapshot(root) == before\n    _assert_unconsumed(state_path)",
+          "matchesCurrent": true
+        },
+        {
+          "check": "C2",
+          "file": "learner/gate/tests/test_gate_multirecord_receipt_binding.py",
+          "line": 161,
+          "endLine": 163,
+          "literal": "        assert decision is not None and not decision.ok\n        assert any(\"evidence_digest does not match\" in e for e in decision.errors)\n        assert state_path.read_text(encoding=\"utf-8\") == original",
+          "matchesCurrent": true
+        },
+        {
+          "check": "C2",
+          "file": "learner/gate/tests/test_gate.py",
+          "line": 321,
+          "endLine": 321,
+          "literal": "        assert any(\"embedded verifier\" in error for error in errors)",
+          "matchesCurrent": true
+        }
+      ]
+    },
+    {
+      "id": "C3",
+      "claim": "Dada a mesma tentativa com recibo separado, confinado e digest-bound, `context_isolated=true`, PASS e scores nos thresholds configurados, o gate produz `pass_first_try`/`mastered`; após retry legítimo produz `pass_retried`, registrando a fonte do verificador no review.",
+      "proofRun": "Own full batched proofs at 375aacb33b9f3ce6451c979995d7c238b0972308: Python shared exit0 (1209 PASS/3 SKIP); Node exit0 (61 PASS); client exit0 (5 PASS) as applicable.",
+      "evidence": "learner/gate/tests/test_gate.py:750 `assert decision is not None and decision.ok and decision.passed;         assert decision.gate_outcome == \"pass_first_try\";         persisted = yaml.safe_load(state_path.read_text(encoding=\"utf-8\"));         assert persisted[\"active_unit\"][\"state\"] == \"mastered\";         review = persisted[\"units_log\"][0][\"reviews\"][-1];         assert review[\"evidence_verifier_source\"] == \"independent-voxel-verifier\"`; learner/gate/tests/test_readiness_plan_contract.py:155 `assert decision is not None and decision.ok and decision.passed;     assert decision.gate_outcome == \"pass_retried\";     persisted = load_and_validate(state_path);     assert persisted[\"active_unit\"][\"state\"] == \"mastered\";     assert persisted[\"active_unit\"][\"retry_count\"] == 1;     reviews = persisted[\"units_log\"][0][\"reviews\"];     assert len(reviews) == 2 and reviews[0] == first_review;     assert reviews[1][\"gate_outcome\"] == \"pass_retried\";     assert reviews[1][\"evidence_verifier_source\"] == (;         \"readiness-independent-retry-verifier\";     );     assert reviews[1][\"evidence_digest\"] == canonical_evidence_digest(retried);     assert reviews[1][\"evidence_ts\"] == retried[\"ts\"]`",
+      "result": "PASS",
+      "limit": "Gate/handler/client contract layer; isolated fixtures do not establish a real game, canonical mastery, deployment or whole-engine readiness. No faults injected under light.",
+      "proofCommands": [
+        "python -m pytest learner/gate/tests/test_gate.py::TestDecide::test_pass_first_try learner/gate/tests/test_gate.py::TestDecide::test_pass_after_retry learner/gate/tests/test_gate.py::TestEndToEnd::test_pixelquest_pass_with_digest_bound_receipt_masters learner/gate/tests/test_readiness_plan_contract.py::test_retry_receipt_persists_source -vv"
+      ],
+      "sourceAssertionStatus": "verified at 375aacb33b9f3ce6451c979995d7c238b0972308; source location is not proof of execution",
+      "carriedResultFrom": null,
+      "assertions": [
+        {
+          "check": "C3",
+          "file": "learner/gate/tests/test_gate.py",
+          "line": 572,
+          "endLine": 573,
+          "literal": "        assert d.ok and d.passed\n        assert d.gate_outcome == \"pass_first_try\" and d.rating == \"good\"",
+          "matchesCurrent": true
+        },
+        {
+          "check": "C3",
+          "file": "learner/gate/tests/test_gate.py",
+          "line": 583,
+          "endLine": 583,
+          "literal": "        assert d.gate_outcome == \"pass_retried\" and d.rating == \"hard\"",
+          "matchesCurrent": true
+        },
+        {
+          "check": "C3",
+          "file": "learner/gate/tests/test_gate.py",
+          "line": 750,
+          "endLine": 755,
+          "literal": "        assert decision is not None and decision.ok and decision.passed\n        assert decision.gate_outcome == \"pass_first_try\"\n        persisted = yaml.safe_load(state_path.read_text(encoding=\"utf-8\"))\n        assert persisted[\"active_unit\"][\"state\"] == \"mastered\"\n        review = persisted[\"units_log\"][0][\"reviews\"][-1]\n        assert review[\"evidence_verifier_source\"] == \"independent-voxel-verifier\"",
+          "matchesCurrent": true
+        },
+        {
+          "check": "C3",
+          "file": "learner/gate/tests/test_readiness_plan_contract.py",
+          "line": 155,
+          "endLine": 167,
+          "literal": "    assert decision is not None and decision.ok and decision.passed\n    assert decision.gate_outcome == \"pass_retried\"\n    persisted = load_and_validate(state_path)\n    assert persisted[\"active_unit\"][\"state\"] == \"mastered\"\n    assert persisted[\"active_unit\"][\"retry_count\"] == 1\n    reviews = persisted[\"units_log\"][0][\"reviews\"]\n    assert len(reviews) == 2 and reviews[0] == first_review\n    assert reviews[1][\"gate_outcome\"] == \"pass_retried\"\n    assert reviews[1][\"evidence_verifier_source\"] == (\n        \"readiness-independent-retry-verifier\"\n    )\n    assert reviews[1][\"evidence_digest\"] == canonical_evidence_digest(retried)\n    assert reviews[1][\"evidence_ts\"] == retried[\"ts\"]",
+          "matchesCurrent": true
+        }
+      ]
+    },
+    {
+      "id": "C4",
+      "claim": "Uma tentativa legítima `pass:false` continua elegível para resultado `fail`: o aprendiz permanece `evaluating`, `retry_count` aumenta em 1 e o retry documentado continua possível; a exigência de recibo para um pass não converte todo insucesso pedagógico em erro de integridade.",
+      "proofRun": "Own full batched proofs at 375aacb33b9f3ce6451c979995d7c238b0972308: Python shared exit0 (1209 PASS/3 SKIP); Node exit0 (61 PASS); client exit0 (5 PASS) as applicable.",
+      "evidence": "learner/gate/tests/test_gate.py:587 `assert d.ok and not d.passed;         assert d.gate_outcome == \"fail\" and d.rating == \"again\"`; learner/gate/tests/test_gate.py:674 `assert len(new_state[\"units_log\"]) == 1;         assert new_state[\"units_log\"][0][\"mastered\"] is False;         assert new_state[\"units_log\"][0][\"reviews\"][-1][\"gate_outcome\"] == \"fail\";         assert new_state[\"active_unit\"][\"state\"] == \"evaluating\";         assert new_state[\"active_unit\"][\"retry_count\"] == 1;         assert new_state[\"streak\"][\"current\"] == 0  # failed gate never extends streak`",
+      "result": "PASS",
+      "limit": "Gate/handler/client contract layer; isolated fixtures do not establish a real game, canonical mastery, deployment or whole-engine readiness. No faults injected under light.",
+      "proofCommands": [
+        "python -m pytest learner/gate/tests/test_gate.py::TestDecide::test_failed_run_gates_to_fail learner/gate/tests/test_gate.py::TestApplyGate::test_fail_increments_retry_and_keeps_evaluating -vv"
+      ],
+      "sourceAssertionStatus": "verified at 375aacb33b9f3ce6451c979995d7c238b0972308; source location is not proof of execution",
+      "carriedResultFrom": null,
+      "assertions": [
+        {
+          "check": "C4",
+          "file": "learner/gate/tests/test_gate.py",
+          "line": 587,
+          "endLine": 588,
+          "literal": "        assert d.ok and not d.passed\n        assert d.gate_outcome == \"fail\" and d.rating == \"again\"",
+          "matchesCurrent": true
+        },
+        {
+          "check": "C4",
+          "file": "learner/gate/tests/test_gate.py",
+          "line": 674,
+          "endLine": 679,
+          "literal": "        assert len(new_state[\"units_log\"]) == 1\n        assert new_state[\"units_log\"][0][\"mastered\"] is False\n        assert new_state[\"units_log\"][0][\"reviews\"][-1][\"gate_outcome\"] == \"fail\"\n        assert new_state[\"active_unit\"][\"state\"] == \"evaluating\"\n        assert new_state[\"active_unit\"][\"retry_count\"] == 1\n        assert new_state[\"streak\"][\"current\"] == 0  # failed gate never extends streak",
+          "matchesCurrent": true
+        },
+        {
+          "check": "C4",
+          "file": "learner/gate/tests/test_readiness_plan_contract.py",
+          "line": 134,
+          "endLine": 139,
+          "literal": "    assert failed is not None and failed.ok and not failed.passed\n    after_failure = load_and_validate(state_path)\n    assert after_failure[\"active_unit\"][\"state\"] == \"evaluating\"\n    assert after_failure[\"active_unit\"][\"retry_count\"] == 1\n    first_review = after_failure[\"units_log\"][0][\"reviews\"][0]\n    assert first_review[\"gate_outcome\"] == \"fail\"",
+          "matchesCurrent": true
+        }
+      ]
+    },
+    {
+      "id": "C5",
+      "claim": "Um NDJSON legítimo seleciona o último registro da unidade ativa e vincula o recibo a esse registro; outras unidades não o substituem. Após commit no repositório temporário, `load_and_validate` aceita o backing. Sem registro correspondente, o CLI retorna `NOTHING TO GRADE`/exit 0 sem escrever; linha corrompida ou não objeto é recusada.",
+      "proofRun": "Own full batched proofs at 375aacb33b9f3ce6451c979995d7c238b0972308: Python shared exit0 (1209 PASS/3 SKIP); Node exit0 (61 PASS); client exit0 (5 PASS) as applicable.",
+      "evidence": "learner/gate/tests/test_readiness_plan_contract.py:206 `persisted = load_and_validate(state_path);     assert persisted[\"active_unit\"][\"state\"] == \"mastered\";     review = persisted[\"units_log\"][0][\"reviews\"][-1];     assert review[\"evidence_ts\"] == active[\"ts\"];     assert review[\"evidence_digest\"] == canonical_evidence_digest(active)`; learner/gate/tests/test_readiness_plan_contract.py:178 `assert cli_main([\"--root\", str(root), \"--evidence\", str(path)]) == 0; ;     assert \"NOTHING TO GRADE\" in capsys.readouterr().out;     assert _snapshot(root) == before;     _assert_unconsumed(state_path)`",
+      "result": "PASS",
+      "limit": "Gate/handler/client contract layer; isolated fixtures do not establish a real game, canonical mastery, deployment or whole-engine readiness. No faults injected under light. The complete run additionally executed test_committed_multirecord_backing_revalidates, omitted by the frozen narrow selector.",
+      "proofCommands": [
+        "python -m pytest learner/gate/tests/test_gate_multirecord_receipt_binding.py::TestMultirecordEndToEnd::test_gates_latest_matching_record_with_receipt learner/gate/tests/test_gate_multirecord_receipt_binding.py::TestMultirecordEndToEnd::test_persisted_multirecord_state_revalidates learner/gate/tests/test_gate.py::TestLoadEvidenceNdjson::test_malformed_line_rejects_whole_file learner/gate/tests/test_gate.py::TestLoadEvidenceNdjson::test_non_object_line_rejected learner/gate/tests/test_readiness_plan_contract.py::test_nothing_to_grade_cli_does_not_write -vv"
+      ],
+      "sourceAssertionStatus": "verified at 375aacb33b9f3ce6451c979995d7c238b0972308; source location is not proof of execution",
+      "carriedResultFrom": null,
+      "assertions": [
+        {
+          "check": "C5",
+          "file": "learner/gate/tests/test_gate_multirecord_receipt_binding.py",
+          "line": 119,
+          "endLine": 124,
+          "literal": "        assert decision is not None and decision.ok and decision.passed\n\n        persisted = yaml.safe_load(state_path.read_text(encoding=\"utf-8\"))\n        assert persisted[\"active_unit\"][\"state\"] == \"mastered\"\n        gate_review = persisted[\"units_log\"][-1][\"reviews\"][-1]\n        assert gate_review[\"evidence_ts\"] == active[\"ts\"]",
+          "matchesCurrent": true
+        },
+        {
+          "check": "C5",
+          "file": "learner/gate/tests/test_gate_multirecord_receipt_binding.py",
+          "line": 134,
+          "endLine": 135,
+          "literal": "        assert decision is not None and decision.ok and decision.passed\n        assert load_and_validate(state_path)[\"active_unit\"][\"state\"] == \"mastered\"",
+          "matchesCurrent": true
+        },
+        {
+          "check": "C5",
+          "file": "learner/gate/tests/test_readiness_plan_contract.py",
+          "line": 206,
+          "endLine": 210,
+          "literal": "    persisted = load_and_validate(state_path)\n    assert persisted[\"active_unit\"][\"state\"] == \"mastered\"\n    review = persisted[\"units_log\"][0][\"reviews\"][-1]\n    assert review[\"evidence_ts\"] == active[\"ts\"]\n    assert review[\"evidence_digest\"] == canonical_evidence_digest(active)",
+          "matchesCurrent": true
+        },
+        {
+          "check": "C5",
+          "file": "learner/gate/tests/test_readiness_plan_contract.py",
+          "line": 178,
+          "endLine": 182,
+          "literal": "    assert cli_main([\"--root\", str(root), \"--evidence\", str(path)]) == 0\n\n    assert \"NOTHING TO GRADE\" in capsys.readouterr().out\n    assert _snapshot(root) == before\n    _assert_unconsumed(state_path)",
+          "matchesCurrent": true
+        },
+        {
+          "check": "C5",
+          "file": "learner/gate/tests/test_gate.py",
+          "line": 927,
+          "endLine": 928,
+          "literal": "        with pytest.raises(ValueError, match=\"line 2\"):\n            load_evidence_ndjson(path)",
+          "matchesCurrent": true
+        },
+        {
+          "check": "C5",
+          "file": "learner/gate/tests/test_gate.py",
+          "line": 933,
+          "endLine": 934,
+          "literal": "        with pytest.raises(ValueError, match=\"not a JSON object\"):\n            load_evidence_ndjson(path)",
+          "matchesCurrent": true
+        }
+      ]
+    },
+    {
+      "id": "C6",
+      "claim": "Um estado histórico válido com `mastered` anterior à exigência de recibo continua validando sem reescrita de reviews ou migração retroativa; não se altera `standards.py` ou flags de rubrica para contornar a correção no seam de decisão.",
+      "proofRun": "Own full batched proofs at 375aacb33b9f3ce6451c979995d7c238b0972308: Python shared exit0 (1209 PASS/3 SKIP); Node exit0 (61 PASS); client exit0 (5 PASS) as applicable.",
+      "evidence": "learner/gate/tests/test_gate.py:763 `state = make_state(root, state=\"mastered\");         state[\"units_log\"][0][\"reviews\"] = [;             {;                 \"date\": date(2026, 7, 5),;                 \"event\": \"gate\",;                 \"rating\": \"good\",;                 \"gate_outcome\": \"pass_first_try\",;                 \"evidence_ts\": \"2026-06-09T01:24:09.038Z\",;             };         ]; ;         assert validate(state, root) == []`",
+      "result": "PASS",
+      "limit": "Gate/handler/client contract layer; isolated fixtures do not establish a real game, canonical mastery, deployment or whole-engine readiness. No faults injected under light. Historical validate test proves acceptance; unchanged standards/rubrics/canonical YAML/reviews/results diff and read-only validator code establish that no migration or historical rewrite was introduced.",
+      "proofCommands": [
+        "python -m pytest learner/gate/tests/test_gate.py::TestEndToEnd::test_historical_mastered_without_receipt_still_validates -vv",
+        "git diff 0a2e2dbeda5e41b00642a5280e40a0d8102d1102 -- learner/gate/standards.py learner/gate/evidence_rubrics.yaml learner/learning_state.yaml"
+      ],
+      "sourceAssertionStatus": "verified at 375aacb33b9f3ce6451c979995d7c238b0972308; source location is not proof of execution",
+      "carriedResultFrom": null,
+      "assertions": [
+        {
+          "check": "C6",
+          "file": "learner/gate/tests/test_gate.py",
+          "line": 763,
+          "endLine": 774,
+          "literal": "        state = make_state(root, state=\"mastered\")\n        state[\"units_log\"][0][\"reviews\"] = [\n            {\n                \"date\": date(2026, 7, 5),\n                \"event\": \"gate\",\n                \"rating\": \"good\",\n                \"gate_outcome\": \"pass_first_try\",\n                \"evidence_ts\": \"2026-06-09T01:24:09.038Z\",\n            }\n        ]\n\n        assert validate(state, root) == []",
+          "matchesCurrent": true
+        }
+      ]
+    },
+    {
+      "id": "C7",
+      "claim": "Depois de consumir uma evidência, sua repetição continua recusada pelo guard existente de timestamp/digest/identidade da tentativa, sem segundo review. `--dry-run` mantém zero escrita tanto no caso positivo quanto no negativo.",
+      "proofRun": "Own full batched proofs at 375aacb33b9f3ce6451c979995d7c238b0972308: Python shared exit0 (1209 PASS/3 SKIP); Node exit0 (61 PASS); client exit0 (5 PASS) as applicable.",
+      "evidence": "learner/gate/tests/test_readiness_plan_contract.py:253 `assert second is not None and not second.ok and not second.passed;     assert second.receipt is None;     assert any(expected in error for error in second.errors);     assert _snapshot(root) == before;     assert state_path.read_bytes() == consumed_state;     persisted = yaml.safe_load(consumed_state);     assert len(persisted[\"units_log\"][0][\"reviews\"]) == 1;     assert persisted[\"active_unit\"][\"retry_count\"] == 1;     assert persisted[\"active_unit\"][\"state\"] == \"evaluating\"`; learner/gate/tests/test_readiness_plan_contract.py:275 `assert cli_main(argv) == (0 if has_receipt else 1); ;     output = capsys.readouterr().out;     assert (\"would be\" if has_receipt else \"NOT ELIGIBLE\") in output;     assert _snapshot(root) == before;     _assert_unconsumed(state_path)`",
+      "result": "PASS",
+      "limit": "Gate/handler/client contract layer; isolated fixtures do not establish a real game, canonical mastery, deployment or whole-engine readiness. No faults injected under light. Both supplemental test_dry_run_preserves_all_files[positive/negative] ran and passed.",
+      "proofCommands": [
+        "python -m pytest learner/gate/tests/test_gate.py::TestGateIntegrity::test_same_payload_with_bumped_timestamp_is_rejected_by_digest learner/gate/tests/test_gate.py::TestGateIntegrity::test_ignored_producer_nonce_cannot_bypass_consumed_evidence learner/gate/tests/test_gate.py::TestGateIntegrity::test_same_run_id_with_changed_payload_is_rejected learner/gate/tests/test_gate.py::TestCli::test_dry_run_writes_nothing learner/gate/tests/test_readiness_plan_contract.py::test_replay_preserves_consumed_state -vv"
+      ],
+      "sourceAssertionStatus": "verified at 375aacb33b9f3ce6451c979995d7c238b0972308; source location is not proof of execution",
+      "carriedResultFrom": null,
+      "assertions": [
+        {
+          "check": "C7",
+          "file": "learner/gate/tests/test_readiness_plan_contract.py",
+          "line": 216,
+          "endLine": 220,
+          "literal": "        (\"same_record\", \"stale or duplicate\"),\n        (\"new_timestamp\", \"digest replay\"),\n        (\"producer_nonce\", \"attempt/scenario replay\"),\n        (\"changed_payload\", \"run_id is immutable\"),\n    ],",
+          "matchesCurrent": true
+        },
+        {
+          "check": "C7",
+          "file": "learner/gate/tests/test_readiness_plan_contract.py",
+          "line": 253,
+          "endLine": 261,
+          "literal": "    assert second is not None and not second.ok and not second.passed\n    assert second.receipt is None\n    assert any(expected in error for error in second.errors)\n    assert _snapshot(root) == before\n    assert state_path.read_bytes() == consumed_state\n    persisted = yaml.safe_load(consumed_state)\n    assert len(persisted[\"units_log\"][0][\"reviews\"]) == 1\n    assert persisted[\"active_unit\"][\"retry_count\"] == 1\n    assert persisted[\"active_unit\"][\"state\"] == \"evaluating\"",
+          "matchesCurrent": true
+        },
+        {
+          "check": "C7",
+          "file": "learner/gate/tests/test_readiness_plan_contract.py",
+          "line": 275,
+          "endLine": 280,
+          "literal": "    assert cli_main(argv) == (0 if has_receipt else 1)\n\n    output = capsys.readouterr().out\n    assert (\"would be\" if has_receipt else \"NOT ELIGIBLE\") in output\n    assert _snapshot(root) == before\n    _assert_unconsumed(state_path)",
+          "matchesCurrent": true
+        },
+        {
+          "check": "C7",
+          "file": "learner/gate/tests/test_gate.py",
+          "line": 1082,
+          "endLine": 1082,
+          "literal": "        )",
+          "matchesCurrent": true
+        },
+        {
+          "check": "C7",
+          "file": "learner/gate/tests/test_gate.py",
+          "line": 1136,
+          "endLine": 1136,
+          "literal": "        assert any(\"attempt/scenario replay\" in error for error in errors)",
+          "matchesCurrent": true
+        },
+        {
+          "check": "C7",
+          "file": "learner/gate/tests/test_gate.py",
+          "line": 1168,
+          "endLine": 1168,
+          "literal": "        assert any(\"run_id\" in error and \"immutable\" in error for error in errors)",
+          "matchesCurrent": true
+        },
+        {
+          "check": "C7",
+          "file": "learner/gate/tests/test_gate.py",
+          "line": 1431,
+          "endLine": 1432,
+          "literal": "        assert \"would be\" in capsys.readouterr().out\n        assert state_path.read_text(encoding=\"utf-8\") == original",
+          "matchesCurrent": true
+        }
+      ]
+    },
+    {
+      "id": "C8",
+      "claim": "Um registro honesto l02 v4 de cada atividade `l02-a1/output_comparison`, `l02-a2/choice` e `l02-a3/sort`, com resposta aprovada pelo avaliador atual, recebe recibo `PASS`, `independent_pass:true` e `verifier_version:\"1-netlify-l02-v4\"`, vinculado ao digest e à identidade exatos da tentativa.",
+      "proofRun": "Own full batched proofs at 375aacb33b9f3ce6451c979995d7c238b0972308: Python shared exit0 (1209 PASS/3 SKIP); Node exit0 (61 PASS); client exit0 (5 PASS) as applicable.",
+      "evidence": "learner/gate/tests/literacy_verify_readiness_plan.test.mjs:92 `assert.equal(receipt.verdict, \"PASS\");;       assert.equal(receipt.independent_pass, true);;       assert.equal(receipt.mastery_eligible, true);;       assert.equal(receipt.context_isolated, true);;       assert.equal(receipt.source, \"independent-literacy-verifier\");;       assert.equal(receipt.verifier_version, \"1-netlify-l02-v4\");;       assert.equal(receipt.lesson_id, \"l02\");;       assert.equal(receipt.lesson_version, 4);;       assert.equal(receipt.activity_id, activity.activityId);;       assert.equal(receipt.attempt_id, `plan-attempt-${activity.activityId}`);;       assert.equal(receipt.evidence_digest, expectedDigest(evidence));;       assert.equal(receipt.producer_writes_mastered, false);;       assert.equal(receipt.max_producer_claim, \"completed\");;       assert.deepEqual(receipt.errors, []);`; learner/gate/tests/literacy_verify_readiness_plan.test.mjs:107 `assert.equal(verify({ ...evidence, timestamp: \"2026-10-15T13:00:00.000Z\" }).evidence_digest, receipt.evidence_digest);;       assert.notEqual(verify({ ...evidence, attemptId: \"different-attempt\" }).evidence_digest, receipt.evidence_digest);`; .scratch/gh-375/final-verifier-375aacb3/receipt-literal-probe.mjs:5,11,17 assert three exact hex digests; Python hashlib recalculated all three in assertion-refresh.json, then current handler run exit0.",
+      "result": "PASS",
+      "limit": "Gate/handler/client contract layer; isolated fixtures do not establish a real game, canonical mastery, deployment or whole-engine readiness. No faults injected under light.",
+      "proofCommands": [
+        "node --test --test-name-pattern=\"plan: complete v4 receipt binding\" learner/gate/tests/literacy_verify_readiness_plan.test.mjs"
+      ],
+      "sourceAssertionStatus": "verified at 375aacb33b9f3ce6451c979995d7c238b0972308; source location is not proof of execution",
+      "carriedResultFrom": null,
+      "assertions": [
+        {
+          "check": "C8",
+          "file": "learner/gate/tests/literacy_verify_readiness_plan.test.mjs",
+          "line": 92,
+          "endLine": 105,
+          "literal": "      assert.equal(receipt.verdict, \"PASS\");\n      assert.equal(receipt.independent_pass, true);\n      assert.equal(receipt.mastery_eligible, true);\n      assert.equal(receipt.context_isolated, true);\n      assert.equal(receipt.source, \"independent-literacy-verifier\");\n      assert.equal(receipt.verifier_version, \"1-netlify-l02-v4\");\n      assert.equal(receipt.lesson_id, \"l02\");\n      assert.equal(receipt.lesson_version, 4);\n      assert.equal(receipt.activity_id, activity.activityId);\n      assert.equal(receipt.attempt_id, `plan-attempt-${activity.activityId}`);\n      assert.equal(receipt.evidence_digest, expectedDigest(evidence));\n      assert.equal(receipt.producer_writes_mastered, false);\n      assert.equal(receipt.max_producer_claim, \"completed\");\n      assert.deepEqual(receipt.errors, []);",
+          "matchesCurrent": true
+        },
+        {
+          "check": "C8",
+          "file": "learner/gate/tests/literacy_verify_readiness_plan.test.mjs",
+          "line": 107,
+          "endLine": 108,
+          "literal": "      assert.equal(verify({ ...evidence, timestamp: \"2026-10-15T13:00:00.000Z\" }).evidence_digest, receipt.evidence_digest);\n      assert.notEqual(verify({ ...evidence, attemptId: \"different-attempt\" }).evidence_digest, receipt.evidence_digest);",
+          "matchesCurrent": true
+        }
+      ]
+    },
+    {
+      "id": "C9",
+      "claim": "O verificador recompõe os checks, score e pass a partir de `answer`, conforme as regras atuais transcritas em Proof. Alterar somente `deterministicChecks`, `score` ou `pass` gera `FAIL` com o erro de divergência correspondente e `mastery_eligible:false`; uma resposta honestamente incorreta gera `FAIL` pedagógico e pode ter `errors:[]`.",
+      "proofRun": "Own full batched proofs at 375aacb33b9f3ce6451c979995d7c238b0972308: Python shared exit0 (1209 PASS/3 SKIP); Node exit0 (61 PASS); client exit0 (5 PASS) as applicable.",
+      "evidence": "learner/gate/tests/literacy_verify_readiness_plan.test.mjs:115 `for (const field of [\"deterministicChecks\", \"score\", \"pass\"]) {;       await t.test(`${activity.activityId}: ${field} changed alone`, () => {;         const changes = {;           deterministicChecks: { ...activity.deterministicChecks, [Object.keys(activity.deterministicChecks)[0]]: false },;           score: 0.99,;           pass: false,;         };;         const receipt = verify(record(activity, { [field]: changes[field] }));;         assert.equal(receipt.verdict, \"FAIL\");;         assert.equal(receipt.independent_pass, false);;         assert.equal(receipt.mastery_eligible, false);;         assert.deepEqual(receipt.errors, [`producer ${field} does not match independent recomputation`]);`; learner/gate/tests/literacy_verify_readiness_plan.test.mjs:130 `const receipt = verify(record(activity, activity.incorrect));;       assert.equal(receipt.verdict, \"FAIL\");;       assert.equal(receipt.independent_pass, false);;       assert.equal(receipt.mastery_eligible, false);;       assert.deepEqual(receipt.errors, []);`",
+      "result": "PASS",
+      "limit": "Gate/handler/client contract layer; isolated fixtures do not establish a real game, canonical mastery, deployment or whole-engine readiness. No faults injected under light.",
+      "proofCommands": [
+        "node --test --test-name-pattern=\"plan: independent tamper rejection\" learner/gate/tests/literacy_verify_readiness_plan.test.mjs"
+      ],
+      "sourceAssertionStatus": "verified at 375aacb33b9f3ce6451c979995d7c238b0972308; source location is not proof of execution",
+      "carriedResultFrom": null,
+      "assertions": [
+        {
+          "check": "C9",
+          "file": "learner/gate/tests/literacy_verify_readiness_plan.test.mjs",
+          "line": 115,
+          "endLine": 126,
+          "literal": "    for (const field of [\"deterministicChecks\", \"score\", \"pass\"]) {\n      await t.test(`${activity.activityId}: ${field} changed alone`, () => {\n        const changes = {\n          deterministicChecks: { ...activity.deterministicChecks, [Object.keys(activity.deterministicChecks)[0]]: false },\n          score: 0.99,\n          pass: false,\n        };\n        const receipt = verify(record(activity, { [field]: changes[field] }));\n        assert.equal(receipt.verdict, \"FAIL\");\n        assert.equal(receipt.independent_pass, false);\n        assert.equal(receipt.mastery_eligible, false);\n        assert.deepEqual(receipt.errors, [`producer ${field} does not match independent recomputation`]);",
+          "matchesCurrent": true
+        },
+        {
+          "check": "C9",
+          "file": "learner/gate/tests/literacy_verify_readiness_plan.test.mjs",
+          "line": 130,
+          "endLine": 134,
+          "literal": "      const receipt = verify(record(activity, activity.incorrect));\n      assert.equal(receipt.verdict, \"FAIL\");\n      assert.equal(receipt.independent_pass, false);\n      assert.equal(receipt.mastery_eligible, false);\n      assert.deepEqual(receipt.errors, []);",
+          "matchesCurrent": true
+        }
+      ]
+    },
+    {
+      "id": "C10",
+      "claim": "v3 legado, identidade/tipo/skillIds incompatíveis ou `activityId` ausente, null, numérico, booleano, array ou objeto recebem recibo `FAIL`, sem coerção para uma atividade válida e sem exception. A mudança não exige reescrever recibos históricos aceitos pelo cliente agnóstico à versão.",
+      "proofRun": "Own full batched proofs at 375aacb33b9f3ce6451c979995d7c238b0972308: Python shared exit0 (1209 PASS/3 SKIP); Node exit0 (61 PASS); client exit0 (5 PASS) as applicable.",
+      "evidence": "learner/gate/tests/literacy_verify_readiness_plan.test.mjs:141 `[\"legacy-v3\", { lessonVersion: 3 }],;     [\"schema\", { schemaVersion: 2 }],;     [\"source\", { source: \"producer\" }],;     [\"verifierRequired\", { verifierRequired: false }],;     [\"lesson\", { lessonId: \"l03\" }],;     [\"type\", { activityType: \"sort\" }],;     [\"unknown-activity\", { activityId: \"l02-a4\" }],;     [\"null-activity\", { activityId: null }],;     [\"numeric-activity\", { activityId: 1 }],;     [\"boolean-activity\", { activityId: true }],;     [\"array-activity\", { activityId: [\"l02-a1\"] }],;     [\"object-activity\", { activityId: {} }],;     [\"uncoercible-activity\", { activityId: { toString: null } }],;     [\"reordered-skills\", { skillIds: [\"avaliar\", \"entender\"] }],;     [\"missing-skill\", { skillIds: [\"entender\"] }],;     [\"extra-skill\", { skillIds: [\"entender\", \"avaliar\", \"criar\"] }],;     [\"nonarray-skills\", { skillIds: \"entender,avaliar\" }],;     [\"null-skills\", { skillIds: null }],`; learner/gate/tests/literacy_verify_readiness_plan.test.mjs:163 `assert.equal(receipt.verdict, \"FAIL\");;       assert.equal(receipt.independent_pass, false);;       assert.equal(receipt.mastery_eligible, false);;       assert.deepEqual(receipt.errors, [\"evidence identity is not the fixed l02 v4 verifier contract\"]);`",
+      "result": "PASS",
+      "limit": "Gate/handler/client contract layer; isolated fixtures do not establish a real game, canonical mastery, deployment or whole-engine readiness. No faults injected under light.",
+      "proofCommands": [
+        "node --test learner/gate/tests/literacy_verify_identity.test.mjs",
+        "node --test --test-name-pattern=\"plan: invalid identity and legacy contract\" learner/gate/tests/literacy_verify_readiness_plan.test.mjs",
+        "(cwd engines/literacyDojo) npm run test -- tests/domain/verification.test.ts"
+      ],
+      "sourceAssertionStatus": "verified at 375aacb33b9f3ce6451c979995d7c238b0972308; source location is not proof of execution",
+      "carriedResultFrom": null,
+      "assertions": [
+        {
+          "check": "C10",
+          "file": "learner/gate/tests/literacy_verify_readiness_plan.test.mjs",
+          "line": 141,
+          "endLine": 158,
+          "literal": "    [\"legacy-v3\", { lessonVersion: 3 }],\n    [\"schema\", { schemaVersion: 2 }],\n    [\"source\", { source: \"producer\" }],\n    [\"verifierRequired\", { verifierRequired: false }],\n    [\"lesson\", { lessonId: \"l03\" }],\n    [\"type\", { activityType: \"sort\" }],\n    [\"unknown-activity\", { activityId: \"l02-a4\" }],\n    [\"null-activity\", { activityId: null }],\n    [\"numeric-activity\", { activityId: 1 }],\n    [\"boolean-activity\", { activityId: true }],\n    [\"array-activity\", { activityId: [\"l02-a1\"] }],\n    [\"object-activity\", { activityId: {} }],\n    [\"uncoercible-activity\", { activityId: { toString: null } }],\n    [\"reordered-skills\", { skillIds: [\"avaliar\", \"entender\"] }],\n    [\"missing-skill\", { skillIds: [\"entender\"] }],\n    [\"extra-skill\", { skillIds: [\"entender\", \"avaliar\", \"criar\"] }],\n    [\"nonarray-skills\", { skillIds: \"entender,avaliar\" }],\n    [\"null-skills\", { skillIds: null }],",
+          "matchesCurrent": true
+        },
+        {
+          "check": "C10",
+          "file": "learner/gate/tests/literacy_verify_readiness_plan.test.mjs",
+          "line": 163,
+          "endLine": 166,
+          "literal": "      assert.equal(receipt.verdict, \"FAIL\");\n      assert.equal(receipt.independent_pass, false);\n      assert.equal(receipt.mastery_eligible, false);\n      assert.deepEqual(receipt.errors, [\"evidence identity is not the fixed l02 v4 verifier contract\"]);",
+          "matchesCurrent": true
+        },
+        {
+          "check": "C10",
+          "file": "learner/gate/tests/literacy_verify_readiness_plan.test.mjs",
+          "line": 169,
+          "endLine": 177,
+          "literal": "  await t.test(\"missing-activity\", () => {\n    const evidence = record(CASES[0]);\n    delete evidence.activityId;\n    const receipt = verify(evidence);\n    assert.equal(receipt.verdict, \"FAIL\");\n    assert.equal(receipt.independent_pass, false);\n    assert.equal(receipt.mastery_eligible, false);\n    assert.deepEqual(receipt.errors, [\"evidence identity is not the fixed l02 v4 verifier contract\"]);\n  });",
+          "matchesCurrent": true
+        },
+        {
+          "check": "C10",
+          "file": "learner/gate/tests/literacy_verify_identity.test.mjs",
+          "line": 36,
+          "endLine": 40,
+          "literal": "function assertFailClosedIdentity(result) {\n  assert.equal(result.verdict, \"FAIL\");\n  assert.equal(result.independent_pass, false);\n  assert.equal(result.mastery_eligible, false);\n  assert.equal(result.errors[0], \"evidence identity is not the fixed l02 v4 verifier contract\");",
+          "matchesCurrent": true
+        },
+        {
+          "check": "C10",
+          "file": "learner/gate/tests/literacy_verify_identity.test.mjs",
+          "line": 43,
+          "endLine": 56,
+          "literal": "test(\"array activityId never passes via key coercion (was PASS with empty activity_id)\", () => {\n  const result = verify(honestA1Record([\"l02-a1\"]));\n  assertFailClosedIdentity(result);\n  assert.equal(result.activity_id, \"\");\n});\n\ntest(\"array activityId for other contract activities also fails closed\", () => {\n  assertFailClosedIdentity(verify(honestA1Record([\"l02-a3\"])));\n});\n\ntest(\"object activityId with null toString returns a FAIL receipt instead of throwing\", () => {\n  const result = verify(honestA1Record({ toString: null }));\n  assertFailClosedIdentity(result);\n});",
+          "matchesCurrent": true
+        },
+        {
+          "check": "C10",
+          "file": "engines/literacyDojo/tests/domain/verification.test.ts",
+          "line": 47,
+          "endLine": 51,
+          "literal": "  it(\"aceita somente um recibo ligado à identidade e ao digest da tentativa\", async () => {\n    await expect(validateReceipt(await validReceipt(), record)).resolves.toMatchObject({\n      verdict: \"PASS\",\n      attempt_id: record.attemptId,\n    });",
+          "matchesCurrent": true
+        }
+      ]
+    },
+    {
+      "id": "C11",
+      "claim": "Na lição real l02 v4, o fluxo sequencial conclui em a3: a última evidência passante selecionada por `LessonScreen` chega a `ResultScreen` e recebe recibo válido ligado à tentativa a3. Os contratos independentes a1/a2/a3 continuam exigidos pelos critérios 8–10. O resultado continua progresso local; zero escrita de `mastered` no aprendiz canônico.",
+      "proofRun": "Own observe-engine literacyDojo last-passing-evidence exit0, real local HTTP and browser at final HEAD.",
+      "evidence": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/literacy-runtime.mjs:145,150 `assert.equal(await page.getByTestId(\"finish-lesson\").count(), 0)` before a3; :232 `assert.equal(selected.activityId, \"l02-a3\")`; :234 `assert.deepEqual(request.body, selected)`; :35-46 exact receipt identity/digest assertions; own report referenced in runtime-summary.json.",
+      "result": "PASS",
+      "limit": "Owner revision2 is authoritative: a1→a2→a3, conclude only after a3. C8–10 independently cover all three receipts. Local progress/canonical YAML unchanged. New captures have no new Jev inference; historical phase2 semantics is separately source-bound and has a copy caveat.",
+      "proofCommands": [
+        "node intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/observe-engine.mjs literacyDojo last-passing-evidence"
+      ],
+      "sourceAssertionStatus": "verified at 375aacb33b9f3ce6451c979995d7c238b0972308; source location is not proof of execution",
+      "carriedResultFrom": null
+    },
+    {
+      "id": "C12",
+      "claim": "Com o transporte de verificação indisponível/rejeitado, a tela de resultado preserva progresso/evidência e oferece retry; após restaurar o endpoint, uma nova tentativa de verificar recebe recibo vinculado. Mock de HTTP ou fallback sozinho não encerra esse critério.",
+      "proofRun": "Own observe-engine literacyDojo verifier-outage-retry exit0; stopped actual endpoint, restored it, then retry.",
+      "evidence": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/literacy-runtime.mjs:217 `assert.deepEqual(beforeRetry, completed)`; :221 waits for \"Recibo independente: PASS\"; :222 `assert.deepEqual(await readLocal(page), beforeRetry)`; :223 `assert.equal(requests.length, 1)`; receipt binding also checked. Own transitions/requests in report referenced by runtime-summary.json.",
+      "result": "PASS",
+      "limit": "Actual local HTTP, no mocked responses. State/evidence unchanged, canonical digest identical. Semantic judgment remains the separate historical phase2 layer; no API call or semantic approval of these new bytes was fabricated.",
+      "proofCommands": [
+        "node intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/observe-engine.mjs literacyDojo verifier-outage-retry"
+      ],
+      "sourceAssertionStatus": "verified at 375aacb33b9f3ce6451c979995d7c238b0972308; source location is not proof of execution",
+      "carriedResultFrom": null
+    },
+    {
+      "id": "C13",
+      "claim": "Se o piloto oferecer o verificador publicado, a prova registra URL/origem, deploy ID, source SHA e `verifier_version`, com positivos a1/a2/a3 e negativos de identidade/adulteração executados no endpoint real; merge ou E2E do Vite não substitui essa prova.",
+      "proofRun": "Own deployed-verifier exit2; prerequisite-only result, no remote POST.",
+      "evidence": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/literacy-runtime.mjs:323-325 records deployedEndpoint and missing deploy ID/source SHA/endpoint cases; no remote assertion is present. Local assertions :35-46 cannot prove publication.",
+      "result": "unverified",
+      "limit": "No authentic current deploy ID plus matching source SHA provided. Existing published URL/preflight identity without source binding does not satisfy this check; no deploy was attempted.",
+      "proofCommands": [
+        "node intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/observe-engine.mjs literacyDojo deployed-verifier"
+      ],
+      "sourceAssertionStatus": "verified at 375aacb33b9f3ce6451c979995d7c238b0972308; source location is not proof of execution",
+      "carriedResultFrom": null
+    },
+    {
+      "id": "C14",
+      "claim": "Cada PR, após sincronizar com main e incorporar os ajustes necessários, tem diff completo revisto, provas funcionais discriminantes, revisão independente e checks requeridos `success` no head/merge-ref correspondente. O #657 obtém novos resultados para os três checks cancelados; o #656 resolve proteção de testes com aceite rastreável do owner e registra produtor real antes do countersign. O corpo de cada PR passa a refletir seu escopo real, sem declarar aprovações inexistentes.",
+      "proofRun": "Own raw GitHub: #657 required text exit0, #656 required text exit1; full check-runs/head JSON exit0; delivery-heads exit2.",
+      "evidence": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/assert-readiness-artifacts.py:205 `check.get(\"conclusion\") == \"success\" and check.get(\"sha\") in {head, row.get(\"mergeRefSha\")}`; :208 requires cancelled checks replaced. gh-raw-657-checks.log contains three cancelled; gh-raw-656-checks.log contains guardrails/countersign failure.",
+      "result": "FAIL",
+      "limit": "Remote heads remain 817b9872b2b966314794540472860a6287c4737c / b29631ee366954803d59691b646c10f0779082ce, unrelated to this final local candidate. Main is now 98a063269429cc3cc366eed8ece71db05bb47370. No synchronized publication, refreshed checks or final-head countersign. gh-axi summaries ignored --required/--json and normalized cancellation; exact gh API fallback was used. Approved protected patch remains exact; local Judge approval is separate.",
+      "proofCommands": [
+        "gh pr checks 657 --repo dandpb/aidevschool --required",
+        "gh pr checks 656 --repo dandpb/aidevschool --required",
+        "python3 intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/assert-readiness-artifacts.py delivery-heads"
+      ],
+      "sourceAssertionStatus": "verified at 375aacb33b9f3ce6451c979995d7c238b0972308; source location is not proof of execution",
+      "carriedResultFrom": null
+    },
+    {
+      "id": "C15",
+      "claim": "A integração preserva o protocolo local: atualização de `MANIFEST.md` junto das mudanças de gate/contrato, countersign de agente distinto pinado ao head final e merge somente pela porta `scripts/merge_pr.sh`, quando autorizado. Quando o diff atingir specs/`sourcePaths` de claims publicadas, o lote só fecha com re-grant emparceirado completo e lane de claims de main verde. Um avanço de main que altere a fonte coberta exige nova âncora/prova.",
+      "proofRun": "Own merge-records exit2; MANIFEST full-range diff reviewed; own full guard outcome recorded below.",
+      "evidence": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/assert-readiness-artifacts.py:303 `proof.get(\"headSha\") == row.get(\"headSha\")`; :305 requires scripts/merge_pr.sh plus exit0. REGRANT-RUNBOOK.md:65-80 requires paired independent observation and green main lane.",
+      "result": "unverified",
+      "limit": "merge-records.json absent. No authorization or execution of push/merge/deploy. MANIFEST changes are present, but they do not replace countersign, merge-door, re-grant or live-main anchoring.",
+      "proofCommands": [
+        "python3 intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/assert-readiness-artifacts.py merge-records"
+      ],
+      "sourceAssertionStatus": "verified at 375aacb33b9f3ce6451c979995d7c238b0972308; source location is not proof of execution",
+      "carriedResultFrom": null
+    },
+    {
+      "id": "C16",
+      "claim": "O pacote informativo contém exatamente os 14 `engineId` de Journey, sem duplicatas, e todos os campos de Shape/Adds: `declaredUse`, `entry`, `runtime`, `sourceCommit`, `sourceFingerprint`, `observedAt`, `producerContext`, `verifierContext`, `cases`, `evidenceRefs`, `limitations`, `linkedUseCases`, `status`. Cada caso obrigatório e variante oferecida tem fonte da promessa, resultado e prova com digest; contextos de produtor/verificador são distintos. `pass` exige todos os casos obrigatórios comprovados; falha comprovada gera `blocked`, prova ausente gera `unverified`; inaplicabilidade tem justificativa com fonte.",
+      "proofRun": "Own engine-packets exit1: validatedShape=true, obligationProven=false; current binding/integrity audit.",
+      "evidence": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/assert-readiness-artifacts.py:120 requires len(rows)==14, exact IDs/uniqueness; :151 validates source fingerprint; :178-180 requires distinct verifier context/status. Current packet has 14 IDs, 0 pass/3 blocked/11 unverified and grantsReadinessTier=false.",
+      "result": "unverified",
+      "limit": "Structure and included references are coherent; 14 verifierContext values are null and mandatory cases remain unresolved. Current packet: 355 cases (229 pass/4 blocked/122 unverified). Format and retained producer results cannot prove whole use. Original manifest-pointer drift was fixed by root in final metadata commit; fresh exact comparison passes.",
+      "proofCommands": [
+        "python3 intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/assert-readiness-artifacts.py engine-packets"
+      ],
+      "sourceAssertionStatus": "verified at 375aacb33b9f3ce6451c979995d7c238b0972308; source location is not proof of execution",
+      "carriedResultFrom": null
+    },
+    {
+      "id": "C17",
+      "claim": "`aiDevschoolMvp`: no harness oferecido e em perfil isolado, tentativa representativa → gates G1–G4 → agendamento/recomputação → card/ledger próprios funciona, incluindo negativa pedagógica/retry/retorno. Script com exit não zero repassa o erro literalmente e para, conforme a SKILL; não se faz autoreparo ou retry improvisado. O registro identifica as variantes dos 24 conceitos e plataformas cobertas; G4 usa o caminho existente de julgamentos por digest. Ausência de julgamento live não é suprida com fixture apresentado como IA real; zero promoção canônica e zero entrega a canal real.",
+      "proofRun": "Own named Python PASS; observe-aiDevschoolMvp exit2, runtimeExecuted=false.",
+      "evidence": "engines/aiDevschoolMvp/tests/acceptance/test_acceptance_full.py:71 `assert out == (\"moved\", (\"ATTEMPTED\", \"MASTERED\"))`; :105 `assert out[\"nudge_payloads\"] == []`; engines/aiDevschoolMvp/tests/installer/test_install.py:51 `assert digest_tree(source) == before`; intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/observe-engine.mjs:72–77 literal `runtimeExecuted: false`.",
+      "result": "unverified",
+      "limit": "Existing native producer failures G1/G3/G4 remain historical evidence with a separate draft intent; scripts/fixture tests do not settle 24 native conversations, scheduling/card/ledger/recovery. No new model/profile/cron/channel work was authorized for this verification.",
+      "proofCommands": [
+        "python3 -m pytest engines/aiDevschoolMvp/tests/acceptance/test_acceptance_full.py::test_state_machine_eight_transitions_and_guards engines/aiDevschoolMvp/tests/acceptance/test_acceptance_full.py::test_scheduler_review_due_idempotency_and_quiet_hours engines/aiDevschoolMvp/tests/installer/test_install.py::test_check_is_read_only -vv",
+        "node intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/observe-engine.mjs aiDevschoolMvp declared-use"
+      ],
+      "sourceAssertionStatus": "verified at 375aacb33b9f3ce6451c979995d7c238b0972308; source location is not proof of execution",
+      "carriedResultFrom": null
+    },
+    {
+      "id": "C18",
+      "claim": "`codexDojo`: dashboard lê a projeção, apresenta a próxima ação e permite copiar o prompt; a ponte OS configurada abre o destino correto e a configuração ausente mantém o comportamento documentado, sem escrita em `learner/`.",
+      "proofRun": "No current independent full browser/clipboard/OS-configuration run.",
+      "evidence": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/dashboard-runtime.mjs:231 `assert.equal(copied, canonicalPrompt)`; :237 `assert.equal(await launch.getAttribute(\"href\"), os.origin)`; :264 conta controles de launch =0 sem config.",
+      "result": "unverified",
+      "limit": "Retained producer observed projection/clipboard/OS/config, but all required variants lack this verifier current full execution; phase2 covered only a subset of original images. Remains unverified.",
+      "proofCommands": [
+        "pnpm exec playwright test playwright/smoke.spec.ts --grep \"codexDojo dashboard mounts|linuxLab view stays\"",
+        "node intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/observe-engine.mjs codexDojo declared-use"
+      ],
+      "sourceAssertionStatus": "verified at 375aacb33b9f3ce6451c979995d7c238b0972308; source location is not proof of execution",
+      "carriedResultFrom": null
+    },
+    {
+      "id": "C19",
+      "claim": "`codexdojo-os-prototype`: primeira entrada → escolha de trilha → missão suportada → resultado → retorno no mesmo perfil funciona, incluindo falha de host/verificação e storage limpo. O conjunto oferecido de missões/adaptadores tem cobertura explícita; listagem de catálogo ou bundle não conta como missão executada. Progresso local e ações do Hub não promovem maestria.",
+      "proofRun": "No current full five-file producer or all39-mission observer run.",
+      "evidence": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/learning-runtime.mjs:145 `await expect(progress.missionStatusByKey[`${mission.trackId}:${mission.id}`]).toBe(\"completed\")`; :156 `await expect(afterReload.missionStatusByKey).toEqual(beforeReload.missionStatusByKey)`.",
+      "result": "unverified",
+      "limit": "Historical 8/39 missions with 31 pending; Hub/recovery incomplete. Earlier Playwright failures include stale text/timeouts and interrupted repeat; no new product defect is inferred from those old runner results. Own minimax Hub path proves only C24 local entry.",
+      "proofCommands": [
+        "npx playwright test tests/release-journeys.smoke.spec.ts tests/readiness-recovery.smoke.spec.ts tests/chapter-continuity.smoke.spec.ts tests/renderer-fallback.smoke.spec.ts tests/engines.smoke.spec.ts",
+        "node intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/observe-engine.mjs codexdojo-os-prototype declared-use"
+      ],
+      "sourceAssertionStatus": "verified at 375aacb33b9f3ce6451c979995d7c238b0972308; source location is not proof of execution",
+      "carriedResultFrom": null
+    },
+    {
+      "id": "C20",
+      "claim": "`dojoToday`: revisões, streak, unidade ativa e próxima ação correspondem à projeção; a prática inline oferecida do jogo 02 funciona e o limite somente leitura permanece observável. Sócrates offline e a configuração BYOK que for oferecida têm resultado/recovery honesto; chave não aparece nos artefatos e limpar configuração remove o dado local correspondente.",
+      "proofRun": "No current inline game02/BYOK browser run.",
+      "evidence": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/dashboard-runtime.mjs:334 `assert.ok(iframeObservation.canvasCount > 0 || /WAREHOUSE/i.test(iframeObservation.title), ...)`; :316 `assert.equal(await page.evaluate(() => localStorage.getItem(\"dojoToday:aiConfig\")), null)`.",
+      "result": "unverified",
+      "limit": "Historical inline game02 displayed daily landing; dedicated intent remains draft. BYOK real success/error/clear and broad semantics incomplete. No current own failure reproduced, so this criterion remains unverified rather than inventing a new FAIL.",
+      "proofCommands": [
+        "npx playwright test playwright/readiness.spec.ts playwright/continuity.spec.ts playwright/hosted-os.spec.ts playwright/a11y-w3.spec.ts",
+        "node intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/observe-engine.mjs dojoToday declared-use"
+      ],
+      "sourceAssertionStatus": "verified at 375aacb33b9f3ce6451c979995d7c238b0972308; source location is not proof of execution",
+      "carriedResultFrom": null
+    },
+    {
+      "id": "C21",
+      "claim": "`literacyDojo`: o percurso standalone oferecido de IA Prática cobre suas lições/atividades, feedback, retry, desafios, reviews e retomada local; Dev segue o CTA para OS. Reload no meio da atividade respeita o reinício documentado da lição e não reconstrói respostas transitórias. As três atividades v4 e a recuperação de verificação satisfazem 8–12.",
+      "proofRun": "Own C8–12/client/content pass; no current full23-lesson/challenges/reviews run.",
+      "evidence": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/learning-runtime.mjs:66 `await expect(offered).toHaveLength(23)`; :93 `await expect(progress.lessonStatus[id]).toBe(\"completed\")`; :105–106 inputs não checked após reload.",
+      "result": "unverified",
+      "limit": "Historical 23 lessons/69 activities are retained producer coverage. Three challenges/reviews and complete independent observation remain absent. Current l02 checks close C11/C12 only.",
+      "proofCommands": [
+        "npx playwright test playwright/vertical-slice.spec.ts playwright/corridor.spec.ts playwright/backup-restore.spec.ts playwright/gamification.spec.ts playwright/escola-map-focus.pwa.spec.ts",
+        "node intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/observe-engine.mjs literacyDojo declared-use"
+      ],
+      "sourceAssertionStatus": "verified at 375aacb33b9f3ce6451c979995d7c238b0972308; source location is not proof of execution",
+      "carriedResultFrom": null
+    },
+    {
+      "id": "C22",
+      "claim": "`miniMaxEvolutionEngine`: um ciclo supervisionado oferecido de cinco fases produz artefatos com produtor/verificador separados; interrupção → status/diagnóstico → recuperação explícita não redispara trabalho automaticamente. Somente se oferecida, a autonomia `spec → spec-done` é observada com seus controles atuais; fixture tracer ou `tick` sem execução de modelo não é prova dessa autonomia.",
+      "proofRun": "Own named tracer tests PASS; observe-miniMaxEvolutionEngine exit2, runtimeExecuted=false.",
+      "evidence": "engines/miniMaxEvolutionEngine/tests/test_supervisor_tracer.py:119–120 `assert [role for role, _ in calls] == [\"producer\", \"verifier\"]`; `assert len({context for _, context in calls}) == 2`; :127 só `(\"spec-done\", \"implementation\")`; :227 `assert restarted == []`.",
+      "result": "unverified",
+      "limit": "Native five-phase cycle, offered autonomy and recovery are not executed by prerequisite-only dispatcher or fixture tracer. Historical native entry/cycle gap has its own intent; no claim of five-phase live success.",
+      "proofCommands": [
+        "python3 -m pytest engines/miniMaxEvolutionEngine/tests/test_supervisor_tracer.py::test_happy_path_autonomous_spec_tracer engines/miniMaxEvolutionEngine/tests/test_supervisor_tracer.py::test_learning_gate_is_read_only engines/miniMaxEvolutionEngine/tests/test_supervisor_tracer.py::test_restart_reconciles_authorized_advance_without_roles -vv",
+        "node intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/observe-engine.mjs miniMaxEvolutionEngine declared-use"
+      ],
+      "sourceAssertionStatus": "verified at 375aacb33b9f3ce6451c979995d7c238b0972308; source location is not proof of execution",
+      "carriedResultFrom": null
+    },
+    {
+      "id": "C23",
+      "claim": "`miniTown`: entrada → exploração/dia-noite/HUD → saída/reabertura funciona no uso experimental; falha do renderer/rota segue a orientação existente de reload/saída. Não exigir persistência, lição, assessment ou maestria que o contrato exclui.",
+      "proofRun": "No current full exploration/night/route/renderer browser run.",
+      "evidence": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/dashboard-runtime.mjs:404–406 `assert.equal(observed.after.phase, \"night\")`; `assert.equal(observed.sunIntensity, 0)`; HUD inclui night; :417–418 storage vazio.",
+      "result": "unverified",
+      "limit": "Historical clock/HUD/reentry exists but morning image has ground/HUD without entities; broad semantics and current own route/renderer flow absent. No persistence/mastery requirement was added.",
+      "proofCommands": [
+        "pnpm exec playwright test playwright/mini-town.spec.ts --grep \"loads the town and advances its public simulation\"",
+        "node intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/observe-engine.mjs miniTown declared-use"
+      ],
+      "sourceAssertionStatus": "verified at 375aacb33b9f3ce6451c979995d7c238b0972308; source location is not proof of execution",
+      "carriedResultFrom": null
+    },
+    {
+      "id": "C24",
+      "claim": "`minimaxDojo`: entrada local existente e bootstrap → tentativa → Prometor e Crítico em contextos separados → relatório/whiteboard/reflexão funciona, com erro/retry/retomada pelo Maestro. Teste do núcleo Python não substitui a execução do fluxo local oferecido, e o whiteboard local não vira autoridade global.",
+      "proofRun": "Own core named tests PASS; current local CLI/OS Hub/authenticated bridge real runtimeStatus=pass, 9 cases; global exit2 unverified.",
+      "evidence": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/minimax-local-runtime.mjs:248 `assert.equal(body.output.trimEnd(), cli.stdout.trimEnd(), ...)`; :255-257 requires actual read-only briefing/canonical authority text; :300-301 asserts actual CLI; :17-21 missingCycle explicitly names full-cycle absence. Core contract test remains below this boundary.",
+      "result": "unverified",
+      "limit": "Human local-environment decision honored: no Team URL/key question. Existing app only prepares a read-only briefing. No complete bootstrap/attempt/fresh Prometor/Crítico/report/reflection/Maestro error-retry-resume. Functional entry success is not C24 completion.",
+      "proofCommands": [
+        "python3 -m pytest engines/minimaxDojo/tests/test_learning_unit_e2e_contract.py::TestLearningUnitE2EContract::test_verifier_pass_is_the_only_path_to_dominado_and_is_audited engines/minimaxDojo/tests/test_learning_unit_e2e_contract.py::TestLearningUnitE2EContract::test_failed_gate_retries_then_blocks_without_mastery -vv",
+        "node intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/observe-engine.mjs minimaxDojo declared-use"
+      ],
+      "sourceAssertionStatus": "verified at 375aacb33b9f3ce6451c979995d7c238b0972308; source location is not proof of execution",
+      "carriedResultFrom": null
+    },
+    {
+      "id": "C25",
+      "claim": "`openclaw`: em checkout descartável completo, preview é somente leitura; avanço simulate-grade por checklist e bloqueio por artefato/gate ausente correspondem ao pipeline observado, com retomada dentro do contrato. A CLI deriva a raiz do módulo, portanto zero execução de avanço na árvore compartilhada e zero alegação de IA/maestria empírica.",
+      "proofRun": "Own observe-engine openclaw declared-use exit0; complete disposable copy, 4 scenarios and partial→resume CLI.",
+      "evidence": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/agent-runtime-openclaw.py:151 `if before != after: raise RuntimeError(...)`; :154 checks preview exit (0 valid, 1 blocked/missing/small); :170 `if resumed[\"exitCode\"] != 0 or \"Final phase: cycle-complete\" not in final or \"grade=simulate advanced_by=openclaw-checklist\" not in final: raise RuntimeError(...)`; :174 requires unchanged learner digest. Own report and 25-file binding in .scratch/gh-375/final-verifier-375aacb3/openclaw-source-binding.json.",
+      "result": "PASS",
+      "limit": "Declared simulate-grade boundary only; synthetic artifact fixtures are disclosed, no model calls or empirical mastery. Preview unchanged for blocked/missing/small/valid, partial phase impl-done then cycle-complete. Shared learner unchanged and complete temporary copy removed. All25 OpenClaw source files match current final HEAD.",
+      "proofCommands": [
+        "python3 -m pytest engines/openclaw/tests/test_cli_preview.py::test_preview_reports_real_checklist_without_writing_canonical_state engines/openclaw/tests/test_cli_preview.py::test_preview_halt_returns_failure_and_reports_actual_source engines/openclaw/tests/test_scheduler.py::test_scheduler_respects_learning_gate engines/openclaw/tests/test_scheduler.py::test_missing_spec_halts -vv",
+        "node intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/observe-engine.mjs openclaw declared-use"
+      ],
+      "sourceAssertionStatus": "verified at 375aacb33b9f3ce6451c979995d7c238b0972308; source location is not proof of execution",
+      "carriedResultFrom": null
+    },
+    {
+      "id": "C26",
+      "claim": "`pixelDojo`: cada lab oferecido do PixelQuest tem entrada, interação principal, retry/retorno aplicável e evidência NDJSON recuperável para verificador independente; o jogo mantém append-only e não escreve estado canônico. Seeds de brainstorm e a pasta reservada `games/` não entram como jogos lançados.",
+      "proofRun": "No current full18-lab runtime rerun; phase2 historical result-image judgments inspected separately.",
+      "evidence": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/pixel-runtime.mjs:112–113 `assert.equal(channel.length, before.length + 1, ...)`; `assert.deepEqual(channel.slice(0, -1), before, ...)`; :167–170 exige os18 projetos.",
+      "result": "unverified",
+      "limit": "Historical18 fail→retry/pass and replay/NDJSON retained; Jev judged18 result states, not entry/intermediate teaching mechanics or NDJSON validity. Current full runtime missing. Debug navigation/input hooks disclosed. README Agent Quest/lab01 Token Bucket mismatch remains a bounded source/copy caveat.",
+      "proofCommands": [
+        "pnpm exec playwright test playwright/pixel-quest.spec.ts playwright/encounter-evidence-dense.spec.ts playwright/error-path.spec.ts playwright/evidence-append-only.spec.ts playwright/returning.spec.ts",
+        "node intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/observe-engine.mjs pixelDojo declared-use"
+      ],
+      "sourceAssertionStatus": "verified at 375aacb33b9f3ce6451c979995d7c238b0972308; source location is not proof of execution",
+      "carriedResultFrom": null
+    },
+    {
+      "id": "C27",
+      "claim": "`school-entry`: catálogo inicial desabilitado → indisponibilidade explícita; operador autenticado configura um destino confiável → checagem inicial → até 3 recomendações elegíveis → lançamento. Anônimo não libera engines. Chave ausente/erro/timeout segue o fallback existente; falha de storage não aparenta liberação bem-sucedida. Checker mantém restrições de rede e não concede prontidão ao destino.",
+      "proofRun": "No current real operator/destination/provider runtime or frozen four-file Node run.",
+      "evidence": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/local-products-runtime-school.mjs:67 `check(r, \"Anonymous release denied\", anon.status() === 401, { httpStatus: anon.status() })`; :136–139 caso configured-provider/timeout marcado unverified.",
+      "result": "unverified",
+      "limit": "Historical SQLite/operator/checker/fallback cases are producer evidence; configured provider success/timeout and complete semantic/current execution remain absent. Checker cannot confer readiness on destination.",
+      "proofCommands": [
+        "node --test tests/backend.test.mjs tests/health.test.mjs tests/model.test.mjs tests/browser.spec.mjs",
+        "node intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/observe-engine.mjs school-entry declared-use"
+      ],
+      "sourceAssertionStatus": "verified at 375aacb33b9f3ce6451c979995d7c238b0972308; source location is not proof of execution",
+      "carriedResultFrom": null
+    },
+    {
+      "id": "C28",
+      "claim": "`sdlc-quest`: os modos oferecidos de campanha/workshop/lab e idiomas funcionam por HTTP e no standalone documentado, com salvar/retomar e export/import com preview. Mudança de origem e perda de aprovações do lab ao importar são explicadas. `set_content` com storage simulado não é prova de HTTP ou `file://` real.",
+      "proofRun": "No current complete HTTP/file×modes×languages runtime or frozen Node suite run; historical semantics bound separately.",
+      "evidence": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/local-products-runtime-quest.mjs:304 `check(r, \"No browser page errors across HTTP and native file modes\", r.errors.length === 0)`; :161 download lab enabled.",
+      "result": "unverified",
+      "limit": "Historical real HTTP/file runtime and12 variant result states have coherent Jev bindings, but entry captures/intermediate challenges were not judged and some headers clipped. No current full variant run, and set_content tests do not prove native HTTP/file behavior.",
+      "proofCommands": [
+        "node --test tests/local-package.test.cjs tests/tlc.test.cjs tests/harness.test.cjs tests/i18n.test.cjs",
+        "node intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/observe-engine.mjs sdlc-quest declared-use"
+      ],
+      "sourceAssertionStatus": "verified at 375aacb33b9f3ce6451c979995d7c238b0972308; source location is not proof of execution",
+      "carriedResultFrom": null
+    },
+    {
+      "id": "C29",
+      "claim": "`voxelDojo`: os jogos/variantes oferecidos no catálogo têm loop didático L1–L4, recuperação de renderer quando suportada e evidência bruta entregável ao verificador; localStorage sozinho não é prova. Cada jogo declarado recebe resultado próprio; um smoke do jogo 10 não aprova os demais.",
+      "proofRun": "No current 17×L1–L4 browser/WebGL/fallback rerun.",
+      "evidence": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/voxel-runtime.mjs:306–310 `assert.deepEqual(after.slice(0, before.length), before, ...)`; `assert.equal(after.length, before.length + 1, ...)`; dual channels iguais; :406–407 catálogo17.",
+      "result": "unverified",
+      "limit": "Historical8 complete games:32/68 WebGL pairs plus32fallback,8 retries/reentries;36 WebGL pairs pending and Hash Ring incomplete. Each missing game/level stays missing. No semantic or full catalog pass inferred from metadata/localStorage.",
+      "proofCommands": [
+        "pnpm exec playwright test playwright/warehouse.spec.ts --grep \"boots the warehouse|renders an actual WebGL canvas\"",
+        "node intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/observe-engine.mjs voxelDojo declared-use"
+      ],
+      "sourceAssertionStatus": "verified at 375aacb33b9f3ce6451c979995d7c238b0972308; source location is not proof of execution",
+      "carriedResultFrom": null
+    },
+    {
+      "id": "C30",
+      "claim": "`zai-duolingo-like`: as duas entradas de onboarding e o currículo local oferecido têm perfil → lição → progresso → prática/revisão e recuperação documentada, usando DBs de teste isolados. Chat configurado e provider ausente/falhando têm resultados honestos; identidade/progresso continuam próprios. Os modos Next e Bun oferecidos são identificados separadamente, sem reciclar servidor de outra instância.",
+      "proofRun": "No current Next/Bun27-lesson/runtime/provider rerun.",
+      "evidence": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/local-products-runtime-zai.mjs:246 `check(r, `Persisted visible lesson completion ${l.slug}`, progress === finished, ...)`; :347–349 Bun é caso próprio.",
+      "result": "unverified",
+      "limit": "Historical23/27 persisted lesson completions;4 lessons, second onboarding, review/chat, Bun and runtime closure incomplete. Phase2 did not sweep Zai. No real DB/reset/provider action performed.",
+      "proofCommands": [
+        "npx playwright test e2e/smoke.spec.ts e2e/navigation.spec.ts e2e/lesson-flow.spec.ts e2e/playground.spec.ts e2e/meta.spec.ts",
+        "node intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/observe-engine.mjs zai-duolingo-like declared-use"
+      ],
+      "sourceAssertionStatus": "verified at 375aacb33b9f3ce6451c979995d7c238b0972308; source location is not proof of execution",
+      "carriedResultFrom": null
+    },
+    {
+      "id": "C31",
+      "claim": "Para os seis casos stale da discovery e quaisquer adicionais invalidados pelo candidato final, há novos fatos e assessments independentes aplicáveis à fonte oferecida; `check --require-current` retorna 0. Assessments e resultados históricos permanecem auditáveis, sem reescrever suas datas/digests para fazê-los parecer novos.",
+      "proofRun": "Own check --require-current exit1; canonical-assessments exit1; readiness tooling57PASS/2SKIP.",
+      "evidence": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/assert-readiness-artifacts.py:219 `audit.require(result.returncode == 0, \"claims-not-current\", ...)`; :227 preserves historical assessments; :230 preserves results prefix. .scratch/gh-375/final-verifier-375aacb3/claims-current.log:1-6 has exactly six STALE-WINDOW entries.",
+      "result": "FAIL",
+      "limit": "Six stale claims remain without current independent grants. Test success validates tools, not freshness. No historical dates/digests or canonical claim state were rewritten. Live main drift requires a new source anchor for any future release.",
+      "proofCommands": [
+        "python3 docs/product-readiness/tools/cli.py check --require-current",
+        "python3 intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/assert-readiness-artifacts.py canonical-assessments"
+      ],
+      "sourceAssertionStatus": "verified at 375aacb33b9f3ce6451c979995d7c238b0972308; source location is not proof of execution",
+      "carriedResultFrom": null
+    },
+    {
+      "id": "C32",
+      "claim": "O relatório dos 14 engines e `engine-qualification.json` permanecem informativos: nenhum `ReadinessTier` é concedido por eles. `aggregate --observations` recebe somente bundles no esquema existente (`observerContext:\"independent-readiness-observer\"`), nunca o JSON informativo de qualificação; não ocorre erro de shape nem inclusão de casos alheios que rebaixe claims por ausência de observação.",
+      "proofRun": "Own authority-separation exit2; informational/no-grant packet declaration independently confirmed.",
+      "evidence": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/assert-readiness-artifacts.py:245 `packet.get(\"informational\") is True and packet.get(\"grantsReadinessTier\") is False`; :260 requires actual aggregate exit0; :271 checks exact schema/observerContext.",
+      "result": "unverified",
+      "limit": "claims-flow.json and actual successful canonical aggregate receipt absent. No fictitious bundle or assess/re-grant write was created. Informational packet never grants ReadinessTier.",
+      "proofCommands": [
+        "python3 intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/assert-readiness-artifacts.py authority-separation"
+      ],
+      "sourceAssertionStatus": "verified at 375aacb33b9f3ce6451c979995d7c238b0972308; source location is not proof of execution",
+      "carriedResultFrom": null
+    },
+    {
+      "id": "C33",
+      "claim": "A árvore integrada prevista e o push-run pós-merge de main passam na lane de claims. `assess`/re-grant promovido inclui observação independente; proposta `pending-observation`/exit 3 e CI de produtor não encerram o lote. Se main avançar sob o fingerprint, a prova é renovada conforme o runbook single-writer.",
+      "proofRun": "Own main-claims exit2; live GitHub main-head read only, source98a06326.",
+      "evidence": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/assert-readiness-artifacts.py:285 requires conclusion success/jobName product readiness (claims); :288 requires actual origin/main SHA; :289 requires regrantStatus written and exit0.",
+      "result": "unverified",
+      "limit": "No main-claims.json, paired grant, integration or post-merge push-run for this candidate. Main has advanced beyond feature base. Old producer CI and pending-observation do not close this check.",
+      "proofCommands": [
+        "python3 intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/assert-readiness-artifacts.py main-claims"
+      ],
+      "sourceAssertionStatus": "verified at 375aacb33b9f3ce6451c979995d7c238b0972308; source location is not proof of execution",
+      "carriedResultFrom": null
+    },
+    {
+      "id": "C34",
+      "claim": "O relatório final só afirma prontidão do conjunto quando há 14/14 `pass`, zero bloqueio crítico/alto aberto no escopo, claims correntes e provas dos ambientes efetivamente oferecidos; qualquer `blocked`/`unverified` mantém a conclusão global pendente. O resultado observado é apresentado a Daniel para aceite do piloto, separado da aprovação de código/merge.",
+      "proofRun": "Own pilot-offer exit1; full34-check FAIL report presented to root/user.",
+      "evidence": "intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/assert-readiness-artifacts.py:315 `all(item.get(\"status\") == \"pass\" for item in packet.get(\"engines\", []))`; :320 rejects high/critical; :324 requires Daniel/accepted/scope observed-pilot-offer.",
+      "result": "unverified",
+      "limit": "Global readiness remains pending: canonical packet0/14pass and severe blocker/claims/external proofs unresolved. This verification report is not Daniel pilot acceptance, code approval or merge authorization. Historical assessment prose still contains old C11/Jev prerequisites; current owner record and this report supersede those stale descriptions without rewriting history.",
+      "proofCommands": [
+        "python3 intent/2026-10-15-ecosystem-product-readiness/evidence/scripts/assert-readiness-artifacts.py pilot-offer"
+      ],
+      "sourceAssertionStatus": "verified at 375aacb33b9f3ce6451c979995d7c238b0972308; source location is not proof of execution",
+      "carriedResultFrom": null
+    }
+  ],
+  "binding": {
+    "head": "375aacb33b9f3ce6451c979995d7c238b0972308",
+    "diff": {
+      "path": "/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/gh-375/final-verifier-375aacb3/full-feature.patch",
+      "bytes": 8220995,
+      "sha256": "f8b26ff476bbad534553eea5380641f56d5b30e8281a52af071139f9935ccd4e",
+      "files": 310
+    },
+    "packetSha256": "94697a22d9896c3c6e4053ebfd7709cf41d97bb5d996cd5e80722100f8b748e4",
+    "retentionManifest": {
+      "expected": "890fb0763b2deefc6b87deef4329c8be4c42639dd75250ed078ee34d4ec8e4c3",
+      "actual": "890fb0763b2deefc6b87deef4329c8be4c42639dd75250ed078ee34d4ec8e4c3"
+    },
+    "freeze": {
+      "task": {
+        "expected": "bc5d155666014c6fb600637c2c3315eff011628fe864b039035d616216be3079",
+        "actual": "bc5d155666014c6fb600637c2c3315eff011628fe864b039035d616216be3079"
+      },
+      "checklist": {
+        "expected": "be2f4cbd87841b05ad0f770dc5391a9a0c840a3e0b3a98c881a9e872eeeeed83",
+        "actual": "be2f4cbd87841b05ad0f770dc5391a9a0c840a3e0b3a98c881a9e872eeeeed83"
+      }
+    },
+    "round1ToCurrentProductDiff": [],
+    "lastMetadataCommit": [
+      "docs/product-readiness/evidence/observations/2026-10-15-ecosystem-beta-readiness/engine-qualification.json",
+      "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/binding-correction.json"
+    ]
+  },
+  "faultsInjected": [],
+  "faultPolicy": "Not injected: light. Coverage join and Test policy row verdicts not run under this default; explicit level/sampling gaps remain.",
+  "commands": ".scratch/gh-375/final-verifier-375aacb3/commands.json",
+  "commandsSha256": "32ac8519490b8c21857e0f036a7cf389c0cee0476b985feee24e9aa345896901",
+  "testCounts": {
+    "python-shared-engines.xml": {
+      "tests": 1212,
+      "pass": 1209,
+      "skips": [
+        {
+          "name": "test_live_smoke_occurrences",
+          "message": "live smoke requires TYPESAFE_API_KEY"
+        },
+        {
+          "name": "test_live_paraphrase_semantics",
+          "message": "live paraphrase proof requires TYPESAFE_API_KEY"
+        },
+        {
+          "name": "test_empirical_gates_doc_only_uses_valid_config_refs",
+          "message": "0 ⟨config:⟩ references in docs/04_empirical_gates.md — this guard would otherwise pass vacuously (D9)."
+        }
+      ]
+    },
+    "python-readiness.xml": {
+      "tests": 59,
+      "pass": 57,
+      "skips": [
+        {
+          "name": "test_independent_candidate_writes_and_restores",
+          "message": "clean tree required (spec §3.4 deterministic restore, R5)"
+        },
+        {
+          "name": "test_written_proposal_writes_state_manifest_and_restores",
+          "message": "clean tree required (spec §3.4 deterministic restore)"
+        }
+      ]
+    }
+  },
+  "proofNameAudit": ".scratch/gh-375/final-verifier-375aacb3/proof-name-audit.json",
+  "assertionAudit": ".scratch/gh-375/final-verifier-375aacb3/assertion-refresh.json",
+  "retentionAudit": ".scratch/gh-375/verify-round2/binding-audit.json",
+  "semanticEvidence": {
+    "historicalReport": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/jev/phase2/REPORT.json",
+    "sha256": "8d85b53c153faeed198e4a650da223692cd84b1c44d6c9a7191faf22b73de5eb",
+    "newCalls": 0,
+    "limits": "59 historical images/15 HTTP200/353 Nouls. Source/byte bindings audited; product paths compatible, dispatcher drift disclosed. No fresh semantic inference for new verifier screenshots. No new quota spent."
+  },
+  "ownedCleanup": {
+    "allDirectProofHandlesAwaited": true,
+    "allOwnedGroupsStopped": null,
+    "processInventory": "Only owned PIDs/PGIDs/ports inspected; no global ps/argv inventory. Guard post-wait group state is unknown_permission; no further group signals were sent.",
+    "literacyC11": {
+      "nodePid": 12078,
+      "browserPid": null,
+      "browserPidObservation": "unknown; no browser process API or process inventory used",
+      "contextCloseAwaited": true,
+      "browser": {
+        "closeAwaited": true,
+        "isConnected": false
+      },
+      "vite": {
+        "closeAwaited": true,
+        "listening": false
+      },
+      "functionHttp": {
+        "closeAwaited": true,
+        "listening": false
+      },
+      "portProbes": [
+        {
+          "port": 50938,
+          "closed": true,
+          "result": "ECONNREFUSED"
+        },
+        {
+          "port": 50939,
+          "closed": true,
+          "result": "ECONNREFUSED"
+        }
+      ]
+    },
+    "literacyC12": {
+      "nodePid": 12574,
+      "browserPid": null,
+      "browserPidObservation": "unknown; no browser process API or process inventory used",
+      "contextCloseAwaited": true,
+      "browser": {
+        "closeAwaited": true,
+        "isConnected": false
+      },
+      "vite": {
+        "closeAwaited": true,
+        "listening": false
+      },
+      "functionHttp": {
+        "closeAwaited": true,
+        "listening": false
+      },
+      "portProbes": [
+        {
+          "port": 50965,
+          "closed": true,
+          "result": "ECONNREFUSED"
+        },
+        {
+          "port": 50966,
+          "closed": true,
+          "result": "ECONNREFUSED"
+        }
+      ]
+    },
+    "minimax": {
+      "errors": [],
+      "allOwnedProcessesStopped": true,
+      "ownedPortClosed": true,
+      "ownedBrowserPortClosed": true
+    },
+    "openclawTemporaryCopyRemoved": true,
+    "guard": {
+      "ownedPid": null,
+      "ownedProcessGroup": null,
+      "timedOut": null,
+      "exitCode": null,
+      "waited": true,
+      "ownedGroupAliveAfterWait": null,
+      "groupProbe": "unknown_permission",
+      "collectorError": "PermissionError EPERM from os.killpg(process.pid,0) after direct handle wait",
+      "collectorExitCode": 1
+    }
+  },
+  "sourceDiffAfterVerification": "?? .checks/product-readiness-20261015.verified.json\n?? .checks/product-readiness-20261015.verified.md\n?? .checks/product-readiness-20261015.warnings.json",
+  "allProofProcessesAwaited": null,
+  "allDirectProofHandlesAwaited": true,
+  "allChildHelpersCompleted": true,
+  "canonicalPacketCounts": {
+    "blocked": 3,
+    "unverified": 11
+  },
+  "warningIds": [
+    "SDLC-READY-001",
+    "SDLC-READY-002",
+    "SDLC-READY-003",
+    "SDLC-READY-004",
+    "SDLC-READY-005",
+    "SDLC-UI-001",
+    "SDLC-VERIFY-001"
+  ],
+  "reportSha256": "5de72e81ff7ee1f351931f97caecd336c7dc26c00b4e48c906e8f5759f064274"
+}

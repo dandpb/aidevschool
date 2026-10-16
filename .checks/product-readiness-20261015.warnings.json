@@ -1,0 +1,102 @@
+{
+  "sourceCommit": "375aacb33b9f3ce6451c979995d7c238b0972308",
+  "featureVerdict": "FAIL",
+  "criteria": {
+    "pass": 13,
+    "fail": 2,
+    "unverified": 19,
+    "total": 34
+  },
+  "verifiedReportSha256": "aade838240e18348dfed06c91d96f7466b4e57878c3e4449b8620702ff9d219b",
+  "resolvedClarifications": [
+    "C11 owner revision2 applied and independently proven",
+    "C24 existing local entry used; external Team URL removed as prerequisite",
+    "TypeSafe/Jev environment access used successfully",
+    "Manifest pointer matches all 225 retained entries"
+  ],
+  "sdlc_warnings": [
+    {
+      "id": "SDLC-READY-001",
+      "repo": "dandpb/aidevschool",
+      "head": "375aacb33b9f3ce6451c979995d7c238b0972308",
+      "issue": "PRs ainda sem os reparos locais: #657 tem três cancelados; #656 tem duas falhas.",
+      "evidence": "[Relatório independente](/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.checks/product-readiness-20261015.verified.md)",
+      "correction": "Publicar a branch e abrir o PR autorizado; concluir sincronização/revisão/checks/countersign antes de integrar os reparos.",
+      "verification": "Checks no head final em success; countersign distinto e merge por scripts/merge_pr.sh.",
+      "status": "open",
+      "prerequisite": "Candidato final revisado, checks success e countersign distinto; publicação já autorizada pelo usuário."
+    },
+    {
+      "id": "SDLC-READY-002",
+      "repo": "dandpb/aidevschool",
+      "head": "375aacb33b9f3ce6451c979995d7c238b0972308",
+      "issue": "C11/C12 passaram; o endpoint publicado de C13 continua sem prova vinculada.",
+      "evidence": "[Relatório independente](/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.checks/product-readiness-20261015.verified.md)",
+      "correction": "Obter deploy ID/source SHA e executar positivos a1/a2/a3 e negativos no endpoint oferecido.",
+      "verification": "Recibos 1-netlify-l02-v4 com identidade/digest corretos e negativas rejeitadas.",
+      "status": "awaiting_prerequisite",
+      "prerequisite": "Metadados autênticos do deploy; autorização se um novo deploy for necessário."
+    },
+    {
+      "id": "SDLC-READY-003",
+      "repo": "dandpb/aidevschool",
+      "head": "375aacb33b9f3ce6451c979995d7c238b0972308",
+      "issue": "Seis claims continuam stale; C31 retornou exit 1.",
+      "evidence": "[Relatório independente](/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.checks/product-readiness-20261015.verified.md)",
+      "correction": "Renovar observações e assessments independentes na fonte final, preservando histórico.",
+      "verification": "docs/product-readiness/tools/cli.py check --require-current retorna 0.",
+      "status": "open",
+      "prerequisite": "Fonte final e observações completas."
+    },
+    {
+      "id": "SDLC-READY-004",
+      "repo": "dandpb/aidevschool",
+      "head": "375aacb33b9f3ce6451c979995d7c238b0972308",
+      "issue": "Qualificação dos 14 engines incompleta; o pacote conserva 0 pass/3 blocked/11 unverified.",
+      "evidence": "[Relatório independente](/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.checks/product-readiness-20261015.verified.md)",
+      "correction": "Concluir variantes e contextos independentes; C25 passou nesta rodada, mas C24 só tem briefing local.",
+      "verification": "Todos os casos obrigatórios comprovados e 14/14 pass antes do aceite global.",
+      "status": "open",
+      "prerequisite": "Provas restantes; plano aceito antes de acrescentar capacidade ao fluxo local."
+    },
+    {
+      "id": "SDLC-READY-005",
+      "repo": "dandpb/aidevschool",
+      "head": "375aacb33b9f3ce6451c979995d7c238b0972308",
+      "issue": "MVP, entrada MME e inline dojoToday têm bloqueios observados; os três planos são propostas.",
+      "evidence": "[Planos propostos](/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.scratch/readiness-next-repairs-20261016/README.md)",
+      "correction": "Revisar e aceitar os planos, implementar o escopo aprovado e repetir as jornadas reais.",
+      "verification": "Gates MVP, comandos MME e jogo 02 inline comprovados por verificador separado.",
+      "status": "awaiting_prerequisite",
+      "prerequisite": "Aceite dos planos e resolução das decisões bloqueantes."
+    },
+    {
+      "id": "SDLC-UI-001",
+      "repo": "dandpb/aidevschool",
+      "head": "375aacb33b9f3ce6451c979995d7c238b0972308",
+      "issue": "Jev foi usado via ambiente; entradas/variantes e semântica ainda têm lacunas.",
+      "evidence": "[Relatório independente](/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.checks/product-readiness-20261015.verified.md)",
+      "correction": "Completar a cobertura e tratar as ressalvas de texto/cabeçalho com escopo aprovado.",
+      "verification": "Capturas e transições atuais, fonte/digests e parecer separado por caso.",
+      "status": "open",
+      "prerequisite": "Cobertura restante; credencial Jev já foi confirmada e utilizada."
+    },
+    {
+      "id": "SDLC-VERIFY-001",
+      "repo": "dandpb/aidevschool",
+      "head": "375aacb33b9f3ce6451c979995d7c238b0972308",
+      "issue": "Guard sem resultado confiável: coletor recebeu EPERM após wait; retorno e fechamento do grupo desconhecidos.",
+      "evidence": "[Relatório independente](/Users/danielbarreto/.codex/worktrees/issue-375-catalog/aidevschool/.checks/product-readiness-20261015.verified.md)",
+      "correction": "Corrigir coleta/ownership e repetir o guard integral com recibo confiável, preservando todos os checks.",
+      "verification": "scripts/sdlc_guard_check.sh no range completo retorna 0; processos próprios têm encerramento comprovado.",
+      "status": "open",
+      "prerequisite": "Executor que registre PID/PGID e resultado antes da sondagem de encerramento."
+    }
+  ],
+  "publicationAuthorization": {
+    "source": "direct human message in this conversation",
+    "request": "commitar e subir pr",
+    "scope": "Commit the pending reports, push the current branch and create its pull request.",
+    "currentMergeOrDeployRequested": false
+  }
+}
