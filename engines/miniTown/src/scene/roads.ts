@@ -67,9 +67,9 @@ export class RoadsRenderer {
   }
 
   sync(): void {
-    const seen = new Set<string>()
-    for (const road of this.#town.roads) {
-      seen.add(road.id)
+    for (let i = 0; i < this.#town.roads.length; i++) {
+      const road = this.#town.roads[i]
+      if (!road) continue
       let mesh = this.#meshes.get(road.id)
       if (!mesh) {
         const geo = new THREE.PlaneGeometry(0.98, 0.98)
@@ -81,11 +81,18 @@ export class RoadsRenderer {
         this.#meshes.set(road.id, mesh)
       }
     }
-    for (const [id, mesh] of this.#meshes) {
-      if (!seen.has(id)) {
-        this.group.remove(mesh)
-        mesh.geometry.dispose()
-        this.#meshes.delete(id)
+    if (this.#meshes.size > this.#town.roads.length) {
+      const seen = new Set<string>()
+      for (let i = 0; i < this.#town.roads.length; i++) {
+        const r = this.#town.roads[i]
+        if (r) seen.add(r.id)
+      }
+      for (const [id, mesh] of this.#meshes) {
+        if (!seen.has(id)) {
+          this.group.remove(mesh)
+          mesh.geometry.dispose()
+          this.#meshes.delete(id)
+        }
       }
     }
   }

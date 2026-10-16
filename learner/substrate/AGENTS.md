@@ -24,6 +24,7 @@
 | Symbol | Type | Location | Role |
 | --- | --- | --- | --- |
 | `validate` | Function | `__init__.py:119` | Enforces canonical learner-state invariants. |
+| `load_guided_practice_catalog` | Function | `mission_catalog_guided_practice.py` | Loads/validates `curriculum/sequencia-dev-guiada/` packages; contentVersion parity with the OS projection script (`gen-guided-practice.mjs`). |
 | `_validate_units_log` | Function | `__init__.py:179` | Rejects mastered units without gate review evidence. |
 | `_validate_streak` | Function | `__init__.py:246` | Checks streak/freeze bounds. |
 | `regenerate_*` | Functions | `__init__.py` | Regenerate Mavis, whiteboard, dashboard, OS, or game views independently. |

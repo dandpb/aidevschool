@@ -3,6 +3,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
+from learner.substrate.mission_catalog_guided_practice import (
+    validate_guided_practice_binding,
+)
 from learner.substrate.mission_catalog_voxel import (
     MissionCatalogError,
     _mapping,
@@ -16,6 +19,7 @@ SUPPORTED_TRACKS = frozenset({"ai-pratica", "dev"})
 SUPPORTED_EVIDENCE_SCHEMAS = {
     "literacy-evidence": frozenset({1}),
     "teaching-game-evidence": frozenset({1}),
+    "guided-practice-evidence": frozenset({1}),
 }
 SUPPORTED_FALLBACKS = frozenset({"dom", "canvas2d"})
 LESSON_JOURNEY_TRACKS = {"ia_pratica": "ai-pratica", "dev": "dev"}
@@ -27,6 +31,7 @@ class BindingSources:
     projects: dict[str, Any]
     voxel_games: dict[str, dict[str, Any]]
     literacy_content_version: str
+    guided_practices: dict[str, dict[str, Any]]
 
 
 def validate_tracks(raw: Any, literacy_content_version: str) -> dict[str, dict[str, str]]:
@@ -210,6 +215,32 @@ def normalize_bindings(
             evidence = voxel_record["evidence"]
             title = voxel_record["title"]
             objective = voxel_record["objective"]
+        elif curriculum_kind == "guided-practice":
+            practice_id = _nonempty_string(
+                curriculum.get("practiceId"), f"{label}.curriculum.practiceId"
+            )
+            practice = sources.guided_practices.get(practice_id)
+            if practice is None:
+                raise MissionCatalogError(
+                    f"{label} references unknown guided practice {practice_id!r}"
+                )
+            guided_record = validate_guided_practice_binding(
+                binding,
+                label,
+                mission_id,
+                track_id,
+                unit_id,
+                runtime,
+                declared_prerequisites,
+                practice,
+                _validate_evidence,
+            )
+            lesson_id = guided_record["lesson_id"]
+            version = guided_record["version"]
+            estimated_minutes = guided_record["estimated_minutes"]
+            evidence = guided_record["evidence"]
+            title = guided_record["title"]
+            objective = guided_record["objective"]
         else:
             raise MissionCatalogError(f"{label}.curriculum.kind is unsupported")
 
