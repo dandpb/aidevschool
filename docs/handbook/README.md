@@ -89,6 +89,9 @@ replace engine-local setup or grant learner mastery.
 | 8 | [Learner substrate](08_learner_substrate.md) | Understand the learner state schema, the gates, FSRS spaced repetition, and the read/write contract. |
 | 9 | [Glossary](09_glossary.md) | Look up a term (especially the Portuguese agent names and state values). |
 | 14 | [Factory docs loop](14_factory_docs_loop.md) | Run a documentation change through the agentic factory (intake, contract, build, prove, gate) with deterministic, verifier-owned doc checks. |
+| 15 | [Pipeline ownership](15_pipeline_ownership.md) | Find the canonical cycle state, shared status helper, writing callers, consumers, and concurrency limits before changing the pipeline. |
+| 16 | [Analytics ownership](16_analytics_ownership.md) | Trace product vocabulary, emission, collection, staging and offline reports; distinguish learner-event schemas and Python instrumentation before changing analytics. |
+| 17 | [Portable copies](17_portable_copies.md) | Choose the edit source for MVP runtime mirrors, vendored skill peers and generated projections using their existing parity contracts. |
 
 > **Non-integrated prototype:** `engines/zai-duolingo-like/` ("Vertical Protocol" — a
 > cyberpunk-Tokyo "Duolingo for AI" in Next.js) is a future engine to integrate and a candidate
