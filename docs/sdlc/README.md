@@ -474,7 +474,10 @@ comentário com linha `Countersign:`) satisfaz TUDO:
 3. **Head pinado**: o SHA full 40-hex do head ATUAL do PR aparece no comentário
    — novo push/update-branch quebra o pin e exige countersign fresco;
 4. **Atribuído**: o comentário carrega `Provenance: agent=<slug> task=<AID|GH>-<n>
-   run=<runId> session=<sessionId>` (AID-2493);
+   run=<runId> session=<sessionId>` (AID-2493), e nem a sessão do countersigner
+   nem a do produtor são **placeholder** (AID-4898, achado AID-4897 §4:
+   `session=opencode_local` passava na validação de forma; política de
+   metadados 2026-10-01 — placeholder não é sessão);
 5. **Agente distinto do produtor** (por AGENTE, não runId — AID-2763): o
    produtor é o PRIMEIRO trailer de provenance da conversa (body conta
    primeiro); sem trailer nenhum → "producer unattributed" → vermelho (formato
@@ -484,7 +487,19 @@ comentário com linha `Countersign:`) satisfaz TUDO:
    de seleção é pré-merge — § Modo auditoria pós-merge, AID-2840);
 7. **Não supersedido**: nenhum comentário posterior com marcador VOID ou HELD,
    e nenhum evento `reopened` posterior (close de contenção → reopen não viaja
-   com countersign stale; caso #535).
+   com countersign stale; caso #535);
+8. **Âncora de sessão no registro de runs** (AID-4898): o `run=` da citação
+   operativa precisa **existir** no registro (`/api/heartbeat-runs/<id>` via
+   `PAPERCLIP_API_URL`/`PAPERCLIP_API_TOKEN`), ter status **`succeeded`**, e a
+   sessão efetiva precisa casar com uma das sessões registradas do run
+   (`sessionIdBefore`/`sessionIdAfter`/`usageJson.persistedSessionId`).
+   **Caminho conformante para countersigns mid-run** (causa estrutural do
+   achado: comentário mid-run não conhece o próprio `sessionIdAfter`): um
+   **adendo de provenância** posterior — mesmo `agent=`/`task=`/`run=`,
+   `session=` REAL, SEM nova linha `Countersign:` (não perturba a citação
+   operativa) — ancora a sessão (em modo auditoria, só adendos pré-merge
+   contam). Credenciais do registro ausentes, erro de transporte ou rejeição
+   de auth → vermelho (fail-closed, mesma doutrina do resolver §2).
 
 Linhas dentro de **code fences** (blocos cercados por ```/~~~, AID-2824 — achado
 AID-2818) são template/documentação e **não contam** em nenhum scan de citação
@@ -530,6 +545,12 @@ ruído pós-merge sem depender de edição de histórico.
 Countersign: AID-<n> verdict <commentId> head=<full-40-hex-head>
 Provenance: agent=<slug-distinto-do-produtor> task=AID-<n> run=<runId> session=<sessionId>
 ```
+
+`session=` é a sessão REAL do run citado (`sessionIdAfter`/`persistedSessionId`
+do registro de runs — ex.: `ses_…` ou UUID); placeholders como
+`opencode_local` são rejeitados (AID-4898). Countersign postado mid-run, antes
+da sessão fechar: poste depois um adendo `Provenance:` com o MESMO
+agent/task/run e a sessão real — sem nova linha `Countersign:` (§8 acima).
 
 ### Helper offline de recibos canônicos (AID-3585)
 
