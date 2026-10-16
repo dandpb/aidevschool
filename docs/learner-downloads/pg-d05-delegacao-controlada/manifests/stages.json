@@ -1,0 +1,43 @@
+{
+  "kit": "pg-d05-delegacao-controlada",
+  "zipRoot": "pg-d05",
+  "stages": [
+    {
+      "id": "etapa-1-pratica",
+      "zip": "pg-d05-etapa-1-pratica.zip",
+      "audience": "learner",
+      "name": "Etapa 1 — Prática: ciclo completo de delegação controlada",
+      "purpose": "Entregar tudo o que o aprendiz-controlador usa na sessão de 25–40 min: contrato e plano aprovados ANTES do diff (passo 1), verificador mecânico de escopo e de evidência, fixture determinística (biblioteca/testes), as duas rodadas do produtor simulado (r1 fora do escopo com alegação parcialmente verdadeira; r2 reentrega correta), ALLOWLIST do mundo fechado e a rúbrica com perChecks. Extração única que roda os comandos do enunciado verbatim, offline (Python 3 + git local).",
+      "limit": "Não contém NENHUM arquivo de guia-de-correcao (solução, veredito-r1 modelo, recibo-exemplo e recibo-falso) nem o MANIFEST.md de proveniência do pacote — as âncoras de integridade que o enunciado consulta no MANIFEST.md (sha256 de insumos/fixture/testes.py etc.) estão no INVENTARIO.txt desta etapa, linha a linha.",
+      "adds": [
+        "ALLOWLIST.md",
+        "enunciado.md",
+        "exemplo-trabalhado.md",
+        "rubrica-v1.md",
+        "insumos/CONTRATO.md",
+        "insumos/PLANO-APROVADO.md",
+        "insumos/verifica_delegacao.py",
+        "insumos/fixture/biblioteca.py",
+        "insumos/fixture/testes.py",
+        "insumos/delegacao-r1/diff-r1.patch",
+        "insumos/delegacao-r1/resposta-produtor-r1.md",
+        "insumos/delegacao-r2/diff-r2.patch",
+        "insumos/delegacao-r2/resposta-produtor-r2.md"
+      ]
+    },
+    {
+      "id": "etapa-2-docente",
+      "zip": "pg-d05-etapa-2-docente.zip",
+      "audience": "teacher",
+      "name": "Etapa 2 — Docente: gabaritos e prova V&E (pós-tentativa)",
+      "purpose": "Gabarito completo para uso docente ou autoavaliação APÓS a tentativa (enunciado §Limites: 'consulte após a tentativa'): solução com saídas reais de todos os comandos do aluno, veredito-r1 modelo com cláusulas e retrabalho, recibo-exemplo que passa no verificador e recibo-falso que reprova (o negativo anti-falsa-comprovação). Cumulativa sobre a Etapa 1: com as duas etapas extraídas na mesma pasta, 'python3 insumos/verifica_delegacao.py selftest' reproduz a prova V&E congelada do pacote (APROVADO 4/4).",
+      "limit": "Uso docente/avaliação pós-tentativa; não faz parte da tentativa do aprendiz. Contém exatamente os 4 arquivos de guia-de-correcao do pacote aceito — nenhum conteúdo reautorado.",
+      "adds": [
+        "guia-de-correcao/exemplos/recibo-falso.md",
+        "guia-de-correcao/recibo-exemplo/recibo-aceite-r2.md",
+        "guia-de-correcao/solucao.md",
+        "guia-de-correcao/veredito-r1.md"
+      ]
+    }
+  ]
+}
