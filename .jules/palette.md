@@ -32,3 +32,6 @@
 ## 2026-10-13 - Emojis in Togglable Buttons without Custom CSS
 **Learning:** In environments lacking .sr-only classes, visual symbols in buttons must be wrapped in <span aria-hidden="true"> while the button needs an explicit aria-label. For dynamic buttons, innerHTML must be used instead of textContent to preserve the span.
 **Action:** Use innerHTML for dynamic text updates involving emojis and hide emojis via aria-hidden alongside parent aria-labels.
+## 2025-02-14 - Dynamic togglable UI buttons accessibility in dojoToday
+**Learning:** When dynamically updating togglable UI buttons containing visual symbols (like emojis or Unicode arrows) in environments lacking `.sr-only` classes, modifying just `textContent` destroys the `aria-hidden` wrapper around the symbol. The symbol must be wrapped in `<span aria-hidden="true">` to prevent noisy or incorrect announcements by screen readers.
+**Action:** Use `innerHTML` instead of `textContent` to safely replace the button text while preserving the `<span aria-hidden="true">` wrapper around the visual symbol, and simultaneously update the parent element's `aria-label` to match the new state.
