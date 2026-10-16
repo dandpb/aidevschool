@@ -1,0 +1,289 @@
+# Dicionário de métricas de aprendizagem observável — v1
+#
+# Versionamento: qualquer mudança de observável, métrica, fórmula, fonte ou
+# regra de dupla contagem gera v2 com changelog; correções tipográficas não.
+# Fontes canônicas (SHA pinado no doc docs/metrics/AID-3515-evidencias-observaveis.md §Fontes):
+#   - ADR-0009 (analytics literacy: fronteira de privacidade, vocabulário fechado, master proibido)
+#   - ADR-0010 (coletor same-origin, k>=5, IDs nunca publicados)
+#   - AID-463 §3.0 (k-anonimato imutável n>=5)
+#   - Vocabulário literacy v2: engines/shared/teaching-evidence/vocabularies/literacy.json
+#   - Vocabulário OS v1: engines/shared/teaching-evidence/vocabularies/os.json
+#   - Rubricas de transferência: curriculum/praticas-transferencia/tp-c01-cotidiano/rubrica-v1.md
+#     e tp-d01-dev/rubrica-v1.md (PR #619 @ 7259dbc5, DRAFT)
+#   - Auditoria AID-1583: docs/metrics/AID-1583-auditoria-instrumentacao.md (lacunas G1–G8)
+#
+# Regra de ouro: analytics mede EXPERIÊNCIA (exposição, tentativa, retorno);
+# o canal de EVIDÊNCIA mede DESFECHO de transferência (rubrica humana
+# versionada). Nenhum dos dois emite "mastered" — mastery exige tentativa do
+# aprendiz + evidência independente apropriada ao gate (learner/AGENTS.md),
+# fora do alcance deste dicionário.
+
+meta:
+  dictionary_version: v1
+  issued: "2026-09-30"
+  owner: Learner Analytics Engineer
+  issue: AID-3515
+  k_anonymity_threshold: 5
+  forbidden_terms: [mastered, mastery_score, competency_score]
+  envelopes:
+    literacy_v2: {source: literacydojo, id_field: sessionId, id_scope: ephemeral-per-pageload}
+    os_v1: {source: codexdojo-os, id_field: installationId, id_scope: pseudonymous-installation}
+  evidence_channel:
+    transfer_outcome: registro NDJSON de aplicação de rubrica versionada (tp-c01/tp-d01)
+
+# ---------------------------------------------------------------------------
+# 1. Observáveis — o que a escola PODE observar, por qual canal
+# ---------------------------------------------------------------------------
+observables:
+  visita:
+    definition: "Uma superfície de entrada foi exibida a um navegador (1 page load)."
+    ui_action: "Aprende abre a home (literacy) ou o host OS renderiza a 1ª tela."
+    channel: analytics
+    unit: sessão (page load)
+    sources:
+      - envelope: literacy_v2
+        event: entry_viewed
+        fields: [entry]
+      - envelope: os_v1
+        event: onboarding.started
+        fields: []
+    double_count_risk: "Reload/refresh cria nova visita (sessionId novo por page load) — visita ≠ pessoa (G8; ADR-0009 emenda AID-913)."
+    inference_limit: "Sem installationId no literacy standalone: visitas não somam pessoas nem retenção."
+
+  tentativa:
+    definition: "O aprendiz submeteu uma resposta a uma atividade estruturada."
+    ui_action: "Clica 'enviar/responder' numa atividade (literacy) ou submete etapa de missão (OS)."
+    channel: analytics
+    unit: tentativa
+    sources:
+      - envelope: literacy_v2
+        event: activity_attempted
+        fields: [lessonId, activityType, passed]
+      - envelope: os_v1
+        event: structured_attempt.submitted
+        fields: [missionId, activityType]
+    double_count_risk: "Sem attempt_id no OS v1, N submissões da mesma etapa são indistinguíveis de N etapas — contar por (sessão, missão) e reportar o limite."
+    inference_limit: "Tentativa observada prova interação, não compreensão."
+
+  erro:
+    definition: "Tentativa com veredito 'fail' registrado pelo verificador determinístico da atividade."
+    ui_action: "Submete e recebe veredito negativo no painel de feedback."
+    channel: analytics
+    unit: tentativa
+    sources:
+      - envelope: literacy_v2
+        event: activity_attempted
+        fields: [passed=false]
+      - envelope: os_v1
+        event: "structured_attempt.submitted SEM structured_attempt.passed na mesma (instalação, sessão, missão)"
+        fields: []
+    double_count_risk: "No OS, 'submitted sem passed' é PROXY: evento de veredito negativo não existe; ausência ≠ fail confirmado (pode ser saída antes do veredito)."
+    inference_limit: "Erro do literacy é determinístico (prop passed); erro do OS é inferido por co-ocorrência — submitted cuja chave (instalação, sessão, missão) não tem NENHUM passed, sem pareamento por tentativa nem uso de `sequence` — reportar sempre com o qualificador 'proxy'."
+
+  feedback:
+    definition: "O painel de feedback foi exibido após uma tentativa."
+    ui_action: "Painel de feedback com veredito aparece após submit."
+    channel: analytics
+    unit: tentativa
+    sources:
+      - envelope: literacy_v2
+        event: "(nenhum — feedback não instrumentado)"
+        fields: []
+      - envelope: os_v1
+        event: structured_attempt.passed
+        fields: [missionId]
+    double_count_risk: "n/a (canal quase vazio)."
+    inference_limit: "GAP: nenhum envelope tem evento 'feedback_shown'. No literacy o feedback é UI transitória não instrumentada; no OS `structured_attempt.passed` só cobre o caso aprovado. Feedback negativo exibido NÃO é observável hoje — proxy parcial = erro (acima)."
+
+  retry:
+    definition: "Nova tentativa do aprendiz na mesma lição/etapa dentro da mesma sessão após veredito (qualquer)."
+    ui_action: "Escolhe 'tentar de novo' (ou simplesmente submete de novo)."
+    channel: analytics
+    unit: sessão-com-retry
+    sources:
+      - envelope: literacy_v2
+        event: ">=2 activity_attempted com mesmo (sessionId, lessonId)"
+        fields: []
+      - envelope: os_v1
+        event: retry.requested
+        fields: [missionId]
+    double_count_risk: "Retry NÃO é nova visita nem nova conclusão: restringir a contagem ao par (sessão, lição/missão). `activity_presented` não reemite em retry (emenda ADR-0009 F2) — usar activity_attempted como numerador do retry."
+    inference_limit: "No literacy, 'hint_requested' não existe no vocabulário (fora, por design) — retry por dica é inobservável."
+
+  conclusao:
+    definition: "A lição/missão foi concluída nesta sessão (evento terminal da experiência)."
+    ui_action: "Última atividade aprovada; tela de fim de lição/missão."
+    channel: analytics
+    unit: sessão
+    sources:
+      - envelope: literacy_v2
+        event: lesson_completed
+        fields: [lessonId, lessonVersion, score]
+      - envelope: os_v1
+        event: mission.completed
+        fields: [missionId]
+    double_count_risk: "Re-concluir a mesma lição em sessões distintas conta 2 conclusões de experiência — é permitido (unidade é sessão), mas NUNCA reportar como 2 aprendizes."
+    inference_limit: "CONCLUSÃO ≠ MASTERY (ADR-0009: analytics jamais mede competência; `score` é média das melhores notas = progresso de experiência). Local progress 'completed' nunca vira `mastered` (engines/literacyDojo AGENTS)."
+
+  retomada:
+    definition: "Sessão que começa onde a anterior parou (lição em andamento reexibida)."
+    ui_action: "Reabre o app e cai direto na lição em curso (resumeSession)."
+    channel: analytics
+    unit: sessão
+    sources:
+      - envelope: literacy_v2
+        event: entry_viewed
+        fields: [entry=lesson-resume]
+      - envelope: os_v1
+        event: journey.returned
+        fields: []
+    double_count_risk: "Prop `entry` opcional: envelopes pré-v4 sem a prop são 'não instrumentado (pré-v4)', NUNCA contados como retomada nem como não-retomada (emenda ADR-0009 F2)."
+    inference_limit: "Retomada observa comportamento de retorno à experiência, não aprendizado."
+
+  retencao:
+    definition: "Retorno em dia distinto (R1/R7/R21) do mesmo sujeito observável."
+    ui_action: "Aprende volta no dia seguinte/semana."
+    channel: analytics
+    unit: installation/sujeito
+    sources:
+      - envelope: os_v1
+        event: "eventos de >=2 dias distintos com mesmo installationId"
+        fields: []
+      - envelope: literacy_v2
+        event: "(não mensurável)"
+        fields: []
+    double_count_risk: "n/a (canal vazio no literacy)."
+    inference_limit: "G8 (auditoria AID-1583): literacy standalone só tem sessionId efêmero — retenção cross-dia INOBSERVÁVEL pelo pipeline; só o OS (installationId) pode medir, sempre sujeito a k>=5. Retenção de EXPERIÊNCIA, não de aprendizagem."
+
+  transferencia:
+    definition: "Desempenho do aprendiz em problema NOVO avaliado por rubrica versionada aplicada por revisor humano (nível T3 da matriz @579ce995 §0.1)."
+    ui_action: "Entrega memorando (tp-c01) ou correção+testes executáveis (tp-d01); revisor aplica rubrica."
+    channel: evidence
+    unit: aplicação-de-rubrica
+    sources:
+      - artifact: curriculum/praticas-transferencia/tp-c01-cotidiano/rubrica-v1.md
+        fields: [c1..c5, tentativa 1|2]
+      - artifact: curriculum/praticas-transferencia/tp-d01-dev/rubrica-v1.md
+        fields: [c1..c6, tentativa 1|2]
+    double_count_risk: "2ª tentativa com critérios recuperados é registro SEPARADO (tentativa=2), nunca soma com a 1ª; exemplos autorais de calibração (exemplos/) NUNCA contam como resultado de aprendiz."
+    inference_limit: "SIMULAÇÃO/EXEMPLO DO AUTOR ≠ TRANSFERÊNCIA DO ALUNO (regra do pacote PR #619); execução de código do assistente não é evidência (tp-d01). Rubrica humana v1 ainda SEM aplicação real: todo número de transferência real = not_measured até haver registros de revisão. Prática não gera mastered/score/certificação (rubrica tp-c01 cabeçalho)."
+
+# ---------------------------------------------------------------------------
+# 2. Métricas — definição + fórmula + fonte + status honesto
+# ---------------------------------------------------------------------------
+metrics:
+  - id: pipeline_events_accepted
+    observable: [visita, tentativa, conclusao]
+    definition: "Eventos aceitos pós-dedup por eventId no intervalo."
+    formula: "count(distinct eventId)"
+    source: "cabeçalho report aggregate_funnel.mjs (reportVersion 4) / compute.py"
+    audience: [dev, cotidiano]
+    status: measurable_now
+  - id: pipeline_duplicates_removed
+    observable: [visita]
+    definition: "Linhas NDJSON descartadas por eventId repetido (corrida beacon+fetch)."
+    formula: "count(rows) - count(distinct eventId)"
+    source: idem
+    audience: [dev, cotidiano]
+    status: measurable_now
+  - id: funnel_literacy_sessions
+    observable: [visita, tentativa, conclusao, retomada]
+    definition: "Sessões (page load) por estágio: entrada (entry_viewed) → brief (lesson_brief_viewed) → lição iniciada (lesson_started) → 1ª atividade exposta (activity_presented) → tentativa (activity_attempted) → concluída (lesson_completed)."
+    formula: "count(distinct sessionId com estágio) por dia"
+    source: "literacyFunnel/briefExposure do report v4; compute.py reproduz nos fixtures"
+    audience: [cotidiano]
+    status: measurable_now
+    suppression: "célula n<5 => suppressed (n<k), nunca taxa"
+  - id: attempt_error_rate_literacy
+    observable: [erro]
+    definition: "Tentativas com passed=false sobre tentativas totais, por activityType."
+    formula: "sum(passed=false) / sum(activity_attempted)"
+    source: "activity_attempted.passed (determinístico)"
+    audience: [cotidiano]
+    status: measurable_now
+    suppression: k>=5
+  - id: retry_sessions_literacy
+    observable: [retry]
+    definition: "Sessões com >=2 activity_attempted no mesmo (sessionId, lessonId)."
+    formula: "count(distinct (sessionId, lessonId) com >=2 tentativas)"
+    source: activity_attempted
+    audience: [cotidiano]
+    status: measurable_now
+    suppression: k>=5
+  - id: resume_sessions_literacy
+    observable: [retomada]
+    definition: "entry_viewed com entry=lesson-resume sobre entry_viewed com prop presente."
+    formula: "count(entry=lesson-resume) / count(entry_viewed com prop)"
+    source: entry_viewed.entry
+    audience: [cotidiano]
+    status: measurable_now
+    note: "envelopes pré-v4 (sem prop) ficam FORA do denominador"
+  - id: funnel_os_activation
+    observable: [visita, conclusao]
+    definition: "Instalações por semana ISO: onboarding.started → onboarding.completed."
+    formula: "count(distinct installationId por estágio/semana)"
+    source: activationFunnel report v4
+    audience: [dev, cotidiano]
+    status: measurable_now
+    suppression: k>=5
+  - id: retention_os_r1_r7
+    observable: [retencao]
+    definition: "Instalações com evento em >=2 dias distintos (R1/R7 por janela)."
+    formula: "count(distinct installationId cross-dia) / count(installationId ativos)"
+    source: os_v1 installationId
+    audience: [dev, cotidiano]
+    status: measurable_now
+    suppression: k>=5
+  - id: retention_literacy_standalone
+    observable: [retencao]
+    definition: "n/a"
+    formula: "n/a"
+    source: "n/a (sessionId efêmero)"
+    audience: [cotidiano]
+    status: not_measured
+    reason: "G8: sem identificador cross-dia no literacy standalone; decisão de board (emenda ADR-0009) é pré-requisito."
+  - id: feedback_shown_rate
+    observable: [feedback]
+    definition: "n/a"
+    formula: "n/a"
+    source: "n/a"
+    audience: [dev, cotidiano]
+    status: not_measured
+    reason: "GAP novo (TF-1): nenhum envelope instrumenta feedback_shown; proxy parcial = erro/tentativa."
+  - id: transfer_first_attempt_pass
+    observable: [transferencia]
+    definition: "Aplicações de rubrica com todos os critérios 'suficiente' na 1ª tentativa (tp-c01: 5/5; tp-d01: 6/6)."
+    formula: "count(tentativa=1, todos critérios suficiente) / count(aplicações tentativa=1)"
+    source: "registros do canal de evidência (rubrica v1) — ainda INEXISTENTES em produção"
+    audience: [dev, cotidiano]
+    status: not_measured
+    reason: "práticas tp-c01/tp-d01 ainda sem aplicação real (PR #619 DRAFT; teste com alunos pendente). Fixtures deste pacote demonstram o cálculo com dados SINTÉTICOS rotulados."
+  - id: transfer_recovery_second_attempt
+    observable: [transferencia, retry]
+    definition: "2ª tentativas com critérios antes insuficientes recuperados (+afirmação nova tratada, tp-c01)."
+    formula: "count(tentativa=2 com recuperação) / count(tentativa=2)"
+    source: canal de evidência
+    audience: [dev, cotidiano]
+    status: not_measured
+    reason: idem transfer_first_attempt_pass
+
+# ---------------------------------------------------------------------------
+# 3. Controles negativos (travados em learner/analytics_metrics/tests/)
+# ---------------------------------------------------------------------------
+negative_controls:
+  - id: NC-1 dedup-eventid
+    rule: "Mesmo eventId recebido 2x conta 1 (beacon+fetch)."
+  - id: NC-2 reload-nao-e-pessoa
+    rule: "2 sessões do mesmo aprendiz (reload) = 2 visitas, 0 informação sobre nº de pessoas; relatório nunca emite 'aprendizes'."
+  - id: NC-3 retry-nao-e-conclusao-nova
+    rule: "3 tentativas na mesma (sessão, lição) => 3 tentativas, 1 conclusão no máximo, 1 retry."
+  - id: NC-4 erro-nao-e-pessoa-nova
+    rule: "passed=false incrementa tentativas_com_erro, nenhum outro contador."
+  - id: NC-5 k-suppressão
+    rule: "célula n<5 => 'suppressed (n=k_x<k)', nunca taxa, nunca zero."
+  - id: NC-6 sem-mastered
+    rule: "nenhuma saída (JSON/MD/YAML) contém 'mastered' fora de contexto de proibição; assert mecânico no compute e no teste."
+  - id: NC-7 transferência-exemplos-nao-contam
+    rule: "registros synthetic=true ou de exemplos autorais ficam fora de todo numerador 'real'; desfecho insuficiente nunca vira conclusão."
+  - id: NC-8 ausência-não-é-zero
+    rule: "fonte sem dados => 'not_measured' com motivo, nunca 0/taxa."
