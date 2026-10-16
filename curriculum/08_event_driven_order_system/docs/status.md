@@ -2,7 +2,7 @@
 
 ## Phase
 
-phase: cycle-complete
+phase: impl
 
 # Status — Project 08 Event-Driven Order System
 
