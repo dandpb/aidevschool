@@ -1,0 +1,11 @@
+{
+  "reason": "Root appended the retained local Judge report after the 224-entry packet had been finalized; the packet hash pointer was not refreshed.",
+  "sourceHead": "91bacc0c9277fbaee63982724aa5b4a115a5d9e0",
+  "scope": "one informational packet hash pointer; no product, tests, helper, frozen obligation or status change",
+  "previousPacketSha256": "de5967451af1f54d90382480b63561a48d5001e75e6e5690b63a7cac6099db0f",
+  "previousManifestPointer": "560ccf9595f383f8c765a0310015c6860e80dc58e87b31efae3c27fa6ca7d7df",
+  "currentManifestSha256": "890fb0763b2deefc6b87deef4329c8be4c42639dd75250ed078ee34d4ec8e4c3",
+  "currentPacketSha256": "94697a22d9896c3c6e4053ebfd7709cf41d97bb5d996cd5e80722100f8b748e4",
+  "retentionEntries": 225,
+  "rootAction": "Update the pointer and re-verify after the final local commit; preserve the historical artifact-update-validation snapshot."
+}

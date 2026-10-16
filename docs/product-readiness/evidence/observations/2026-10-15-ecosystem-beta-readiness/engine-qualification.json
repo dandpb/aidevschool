@@ -14438,7 +14438,7 @@
     "manifest": "intent/2026-10-15-ecosystem-product-readiness/evidence/implementation/retention-manifest.json",
     "policy": "Small reports/source manifests/sanitized API receipts retained byte-identically; media remains under original ignored test-results paths. No historical source identity rewritten.",
     "followupSubtree": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016",
-    "manifestSha256": "560ccf9595f383f8c765a0310015c6860e80dc58e87b31efae3c27fa6ca7d7df"
+    "manifestSha256": "890fb0763b2deefc6b87deef4329c8be4c42639dd75250ed078ee34d4ec8e4c3"
   },
   "priorTask": {
     "path": "intent/2026-10-15-ecosystem-product-readiness/evidence/followup-20261016/history/prior-task/plan.md",
