@@ -1,0 +1,10 @@
+{
+  "recordedAt": "2026-10-16T01:10:33.377479+00:00",
+  "source": "direct human reply in this conversation",
+  "question": "Autoriza aplicar a edição delimitada do teste protegido learner/gate/tests/literacy_verify_netlify.test.mjs exatamente como proposta no PR #656 b29631ee?",
+  "answer": "Autorizar a edição delimitada",
+  "authorizedPath": "learner/gate/tests/literacy_verify_netlify.test.mjs",
+  "referenceHead": "b29631ee366954803d59691b646c10f0779082ce",
+  "patchSha256": "6356f5b8a33f50506ec49ec09e54455d33defa95270744471f7caa2d937940e6",
+  "boundary": "Apply this exact contract-v4 test diff; no weakened assertions, other test overrides, external publication, push, deploy or production data authorization."
+}
