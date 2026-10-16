@@ -4,7 +4,7 @@
 > MUST reference this file. Other documents that list projects (e.g. `docs/PROMPTS/IDEIAS/`,
 > `engines/codexDojo/ecosystem/ROADMAP.md`) are derived and must stay aligned with this catalog.
 >
-> **Status:** Canonical · **Total projects:** 19 (00–18) · **Implemented:** 2 (Project 01, Project 02 — both Node.js-only certifications; the status and caveats below are authoritative)
+> **Status:** Canonical · **Total projects:** 19 (00–18) · **Implemented:** 2 certified (Project 01, Project 02 — both Node.js-only certifications) + 3 partially implemented Node-verified (Projects 05, 12, 18; the status and caveats below are authoritative)
 >
 > `BACKLOG_STATUS.md` is a generated projection of this catalog. Edit status here, then run
 > `python3 -m learner.substrate`; never edit the generated backlog directly.
@@ -82,7 +82,7 @@ gate de código. Superfície de exploração associada: `engines/miniTown/`.
 | **Directory** | `02_key_value_store/` |
 | **Go coverage** | N/A — `go-impl/` was removed in `1b0a309` (ungated backfill cleanup); no Go implementation exists for this project. |
 | **Rust tests** | N/A — `rust-impl/` was removed in the same commit; no Rust implementation exists for this project. |
-| **Node coverage** | 91.45% stmts / 82.01% branch / 100% funcs / 91.45% lines — 10/10 tests passing (re-verified this cycle after 3 Major bug fixes + regression tests; `tsc`/`eslint` clean) |
+| **Node coverage** | 89.4% stmts / 92.26% branch / 100% funcs / 89.4% lines (v8 All files; `store.ts` 95.91/90.26/100/95.91, `server.ts` 95.89/94.93/100/95.89, `log.ts`/`types.ts` 0%) — 33/33 tests passing across 3 files (`store`, `server`, `mutation`; re-verified 2026-09-13 @ `05fca349`, `tsc`/`eslint` clean) |
 | **Benchmark** | **Node.js only**, N=10 + tolerance re-check PASS, native harness (autocannon substitute for k6, mixed GET/SET/DELETE/EXPIRE/TTL-read workload). Go/Rust not executed — out of scope this cycle by explicit repo-owner decision, not a toolchain failure. Not a 3-language comparison. |
 | **Evolution** | **Node.js only** — 3 Major code-review bugs fixed (expire() key-validation bypass, UTF-16-vs-UTF-8 value-size check, insecure `0.0.0.0` default bind) with regression tests; 1 measured perf optimization applied (rate-limited `/health` expiry sweep) — honest result: a wash on the benchmarked workload (all deltas within measurement noise), reported as-is, not spun as an improvement; 1 optimization rejected (dropping the sweep entirely) with documented reasoning. See `docs/evolution_report.md`. |
 | **Dependencies** | Project 01 (concurrency basics) |
@@ -124,12 +124,15 @@ gate de código. Superfície de exploração associada: `engines/miniTown/`.
 | Field | Value |
 |-------|-------|
 | **Slug** | `05_websocket_chat` |
-| **Status** | scaffolded |
-
+| **Status** | Partially implemented (Node.js: verified green; Go/Rust: removed in `1b0a309` quality cuts) |
+| **Evidence** | Node.js implementation verified 2026-09-13 @ `05fca349` (`npm install`/`lint`/`build`/`test` exit 0; 10/10 tests passing across 2 files: `chatHub`, `config`) with `docs/{spec,code_review,evolution_report,benchmark_results,status}.md` present on disk. Caveat: Node.js-only (`go-impl/` and `rust-impl/` were removed in `1b0a309` and do not exist on disk). |
 | **Concepts** | WebSocket protocol, connection management, fan-out broadcasting, rooms, presence, heartbeats |
 | **Key question** | How does each runtime handle 10k+ concurrent persistent connections? |
 | **Learning goal** | Gerir conexões persistentes e broadcast em escala. |
 | **Directory** | `05_websocket_chat/` |
+| **Go coverage** | N/A — `go-impl/` was removed in `1b0a309`; no Go implementation exists on disk. |
+| **Rust tests** | N/A — `rust-impl/` was removed in `1b0a309`; no Rust implementation exists on disk. |
+| **Node coverage** | 10/10 tests passing across 2 files (`tests/chatHub.test.ts`, `tests/config.test.ts`; verified 2026-09-13 @ `05fca349`, `lint`/`build` exit 0) |
 | **Dependencies** | Projects 01-03 |
 
 ### 06. File Upload/Processing Pipeline
@@ -227,12 +230,15 @@ gate de código. Superfície de exploração associada: `engines/miniTown/`.
 | Field | Value |
 |-------|-------|
 | **Slug** | `12_distributed_job_scheduler` |
-| **Status** | scaffolded |
-
+| **Status** | Partially implemented (Node.js: verified green; Go/Rust: removed in `1b0a309` quality cuts) |
+| **Evidence** | Node.js implementation verified 2026-09-13 @ `05fca349` (`npm install`/`lint`/`build`/`test` exit 0; 7/7 tests passing in 1 file; v8 All files coverage 91.2% stmts / 83.33% branch / 96.42% funcs / 91.2% lines) with `docs/{spec,code_review,evolution_report,benchmark_results,status}.md` present on disk. Caveat: Node.js-only (`go-impl/` and `rust-impl/` were removed in `1b0a309` and do not exist on disk). |
 | **Concepts** | Leader election (Raft simplified), distributed locks, cron-like scheduling, fault tolerance, DAG dependencies, exponential backoff retry |
 | **Key question** | How do leader election implementations compare in split-brain scenarios? |
 | **Learning goal** | Coordenar jobs distribuídos sem split-brain. |
 | **Directory** | `12_distributed_job_scheduler/` |
+| **Go coverage** | N/A — `go-impl/` was removed in `1b0a309`; no Go implementation exists on disk. |
+| **Rust tests** | N/A — `rust-impl/` was removed in `1b0a309`; no Rust implementation exists on disk. |
+| **Node coverage** | 91.2% stmts / 83.33% branch / 96.42% funcs / 91.2% lines (v8 All files) — 7/7 tests passing in 1 file (verified 2026-09-13 @ `05fca349`, `lint`/`build` exit 0) |
 | **Dependencies** | Projects 07-09 |
 
 ---
@@ -317,12 +323,15 @@ gate de código. Superfície de exploração associada: `engines/miniTown/`.
 | Field | Value |
 |-------|-------|
 | **Slug** | `18_search_engine` |
-| **Status** | scaffolded |
-
+| **Status** | Partially implemented (Node.js: verified green; Go/Rust: removed in `1b0a309` quality cuts) |
+| **Evidence** | Node.js implementation verified 2026-09-13 @ `05fca349` (`npm install`/`lint`/`build`/`test` exit 0, `lint` = `tsc --noEmit`; 10/10 tests passing in 1 file: `tests/search.test.ts`) with `docs/{spec,code_review,evolution_report,benchmark_results,status}.md` present on disk. Caveat: Node.js-only (`go-impl/` and `rust-impl/` were removed in `1b0a309` and do not exist on disk). |
 | **Concepts** | Inverted indexes, tokenization, TF-IDF/BM25 ranking, query parsing, fuzzy search, autocomplete, incremental indexing, index persistence |
 | **Key question** | How do inverted index build times and query latencies compare for different corpus sizes? |
 | **Learning goal** | Construir busca com tokenização, ranking e autocomplete. |
 | **Directory** | `18_search_engine/` |
+| **Go coverage** | N/A — `go-impl/` was removed in `1b0a309`; no Go implementation exists on disk. |
+| **Rust tests** | N/A — `rust-impl/` was removed in `1b0a309`; no Rust implementation exists on disk. |
+| **Node coverage** | 10/10 tests passing in 1 file (`tests/search.test.ts`; verified 2026-09-13 @ `05fca349`, `lint` = `tsc --noEmit` / `build` exit 0) |
 | **Dependencies** | Projects 13-15 |
 
 ---
