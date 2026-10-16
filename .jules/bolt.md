@@ -60,3 +60,6 @@
 ## 2024-10-10 - Caching Derived State Requires Care
 **Learning:** Naively caching derived state (like `#roofedCount` or `#inhabitedShops`) purely inside `tick()` transitions introduces subtle but critical bugs because it misses initialization/loading phases and deletions. In hot loops, replacing `for...of` with a traditional indexed `for` loop provides a safe, strict GC-free optimization without breaking functional correctness.
 **Action:** Prefer traditional indexed `for` loops in highly-called methods (e.g. `snapshot`) to reduce iterator allocation GC pressure, instead of caching state if caching cannot perfectly mirror the entire lifecycle.
+## 2026-10-13 - Prevent Set Allocations in Continuous Sync Loops
+**Learning:** In 60-FPS environments like `miniTown`, using `new Set()` inside the `sync()` loop on every frame to identify removed items causes excessive garbage collection pressure. This can be mitigated by guarding the cleanup with a size check (e.g. `map.size > source.length`) so the set is only allocated when items are actually removed, which is rare.
+**Action:** Use an indexed loop instead of `for...of` for the main sync, and wrap the cleanup block (including the `seen` Set allocation) inside an `if (currentSize > targetLength)` condition.

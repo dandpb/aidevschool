@@ -47,9 +47,9 @@ export class BuildingsRenderer {
   }
 
   sync(): void {
-    const seen = new Set<string>()
-    for (const building of this.#town.buildings) {
-      seen.add(building.id)
+    for (let i = 0; i < this.#town.buildings.length; i++) {
+      const building = this.#town.buildings[i]
+      if (!building) continue
       let entry = this.#entries.get(building.id)
       if (!entry) {
         const root = new THREE.Group()
@@ -63,11 +63,18 @@ export class BuildingsRenderer {
         entry.stage = building.stage
       }
     }
-    for (const [id, entry] of this.#entries) {
-      if (!seen.has(id)) {
-        this.group.remove(entry.root)
-        this.#disposeGroup(entry.root)
-        this.#entries.delete(id)
+    if (this.#entries.size > this.#town.buildings.length) {
+      const seen = new Set<string>()
+      for (let i = 0; i < this.#town.buildings.length; i++) {
+        const b = this.#town.buildings[i]
+        if (b) seen.add(b.id)
+      }
+      for (const [id, entry] of this.#entries) {
+        if (!seen.has(id)) {
+          this.group.remove(entry.root)
+          this.#disposeGroup(entry.root)
+          this.#entries.delete(id)
+        }
       }
     }
   }
