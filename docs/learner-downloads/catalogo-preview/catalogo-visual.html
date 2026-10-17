@@ -53,6 +53,7 @@ button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid #12
 .status{display:flex;align-items:center;gap:8px;font:11px var(--mono);letter-spacing:.9px;color:#4c6057}
 .primary{background:var(--mint);border:1px solid #86bfa7;padding:13px 19px;border-radius:9px;color:#163b2d;font-weight:750;font-size:14px;min-height:46px;box-shadow:0 2px 0 #82b49e;transition:background .15s}
 .primary:hover{background:#baeeda}
+a.primary{display:block;text-decoration:none;text-align:center}
 .availability-note{font-size:12px;line-height:1.65;color:#4c6057;margin:0}
 .footer{padding:18px 0 22px;border-top:1px solid var(--line);color:#495f50;font:10px var(--mono);line-height:1.7;margin-top:26px}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
@@ -91,11 +92,11 @@ button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid #12
   <div class="heading">
     <p class="eyebrow">CATÁLOGO DE PRÁTICAS</p>
     <h1>Escolha sua próxima <em>prática</em></h1>
-    <p>Cada card mostra o resultado que você pratica, a duração real, o que é preciso já ter visto, os primeiros passos e a disponibilidade verdadeira. Nesta versão de preview, todas as práticas estão em preparação: ainda não há download — e nenhum link falso aparece no lugar.</p>
+    <p>Cada card mostra o resultado que você pratica, a duração real, o que é preciso já ter visto, os primeiros passos e a disponibilidade verdadeira. Nesta versão, as oito práticas estão disponíveis: os links abrem o pacote real (pasta do repositório ou ZIP do kit offline). Continua sendo preview local: nada é publicado fora do repositório, e nada é salvo ou enviado.</p>
   </div>
 
   <div class="countbar">
-    <p class="count" style="margin:0">4 PRÁTICAS LISTADAS · 0 DISPONÍVEIS AGORA · 4 EM PREPARAÇÃO</p>
+    <p class="count" style="margin:0">8 PRÁTICAS LISTADAS · 8 DISPONÍVEIS AGORA · 0 EM PREPARAÇÃO</p>
     <p class="legend" style="margin:0">
       <span><i class="dot mint" aria-hidden="true"></i>Disponível agora (download real)</span>
       <span><i class="dot gold" aria-hidden="true"></i>Em preparação (ainda sem download)</span>
@@ -103,6 +104,106 @@ button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid #12
   </div>
 
   <div class="catalog">
+
+    <article class="practice" aria-labelledby="pratica-c01">
+      <div class="practice-kicker">
+        <span class="track cotidiano">TRILHA IA NO COTIDIANO · PRÁTICA GUIADA</span>
+        <span class="practice-number">PG-C01</span>
+      </div>
+      <h2 id="pratica-c01">Dados mínimos e verificação — o aviso da festa</h2>
+      <p class="outcome">Diante do recado da anfitriã e do grupo de família bagunçado, você prepara um pedido de ajuda para IA com o mínimo de informação (sem expor pessoas e sem o que não é preciso), verifica a resposta da IA afirmação por afirmação — apoiada, contrariada ou “fontes não dizem”, sempre citando fonte e linha — recusa o pedido de dado sensível e escreve o aviso afirmando somente o que as fontes sustentam, com a incerteza dita com todas as letras. A prática é simulada: a resposta “da IA” já vem no pacote e nada é enviado a ninguém.</p>
+      <dl class="meta">
+        <div class="meta-row"><dt>Duração</dt><dd>Uma sessão, no seu ritmo (o pacote não fixa tempo).</dd></div>
+        <div class="meta-row"><dt>Requisitos</dt><dd>Lições l09–l12, l20 e l25 da trilha IA no cotidiano (ou equivalentes): sinais de invenção, quando verificar, marcar o que verificar e proteger antes de enviar.</dd></div>
+        <div class="meta-row"><dt>Formato</dt><dd>Prática guiada simulada, no papel, com insumos sintéticos rotulados: preparar → verificar → responder, com exemplo trabalhado, rúbrica e tentativa novamente.</dd></div>
+      </dl>
+      <p class="steps-label">PRIMEIROS PASSOS</p>
+      <ol class="steps">
+        <li>Ler o exemplo trabalhado (um mini-caso diferente, só de estudo).</li>
+        <li>Preparar o pedido: montar o mínimo de informação que a tarefa precisa.</li>
+        <li>Classificar cada afirmação da resposta, recusar o dado sensível e escrever o aviso; autoconferir com a rúbrica.</li>
+      </ol>
+      <div class="availability">
+        <p class="status" style="margin:0"><i class="dot mint" aria-hidden="true"></i>DISPONÍVEL AGORA</p>
+        <a class="primary" href="../../../curriculum/praticas-guiadas-cotidiano/pg-c01-dados-minimos-e-verificacao/enunciado.md">Abrir o enunciado da prática</a>
+        <p class="availability-note">Pacote completo (enunciado, fontes sintéticas, resposta da IA e exemplo) em curriculum/praticas-guiadas-cotidiano/pg-c01-dados-minimos-e-verificacao/ — o link abre o enunciado. O gabarito fica separado, fora do caminho do aprendiz.</p>
+      </div>
+    </article>
+
+    <article class="practice" aria-labelledby="pratica-d01">
+      <div class="practice-kicker">
+        <span class="track dev">TRILHA IA PARA DEV · PRÁTICA GUIADA</span>
+        <span class="practice-number">U06</span>
+      </div>
+      <h2 id="pratica-d01">Debug com assistente: reproduza antes de perguntar</h2>
+      <p class="outcome">Diante de um bug report, você executa o ciclo completo — reprodução manual, teste de regressão vermelho, correção mínima na causa raiz, suíte verde e revisão do diff — usando um assistente de IA em cada passo sem terceirizar a prova: quem roda os comandos e lê as saídas é você. A entrega é o pedido de diagnóstico com o erro reproduzido, o caso mínimo e o esperado-vs-observado.</p>
+      <dl class="meta">
+        <div class="meta-row"><dt>Duração</dt><dd>25–40 min (uma sessão)</dd></div>
+        <div class="meta-row"><dt>Requisitos</dt><dd>Lições l16 (primeiro código com assistente) e l21 (peça testes que valem a pena), ou experiência equivalente.</dd></div>
+        <div class="meta-row"><dt>Formato</dt><dd>Prática guiada offline com fixture local determinística: exemplo → tentativa → feedback (rúbrica) → tente novamente → takeaway. Sem rede, sem conta, sem chave.</dd></div>
+      </dl>
+      <p class="steps-label">PRIMEIROS PASSOS</p>
+      <ol class="steps">
+        <li>Ler o exemplo trabalhado (~8 min): caso real do repositório, com saídas reais citadas.</li>
+        <li>Reproduzir o bug manualmente e confirmar que a suíte atual fica verde com o bug presente.</li>
+        <li>Escrever o pedido de diagnóstico e o teste de regressão (vermelho pelo motivo certo); aplicar a correção mínima e revisar o diff.</li>
+      </ol>
+      <div class="availability">
+        <p class="status" style="margin:0"><i class="dot mint" aria-hidden="true"></i>DISPONÍVEL AGORA</p>
+        <a class="primary" href="../../../curriculum/sequencia-dev-guiada/pg-d01-debug-reproduza/enunciado.md">Abrir o enunciado da prática</a>
+        <p class="availability-note">Pacote completo (enunciado, exemplo trabalhado, fixture e rúbrica) em curriculum/sequencia-dev-guiada/pg-d01-debug-reproduza/ — o link abre o enunciado. O gabarito fica separado, fora do caminho do aprendiz.</p>
+      </div>
+    </article>
+
+    <article class="practice" aria-labelledby="pratica-d02">
+      <div class="practice-kicker">
+        <span class="track dev">TRILHA IA PARA DEV · PRÁTICA GUIADA</span>
+        <span class="practice-number">U03</span>
+      </div>
+      <h2 id="pratica-d02">O pedido estruturado de 5 campos</h2>
+      <p class="outcome">Dado um pedido real (fictício, mas realista) vago demais, você o reescreve nos cinco campos — CONTEXTO, OBJETIVO, RESTRIÇÕES, ACEITE e NÃO-META — com o ACEITE verificável por um comando executável local (offline) e a NÃO-META excluindo explicitamente um escopo vizinho que estava embutido no pedido original. O teste: um revisor consegue decidir os casos de borda sem perguntar a você.</p>
+      <dl class="meta">
+        <div class="meta-row"><dt>Duração</dt><dd>25–40 min (uma sessão)</dd></div>
+        <div class="meta-row"><dt>Requisitos</dt><dd>Lição l16 (pedido de código com contexto) ou equivalente.</dd></div>
+        <div class="meta-row"><dt>Formato</dt><dd>Prática guiada offline com caso-modelo e exemplo executável: exemplo → tentativa → feedback (rúbrica) → tente novamente → takeaway. Sem rede, sem conta, sem chave.</dd></div>
+      </dl>
+      <p class="steps-label">PRIMEIROS PASSOS</p>
+      <ol class="steps">
+        <li>Ler o pedido original e o exemplo trabalhado do caso-modelo.</li>
+        <li>Reescrever o pedido nos cinco campos, na ordem.</li>
+        <li>Conferir: o ACEITE roda offline e as bordas ficam decidíveis sem você.</li>
+      </ol>
+      <div class="availability">
+        <p class="status" style="margin:0"><i class="dot mint" aria-hidden="true"></i>DISPONÍVEL AGORA</p>
+        <a class="primary" href="../../../curriculum/sequencia-dev-guiada/pg-d02-pedido-estruturado/enunciado.md">Abrir o enunciado da prática</a>
+        <p class="availability-note">Pacote completo (enunciado, exemplo trabalhado, insumos e rúbrica) em curriculum/sequencia-dev-guiada/pg-d02-pedido-estruturado/ — o link abre o enunciado. O gabarito fica separado, fora do caminho do aprendiz.</p>
+      </div>
+    </article>
+
+    <article class="practice" aria-labelledby="pratica-d03">
+      <div class="practice-kicker">
+        <span class="track dev">TRILHA IA PARA DEV · PRÁTICA GUIADA</span>
+        <span class="practice-number">U07</span>
+      </div>
+      <h2 id="pratica-d03">Refatoração com rede de segurança (comportamento é o contrato)</h2>
+      <p class="outcome">Dado um pedido de refatoração com a proposta anexa do assistente, você monta a rede antes de tocar no código: registra o baseline da suíte e escreve teste(s) de caracterização para o que a suíte não cobre. Aí julga a proposta com evidência — ela precisa passar na suíte existente E violar o contrato no seu teste, exibindo o contraexemplo observado — e só então refatora em passos, com a suíte verde entre eles.</p>
+      <dl class="meta">
+        <div class="meta-row"><dt>Duração</dt><dd>25–40 min (uma sessão)</dd></div>
+        <div class="meta-row"><dt>Requisitos</dt><dd>Lição l21 (pedir testes) e a prática pg-d01 (reproduzir antes de diagnosticar), ou equivalentes.</dd></div>
+        <div class="meta-row"><dt>Formato</dt><dd>Prática guiada offline com fixture Python determinística: exemplo → tentativa → feedback (rúbrica) → tente novamente → takeaway. Sem rede, sem conta, sem chave.</dd></div>
+      </dl>
+      <p class="steps-label">PRIMEIROS PASSOS</p>
+      <ol class="steps">
+        <li>Rodar o baseline da suíte e escrever o teste de caracterização (verde sobre o código original).</li>
+        <li>Aplicar (ou ler com precisão de diff) a proposta do assistente.</li>
+        <li>Mostrar as duas provas — suíte existente verde e contraexemplo do contrato — e refatorar com a rede.</li>
+      </ol>
+      <div class="availability">
+        <p class="status" style="margin:0"><i class="dot mint" aria-hidden="true"></i>DISPONÍVEL AGORA</p>
+        <a class="primary" href="../../../curriculum/sequencia-dev-guiada/pg-d03-refatorar-com-rede/enunciado.md">Abrir o enunciado da prática</a>
+        <p class="availability-note">Pacote completo (enunciado, exemplo trabalhado, fixture e rúbrica) em curriculum/sequencia-dev-guiada/pg-d03-refatorar-com-rede/ — o link abre o enunciado. O gabarito fica separado, fora do caminho do aprendiz.</p>
+      </div>
+    </article>
 
     <article class="practice" aria-labelledby="pratica-u09">
       <div class="practice-kicker">
@@ -123,9 +224,9 @@ button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid #12
         <li>Escrever CONTEXTO (tabelas incluído/excluído, cada linha com o porquê), PRD e SPEC — nessa ordem.</li>
       </ol>
       <div class="availability">
-        <p class="status" style="margin:0"><i class="dot gold" aria-hidden="true"></i>EM PREPARAÇÃO</p>
-        <button type="button" class="primary" disabled>Ainda não disponível — em preparação</button>
-        <p class="availability-note">Quando o pacote desta prática for aceito, este botão ganha o download real. Neste preview, ele não faz nada — de propósito.</p>
+        <p class="status" style="margin:0"><i class="dot mint" aria-hidden="true"></i>DISPONÍVEL AGORA</p>
+        <a class="primary" href="../pg-d04-contexto-e-spec/zips/pg-d04-contexto-e-spec.zip">Baixar o kit offline (ZIP)</a>
+        <p class="availability-note">Kit 100% offline: extraia o ZIP numa pasta limpa e trabalhe sem abrir o repositório. O mesmo conteúdo também existe como pacote em curriculum/sequencia-dev-guiada/pg-d04-contexto-e-spec/.</p>
       </div>
     </article>
 
@@ -148,9 +249,9 @@ button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid #12
         <li>Re-executar tudo, escrever o veredito com as cláusulas e o retrabalho; aceitar a r2 só com as provas.</li>
       </ol>
       <div class="availability">
-        <p class="status" style="margin:0"><i class="dot gold" aria-hidden="true"></i>EM PREPARAÇÃO</p>
-        <button type="button" class="primary" disabled>Ainda não disponível — em preparação</button>
-        <p class="availability-note">Quando o pacote desta prática for aceito, este botão ganha o download real. Neste preview, ele não faz nada — de propósito.</p>
+        <p class="status" style="margin:0"><i class="dot mint" aria-hidden="true"></i>DISPONÍVEL AGORA</p>
+        <a class="primary" href="../pg-d05-delegacao-controlada/zips/pg-d05-etapa-1-pratica.zip">Baixar a etapa 1 — prática (ZIP)</a>
+        <p class="availability-note">Kit offline em 2 etapas cumulativas: a etapa 1 é a prática completa do aprendiz; a etapa 2 (docente) traz o guia de correção e só entra depois da sua tentativa. O mesmo conteúdo também existe como pacote em curriculum/sequencia-dev-guiada/pg-d05-delegacao-controlada/.</p>
       </div>
     </article>
 
@@ -173,9 +274,9 @@ button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid #12
         <li>Rodar o scorer A vs B, diagnosticar a fatia que piorou e testar a correção nos casos novos.</li>
       </ol>
       <div class="availability">
-        <p class="status" style="margin:0"><i class="dot gold" aria-hidden="true"></i>EM PREPARAÇÃO</p>
-        <button type="button" class="primary" disabled>Ainda não disponível — em preparação</button>
-        <p class="availability-note">Quando o pacote desta prática for aceito, este botão ganha o download real. Neste preview, ele não faz nada — de propósito.</p>
+        <p class="status" style="margin:0"><i class="dot mint" aria-hidden="true"></i>DISPONÍVEL AGORA</p>
+        <a class="primary" href="../pg-e01-evals-offline/zips/pg-e01-etapa-1-inicio.zip">Baixar a etapa 1 — início (ZIP)</a>
+        <p class="availability-note">Kit offline em 5 etapas cumulativas que protegem o método: 1 início (critérios antes dos resultados), 2 base, 3 held-out, 4 referência mínima, 5 docente. O mesmo conteúdo também existe como pacote em curriculum/praticas-evals-offline/pg-e01-evals-offline/.</p>
       </div>
     </article>
 
@@ -198,9 +299,9 @@ button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid #12
         <li>Testar com os números novos da semana 2 e autoconferir com nova tentativa.</li>
       </ol>
       <div class="availability">
-        <p class="status" style="margin:0"><i class="dot gold" aria-hidden="true"></i>EM PREPARAÇÃO</p>
-        <button type="button" class="primary" disabled>Ainda não disponível — em preparação</button>
-        <p class="availability-note">Quando a folha imprimível for aceita, este botão ganha o download real. Neste preview, ele não faz nada — de propósito.</p>
+        <p class="status" style="margin:0"><i class="dot mint" aria-hidden="true"></i>DISPONÍVEL AGORA</p>
+        <a class="primary" href="../../worksheets/reparo-de-rotina/worksheet-visual.html">Abrir a folha (versão visual)</a>
+        <p class="availability-note">Folha pronta em docs/worksheets/reparo-de-rotina/: versão visual, versão em texto puro e guia do docente. Imprima ou use no digital — nada é salvo ou enviado.</p>
       </div>
     </article>
 
