@@ -85,12 +85,31 @@ describe('GuidedPracticeApp embedded default (pg-d01 / AC1 negatives)', () => {
 describe('GuidedPracticeApp daily (pg-c01)', () => {
   it('renders the daily identity without Dev-only defaults (no track/anchor/duration)', () => {
     render(<GuidedPracticeApp practiceId="pg-c01" onTeach={() => {}} />)
-    expect(screen.getByText(`${dailyProjection.practiceId} · ${dailyProjection.package.id}`)).toBeTruthy()
+    // AID-3643 (P3): human title primary; technical identity subordinated.
+    expect(
+      screen.getByRole('heading', { level: 1, name: /cotidiano: dados mínimos e verificação/i }),
+    ).toBeTruthy()
+    expect(
+      screen.getByText(/pg-c01 · pg-c01-dados-minimos-e-verificacao v1/).closest('.practice-identity'),
+    ).toBeTruthy()
     expect(screen.getByText(new RegExp(dailyProjection.contentVersion))).toBeTruthy()
     expect(screen.getByText(new RegExp(dailyProjection.projectionPin.artifactSha256.slice(0, 12)))).toBeTruthy()
     expect(document.body.textContent).not.toContain('TRILHA')
     expect(document.body.textContent).not.toContain('Sessão de ')
     expect(screen.getByRole('heading', { name: /exemplo trabalhado/i })).toBeTruthy()
+  })
+
+  it('renders ratified daily markdown as structure, never as literal markers (AID-3643 P2)', () => {
+    render(<GuidedPracticeApp practiceId="pg-c01" onTeach={() => {}} />)
+    // No literal ** markers survive on the daily surface…
+    expect(document.body.textContent).not.toContain('**')
+    // …while the ratified words themselves remain (bold + inline code).
+    expect(document.querySelectorAll('.practice-app strong').length).toBeGreaterThan(0)
+    expect(document.querySelectorAll('.practice-app code').length).toBeGreaterThan(0)
+    // The worked example renders block structure (quote + ordered list), not a <pre> dump.
+    expect(document.querySelector('.practice-source .practice-markdown blockquote')).toBeTruthy()
+    expect(document.querySelector('.practice-source .practice-markdown ol')).toBeTruthy()
+    expect(document.querySelector('.practice-source pre')).toBeNull()
   })
 
   it('runs the full daily cycle with retry and emits the deterministic receipt without onConcluded', async () => {
@@ -133,11 +152,19 @@ describe('GuidedPracticeApp daily (pg-c01)', () => {
     fireEvent.change(screen.getByLabelText(/\(b\)/), { target: { value: 'a frase do dia com L1' } })
     await user.click(screen.getByRole('button', { name: /concluir a prática/i }))
 
-    const receipt = screen.getByText(/Recibo da prática guiada pg-c01/)
+    const receiptHeading = screen.getByText(/Recibo da prática guiada pg-c01/)
+    const receipt = receiptHeading.closest('.practice-receipt')
+    if (receipt === null) throw new Error('daily receipt container not rendered')
     expect(receipt.textContent).toContain(dailyProjection.contentVersion)
     expect(receipt.textContent).toContain(dailyProjection.projectionPin.artifactSha256)
-    expect(receipt.textContent).toContain('- c3-citações: sufficient')
-    expect(receipt.textContent).toContain('## Resposta ao retry (tentativa 2)')
+    expect(receipt.textContent).toContain('c3-citações: sufficient')
+    expect(receipt.textContent).toContain('Resposta ao retry (tentativa 2)')
+    // AID-3643: the daily receipt renders structure (no literal markers)…
+    expect(receipt.textContent).not.toContain('**')
+    expect(receipt.textContent).not.toContain('##')
+    // …and keeps every ratified section heading visible as text.
+    expect(receipt.textContent).toContain('Etapas A/B/C')
+    expect(receipt.textContent).toContain('Critérios (veredito binário sufficient/insufficient)')
     // AC1 negative: a pg-c01 conclusion never fires the mission-credit callback.
     expect(onConcluded).not.toHaveBeenCalled()
   })
@@ -169,7 +196,9 @@ describe('GuidedPracticeStandaloneApp (explicit content choice)', () => {
     render(<GuidedPracticeStandaloneApp onTeach={() => {}} />)
     // Free switch before any attempt: pg-d01 → pg-c01.
     await user.click(screen.getByRole('button', { name: /pg-c01 ·/i }))
-    expect(screen.getByRole('heading', { level: 1, name: new RegExp(dailyProjection.package.id) })).toBeTruthy()
+    expect(
+      screen.getByRole('heading', { level: 1, name: /cotidiano: dados mínimos e verificação/i }),
+    ).toBeTruthy()
     await completeDailyAttempt(user)
     expect(screen.getByRole('heading', { name: /feedback pelos critérios/i })).toBeTruthy()
     // Attempt active (feedback phase): switching asks for an explicit restart.
@@ -194,5 +223,47 @@ describe('GuidedPracticeStandaloneApp (explicit content choice)', () => {
   it('documents session volatility (close/minimize dismounts, no persistence claim)', () => {
     render(<GuidedPracticeStandaloneApp onTeach={() => {}} />)
     expect(screen.getByText(/fechar ou minimizar o app encerra a sessão sem persistir nada/i)).toBeTruthy()
+  })
+
+  it('gives every chooser option an explicit legible surface class (AID-3643 P2)', () => {
+    render(<GuidedPracticeStandaloneApp onTeach={() => {}} />)
+    const chooser = screen.getByLabelText(/escolha da prática guiada/i)
+    const scope = within(chooser)
+    const inactive = scope.getByRole('button', { name: /pg-c01 ·/i })
+    const active = scope.getByRole('button', { name: /pg-d01 ·/i })
+    expect(inactive.className).toContain('practice-choice')
+    expect(inactive.getAttribute('aria-pressed')).toBe('false')
+    expect(active.className).toContain('practice-primary')
+    expect(active.getAttribute('aria-pressed')).toBe('true')
+  })
+
+  it('orients the LearningRail on the selected content without forcing it open (AID-3643 P2)', async () => {
+    const user = userEvent.setup()
+    const onTeach = vi.fn()
+    const onRailContext = vi.fn()
+    const { coreContexts } = await import('../learning/learningContexts')
+    render(<GuidedPracticeStandaloneApp onTeach={onTeach} onRailContext={onRailContext} />)
+
+    // Default mount keeps the accepted pg-d01 practice context.
+    expect(onRailContext).toHaveBeenLastCalledWith(coreContexts.practice)
+    expect(onTeach).not.toHaveBeenCalled()
+
+    await user.click(screen.getByRole('button', { name: /pg-c01 ·/i }))
+    // pg-c01 selected: the rail context is derived from the pinned projection
+    // and carries no pg-d01 orientation.
+    const dailyContext = onRailContext.mock.lastCall?.[0]
+    expect(dailyContext).toBeDefined()
+    expect(dailyContext?.title).toBe('Cotidiano: dados mínimos e verificação')
+    expect(dailyContext?.summary).toBe(dailyProjection.objective)
+    expect(dailyContext?.challenge).toBe(dailyProjection.rules[0])
+    expect(JSON.stringify(dailyContext)).not.toContain('pg-d01')
+    expect(JSON.stringify(dailyContext)).not.toContain('Reproduza antes de perguntar')
+    // Content-only update: the rail was never forced open via teach.
+    expect(onTeach).not.toHaveBeenCalled()
+
+    // Switching back restores the untouched pg-d01 practice context.
+    await user.click(screen.getByRole('button', { name: /pg-d01 ·/i }))
+    expect(onRailContext).toHaveBeenLastCalledWith(coreContexts.practice)
+    expect(onTeach).not.toHaveBeenCalled()
   })
 })
