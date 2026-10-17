@@ -1,6 +1,7 @@
 import { useServices } from "../app/services";
 import { MentorGuide } from "../components/MentorGuide";
 import { VoxelWorld } from "../components/VoxelWorld";
+import { type JourneyId, activeJourneyOf } from "../domain/journeyProgress";
 import type { LearnerProgress } from "../domain/progress";
 import { RETROFIT_NOTICE_S1, isRetrofittedLesson } from "../domain/retrofitNotice";
 import { buildTrackQueries } from "../domain/trackQueries";
@@ -16,6 +17,7 @@ export function HomeScreen({
   onOpenCheckpoint,
   onOpenMap,
   onOpenProgress,
+  onSwitchJourney,
   onReset,
 }: {
   progress: LearnerProgress;
@@ -24,11 +26,13 @@ export function HomeScreen({
   onOpenCheckpoint: (checkpointId: "cp-01" | "cp-02" | "cp-03") => void;
   onOpenMap: () => void;
   onOpenProgress: () => void;
+  onSwitchJourney: (journey: JourneyId) => void;
   onReset: () => void;
 }) {
   const services = useServices();
   const track = services.content.getTrack();
-  const queries = buildTrackQueries(progress, services.content, services.clock);
+  const activeJourney = activeJourneyOf(progress);
+  const queries = buildTrackQueries(progress, services.content, services.clock, activeJourney);
   const { mission, reviewLesson, dailyGoal: goal, trackSummary: summary, dueReviews } = queries;
   const pendingCheckpoint = queries.pendingCheckpoint;
 
@@ -119,6 +123,46 @@ export function HomeScreen({
         )}
       </div>
 
+      <div className="card journey-card" data-testid="journey-card">
+        <h2>Suas jornadas</h2>
+        <p className="muted">
+          Duas trilhas no mesmo app. A Jornada Dev é opcional: começa do zero dela, sem
+          pré-requisito — se você ainda não usa IA no dia a dia, recomendamos conhecer a Vila Lume
+          primeiro.
+        </p>
+        <fieldset className="journey-options">
+          <legend className="sr-only">Escolher jornada</legend>
+          <button
+            type="button"
+            className="btn btn-journey"
+            data-testid="journey-switch-ia_pratica"
+            aria-pressed={activeJourney === "ia_pratica"}
+            disabled={activeJourney === "ia_pratica"}
+            onClick={() => onSwitchJourney("ia_pratica")}
+          >
+            <strong>Vila Lume · IA na Prática</strong>
+            <span>
+              {activeJourney === "ia_pratica" ? "Jornada atual" : "Voltar à IA do dia a dia"}
+            </span>
+          </button>
+          <button
+            type="button"
+            className="btn btn-journey"
+            data-testid="journey-switch-dev"
+            aria-pressed={activeJourney === "dev"}
+            disabled={activeJourney === "dev"}
+            onClick={() => onSwitchJourney("dev")}
+          >
+            <strong>Jornada Dev</strong>
+            <span>
+              {activeJourney === "dev"
+                ? "Jornada atual"
+                : "9 lições para quem programa com IA (opcional)"}
+            </span>
+          </button>
+        </fieldset>
+      </div>
+
       <div className="card">
         <h2>Sua trilha</h2>
         <p data-testid="track-progress">
@@ -146,7 +190,7 @@ export function HomeScreen({
           data-testid="open-map"
           onClick={onOpenMap}
         >
-          Explorar Vila Lume
+          {activeJourney === "dev" ? "Explorar Jornada Dev" : "Explorar Vila Lume"}
         </button>
         <button
           type="button"
