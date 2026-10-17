@@ -1,18 +1,21 @@
-# Runbook — Pipeline de mídia content-addressed (R2 + CDN)
+# Runbook — Pipeline de mídia content-addressed (local-first: Release Assets + pacotes offline)
 
-Issue: AID-2925 · Owner: Storage Engineer · Status: **ativo**
-ADR: `docs/storage/AID-2886_ADR_MEDIA_PIPELINE_2026-09-26.md` (**ACEITA** — Opção 2
-R2 + CDN, decisão do founder registrada na ADR)
-Ferramenta: `scripts/storage/media_pipeline.py` + `scripts/storage/s3_miniclient.py`
-(Python 3 stdlib only — sem dependências; SigV4 nativo contra API S3-compatível)
+Issue: AID-2925/AID-2928 · Owner: Storage Engineer · Status: **ativo**
+ADRs: `docs/storage/AID-2886_ADR_MEDIA_PIPELINE_2026-09-26.md` (contrato original,
+Opção 2 R2 + CDN — **produção R2 ADIADA**) e
+`docs/storage/AID-2928_ADR_MEDIA_LOCAL_FIRST_2026-10-17.md` (**produção vigente**:
+100% local-first via GitHub Release Assets + pacotes offline determinísticos,
+US$0/mês — decisão do founder no encerramento da AID-2931 e refinamento
+provider-model nos comentários da AID-2928 de 2026-10-17T16:15Z/16:18Z).
+Ferramentas: `scripts/storage/media_pipeline.py` + `scripts/storage/s3_miniclient.py`
+(backend S3, stand-in/opcional) e `scripts/storage/offline_package.py`
+(pacotes offline; Python 3 stdlib only — sem dependências).
 
 > **Pivô de produção (2026-10-17, AID-2928):** a origem de produção ATIVA é
-> local-first — GitHub Release Assets + kits offline determinísticos
-> (ADR `docs/storage/AID-2928_ADR_MEDIA_LOCAL_FALLBACK_2026-10-17.md`,
-> decisão do founder no fechamento da AID-2931). Tudo abaixo (contrato §1,
-> manifest, lifecycle, orçamento) continua válido; o backend S3 fica como
-> stand-in/opcional (§4b) e a produção R2 (§4a) fica **DEFERIDA** até decisão
-> do CEO. Comandos da origem ativa: §10.
+> local-first — GitHub Release Assets + kits offline determinísticos. Tudo
+> abaixo (contrato §1, manifest, lifecycle, orçamento) continua válido; o
+> backend S3 fica como stand-in/opcional (§4b) e a produção R2 (§4a) fica
+> **ADIADA** até decisão do CEO. Origem ativa: §4c; pacotes offline: §10.
 
 ## 1. Contrato (o que o pipeline garante)
 
@@ -67,10 +70,11 @@ apontando fora do repo.
 
 ## 4. Provisionamento
 
-### 4a. Produção (Cloudflare R2) — requer credenciais do CEO
+### 4a. Produção (Cloudflare R2) — **ADIADA** (decisão founder AID-2931, 2026-10-17)
 
-> **DEFERIDA (2026-10-17, AID-2928/AID-2931):** produção migrou para a origem
-> local-first (§10). Reativar R2 exige decisão do CEO.
+> Especificação mantida para reativação futura (ADR AID-2886 segue válida como
+> contrato de conteúdo; só o destino de produção mudou — ver §4c). Passos
+> abaixo permanecem como estavam; nada disso está provisionado.
 
 1. Dashboard R2 → criar bucket `aidevschool-media` (location: auto).
 2. Criar token S3 (escopo Object Read & Write **neste bucket**) → preencher env da seção 2.
@@ -93,6 +97,27 @@ ADS_MEDIA_ENDPOINT=http://127.0.0.1:53210 ADS_MEDIA_REGION=us-east-1 \
 ADS_MEDIA_ACCESS_KEY_ID=x ADS_MEDIA_SECRET_ACCESS_KEY=x \
   python3 scripts/storage/media_pipeline.py self-test
 ```
+
+### 4c. Produção local-first (GitHub Release Assets) — **ATIVA** (2026-10-17)
+
+ADR: `docs/storage/AID-2928_ADR_MEDIA_LOCAL_FIRST_2026-10-17.md`. Provider
+model (founder, comentários AID-2928 16:15Z/16:18Z): **`file://` primário**
+(static-bundle local — offline/CI-friendly), **Release Assets fallback**
+(distribuição pública), **SHA-256 fail-closed em todo caminho**.
+
+1. **Upload**: mídia nova sobe como asset `blobs/<sha256>.<ext>` na release
+   `media-v<N>` do repo público. Asset publicado é imutável — nunca
+   re-escrito na mesma tag; conteúdo divergente no mesmo nome = erro.
+2. **Manifest** (autoridade, no git): `docs/storage/manifests/media-manifest.json`
+   mapeia `path → sha256 → url` com
+   `https://github.com/dandpb/aidevschool/releases/download/media-v<N>/blobs/<sha256>.<ext>`
+   (download anônimo; Level 0 sem conta). O PR mostra o manifest, não os bytes.
+3. **Pacotes offline** (§10) espelham os mesmos blobs em zips determinísticos
+   com `SHA256SUMS.txt` — o consumidor `file://` resolve primeiro do bundle.
+4. **Retenção**: sem lifecycle nativo — GC 100% manifest-driven (§5, carência
+   90d); expurgo opera por release inteira órfã, com recibo no sweep.
+5. **Orçamento**: US$0/mês (repo público). Teto US$25 e alerta US$10 seguem
+   para qualquer backend futuro.
 
 ## 5. Lifecycle de órfãos (regra completa)
 
@@ -160,29 +185,27 @@ referenciados intactos, budget US$0,00 — **PASS**
 - O manifest cresce uma entrada por path lógico (não por conteúdo) — dedup de
   conteúdo compartilha a mesma chave/objeto.
 
-## 10. Origem ATIVA: GitHub Release Assets + kits offline (local-first)
+## 10. Pacotes offline determinísticos (offline_package.py)
 
-ADR: `docs/storage/AID-2928_ADR_MEDIA_LOCAL_FALLBACK_2026-10-17.md` (ACEITA
-2026-10-17, decisão founder no fechamento da AID-2931). Contrato da seção 1
-segue valendo; só a origem dos bytes muda.
+Ferramenta: `scripts/storage/offline_package.py` (+ `test_offline_package.py`,
+7 testes / `python3 scripts/storage/test_offline_package.py`). Embala blobs
+content-addressed em bundles `NAME-VERSION.zip` **reproduzíveis byte a byte**
+(timestamps/ordem/compressão fixos), com `manifest.json` +
+`SHA256SUMS.txt` (verificação offline: `sha256sum -c`); restore **fail-closed**
+(hash divergente não é gravado). A pessoa aprende baixa o zip para
+`learner/downloads/` (zona de aterrissagem local, gitignored) — o provider
+`file://` da §4c resolve primeiro daí; Level 0 permanece sem conta, sem rede,
+sem dependência nova.
 
-1. **Upload de mídia**: asset `<sha256>.<ext>` na release `media-<AAAAMMDD>`
-   do repo público. Asset publicado é imutável (nunca re-escrito na mesma
-   tag); conteúdo divergente no mesmo nome = erro.
-2. **Manifest**: `docs/storage/manifests/media-manifest.json` ganha
-   `origin: "release"` + `tag`/`asset`/`url`/`bytes` por entrada. A URL
-   pública é `https://github.com/dandpb/aidevschool/releases/download/<tag>/<asset>`
-   (download anônimo — Level 0 sem conta).
-3. **Kits offline** (pacotes de micro-lesson): zips determinísticos
-   (timestamps fixos, entradas ordenadas) + INVENTÁRIO sha256 + PROVENANCE
-   com fonte pinada, convenção `docs/learner-downloads/`; publicados como
-   assets das mesmas releases. Verificação offline: `sha256sum -c`.
-4. **Retenção**: igual §5 — órfão = asset sem referência no manifest por
-   >90 dias; remoção só via `orphan-gc` com recibo no sweep (não existe
-   lifecycle nativo no GitHub; referenciado nunca é deletado).
-5. **Orçamento**: US$0/mês (release assets de repo público, egress incluso).
-   Limites US$10/US$25 permanecem para qualquer backend futuro.
-6. **Ferramentas (em implementação, AID-2928)**: `release_assets.py`
-   (minicliente Releases), `offline_kit.py` (empacotador determinístico),
-   self-test e2e offline; primeiro upload real + `verify --deep` + drill de
-   restore fecham os critérios da issue.
+1. **Build**: `offline_package.py build --file F [--file F…] --name N
+   --version V --out DIR --zip` — dedup por sha256; gera
+   `DIR/N-V/` (blobs + `manifest.json` + `SHA256SUMS.txt`) e o zip
+   determinístico `N-V.zip` + sidecar `N-V.zip.sha256`.
+2. **Verify**: `offline_package.py verify --package DIR` (re-hash dos blobs)
+   ou `--zip PACOTE.zip` (contra sidecar/`--expect sha256`) — fail-closed.
+3. **Restore**: `offline_package.py restore --package DIR --into DEST` —
+   grava somente bytes que conferem com o manifesto interno.
+4. **Publicação**: o zip vira Release Asset da `media-v<N>` (§4c) e o
+   manifest do repo referencia a URL + o hash do zip.
+5. Kits curriculares seguem também a convenção documentada de
+   `docs/learner-downloads/` (INVENTÁRIO + PROVENANCE com fonte pinada).
