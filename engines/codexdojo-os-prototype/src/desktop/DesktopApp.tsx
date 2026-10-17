@@ -179,6 +179,7 @@ export function DesktopApp({ learner }: AppProps) {
                 learner={resolvedLearner}
                 onTeach={teach}
                 onOpenApp={openApp}
+                onRailContext={setLearningContext}
               />
             </DesktopWindow>
           ))}

@@ -42,3 +42,103 @@ export type GuidedPracticeProjection = {
   readonly takeawayPrompts: Readonly<{ readonly a: string; readonly b: string }>
   readonly manifest: readonly GuidedPracticeManifestEntry[]
 }
+
+// AID-3590: daily (cotidiano) guided practice pg-c01. The runtime projection
+// is derived at build time from the immutable adapter artifact
+// (aidevschool/praticas-guiadas-cotidiano/projection@1, sha256-pinned in
+// scripts/gen-guided-practice.mjs). Only learner-facing fields exist here:
+// no title/duration/lesson anchor (the daily contract has none — Dev-style
+// defaults must not be invented), and the rubric carries criterion ids plus
+// the ratified retry feedback only, never perCheck/gabarito columns.
+
+export type DailyRubricVerdict = 'sufficient' | 'insufficient'
+
+export type DailyGuidedPracticeSourceLine = {
+  readonly id: string
+  readonly text: string
+}
+
+export type DailyGuidedPracticeStatement = {
+  readonly id: string
+  readonly text: string
+}
+
+export type DailyGuidedPracticeVerdictPolicy = {
+  readonly allowed: readonly DailyRubricVerdict[]
+  readonly binary: boolean
+  readonly allCriteriaRequired: boolean
+  readonly aggregateScore: 'none'
+}
+
+export type DailyGuidedPracticeProjection = {
+  readonly practiceId: 'pg-c01'
+  readonly contentVersion: string
+  readonly package: {
+    readonly id: string
+    readonly version: string
+    readonly family: 'praticas-guiadas-cotidiano'
+    readonly audience: string
+    readonly journey: string
+    readonly competencies: readonly string[]
+    readonly simulated: boolean
+    readonly gradesOrCertifies: boolean
+  }
+  readonly projectionPin: {
+    readonly artifactSha256: string
+    readonly artifactBytes: number
+    readonly adapterTool: string
+    readonly adapterToolVersion: string
+    readonly sourcePullRequest: number
+    readonly sourceHead: string
+    readonly canonicalAttachmentSha256: string
+  }
+  readonly objective: string
+  readonly steps: readonly { readonly id: string; readonly instruction: string }[]
+  readonly rules: readonly string[]
+  readonly inputs: {
+    readonly fonte1: {
+      readonly file: string
+      readonly anchorKind: 'L'
+      readonly lines: readonly DailyGuidedPracticeSourceLine[]
+    }
+    readonly fonte2: {
+      readonly file: string
+      readonly anchorKind: 'G'
+      readonly lines: readonly DailyGuidedPracticeSourceLine[]
+    }
+    readonly respostaIa: {
+      readonly file: string
+      readonly statements: readonly DailyGuidedPracticeStatement[]
+    }
+  }
+  readonly workedExample: {
+    readonly markdown: string
+    readonly sourcePath: string
+  }
+  readonly retry: {
+    readonly instruction: string
+    readonly insistedStatement: {
+      readonly id: string
+      readonly text: string
+    }
+  }
+  readonly takeaway: {
+    readonly instruction: string
+    readonly prompts: readonly [string, string]
+  }
+  readonly criteria: readonly string[]
+  readonly verdictPolicy: DailyGuidedPracticeVerdictPolicy
+  readonly completion: string
+  readonly feedbackByCriterion: Readonly<Record<string, string>>
+  readonly manifest: readonly GuidedPracticeManifestEntry[]
+}
+
+export type GuidedPracticeId = 'pg-d01' | 'pg-c01'
+
+export type AnyGuidedPracticeProjection = GuidedPracticeProjection | DailyGuidedPracticeProjection
+
+export function isDailyGuidedPractice(
+  projection: AnyGuidedPracticeProjection,
+): projection is DailyGuidedPracticeProjection {
+  return projection.practiceId === 'pg-c01'
+}

@@ -1,0 +1,46 @@
+[
+  {
+    "hash": "c82b686",
+    "message": "refactor(codexdojo-os): table-driven analytics policies + gates"
+  },
+  {
+    "hash": "1cf2271",
+    "message": "feat(curso): workflow lab + course page validators and skill pack"
+  },
+  {
+    "hash": "697c056",
+    "message": "refactor(curriculum): split ai-literacy validator into modules + CC gate"
+  },
+  {
+    "hash": "e63f0f0",
+    "message": "feat: AI dev workflow teaching page + tested workflow library"
+  },
+  {
+    "hash": "a1efd80",
+    "message": "docs: priorities report (top 10 + 3 tested cases) and static course page"
+  },
+  {
+    "hash": "1155dcb",
+    "message": "fix: priorities round 2 — CI pilot smoke, atomic gate manifest, catalog truth"
+  },
+  {
+    "hash": "f4fa2dc",
+    "message": "feat(codexdojo-os): pilot static deploy, repo hygiene guards, public LiteracyDojo entry"
+  },
+  {
+    "hash": "96c4d9d",
+    "message": "fix(ci): fix main red — voxelDojo biome lint + literacyDojo lockfile"
+  },
+  {
+    "hash": "7aaa182",
+    "message": "Merge branch 'main' of github.com:dandpb/aidevschool"
+  },
+  {
+    "hash": "62743d6",
+    "message": "ci: trigger fresh run (previous run record stuck on stale conclusion after rerun)"
+  },
+  {
+    "hash": "35db5c8",
+    "message": "feat(ci)!: skip pixelDojo games matrix job when no games exist\n\nBREAKING CHANGE: matriz sem jogos agora pula o job em vez de falhar a avaliação; pipelines que dependiam da falha explícita devem migrar para o gate de descoberta."
+  }
+]
