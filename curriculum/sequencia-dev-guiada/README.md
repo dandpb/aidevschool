@@ -1,4 +1,4 @@
-# curriculum/sequencia-dev-guiada — sequência Dev guiada (AID-3510)
+# curriculum/sequencia-dev-guiada — sequência Dev guiada (AID-3510/AID-3553)
 
 Pacote de conteúdo da sequência didática executável da jornada **IA para
 Dev** (D1–D7) da escola única (AID-3453). Desde a AID-3535 a família tem
@@ -32,6 +32,18 @@ sequencia-dev-guiada/
 │       ├── teste_regressao_bug001.py  # vermelho contra a fixture original
 │       ├── solucao/notas.py           # fix mínimo (1 caractere, causa raiz)
 │       └── solucao.md                 # saídas reais da execução completa
+├── pg-d02-pedido-estruturado/       # segunda prática guiada (U03, M3, D3;
+│   │                                # AID-3553) — pedido de 5 campos
+│   ├── enunciado.md                 # ciclo guiado + casos de borda B1/B2
+│   ├── exemplo-trabalhado.md        # M3 §3.1–3.2 + PRD/SPEC workflow-exemplo
+│   ├── insumos/                     # pedido-original (romance), amostra fixa
+│   │   ├── pedido-original.md       #   meus_commits.json (11 commits) e
+│   │   ├── meus_commits.json        #   verificador mecânico de formato
+│   │   └── verifica_pedido.py
+│   ├── rubrica-v1.md                # 7 critérios (met/partial/not_met) + perChecks
+│   └── guia-de-correcao/            # SEPARADO do enunciado:
+│       ├── pedido-5-campos.md         # pedido-modelo (decide B1/B2)
+│       └── solucao.md                 # saídas reais + vereditos B1/B2
 └── pg-d03-refatorar-com-rede/       # prática guiada (U07, l28, D4;
                                      # AID-3562) — refatoração com rede de
                                      # segurança (comportamento é o contrato)
@@ -64,6 +76,23 @@ PYTHONPATH=insumos/fixture python3 insumos/fixture/testes.py
 
 PYTHONPATH=insumos/fixture python3 guia-de-correcao/teste_regressao_bug001.py
 # AssertionError ... obtido 'REPROVADO' (vermelho pelo motivo certo)
+```
+
+## Como rodar o pg-d02 (verificação local, sem rede)
+
+```sh
+cd curriculum/sequencia-dev-guiada/pg-d02-pedido-estruturado
+python3 ../../../docs/curso-simples/workflow-exemplo/release_notes.py \
+  insumos/meus_commits.json --version v0.9.0   # estado atual (exit=0, 5 seções)
+
+python3 insumos/verifica_pedido.py guia-de-correcao/pedido-5-campos.md
+# campos: 5/5 · veredito: met  (contra insumos/pedido-original.md: 0/5, not_met)
+
+python3 insumos/verifica_pedido.py --caminhos guia-de-correcao/pedido-5-campos.md
+# 3x "ok caminho …" · veredito: met
+
+cd ../../../docs/curso-simples/workflow-exemplo && python3 -m pytest test_release_notes.py -q
+# 22 passed  (fonte do exemplo, intocada)
 ```
 
 ## Como rodar o pg-d03 (verificação local, sem rede)
