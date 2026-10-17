@@ -1,5 +1,6 @@
 """Learner-state substrate: single source of truth and derived-view adapters."""
 
+import json
 import os
 import re
 from datetime import date
@@ -514,14 +515,96 @@ def _validate_evidence_files(state: dict[str, Any], root: Path = ROOT) -> list[s
                 )
             )
             continue
+        if gate_kind == "guided_practice":
+            # AID-5005: guided-practice conclusions are digest-bound receipts
+            # (learner/practice_receipts/), never mastery writes. The unit may
+            # conclude several practices, each with its own receipt; the
+            # evidence_file must back at least one recorded digest and every
+            # review's own receipt must still match its digest.
+            from learner.substrate.practice import (
+                bound_practice_receipt_violations,
+                practice_review_trail_violations,
+            )
+
+            practice_digests = [
+                review.get("evidence_digest")
+                for review in reviews
+                if isinstance(review, dict)
+                and review.get("gate_kind") == "guided_practice"
+                and isinstance(review.get("evidence_digest"), str)
+            ]
+            errors.extend(
+                f"units_log[{index}].{error}"
+                for error in bound_practice_receipt_violations(
+                    evidence_path, practice_digests or [expected_digest], root
+                )
+            )
+            errors.extend(
+                f"units_log[{index}].{error}"
+                for error in practice_review_trail_violations(unit, root)
+            )
+            if unit.get("mastered"):
+                errors.append(
+                    f"units_log[{index}] is a guided_practice gate with"
+                    " mastered = true; a practice conclusion never masters"
+                )
+            continue
         errors.extend(
             f"units_log[{index}].{error}"
             for error in bound_evidence_violations(
                 evidence_path, expected_digest, root
             )
         )
+        errors.extend(
+            _verifier_receipt_file_violations(
+                index,
+                str(receipt_review.get("evidence_verifier_source", "")),
+                expected_digest,
+                root,
+            )
+        )
 
     return errors
+
+
+def _find_receipt_by_source(receipts_dir: Path, source: str) -> Path | None:
+    if not receipts_dir.is_dir():
+        return None
+    for candidate in sorted(receipts_dir.glob("*.json")):
+        try:
+            raw = json.loads(candidate.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        if isinstance(raw, dict) and raw.get("source") == source:
+            return candidate
+    return None
+
+
+def _verifier_receipt_file_violations(
+    index: int, source: str, expected_digest: str, root: Path
+) -> list[str]:
+    from learner.gate.security import GateSecurityError
+    from learner.gate.standards import load_thresholds
+    from learner.gate.verifier_receipt import load_verifier_receipt
+
+    receipt_path = _find_receipt_by_source(root / "learner" / "verifier_receipts", source)
+    if receipt_path is None:
+        return []
+    try:
+        receipt = load_verifier_receipt(
+            receipt_path.relative_to(root.resolve()), root
+        )
+    except GateSecurityError as exc:
+        return [f"units_log[{index}].verifier_receipt invalid: {exc}"]
+    th = load_thresholds()
+    violations: list[str] = []
+    if not receipt.passed:
+        violations.append(f"units_log[{index}].verifier_receipt verdict is {receipt.verdict!r}, not PASS")
+    if receipt.evidence_digest != expected_digest:
+        violations.append(f"units_log[{index}].verifier_receipt evidence_digest mismatch")
+    if receipt.mutation_score < th.mutation_min or receipt.coverage_core < th.coverage_min:
+        violations.append(f"units_log[{index}].verifier_receipt scores below threshold")
+    return violations
 
 
 # Well-known role names. Sorted for human-readable error messages.
