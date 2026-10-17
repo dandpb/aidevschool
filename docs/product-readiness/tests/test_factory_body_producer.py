@@ -123,11 +123,22 @@ def test_gate_attributes_producer_at_origin(tmp_path):
 def test_gate_passes_with_independent_countersign(tmp_path):
     gate = _load_gate()
     body = _render_body(tmp_path, _body_script())
-    operative, producer, countersigner = gate.evaluate(
+    # AID-4898 §8: a passing citation now anchors its session= to the cited
+    # run= in the run registry — stub the registry with the SUCCEEDED fixture
+    # run whose registered session matches the trailer (hermetic, no network).
+    gate.lookup_run = lambda run_id: {
+        "id": run_id,
+        "status": "succeeded",
+        "sessionIdBefore": None,
+        "sessionIdAfter": "11111111-2222-3333-4444-555555555555",
+        "usageJson": {},
+    }
+    operative, producer, countersigner, session = gate.evaluate(
         _ctx(body, [_comment(QA_COUNTERSIGN)]), [], HEAD, _stub_resolver(tmp_path)
     )
     assert producer == "readiness-regrant-factory", producer
     assert countersigner == "qa-lead", countersigner
+    assert session == "11111111-2222-3333-4444-555555555555", session
 
 
 def test_body_without_trailer_is_producer_unattributed(tmp_path):
