@@ -314,6 +314,13 @@ function wireInteractions(a: TodaySnapshot["activeUnit"]): void {
   configBtn.addEventListener("click", () => {
     configPanel.hidden = !configPanel.hidden;
     configBtn.setAttribute("aria-expanded", String(!configPanel.hidden));
+    if (!configPanel.hidden) {
+      configBtn.innerHTML = `<span aria-hidden="true">⚙️</span> Ocultar configuração do assistente`;
+      configBtn.setAttribute("aria-label", "Ocultar configuração do assistente");
+    } else {
+      configBtn.innerHTML = `<span aria-hidden="true">⚙️</span> Configurar assistente (opcional)`;
+      configBtn.setAttribute("aria-label", "Configurar assistente (opcional)");
+    }
     fill();
   });
   saveBtn?.addEventListener("click", () => {
@@ -324,6 +331,8 @@ function wireInteractions(a: TodaySnapshot["activeUnit"]): void {
     });
     configPanel.hidden = true;
     configBtn.setAttribute("aria-expanded", "false");
+    configBtn.innerHTML = `<span aria-hidden="true">⚙️</span> Configurar assistente (opcional)`;
+    configBtn.setAttribute("aria-label", "Configurar assistente (opcional)");
     setReply(
       isConfigured(loadConfig())
         ? "Assistente configurado. Pergunte acima."
@@ -371,10 +380,14 @@ function wireInteractions(a: TodaySnapshot["activeUnit"]): void {
     // W2 §2.3-6 (AID-1089): ação assíncrona — controle desabilita + aria-busy;
     // a região role=status (#soc-reply, aria-live polite) anuncia o andamento.
     send.setAttribute("aria-busy", "true");
+    const originalText = send.innerHTML;
+    send.innerHTML = `<span aria-hidden="true">⏳</span> Pensando…`;
     try {
       if (!isConfigured(cfg)) {
         configPanel.hidden = false;
         configBtn.setAttribute("aria-expanded", "true");
+        configBtn.innerHTML = `<span aria-hidden="true">⚙️</span> Ocultar configuração do assistente`;
+        configBtn.setAttribute("aria-label", "Ocultar configuração do assistente");
         fill();
         setReply(deterministicNudge(mission));
         return;
@@ -388,6 +401,7 @@ function wireInteractions(a: TodaySnapshot["activeUnit"]): void {
     } finally {
       send.disabled = false;
       send.removeAttribute("aria-busy");
+      send.innerHTML = originalText;
     }
   };
   send.addEventListener("click", () => void ask());

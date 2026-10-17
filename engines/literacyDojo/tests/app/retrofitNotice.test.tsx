@@ -8,21 +8,27 @@ import type { ContentRepository } from "../../src/application/ports";
 import { createInitialProgress } from "../../src/domain/progress";
 import type { LearnerProgress } from "../../src/domain/progress";
 import { RETROFIT_NOTICE_S1, RETROFIT_NOTICE_S2 } from "../../src/domain/retrofitNotice";
+import { emptyXpLedger } from "../../src/domain/xpLedger";
 import { LiteracyMissionAdapter } from "../../src/host/LiteracyMissionAdapter";
-import { InMemoryEvidenceSink, InMemoryProgressRepository, fixedClock } from "../fakes";
+import { InMemoryEvidenceSink, InMemoryLearnerStateStore, fixedClock } from "../fakes";
 import { FIXED_NOW, makeServices } from "../helpers";
 
 /** Serviços em memória com repositório de conteúdo pinado (janela da onda C1). */
 function makeServicesWithContent(progress: LearnerProgress, content: ContentRepository) {
-  const progressRepo = new InMemoryProgressRepository();
-  progressRepo.seed(progress);
+  const stateStore = new InMemoryLearnerStateStore();
+  stateStore.seedState({
+    stateVersion: 1,
+    origin: "fresh-seed",
+    progress: progress,
+    xpLedger: emptyXpLedger(),
+  });
   const services = createServices({
-    progressRepo,
+    stateStore,
     evidence: new InMemoryEvidenceSink(),
     clock: fixedClock(FIXED_NOW),
     content,
   });
-  return { services, progressRepo };
+  return { services, stateStore };
 }
 
 /**

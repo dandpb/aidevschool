@@ -1,6 +1,7 @@
 import { Bot, BrainCircuit, Send, Trophy, X } from 'lucide-react'
 import { useState } from 'react'
 import type { LearningContext } from '../domain'
+import { StructuredMarkdown, renderInlineMarkdown } from '../practice/structuredMarkdown'
 
 export function LearningRail({ context, onClose }: { readonly context: LearningContext; readonly onClose: () => void }) {
   const [question, setQuestion] = useState('')
@@ -16,17 +17,35 @@ export function LearningRail({ context, onClose }: { readonly context: LearningC
   }
   return (
     <aside className="learning-rail">
-      <header><span><BrainCircuit /> Modo Aprender</span><button type="button" onClick={onClose} aria-label="Fechar Modo Aprender" title="Fechar"><span aria-hidden="true"><X /></span></button></header>
+      <header><span><BrainCircuit /> Modo Aprender</span><button
+            type="button"
+            onClick={onClose}
+            onPointerDown={(event) => {
+              // AID-3564: without this, mousedown focuses the rail, the
+              // :focus-within sheet grows and moves this button mid-press,
+              // swallowing the click. Preventing the pointer focus shift
+              // keeps the button under the pointer; keyboard flow (Tab/Enter)
+              // is untouched.
+              event.preventDefault()
+            }}
+            aria-label="Fechar Modo Aprender"
+            title="Fechar"
+          >
+            <span aria-hidden="true"><X /></span>
+          </button></header>
       <div className="learning-scroll">
         <span className="context-eyebrow">{context.eyebrow}</span>
         <h2>{context.title}</h2>
-        <p>{context.summary}</p>
+        {/* AID-3643: structured rendering so ratified markdown summaries (e.g.
+            the pg-c01 objective) show visible structure; plain summaries keep
+            rendering as a single paragraph with the same styling. */}
+        <StructuredMarkdown className="learning-rail-summary" text={context.summary} />
         <div className="concept-list">
           {context.concepts.map((concept, index) => (
             <div key={`${concept.name}-${concept.detail}`}><span>0{index + 1}</span><div><strong>{concept.name}</strong><p>{concept.detail}</p></div></div>
           ))}
         </div>
-        <div className="mini-challenge"><Trophy /><div><span>DESAFIO RÁPIDO</span><p>{context.challenge}</p></div></div>
+        <div className="mini-challenge"><Trophy /><div><span>DESAFIO RÁPIDO</span><p>{renderInlineMarkdown(context.challenge, 'rail-challenge')}</p></div></div>
         <section className="mentor-box">
           <div className="mentor-heading"><span><Bot /> Mentor IA</span><i>PROTÓTIPO LOCAL</i></div>
           <p className="mentor-answer">{answer}</p>

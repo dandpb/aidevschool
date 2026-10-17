@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { App } from "../../src/app/App";
-import type { ProgressRepository } from "../../src/application/ports";
+import type { LearnerStateStore } from "../../src/application/ports";
 import { type ActivityDefinition, lessons, modules } from "../../src/data/generated/lessons";
 import { createInitialProgress } from "../../src/domain/progress";
 import { makeServices } from "../helpers";
@@ -34,17 +34,48 @@ import { makeServices } from "../helpers";
 
 type User = ReturnType<typeof userEvent.setup>;
 
-/** Repositório quebrado: boot falha e cai na ErrorRecoveryScreen. */
-class BrokenProgressRepository implements ProgressRepository {
-  async load(): Promise<never> {
+/** Store quebrado: boot falha e cai na ErrorRecoveryScreen (AID-3888: blocked, dados preservados). */
+class BrokenLearnerStateStore implements LearnerStateStore {
+  async readState() {
+    return {
+      status: "read-error" as const,
+      error: new Error("armazenamento local inacessível (teste)"),
+    };
+  }
+  async saveState(): Promise<void> {
     throw new Error("armazenamento local inacessível (teste)");
   }
-
-  async save(): Promise<void> {
+  async activateState(): Promise<void> {
     throw new Error("armazenamento local inacessível (teste)");
   }
-
-  async reset(): Promise<void> {
+  async deleteState(): Promise<void> {
+    throw new Error("armazenamento local inacessível (teste)");
+  }
+  async readLegacyRaw() {
+    return {
+      status: "read-error" as const,
+      error: new Error("armazenamento local inacessível (teste)"),
+    };
+  }
+  async readSnapshot() {
+    return {
+      status: "read-error" as const,
+      error: new Error("armazenamento local inacessível (teste)"),
+    };
+  }
+  async persistSnapshot(): Promise<void> {
+    throw new Error("armazenamento local inacessível (teste)");
+  }
+  async readResetIntent() {
+    return {
+      status: "read-error" as const,
+      error: new Error("armazenamento local inacessível (teste)"),
+    };
+  }
+  async saveResetIntent(): Promise<void> {
+    throw new Error("armazenamento local inacessível (teste)");
+  }
+  async deleteResetIntent(): Promise<void> {
     throw new Error("armazenamento local inacessível (teste)");
   }
 }
@@ -172,7 +203,7 @@ describe("AID-1755/T3: refocus/anúncio em Progress/Checkpoint/ErrorRecovery", (
   it("ErrorRecovery: h1 focado na montagem e mensagem em role=alert", async () => {
     const { createTestServices, fixedClock } = await import("../fakes");
     const services = createTestServices({
-      progressRepo: new BrokenProgressRepository(),
+      stateStore: new BrokenLearnerStateStore(),
       clock: fixedClock(new Date("2026-07-19T12:00:00.000Z")),
     });
     render(<App services={services} />);
