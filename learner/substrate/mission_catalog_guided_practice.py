@@ -432,13 +432,23 @@ def _load_practice(
     return _load_contract_practice(package_dir, contract)
 
 
+def _should_load_practice(
+    package_dir: Path, contracts: dict[str, dict[str, Any]]
+) -> bool:
+    if not package_dir.is_dir() or not (package_dir / "enunciado.md").is_file():
+        return False
+    return package_dir.name in contracts or not re.match(
+        r"^pg-d(?!01\b)\d+-", package_dir.name
+    )
+
+
 def load_guided_practice_catalog(root: Path) -> dict[str, dict[str, Any]]:
     if not root.is_dir():
         return {}
     contracts = _load_source_contracts(root)
     practices: dict[str, dict[str, Any]] = {}
-    for package_dir in sorted(path for path in root.iterdir() if path.is_dir()):
-        if not (package_dir / "enunciado.md").is_file():
+    for package_dir in sorted(root.iterdir()):
+        if not _should_load_practice(package_dir, contracts):
             continue
         record = _load_practice(package_dir, contracts.get(package_dir.name))
         if record["practice_id"] in practices:

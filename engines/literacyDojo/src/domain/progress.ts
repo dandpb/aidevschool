@@ -627,8 +627,7 @@ export function recordActivityAttempt(
           intervalsDays: number[];
           now: Date;
         }),
-        activityId:
-          (ledgerOrInput as { activityId?: string }).activityId ?? "__legacy_activity__",
+        activityId: (ledgerOrInput as { activityId?: string }).activityId ?? "__legacy_activity__",
       }
     : maybeInput;
 
@@ -767,7 +766,8 @@ export function completeLesson(
 
   const lessonKey = lessonLedgerKey(lesson.id);
   const firstCompletion =
-    progress.lessonStatus[lesson.id] !== "completed" && !isFirstCompletionAwarded(ledger, lessonKey);
+    progress.lessonStatus[lesson.id] !== "completed" &&
+    !isFirstCompletionAwarded(ledger, lessonKey);
 
   let next: LearnerProgress = {
     ...progress,

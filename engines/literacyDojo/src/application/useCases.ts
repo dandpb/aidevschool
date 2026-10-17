@@ -165,9 +165,7 @@ export class LiteracyUseCases {
     if (this.deps.progress) {
       const current = await this.deps.progress.load();
       if (!current) {
-        throw new Error(
-          "Progresso não inicializado — o boot do app deve semear o estado inicial",
-        );
+        throw new Error("Progresso não inicializado — o boot do app deve semear o estado inicial");
       }
       return current;
     }
