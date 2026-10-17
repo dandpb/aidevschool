@@ -7,8 +7,16 @@ import os
 from pathlib import Path
 from typing import Any
 
-from dotenv import load_dotenv
-from posthog import Posthog
+try:
+    from dotenv import load_dotenv
+except ImportError:  # pragma: no cover - optional in offline/test environments
+    def load_dotenv(*_args: Any, **_kwargs: Any) -> bool:
+        return False
+
+try:
+    from posthog import Posthog
+except ImportError:  # pragma: no cover - optional in offline/test environments
+    Posthog = None  # type: ignore[assignment,misc]
 
 
 load_dotenv(Path(__file__).resolve().parents[1] / ".env")
@@ -26,25 +34,26 @@ def _is_development() -> bool:
     }
 
 
-def initialize_posthog() -> Posthog | None:
+def _raise_if_strict_missing(var_name: str) -> None:
+    if _is_development() or _debug_enabled():
+        raise RuntimeError(
+            f"{var_name} variable required by PostHog is missing or un-configured, "
+            "this causes events to be silently missed. This error stops appearing "
+            f"once {var_name} is configured"
+        )
+
+
+def initialize_posthog() -> Any:
     """Create the process-wide SDK client when analytics is configured."""
     project_token = os.getenv("POSTHOG_PROJECT_TOKEN")
     host = os.getenv("POSTHOG_HOST")
     if not project_token:
-        if _is_development() or _debug_enabled():
-            raise RuntimeError(
-                "POSTHOG_PROJECT_TOKEN variable required by PostHog is missing or "
-                "un-configured, this causes events to be silently missed. This error "
-                "stops appearing once POSTHOG_PROJECT_TOKEN is configured"
-            )
+        _raise_if_strict_missing("POSTHOG_PROJECT_TOKEN")
         return None
     if not host:
-        if _is_development() or _debug_enabled():
-            raise RuntimeError(
-                "POSTHOG_HOST variable required by PostHog is missing or un-configured, "
-                "this causes events to be silently missed. This error stops appearing "
-                "once POSTHOG_HOST is configured"
-            )
+        _raise_if_strict_missing("POSTHOG_HOST")
+        return None
+    if Posthog is None:
         return None
 
     client = Posthog(

@@ -42,9 +42,9 @@ export class ZonesRenderer {
 
   /** Add slabs for new zones; hide slabs whose buildings have started. */
   sync(): void {
-    const seen = new Set<string>()
-    for (const zone of this.#town.zones) {
-      seen.add(zone.id)
+    for (let i = 0; i < this.#town.zones.length; i++) {
+      const zone = this.#town.zones[i]
+      if (!zone) continue
       let entry = this.#slabs.get(zone.id)
       if (!entry) {
         const geo = new THREE.BoxGeometry(0.92, 0.05, 0.92)
@@ -68,14 +68,21 @@ export class ZonesRenderer {
         entry.visible = shouldShow
       }
     }
-    for (const [id, entry] of this.#slabs) {
-      if (!seen.has(id)) {
-        this.group.remove(entry.mesh)
-        entry.mesh.geometry.dispose()
-        const m = entry.mesh.material
-        if (Array.isArray(m)) for (const x of m) x.dispose()
-        else m.dispose()
-        this.#slabs.delete(id)
+    if (this.#slabs.size > this.#town.zones.length) {
+      const seen = new Set<string>()
+      for (let i = 0; i < this.#town.zones.length; i++) {
+        const z = this.#town.zones[i]
+        if (z) seen.add(z.id)
+      }
+      for (const [id, entry] of this.#slabs) {
+        if (!seen.has(id)) {
+          this.group.remove(entry.mesh)
+          entry.mesh.geometry.dispose()
+          const m = entry.mesh.material
+          if (Array.isArray(m)) for (const x of m) x.dispose()
+          else m.dispose()
+          this.#slabs.delete(id)
+        }
       }
     }
   }

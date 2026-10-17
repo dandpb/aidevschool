@@ -401,6 +401,17 @@ const LITERACY_EDGE_CASES = [
     },
   },
   {
+    label: "old l16 v3 receipt after content bump to v4 (audit trail, not re-evaluated)",
+    variant: "fail",
+    record: {
+      ...LITERACY_PAYLOADS.l16["l16-a2"].pass,
+      lessonVersion: 3,
+      answer: { verdicts: { "c-schema": "met", "c-redact": "partial", "c-types": "met", "c-erros": "not_met", "c-deps": "not_met" } },
+      deterministicChecks: { "c-schema": true, "c-redact": true, "c-types": true, "c-erros": true, "c-deps": true },
+      attemptId: "att-l16-v3-historical",
+    },
+  },
+  {
     label: "blank attemptId",
     variant: "fail",
     record: { ...LITERACY_PAYLOADS.l02["l02-a1"].pass, attemptId: " " },
@@ -477,6 +488,29 @@ test("staged literacy verifier fails closed on prompt_builder and drift without 
     LITERACY_EDGE_CASES.find(({ label }) => label.startsWith("naive timestamp")).record,
   );
   assert.equal(naive.verdict, "PASS");
+});
+
+
+test("content bump l16 v3->v4: historical v3 attempts fail honestly on version, never re-interpreted or mastered", () => {
+  const historical = LITERACY_EDGE_CASES.find(({ label }) => label.startsWith("old l16 v3 receipt"));
+  const receipt = verifyLiteracyEvidence(historical.record);
+  assert.equal(receipt.verdict, "FAIL");
+  assert.equal(receipt.independent_pass, false);
+  assert.equal(receipt.mastery_eligible, false);
+  assert.equal(receipt.producer_writes_mastered, false);
+  assert.ok(
+    receipt.errors.some((error) => error.includes("lessonVersion")),
+    "version mismatch must be the explicit failure, not criteria reinterpretation",
+  );
+  assert.ok(
+    !JSON.stringify(receipt).includes("c-redact-shape"),
+    "old v3 evidence must not be re-judged against v4 criteria",
+  );
+  const fresh = verifyLiteracyEvidence(LITERACY_PAYLOADS.l16["l16-a2"].pass);
+  assert.equal(fresh.verdict, "PASS", "new v4 attempts recompute against the split criteria");
+  assert.deepEqual(fresh.errors, []);
+  assert.equal(fresh.mastery_eligible, true);
+  assert.equal(fresh.producer_writes_mastered, false);
 });
 
 test("verification endpoint returns a bound literacy receipt (AID-449)", async () => {

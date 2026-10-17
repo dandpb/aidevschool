@@ -421,6 +421,24 @@ todo writer (hoje o single-writer FPE; sob R1, quem mergar):
     verificação com o último passo executado localmente. A porta imprime
     este protocolo no stderr quando o merge via API falha
     (`scripts/merge_pr.sh` §5, AID-3433/E2).
+8. **Recibo de push-run com escopo de run/evento/PR/SHA (AID-3521 Fase1
+     v2.1 docs-only; achado AID-3278).** O tier `issue_comment` do
+     `countersign-gate` roda na cópia de main e o check-run resultante é
+     anexado ao HEAD de main — runs de PRs alheios pintam de vermelho
+     commits de merge não relacionados (18 falhas cross-PR em 7 HEADs só em
+     2026-09-28; matriz no thread AID-3278). A partir daqui, todo recibo de
+     push-run pós-merge que cite checks de um commit de merge M **enumera os
+     check-runs de M e resolve cada linha pela run de origem** (event,
+     workflow, head), classificando por proveniência — `push @ M` (pertence
+     a M; vermelho é real e permanece visível, ex.: `product readiness
+     (claims)` failed no run 36491949848 do M=a02b1833), `cross-PR (PR P @
+     H)` (veredito sobre outro PR/HEAD, rotulado com run/PR/SHA — mantido,
+     nunca descartado) ou `derived @ M` (workflow_run encadeado ao push de
+     M). **Proibido descarte global** de checks de main, ocultação de
+     vermelho real de push ou classificação sem endpoint citado; template:
+     `docs/sdlc/templates/push-run-receipt.md`. Sem mudança mecânica: o
+     gate do merge continua sendo o `countersign-gate` no head do PR + o
+     re-run live da porta (`scripts/merge_pr.sh`).
 
 ## GATE pré-merge mecânico `countersign-gate` (AID-2768 — fim da classe F)
 
@@ -511,6 +529,26 @@ ruído pós-merge sem depender de edição de histórico.
 ```
 Countersign: AID-<n> verdict <commentId> head=<full-40-hex-head>
 Provenance: agent=<slug-distinto-do-produtor> task=AID-<n> run=<runId> session=<sessionId>
+```
+
+### Helper offline de recibos canônicos (AID-3585)
+
+`scripts/receipt_canon_check.py` valida/gera RASCUNHO canônico offline (mesmas
+`CITATION_RE`/`PROVENANCE_RE` do gate, importadas — sem duplicar contrato) ANTES
+da postagem: campo ausente, placeholder (incl. `_default`), agent ID no lugar de
+session (troca actor/session), head ausente/stale/divergente, produtor=revisor,
+prosa no fim da linha canônica, linha dentro de code fence. Consome apenas fatos
+fornecidos explicitamente (`--facts` JSON: head esperado, identidades
+produtor/revisor, run/session, referência do veredito, actor IDs capturados);
+nunca adivinha valores e nunca publica. Sucesso significa apenas "forma canônica
+do rascunho OK" — não é countersign, review ou autorização de merge, e não
+verifica resolvabilidade/atualidade do head (limites offline). Testes/fixtures
+sintéticas: `scripts/test_receipt_canon_check.py` +
+`scripts/receipt_canon_fixtures/`.
+
+```bash
+python3 scripts/receipt_canon_check.py --render --facts fatos.json   # emite rascunho
+python3 scripts/receipt_canon_check.py --check --facts fatos.json --draft rascunho.md
 ```
 
 ### Modelo de ameaça (o que o gate assume honestamente)
