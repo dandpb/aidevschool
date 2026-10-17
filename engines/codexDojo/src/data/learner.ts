@@ -46,12 +46,18 @@ export const learnerSnapshot: LearnerSnapshot = {
       title: "GATEKEEPER: token-bucket rate limiter robustness",
       dueIn: "overdue 43d",
       reason: "overdue",
+      stability: 2.31,
+      difficulty: 2.12,
+      due: "2026-07-09",
     },
     {
       unitId: "U2-key-value-store",
       title: "KV WAREHOUSE: hash-map-backed CRUD with TTL expiration",
       dueIn: "overdue 4d",
       reason: "overdue",
+      stability: 2.31,
+      difficulty: 2.12,
+      due: "2026-08-17",
     },
     {
       unitId: "P-001",

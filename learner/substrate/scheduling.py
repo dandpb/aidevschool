@@ -145,6 +145,29 @@ def _format_due_in(due: date, today: date) -> str:
     return f"in {delta}d"
 
 
+#: Decimal places kept when materializing card state into derived views.
+#: Fixed rounding keeps generated projections byte-stable (same input → same
+#: output) even if the underlying FSRS float repr ever changes.
+CARD_STATE_DECIMALS = 4
+
+
+def card_state_view(card: Card | None) -> dict[str, float | str] | None:
+    """Materialize the FSRS card state (stability/difficulty/due) for consumers.
+
+    AID-5005: verified completions must land as observable card state, not just
+    as an opaque ``dueIn`` label. ``None`` means "no card yet" (unit never had a
+    rated review). Values are rounded to ``CARD_STATE_DECIMALS`` so projections
+    stay deterministic across regenerations.
+    """
+    if card is None or card.due is None:
+        return None
+    return {
+        "stability": round(float(card.stability), CARD_STATE_DECIMALS),
+        "difficulty": round(float(card.difficulty), CARD_STATE_DECIMALS),
+        "due": card.due.astimezone(timezone.utc).date().isoformat(),
+    }
+
+
 # --- Streak + freeze (Phase 2) -----------------------------------------------
 
 def record_gate_outcome(
@@ -243,19 +266,20 @@ def derive_next_reviews(
     units_log: list[dict[str, Any]],
     pitfalls: list[dict[str, Any]],
     today: date,
-) -> list[dict[str, str]]:
+) -> list[dict[str, Any]]:
     """Derive the next-review queue from real ``units_log`` history using FSRS.
 
     Each unit's gate-rated reviews are replayed into an FSRS card; the card's
     ``due`` date (vs the injected ``today``) decides whether the unit surfaces as
     overdue/due or stays hidden. A unit with no gate reviews yet is "due" (it
-    needs a first gate attempt). Recurring traps come from the pitfalls log
-    (real history), not invented.
+    needs a first attempt). Recurring traps come from the pitfalls log
+    (real history), not invented. Rows for units with a replayed card also
+    carry the materialized card state (``stability``/``difficulty``/``due``).
 
     ``today`` is injected (never read from the clock inside pure logic) so the
     derivation is deterministic and testable.
     """
-    reviews: list[dict[str, str]] = []
+    reviews: list[dict[str, Any]] = []
 
     for unit in units_log:
         unit_id = unit.get("unit_id")
@@ -274,14 +298,18 @@ def derive_next_reviews(
             continue  # not due yet — not surfaced
 
         reason = "overdue" if due < today else "due"
-        reviews.append(
-            {
-                "unitId": unit_id,
-                "title": title,
-                "dueIn": _format_due_in(due, today),
-                "reason": reason,
-            }
-        )
+        review: dict[str, Any] = {
+            "unitId": unit_id,
+            "title": title,
+            "dueIn": _format_due_in(due, today),
+            "reason": reason,
+        }
+        # AID-5005: surface the materialized FSRS card state so every consumer
+        # (dojoToday queue, OS learner snapshot) sees the same scheduling truth.
+        card_state = card_state_view(card)
+        if card_state is not None:
+            review.update(card_state)
+        reviews.append(review)
 
     # Recurring traps are real pegadinha history, surfaced for re-exposure.
     for pitfall in pitfalls[:1]:
