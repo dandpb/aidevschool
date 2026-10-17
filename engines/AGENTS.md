@@ -50,7 +50,6 @@ Neither engine has by-name CI coverage yet (hardens AID-2286/AID-2287, children 
 | Programmer's daily lesson | `dojoToday/` | Read-only landing: FSRS due reviews, streak, active unit. Read model `src/data/today.ts` is generated (prebuild runs the substrate); never schedules, grades, or marks mastery. |
 | AI-literacy chat-tutor MVP | `aiDevschoolMvp/` | SKILL.md-based tutor; bundled scripts own gates/scoring/scheduling; installer tests in `tests/installer` run via repo-root `make test`. |
 | Shared teaching evidence | `shared/teaching-evidence/` | Dual-channel producer helpers; no mastery writes. |
-| Shared Playwright defaults | `shared/playwright/` | Base config (screenshot+video on, per-engine `test-results/`) and Jev verification seam; default for all agents per root AGENTS.md. |
 | Long-running tutor protocol | `minimaxDojo/` | Start with local `AGENTS.md`, then `INDEX.md`; verify from repo root with `make test-core`. |
 | Claude Code orchestration | `miniMaxEvolutionEngine/` | Local `CLAUDE.md` is the engine contract. |
 | Continuous runner tracer bullet | `openclaw/` | Python filesystem checklist scheduler; no Hermes bus or semantic verification. |

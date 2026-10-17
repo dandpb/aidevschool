@@ -13,19 +13,7 @@ class OpenclawConfig:
 
 DEFAULT_CONFIG = OpenclawConfig()
 LANGUAGES: tuple[str, ...] = ("go", "rust", "node")
-POLYGLOT_PROJECTS: frozenset[str] = frozenset({"curriculum/01_rate_limiter", "01_rate_limiter"})
 DEFAULT_PROJECT = "curriculum/01_rate_limiter"
-
-
-def project_languages(project: str) -> tuple[str, ...]:
-    """Return required implementation languages for a project.
-
-    Project 01 retains the original polyglot (Go/Rust/Node) track; projects
-    02–18 are Node-only per commit 1b0a3090.
-    """
-    if project in POLYGLOT_PROJECTS or project.endswith("/01_rate_limiter"):
-        return LANGUAGES
-    return ("node",)
 
 
 def spec_path(project: str) -> str:

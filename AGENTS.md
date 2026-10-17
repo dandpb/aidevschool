@@ -132,12 +132,6 @@ Compatibility symlinks at root: `projects -> curriculum`, `.agora -> learner`,
   (`rtk init -g`, `--codex -g`, `--agent omp -g`, `--opencode -g`, `--gemini -g`,
   `--copilot -g`). For library/framework/SDK docs lookup, use the `ctx7` CLI before
   answering.
-- Browser-test evidence default for all agents: Playwright with the shared base config
-  `engines/shared/playwright/base.config.ts` (`screenshot: "on"`, `video: "on"`,
-  `trace: "retain-on-failure"`, artifacts under the engine's own `test-results/`).
-  Semantic verification of captured evidence goes through TypeSafe/Jev (reference:
-  `learner/substrate/judgments.py`), always from a separate verifier context. Usage
-  and artifact paths: `engines/shared/playwright/README.md`.
 
 ## ANTI-PATTERNS
 

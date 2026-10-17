@@ -30,7 +30,7 @@ const CORPUS: Doc[] = [
   { id: "doc-a", text: "the quick brown fox jumps" },
   { id: "doc-b", text: "the lazy dog sleeps quietly" },
   { id: "doc-c", text: "the quick dog and the lazy fox" },
-  { id: "doc-d", text: "fox fox den under the hill" },
+  { id: "doc-d", text: "fox fox fox den under the hill" },
   { id: "doc-e", text: "quiet streams and lazy fish" },
 ]
 

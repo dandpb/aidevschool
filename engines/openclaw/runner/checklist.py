@@ -47,7 +47,7 @@ def phase_plan(project: str, config: cfg.OpenclawConfig = cfg.DEFAULT_CONFIG) ->
             label="impl",
             artifacts=tuple(
                 ArtifactCheck(cfg.impl_path(project, lang), is_dir=True)
-                for lang in cfg.project_languages(project)
+                for lang in cfg.LANGUAGES
             ),
         ),
         PhaseCheck(

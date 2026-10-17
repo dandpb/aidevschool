@@ -34,7 +34,6 @@ import yaml
 from learner.gate.standards import (
     VerifierVerdict,
     challenge_gate_blockers,
-    load_thresholds,
     verdict_passed,
 )
 from shared.errors import StateCorruptionError
@@ -54,7 +53,7 @@ _ARTIFACT_PATHS: tuple[tuple[str, str], ...] = (
     ("diagnostic", "docs/diagnostic.md"),
 )
 
-_PHASE_RE = re.compile(r"\*{0,2}phase:\*{0,2}\s*`?([\w-]+)`?", re.IGNORECASE)
+_PHASE_RE = re.compile(r"phase:\s*`?([\w-]+)`?", re.IGNORECASE)
 
 
 class Phase(StrEnum):
@@ -252,67 +251,10 @@ def _read_benchmark_all_pass(project_id: str, root: Path) -> bool | None:
 # ---------------------------------------------------------------------------
 
 
-def _load_learning_state(root: Path) -> dict[str, Any]:
-    state_path = root / "learner" / "learning_state.yaml"
-    if not state_path.is_file():
-        return {}
-    try:
-        data = yaml.safe_load(state_path.read_text(encoding="utf-8"))
-    except (OSError, yaml.YAMLError):
-        return {}
-    return data if isinstance(data, dict) else {}
-
-
-def _file_exists_nonempty(rel_path: Any, root: Path) -> bool:
-    if not isinstance(rel_path, str) or not rel_path.strip():
-        return False
-    try:
-        resolved = resolve_contained(Path(rel_path), root)
-        return resolved.is_file() and resolved.stat().st_size > 0
-    except (StateCorruptionError, OSError):
-        return False
-
-
-def _project_units_in_state(project_id: str, root: Path) -> list[dict[str, Any]]:
-    state = _load_learning_state(root)
-    units: list[dict[str, Any]] = []
-    for item in state.get("units_log") or []:
-        if isinstance(item, dict) and item.get("project") == project_id:
-            units.append(item)
-    active = state.get("active_unit")
-    if isinstance(active, dict) and active.get("project") == project_id:
-        units.append(active)
-    return units
-
-
-def _attempt_in_canonical_state(project_id: str, root: Path) -> bool:
-    return any(
-        _file_exists_nonempty(unit.get("attempt_file"), root)
-        for unit in _project_units_in_state(project_id, root)
-    )
-
-
-def _verdict_from_canonical_state(project_id: str, root: Path) -> VerifierVerdict:
-    state = _load_learning_state(root)
-    for unit in reversed(state.get("units_log") or []):
-        if not isinstance(unit, dict) or unit.get("project") != project_id:
-            continue
-        if unit.get("mastered") is True and _file_exists_nonempty(unit.get("evidence_file"), root):
-            th = load_thresholds()
-            return VerifierVerdict(
-                mutation_score=th.mutation_min,
-                coverage_core=th.coverage_min,
-                context_isolated=True,
-                verdict="PASS",
-                source=str(unit.get("evidence_file", "")),
-            )
-    return VerifierVerdict(None, None, None, "UNKNOWN")
-
-
 def _read_latest_verdict(project_id: str, root: Path) -> VerifierVerdict:
     ndjson_path = _evidence_ndjson_path(project_id, root)
     if not ndjson_path.exists():
-        return _verdict_from_canonical_state(project_id, root)
+        return VerifierVerdict(None, None, None, "UNKNOWN")
     try:
         lines = ndjson_path.read_text(encoding="utf-8").splitlines()
     except OSError:
@@ -352,7 +294,7 @@ def inspect(project_id: str, *, root: Path | str | None = None) -> ChallengeEvid
     artifacts = _discover_artifacts(project_id, root)
     attempt_present = any(
         a.name == "diagnostic" and a.exists and a.bytes > 0 for a in artifacts
-    ) or _attempt_in_canonical_state(project_id, root)
+    )
     return ChallengeEvidence(
         project_id=project_id,
         phase=_detect_phase(project_id, root),

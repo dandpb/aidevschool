@@ -11,16 +11,13 @@ core:
     linguagem_foco: TypeScript
     tempo_semanal: 5h
     nivel_autodeclado: intermediario
-    dreyfus_global: proficient
-    bloom_global: analyze
+    dreyfus_global: advanced_beginner
+    bloom_global: apply
     ai_dependency_index: 0.34
     socrates_quota_today: 0 / 15
     human_instructor: none
   trilha:
     proxima_unidade: U2-key-value-store
-    ultima_dominada: U2-key-value-store
-  pegadinhas_top_3:
-  - 'P-001: Reivindicar domínio a partir de trabalho de documentação/dashboard'
-  skills_ativas_top_3:
-  - U0-sonda-rate-limiter-robustness
-  - U2-key-value-store
+    ultima_dominada: null
+  pegadinhas_top_3: []
+  skills_ativas_top_3: []

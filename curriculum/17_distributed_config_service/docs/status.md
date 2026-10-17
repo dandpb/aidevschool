@@ -3,7 +3,7 @@
 ## Phase
 
 
-phase: impl
+phase: cycle-complete
 `cycle-complete`
 
 ## Implementation status

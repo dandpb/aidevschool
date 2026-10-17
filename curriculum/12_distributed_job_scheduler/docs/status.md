@@ -2,7 +2,7 @@
 
 ## Phase
 
-phase: impl
+phase: cycle-complete
 
 # Status — Project 12 · Distributed Job Scheduler
 

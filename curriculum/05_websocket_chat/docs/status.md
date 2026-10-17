@@ -2,9 +2,11 @@
 
 ## Phase
 
-phase: impl
+phase: cycle-complete
 
-> Phase: **impl**
+# Status — Project 05 · WebSocket Chat Server
+
+> Phase: **cycle-complete**
 > Present implementation: Node/TypeScript only
 > Source status: partially implemented, with dated green Node verification.
 

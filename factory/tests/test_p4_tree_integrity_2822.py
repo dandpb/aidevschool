@@ -101,10 +101,9 @@ class TestF6StressRepro:
         state = coord._load_state("run-FE-F6")
         worktree = Path(state["worktree"])
         # O sed do stress: NÃO move o SHA, NÃO cria untracked — era invisível.
-        decision_path = worktree / "docs" / "decision.txt"
-        decision_path.write_text(
-            decision_path.read_text(encoding="utf-8").replace("proposed", "accepted"),
-            encoding="utf-8",
+        subprocess.run(
+            ["sed", "-i", "s/proposed/accepted/", str(worktree / "docs" / "decision.txt")],
+            check=True,
         )
         assert capture_tree_state(worktree).dirty == ["docs/decision.txt"]
 

@@ -18,11 +18,7 @@ from learner.gate.air_traffic_evaluator import evaluate_air_traffic
 from learner.gate.breaker_grid_evaluator import evaluate_breaker_grid
 from learner.gate.checkpoint_evaluator import evaluate_checkpoint
 from learner.gate.docking_evaluator import evaluate_docking
-from learner.gate.freight_yard_evaluator import evaluate_freight_yard
 from learner.gate.hash_ring_evaluator import evaluate_hash_ring
-from learner.gate.lighthouse_network_evaluator import evaluate_lighthouse_network
-from learner.gate.observatory_evaluator import evaluate_observatory
-from learner.gate.stacks_evaluator import evaluate_stacks
 from learner.gate.timeline_evaluator import evaluate_timeline
 from learner.gate.evidence_validator import validate_teaching_evidence_structure
 from learner.gate.evidence_io import canonical_evidence_digest, read_bounded_evidence
@@ -118,30 +114,6 @@ GAME_SPECS = {
         "14_log_aggregator",
         "river-delta-",
         evaluate_river_delta,
-    ),
-    "OBSERVATORY": (
-        "U15-metrics-collector",
-        "15_metrics_collector",
-        "observatory-",
-        evaluate_observatory,
-    ),
-    "FREIGHT YARD": (
-        "U16-message-queue",
-        "16_mini_message_queue",
-        "freight-yard-",
-        evaluate_freight_yard,
-    ),
-    "LIGHTHOUSE NETWORK": (
-        "U17-config-service",
-        "17_distributed_config_service",
-        "lighthouse-network-",
-        evaluate_lighthouse_network,
-    ),
-    "STACKS": (
-        "U18-search-engine",
-        "18_search_engine",
-        "stacks-",
-        evaluate_stacks,
     ),
 }
 ALLOWED_KEYS = frozenset(
