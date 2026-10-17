@@ -65,13 +65,12 @@ strip_code_fences = gate.strip_code_fences
 # Placeholders conhecidos (AID-3585: rejeitar placeholder, incluindo `_default`
 # — valor de fingerprint/origin seen em payloads reais). Comparação
 # case-insensitive; qualquer valor embrulhado em <...> também é template.
-KNOWN_PLACEHOLDERS = {
-    "_default", "default", "tbd", "todo", "fixme", "xxx", "xxxx", "xxxxx",
-    "placeholder", "unknown", "n/a", "none", "null", "?", "??", "...", "-",
-    "changeme", "change-me", "your-agent", "your-run", "your-session",
-    "seu-agent", "sua-session", "agent", "run", "session", "task", "verdict",
-}
-TEMPLATE_VALUE_RE = re.compile(r"^<[^>]*>$")
+# AID-4898: a lista canônica passou a viver NO GATE (countersign_gate_check)
+# — que agora também rejeita placeholders de sessão (achado AID-4897 §4,
+# session=opencode_local) — e este helper apenas importa, para que o
+# recibo offline e o gate live nunca divirjam.
+KNOWN_PLACEHOLDERS = gate.KNOWN_PLACEHOLDERS
+TEMPLATE_VALUE_RE = gate.TEMPLATE_VALUE_RE
 
 TASK_RE = re.compile(r"^(AID|GH)-[1-9][0-9]*$")
 AGENT_RE = re.compile(r"^[A-Za-z0-9_][A-Za-z0-9._-]*$")

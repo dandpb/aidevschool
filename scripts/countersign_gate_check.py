@@ -29,10 +29,15 @@ ACCEPTANCE CONTRACT (all must hold; fail-closed in every ambiguity):
      citation comment (anywhere: 'head=' token or a bare 40-hex token).
      A new push / update-branch moves the head -> the pin breaks -> red
      until a fresh countersign pins the new head.
-  4. ATTRIBUTED — the citation comment carries a canonical provenance
-     trailer (AID-2493):
-         Provenance: agent=<slug> task=(AID|GH)-<n> run=<runId> session=<sessionId>
-  5. DISTINCT AGENT — the earliest provenance trailer in the conversation
+   4. ATTRIBUTED — the citation comment carries a canonical provenance
+      trailer (AID-2493):
+          Provenance: agent=<slug> task=(AID|GH)-<n> run=<runId> session=<sessionId>
+      and neither the citation's nor the producer's session= value is a
+      PLACEHOLDER (AID-4898, audit AID-4897 criterion 4: form-only validation
+      accepted session=opencode_local — policy 2026-10-01: a placeholder is
+      not a session). The citation session may be anchored post-hoc by a
+      SESSION ADDENDUM (§8a).
+   5. DISTINCT AGENT — the earliest provenance trailer in the conversation
      (PR body first, then comments by createdAt) attributes the PRODUCER;
      the countersign agent slug must differ. No trailer anywhere ->
      'producer unattributed' (this is what F1/F2 looked like; a producer
@@ -45,14 +50,31 @@ ACCEPTANCE CONTRACT (all must hold; fail-closed in every ambiguity):
      posted after the merge — e.g. a duplicate from a parallel heartbeat
      (AID-2840) — did not exist at the merge decision and cannot become
      operative, in either direction. No pre-merge citation at all -> red.
-  7. NOT SUPERSEDED — no comment AFTER the operative citation contains an
-     uppercase word-bounded VOID or HELD marker (guard-hold pattern: F3
-     merged 94s after a HELD), and no 'reopened' timeline event is newer
-     than the operative citation (containment close -> reopen must not
-     ride a stale countersign; case #535). This scan covers the WHOLE
-     conversation including post-merge comments: a countersign later found
-     bogus (retro-VOID) must keep the audit red even though the citation
-     pool itself is pre-merge only.
+   7. NOT SUPERSEDED — no comment AFTER the operative citation contains an
+      uppercase word-bounded VOID or HELD marker (guard-hold pattern: F3
+      merged 94s after a HELD), and no 'reopened' timeline event is newer
+      than the operative citation (containment close -> reopen must not
+      ride a stale countersign; case #535). This scan covers the WHOLE
+      conversation including post-merge comments: a countersign later found
+      bogus (retro-VOID) must keep the audit red even though the citation
+      pool itself is pre-merge only.
+   8. SESSION ANCHOR (AID-4898) — the operative citation's session= must be
+      the REAL session of its run=, proven against the run registry
+      (PAPERCLIP_API_URL + PAPERCLIP_API_TOKEN/KEY):
+        a. ADDENDUM PATH (conformant mid-run countersigns): a mid-run
+           comment cannot know its own closing session id, and a
+           hand-transcribed id can carry a typo (observed 1st hand:
+           ses_ebbc4d26… vs registry ses_ebbb4d26…), so a LATER comment
+           (pre-merge only in audit mode) carrying a trailer with the SAME
+           agent=/task=/run= and a non-placeholder session= anchors the
+           citation (no new 'Countersign:' line — the operative citation
+           is untouched; latest addendum wins).
+        b. REGISTRY: the cited run must EXIST, must have SUCCEEDED, and the
+           effective session (trailer's, or the addendum's) must match one
+           of the run's registered session ids (sessionIdBefore /
+           sessionIdAfter / usageJson.persistedSessionId). Unconfigured
+           registry credentials, transport errors, and auth rejections all
+           FAIL CLOSED (same doctrine as SDLC_GUARD_AID_RESOLVER).
 
 Live data comes from gh (GH_TOKEN); hermetic mode (--context/--timeline)
 runs the same core on fixture JSON so the self-test needs no network.
@@ -73,6 +95,10 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import threading
+import urllib.error
+import urllib.request
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 # CRLF tolerance (AID-3050): citations/provenance pasted from Windows
 # tooling arrive with a residual CR before the newline. The trailing class
@@ -92,6 +118,33 @@ PROVENANCE_RE = re.compile(
 )
 SHA40_RE = re.compile(r"\b[0-9a-fA-F]{40}\b")
 VOID_HELD_RE = re.compile(r"\b(VOID|HELD)\b")
+
+# Session placeholder policy (AID-4898; audit AID-4897 criterion 4; metadata
+# policy 2026-10-01 "placeholders are not sessions"). PROVENANCE_RE only
+# validates SHAPE, so `session=opencode_local` — the adapter placeholder,
+# not a session id — passed the gate while the countersigner's real run
+# session (ses_ee18e706fffe…) was verifiable in the run registry. This list
+# is the single source of truth: scripts/receipt_canon_check.py imports it
+# (was its local KNOWN_PLACEHOLDERS, AID-3585) so the offline receipt helper
+# and the live gate cannot drift. Real sessions in this fleet look like
+# ses_<22+> or a UUID — none of the tokens below can be one in any runtime.
+KNOWN_PLACEHOLDERS = frozenset({
+    "_default", "default", "tbd", "todo", "fixme", "xxx", "xxxx", "xxxxx",
+    "placeholder", "unknown", "n/a", "none", "null", "nil", "?", "??", "...",
+    "-", "changeme", "change-me", "your-agent", "your-run", "your-session",
+    "seu-agent", "sua-session", "agent", "run", "session", "task", "verdict",
+    # adapter/runtime placeholders seen in the wild (AID-4897):
+    "opencode_local", "opencode-local", "opencode", "local", "localhost",
+    "local_run", "local-run", "offline", "anonymous", "anon", "unset",
+    "missing", "pending", "test", "dev", "debug", "scratch", "n-a",
+})
+TEMPLATE_VALUE_RE = re.compile(r"^<[^>]*>$")
+
+
+def is_placeholder(value):
+    """True when a provenance field value is a known/template placeholder."""
+    v = (value or "").strip()
+    return v.lower() in KNOWN_PLACEHOLDERS or bool(TEMPLATE_VALUE_RE.match(v))
 
 # Code-fence stripping (AID-2824, finding AID-2818): producer templates quote
 # the citation/provenance format inside ```-fenced blocks, and a fenced line is
@@ -177,6 +230,95 @@ def repo_slug():
 
 
 # ---------------------------------------------------------------------------
+# Run registry anchor (AID-4898 §8b). HTTP via urllib (stdlib — no curl/gh
+# dependency); the CI job already provisions PAPERCLIP_API_URL/TOKEN for the
+# AID resolver, so this adds no new secret. Fail-closed on every failure
+# class with a distinguishable message (resolver doctrine, AID-2768 §2).
+# ---------------------------------------------------------------------------
+
+def registry_config():
+    base = (os.environ.get("PAPERCLIP_API_URL") or "").rstrip("/")
+    token = os.environ.get("PAPERCLIP_API_TOKEN") or os.environ.get("PAPERCLIP_API_KEY") or ""
+    if base.startswith("http://"):
+        # The board redirects http->https and the redirect drops the
+        # Authorization header (sdlc_aid_resolve.sh precedent) — normalize
+        # except for loopback, where the hermetic self-test stub serves http.
+        host = base[len("http://"):].split("/")[0].split(":")[0]
+        if host not in ("127.0.0.1", "localhost", "::1"):
+            base = "https://" + base[len("http://"):]
+    return base, token
+
+
+def lookup_run(run_id):
+    """Fetch the run-registry record for run_id; raise Violation fail-closed.
+
+    Returns the parsed record dict on 200. Unconfigured credentials, 404,
+    auth rejection, transport failure, and malformed JSON are all Violations
+    (never read as 'absent'/'ok' — AID-2836 convention).
+    """
+    base, token = registry_config()
+    if not base or not token:
+        raise Violation(
+            "PAPERCLIP_API_URL/PAPERCLIP_API_TOKEN are not configured — cannot "
+            "anchor the countersign run %s in the run registry (fail-closed, "
+            "AID-4898 §8)" % run_id
+        )
+    req = urllib.request.Request(
+        "%s/api/heartbeat-runs/%s" % (base, run_id),
+        headers={"Authorization": "Bearer " + token, "Accept": "application/json"},
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=20) as resp:
+            payload = resp.read().decode("utf-8", "replace")
+    except urllib.error.HTTPError as exc:
+        if exc.code == 404:
+            raise Violation(
+                "cited run %s does not exist in the run registry — a countersign "
+                "must cite a real run (AID-4898 §8)" % run_id
+            )
+        if exc.code in (401, 403):
+            raise Violation(
+                "run-registry credentials rejected (HTTP %d) — cannot anchor run "
+                "%s (fail-closed, AID-4898 §8)" % (exc.code, run_id)
+            )
+        raise Violation(
+            "run-registry HTTP error (%s) on run %s — fail-closed (AID-4898 §8)"
+            % (exc, run_id)
+        )
+    except Exception as exc:  # URLError, timeout, DNS…
+        raise Violation(
+            "run-registry transport error on run %s (%s) — fail-closed, retry or "
+            "escalate to the FPE; never read as absent (AID-4898 §8 / AID-2836 "
+            "convention)" % (run_id, exc)
+        )
+    try:
+        rec = json.loads(payload)
+        if not isinstance(rec, dict):
+            raise ValueError("registry payload is %s, not an object" % type(rec).__name__)
+    except ValueError as exc:
+        raise Violation(
+            "run-registry returned malformed JSON for run %s (%s) — fail-closed "
+            "(AID-4898 §8)" % (run_id, exc)
+        )
+    return rec
+
+
+def run_sessions(rec):
+    """The session ids a run was actually executed under (registered facts)."""
+    out = []
+    for key in ("sessionIdBefore", "sessionIdAfter"):
+        v = (rec.get(key) or "").strip() if isinstance(rec.get(key), str) else ""
+        if v:
+            out.append(v)
+    usage = rec.get("usageJson")
+    if isinstance(usage, dict):
+        v = (usage.get("persistedSessionId") or "").strip()
+        if v:
+            out.append(v)
+    return out
+
+
+# ---------------------------------------------------------------------------
 # Core evaluation. ctx: {body, mergedAt, comments:[{createdAt, body}]};
 # timeline: [{event, created_at}]; head: current PR head sha (40-hex).
 # Returns (operative_comment, producer_agent) on success; raises Violation.
@@ -198,16 +340,16 @@ def evaluate(ctx, timeline, head, resolver):
     # Producer attribution: earliest provenance trailer, body counts first
     # (sort key 0 = body, 1 = comment createdAt — a timestamp string would
     # otherwise always sort before the literal "body" marker).
-    earliest = None  # (sortkey, agent)
+    earliest = None  # (sortkey, agent, session)
     m = PROVENANCE_RE.search(body)
     if m:
-        earliest = ((0, ""), m.group("agent"))
+        earliest = ((0, ""), m.group("agent"), m.group("session"))
     for c, sbody in scanned:
         m = PROVENANCE_RE.search(sbody)
         if m:
             key = (1, c.get("createdAt") or "")
             if earliest is None or key < earliest[0]:
-                earliest = (key, m.group("agent"))
+                earliest = (key, m.group("agent"), m.group("session"))
     if earliest is None:
         raise Violation(
             "producer unattributed: no 'Provenance: agent=… task=… run=… session=…' "
@@ -216,6 +358,15 @@ def evaluate(ctx, timeline, head, resolver):
             "(fail-closed, AID-2768 §5)"
         )
     producer_agent = earliest[1]
+    # Producer session placeholder (AID-4898 §4): a trailer whose session= is
+    # a placeholder is not an attribution — the producer's run must be
+    # identifiable in the registry by a real session id.
+    if is_placeholder(earliest[2]):
+        raise Violation(
+            "producer trailer session=%r is a placeholder, not a session id "
+            "(policy 2026-10-01, AID-4898 §4) — re-register the producer "
+            "provenance with the real session of its run" % earliest[2]
+        )
 
     # Operative citation = chronologically LAST comment with a line-start
     # 'Countersign:' citation (F3: a later producer self-cite supersedes and
@@ -321,6 +472,76 @@ def evaluate(ctx, timeline, head, resolver):
             "AGENT, not by runId; a verdict from any run of the producer does "
             "not count (F3/AID-2763, AID-2768 §5)" % countersign_agent
         )
+    countersign_run = m.group("run")
+    cite_session = m.group("session")
+
+    # SESSION ANCHOR (AID-4898). A mid-run comment cannot know its own
+    # closing session id (the structural cause behind session=opencode_local,
+    # audit AID-4897 §4), and a hand-transcribed id can carry a typo —
+    # observed 1st hand on the very first countersign under this contract
+    # (trailer ses_ebbc4d26… vs registry ses_ebbb4d26…). The REGISTRY is the
+    # arbiter (§8b); the ADDENDUM is the conformant repair path: a comment
+    # posted AFTER the operative citation (pre-merge only in audit mode — the
+    # anchor must exist at the merge decision, same ordering rule as §6/§7)
+    # carrying a trailer with the SAME agent=/task=/run= and a non-placeholder
+    # session=. No new 'Countersign:' line: the operative citation is
+    # untouched, only its session gets anchored. A placeholder operative
+    # session REQUIRES an addendum; a non-placeholder one may be superseded
+    # by a later addendum (latest wins — e.g. correcting a transcribed id);
+    # every candidate still has to match the registry in §8b.
+    anchor_pool = []
+    for c, sbody in scanned:
+        cwhen = c.get("createdAt") or ""
+        if not (when and cwhen > when):
+            continue  # strictly after the operative citation
+        if merged_at and not (cwhen and cwhen < merged_at):
+            continue  # audit mode: anchor must be pre-merge
+        am = PROVENANCE_RE.search(sbody)
+        if not am:
+            continue
+        if (am.group("agent") == countersign_agent
+                and am.group("task") == m.group("task")
+                and am.group("run") == countersign_run
+                and not is_placeholder(am.group("session"))):
+            anchor_pool.append((cwhen, am.group("session")))
+    effective_session = cite_session
+    if is_placeholder(cite_session):
+        if not anchor_pool:
+            raise Violation(
+                "operative citation trailer session=%r is a placeholder, not a "
+                "session id (policy 2026-10-01, audit AID-4897 §4) — post a "
+                "provenance ADDENDUM (same agent/task/run, real session, no new "
+                "'Countersign:' line) after the countersign run completes, or "
+                "re-countersign with the real session (AID-4898 §8a)" % cite_session
+            )
+        effective_session = max(anchor_pool)[1]
+    elif anchor_pool:
+        # Latest addendum wins (registry-checked below): corrects a
+        # mis-transcribed non-placeholder id without disturbing the citation.
+        # An addendum can only redden, never green-wash: §8b still decides.
+        effective_session = max(anchor_pool)[1]
+
+    # REGISTRY ANCHOR (AID-4898 §8b): the cited run must be a real, SUCCEEDED
+    # run whose registered session ids include the effective session. This is
+    # what turns 'run=<id>' from a free-text token into an anchored fact.
+    rec = lookup_run(countersign_run)
+    run_status = rec.get("status")
+    if run_status != "succeeded":
+        raise Violation(
+            "cited run %s has registry status %r (need 'succeeded') — a "
+            "countersign must come from a completed run; if it is still "
+            "running, wait for completion and re-run the gate (fail-closed, "
+            "AID-4898 §8b)" % (countersign_run, run_status)
+        )
+    registered = run_sessions(rec)
+    if effective_session not in registered:
+        raise Violation(
+            "session '%s' does not match any registered session of run %s "
+            "(registry: %s) — the countersign must anchor the run's REAL "
+            "session (audit AID-4897 §4, AID-4898 §8b)"
+            % (effective_session, countersign_run,
+               ", ".join(sorted(set(registered))) if registered else "none registered")
+        )
 
     # Not superseded: VOID/HELD after the operative citation (F3 merged 94s
     # after a HELD) and reopened-after-citation (containment reopen, case #535).
@@ -343,7 +564,7 @@ def evaluate(ctx, timeline, head, resolver):
                     "AID-2768 §7)" % (t, when)
                 )
 
-    return operative, producer_agent, countersign_agent
+    return operative, producer_agent, countersign_agent, effective_session
 
 
 def run_gate(args):
@@ -383,7 +604,8 @@ def run_gate(args):
         return 2
 
     try:
-        operative, producer, countersigner = evaluate(ctx, timeline, head, resolver)
+        operative, producer, countersigner, session = evaluate(
+            ctx, timeline, head, resolver)
     except Violation as exc:
         if args.print_citation:
             print("ERROR: gate fails — no operative citation to print: %s" % exc,
@@ -395,23 +617,27 @@ def run_gate(args):
 
     cite = CITATION_RE.search(strip_code_fences(operative.get("body") or ""))
     if args.print_citation:
-        print("%s (agent=%s, distinct from producer agent=%s, head=%s pinned, posted %s)"
+        print("%s (agent=%s, distinct from producer agent=%s, head=%s pinned, "
+              "session=%s anchored to run, posted %s)"
               % (cite.group(0).strip(), countersigner, producer, head,
-                 operative.get("createdAt")))
+                 session, operative.get("createdAt")))
         return 0
     annotate(
         "notice",
         "countersign-gate PASS (AID-2768): operative citation '%s' (posted %s) — "
-        "producer agent '%s' != countersign agent '%s', head %s pinned, no "
-        "VOID/HELD or reopen supersedes it"
+        "producer agent '%s' != countersign agent '%s', head %s pinned, session "
+        "%s anchored to run %s, no VOID/HELD or reopen supersedes it"
         % (cite.group(0).strip(), operative.get("createdAt"), producer,
-           countersigner, head[:12]),
+           countersigner, head[:12], session,
+           PROVENANCE_RE.search(strip_code_fences(
+               operative.get("body") or "")).group("run")),
     )
     print(
         "countersign-gate: PASS — operative citation: %s (posted %s); producer "
-        "agent '%s' / countersign agent '%s'; head %s pinned"
+        "agent '%s' / countersign agent '%s'; head %s pinned; session %s "
+        "anchored to run"
         % (cite.group(0).strip(), operative.get("createdAt"), producer,
-           countersigner, head)
+           countersigner, head, session)
     )
     return 0
 
@@ -439,6 +665,57 @@ def self_test():
         fh.write("#!/usr/bin/env bash\ncase \"$1\" in AID-9006) exit 0 ;; *) exit 1 ;; esac\n")
     os.chmod(stub, 0o755)
 
+    # Stub run registry (AID-4898 §8b): a loopback HTTP server serving
+    # /api/heartbeat-runs/<id> fixtures so the session anchor is proven
+    # hermetically (no network, same contract as the live board API).
+    registry_runs = {
+        "w2800": {"id": "w2800", "status": "succeeded", "exitCode": 0,
+                  "sessionIdBefore": None,
+                  "sessionIdAfter": "1e9be0fa-c320-4309-9704-c755c53da7fd",
+                  "usageJson": {}},
+        "w2801": {"id": "w2801", "status": "succeeded", "exitCode": 0,
+                  "sessionIdBefore": None,
+                  "sessionIdAfter": "ca6a3f95-0000-0000-0000-000000000000",
+                  "usageJson": {}},
+        # the audited V&E countersign run shape (AID-4897 criterion 4)
+        "w4898ve": {"id": "w4898ve", "status": "succeeded", "exitCode": 0,
+                    "sessionIdBefore": None,
+                    "sessionIdAfter": "ses_ee18e706fffeBmR3tN52V5396h",
+                    "usageJson": {"persistedSessionId":
+                                  "ses_ee18e706fffeBmR3tN52V5396h"}},
+        # mid-run record: not yet succeeded, no session registered
+        "w4898run": {"id": "w4898run", "status": "running", "exitCode": None,
+                     "sessionIdBefore": None, "sessionIdAfter": None,
+                     "usageJson": {}},
+        # session registered ONLY via usageJson.persistedSessionId
+        "w4898ps": {"id": "w4898ps", "status": "succeeded", "exitCode": 0,
+                    "sessionIdBefore": None, "sessionIdAfter": None,
+                    "usageJson": {"persistedSessionId":
+                                  "ses_persistedonly00000000000000000X"}},
+    }
+
+    class _StubHandler(BaseHTTPRequestHandler):
+        def do_GET(self):
+            m = re.match(r"^/api/heartbeat-runs/([^/?]+)$", self.path)
+            if m and m.group(1) in registry_runs:
+                blob = json.dumps(registry_runs[m.group(1)]).encode("utf-8")
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Content-Length", str(len(blob)))
+                self.end_headers()
+                self.wfile.write(blob)
+            else:
+                self.send_response(404)
+                self.send_header("Content-Length", "0")
+                self.end_headers()
+
+        def log_message(self, *args):
+            pass
+
+    httpd = ThreadingHTTPServer(("127.0.0.1", 0), _StubHandler)
+    threading.Thread(target=httpd.serve_forever, daemon=True).start()
+    stub_registry = "http://127.0.0.1:%d" % httpd.server_address[1]
+
     prod_trailer = ("Provenance: agent=platform-ci task=AID-2768 run=w2800 "
                     "session=1e9be0fa-c320-4309-9704-c755c53da7fd")
     qa_trailer = ("Provenance: agent=qa-lead task=AID-9006 run=w2801 "
@@ -446,7 +723,7 @@ def self_test():
     cite_line = "Countersign: AID-9006 verdict 5843026877 head=" + HEAD
 
     def scenario(name, expected, ctx, timeline=None, head=HEAD, resolver=stub,
-                 env_resolver=True, merged_at=None):
+                 env_resolver=True, merged_at=None, registry=stub_registry):
         if merged_at is not None:
             ctx = dict(ctx)
             ctx["mergedAt"] = merged_at
@@ -462,11 +739,21 @@ def self_test():
         env.pop("SDLC_GUARD_AID_RESOLVER", None)
         if env_resolver and resolver:
             env["SDLC_GUARD_AID_RESOLVER"] = resolver
+        # Run-registry anchor env: point at the loopback stub by default; a
+        # scenario may pass registry=None to prove the unconfigured case is
+        # fail-closed. Never leak this process's real registry env into a
+        # hermetic scenario.
+        for var in ("PAPERCLIP_API_URL", "PAPERCLIP_API_TOKEN",
+                    "PAPERCLIP_API_KEY"):
+            env.pop(var, None)
+        if registry:
+            env["PAPERCLIP_API_URL"] = registry
+            env["PAPERCLIP_API_TOKEN"] = "stub-token"
         proc = subprocess.run(argv, capture_output=True, text=True, env=env)
         ok = proc.returncode == expected
         print("%s [%s] rc=%d (expected %d)%s"
               % ("PASS" if ok else "FAIL", name, proc.returncode, expected,
-                 "" if ok else "\n    | " + proc.stdout.strip().replace("\n", "\n    | ")))
+                  "" if ok else "\n    | " + proc.stdout.strip().replace("\n", "\n    | ")))
         return 1 if ok else 0
 
     T = "2026-09-26T05:00:00Z"
@@ -735,10 +1022,139 @@ def self_test():
         _ctx("producer body\n" + prod_trailer.replace("session=", "session\r="),
              [_comment(T, cite_line + "\n" + qa_trailer)]),
     ))
+    # 36–47. session placeholder + run-registry anchor (AID-4898, audit
+    # AID-4897 criterion 4): the gate used to accept session=opencode_local
+    # because PROVENANCE_RE validates shape only. Now a placeholder session
+    # is rejected unless a same-(agent,task,run) ADDENDUM posted after the
+    # operative citation (pre-merge in audit mode) anchors the REAL session,
+    # and the cited run must exist, have SUCCEEDED, and match it.
+    ve_placeholder = ("Provenance: agent=qa-lead task=AID-9006 run=w4898ve "
+                      "session=opencode_local")
+    ve_real = "ses_ee18e706fffeBmR3tN52V5396h"
+    addendum = ("Session addendum (AID-4898 §8a): run w4898ve completed; real "
+                "session below.\n"
+                "Provenance: agent=qa-lead task=AID-9006 run=w4898ve "
+                "session=" + ve_real)
+    # 36. THE FINDING: placeholder session, no addendum -> fail
+    cases.append(scenario(
+        "placeholder session fails without addendum (AID-4897 §4)", 1,
+        _ctx("producer body\n" + prod_trailer,
+             [_comment(T, cite_line + "\n" + ve_placeholder)]),
+    ))
+    # 37. conformant mid-run path: addendum after the citation anchors it
+    cases.append(scenario(
+        "addendum anchors placeholder session (AID-4898 §8a)", 0,
+        _ctx("producer body\n" + prod_trailer,
+             [_comment(T, cite_line + "\n" + ve_placeholder),
+              _comment("2026-09-26T05:05:00Z", addendum)]),
+    ))
+    # 38. addendum whose session does not match the registry -> fail
+    cases.append(scenario(
+        "addendum with registry-mismatched session fails", 1,
+        _ctx("producer body\n" + prod_trailer,
+             [_comment(T, cite_line + "\n" + ve_placeholder),
+              _comment("2026-09-26T05:05:00Z",
+                       addendum.replace(ve_real,
+                                        "ses_notherunsession00000000000000A"))]),
+    ))
+    # 39. addendum for a DIFFERENT run does not anchor the citation
+    cases.append(scenario(
+        "addendum citing a different run does not anchor", 1,
+        _ctx("producer body\n" + prod_trailer,
+             [_comment(T, cite_line + "\n" + ve_placeholder),
+              _comment("2026-09-26T05:05:00Z",
+                       "Provenance: agent=qa-lead task=AID-9006 run=w2801 "
+                       "session=" + ve_real)]),
+    ))
+    # 40. citation cites a run that does not exist in the registry -> fail
+    ghost_run = ("Provenance: agent=qa-lead task=AID-9006 run=w4898ghost "
+                 "session=" + ve_real)
+    cases.append(scenario(
+        "citation citing a nonexistent run fails (§8b)", 1,
+        _ctx("producer body\n" + prod_trailer,
+             [_comment(T, cite_line + "\n" + ghost_run)]),
+    ))
+    # 41. citation cites a run that has not SUCCEEDED (still running)
+    live_run = ("Provenance: agent=qa-lead task=AID-9006 run=w4898run "
+                "session=ses_runstillactive0000000000000000000")
+    cases.append(scenario(
+        "citation citing a non-succeeded run fails (§8b)", 1,
+        _ctx("producer body\n" + prod_trailer,
+             [_comment(T, cite_line + "\n" + live_run)]),
+    ))
+    # 42. registry not configured -> fail-closed
+    ve_direct = ("Provenance: agent=qa-lead task=AID-9006 run=w4898ve "
+                 "session=" + ve_real)
+    cases.append(scenario(
+        "registry not configured fails closed (§8b)", 1,
+        _ctx("producer body\n" + prod_trailer,
+             [_comment(T, cite_line + "\n" + ve_direct)]),
+        registry=None,
+    ))
+    # 43. producer trailer with placeholder session -> fail
+    prod_placeholder = ("Provenance: agent=platform-ci task=AID-2768 "
+                        "run=w2800 session=opencode_local")
+    cases.append(scenario(
+        "producer placeholder session fails (§4)", 1,
+        _ctx("producer body\n" + prod_placeholder,
+             [_comment(T, cite_line + "\n" + qa_trailer)]),
+    ))
+    # 44. direct anchor: citation carries the run's real session -> pass
+    cases.append(scenario(
+        "real session matching the registry passes (no addendum)", 0,
+        _ctx("producer body\n" + prod_trailer,
+             [_comment(T, cite_line + "\n" + ve_direct)]),
+    ))
+    # 45. session registered only via usageJson.persistedSessionId -> pass
+    ps_trailer = ("Provenance: agent=qa-lead task=AID-9006 run=w4898ps "
+                  "session=ses_persistedonly00000000000000000X")
+    cases.append(scenario(
+        "persistedSessionId anchor passes (sessionIdAfter null)", 0,
+        _ctx("producer body\n" + prod_trailer,
+             [_comment(T, cite_line + "\n" + ps_trailer)]),
+    ))
+    # 46. audit mode: addendum posted AFTER mergedAt cannot anchor
+    cases.append(scenario(
+        "post-merge addendum does not anchor (audit mode)", 1,
+        _ctx("producer body\n" + prod_trailer,
+             [_comment(T, cite_line + "\n" + ve_placeholder),
+              _comment("2026-09-26T06:00:00Z", addendum)]),
+        merged_at="2026-09-26T05:30:00Z",
+    ))
+    # 47. addendum-equivalent posted BEFORE the citation does not anchor
+    cases.append(scenario(
+        "pre-citation trailer does not anchor placeholder", 1,
+        _ctx("producer body\n" + prod_trailer,
+             [_comment("2026-09-26T04:59:00Z", addendum),
+              _comment("2026-09-26T05:02:00Z", cite_line + "\n" + ve_placeholder)]),
+    ))
+    # 48–49. transcription-typo session (observed 1st hand on the first
+    # countersign under this contract: trailer ses_ebbc4d26… vs registry
+    # ses_ebbb4d26…). A non-placeholder id that simply does not match the
+    # registry fails §8b; the ADDENDUM is the repair path (latest wins,
+    # registry-checked) — same mechanism as the placeholder case.
+    typo_trailer = ("Provenance: agent=qa-lead task=AID-9006 run=w4898ve "
+                    "session=ses_transcribedtypo0000000000000X")
+    # 48. mis-transcribed session, no addendum -> fail (§8b mismatch)
+    cases.append(scenario(
+        "transcription-typo session fails without addendum", 1,
+        _ctx("producer body\n" + prod_trailer,
+             [_comment(T, cite_line + "\n" + typo_trailer)]),
+    ))
+    # 49. mis-transcribed session + later addendum with the registry
+    # session -> pass (the observed incident's remediation shape)
+    cases.append(scenario(
+        "addendum corrects mis-transcribed session (AID-4898 §8a)", 0,
+        _ctx("producer body\n" + prod_trailer,
+             [_comment(T, cite_line + "\n" + typo_trailer),
+              _comment("2026-09-26T05:05:00Z", addendum)]),
+    ))
 
     passed = sum(cases)
     total = len(cases)
     print("countersign-gate self-test: %d/%d passed" % (passed, total))
+    httpd.shutdown()
+    httpd.server_close()
     shutil.rmtree(tmp, ignore_errors=True)
     return 0 if passed == total else 1
 
