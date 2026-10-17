@@ -669,7 +669,7 @@ update-branch/re-pin: exatamente 1 issue de countersign por (PR, head)
 | **Dedup de assignment de countersign — máx. 1 issue aberta por (PR, head) (AID-2844)** | **tooling + processo (binding)** | **`scripts/countersign_assign.sh` porta de assignment (check/reuse+bump/create com chave canônica `[CS PR#<n>@<head-40hex>]` no título, fail-closed em erro de transporte) · contrato e caso-registro em §Dedup de assignment (AID-2844) · corrida AID-2832/33/34 = contraexemplo** |
 | Verify-your-work reminder per touched surface | hook | `.claude/hooks/verify-nudge.sh` (PostToolUse, advisory) |
 | Review passes + severities | advisory | `REVIEW.md` (repo root) |
-| Provenance trailer per agent in process comments (AID-2493) | advisory (notice) | `scripts/sdlc_guard_check.sh` check 5 in PR context — parses `Provenance: agent=… task=… run=… session=…`, notices absence/malformation in process comments; never reddens (mitigation phase, see §Merge protocol item 6) |
+| Provenance trailer per agent in process comments (AID-2493) | advisory (notice) | `scripts/sdlc_guard_check.sh` check 5 in PR context — parses `Provenance: agent=… task=… run=… session=…`, notices absence/malformation in process comments; notices agent-lane PR bodies (`aid<n>/…`, `gh<n>/…`, `codex/…`) opened without a valid body trailer (AID-3722, open PRs only); never reddens (mitigation phase, see §Merge protocol item 6) |
 | SDLC loop itself | advisory (skill) | `.claude/skills/ai-native-sdlc/SKILL.md` |
 
 A skill makes violations rare; a hook makes them close to impossible. Policies
