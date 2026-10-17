@@ -1,0 +1,59 @@
+# Evidence: Fail-closed verdict fallback + STACKS type guard
+
+Change-id: AID-5002-verdict-fabrication-fix · base `b08e0096`
+
+## Defect reproduction (BEFORE, on `b08e0096`)
+
+Repro script (temp root, no repo state touched):
+
+1. `units_log` entry `mastered: true` + `evidence_file` containing the text
+   `this is not verifier evidence` → `inspect()` returned
+   `verdict=PASS, gate_ready=True, mutation_score=0.65, coverage_core=0.8`
+   (threshold minimums minted from `load_thresholds()`; no verification run).
+2. `evaluate_stacks("L2", {"kind": "stacks-L2", "predictedTop": []}, {}, errors)`
+   → `TypeError: unhashable type: 'list'`; same for L3 with `{}`.
+
+## Fix verification (AFTER, this branch)
+
+Same repro script against this branch:
+
+1. → `verdict=UNKNOWN, gate_ready=False, mutation_score=None,
+   coverage_core=None`; attempt discovery still reports
+   `attempt_present=True`.
+2. → `False` with `errors == ["observations do not match the closed L2/L3
+   scenario trace"]` (structured FAIL; covered parametrized for
+   `[]`, `["doc-a"]`, `{}`, `None`, `7`).
+
+## Suites (this branch, Python 3, repo-root cwd)
+
+- `python3 -m pytest learner/gate/tests/ -q` → **577 passed, 1 skipped**
+  (includes the new STACKS unhashable-payload tests).
+- `python3 -m pytest curriculum/_shared/tests/
+  learner/gate/tests/test_late_games_evaluators.py -q` → **70 passed**
+  (includes the 11 new chain tests + rewritten reconciliation pair).
+- `python3 -m pytest curriculum/ -q` (pre-refactor baseline of same code
+  semantics) → **198 passed**.
+- `python3 -m unittest discover -s learner/substrate/tests -t .` →
+  **215 tests OK** (regenerated 31 projections cleanly).
+
+## Complexity gate
+
+`python3 scripts/check_python_complexity.py --max 8 --baseline
+scripts/python_complexity_baseline.txt curriculum/_shared/evidence.py
+learner/gate/stacks_evaluator.py` → only pre-existing
+`_detect_phase:10` (identical on pristine `b08e0096`; `curriculum/` is
+outside the CI gate's scan set — `.github/workflows/ci.yml:342`). All new
+functions ≤ 8 after extracting `_chain_verdict`,
+`_evidence_binding_violations`, `_attempt_file_digest`. `stacks_evaluator.py`
+(in CI scan set) reports no violation.
+
+## Protected test edit
+
+`curriculum/_shared/tests/test_evidence_reconciliation.py` (existing test
+asserted the fabricated PASS) — edited under owner-accepted trailer
+`SDLC-ALLOW-TEST-EDIT: AID-5002` (issue = founder-ratified follow-up closing
+incident AID-4910; precedent `aca108a2`). The rewrite strengthens the case:
+attempt discovery still asserted; verdict now asserted UNKNOWN without a
+verifier chain; new sibling proves PASS with the full chain. No check
+weakened — the assertion flipped from fabrication-accepting to
+fabrication-rejecting.

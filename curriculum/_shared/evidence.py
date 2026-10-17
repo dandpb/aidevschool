@@ -22,7 +22,9 @@ Precedent: ``engines/openclaw/runner/pipeline_status.py`` (YAML seam, MD narrati
 
 from __future__ import annotations
 
+import hashlib
 import json
+import math
 import re
 from dataclasses import dataclass
 from enum import StrEnum
@@ -31,12 +33,14 @@ from typing import Any
 
 import yaml
 
+from learner.gate.evidence_io import bound_evidence_violations
+from learner.gate.security import GateSecurityError
 from learner.gate.standards import (
     VerifierVerdict,
     challenge_gate_blockers,
-    load_thresholds,
     verdict_passed,
 )
+from learner.gate.verifier_receipt import load_verifier_receipt
 from shared.errors import StateCorruptionError
 from shared.fsio import atomic_write_text, resolve_contained
 from shared.time import utc_now_iso
@@ -292,21 +296,141 @@ def _attempt_in_canonical_state(project_id: str, root: Path) -> bool:
     )
 
 
+def _last_gate_review(unit: dict[str, Any]) -> dict[str, Any] | None:
+    reviews = unit.get("reviews")
+    if not isinstance(reviews, list):
+        return None
+    for review in reversed(reviews):
+        if isinstance(review, dict) and review.get("event") == "gate":
+            return review
+    return None
+
+
+def _is_sha256_hex(value: Any) -> bool:
+    return (
+        isinstance(value, str)
+        and len(value) == 64
+        and all(character in "0123456789abcdef" for character in value)
+    )
+
+
+def _attempt_file_digest(rel_path: Path, root: Path) -> str | None:
+    """sha256 of a root-contained file's bytes; None when unreadable/empty."""
+    if rel_path.is_absolute():
+        return None
+    try:
+        resolved = resolve_contained(rel_path, root)
+        if not resolved.is_file() or resolved.stat().st_size == 0:
+            return None
+        return hashlib.sha256(resolved.read_bytes()).hexdigest()
+    except (StateCorruptionError, OSError):
+        return None
+
+
+def _attempt_identity_violations(gate: dict[str, Any], root: Path) -> list[str]:
+    """The gate review must still bind the exact attempt file it graded."""
+    attempt_id = gate.get("evidence_attempt_id")
+    if not isinstance(attempt_id, str) or not attempt_id.strip():
+        return ["last gate review has no attempt id"]
+    if not _is_sha256_hex(gate.get("evidence_attempt_digest")):
+        return ["last gate review has no attempt digest"]
+    actual = _attempt_file_digest(Path(attempt_id), root)
+    if actual is None or actual != gate["evidence_attempt_digest"]:
+        return ["gate-bound attempt file is missing, unreadable, or changed"]
+    return []
+
+
+def _receipt_for_digest(digest: str, root: Path) -> VerifierVerdict | None:
+    """Find the separate verifier receipt bound to ``digest`` (by digest, not
+    by source label — source is not unique across receipts)."""
+    receipts_dir = root / "learner" / "verifier_receipts"
+    if not receipts_dir.is_dir():
+        return None
+    for path in sorted(receipts_dir.glob("*.json")):
+        try:
+            receipt = load_verifier_receipt(path, root)
+        except (GateSecurityError, OSError, ValueError):
+            continue
+        if receipt.evidence_digest != digest:
+            continue
+        if not (
+            math.isfinite(receipt.mutation_score)
+            and math.isfinite(receipt.coverage_core)
+        ):
+            continue
+        return VerifierVerdict(
+            mutation_score=receipt.mutation_score,
+            coverage_core=receipt.coverage_core,
+            context_isolated=receipt.context_isolated,
+            verdict=receipt.verdict,
+            source=receipt.source,
+        )
+    return None
+
+
+def _evidence_binding_violations(
+    unit: dict[str, Any], gate: dict[str, Any], root: Path
+) -> list[str]:
+    """The unit's evidence file must still match the gate-bound digest."""
+    evidence_file = unit.get("evidence_file")
+    if not _file_exists_nonempty(evidence_file, root):
+        return ["unit evidence_file is missing or empty"]
+    try:
+        return bound_evidence_violations(
+            str(evidence_file), gate["evidence_digest"], root
+        )
+    except OSError:
+        return ["unit evidence_file is unreadable"]
+
+
+def _chain_verdict(
+    unit: dict[str, Any], gate: dict[str, Any], root: Path
+) -> VerifierVerdict | None:
+    """Verdict when the last gate's verification chain is fully intact.
+
+    None on any broken link (digest, evidence binding, attempt identity,
+    receipt, PASS/mastered contradiction) — callers turn that into UNKNOWN.
+    """
+    if not _is_sha256_hex(gate.get("evidence_digest")):
+        return None
+    if _evidence_binding_violations(unit, gate, root):
+        return None
+    if _attempt_identity_violations(gate, root):
+        return None
+    verdict = _receipt_for_digest(gate["evidence_digest"], root)
+    if verdict is None:
+        return None
+    if verdict.verdict == "PASS" and unit.get("mastered") is not True:
+        return None
+    return verdict
+
+
 def _verdict_from_canonical_state(project_id: str, root: Path) -> VerifierVerdict:
+    """Read the last *independently verified* verdict for a project.
+
+    Fail-closed (AID-5002): the canonical state never mints a verdict. A
+    unit's last gate review only counts when the full verification chain is
+    intact — the gate-bound evidence digest still matches the unit's
+    ``evidence_file`` on disk, the gate-bound attempt identity still matches
+    the attempt file, and a separate verifier receipt under
+    ``learner/verifier_receipts/`` carries the same digest. Metrics come from
+    that receipt, never from thresholds. Anything missing, stale, tampered,
+    or contradictory stays ``UNKNOWN``; a real ``FAIL`` receipt with an
+    intact chain is preserved.
+    """
+    unknown = VerifierVerdict(None, None, None, "UNKNOWN")
     state = _load_learning_state(root)
     for unit in reversed(state.get("units_log") or []):
         if not isinstance(unit, dict) or unit.get("project") != project_id:
             continue
-        if unit.get("mastered") is True and _file_exists_nonempty(unit.get("evidence_file"), root):
-            th = load_thresholds()
-            return VerifierVerdict(
-                mutation_score=th.mutation_min,
-                coverage_core=th.coverage_min,
-                context_isolated=True,
-                verdict="PASS",
-                source=str(unit.get("evidence_file", "")),
-            )
-    return VerifierVerdict(None, None, None, "UNKNOWN")
+        gate = _last_gate_review(unit)
+        if gate is None:
+            continue
+        verdict = _chain_verdict(unit, gate, root)
+        if verdict is None:
+            return unknown
+        return verdict
+    return unknown
 
 
 def _read_latest_verdict(project_id: str, root: Path) -> VerifierVerdict:
