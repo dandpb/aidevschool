@@ -249,7 +249,16 @@ export function GuidedPracticeApp({ practiceId = 'pg-d01', onTeach, onConcluded,
               </button>
             )}
             {state.phase === 'takeaway' && blockers.length > 0 && (
-              <small className="practice-note">Pendências antes de concluir: {blockers.join(', ')}</small>
+              <>
+                <button type="button" onClick={() => dispatch({ type: 'revisao-pedida' })}>
+                  <RotateCcw size={14} aria-hidden />{' '}
+                  {isDaily ? 'Revisar critérios — voltar ao feedback' : 'Revisar rúbrica — voltar ao feedback'}
+                </button>
+                <small className="practice-note">
+                  Pendências antes de concluir: {blockers.join(', ')} — a conclusão fica indisponível até todas
+                  resolvidas; revisar não consome tentativa e preserva esta sessão.
+                </small>
+              </>
             )}
           </>
         )}

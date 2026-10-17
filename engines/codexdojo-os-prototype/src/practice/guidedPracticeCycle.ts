@@ -107,6 +107,7 @@ export type GuidedPracticeEvent =
   | { readonly type: 'retry-respondido'; readonly response: string }
   | { readonly type: 'retry-concluido' }
   | { readonly type: 'takeaway-registrado'; readonly a: string; readonly b: string }
+  | { readonly type: 'revisao-pedida' }
   | { readonly type: 'pratica-concluida' }
 
 export const CYCLE_PHASE_ORDER: readonly CyclePhase[] = [
@@ -279,6 +280,15 @@ export function reduceGuidedPractice(
     case 'takeaway-registrado': {
       if (state.phase !== 'feedback' && state.phase !== 'takeaway') return state
       return { ...state, phase: 'takeaway', takeaway: { a: event.a, b: event.b } }
+    }
+    // AID-3772 (F1, AID-3677/L03): explicit takeaway → feedback return —
+    // the dead-end exit. Navigation only: it preserves the whole session
+    // (A/B/C pieces, criteria verdicts, retry response, takeaway text and
+    // attempt count) and consumes no attempt; retry stays a separate action
+    // gated by its own cap.
+    case 'revisao-pedida': {
+      if (state.phase !== 'takeaway') return state
+      return { ...state, phase: 'feedback' }
     }
     case 'pratica-concluida': {
       if (state.phase !== 'takeaway') return state
