@@ -70,6 +70,32 @@ VERDICT PASS project=curriculum/07_rest_api_auth/node-impl steps=4/4 date=2026-1
   Onda 1, atualizado no mesmo commit como em `90f89498`).
 - `TestDashboardSnapshot`: 5 passed.
 
+## Addendum 2026-10-17 (~19:20Z) — diagnóstico de CI no head `a7881ad2` (PR #707)
+
+Primeira mão (logs de job baixados da Actions):
+
+- `SDLC guardrails (diff)` = failure, 2 violações:
+  1. `protect-tests`: `learner/substrate/tests/test_substrate.py` é teste
+     existente e o range altera código que ele verifica. A alteração em
+     questão é o pin derivado `scaffoldedCount` 14→12, regeneração mecânica
+     do substrate — mesma operação da Onda 1 (`90f89498`, autorizada em
+     GH-375). O item de trabalho AID-5012 (criado 16:22:02Z, atribuído a
+     este agente, onda aprovada pelo founder) cobre a aceitação; o range
+     passa a carregar o trailer `SDLC-ALLOW-TEST-EDIT: AID-5012` (commit
+     seguinte).
+  2. `countersign`: sem citação `Countersign: … verdict …` no PR (AID-2318)
+     — esperado nesta fase: produtor registra provenance no PR e o
+     countersign independente (QA) fixa o head após o último push.
+- `countersign-gate` = failure: "producer unattributed" (AID-2768) — o
+  comentário de registro do produtor no PR #707 resolve a atribuição; a
+  citação independente permanece pendente por desenho (independência por
+  agente).
+- Demais 44 checks: success/skipped (incl. `curriculum Node (18 projects)`).
+- Limitação registrada: outage do control-plane Paperclip (F2 de AID-5014,
+  dono Platform & Capacity/founder) degrada a verificação de registry do
+  gate (§8 fail-closed) e o close-out no board; probes 1ª-mão neste run
+  (000/hang em rotas autenticadas).
+
 ## Drift conhecido e deliberado
 
 Este checkout compartilhado contém trabalho concorrente (AID-5006,
