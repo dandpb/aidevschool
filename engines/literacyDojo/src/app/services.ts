@@ -22,6 +22,7 @@ import type {
   EvidenceSink,
   FeedbackProvider,
   LearnerStateStore,
+  ProgressRepository,
   VerificationClient,
 } from "../application/ports";
 import { LiteracyUseCases } from "../application/useCases";
@@ -57,6 +58,7 @@ export type Services = {
 export function createServices(overrides?: {
   content?: ContentRepository;
   stateStore?: LearnerStateStore;
+  progressRepo?: ProgressRepository;
   evidence?: EvidenceSink;
   feedback?: FeedbackProvider;
   clock?: Clock;
@@ -101,6 +103,7 @@ export function createServices(overrides?: {
   const useCases = new LiteracyUseCases({
     content,
     state: stateStore,
+    progress: overrides?.progressRepo,
     evidence,
     feedback,
     clock,

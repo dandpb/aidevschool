@@ -71,6 +71,51 @@ export class IndexedDbProgressRepository implements ProgressRepository {
     }
   }
 
+  /**
+   * Read-modify-write atômico (AID-3740): get → migrate → mutate → put dentro
+   * de UMA transação readwrite. O `put` é emitido no callback `onsuccess` do
+   * `get` (mesma ativação da transação — jamais entre awaits, que drenariam a
+   * fila de microtasks e deixariam a transação auto-commitar). Transações
+   * IndexedDB do mesmo banco serializam em commit: duas abas executando
+   * `update` concorrentemente veem, a segunda, o estado commitado pela
+   * primeira — fechando o TOCTOU load→compute→save→emit da corrida
+   * multi-tab (2× `lesson_completed` em 2/5 execuções no registro S5-RACE).
+   * Erro do callback aborta a transação e repassa a exceção original.
+   */
+  async update(
+    mutate: (current: LearnerProgress | null) => LearnerProgress,
+  ): Promise<LearnerProgress> {
+    const db = await this.openDb();
+    try {
+      const transaction = db.transaction(STORE_NAME, "readwrite");
+      const store = transaction.objectStore(STORE_NAME);
+      const getRequest = store.get(PROGRESS_KEY);
+      let committed: LearnerProgress | null = null;
+      let failure: unknown = null;
+      getRequest.onsuccess = () => {
+        try {
+          const raw = getRequest.result;
+          const current = raw === undefined ? null : migrateProgress(raw, contentVersion);
+          committed = mutate(current);
+          store.put(committed, PROGRESS_KEY);
+        } catch (error) {
+          failure = error;
+          transaction.abort();
+        }
+      };
+      await transactionToPromise(transaction).catch((error: unknown) => {
+        if (failure !== null) throw failure;
+        throw error;
+      });
+      if (committed === null) {
+        throw new Error("Falha ao atualizar o progresso no IndexedDB");
+      }
+      return committed;
+    } finally {
+      db.close();
+    }
+  }
+
   async reset(): Promise<void> {
     const db = await this.openDb();
     try {
