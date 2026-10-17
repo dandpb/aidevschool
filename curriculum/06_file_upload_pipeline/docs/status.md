@@ -2,11 +2,11 @@
 
 ## Phase
 
-phase: cycle-complete
+phase: impl
 
 # Status — Project 06 · File Upload/Processing Pipeline
 
-> Phase: **cycle-complete**
+> Phase: **impl**
 > Implementations reviewed: Go, Rust, Node/TypeScript
 > Source status: all implementations are done for the current learning cycle.
 

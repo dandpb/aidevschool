@@ -24,20 +24,9 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 VOXEL_CATALOG = REPO_ROOT / "engines" / "voxelDojo" / "catalog.json"
 CURRICULUM_CATALOG = REPO_ROOT / "curriculum" / "catalog.md"
 
-# Games known to have NO independent evaluator in GAME_SPECS yet
-# (verifier-map §4, L1' lote 2+: games 15-18). Each entry must be
-# removed in the same PR that ships the game's evaluator.
-ALLOWED_UNVERIFIED: frozenset[str] = frozenset(
-    {
-        # game-04-task-queue removed in this PR (AID-1902 PR-A2): the TASK FORGE
-        # evaluator (learner/gate/task_queue_evaluator.py) registers it in GAME_SPECS,
-        # paying the debt AID-1901 PR-A1 left when it shipped the game.
-        "game-15-observatory",
-        "game-16-freight-yard",
-        "game-17-lighthouse-network",
-        "game-18-stacks",
-    }
-)
+# Games known to have NO independent evaluator in GAME_SPECS yet.
+# Empty: all 17 voxelDojo games (02–18) now have independent evaluators in GAME_SPECS.
+ALLOWED_UNVERIFIED: frozenset[str] = frozenset()
 
 # Known catalog unitId quirks: game number != unit number prefix. Pinned to
 # the exact (game id, unitId) pair so any change — the fix OR a new breakage —

@@ -1,0 +1,82 @@
+{
+  "kit": "pg-e01-evals-offline",
+  "zipRoot": "pg-e01",
+  "stages": [
+    {
+      "id": "etapa-1-inicio",
+      "zip": "pg-e01-etapa-1-inicio.zip",
+      "audience": "learner",
+      "name": "Etapa 1 — Início: cenário, critérios e plano de medição",
+      "purpose": "Entregar o cenário PrismaDesk, os prompts v1/v2, o modelo de critérios, os casos base (tickets + rótulos dourados), o scorer determinístico e o exemplo trabalhado TrilhaFit completo, para que você declare e congele seus critérios e o plano de medição ANTES de ver qualquer saída do PrismaDesk (enunciado, passos 1 e 2 da tentativa).",
+      "limit": "Não contém NENHUMA saída do PrismaDesk (insumos/fixture/saidas_*.json), nem o heldout, nem o guia-de-correcao. As únicas saídas presentes são as do exemplo trabalhado TrilhaFit (exemplo/), leitura obrigatória do passo 1.",
+      "adds": [
+        "enunciado.md",
+        "rubrica-v1.md",
+        "exemplo-trabalhado.md",
+        "exemplo/casos_base.json",
+        "exemplo/saidas_A_base.json",
+        "exemplo/saidas_B_base.json",
+        "exemplo/heldout/casos_heldout.json",
+        "exemplo/heldout/saidas_A_heldout.json",
+        "exemplo/heldout/saidas_B_heldout.json",
+        "exemplo/heldout/saidas_C_heldout.json",
+        "insumos/CENARIO.md",
+        "insumos/prompts/prompt_v1.md",
+        "insumos/prompts/prompt_v2.md",
+        "insumos/modelo-de-criterios.md",
+        "insumos/fixture/casos_base.json",
+        "insumos/fixture/metricas.py"
+      ]
+    },
+    {
+      "id": "etapa-2-base",
+      "zip": "pg-e01-etapa-2-base.zip",
+      "audience": "learner",
+      "name": "Etapa 2 — Tentativa: conjunto base (A vs B)",
+      "purpose": "Liberar as saídas A e B do conjunto base para você rodar o scorer, registrar o veredito real, diagnosticar a fatia que piorou e escrever a proposta v2.1 com hash (enunciado, passos 3 a 5 da tentativa).",
+      "limit": "Sem heldout, sem variante C, sem guia-de-correcao. Extraia por cima da Etapa 1 (mesma pasta).",
+      "adds": [
+        "insumos/fixture/saidas_A_base.json",
+        "insumos/fixture/saidas_B_base.json"
+      ]
+    },
+    {
+      "id": "etapa-3-heldout",
+      "zip": "pg-e01-etapa-3-heldout.zip",
+      "audience": "heldout",
+      "name": "Etapa 3 — Held-out: casos NOVOS (A vs B e B vs C)",
+      "purpose": "Abrir o heldout SOMENTE após registrar sua proposta v2.1: testar se o diagnóstico se reproduz em casos novos (A vs B) e se a correção de referência C recupera a fatia sem derrubar as outras (B vs C) — enunciado, passo 6 da tentativa.",
+      "limit": "Sem guia-de-correcao (a proposta-referencia.md da Etapa 4 continua fora). A variante C é a correção de referência sintética do pacote, usada aqui por desenho do passo 6.",
+      "adds": [
+        "insumos/fixture/heldout/casos_heldout.json",
+        "insumos/fixture/heldout/saidas_A_heldout.json",
+        "insumos/fixture/heldout/saidas_B_heldout.json",
+        "insumos/fixture/heldout/saidas_C_heldout.json"
+      ]
+    },
+    {
+      "id": "etapa-4-referencia",
+      "zip": "pg-e01-etapa-4-referencia.zip",
+      "audience": "learner",
+      "name": "Etapa 4 — Referência mínima (passo 7)",
+      "purpose": "Conter exatamente o que o passo 7 do enunciado manda consultar depois da sua tentativa: guia-de-correcao/proposta-referencia.md, para comparar com a SUA proposta.",
+      "limit": "Contém apenas proposta-referencia.md. critérios-referencia, solucao.md e testes.py (Etapa 5) continuam fora. Alternativas fundamentadas que cumpram a rubrica valem met.",
+      "adds": [
+        "guia-de-correcao/proposta-referencia.md"
+      ]
+    },
+    {
+      "id": "etapa-5-docente",
+      "zip": "pg-e01-etapa-5-docente.zip",
+      "audience": "teacher",
+      "name": "Etapa 5 — Docente: guia completo de correção",
+      "purpose": "Gabaritos completos (critérios-referencia, solucao com as saídas reais do scorer) e os 9 checks determinísticos (testes.py) para uso docente ou autoavaliação APÓS concluir a prática.",
+      "limit": "Uso docente/avaliação; não faz parte da tentativa do aprendiz.",
+      "adds": [
+        "guia-de-correcao/criterios-referencia.md",
+        "guia-de-correcao/solucao.md",
+        "guia-de-correcao/testes.py"
+      ]
+    }
+  ]
+}
