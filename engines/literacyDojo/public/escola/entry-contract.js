@@ -43,12 +43,12 @@ export const SCHOOL_ENTRY = Object.freeze({
       audience: "JORNADA 2 · PARA QUEM DESENVOLVE · PRÉVIA",
       title: "IA para Dev",
       description:
-        "Construa software robusto com IA: intenção, plano, construção, teste e review. Comece pelos mesmos fundamentos; a ponte Dev é uma prévia planejada — o destino, não um percurso pronto no app.",
+        "Construa software robusto com IA: intenção, plano, construção, teste e review. Jornada opcional no app de lições: começa do zero dela, sem pré-requisito — se você ainda não usa IA no dia a dia, recomendamos conhecer os fundamentos primeiro.",
       engineId: "literacyDojo",
       preview: true,
       cta: "Começar pelos fundamentos",
       bridge: Object.freeze({
-        label: "Depois dos fundamentos — ponte Dev (prévia planejada)",
+        label: "No app de lições — Jornada Dev (prévia opcional)",
         trackId: "dev",
         moduleId: "mod-05",
         lessons: Object.freeze(
@@ -64,7 +64,7 @@ export const SCHOOL_ENTRY = Object.freeze({
             ["l29", "Avalie as dependências sugeridas"],
           ].map(([id, title]) => Object.freeze([id, title])),
         ),
-        note: "Prévia planejada: hoje o app de lições abre a trilha de fundamentos; esta ponte Dev (módulo 05 do currículo) ainda não faz parte do percurso do app — as lições acima mostram o destino planejado. Laboratórios 3D são prática opcional, não porta de entrada.",
+        note: "Prévia jogável: a Jornada Dev já está no app de lições como escolha opcional — este percurso (módulo 05 do currículo) começa em l15 e as lições acima abrem na ordem, uma por vez. Laboratórios 3D são prática opcional, não porta de entrada.",
       }),
     }),
   ]),

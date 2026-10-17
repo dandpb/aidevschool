@@ -44,7 +44,15 @@ const SOURCE_PINS_80C7ADDC = {
   "server/catalog.mjs": "3cc1ef56e5c76020c5819de792ca99c6c4d9a2bd4caa951a52dea09ac4527673",
 };
 
-/** Canonical SCHOOL_ENTRY serialized from school-entry @ 80c7addc. */
+/**
+ * Canonical SCHOOL_ENTRY: port base school-entry @ 80c7addc, com a correção
+ * de disponibilidade AID-3708 (QA-ROUND L18 F1): o RC2 entrega a Jornada Dev
+ * por opt-in com l15 jogável (PR638/PR640 — playwright/dev-track-navigation
+ * 5/5, src/domain/journeyProgress.ts), logo a copy "prévia planejada / ainda
+ * não faz parte do percurso do app" era under-claim factual. Ajuste consciente
+ * e documentado; a fonte school-entry nesta base ainda não tem SCHOOL_ENTRY
+ * (guard cross-source em SKIP explícito, pré-merge #615).
+ */
 const CANONICAL_CONTRACT_80C7ADDC = {
   schemaVersion: 1,
   fundamentals: {
@@ -81,12 +89,12 @@ const CANONICAL_CONTRACT_80C7ADDC = {
       audience: "JORNADA 2 · PARA QUEM DESENVOLVE · PRÉVIA",
       title: "IA para Dev",
       description:
-        "Construa software robusto com IA: intenção, plano, construção, teste e review. Comece pelos mesmos fundamentos; a ponte Dev é uma prévia planejada — o destino, não um percurso pronto no app.",
+        "Construa software robusto com IA: intenção, plano, construção, teste e review. Jornada opcional no app de lições: começa do zero dela, sem pré-requisito — se você ainda não usa IA no dia a dia, recomendamos conhecer os fundamentos primeiro.",
       engineId: "literacyDojo",
       preview: true,
       cta: "Começar pelos fundamentos",
       bridge: {
-        label: "Depois dos fundamentos — ponte Dev (prévia planejada)",
+        label: "No app de lições — Jornada Dev (prévia opcional)",
         trackId: "dev",
         moduleId: "mod-05",
         lessons: [
@@ -100,7 +108,7 @@ const CANONICAL_CONTRACT_80C7ADDC = {
           ["l28", "Refatore com assistente sem quebrar comportamento"],
           ["l29", "Avalie as dependências sugeridas"],
         ],
-        note: "Prévia planejada: hoje o app de lições abre a trilha de fundamentos; esta ponte Dev (módulo 05 do currículo) ainda não faz parte do percurso do app — as lições acima mostram o destino planejado. Laboratórios 3D são prática opcional, não porta de entrada.",
+        note: "Prévia jogável: a Jornada Dev já está no app de lições como escolha opcional — este percurso (módulo 05 do currículo) começa em l15 e as lições acima abrem na ordem, uma por vez. Laboratórios 3D são prática opcional, não porta de entrada.",
       },
     },
   ],
@@ -114,7 +122,7 @@ describe("/escola/ static entry — honest copy (F1/F2)", () => {
       "avaliação",
       "COMECE AQUI",
       "entra na jornada",
-      "prévia planejada",
+      "prévia jogável",
       "não sincroniza",
       "progresso fica",
     ]) {
@@ -198,7 +206,7 @@ describe("/escola/ static entry — mechanical href allowlist (no invented hostn
 });
 
 describe("/escola/ static entry — contract integrity and drift guard", () => {
-  it("ports SCHOOL_ENTRY verbatim from school-entry @ 80c7addc", () => {
+  it("matches the canonical SCHOOL_ENTRY (port base 80c7addc + correção de disponibilidade AID-3708)", () => {
     expect(SCHOOL_ENTRY).toEqual(CANONICAL_CONTRACT_80C7ADDC);
   });
 
