@@ -14,7 +14,7 @@ test("entrada /escola/ serve a página, os assets diretos e o fallback SPA do bu
   await page.goto("/escola/");
   await expect(page.getByRole("heading", { name: "Fundamentos de IA" })).toBeVisible();
   await expect(page.locator("#jornada-cotidiano")).toContainText("IA no cotidiano");
-  await expect(page.locator("#jornada-dev")).toContainText("prévia planejada");
+  await expect(page.locator("#jornada-dev")).toContainText("prévia jogável");
   await expect(page.locator("#world")).toBeVisible();
   await expect(page.locator("#start-fundamentals")).toHaveAttribute("href", "/");
   // Sem overflow horizontal nos dois extremos de viewport (mobile default 360 e desktop).
