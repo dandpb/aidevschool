@@ -9,7 +9,7 @@ numbered catalog and AI Literacy track are not owned by a single app.
 
 | Task | Location | Notes |
 | --- | --- | --- |
-| Project catalog | `catalog.md` | Canonical list of 19 entries (00–18); 01–18 are programming projects. |
+| Project catalog | `catalog.md` | Canonical list of 20 entries (00–19); 01–18 are programming projects; 00 and 19 are AI-application families (00 non-technical, 19 guided Dev journey `sequencia-dev-guiada/`). |
 | Nontechnical AI lessons | `ai-literacy/` | Canonical content, lesson count/status, schemas, validator, and compiler for LiteracyDojo. |
 | Numbered projects | `01_rate_limiter/` through `18_search_engine/` | Each owns its docs and language implementations. |
 | Active/gate reference | `01_rate_limiter/` | Most complete project-local contract and benchmark evidence. |

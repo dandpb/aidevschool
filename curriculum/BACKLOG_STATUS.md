@@ -25,6 +25,7 @@ Canonical source: [catalog.md](./catalog.md). This operational view preserves th
 | `16_mini_message_queue` | `scaffolded` | Project artifacts exist; catalog verification is pending. |
 | `17_distributed_config_service` | `scaffolded` | Project artifacts exist; catalog verification is pending. |
 | `18_search_engine` | `scaffolded` | Project artifacts exist; catalog verification is pending. |
+| `19_sequencia_dev_guiada` | `planned` | Sequência r1 versionada em `curriculum/sequencia-dev-guiada/SEQUENCIA.md` (ordem U01–U12 por objetivo/pré-requisito, classificação pronto/adaptação/lacuna) + primeira unidade `pg-d01-debug-reproduza/` (enunciado com lição-âncora l27, exemplo trabalhado citado, insumos/fixture Python puro com 5 testes, rubrica v1 com critérios c-*, guia de correção separado) — PR #620 @ `e01d9d42`, revisão Content Designer da AID-3510 approved 2026-09-30. Ids canônicos p/ bindings (AID-3535): projectId `19_sequencia_dev_guiada`; unitId por unidade no padrão `sequencia-dev-guiada:pg-dNN` (ex.: pg-d01 gera `sequencia-dev-guiada:pg-d01`), espelhando o padrão `ai-literacy:lNN`. Status planned: família com sequência r1 e 1/12 unidades autoradas; promove a scaffolded quando o pipeline de unidades rodar. |
 
 ## Update rule
 
