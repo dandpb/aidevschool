@@ -6,6 +6,14 @@ R2 + CDN, decisão do founder registrada na ADR)
 Ferramenta: `scripts/storage/media_pipeline.py` + `scripts/storage/s3_miniclient.py`
 (Python 3 stdlib only — sem dependências; SigV4 nativo contra API S3-compatível)
 
+> **Pivô de produção (2026-10-17, AID-2928):** a origem de produção ATIVA é
+> local-first — GitHub Release Assets + kits offline determinísticos
+> (ADR `docs/storage/AID-2928_ADR_MEDIA_LOCAL_FALLBACK_2026-10-17.md`,
+> decisão do founder no fechamento da AID-2931). Tudo abaixo (contrato §1,
+> manifest, lifecycle, orçamento) continua válido; o backend S3 fica como
+> stand-in/opcional (§4b) e a produção R2 (§4a) fica **DEFERIDA** até decisão
+> do CEO. Comandos da origem ativa: §10.
+
 ## 1. Contrato (o que o pipeline garante)
 
 1. **Bytes são content-addressed**: mídia sobe como `media/<sha256>.<ext>` —
@@ -60,6 +68,9 @@ apontando fora do repo.
 ## 4. Provisionamento
 
 ### 4a. Produção (Cloudflare R2) — requer credenciais do CEO
+
+> **DEFERIDA (2026-10-17, AID-2928/AID-2931):** produção migrou para a origem
+> local-first (§10). Reativar R2 exige decisão do CEO.
 
 1. Dashboard R2 → criar bucket `aidevschool-media` (location: auto).
 2. Criar token S3 (escopo Object Read & Write **neste bucket**) → preencher env da seção 2.
@@ -148,3 +159,30 @@ referenciados intactos, budget US$0,00 — **PASS**
   irrelevante na escala atual; egress zero).
 - O manifest cresce uma entrada por path lógico (não por conteúdo) — dedup de
   conteúdo compartilha a mesma chave/objeto.
+
+## 10. Origem ATIVA: GitHub Release Assets + kits offline (local-first)
+
+ADR: `docs/storage/AID-2928_ADR_MEDIA_LOCAL_FALLBACK_2026-10-17.md` (ACEITA
+2026-10-17, decisão founder no fechamento da AID-2931). Contrato da seção 1
+segue valendo; só a origem dos bytes muda.
+
+1. **Upload de mídia**: asset `<sha256>.<ext>` na release `media-<AAAAMMDD>`
+   do repo público. Asset publicado é imutável (nunca re-escrito na mesma
+   tag); conteúdo divergente no mesmo nome = erro.
+2. **Manifest**: `docs/storage/manifests/media-manifest.json` ganha
+   `origin: "release"` + `tag`/`asset`/`url`/`bytes` por entrada. A URL
+   pública é `https://github.com/dandpb/aidevschool/releases/download/<tag>/<asset>`
+   (download anônimo — Level 0 sem conta).
+3. **Kits offline** (pacotes de micro-lesson): zips determinísticos
+   (timestamps fixos, entradas ordenadas) + INVENTÁRIO sha256 + PROVENANCE
+   com fonte pinada, convenção `docs/learner-downloads/`; publicados como
+   assets das mesmas releases. Verificação offline: `sha256sum -c`.
+4. **Retenção**: igual §5 — órfão = asset sem referência no manifest por
+   >90 dias; remoção só via `orphan-gc` com recibo no sweep (não existe
+   lifecycle nativo no GitHub; referenciado nunca é deletado).
+5. **Orçamento**: US$0/mês (release assets de repo público, egress incluso).
+   Limites US$10/US$25 permanecem para qualquer backend futuro.
+6. **Ferramentas (em implementação, AID-2928)**: `release_assets.py`
+   (minicliente Releases), `offline_kit.py` (empacotador determinístico),
+   self-test e2e offline; primeiro upload real + `verify --deep` + drill de
+   restore fecham os critérios da issue.
