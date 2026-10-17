@@ -8,6 +8,9 @@ objective: "Diante de uma resposta convincente sem evidência, reconhecer que el
 estimatedMinutes: 4
 skillIds: [entender, avaliar]
 prerequisites: []
+competency:
+  primary: F1
+  supporting: [F4]
 
 activities:
   - id: l02-a1

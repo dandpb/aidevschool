@@ -8,6 +8,9 @@ objective: "Ajustar público, tom e formato de um pedido para obter uma resposta
 estimatedMinutes: 4
 skillIds: [pedir]
 prerequisites: [l05]
+competency:
+  primary: F3
+  supporting: []
 
 activities:
   - id: l06-a1

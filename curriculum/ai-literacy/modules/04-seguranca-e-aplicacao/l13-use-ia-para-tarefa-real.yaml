@@ -8,6 +8,9 @@ objective: "Aplicar o ciclo pedir-avaliar-melhorar em uma tarefa real da própri
 estimatedMinutes: 5
 skillIds: [aplicar]
 prerequisites: [l12]
+competency:
+  primary: F2
+  supporting: [F4, F3]
 
 activities:
   - id: l13-a1

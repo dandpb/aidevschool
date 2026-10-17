@@ -16,8 +16,9 @@ import {
   MAP_INITIAL_LESSON_ID,
   createInitialProgress,
 } from "../../src/domain/progress";
+import { emptyXpLedger } from "../../src/domain/xpLedger";
 import { LiteracyMissionAdapter } from "../../src/host/LiteracyMissionAdapter";
-import { InMemoryEvidenceSink, InMemoryProgressRepository, fixedClock } from "../fakes";
+import { InMemoryEvidenceSink, InMemoryLearnerStateStore, fixedClock } from "../fakes";
 import { FIXED_NOW, makeServices } from "../helpers";
 
 /**
@@ -166,16 +167,21 @@ function makeServicesWithLesson(
   lesson: LessonDefinition,
   progress: LearnerProgress = seededProgress(),
 ) {
-  const progressRepo = new InMemoryProgressRepository();
-  progressRepo.seed(progress);
+  const stateStore = new InMemoryLearnerStateStore();
+  stateStore.seedState({
+    stateVersion: 1,
+    origin: "fresh-seed",
+    progress: progress,
+    xpLedger: emptyXpLedger(),
+  });
   const scaffold = makeServices().services;
   const services = createServices({
-    progressRepo,
+    stateStore,
     evidence: new InMemoryEvidenceSink(),
     clock: fixedClock(FIXED_NOW),
     content: pinnedContent(lesson, scaffold.content),
   });
-  return { services, progressRepo };
+  return { services, stateStore };
 }
 
 async function openIntro(user: ReturnType<typeof userEvent.setup>) {

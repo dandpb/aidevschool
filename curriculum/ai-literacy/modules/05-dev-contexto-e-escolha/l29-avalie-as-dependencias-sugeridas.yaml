@@ -8,6 +8,9 @@ objective: "Diante de uma biblioteca recomendada pelo assistente, verificar manu
 estimatedMinutes: 4
 skillIds: [codificar, avaliar]
 prerequisites: [l22]
+competency:
+  primary: D3
+  supporting: [D4]
 
 activities:
   - id: l29-a1

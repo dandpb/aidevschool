@@ -8,6 +8,9 @@ objective: "Diante de um bug, montar o pedido de diagnóstico com o erro reprodu
 estimatedMinutes: 4
 skillIds: [codificar, avaliar]
 prerequisites: [l21]
+competency:
+  primary: D4
+  supporting: [D3]
 
 activities:
   - id: l27-a1

@@ -24,6 +24,12 @@ const allStatic = `${indexHtml}\n${escolaJs}\n${contractJs}`;
 
 /** Only real, verified public surfaces (docs/serving/README.md) may be linked. */
 const OS_ALIAS = "https://aidevschool-codexdojo-os.netlify.app/";
+/**
+ * Self-origin absolute URLs are metadata directives (rel="canonical",
+ * AID-3701), not navigation links — allowed mechanically, still no invented
+ * hostnames.
+ */
+const SELF_ORIGIN = "https://aidevschool-literacydojo.netlify.app/";
 const ALLOWED_EXTERNAL_HREFS = new Set([OS_ALIAS]);
 
 /**
@@ -170,6 +176,7 @@ describe("/escola/ static entry — mechanical href allowlist (no invented hostn
         href === "/" ||
         href.startsWith("#") ||
         href.startsWith("./") ||
+        href.startsWith(SELF_ORIGIN) ||
         ALLOWED_EXTERNAL_HREFS.has(href);
       expect(ok, `href outside allowlist: ${href}`).toBe(true);
     }

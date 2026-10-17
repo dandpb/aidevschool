@@ -9,7 +9,8 @@ import {
   isValidAnalyticsEvent,
 } from "../../src/domain/analytics";
 import { MAP_INITIAL_LESSON_ID, createInitialProgress } from "../../src/domain/progress";
-import { InMemoryEvidenceSink, InMemoryProgressRepository, fixedClock } from "../fakes";
+import { emptyXpLedger } from "../../src/domain/xpLedger";
+import { InMemoryEvidenceSink, InMemoryLearnerStateStore, fixedClock } from "../fakes";
 
 /** Coleta os eventos de analytics em memória — canal de teste (ADR-0009). */
 class InMemoryAnalyticsSink implements AnalyticsSink {
@@ -51,16 +52,22 @@ const PILOT_EVENT = buildLessonCompletedEvent(
 );
 
 function makeCompletableServices(analytics: InMemoryAnalyticsSink) {
-  const progressRepo = new InMemoryProgressRepository();
+  const stateStore = new InMemoryLearnerStateStore();
   const services = createServices({
-    progressRepo,
+    stateStore,
     evidence: new InMemoryEvidenceSink(),
     clock: fixedClock(FIXED_NOW),
     analytics,
   });
-  progressRepo.seed(
-    createInitialProgress(services.content.listModules(), services.content.getContentVersion()),
-  );
+  stateStore.seedState({
+    stateVersion: 1,
+    origin: "fresh-seed",
+    progress: createInitialProgress(
+      services.content.listModules(),
+      services.content.getContentVersion(),
+    ),
+    xpLedger: emptyXpLedger(),
+  });
   return services;
 }
 

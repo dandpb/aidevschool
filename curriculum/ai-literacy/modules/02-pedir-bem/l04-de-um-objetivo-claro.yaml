@@ -8,6 +8,9 @@ objective: "Reescrever um pedido vago como um objetivo concreto e verificável."
 estimatedMinutes: 4
 skillIds: [pedir]
 prerequisites: [l03]
+competency:
+  primary: F3
+  supporting: []
 
 activities:
   - id: l04-a1

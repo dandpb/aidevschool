@@ -8,6 +8,9 @@ objective: "Diante de uma tarefa que depende de um documento ou imagem, escolher
 estimatedMinutes: 4
 skillIds: [pedir, avaliar]
 prerequisites: [l18]
+competency:
+  primary: F3
+  supporting: []
 
 activities:
   - id: l24-a1

@@ -9,6 +9,9 @@ objective: "Distinguir tarefas do próprio trabalho que valem virar rotina assis
 estimatedMinutes: 4
 skillIds: [pedir, aplicar]
 prerequisites: [l18]
+competency:
+  primary: F3
+  supporting: [F2]
 
 activities:
   - id: l30-a1

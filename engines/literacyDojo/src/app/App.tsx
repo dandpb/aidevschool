@@ -16,7 +16,13 @@ import { OnboardingScreen } from "../screens/OnboardingScreen";
 import { ProgressScreen } from "../screens/ProgressScreen";
 import { ResultScreen } from "../screens/ResultScreen";
 import { TrackMapScreen } from "../screens/TrackMapScreen";
-import { type Services, ServicesProvider, createServices, loadOrSeedProgress } from "./services";
+import {
+  type Services,
+  ServicesProvider,
+  createServices,
+  explicitReset,
+  loadOrActivateState,
+} from "./services";
 
 export type ActivityResultSummary = {
   activityId: string;
@@ -99,7 +105,7 @@ export function AppShell({
     void (async () => {
       let seeded: LearnerProgress;
       try {
-        seeded = await loadOrSeedProgress(services);
+        seeded = (await loadOrActivateState(services)).progress;
       } catch (error) {
         if (cancelled) return;
         setBootError(
@@ -191,11 +197,13 @@ export function AppShell({
   }, [route, services]);
 
   const handleReset = useCallback(async () => {
-    await services.progressRepo.reset();
+    // Reset explícito (AID-3888): marker-first — o boot seguinte semeia do
+    // zero sem restaurar do snapshot (preservado como histórico).
+    await explicitReset(services);
     resetRetrofitAcks();
     setRetrofitAcks({});
-    const fresh = await loadOrSeedProgress(services);
-    setProgress(fresh);
+    const fresh = await loadOrActivateState(services);
+    setProgress(fresh.progress);
     setRoute({ name: "onboarding" });
   }, [services]);
 

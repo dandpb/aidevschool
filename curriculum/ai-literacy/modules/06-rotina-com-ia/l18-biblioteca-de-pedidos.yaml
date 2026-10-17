@@ -8,6 +8,9 @@ objective: "Transformar um pedido bem-sucedido em modelo reutilizável e adaptá
 estimatedMinutes: 4
 skillIds: [pedir, aplicar]
 prerequisites: [l14]
+competency:
+  primary: F3
+  supporting: []
 
 activities:
   - id: l18-a1

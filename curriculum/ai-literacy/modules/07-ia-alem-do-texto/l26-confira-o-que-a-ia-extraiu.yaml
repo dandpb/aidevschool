@@ -10,6 +10,9 @@ objective: "Diante de uma extração feita de um documento anexado, conferir os 
 estimatedMinutes: 4
 skillIds: [avaliar, aplicar]
 prerequisites: [l20]
+competency:
+  primary: F4
+  supporting: []
 
 activities:
   - id: l26-a1

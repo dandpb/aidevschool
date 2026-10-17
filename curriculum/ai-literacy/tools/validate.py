@@ -9,6 +9,7 @@ if not __package__:
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
     __package__ = "tools"
 
+from .competency_projection import compile_competency_map
 from .compiler import PUBLIC_JOURNEY, compile_track, compile_verifier_corpus
 from .schema import SchemaResolver, validate_against_schema
 from .semantic import validate_track
@@ -26,6 +27,15 @@ def _parse_arguments(argv):
         default=None,
         help="gera OUTDIR/literacy-corpus.mjs (corpus do verificador independente hospedado, AID-449)",
     )
+    parser.add_argument(
+        "--compile-competency",
+        metavar="OUTDIR",
+        default=None,
+        help=(
+            "gera OUTDIR/competency-map.ts (read model OPCIONAL de competências, spec AID-3514; "
+            "opt-in — lessons.ts permanece inalterado)"
+        ),
+    )
     return parser.parse_args(argv)
 
 
@@ -41,11 +51,16 @@ def main(argv=None):
     errors, ready, catalog = validate_track(track_dir)
     out_path = None
     corpus_path = None
+    competency_path = None
     if not errors and args.compile:
         errors, out_path = compile_track(track_dir, args.compile, validated=(errors, ready, catalog))
     if not errors and args.compile_verifier:
         errors, corpus_path = compile_verifier_corpus(
             track_dir, args.compile_verifier, validated=(errors, ready, catalog)
+        )
+    if not errors and args.compile_competency:
+        errors, competency_path = compile_competency_map(
+            track_dir, args.compile_competency, validated=(errors, ready, catalog)
         )
 
     if errors:
@@ -68,6 +83,8 @@ def main(argv=None):
         print("Read model gerado: %s" % out_path)
     if corpus_path is not None:
         print("Verifier corpus gerado: %s" % corpus_path)
+    if competency_path is not None:
+        print("Competency map gerado: %s" % competency_path)
     return 0
 
 

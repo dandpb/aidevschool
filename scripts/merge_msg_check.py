@@ -20,7 +20,13 @@ is independent of actor, credential, and merge path.
 Acceptance contract (fail-closed):
   1. only MERGE commits are checked (>= 2 parents); regular and squash
      commits are out of scope (the canonical line is a merge-message
-     obligation);
+     obligation). Since AID-3795, in --range mode only commits on the
+     FIRST-PARENT path of the range head (the pushed main tip) are listed:
+     the canonical-line obligation binds the merge that LANDS on main, so
+     merges on the PR-branch side (second parent — `update-branch` merges
+     required by `strict:true` branch protection, internal feature merges)
+     are out of scope; `--sha` still audits exactly the pinned commit,
+     wherever it lives (triage/backfill tool);
   2. the canonical line must match `^Countersign: ` at the start of a line
      in the BODY block (everything after the first blank line that ends the
      subject) with non-empty content — a `Countersign:` line in the subject
@@ -90,8 +96,16 @@ def commit_records(revs, cwd=None):
 
 
 def range_shas(rng, cwd=None):
-    """All commits in `base..head`, oldest first."""
-    out = git("log", "--reverse", "--format=%H", rng, cwd=cwd)
+    """Commits on the FIRST-PARENT path of the range head, oldest first
+    (AID-3795). The workflow passes <pushed-base>..<main-tip>: following
+    only first-parent links from the head yields exactly the landing
+    surface of main — every merge that landed on main is a first-parent
+    commit of the tip (whichever path composed it: door, web UI, raw API,
+    CLI fallback), while PR-side merges (update-branch, internal feature
+    merges) live on second-parent ancestry and drop out. Without this,
+    update-branch merges (empty body by construction) are flagged as
+    out-of-door merges — the AID-3788/AID-3791 false positives."""
+    out = git("log", "--reverse", "--first-parent", "--format=%H", rng, cwd=cwd)
     return [line for line in out.splitlines() if line.strip()]
 
 
@@ -269,8 +283,16 @@ def self_test():
     st("no-blank-line message has no body block", False, canonical_line_ok(["Countersign: AID-1 verdict 5"]))
     st("indented line does not count", False, canonical_line_ok(["s", "", "  Countersign: AID-1 verdict 5"]))
 
-    # Synthetic history: the #607 shape must be flagged, the door shape must
-    # not, and regular commits must be out of scope.
+    # Synthetic history (AID-3795 shape, mirrors AID-3788/AID-3791):
+    #   A ── C (main tip = pushed base)
+    #    \     \
+    #     B     \  (first parent of the PR merge = C: it lands on main)
+    #      \    \
+    #       U    M (PR merge via the door: canonical line -> PASS)
+    #  U = "Merge branch 'main' into <pr>" (update-branch, EMPTY body) —
+    #  lives on the PR-branch side (first parent B): must NOT be checked
+    #  in range mode. The out-of-door merge (ood, #607 shape, EMPTY body)
+    #  DOES land on the first-parent path of main: must STILL be flagged.
     with tempfile.TemporaryDirectory() as td:
         env = {
             **os.environ,
@@ -294,26 +316,56 @@ def self_test():
 
         g("init", "-q", "--initial-branch=main")
         g("commit", "--allow-empty", "-m", "root")
-        base = g("rev-parse", "HEAD").strip()
-        g("commit", "--allow-empty", "-m", "side")
-        side = g("rev-parse", "HEAD").strip()
+        a = g("rev-parse", "HEAD").strip()
         tree = g("write-tree").strip()
-        bad = commit_tree(
-            tree, "-p", base, "-p", side, "-m",
-            "Merge pull request #607 from dandpb/x (countersign AID-3404 GO)",
-        )
-        good_merge = commit_tree(
-            tree, "-p", side, "-p", bad, "-m", "Merge PR #1: x", "-m",
+        c = commit_tree(tree, "-p", a, "-m", "main advance")  # pushed base
+        b = commit_tree(tree, "-p", a, "-m", "pr work")
+        ub = commit_tree(
+            tree, "-p", b, "-p", c, "-m",
+            "Merge branch 'main' into aid1/x",
+        )  # update-branch merge: EMPTY body, PR-branch side
+        m = commit_tree(
+            tree, "-p", c, "-p", ub, "-m", "Merge PR #2: x", "-m",
             "Merged via scripts/merge_pr.sh (single merge door, AID-2768).", "-m",
-            f"Countersign: AID-1 verdict 123 head={side}",
-        )
-        revs = range_shas(f"{base}..{good_merge}", cwd=td)
-        st("synthetic range: 3 commits listed (base exclusive)", 3, len(revs))
+            f"Countersign: AID-2 verdict 9 head={ub}",
+        )  # PR merge: first parent c -> lands on the fp path of main
+        ood = commit_tree(
+            tree, "-p", m, "-p", b, "-m",
+            "Merge pull request #607 from dandpb/x (countersign AID-3404 GO)",
+        )  # out-of-door merge ON the fp path of main (#607 shape)
+
+        plain = [
+            line for line in g(
+                "log", "--reverse", "--format=%H", f"{c}..{m}"
+            ).splitlines() if line.strip()
+        ]
+        st("synthetic range: plain (non-fp) range lists 3 commits incl. PR side", 3, len(plain))
+        st("synthetic range: update-branch merge IS in the plain range", True, ub in plain)
+        revs = range_shas(f"{c}..{m}", cwd=td)
+        st("synthetic range: first-parent range lists only the PR merge", 1, len(revs))
+        st("synthetic range: update-branch merge NOT listed (AID-3795)", True, ub not in revs)
         merges, violations = check(revs, cwd=td)
-        st("synthetic range: 2 merge commits checked", 2, merges)
-        st("synthetic range: exactly 1 violation", 1, len(violations))
-        st("synthetic range: violation is the #607-shape merge", bad[:8], violations[0][0][:8])
-        st("synthetic range: reason names the empty-body fingerprint", True, "EMPTY body" in violations[0][2])
+        st("synthetic range: 1 merge commit checked", 1, merges)
+        st("synthetic range: 0 violations (FP class gone)", 0, len(violations))
+
+        # Negative: out-of-door merge on the fp path of main is still
+        # flagged, alone and inside a multi-merge first-parent push.
+        revs2 = range_shas(f"{m}..{ood}", cwd=td)
+        st("negative range: single-commit fp range lists the ood merge", 1, len(revs2))
+        merges2, violations2 = check(revs2, cwd=td)
+        st("negative range: ood merge flagged", 1, len(violations2))
+        st("negative range: violation is the #607-shape merge", ood[:8], violations2[0][0][:8])
+        st("negative range: reason names the empty-body fingerprint", True, "EMPTY body" in violations2[0][2])
+        revs3 = range_shas(f"{c}..{ood}", cwd=td)
+        merges3, violations3 = check(revs3, cwd=td)
+        st("negative multi-merge push: door merge + ood merge checked", 2, merges3)
+        st("negative multi-merge push: exactly the ood merge flagged", True,
+           len(violations3) == 1 and violations3[0][0][:8] == ood[:8])
+
+        # --sha is unchanged (D3): auditing the pinned update-branch merge
+        # directly still reports it — explicit triage, not push scope.
+        merges4, violations4 = check([ub], cwd=td)
+        st("sha mode: explicit audit of update-branch merge still flags it", 1, len(violations4))
 
     # Incident composer (pure part): title/body cite sha, run url, class refs.
     rows = [("a1b2c3d4" + "0" * 32, 2, "Merge pull request #607 from x", False)]

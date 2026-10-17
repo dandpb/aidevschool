@@ -15,22 +15,35 @@ import {
   HttpVerificationClient,
   UnavailableVerificationClient,
 } from "../adapters/httpVerificationClient";
-import { IndexedDbProgressRepository } from "../adapters/indexedDbProgressRepository";
+import { IndexedDbLearnerStateStore } from "../adapters/learnerStateStore";
 import type {
   AnalyticsSink,
   ContentRepository,
   EvidenceSink,
   FeedbackProvider,
-  ProgressRepository,
+  LearnerStateStore,
   VerificationClient,
 } from "../application/ports";
 import { LiteracyUseCases } from "../application/useCases";
-import { type LearnerProgress, createInitialProgress } from "../domain/progress";
+import {
+  activateStateFromSnapshot,
+  buildCutoverSnapshot,
+  legacyFingerprintNow,
+} from "../domain/learnerState";
+import { UnmigratableProgressError } from "../domain/migration";
+import { createInitialProgress } from "../domain/progress";
+import {
+  type CutoverSnapshotV1,
+  type KeyRead,
+  type LearnerStateV1,
+  type ResetIntentV1,
+  emptyXpLedger,
+} from "../domain/xpLedger";
 
 /** Raiz de composição: único lugar que conhece os adapters concretos. */
 export type Services = {
   content: ContentRepository;
-  progressRepo: ProgressRepository;
+  stateStore: LearnerStateStore;
   evidence: EvidenceSink;
   feedback: FeedbackProvider;
   clock: Clock;
@@ -43,7 +56,7 @@ export type Services = {
 
 export function createServices(overrides?: {
   content?: ContentRepository;
-  progressRepo?: ProgressRepository;
+  stateStore?: LearnerStateStore;
   evidence?: EvidenceSink;
   feedback?: FeedbackProvider;
   clock?: Clock;
@@ -52,7 +65,7 @@ export function createServices(overrides?: {
   analytics?: AnalyticsSink;
 }): Services {
   const content = overrides?.content ?? generatedContent;
-  const progressRepo = overrides?.progressRepo ?? new IndexedDbProgressRepository();
+  const stateStore = overrides?.stateStore ?? new IndexedDbLearnerStateStore();
   const primaryEvidence = overrides?.evidence ?? consoleEvidenceSink;
   const baseEvidence = overrides?.hostAdapter
     ? new CompositeEvidenceSink([primaryEvidence, overrides.hostAdapter])
@@ -87,7 +100,7 @@ export function createServices(overrides?: {
   const analyticsIdentity = createAnalyticsIdentity();
   const useCases = new LiteracyUseCases({
     content,
-    progress: progressRepo,
+    state: stateStore,
     evidence,
     feedback,
     clock,
@@ -96,7 +109,7 @@ export function createServices(overrides?: {
   });
   return {
     content,
-    progressRepo,
+    stateStore,
     evidence,
     feedback,
     clock,
@@ -108,24 +121,220 @@ export function createServices(overrides?: {
 }
 
 /**
- * Boot: carrega o progresso ou semeia o estado inicial. Estado antigo
- * incompatível (migração forward-only falhou) é descartado e recomeçado —
- * nunca migrado parcialmente em silêncio.
+ * Boot bloqueado (AID-3888, errata `25b51990`): NENHUM caminho descarta,
+ * reseta ou sobrescreve progresso/XP válidos. O dado bruto permanece
+ * preservado no armazenamento; a UI oferece retry/recarregamento.
  */
-export async function loadOrSeedProgress(services: Services): Promise<LearnerProgress> {
-  try {
-    const loaded = await services.progressRepo.load();
-    if (loaded) return loaded;
-  } catch (error) {
-    console.warn("[literacydojo] progresso anterior incompatível; reiniciando do zero.", error);
-    await services.progressRepo.reset();
+export type BootBlockedReason =
+  | "state-read-error"
+  | "state-invalid"
+  | "snapshot-read-error"
+  | "snapshot-invalid"
+  | "intent-read-error"
+  | "intent-invalid"
+  | "intent-mismatch"
+  | "legacy-read-error"
+  | "legacy-invalid"
+  | "legacy-diverged";
+
+export class BootBlockedError extends Error {
+  constructor(
+    public readonly reason: BootBlockedReason,
+    detail: string,
+  ) {
+    super(
+      `Seu progresso local está em um formato não reconhecido por esta versão (${detail}). Nada foi apagado — os dados estão preservados neste navegador. Recarregar a página é seguro; se o problema persistir, use a versão mais recente do app.`,
+    );
+    this.name = "BootBlockedError";
   }
-  const fresh = createInitialProgress(
-    services.content.listModules(),
-    services.content.getContentVersion(),
+}
+
+function noReadError<T>(
+  read: KeyRead<T>,
+  reason: BootBlockedReason,
+): Exclude<KeyRead<T>, { status: "read-error" }> {
+  if (read.status === "read-error") {
+    throw new BootBlockedError(reason, String((read.error as Error)?.message ?? read.error));
+  }
+  return read as Exclude<KeyRead<T>, { status: "read-error" }>;
+}
+
+function seedSnapshotFirst(
+  services: Services,
+  legacyCapture: CutoverSnapshotV1["legacyCapture"],
+): Promise<CutoverSnapshotV1> {
+  const snapshot = buildCutoverSnapshot({
+    legacyCapture,
+    contentVersion: services.content.getContentVersion(),
+    now: services.clock(),
+  });
+  return services.stateStore.persistSnapshot(snapshot).then(() => snapshot);
+}
+
+async function activate(services: Services, state: LearnerStateV1): Promise<LearnerStateV1> {
+  await services.stateStore.activateState(state);
+  return state;
+}
+
+function freshState(services: Services, origin: LearnerStateV1["origin"]): LearnerStateV1 {
+  return {
+    stateVersion: 1,
+    origin,
+    progress: createInitialProgress(
+      services.content.listModules(),
+      services.content.getContentVersion(),
+    ),
+    xpLedger: emptyXpLedger(),
+  };
+}
+
+/**
+ * Boot do estado autoritativo (AID-3888; contrato `a0bf3e8a` + errata
+ * `25b51990` + correções `3b9e7f8a`/`46086ca0`/`e3ad989e`).
+ *
+ * 1. Precedência: estado novo VÁLIDO é autoritativo — carrega
+ *    independentemente do ramo legado (inválido/ilegível/ausente).
+ * 2. Verificações próprias do estado novo bloqueiam (read-error, corrupção,
+ *    schema futuro) com dados preservados.
+ * 3. Estado ausente: reset-intent (marker-first) distingue reset explícito
+ *    de ativação interrompida — reset semeia do zero SEM restaurar do
+ *    snapshot (que permanece preservado como histórico).
+ * 4. Snapshot presente sem intent: retoma a ativação SOMENTE se o legado
+ *    não divergiu (fingerprint da projeção canônica); divergiu → bloqueado,
+ *    ramos preservados, sem remigração/mescla.
+ * 5. Sem estado/snapshot: corte (snapshot persistido ANTES da ativação) ou
+ *    seed fresco (somente com ausência CONFIRMADA do legado — nunca
+ *    inferida de erro ou valor inválido).
+ */
+export async function loadOrActivateState(services: Services): Promise<LearnerStateV1> {
+  const store = services.stateStore;
+
+  // 1-2. Estado novo: autoritativo quando válido; bloqueia nos seus próprios defeitos.
+  const stateRead = await store.readState();
+  if (stateRead.status === "present-valid") return stateRead.value;
+  if (stateRead.status === "read-error")
+    throw new BootBlockedError(
+      "state-read-error",
+      String((stateRead.error as Error)?.message ?? stateRead.error),
+    );
+  if (stateRead.status === "present-invalid")
+    throw new BootBlockedError("state-invalid", stateRead.reason ?? "forma inválida");
+
+  // Estado ausente: decisões dependem de snapshot/intent/legado.
+  const snapshotRead = noReadError(await store.readSnapshot(), "snapshot-read-error");
+  const intentRead = noReadError(await store.readResetIntent(), "intent-read-error");
+  const legacyRead = noReadError(await store.readLegacyRaw(), "legacy-read-error");
+
+  // 3. Reset explícito (marker-first): semeia do zero, não restaura.
+  if (intentRead.status !== "absent") {
+    if (intentRead.status === "present-invalid")
+      throw new BootBlockedError("intent-invalid", intentRead.reason ?? "forma inválida");
+    const intent = intentRead.value;
+    const snapshotFp =
+      snapshotRead.status === "present-valid"
+        ? snapshotRead.value.legacyFingerprint
+        : snapshotRead.status === "absent"
+          ? "none"
+          : null;
+    if (snapshotFp === null)
+      throw new BootBlockedError("snapshot-invalid", "snapshot ilegível com intent presente");
+    if (intent.supersedesSnapshotFingerprint !== snapshotFp)
+      throw new BootBlockedError(
+        "intent-mismatch",
+        "intent de reset não corresponde ao snapshot vigente — registros inconsistentes",
+      );
+    const state = freshState(services, "reset-seed");
+    await activate(services, state);
+    await store.deleteResetIntent();
+    return state;
+  }
+
+  // 4. Snapshot presente (sem intent): retomada de corte interrompido.
+  if (snapshotRead.status === "present-invalid")
+    throw new BootBlockedError("snapshot-invalid", snapshotRead.reason ?? "forma inválida");
+  if (snapshotRead.status === "present-valid") {
+    const snapshot = snapshotRead.value;
+    if (snapshot.legacyCapture.legacy === "confirmed-absent") {
+      // Fresh-seed interrompido após o snapshot: legado tem de continuar ausente.
+      if (legacyRead.status !== "absent")
+        throw new BootBlockedError(
+          "legacy-diverged",
+          "ramo legado apareceu após snapshot de instalação nova — divergência preservada",
+        );
+      return activate(services, freshState(services, "fresh-seed"));
+    }
+    if (legacyRead.status === "absent")
+      throw new BootBlockedError(
+        "legacy-diverged",
+        "ramo legado foi apagado após o corte (cliente antigo?) — snapshot preservado",
+      );
+    if (legacyRead.status === "present-invalid")
+      throw new BootBlockedError(
+        "legacy-invalid",
+        legacyRead.reason ?? "legado ilegível no momento da retomada",
+      );
+    if (legacyFingerprintNow(legacyRead.value) !== snapshot.legacyFingerprint)
+      throw new BootBlockedError(
+        "legacy-diverged",
+        "ramo legado mudou após o corte — sem remigração/mescla automática",
+      );
+    return activate(
+      services,
+      activateStateFromSnapshot(snapshot, services.content.getContentVersion(), services.clock()),
+    );
+  }
+
+  // 5. Sem estado/snapshot: corte ou seed fresco.
+  if (legacyRead.status === "present-invalid")
+    throw new BootBlockedError("legacy-invalid", legacyRead.reason ?? "progresso legado ilegível");
+  if (legacyRead.status === "absent") {
+    // Ausência CONFIRMADA pelo port — seed com snapshot de ausência antes.
+    await seedSnapshotFirst(services, { legacy: "confirmed-absent" });
+    return activate(services, freshState(services, "fresh-seed"));
+  }
+  let snapshot: CutoverSnapshotV1;
+  try {
+    snapshot = await seedSnapshotFirst(services, {
+      legacy: "present",
+      value: legacyRead.value,
+    });
+  } catch (error) {
+    if (error instanceof UnmigratableProgressError) {
+      // Legado presente mas não migrável (corrupt/prototype-schema-5/future):
+      // blocked com preservação — o valor bruto permanece no armazenamento.
+      throw new BootBlockedError("legacy-invalid", error.message);
+    }
+    throw error;
+  }
+  return activate(
+    services,
+    activateStateFromSnapshot(snapshot, services.content.getContentVersion(), services.clock()),
   );
-  await services.progressRepo.save(fresh);
-  return fresh;
+}
+
+/**
+ * Reset explícito (AID-3888, `46086ca0` Precisão 2): marker ANTES de apagar
+ * o estado — interrupção nunca produz estado-apagado-sem-marker. Snapshot
+ * e ramo legado são preservados; o boot subsequente semeia do zero SEM
+ * restaurar do snapshot.
+ */
+export async function explicitReset(services: Services): Promise<void> {
+  const snapshotRead = await services.stateStore.readSnapshot();
+  if (snapshotRead.status === "read-error")
+    throw new BootBlockedError(
+      "snapshot-read-error",
+      String((snapshotRead.error as Error)?.message ?? snapshotRead.error),
+    );
+  const fingerprint =
+    snapshotRead.status === "present-valid" ? snapshotRead.value.legacyFingerprint : "none";
+  const intent: ResetIntentV1 = {
+    intentVersion: 1,
+    kind: "explicit-reset",
+    performedAt: services.clock().toISOString(),
+    supersedesSnapshotFingerprint: fingerprint,
+  };
+  await services.stateStore.saveResetIntent(intent);
+  await services.stateStore.deleteState();
 }
 
 const ServicesContext = createContext<Services | null>(null);

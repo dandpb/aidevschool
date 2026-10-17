@@ -4,6 +4,8 @@ dist/
 
 # Read model gerado por `npm run gen:content` (nunca editar à mão; regenerar sempre)
 src/data/generated/lessons.ts
+# Read model OPCIONAL de competências (mesma geração; spec AID-3514, contrato §6.1)
+src/data/generated/competency-map.ts
 
 # Saídas de teste
 test-results/

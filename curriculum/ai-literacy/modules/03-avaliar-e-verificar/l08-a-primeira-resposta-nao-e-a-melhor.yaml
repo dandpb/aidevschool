@@ -8,6 +8,9 @@ objective: "Comparar a primeira resposta da IA com uma alternativa e escolher co
 estimatedMinutes: 4
 skillIds: [avaliar]
 prerequisites: [l07]
+competency:
+  primary: F4
+  supporting: []
 
 activities:
   - id: l08-a1
