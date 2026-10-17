@@ -37,20 +37,29 @@ def _parse_day(day: str) -> date:
     return date.fromisoformat(day)
 
 
-def compute_os_retention(events: list[dict]) -> dict:
-    """Retention for one deduped OS stream, by installationId."""
+def _installation_days(events: list[dict]) -> dict[str, set[str]]:
     by_install: dict[str, set[str]] = defaultdict(set)
     for ev in events:
         by_install[str(ev["dimensions"]["installationId"])].add(day_of(ev["occurredAt"]))
+    return by_install
+
+
+def _window_hit(days: set[str], span: int) -> bool:
+    first = min(_parse_day(d) for d in days)
+    end = first + timedelta(days=span)
+    return any(first < _parse_day(d) <= end for d in days)
+
+
+def compute_os_retention(events: list[dict]) -> dict:
+    """Retention for one deduped OS stream, by installationId."""
+    by_install = _installation_days(events)
 
     cross_day = sum(1 for days in by_install.values() if len(days) >= 2)
 
     windows = {label: 0 for label in WINDOW_DAYS}
     for days in by_install.values():
-        first = min(_parse_day(d) for d in days)
         for label, span in WINDOW_DAYS.items():
-            end = first + timedelta(days=span)
-            if any(first < _parse_day(d) <= end for d in days):
+            if _window_hit(days, span):
                 windows[label] += 1
 
     return {

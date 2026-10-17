@@ -3,7 +3,7 @@
 Reads the same shared JSON that feeds the TypeScript emitters and the
 same-origin collector (`engines/shared/teaching-evidence/vocabularies/`).
 No vocabulary is copied into this package: unknown event names, unknown prop
-keys and out-of-policy values fail closed in `envelopes`. If the shared JSON
+keys and out-of-policy values fail closed in `contracts`. If the shared JSON
 gains events, the bridge picks them up; if it loses them, validation errors.
 """
 from __future__ import annotations

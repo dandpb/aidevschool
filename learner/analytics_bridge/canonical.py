@@ -97,26 +97,39 @@ def _strip_label(ev: dict) -> dict:
     return {k: v for k, v in ev.items() if k != "synthetic"}
 
 
-def project_literacy_attempt(ev: dict, schema: dict) -> tuple[dict | None, str | None]:
-    """`activity_attempted` -> canonical `attempt_started`, fail-closed."""
-    ev = _strip_label(ev)
-    props = ev.get("props", {})
-    if ev.get("event") != "activity_attempted":
-        if ev.get("event") == "entry_viewed":
-            return None, "objective-id-not-emitted"
-        return None, "no-canonical-target"
+def _literacy_skip_gap(ev: dict) -> str:
+    if ev.get("event") == "entry_viewed":
+        return "objective-id-not-emitted"
+    return "no-canonical-target"
+
+
+def _literacy_projection_gap(ev: dict) -> str | None:
+    """First blocking gap for a sound `activity_attempted` projection."""
     event_id = ev.get("eventId", "")
     if not _UUID4_RE.match(event_id):
-        return None, "event-id-not-canonical-uuid4"
+        return "event-id-not-canonical-uuid4"
     # subject_anon_id must be a canonical uuid4 too; a session id outside the
     # canonical grammar is a DATA condition -> skip with gap, never rewrite.
     if not _UUID4_RE.match(str(ev.get("sessionId", ""))):
-        return None, "subject-id-not-canonical-uuid4"
+        return "subject-id-not-canonical-uuid4"
     if not _ISO_CANONICAL_RE.match(str(ev.get("occurredAt", ""))):
-        return None, "occurred-at-not-canonical"
-    lesson_id = props.get("lessonId")
+        return "occurred-at-not-canonical"
+    lesson_id = ev.get("props", {}).get("lessonId")
     if not (isinstance(lesson_id, str) and lesson_id):
-        return None, "objective-id-not-emitted"
+        return "objective-id-not-emitted"
+    return None
+
+
+def project_literacy_attempt(ev: dict, schema: dict) -> tuple[dict | None, str | None]:
+    """`activity_attempted` -> canonical `attempt_started`, fail-closed."""
+    ev = _strip_label(ev)
+    if ev.get("event") != "activity_attempted":
+        return None, _literacy_skip_gap(ev)
+    gap = _literacy_projection_gap(ev)
+    if gap is not None:
+        return None, gap
+    event_id = ev.get("eventId", "")
+    lesson_id = ev["props"]["lessonId"]
     projected = {
         "event_id": event_id,
         "event_type": "attempt_started",

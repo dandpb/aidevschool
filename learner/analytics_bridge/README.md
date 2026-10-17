@@ -15,7 +15,7 @@ telemetria e medição apenas).
 | Módulo | Papel | Fonte das regras |
 | --- | --- | --- |
 | `vocabularies.py` | lê os MESMOS JSONs compartilhados dos emissores TS (`engines/shared/teaching-evidence/vocabularies/{literacy,os}.json`) — zero vocabulário copiado; drift falha fechado | vocabulários de fonte única |
-| `envelopes.py` | validação estrutural espelhando os validadores TS (`literacyDojo/src/domain/analytics.ts:117-192`, `codexdojo-os-prototype/src/analytics/events.ts:179-191`) | emissores reais |
+| `contracts.py` | validação estrutural espelhando os validadores TS (`literacyDojo/src/domain/analytics.ts:117-192`, `codexdojo-os-prototype/src/analytics/events.ts:179-191`). Módulo chamado `contracts` (não `envelopes`): caminho com `env` é bloqueado pelo guard SDLC como credential-shaped, sem override | emissores reais |
 | `funnel.py` | observáveis do dicionário v1: dedup `eventId` (NC-1), funil por sessão (NC-2), retry por (sessão, lição) (NC-3), erro determinístico literacy / proxy OS (§erro), retomada só com prop `entry` | `learner/analytics_metrics/dictionary.yaml` |
 | `retention.py` | R1/R7/R21 por `installationId` (cross-day = definição do dicionário; janelas = retorno em (1º dia + 1 .. 1º dia + W]); literacy = `not_measured` (G8, NC-8) | dicionário §retencao |
 | `canonical.py` | projeção fail-closed para `schema.v3`, gating OBRIGATÓRIO por `learner/analytics_events/validate.py::validate_event`; matriz de cobertura com gap codes nomeados | schema v3 + dicionário |

@@ -1,7 +1,7 @@
 """Deterministic funnel derivations per dictionary v1 (AID-3515).
 
 Implements the dictionary's observable rules over VALIDATED events
-(`envelopes.validate_event` first — this module never trusts raw input):
+(`contracts.validate_event` first — this module never trusts raw input):
 
 - dedup by `eventId` (NC-1: beacon+fetch double delivery counts once);
 - literacy funnel by ephemeral session (visita ≠ pessoa, NC-2), retry as
@@ -20,7 +20,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 
-from .envelopes import validate_event
+from .contracts import validate_event
 
 K_THRESHOLD = 5  # AID-463 §3.0 — immutable (ADR-0010)
 
@@ -71,50 +71,64 @@ def rate(numerator: int, denominator: int) -> dict:
     return {"value": round(numerator / denominator, 4), "n": numerator, "den": denominator}
 
 
+def _attempt_rows(events: list[dict]) -> list[dict]:
+    return [e for e in events if e.get("event") == "activity_attempted"]
+
+
+def _retry_pairs(attempts: list[dict]) -> set[tuple[str, str]]:
+    lesson_attempts: dict[tuple[str, str], int] = defaultdict(int)
+    for attempt in attempts:
+        lesson_id = attempt.get("props", {}).get("lessonId")
+        lesson_attempts[(attempt["sessionId"], str(lesson_id))] += 1
+    return {key for key, count in lesson_attempts.items() if count >= 2}
+
+
+def _entry_stats(events: list[dict]) -> tuple[list[dict], dict[str, int], int]:
+    with_prop = [
+        e for e in events
+        if e.get("event") == "entry_viewed" and "entry" in e.get("props", {})
+    ]
+    split: dict[str, int] = defaultdict(int)
+    for e in with_prop:
+        split[str(e["props"]["entry"])] += 1
+    pre_v4 = sum(
+        1 for e in events
+        if e.get("event") == "entry_viewed" and "entry" not in e.get("props", {})
+    )
+    return with_prop, split, pre_v4
+
+
+def _session_stage_counts(by_session: dict[str, list[dict]]) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for stage, event in LITERACY_FUNNEL_STAGES:
+        counts[stage] = sum(
+            1 for session_events in by_session.values()
+            if any(e.get("event") == event for e in session_events)
+        )
+    return counts
+
+
 def compute_literacy(events: list[dict]) -> dict:
     """Dictionary observables for literacy v2 over one deduped stream."""
     by_session: dict[str, list[dict]] = defaultdict(list)
     for ev in events:
         by_session[ev["sessionId"]].append(ev)
 
-    attempts = [e for e in events if e.get("event") == "activity_attempted"]
+    attempts = _attempt_rows(events)
     failed = [a for a in attempts if a.get("props", {}).get("passed") is False]
-
-    lesson_attempts: dict[tuple[str, str], int] = defaultdict(int)
-    for attempt in attempts:
-        lesson_id = attempt.get("props", {}).get("lessonId")
-        lesson_attempts[(attempt["sessionId"], str(lesson_id))] += 1
-    retry_pairs = {key for key, count in lesson_attempts.items() if count >= 2}
-
-    entry_with_prop = [
-        e for e in events
-        if e.get("event") == "entry_viewed" and "entry" in e.get("props", {})
-    ]
-    entry_split: dict[str, int] = defaultdict(int)
-    for e in entry_with_prop:
-        entry_split[str(e["props"]["entry"])] += 1
-    pre_v4 = sum(
-        1 for e in events
-        if e.get("event") == "entry_viewed" and "entry" not in e.get("props", {})
-    )
-
-    funnel_counts = {
-        stage: sum(1 for session_events in by_session.values()
-                   if any(e.get("event") == event for e in session_events))
-        for stage, event in LITERACY_FUNNEL_STAGES
-    }
+    with_prop, entry_split, pre_v4 = _entry_stats(events)
 
     return {
         "sessions_total": len(by_session),
-        "funnel_counts": funnel_counts,
+        "funnel_counts": _session_stage_counts(by_session),
         "attempts_total": len(attempts),
         "attempts_failed_deterministic": len(failed),
         "attempt_error_rate": rate(len(failed), len(attempts)),
-        "retry_session_lesson_pairs": len(retry_pairs),
+        "retry_session_lesson_pairs": len(_retry_pairs(attempts)),
         "entry_split": dict(entry_split),
         "entry_pre_v4_without_prop": pre_v4,
         "resume_rate": rate(
-            entry_split.get("lesson-resume", 0), len(entry_with_prop),
+            entry_split.get("lesson-resume", 0), len(with_prop),
         ),
         "retention": "not_measured",  # NC-8 — never 0
         "retention_reason": (
@@ -130,6 +144,17 @@ def _os_attempt_key(ev: dict) -> tuple[str, str, str | None]:
             dims.get("missionId") if dims.get("missionId") is not None else None)
 
 
+def _error_proxy_rows(submitted: list[dict], passed_keys: set) -> list[dict]:
+    return [e for e in submitted if _os_attempt_key(e) not in passed_keys]
+
+
+def _installations_with(by_install: dict[str, list[dict]], event_name: str) -> int:
+    return sum(
+        1 for evs in by_install.values()
+        if any(e.get("name") == event_name for e in evs)
+    )
+
+
 def compute_os(events: list[dict]) -> dict:
     """Dictionary observables for OS v1 over one deduped stream."""
     by_install: dict[str, list[dict]] = defaultdict(list)
@@ -142,13 +167,9 @@ def compute_os(events: list[dict]) -> dict:
     submitted = named("structured_attempt.submitted")
     passed = named("structured_attempt.passed")
     passed_keys = {_os_attempt_key(e) for e in passed}
-    error_proxy = [e for e in submitted if _os_attempt_key(e) not in passed_keys]
-    onboarding_started = sum(
-        1 for evs in by_install.values() if any(e.get("name") == "onboarding.started" for e in evs)
-    )
-    onboarding_completed = sum(
-        1 for evs in by_install.values() if any(e.get("name") == "onboarding.completed" for e in evs)
-    )
+    error_proxy = _error_proxy_rows(submitted, passed_keys)
+    onboarding_started = _installations_with(by_install, "onboarding.started")
+    onboarding_completed = _installations_with(by_install, "onboarding.completed")
     mission_completed = len(named("mission.completed"))
 
     return {

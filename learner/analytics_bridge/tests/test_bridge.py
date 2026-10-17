@@ -24,7 +24,7 @@ from learner.analytics_bridge.canonical import (
     project_stream,
     unmapped_emitters,
 )
-from learner.analytics_bridge.envelopes import (
+from learner.analytics_bridge.contracts import (
     detect_stream,
     validate_event,
     validate_literacy_event,

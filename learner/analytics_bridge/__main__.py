@@ -22,7 +22,7 @@ from pathlib import Path
 
 from . import BRIDGE_VERSION
 from .canonical import SUBJECT_ID_SCOPES, mapping_matrix, project_stream, unmapped_emitters
-from .envelopes import detect_stream
+from .contracts import detect_stream
 from .funnel import compute_funnel, dedup, validate_stream
 from .retention import compute_literacy_retention, compute_os_retention
 

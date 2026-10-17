@@ -5,7 +5,7 @@ emitters of `engines/literacyDojo` (envelope v2) and
 
 Three deterministic, stdlib-only layers:
 
-1. `envelopes` — structural validation of emitted events, driven by the SAME
+1. `contracts` — structural validation of emitted events, driven by the SAME
    shared vocabularies the TypeScript emitters and the same-origin collector
    read (`engines/shared/teaching-evidence/vocabularies/{literacy,os}.json`).
    No vocabulary is duplicated here; drift fails loudly and closed.
@@ -25,8 +25,8 @@ Golden rule (house): conclusion never equals mastery; analytics measures
 experience, evidence measures outcome; absence is `not_measured`, not zero.
 """
 
-from . import canonical, envelopes, funnel, retention, vocabularies
+from . import canonical, contracts, funnel, retention, vocabularies
 
 BRIDGE_VERSION = "aid5009-v1"
 
-__all__ = ["BRIDGE_VERSION", "canonical", "envelopes", "funnel", "retention", "vocabularies"]
+__all__ = ["BRIDGE_VERSION", "canonical", "contracts", "funnel", "retention", "vocabularies"]
