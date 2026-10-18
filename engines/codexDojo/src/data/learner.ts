@@ -20,7 +20,7 @@ export const learnerSnapshot: LearnerSnapshot = {
     unblockCondition: "learner_attempt_evaluated",
   },
   profile: {
-    dreyfus: "competent",
+    dreyfus: "proficient",
     bloom: "analyze",
     activeLanguage: "TypeScript",
     weeklyTimeHours: 5,
@@ -36,7 +36,7 @@ export const learnerSnapshot: LearnerSnapshot = {
     {
       id: "P-001",
       description: "Reivindicar domínio a partir de trabalho de documentação/dashboard",
-      occurrences: 21,
+      occurrences: 1,
       lastSeen: "2026-06-18",
     },
   ],
@@ -61,7 +61,7 @@ export const learnerSnapshot: LearnerSnapshot = {
     },
   ],
   masteredCount: 2,
-  scaffoldedCount: 14,
+  scaffoldedCount: 12,
   streak: {
     current: 0,
     longest: 2,

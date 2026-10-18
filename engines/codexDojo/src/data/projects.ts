@@ -62,8 +62,8 @@ export const projects: readonly DojoProject[] = [
       "Hashing (base62, SHA-256 trunc), relational DB design, HTTP redirects (301/302), unique ID generation, analytics pipeline",
     learningGoal: "Explorar hashing, geração de IDs e redirecionamento seguro.",
     evidence: [
-      "Project artifacts exist; catalog verification is pending.",
-      "scaffolded",
+      "Node.js implementation verified 2026-10-18 @ `6bd13ed6` (AID-5013): `npm install --include=dev`/`lint`/`build`/`test` exit 0; 8/8 tests across 2 files (`src/__tests__/core.test.ts`, `src/__tests__/server.test.ts`); local HTTP benchmark (50k req, 0 errors, 12,566 rps, p95 7.12 ms, Node.js driver, k6 unavailable) and live smoke (shorten → 301 → stats) recorded in `docs/benchmark_results.md`; `docs/{spec,code_review,evolution_report,benchmark_results,status}.md` on disk. Caveat: Node.js-only, in-memory store (durability pending); Go/Rust rows in `docs/benchmark_results.md` are historical (`1b0a309`).",
+      "implemented (Node.js only)",
       "03_url_shortener/",
       "Project 02 (storage basics)",
     ],
@@ -78,8 +78,8 @@ export const projects: readonly DojoProject[] = [
       "Worker pools, job scheduling, backpressure, priorities, timeouts, retry policies, dead-letter queues, idempotency",
     learningGoal: "Orquestrar jobs concorrentes com prioridades e retry.",
     evidence: [
-      "Project artifacts exist; catalog verification is pending.",
-      "scaffolded",
+      "Node.js implementation verified 2026-10-18 @ `6bd13ed6` (AID-5013): `npm install --include=dev`/`lint`/`build`/`test` exit 0; 5/5 tests across 2 files (`src/__tests__/taskQueue.test.ts`, `src/__tests__/server.test.ts`); local HTTP benchmark (50k req, 0 errors, 14,002 rps, p95 6.31 ms, Node.js driver, k6 unavailable) and live smoke (enqueue → succeeded via 4-worker pump → stats) recorded in `docs/benchmark_results.md`; `docs/{spec,code_review,evolution_report,benchmark_results,status}.md` on disk. Caveat: Node.js-only, in-memory queue (durability pending); Go/Rust rows in `docs/benchmark_results.md` are historical (`1b0a309`).",
+      "implemented (Node.js only)",
       "04_concurrent_task_queue/",
       "Projects 01-03",
     ],
