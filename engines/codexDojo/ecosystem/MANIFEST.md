@@ -231,3 +231,12 @@ The ecosystem is complete only when a future agent can:
 6. Verify with an adversarial gate.
 7. Update memory and roadmap.
 8. Repeat the cycle through explicit OpenClaw checklist runs without hidden state.
+
+## Dev-family projected content identity
+
+`engines/codexdojo-os-prototype/scripts/gen-guided-practice.mjs` preserves the
+canonical learner-facing manifest order (enunciado, worked example, inputs,
+rubric) before computing pg-d02/03/04 contentVersion. The new Node stdlib suite
+`scripts/guided-practice-source-order.test.mjs` beside that generator checks the
+current pg-d02 frozen contract and source-byte binding. This mapping does not
+approve #710/#715 contract composition, UI acceptance or canonical mastery.
