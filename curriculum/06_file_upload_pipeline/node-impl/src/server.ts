@@ -9,12 +9,13 @@ import { createLogger, type Logger } from './logger';
 import type { Config } from './config';
 import { loadConfig } from './config';
 import { progressOf, UploadRegistry } from './registry';
-import type { Chunk, Upload, UploadError } from './types';
+import type { Chunk, Upload, UploadError, UploadStatus } from './types';
 
 interface StreamFailure { statusCode: number; error: UploadError }
 type UploadResult = { ok: true; upload: Upload } | { ok: false; error: unknown };
 const streamFailure = (statusCode: number, code: string, message: string, retryable: boolean): StreamFailure => ({ statusCode, error: { code, message, retryable } });
 const safeUploadId = /^[A-Za-z0-9_-]{1,64}$/;
+const uploadStatuses: ReadonlySet<string> = new Set<string>(['receiving', 'processing', 'completed', 'failed', 'cancelled'] satisfies UploadStatus[]);
 
 export class UploadService {
   readonly registry = new UploadRegistry();
@@ -77,6 +78,9 @@ export class UploadService {
         this.registry.save(upload);
       }
       if (deferredFailure) throw deferredFailure;
+      if (upload.size === 0 && !this.cfg.allowEmptyFiles) {
+        throw streamFailure(400, 'invalid_file_type', 'zero-byte uploads are not allowed', false);
+      }
       writer.end();
       await once(writer, 'finish');
       const checksum = `sha256:${hash.digest('hex')}`;
@@ -110,8 +114,22 @@ export async function buildApp(cfg: Config = loadConfig(), logger: Logger = crea
   app.get('/healthz', (_req, res) => res.json({ status: 'ok' }));
   app.post('/upload', (req, res, next) => { void handleUpload(service, req, res).catch(next); });
   app.get('/files', (req, res) => {
-    const limit = typeof req.query.limit === 'string' ? Number.parseInt(req.query.limit, 10) : undefined;
-    res.json(service.registry.list({ status: stringQuery(req.query.status), cursor: stringQuery(req.query.cursor), limit }));
+    const limitRaw = stringQuery(req.query.limit);
+    let limit: number | undefined;
+    if (limitRaw !== undefined) {
+      if (!/^\d+$/.test(limitRaw)) {
+        return res.status(400).json({ error: { code: 'invalid_pagination', message: 'limit must be a positive integer', retryable: false } });
+      }
+      limit = Number.parseInt(limitRaw, 10);
+      if (limit < 1) {
+        return res.status(400).json({ error: { code: 'invalid_pagination', message: 'limit must be a positive integer', retryable: false } });
+      }
+    }
+    const status = stringQuery(req.query.status);
+    if (status !== undefined && !uploadStatuses.has(status)) {
+      return res.status(400).json({ error: { code: 'invalid_filter', message: 'status must be a known upload status', retryable: false } });
+    }
+    return res.json(service.registry.list({ status, cursor: stringQuery(req.query.cursor), limit }));
   });
   app.get('/files/:id/status', (req, res) => {
     const upload = service.registry.get(req.params.id);
