@@ -354,6 +354,134 @@ class TestVerdictFallbackChain(unittest.TestCase):
         self.assertEqual(ev.verdict.verdict, "UNKNOWN")
         self.assertFalse(ev.gate_ready)
 
+    # --- hardening round 2: follow-up 6243873612 (AID-5002) ---
 
-if __name__ == "__main__":
-    unittest.main()
+    def test_record_without_unit_id_cannot_claim_any_unit(self) -> None:
+        # unit_id is required producer structure (evidence_validator); a
+        # digest-bound record without it must not establish mastery even
+        # when the whole chain is otherwise intact (copied to another unit
+        # of the same project).
+        incomplete = {
+            key: value
+            for key, value in DEFAULT_RECORD.items()
+            if key != "unit_id"
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            write_chain(
+                root, record=incomplete, evidence_text=None
+            )
+            # write_chain wrote the DEFAULT record; rewrite file + chain
+            (root / EVIDENCE_REL).write_text(
+                json.dumps(incomplete, indent=2) + "\n", encoding="utf-8"
+            )
+            digest = canonical_evidence_digest(incomplete)
+            state_path = root / "learner" / "learning_state.yaml"
+            state = yaml.safe_load(state_path.read_text(encoding="utf-8"))
+            entry = state["units_log"][0]
+            entry["unit_id"] = "U1"
+            entry["reviews"][-1]["evidence_digest"] = digest
+            (root / "learner" / "verifier_receipts" / "u0.json").write_text(
+                json.dumps(_default_receipt(digest)), encoding="utf-8"
+            )
+            state_path.write_text(
+                yaml.safe_dump(state, sort_keys=False), encoding="utf-8"
+            )
+            ev = inspect(PROJECT, root=root)
+            self.assertEqual(ev.verdict.verdict, "UNKNOWN")
+            self.assertFalse(ev.gate_ready)
+
+    def test_record_with_malformed_unit_id_is_unknown(self) -> None:
+        # Non-string unit_id values must not skip the ownership check
+        # (follow-up 6243873612); the digest-bound record has to carry a
+        # well-formed unit_id equal to the unit's own.
+        for bad in (None, 7, ["U0"], {}):
+            with tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp)
+                write_chain(root)
+                record = dict(DEFAULT_RECORD)
+                record["unit_id"] = bad
+                (root / EVIDENCE_REL).write_text(
+                    json.dumps(record, indent=2) + "\n", encoding="utf-8"
+                )
+                digest = canonical_evidence_digest(record)
+                state_path = root / "learner" / "learning_state.yaml"
+                state = yaml.safe_load(state_path.read_text(encoding="utf-8"))
+                state["units_log"][0]["reviews"][-1]["evidence_digest"] = digest
+                (root / "learner" / "verifier_receipts" / "u0.json").write_text(
+                    json.dumps(_default_receipt(digest)), encoding="utf-8"
+                )
+                state_path.write_text(
+                    yaml.safe_dump(state, sort_keys=False), encoding="utf-8"
+                )
+                ev = inspect(PROJECT, root=root)
+                self.assertEqual(ev.verdict.verdict, "UNKNOWN")
+                self.assertFalse(ev.gate_ready)
+
+    def test_gate_identity_absent_or_malformed_is_unknown(self) -> None:
+        for mutate in (
+            lambda gate: gate.pop("evidence_scenario_id"),
+            lambda gate: gate.update(evidence_scenario_id=None),
+            lambda gate: gate.update(evidence_scenario_id=["x"]),
+        ):
+            with tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp)
+                write_chain(root)
+                digest = canonical_evidence_digest(DEFAULT_RECORD)
+                attempt_digest = hashlib.sha256(
+                    b"# Learner attempt\n"
+                ).hexdigest()
+                gate = _default_gate(digest, attempt_digest)
+                mutate(gate)
+                state_path = root / "learner" / "learning_state.yaml"
+                state = yaml.safe_load(state_path.read_text(encoding="utf-8"))
+                state["units_log"][0]["reviews"][-1] = gate
+                state_path.write_text(
+                    yaml.safe_dump(state, sort_keys=False), encoding="utf-8"
+                )
+                ev = inspect(PROJECT, root=root)
+                self.assertEqual(ev.verdict.verdict, "UNKNOWN")
+                self.assertFalse(ev.gate_ready)
+
+    def test_legacy_identity_normalization_matches_gate(self) -> None:
+        # Compatibility (6243873612): raw scenario_id is not universally
+        # required — the gate writer normalizes scenario_id -> encounter_id
+        # -> legacy:<game> (security.build_receipt); the fallback compares
+        # through that same normalization.
+        for replace in (
+            ({"scenario_id": None, "encounter_id": None}, "legacy:PIXEL QUEST"),
+            ({"scenario_id": None, "encounter_id": "enc-42"}, "enc-42"),
+            ({"scenario_id": None, "encounter_id": None}, "legacy:OTHER GAME"),
+        ):
+            overrides, gate_identity = replace
+            with tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp)
+                write_chain(root)
+                record = dict(DEFAULT_RECORD)
+                record.update(overrides)
+                (root / EVIDENCE_REL).write_text(
+                    json.dumps(record, indent=2) + "\n", encoding="utf-8"
+                )
+                digest = canonical_evidence_digest(record)
+                attempt_digest = hashlib.sha256(
+                    b"# Learner attempt\n"
+                ).hexdigest()
+                gate = _default_gate(digest, attempt_digest)
+                gate["evidence_scenario_id"] = gate_identity
+                state_path = root / "learner" / "learning_state.yaml"
+                state = yaml.safe_load(state_path.read_text(encoding="utf-8"))
+                state["units_log"][0]["reviews"][-1] = gate
+                (root / "learner" / "verifier_receipts" / "u0.json").write_text(
+                    json.dumps(_default_receipt(digest)), encoding="utf-8"
+                )
+                state_path.write_text(
+                    yaml.safe_dump(state, sort_keys=False), encoding="utf-8"
+                )
+                ev = inspect(PROJECT, root=root)
+                if gate_identity == "legacy:OTHER GAME":
+                    self.assertEqual(ev.verdict.verdict, "UNKNOWN")
+                else:
+                    self.assertEqual(ev.verdict.verdict, "PASS")
+
+
+

@@ -457,9 +457,10 @@ def _chain_ownership_violations(
 
     A copied, internally consistent chain (evidence file + attempt file +
     receipt + gate review lifted from another unit) must not establish this
-    unit's mastery (static review 6239895063, AID-5002). The digest covers
-    the producer record's identity fields, so requiring the digest-matching
-    record to carry this project/unit identity closes the copy attack.
+    unit's mastery (static review 6239895063 + follow-up 6243873612,
+    AID-5002). The digest covers the producer record's identity fields, so
+    requiring the digest-matching record to carry this project/unit
+    identity closes the copy attack.
     """
     errors: list[str] = []
     attempt_file = unit.get("attempt_file")
@@ -476,15 +477,24 @@ def _chain_ownership_violations(
     if record.get("project") != project_id:
         errors.append("evidence record belongs to another project")
     record_unit = record.get("unit_id")
-    if isinstance(record_unit, str) and record_unit != unit.get("unit_id"):
+    if not isinstance(record_unit, str) or not record_unit.strip():
+        # unit_id is a required producer field (evidence_validator); a
+        # digest-bound record without it cannot claim any unit's mastery
+        # (follow-up 6243873612, AID-5002).
+        errors.append("evidence record has no well-formed unit_id")
+    elif record_unit != unit.get("unit_id"):
         errors.append("evidence record belongs to another unit")
-    scenario = record.get("scenario_id")
-    gate_scenario = gate.get("evidence_scenario_id")
-    if (
-        isinstance(gate_scenario, str)
-        and isinstance(scenario, str)
-        and gate_scenario != scenario
-    ):
+    # Identity binding mirrors learner.gate.security.build_receipt exactly:
+    # scenario_id, else encounter_id, else legacy:<game> — the gate's
+    # evidence_scenario_id is written from that normalization, so the gate
+    # review must carry it and it must still match the record.
+    record_identity = record.get("scenario_id") or record.get("encounter_id")
+    if not isinstance(record_identity, str) or not record_identity.strip():
+        record_identity = "legacy:%s" % (record.get("game") or "unknown")
+    gate_identity = gate.get("evidence_scenario_id")
+    if not isinstance(gate_identity, str) or not gate_identity.strip():
+        errors.append("gate review has no normalized scenario identity")
+    elif gate_identity != record_identity:
         errors.append("gate scenario does not match the evidence record")
     return errors
 

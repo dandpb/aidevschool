@@ -86,3 +86,30 @@ gate_ready=False`; intact chain still `PASS` with the receipt's metrics
   `math` import dropped (no longer used).
 - Suites: `curriculum/_shared/tests/` + late-games → 77 passed (was 70);
   full gate + shared suite and complexity gate re-run before push.
+
+## Hardening round 2 — follow-up review 6243873612 (Oct 18)
+
+Both residual gaps reproduced 1st-hand on head `e4d1c693` BEFORE the fix:
+
+1. Producer record without `unit_id`, chain rebound (gate+receipt) and
+   copied to another unit of the same project → `PASS/gate_ready=True`.
+2. Gate `evidence_scenario_id` removed / `null` / list → `PASS` (the
+   identity check silently deactivated).
+
+AFTER: both → `UNKNOWN`. Compatibility preserved per the reviewer's
+guidance: the identity binding now mirrors `security.build_receipt`
+(`scenario_id` → `encounter_id` → `legacy:<game>`) — a record without
+`scenario_id` still binds through `encounter_id` (PASS verified) or
+`legacy:PIXEL QUEST` (PASS verified); a WRONG legacy identity
+(`legacy:OTHER GAME`) → UNKNOWN.
+
+- Contract: spec.md check 7 now requires a well-formed string `unit_id`
+  equal to the unit's own (mirrors evidence_validator required fields and
+  canonical_gate equality) and a gate identity compared through the
+  build_receipt normalization; absent/malformed gate identity is a broken
+  chain, not an inactive check.
+- New regressions (4): record-without-unit_id (cross-unit copy),
+  malformed unit_id values (None/7/list/object), gate identity
+  absent/null/list/blank, legacy/encounter normalization (incl. mismatch).
+- `learner/gate/*` untouched. Suites: `_shared` 44 passed; gate 577p/1s;
+  combined 621p/1s; complexity gate exit 0; metric-lint exit 0.
