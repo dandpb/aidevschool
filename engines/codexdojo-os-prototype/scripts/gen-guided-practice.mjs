@@ -383,8 +383,8 @@ async function projectDevPackage(config, { repoRoot }) {
   const sourceFiles = [
     'enunciado.md',
     'exemplo-trabalhado.md',
-    'rubrica-v1.md',
     ...config.inputs.map((input) => input.path),
+    'rubrica-v1.md',
   ]
   const sources = new Map()
   for (const relativePath of sourceFiles) {
