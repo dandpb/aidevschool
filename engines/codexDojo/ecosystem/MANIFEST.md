@@ -231,3 +231,13 @@ The ecosystem is complete only when a future agent can:
 6. Verify with an adversarial gate.
 7. Update memory and roadmap.
 8. Repeat the cycle through explicit OpenClaw checklist runs without hidden state.
+
+## Offline media restore boundary
+
+`scripts/storage/offline_package.py` validates the declared manifest schema and
+relative logical/blob paths before restore, confines source bytes to the package
+and targets to the selected destination, and writes through fresh temporary
+files. New negative coverage lives in
+`scripts/storage/test_offline_restore_boundary.py`. The source-byte digest checks
+and partial recovery of valid blobs remain active. This mapping does not grant
+Release URL compatibility, readiness or pedagogical mastery.

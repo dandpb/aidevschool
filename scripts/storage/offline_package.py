@@ -199,14 +199,83 @@ def deterministic_zip(out_dir: Path, package_dir: Path, name: str, version: str)
 # ------------------------------------------------------------------- verify
 
 
+def _relative_parts(relative: str) -> list[str]:
+    """Validate portable path syntax without consulting the current directory."""
+    if not isinstance(relative, str) or not relative or "\\" in relative:
+        raise ValueError(f"caminho relativo inválido: {relative!r}")
+    if any(part in ("", ".", "..") for part in relative.split("/")):
+        raise ValueError(f"caminho relativo inválido: {relative!r}")
+    return relative.split("/")
+
+
+def _confined_path(base: Path, relative: str) -> Path:
+    """Accept only unambiguous relative paths without symlink traversal."""
+    parts = _relative_parts(relative)
+    candidate = base / relative
+    candidate.resolve().relative_to(base.resolve())
+    current = base
+    for part in parts:
+        current = current / part
+        if current.is_symlink():
+            raise ValueError(f"caminho atravessa symlink: {relative!r}")
+    return candidate
+
+
+def _entry_metadata_problems(entry: dict, package_dir: Path) -> list[str]:
+    problems: list[str] = []
+    try:
+        _relative_parts(entry.get("path"))
+        blob = entry.get("blob")
+        if not isinstance(blob, str) or not blob.startswith("blobs/"):
+            raise ValueError("blob deve estar em blobs/")
+        _confined_path(package_dir, blob)
+    except (ValueError, OSError) as exc:
+        problems.append(str(exc))
+    digest = entry.get("sha256")
+    if not isinstance(digest, str) or len(digest) != 64:
+        problems.append("sha256 deve conter 64 dígitos hexadecimais")
+    elif any(char not in "0123456789abcdef" for char in digest):
+        problems.append("sha256 deve conter 64 dígitos hexadecimais")
+    size = entry.get("size")
+    if type(size) is not int or size < 0:
+        problems.append("size deve ser um inteiro não-negativo")
+    provider = entry.get("provider", "file")
+    if not isinstance(provider, str) or provider not in PROVIDERS:
+        problems.append(f"provider inválido: {provider!r}")
+    if provider == "release" and not entry.get("url"):
+        problems.append("entrada provider=release sem url")
+    return problems
+
+
+def _load_package_manifest(package_dir: Path) -> tuple[dict, list[str]]:
+    try:
+        manifest_path = _confined_path(package_dir, "manifest.json")
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        return {}, [f"manifest.json inválido: {exc}"]
+    if not isinstance(manifest, dict):
+        return {}, ["manifest.json deve ser um objeto"]
+    version = manifest.get("schemaVersion")
+    if type(version) is not int or version != SCHEMA_VERSION:
+        return manifest, [f"schemaVersion != {SCHEMA_VERSION}: {version!r}"]
+    entries = manifest.get("entries")
+    if not isinstance(entries, list) or not all(isinstance(entry, dict) for entry in entries):
+        return manifest, ["entries deve ser uma lista de objetos"]
+    problems: list[str] = []
+    for entry in entries:
+        problems.extend(_entry_metadata_problems(entry, package_dir))
+    paths = [entry.get("path") for entry in entries]
+    if all(isinstance(path, str) for path in paths) and len(set(paths)) != len(paths):
+        problems.append("caminhos lógicos duplicados")
+    return manifest, problems
+
+
+
 def verify_package_dir(package_dir: Path) -> dict:
     problems: list[str] = []
-    manifest_path = package_dir / "manifest.json"
-    if not manifest_path.is_file():
-        return {"status": "failed", "problems": [f"sem manifest.json: {package_dir}"]}
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    if manifest.get("schemaVersion") != SCHEMA_VERSION:
-        problems.append(f"schemaVersion != {SCHEMA_VERSION}: {manifest.get('schemaVersion')!r}")
+    manifest, problems = _load_package_manifest(package_dir)
+    if problems:
+        return {"status": "failed", "package": str(package_dir), "problems": problems}
 
     checked = 0
     for entry in manifest.get("entries", []):
@@ -241,7 +310,11 @@ def verify_package_dir(package_dir: Path) -> dict:
             if not line.strip():
                 continue
             expected, _, rel = line.partition("  ")
-            target = package_dir / rel
+            try:
+                target = _confined_path(package_dir, rel)
+            except (ValueError, OSError) as exc:
+                problems.append(f"SHA256SUMS inválido: {exc}")
+                continue
             if not target.is_file():
                 problems.append(f"SHA256SUMS aponta arquivo ausente: {rel}")
             elif sha256_of(target) != expected:
@@ -298,15 +371,22 @@ def cmd_verify(args: argparse.Namespace) -> int:
 def cmd_restore(args: argparse.Namespace) -> int:
     package_dir = Path(args.package).expanduser()
     into = Path(args.into).expanduser()
-    manifest_path = package_dir / "manifest.json"
-    if not manifest_path.is_file():
-        emit({"command": "restore", "status": "failed", "problems": [f"sem manifest.json: {package_dir}"]})
+    manifest, problems = _load_package_manifest(package_dir)
+    if problems:
+        emit({"command": "restore", "status": "failed", "restored": 0,
+              "paths": [], "problems": problems})
         return 1
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
 
+    # Validate all destination paths before writing the first file. A malformed
+    # manifest must never leave a partially restored tree outside --into.
+    try:
+        targets = [_confined_path(into, entry["path"]) for entry in manifest["entries"]]
+    except (ValueError, OSError) as exc:
+        emit({"command": "restore", "status": "failed", "restored": 0,
+              "paths": [], "problems": [str(exc)]})
+        return 1
     restored: list[str] = []
-    problems: list[str] = []
-    for entry in manifest.get("entries", []):
+    for entry, target in zip(manifest["entries"], targets):
         blob_path = package_dir / entry["blob"]
         if not blob_path.is_file():
             problems.append(f"blob ausente: {entry['blob']}")
@@ -314,11 +394,15 @@ def cmd_restore(args: argparse.Namespace) -> int:
         if sha256_of(blob_path) != entry["sha256"]:  # fail-closed
             problems.append(f"sha256 divergente, NÃO gravado: {entry['path']}")
             continue
-        target = into / entry["path"]
         target.parent.mkdir(parents=True, exist_ok=True)
-        tmp = target.with_suffix(target.suffix + ".tmp")
-        shutil.copyfile(blob_path, tmp)
-        tmp.replace(target)  # atómico
+        # A fresh file avoids following a pre-created predictable .tmp symlink.
+        with tempfile.NamedTemporaryFile(dir=target.parent, delete=False) as handle:
+            tmp = Path(handle.name)
+        try:
+            shutil.copyfile(blob_path, tmp)
+            tmp.replace(target)  # atómico
+        finally:
+            tmp.unlink(missing_ok=True)
         restored.append(entry["path"])
 
     receipt = {
