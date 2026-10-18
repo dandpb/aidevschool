@@ -121,6 +121,32 @@ class OfflinePackage(unittest.TestCase):
         self.assertEqual(v.returncode, 1)
         self.assertTrue(any("schemaVersion" in p for p in json.loads(v.stdout)["problems"]))
 
+    def test_provider_default_file(self) -> None:
+        self.build(str(self.tmp / "out"))
+        manifest = json.loads((self.tmp / "out" / "t-1.0.0" / "manifest.json").read_text())
+        self.assertEqual(manifest["provider"], "file")
+        for entry in manifest["entries"]:
+            self.assertEqual(entry["provider"], "file")
+            self.assertNotIn("url", entry)
+
+    def test_provider_release_registra_url_e_exige_base(self) -> None:
+        base = "https://github.com/dandpb/aidevschool/releases/download/media-v1"
+        proc = self.build(str(self.tmp / "out"), "--provider", "release", "--release-base", base)
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        self.assertEqual(json.loads(proc.stdout)["provider"], "release")
+        manifest = json.loads((self.tmp / "out" / "t-1.0.0" / "manifest.json").read_text())
+        self.assertEqual(manifest["provider"], "release")
+        self.assertEqual(manifest["releaseBase"], base)
+        for entry in manifest["entries"]:
+            self.assertEqual(entry["provider"], "release")
+            self.assertEqual(entry["url"], f"{base}/{entry['blob']}")
+        v = run("verify", "--package", str(self.tmp / "out" / "t-1.0.0"))
+        self.assertEqual(v.returncode, 0, v.stdout)
+
+        # release sem --release-base deve falhar (fail-closed)
+        bad = self.build(str(self.tmp / "out2"), "--provider", "release")
+        self.assertNotEqual(bad.returncode, 0)
+
 
 def sha256_of_(path: Path) -> str:
     import hashlib

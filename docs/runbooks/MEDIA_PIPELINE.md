@@ -105,12 +105,16 @@ model (founder, comentários AID-2928 16:15Z/16:18Z): **`file://` primário**
 (static-bundle local — offline/CI-friendly), **Release Assets fallback**
 (distribuição pública), **SHA-256 fail-closed em todo caminho**.
 
-1. **Upload**: mídia nova sobe como asset `blobs/<sha256>.<ext>` na release
+1. **Upload**: mídia nova sobe como asset `blobs.<sha256>.<ext>` na release
    `media-v<N>` do repo público. Asset publicado é imutável — nunca
    re-escrito na mesma tag; conteúdo divergente no mesmo nome = erro.
+   **Correção empírica (drill 2026-10-18)**: a API do GitHub substitui `/`
+   por `.` em nomes de asset — o nome real publicado é `blobs.<sha256>.<ext>`
+   (sem barra) e a URL pública é
+   `https://github.com/dandpb/aidevschool/releases/download/media-v<N>/blobs.<sha256>.<ext>`.
 2. **Manifest** (autoridade, no git): `docs/storage/manifests/media-manifest.json`
    mapeia `path → sha256 → url` com
-   `https://github.com/dandpb/aidevschool/releases/download/media-v<N>/blobs/<sha256>.<ext>`
+   `https://github.com/dandpb/aidevschool/releases/download/media-v<N>/blobs.<sha256>.<ext>`
    (download anônimo; Level 0 sem conta). O PR mostra o manifest, não os bytes.
 3. **Pacotes offline** (§10) espelham os mesmos blobs em zips determinísticos
    com `SHA256SUMS.txt` — o consumidor `file://` resolve primeiro do bundle.

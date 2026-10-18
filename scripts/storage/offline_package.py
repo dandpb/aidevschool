@@ -23,12 +23,17 @@ Contrato (espelha o pipeline R2 — o repo continua fonte da verdade das
    (objeto corrompido entra em `problems`, nunca no destino).
 5. Sem conta, sem login, sem telemetria: download via URL pública de
    Release Asset (ou cópia direta); a verificação é local, offline.
+6. Provider model (founder, AID-2928): `file://` é o provedor primário e
+   Release Assets é o fallback de distribuição; a ferramenta expõe
+   `--provider file|release` (default `file`) e o manifest registra qual
+   provedor atende cada entrada — SHA-256 fail-closed em todo caminho.
 
 Storage preserva e move bytes — nunca avalia (producer ≠ verifier).
 
 Uso:
   offline_package.py build --file ARQ [--file ARQ...] [--path CAMINHO_LOGICO]
-                          --name NOME --version V --out DIR [--zip]
+                           --name NOME --version V --out DIR [--zip]
+                           [--provider file|release] [--release-base URL]
   offline_package.py verify --package DIR
   offline_package.py verify --zip ARQUIVO.zip [--expect SHA256]
   offline_package.py restore --package DIR --into DESTINO
@@ -55,6 +60,7 @@ READ_SIZE = 1 << 20
 ZIP_FIXED_DATE_TIME = (1980, 1, 1, 0, 0, 0)
 ZIP_COMPRESSLEVEL = 9
 SCHEMA_VERSION = 1
+PROVIDERS = ("file", "release")  # ADR AID-2928 §Provider model: `file` é o primário
 
 
 def utcnow_iso() -> str:
@@ -117,13 +123,24 @@ def cmd_build(args: argparse.Namespace) -> int:
 
     entries.sort(key=lambda entry: entry["path"])
     total_bytes = sum(entry["size"] for entry in entries)
+    provider = args.provider
+    release_base = (args.release_base or "").rstrip("/")
+    if provider == "release" and not release_base:
+        raise SystemExit("--provider release exige --release-base (URL base da release media-v<N>)")
+    for entry in entries:
+        entry["provider"] = provider
+        if provider == "release":
+            entry["url"] = f"{release_base}/{entry['blob']}"
     manifest = {
         "schemaVersion": SCHEMA_VERSION,
         "name": args.name,
         "version": args.version,
+        "provider": provider,
         "totalBytes": total_bytes,
         "entries": entries,
     }
+    if provider == "release":
+        manifest["releaseBase"] = release_base
     manifest_path = package_dir / "manifest.json"
     manifest_path.write_text(
         json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
@@ -142,6 +159,7 @@ def cmd_build(args: argparse.Namespace) -> int:
         "package": str(package_dir),
         "name": args.name,
         "version": args.version,
+        "provider": provider,
         "files": len(entries),
         "blobs": len(list(blobs_dir.iterdir())),
         "totalBytes": total_bytes,
@@ -193,6 +211,11 @@ def verify_package_dir(package_dir: Path) -> dict:
     checked = 0
     for entry in manifest.get("entries", []):
         blob_path = package_dir / entry["blob"]
+        provider = entry.get("provider", "file")  # pacotes antigos: default file
+        if provider not in PROVIDERS:
+            problems.append(f"provider inválido: {provider!r} ({entry['path']})")
+        if provider == "release" and not entry.get("url"):
+            problems.append(f"entrada provider=release sem url: {entry['path']}")
         if not blob_path.is_file():
             problems.append(f"blob ausente: {entry['blob']} ({entry['path']})")
             continue
@@ -374,6 +397,29 @@ def cmd_self_test(_: argparse.Namespace) -> int:
         zt = subprocess_run_cli("verify", "--zip", str(out1 / "autoteste-1.0.0.zip"))
         checks.append(("verify --zip contra sidecar", zt.returncode == 0, zt.stdout[:200]))
 
+        # provider release (ADR AID-2928 §Provider model): manifest registra url por entrada
+        br = subprocess_run_cli(
+            "build",
+            "--file", str(media / "aula" / "icone.png"),
+            "--name", "autoteste-rel", "--version", "1.0.0",
+            "--out", str(tmp / "out-rel"), "--zip",
+            "--provider", "release",
+            "--release-base", "https://github.com/x/y/releases/download/media-v1",
+        )
+        brj = json.loads(br.stdout)
+        rel_manifest = json.loads((tmp / "out-rel" / "autoteste-rel-1.0.0" / "manifest.json").read_text())
+        entry_rel = rel_manifest["entries"][0]
+        checks.append((
+            "provider release registra url",
+            br.returncode == 0
+            and rel_manifest["provider"] == "release"
+            and entry_rel["url"].startswith(rel_manifest["releaseBase"])
+            and entry_rel["url"].endswith(entry_rel["blob"]),
+            json.dumps(entry_rel)[:200],
+        ))
+        vr = subprocess_run_cli("verify", "--package", str(tmp / "out-rel" / "autoteste-rel-1.0.0"))
+        checks.append(("verify provider release ok", vr.returncode == 0 and json.loads(vr.stdout)["status"] == "ok", vr.stdout[:200]))
+
         failed = [name for name, ok, _ in checks if not ok]
         receipt = {
             "command": "self-test",
@@ -407,6 +453,10 @@ def main(argv: list[str] | None = None) -> int:
     p_build.add_argument("--name", required=True, help="nome do pacote")
     p_build.add_argument("--version", required=True, help="versão semântica do pacote")
     p_build.add_argument("--out", required=True, help="diretório de saída")
+    p_build.add_argument("--provider", choices=PROVIDERS, default="file",
+                         help="provedor que atende as entradas (default file — ADR AID-2928)")
+    p_build.add_argument("--release-base", dest="release_base",
+                         help="URL base da release (obrigatório com --provider release), ex.: .../releases/download/media-v1")
     p_build.add_argument("--zip", action="store_true", help="gera também NAME-VERSION.zip determinístico + sidecar .sha256")
     p_build.set_defaults(fn=cmd_build)
 

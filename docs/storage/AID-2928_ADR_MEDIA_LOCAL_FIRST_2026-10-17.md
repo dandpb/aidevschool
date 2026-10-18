@@ -60,12 +60,20 @@ produção). O founder optou por remover a dependência externa em vez de provis
 
 ## Verificação
 
-- `scripts/storage/test_offline_package.py` (7 testes) e
-  `offline_package.py self-test` (8 checagens e2e) — dedup, determinismo do zip,
-  verify fail-closed, restore byte-idêntico, tamper detectado.
-- Drill de referência: `DRILL-20261017T*-offline-package.log` em
+- `scripts/storage/test_offline_package.py` (9 testes) e
+  `offline_package.py self-test` (10 checagens e2e) — dedup, determinismo do zip,
+  verify fail-closed, restore byte-idêntico, tamper detectado, provider
+  `release` registrando url por entrada.
+- Drill de referência: `DRILL-20261018T005550Z-offline-package.log` em
   `/paperclip/storage/aidevschool/drills/` (build com mídia real do repo +
-  verify + restore + upload/verificação de Release Asset).
+  verify + restore + upload/verificação de Release Asset) — **PASS**
+  (2026-10-18): primeiro upload real (`media-v1`, 3 assets), download anônimo
+  3/3 com sha256 fail-closed OK, `verify --zip` do download anônimo OK.
+- **Correção empírica (drill 2026-10-18)**: a API do GitHub substitui `/` por
+  `.` em nomes de asset de release. O nome real do asset de blob é
+  `blobs.<sha256>.<ext>` (sem barra) e a URL pública é
+  `.../download/media-v<N>/blobs.<sha256>.<ext>`. Endereçamento por conteúdo,
+  imutabilidade e verificação SHA-256 ficam intactos; runbook §4c atualizado.
 
 ## Provider model (refinamento do founder na própria AID-2928)
 
