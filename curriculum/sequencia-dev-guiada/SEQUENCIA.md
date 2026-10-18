@@ -15,7 +15,7 @@ ratificada é reaberta aqui.
 
 | Família | Fonte (base `d9dbdd5c504e`) | Papel na sequência |
 | --- | --- | --- |
-| 9 YAMLs Dev (l15–l17, l21–l23, l27–l29) | `curriculum/ai-literacy/modules/05-dev-contexto-e-escolha/*.yaml` (blobs `a839a433efab`, `faf30f1c88c1`, `dfebdbb2290e`, `0dca02a01ef2`, `9e063a872de4`, `f04478753063`, `6c9cc6b015d2`, `e88dc1192433`, `006ca4e6761c`) | Micro-lições da trilha `dev` (já bound no OS) — espinha dorsal D1/D3/D4/D5 |
+| 9 YAMLs Dev (l15–l17, l21–l23, l27–l29) | `curriculum/ai-literacy/modules/05-dev-contexto-e-escolha/*.yaml` (blobs `a839a433efab`, `faf30f1c88c1`, `dfebdbb2290e`, `0dca02a01ef2`, `9e063a872de4`, `f04478753063`, `6c9cc6b015d2`, `386c27fe1a6b`, `006ca4e6761c`) | Micro-lições da trilha `dev` (já bound no OS) — espinha dorsal D1/D3/D4/D5 |
 | Catálogo literacy | `curriculum/ai-literacy/catalog.yaml` (blob `eafcbc196b35`) | mod-05 `Dev: contexto e decisão`, jornada `dev` |
 | curso-simples M1–M9 | `docs/curso-simples/index.html` (blob `2bcf99fbd831`) + `ROADMAP.md` (blob `5dc6f72ce505`) | Aprofundamento D1/D2/D6 (10 semanas, gates por fase) |
 | Exemplo executável do curso | `docs/curso-simples/workflow-exemplo/` (`release_notes.py` blob `8bbe0fdffcf5`; 22 testes) | Fixture de reprodução e do pedido de 5 campos |
