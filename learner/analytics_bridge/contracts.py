@@ -292,7 +292,7 @@ def _os_header_errors(ev: dict) -> list[str]:
     extra = set(ev) - _OS_ENVELOPE_KEYS
     if extra:
         errors.append(f"os: unexpected envelope keys {sorted(extra)}")
-    if ev.get("schemaVersion") != OS_SCHEMA_VERSION:
+    if isinstance(ev.get("schemaVersion"), bool) or ev.get("schemaVersion") != OS_SCHEMA_VERSION:
         errors.append(f"os: schemaVersion must be {OS_SCHEMA_VERSION}")
     return errors
 

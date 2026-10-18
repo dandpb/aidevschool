@@ -62,6 +62,24 @@ def guard_no_forbidden(obj) -> None:
             die(f"saída contém termo proibido {term!r} (ADR-0009)")
 
 
+def data_provenance(rows: list[dict]) -> dict:
+    labelled = sum(row.get(SYNTHETIC_LABEL) is True for row in rows)
+    synthetic = bool(rows) and labelled == len(rows)
+    label = (
+        "FIXTURES SINTÉTICAS — nenhum aprendiz real; nenhuma exportação de produção"
+        if synthetic else
+        "FEEDS DO OPERADOR — origem sintética não comprovada; "
+        "não inferir presença de aprendizes reais"
+    )
+    return {
+        "synthetic": synthetic,
+        "label": label,
+        "rows": len(rows),
+        "synthetic_labelled_rows": labelled,
+        "subject_id_scopes": SUBJECT_ID_SCOPES,
+    }
+
+
 def build_report(lit_rows: list[dict], os_rows: list[dict]) -> dict:
     envelope_errors = validate_stream(lit_rows, "literacy") + validate_stream(os_rows, "os")
     if envelope_errors:
@@ -70,17 +88,13 @@ def build_report(lit_rows: list[dict], os_rows: list[dict]) -> dict:
     lit, _ = dedup(lit_rows, "literacy")
     os_, _ = dedup(os_rows, "os")
 
-    funnel = compute_funnel(lit, os_)
+    funnel = compute_funnel(lit_rows, os_rows)
     projection_lit = project_stream(lit, "literacy")
     projection_os = project_stream(os_, "os")
 
     return {
         "bridge_version": BRIDGE_VERSION,
-        "data_provenance": {
-            "synthetic": True,
-            "label": "FIXTURES SINTÉTICAS — nenhum aprendiz real; nenhuma exportação de produção",
-            "subject_id_scopes": SUBJECT_ID_SCOPES,
-        },
+        "data_provenance": data_provenance(lit_rows + os_rows),
         "pipeline": funnel["pipeline"],
         "envelope_validation": {"checked": len(lit_rows) + len(os_rows), "violations": 0},
         "funnel": {"literacy": funnel["literacy"], "os": funnel["os"]},
