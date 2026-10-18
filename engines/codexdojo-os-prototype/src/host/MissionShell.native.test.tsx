@@ -61,9 +61,9 @@ describe('OS-native guided-practice mission (AID-3527, dev:pg-d01)', () => {
       verifierRequired: true,
     })
     const devMissions = missionCatalog.missions.filter((mission) => mission.trackId === 'dev')
-    expect(devMissions).toHaveLength(17)
+    expect(devMissions).toHaveLength(20)
     expect(devMissions.map((mission) => mission.chapterOrder)).toEqual(
-      Array.from({ length: 17 }, (_unused, index) => index + 1),
+      Array.from({ length: 20 }, (_unused, index) => index + 1),
     )
   })
 
