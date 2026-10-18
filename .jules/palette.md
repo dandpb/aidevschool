@@ -38,3 +38,6 @@
 ## 2026-10-01 - Accessible Emojis using sr-only
 **Learning:** For accessibility in UI elements containing emojis (e.g., in codexDojo), avoid applying `role="text"` and `aria-label` to the container, as they are often ignored or cause noisy announcements.
 **Action:** Instead, wrap the descriptive text in a visually hidden `<span class="sr-only">` and hide the emoji itself with a `<span aria-hidden="true">`. Ensure you don't use `aria-label` on the container.
+## 2026-10-21 - Empty State Guidance
+**Learning:** Clicking a submit button without providing input and receiving no feedback leaves the user wondering if the system is broken or waiting.
+**Action:** When a user triggers an action that requires input but none is provided, explicitly communicate the missing requirement using the existing error feedback patterns (e.g., `setReply` with an error state) and return focus to the input field so they can correct the issue immediately.
