@@ -27,6 +27,8 @@ verdict is returned only when ALL hold:
 | 4 | gate's `evidence_attempt_id`/`evidence_attempt_digest` present; attempt file exists, non-empty, contained, sha256(bytes) matches | UNKNOWN |
 | 5 | exactly a real verifier receipt under `learner/verifier_receipts/` parses and its `evidence_digest` equals the gate digest (**bound by digest, not by `source` label** — source is not unique); scores finite | UNKNOWN |
 | 6 | receipt `PASS` ⇒ `unit.mastered is True`; contradiction | UNKNOWN |
+| 7 | **ownership** (hardening, review 6239895063): gate's `evidence_attempt_id` == unit's `attempt_file`; the digest-matching producer record carries `project == <requested project>`; record `unit_id` (when present) == unit's; gate `evidence_scenario_id` (when present on both) == record's `scenario_id` — a copied internally-consistent chain cannot establish another unit/project's mastery | UNKNOWN |
+| 8 | **receipt agreement** (hardening, review 6239895063): ALL receipts matching the digest agree on (verdict, mutation_score, coverage_core, context_isolated); a PASS cannot hide a contradictory FAIL; malformed receipts (unhashable verdict, huge-int scores, bad UTF-8) are skipped, never fatal | UNKNOWN |
 
 - Returned metrics are the **receipt's** (`mutation_score`, `coverage_core`,
   `context_isolated`, `source`) — thresholds are never used to mint scores.

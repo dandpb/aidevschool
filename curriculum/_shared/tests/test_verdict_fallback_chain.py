@@ -250,6 +250,110 @@ class TestVerdictFallbackChain(unittest.TestCase):
         ev = self._inspect(gate=gate)
         self.assertEqual(ev.verdict.verdict, "UNKNOWN")
 
+    # --- hardening: static coordination review 6239895063 (AID-5002) ---
+
+    def test_conflicting_receipts_for_same_digest_are_unknown(self) -> None:
+        # A PASS receipt cannot hide a contradictory FAIL for the same
+        # digest: filename order must never decide a verdict.
+        digest = canonical_evidence_digest(DEFAULT_RECORD)
+        contradictory = _default_receipt(digest)
+        contradictory.update(
+            {
+                "verdict": "FAIL",
+                "mutation_score": 0.1,
+                "coverage_core": 0.1,
+                "source": "second-verifier",
+            }
+        )
+        ev = self._inspect(extra_receipts=[contradictory])
+        self.assertEqual(ev.verdict.verdict, "UNKNOWN")
+        self.assertFalse(ev.gate_ready)
+
+    def test_agreeing_duplicate_receipts_still_pass(self) -> None:
+        digest = canonical_evidence_digest(DEFAULT_RECORD)
+        agreeing = _default_receipt(digest)
+        agreeing["source"] = "second-verifier"
+        ev = self._inspect(extra_receipts=[agreeing])
+        self.assertEqual(ev.verdict.verdict, "PASS")
+        self.assertEqual(ev.verdict.mutation_score, 0.9)
+
+    def test_malformed_receipt_never_crashes_inspect(self) -> None:
+        digest = canonical_evidence_digest(DEFAULT_RECORD)
+        malformed = [
+            '{"verdict": [], "context_isolated": true, "mutation_score": 0.9, '
+            '"coverage_core": 0.95, "source": "v", "evidence_digest": '
+            '"%s"}' % digest,
+            '{"verdict": "PASS", "context_isolated": true, "mutation_score": 1%s, '
+            '"coverage_core": 0.95, "source": "v", "evidence_digest": '
+            '"%s"}' % ("0" * 400, digest),
+        ]
+        for text in malformed:
+            with tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp)
+                write_chain(root)
+                (root / "learner" / "verifier_receipts" / "u0.json").write_text(
+                    text, encoding="utf-8"
+                )
+                ev = inspect(PROJECT, root=root)
+                self.assertEqual(ev.verdict.verdict, "UNKNOWN")
+                self.assertFalse(ev.gate_ready)
+
+    def test_undecodable_evidence_file_is_unknown_no_crash(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            write_chain(root)
+            (root / EVIDENCE_REL).write_bytes(b"\xff\xfe\x00 not utf-8")
+            ev = inspect(PROJECT, root=root)
+            self.assertEqual(ev.verdict.verdict, "UNKNOWN")
+            self.assertFalse(ev.gate_ready)
+
+    def test_gate_attempt_file_must_be_the_units_own(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            write_chain(root)
+            state_path = root / "learner" / "learning_state.yaml"
+            state = yaml.safe_load(state_path.read_text(encoding="utf-8"))
+            state["units_log"][0]["attempt_file"] = "learner/attempts/other.md"
+            state_path.write_text(
+                yaml.safe_dump(state, sort_keys=False), encoding="utf-8"
+            )
+            ev = inspect(PROJECT, root=root)
+            self.assertEqual(ev.verdict.verdict, "UNKNOWN")
+            self.assertFalse(ev.gate_ready)
+
+    def test_copied_chain_cannot_establish_another_project(self) -> None:
+        # The whole intact chain (evidence + attempt + receipt + gate) copied
+        # under a victim project entry must not mint that project's verdict.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            write_chain(root)
+            state_path = root / "learner" / "learning_state.yaml"
+            state = yaml.safe_load(state_path.read_text(encoding="utf-8"))
+            copied = dict(state["units_log"][0])
+            copied["project"] = "99_victim_project"
+            state["units_log"].append(copied)
+            state_path.write_text(
+                yaml.safe_dump(state, sort_keys=False), encoding="utf-8"
+            )
+            ev = inspect("99_victim_project", root=root)
+            self.assertEqual(ev.verdict.verdict, "UNKNOWN")
+            self.assertFalse(ev.gate_ready)
+            # the legitimate owner keeps its verdict
+            self.assertEqual(
+                inspect(PROJECT, root=root).verdict.verdict, "PASS"
+            )
+
+    def test_gate_scenario_must_match_evidence_record(self) -> None:
+        evidence_digest = canonical_evidence_digest(DEFAULT_RECORD)
+        attempt_digest = hashlib.sha256(
+            b"# Learner attempt\n"
+        ).hexdigest()
+        gate = _default_gate(evidence_digest, attempt_digest)
+        gate["evidence_scenario_id"] = "some-other-scenario"
+        ev = self._inspect(gate=gate)
+        self.assertEqual(ev.verdict.verdict, "UNKNOWN")
+        self.assertFalse(ev.gate_ready)
+
 
 if __name__ == "__main__":
     unittest.main()

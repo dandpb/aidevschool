@@ -24,7 +24,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import math
 import re
 from dataclasses import dataclass
 from enum import StrEnum
@@ -33,7 +32,10 @@ from typing import Any
 
 import yaml
 
-from learner.gate.evidence_io import bound_evidence_violations
+from learner.gate.evidence_io import (
+    bound_evidence_violations,
+    canonical_evidence_digest,
+)
 from learner.gate.security import GateSecurityError
 from learner.gate.standards import (
     VerifierVerdict,
@@ -342,30 +344,48 @@ def _attempt_identity_violations(gate: dict[str, Any], root: Path) -> list[str]:
 
 def _receipt_for_digest(digest: str, root: Path) -> VerifierVerdict | None:
     """Find the separate verifier receipt bound to ``digest`` (by digest, not
-    by source label — source is not unique across receipts)."""
+    by source label — source is not unique across receipts).
+
+    Fail-closed on ambiguity and malformed input (static review 6239895063,
+    AID-5002): every receipt matching the digest must agree on verdict and
+    metrics — a PASS hiding a contradictory FAIL for the same digest is not
+    evidence. Malformed receipts (unhashable verdict, huge ints, bad UTF-8)
+    are skipped, never fatal to ``inspect()``.
+    """
     receipts_dir = root / "learner" / "verifier_receipts"
     if not receipts_dir.is_dir():
         return None
+    matches: list[VerifierReceipt] = []
     for path in sorted(receipts_dir.glob("*.json")):
         try:
             receipt = load_verifier_receipt(path, root)
-        except (GateSecurityError, OSError, ValueError):
+        except (
+            GateSecurityError,
+            OSError,
+            ValueError,
+            TypeError,
+            OverflowError,
+        ):
             continue
         if receipt.evidence_digest != digest:
             continue
-        if not (
-            math.isfinite(receipt.mutation_score)
-            and math.isfinite(receipt.coverage_core)
-        ):
-            continue
-        return VerifierVerdict(
-            mutation_score=receipt.mutation_score,
-            coverage_core=receipt.coverage_core,
-            context_isolated=receipt.context_isolated,
-            verdict=receipt.verdict,
-            source=receipt.source,
-        )
-    return None
+        matches.append(receipt)
+    if not matches:
+        return None
+    distinct = {
+        (r.verdict, r.mutation_score, r.coverage_core, r.context_isolated)
+        for r in matches
+    }
+    if len(distinct) != 1:
+        return None
+    receipt = matches[0]
+    return VerifierVerdict(
+        mutation_score=receipt.mutation_score,
+        coverage_core=receipt.coverage_core,
+        context_isolated=receipt.context_isolated,
+        verdict=receipt.verdict,
+        source=receipt.source,
+    )
 
 
 def _evidence_binding_violations(
@@ -379,23 +399,115 @@ def _evidence_binding_violations(
         return bound_evidence_violations(
             str(evidence_file), gate["evidence_digest"], root
         )
-    except OSError:
+    except (OSError, ValueError):
+        # ValueError covers undecodable bytes: an unreadable evidence file is
+        # a closed gate, not a crash (static review 6239895063, AID-5002).
         return ["unit evidence_file is unreadable"]
 
 
+def _bound_evidence_record(
+    evidence_file: Any, digest: Any, root: Path
+) -> dict[str, Any] | None:
+    """The producer record the gate graded, or None when it cannot be
+    established (missing, undecodable, unparseable, digest-missing)."""
+    if not isinstance(evidence_file, str) or not evidence_file.strip():
+        return None
+    if not _is_sha256_hex(digest):
+        return None
+    candidate = Path(evidence_file)
+    if candidate.is_absolute():
+        return None
+    try:
+        resolved = resolve_contained(candidate, root)
+        text = resolved.read_text(encoding="utf-8")
+    except (StateCorruptionError, OSError, ValueError):
+        return None
+    records: list[dict[str, Any]] = []
+    try:
+        raw = json.loads(text)
+    except json.JSONDecodeError:
+        raw = None
+    if isinstance(raw, dict):
+        records = [raw]
+    else:
+        for line in text.splitlines():
+            if not line.strip():
+                continue
+            try:
+                record = json.loads(line)
+            except json.JSONDecodeError:
+                return None
+            if isinstance(record, dict):
+                records.append(record)
+    matching = [
+        record
+        for record in records
+        if canonical_evidence_digest(record) == digest
+    ]
+    return matching[-1] if matching else None
+
+
+def _chain_ownership_violations(
+    unit: dict[str, Any],
+    gate: dict[str, Any],
+    root: Path,
+    project_id: str,
+) -> list[str]:
+    """The intact chain must belong to THIS unit of THIS project.
+
+    A copied, internally consistent chain (evidence file + attempt file +
+    receipt + gate review lifted from another unit) must not establish this
+    unit's mastery (static review 6239895063, AID-5002). The digest covers
+    the producer record's identity fields, so requiring the digest-matching
+    record to carry this project/unit identity closes the copy attack.
+    """
+    errors: list[str] = []
+    attempt_file = unit.get("attempt_file")
+    if not isinstance(attempt_file, str) or not attempt_file.strip():
+        errors.append("unit has no attempt_file to bind the gate to")
+    elif gate.get("evidence_attempt_id") != attempt_file:
+        errors.append("gate graded an attempt file other than the unit's own")
+    record = _bound_evidence_record(
+        unit.get("evidence_file"), gate.get("evidence_digest"), root
+    )
+    if record is None:
+        errors.append("cannot establish which producer record backs the gate")
+        return errors
+    if record.get("project") != project_id:
+        errors.append("evidence record belongs to another project")
+    record_unit = record.get("unit_id")
+    if isinstance(record_unit, str) and record_unit != unit.get("unit_id"):
+        errors.append("evidence record belongs to another unit")
+    scenario = record.get("scenario_id")
+    gate_scenario = gate.get("evidence_scenario_id")
+    if (
+        isinstance(gate_scenario, str)
+        and isinstance(scenario, str)
+        and gate_scenario != scenario
+    ):
+        errors.append("gate scenario does not match the evidence record")
+    return errors
+
+
 def _chain_verdict(
-    unit: dict[str, Any], gate: dict[str, Any], root: Path
+    unit: dict[str, Any],
+    gate: dict[str, Any],
+    root: Path,
+    project_id: str,
 ) -> VerifierVerdict | None:
     """Verdict when the last gate's verification chain is fully intact.
 
     None on any broken link (digest, evidence binding, attempt identity,
-    receipt, PASS/mastered contradiction) — callers turn that into UNKNOWN.
+    chain ownership, receipt, PASS/mastered contradiction) — callers turn
+    that into UNKNOWN.
     """
     if not _is_sha256_hex(gate.get("evidence_digest")):
         return None
     if _evidence_binding_violations(unit, gate, root):
         return None
     if _attempt_identity_violations(gate, root):
+        return None
+    if _chain_ownership_violations(unit, gate, root, project_id):
         return None
     verdict = _receipt_for_digest(gate["evidence_digest"], root)
     if verdict is None:
@@ -426,7 +538,7 @@ def _verdict_from_canonical_state(project_id: str, root: Path) -> VerifierVerdic
         gate = _last_gate_review(unit)
         if gate is None:
             continue
-        verdict = _chain_verdict(unit, gate, root)
+        verdict = _chain_verdict(unit, gate, root, project_id)
         if verdict is None:
             return unknown
         return verdict

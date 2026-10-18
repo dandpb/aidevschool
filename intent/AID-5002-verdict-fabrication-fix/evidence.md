@@ -57,3 +57,32 @@ attempt discovery still asserted; verdict now asserted UNKNOWN without a
 verifier chain; new sibling proves PASS with the full chain. No check
 weakened — the assertion flipped from fabrication-accepting to
 fabrication-rejecting.
+
+## Hardening round 1 — static coordination review 6239895063 (Oct 18)
+
+All three findings reproduced 1st-hand on head `6a39d46c` BEFORE the fix
+(scripts inline in the run log of run 52a37d07):
+
+1. Conflicting receipts (PASS + FAIL) for the same digest → filename order
+   decided the verdict (`a-extra.json` FAIL won over `u0.json` PASS).
+2. Whole intact chain copied under a victim project entry →
+   `verdict=PASS, gate_ready=True` for `99_victim_project`; gate attempt ≠
+   unit `attempt_file` also still passed.
+3. Receipt with `verdict: []` → `TypeError: unhashable type: 'list'`;
+   `mutation_score: 10…0` (401 digits) → `OverflowError`; evidence file with
+   invalid UTF-8 bytes → `UnicodeDecodeError` — all crashed `inspect()`.
+
+AFTER the fix (same scripts): every case → `verdict=UNKNOWN,
+gate_ready=False`; intact chain still `PASS` with the receipt's metrics
+(0.9/0.95); agreeing duplicate receipts still PASS.
+
+- Contract additions: spec.md checks 7 (ownership binding) and 8 (receipt
+  agreement + malformed-input tolerance).
+- New regressions (7): conflicting-receipts-UNKNOWN, agreeing-duplicates-PASS,
+  malformed-receipt-no-crash (unhashable + huge int), undecodable-evidence
+  UNKNOWN, gate-attempt≠unit-attempt UNKNOWN, copied-chain cross-project
+  UNKNOWN (legitimate owner keeps PASS), gate-scenario mismatch UNKNOWN.
+- `learner/gate/*` untouched (defended at the `_shared` call boundary);
+  `math` import dropped (no longer used).
+- Suites: `curriculum/_shared/tests/` + late-games → 77 passed (was 70);
+  full gate + shared suite and complexity gate re-run before push.
