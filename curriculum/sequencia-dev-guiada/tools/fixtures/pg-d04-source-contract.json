@@ -1,0 +1,600 @@
+{
+  "schema": "aidevschool/sequencia-dev-guiada/source-contract@1",
+  "package": {
+    "id": "pg-d04-contexto-e-spec",
+    "version": "rubrica-v1",
+    "practiceId": "pg-d04",
+    "contentVersion": "pg-d04@730ac9dc41c2",
+    "contentVersionBasis": {
+      "formula": "<practiceId>@<sha256-12>",
+      "entries": "path:sha256 (sha256 do conteúdo UTF-8), path = curriculum/sequencia-dev-guiada/pg-d04-contexto-e-spec/<relative>",
+      "join": "newline",
+      "order": "allowlist canônica congelada (contentVersionBasis.allowlist), não lexicográfica",
+      "allowlist": [
+        "enunciado.md",
+        "exemplo-trabalhado.md",
+        "insumos/PEDIDO.md",
+        "insumos/inventario-repo.txt",
+        "insumos/verifica_contexto_spec.py",
+        "rubrica-v1.md"
+      ],
+      "excludes": [
+        "MANIFEST.md",
+        "guia-de-correcao/solucao.md",
+        "guia-de-correcao/teste_verificador.py",
+        "guia-de-correcao/solucao/CONTEXTO.md",
+        "guia-de-correcao/solucao/PRD.md",
+        "guia-de-correcao/solucao/SPEC.md",
+        "guia-de-correcao/contraexemplos/01-contexto-ruidoso/CONTEXTO.md",
+        "guia-de-correcao/contraexemplos/01-contexto-ruidoso/PRD.md",
+        "guia-de-correcao/contraexemplos/01-contexto-ruidoso/SPEC.md",
+        "guia-de-correcao/contraexemplos/02-prd-sem-limite/CONTEXTO.md",
+        "guia-de-correcao/contraexemplos/02-prd-sem-limite/PRD.md",
+        "guia-de-correcao/contraexemplos/02-prd-sem-limite/SPEC.md",
+        "guia-de-correcao/contraexemplos/03-aceite-vago/CONTEXTO.md",
+        "guia-de-correcao/contraexemplos/03-aceite-vago/PRD.md",
+        "guia-de-correcao/contraexemplos/03-aceite-vago/SPEC.md",
+        "guia-de-correcao/contraexemplos/04-spec-aberta/CONTEXTO.md",
+        "guia-de-correcao/contraexemplos/04-spec-aberta/PRD.md",
+        "guia-de-correcao/contraexemplos/04-spec-aberta/SPEC.md"
+      ],
+      "parity": [
+        {
+          "source": "learner/substrate/mission_catalog_guided_practice.py",
+          "commit": "e376d04f6ea7eb7a7be664eb9e6e15305ea675e9",
+          "pullRequest": 628,
+          "symbols": [
+            "Parity contract (AID-3534)",
+            "GUIDED_PRACTICE_LEARNER_FILES",
+            "compute_content_version"
+          ]
+        },
+        {
+          "source": "engines/codexdojo-os-prototype/scripts/gen-guided-practice.mjs",
+          "pullRequest": 625,
+          "symbols": [
+            "SOURCE_FILES",
+            "contentVersion"
+          ]
+        },
+        {
+          "source": "curriculum/sequencia-dev-guiada/tools/fixtures/pg-d02-source-contract.json",
+          "pullRequest": 631,
+          "symbols": [
+            "contentVersionBasis (AID-3617 interface delta)",
+            "sourceInterface"
+          ]
+        }
+      ],
+      "correction": "MANIFEST.md é provenance-only (documento autoral do pacote): hash pinado em files[], nunca entra nas entradas learner. Hashes do guia-de-correcao idem."
+    },
+    "anchors": {
+      "unit": "U09",
+      "unitRef": "SEQUENCIA.md §2",
+      "competencyPrimary": "D2",
+      "competencySupport": [
+        "D3"
+      ],
+      "course": {
+        "course": "curso-simples",
+        "modules": "M4 (Context Engineering §4.1–4.4) e M5 (PRD e Specs §5.1–5.4)",
+        "entry": "docs/curso-simples/index.html",
+        "blob": "2bcf99fbd831"
+      },
+      "workedExample": {
+        "dir": "docs/curso-simples/workflow-exemplo/",
+        "files": {
+          "CONTEXTO.md": "9fbc21127ea2",
+          "PRD.md": "2b4deb2764fe",
+          "SPEC.md": "1d5c696c3bb2"
+        }
+      },
+      "planGates": {
+        "dir": "docs/curso/workflow_lab/fixtures/",
+        "files": {
+          "05-cycle-05.json": "dee137438663",
+          "06-cycle-06.json": "90df4afde0c3"
+        }
+      },
+      "prerequisitePractice": {
+        "id": "pg-d02",
+        "unit": "U03",
+        "label": "pedido de 5 campos",
+        "equivalence": "ou equivalente"
+      },
+      "prerequisiteLesson": {
+        "id": "l16",
+        "unit": "U02",
+        "label": "pedido de código com contexto",
+        "equivalence": "ou equivalente",
+        "resolvedThrough": {
+          "reason": "O pg-d04 declara como pré-requisito a prática pg-d02 (U03), sem lição própria no enunciado; o catálogo (mission_catalog_guided_practice._contract_anchor_lesson_id) exige prerequisiteLesson com id de lição. l16 é a lição-âncora de pré-req ratificada no contrato-fonte pinado do pg-d02 — valor resolvido por cadeia de contratos, não inventado aqui.",
+          "source": "tools/fixtures/pg-d02-source-contract.json",
+          "sourcePackageId": "pg-d02-pedido-estruturado",
+          "sourceSha256": "cab64c4b24b0fe3ed10731e3d7e9136ef2e51a1f97bdfe01988ea6fe63579438",
+          "sourcePrerequisiteLesson": {
+            "id": "l16",
+            "unit": "U02",
+            "label": "pedido de código com contexto"
+          }
+        }
+      }
+    }
+  },
+  "pin": {
+    "repo": "dandpb/aidevschool",
+    "pullRequest": 643,
+    "head": "32888d9f03006f3dbcdaa57811b29c54a2c09146",
+    "merge": "a68c0f237cdf0c6f661817fb50e745d3f0544595",
+    "base": {
+      "pullRequest": 620,
+      "head": "e01d9d42b99434c10d8f155cde0cbbc57b25cf61"
+    },
+    "byteIdenticalAtMainHead": "b08e00962f33645578878346af6f83218317f2f5"
+  },
+  "files": [
+    {
+      "path": "enunciado.md",
+      "sha256": "4bf60840eb3207a2dbfc80533303b609a3d6d92c1d67c5c6a40d8ab498ef60de",
+      "bytes": 7297
+    },
+    {
+      "path": "exemplo-trabalhado.md",
+      "sha256": "68aca19acc9323164138b6616aeeef0f716c597363782c06752767354da39f72",
+      "bytes": 6494
+    },
+    {
+      "path": "insumos/PEDIDO.md",
+      "sha256": "47b7a8f9cda91ab18a1ee2b730953d99c0dc99600b393874f36c72f97a2039bd",
+      "bytes": 2029
+    },
+    {
+      "path": "insumos/inventario-repo.txt",
+      "sha256": "dec5a4e14f26e06231385950e5b2b0a4e6e279fa0c0e19f39449ce62f19dae67",
+      "bytes": 1323
+    },
+    {
+      "path": "insumos/verifica_contexto_spec.py",
+      "sha256": "c44829430540a07c75cecd8bc889d4360362c40ad5d275da1a24f2a627094614",
+      "bytes": 13101
+    },
+    {
+      "path": "rubrica-v1.md",
+      "sha256": "377210d54e11afd8902fc19ff2f5ba2b8fa2c74ded25c3327df4385c790baee1",
+      "bytes": 4589
+    },
+    {
+      "path": "MANIFEST.md",
+      "sha256": "3486b33105f7dd0ee6d45d737d5e98378c855a0de966510d52c40649c0e28c62",
+      "bytes": 2690
+    },
+    {
+      "path": "guia-de-correcao/solucao.md",
+      "sha256": "4c11727b237a70996e4ba2074797a34613daf4e84a7ebb4056f1716b56b02e67",
+      "bytes": 5281
+    },
+    {
+      "path": "guia-de-correcao/teste_verificador.py",
+      "sha256": "d4ceb3a1015cf4fa174f7beb0daeefd3462549b6580224350d9ea1b2d6b02075",
+      "bytes": 3666
+    },
+    {
+      "path": "guia-de-correcao/solucao/CONTEXTO.md",
+      "sha256": "0a3103ad783479858fd4406605782b735691bce8f1b2871a8a623d8642de6b89",
+      "bytes": 2333
+    },
+    {
+      "path": "guia-de-correcao/solucao/PRD.md",
+      "sha256": "e0766aa0b4b0b8c0d23ce5a275847a91c38224b7c53adafe9261ce0b1d1841dc",
+      "bytes": 2461
+    },
+    {
+      "path": "guia-de-correcao/solucao/SPEC.md",
+      "sha256": "4a6fc42981d7ac5906cc4b4df3d758fe6ddf1c78087f36fd68624f94cc0ec936",
+      "bytes": 2570
+    },
+    {
+      "path": "guia-de-correcao/contraexemplos/01-contexto-ruidoso/CONTEXTO.md",
+      "sha256": "7df566354151d4bd7d2d0745ab5bee8726222ffa2b87ce7451dc98d0e7ee1d89",
+      "bytes": 902
+    },
+    {
+      "path": "guia-de-correcao/contraexemplos/01-contexto-ruidoso/PRD.md",
+      "sha256": "e0766aa0b4b0b8c0d23ce5a275847a91c38224b7c53adafe9261ce0b1d1841dc",
+      "bytes": 2461
+    },
+    {
+      "path": "guia-de-correcao/contraexemplos/01-contexto-ruidoso/SPEC.md",
+      "sha256": "4a6fc42981d7ac5906cc4b4df3d758fe6ddf1c78087f36fd68624f94cc0ec936",
+      "bytes": 2570
+    },
+    {
+      "path": "guia-de-correcao/contraexemplos/02-prd-sem-limite/CONTEXTO.md",
+      "sha256": "0a3103ad783479858fd4406605782b735691bce8f1b2871a8a623d8642de6b89",
+      "bytes": 2333
+    },
+    {
+      "path": "guia-de-correcao/contraexemplos/02-prd-sem-limite/PRD.md",
+      "sha256": "6098067d3b160ba3453f54ea9fc5800330e46a921b2ad8d6b4d58562308b5424",
+      "bytes": 1173
+    },
+    {
+      "path": "guia-de-correcao/contraexemplos/02-prd-sem-limite/SPEC.md",
+      "sha256": "4a6fc42981d7ac5906cc4b4df3d758fe6ddf1c78087f36fd68624f94cc0ec936",
+      "bytes": 2570
+    },
+    {
+      "path": "guia-de-correcao/contraexemplos/03-aceite-vago/CONTEXTO.md",
+      "sha256": "0a3103ad783479858fd4406605782b735691bce8f1b2871a8a623d8642de6b89",
+      "bytes": 2333
+    },
+    {
+      "path": "guia-de-correcao/contraexemplos/03-aceite-vago/PRD.md",
+      "sha256": "31249821ddcbf32824093505807cefca14d31514c2e46a75290f9e182dce0b7c",
+      "bytes": 723
+    },
+    {
+      "path": "guia-de-correcao/contraexemplos/03-aceite-vago/SPEC.md",
+      "sha256": "4a6fc42981d7ac5906cc4b4df3d758fe6ddf1c78087f36fd68624f94cc0ec936",
+      "bytes": 2570
+    },
+    {
+      "path": "guia-de-correcao/contraexemplos/04-spec-aberta/CONTEXTO.md",
+      "sha256": "0a3103ad783479858fd4406605782b735691bce8f1b2871a8a623d8642de6b89",
+      "bytes": 2333
+    },
+    {
+      "path": "guia-de-correcao/contraexemplos/04-spec-aberta/PRD.md",
+      "sha256": "e0766aa0b4b0b8c0d23ce5a275847a91c38224b7c53adafe9261ce0b1d1841dc",
+      "bytes": 2461
+    },
+    {
+      "path": "guia-de-correcao/contraexemplos/04-spec-aberta/SPEC.md",
+      "sha256": "7c6778e6f0c8dc69f205a81f0418ec1820ee33971157d5d34894f2025dc900a7",
+      "bytes": 692
+    }
+  ],
+  "structure": {
+    "steps": {
+      "first": 1,
+      "last": 6,
+      "count": 6
+    },
+    "edgeCaseIds": [
+      "B1",
+      "B2",
+      "B3"
+    ],
+    "criteriaIds": [
+      "c1-contexto-duas-tabelas",
+      "c2-contexto-resolve-sem-ruido",
+      "c3-limite-30min",
+      "c4-fora-de-escopo-real",
+      "c5-aceite-verificavel",
+      "c6-spec-fecha-decisoes",
+      "c7-recibo-honesto"
+    ],
+    "objectiveTags": {
+      "c1-contexto-duas-tabelas": "a",
+      "c2-contexto-resolve-sem-ruido": "a",
+      "c3-limite-30min": "b",
+      "c4-fora-de-escopo-real": "b",
+      "c5-aceite-verificavel": "c",
+      "c6-spec-fecha-decisoes": "c"
+    },
+    "takeawayPrompts": 2,
+    "verdicts": [
+      "met",
+      "partial",
+      "not_met"
+    ]
+  },
+  "extractions": [
+    {
+      "role": "metaBlock",
+      "file": "enunciado.md",
+      "reflow": true,
+      "selector": {
+        "kind": "leadParagraph"
+      },
+      "sha256": "d89a772f5828a0a3eb73c0fdfb5c09038e18e1b8d9749af4b3b9ce1cf5a9b3d5"
+    },
+    {
+      "role": "anchorsMeta",
+      "file": "enunciado.md",
+      "selector": {
+        "kind": "leadParagraph"
+      },
+      "reviewRequired": true,
+      "sha256": "3864498509db04de75fd38d00fdf0c10406693625b9357a324077dd38dbfda72"
+    },
+    {
+      "role": "objective",
+      "file": "enunciado.md",
+      "reflow": false,
+      "selector": {
+        "kind": "section",
+        "heading": "Objetivo observável"
+      },
+      "sha256": "d103504b6b953bcebaedd7845d081177bec6a24202a9f04b6cac4e77bf3e1a4b"
+    },
+    {
+      "role": "edgeCases",
+      "file": "enunciado.md",
+      "reflow": true,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "labeledBullets",
+        "section": "Os três casos de borda (fixados; decididos pelo seu SPEC)",
+        "labelRegex": "^\\*\\*(B\\d+)\\*\\*\\s*—\\s*(.*)$"
+      },
+      "sha256": "80321e60471016fafcbcbcd7f4215f656dc4aaf9212a53a66f95ad883aa4f45e"
+    },
+    {
+      "role": "edgeCasePolicy",
+      "file": "enunciado.md",
+      "reflow": true,
+      "selector": {
+        "kind": "paragraph",
+        "section": "Os três casos de borda (fixados; decididos pelo seu SPEC)",
+        "prefix": "Um SPEC que não decide"
+      },
+      "sha256": "47e65bc3237443e51540fa102f7a0c18e79a75c5a90eea4746ffe6a97b7b8166"
+    },
+    {
+      "role": "steps",
+      "file": "enunciado.md",
+      "reflow": true,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "numberedSteps",
+        "section": "2. Tentativa (≈ 20 min)",
+        "first": 1,
+        "last": 6
+      },
+      "sha256": "c32199fe60125f73d0830c4e41202f0c553cd32f91b298ef60eec6ff5030d343"
+    },
+    {
+      "role": "receiptInstruction",
+      "file": "enunciado.md",
+      "reflow": true,
+      "selector": {
+        "kind": "paragraph",
+        "section": "2. Tentativa (≈ 20 min)",
+        "prefix": "Guarde:"
+      },
+      "sha256": "ce2738cc979694ab946b5acf8b4b7e482f5defbb1349adca7609c2cf5fdf52c2"
+    },
+    {
+      "role": "feedbackInstruction",
+      "file": "enunciado.md",
+      "reflow": true,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "paragraph",
+        "section": "3. Feedback (rúbrica)",
+        "index": 0
+      },
+      "sha256": "659170dfcecdb5eea437bfd1bae5244c5530f79b27ce91298a3b4e36be3a215c"
+    },
+    {
+      "role": "retryInstruction",
+      "file": "enunciado.md",
+      "reflow": true,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "paragraph",
+        "section": "4. Retry (se algum critério não passar)",
+        "index": 0
+      },
+      "sha256": "4c25f9d372ff34697f85f127dec9ad5a3068cf898b396d0c0d741f871f56f1ad"
+    },
+    {
+      "role": "takeawayInstruction",
+      "file": "enunciado.md",
+      "reflow": true,
+      "selector": {
+        "kind": "paragraph",
+        "section": "5. Takeaway (≈ 5 min)",
+        "index": 0
+      },
+      "sha256": "86fe371fc8d86d120fa32353528360a59955a4bf60a3f22040112e7b6451fd67"
+    },
+    {
+      "role": "takeawayPrompts",
+      "file": "enunciado.md",
+      "reflow": true,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "labeledSubPrompts",
+        "section": "5. Takeaway (≈ 5 min)",
+        "lead": "Responda em duas frases:",
+        "labels": [
+          "(a)",
+          "(b)"
+        ]
+      },
+      "sha256": "28ffa37085d9fb88eb9035aa25413e00a5aea54a46b5719293a7626341faafc5"
+    },
+    {
+      "role": "scopeNote",
+      "file": "enunciado.md",
+      "reflow": true,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "bulletByPrefix",
+        "section": "Limites explícitos",
+        "prefix": "Esta prática avalia os"
+      },
+      "sha256": "05338ff50478957adde6a07713e8c2df3ddeb6398368f4363a9b807720b60d1b"
+    },
+    {
+      "role": "guiaGuard",
+      "file": "enunciado.md",
+      "reflow": true,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "bulletByPrefix",
+        "section": "Limites explícitos",
+        "prefix": "Solução separada em"
+      },
+      "sha256": "6647219a9e611f0fb535b229f6ad1ff7543a883fd8c559077d9f3790c07de106"
+    },
+    {
+      "role": "verdictHeader",
+      "file": "rubrica-v1.md",
+      "reflow": true,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "leadParagraph"
+      },
+      "sha256": "ee2ffe57537ac382de2efb3053fc3cfd15396d78807b894275d80edbf799cd83"
+    },
+    {
+      "role": "verdictRules",
+      "file": "rubrica-v1.md",
+      "reflow": true,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "bulletByPrefix",
+        "section": "Notas de aplicação",
+        "prefix": "`partial` exige"
+      },
+      "sha256": "2cd4dacaa16ab64091dc8d4d4b25620b24566d4e4a102ecbd3d53b9d30915e76"
+    },
+    {
+      "role": "criteriaRows",
+      "file": "rubrica-v1.md",
+      "reflow": false,
+      "selector": {
+        "kind": "criteriaRows"
+      },
+      "sha256": "9e8bfb728ebe18c58bb92ab738bc3bbdd335a5b13b19986dbdd12088c38ae7b4"
+    },
+    {
+      "role": "pedidoOriginal",
+      "file": "insumos/PEDIDO.md",
+      "reflow": true,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "proseParagraphs",
+        "skipBlockquote": true
+      },
+      "sha256": "bb742ac20e5f9db80e410e920d9bd7ff3284612e255619ac42f714dba5bcb32e"
+    },
+    {
+      "role": "perCheck:c1-contexto-duas-tabelas",
+      "file": "rubrica-v1.md",
+      "reflow": false,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "rubricaCell",
+        "criterionId": "c1-contexto-duas-tabelas",
+        "column": "perCheck"
+      },
+      "sha256": "db8b70c41d83b80d6d36ab7b6ae31fafae48c135e2ba801078a38982735f94c9"
+    },
+    {
+      "role": "perCheck:c2-contexto-resolve-sem-ruido",
+      "file": "rubrica-v1.md",
+      "reflow": false,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "rubricaCell",
+        "criterionId": "c2-contexto-resolve-sem-ruido",
+        "column": "perCheck"
+      },
+      "sha256": "bc258cf84a1fc0c16a2d218c714d9d7c71fc390229493089da99f3773dde43bb"
+    },
+    {
+      "role": "perCheck:c3-limite-30min",
+      "file": "rubrica-v1.md",
+      "reflow": false,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "rubricaCell",
+        "criterionId": "c3-limite-30min",
+        "column": "perCheck"
+      },
+      "sha256": "b72f247b5fc9f899cab697379bde731efcb1818e27947561379d2afe3b8859d0"
+    },
+    {
+      "role": "perCheck:c4-fora-de-escopo-real",
+      "file": "rubrica-v1.md",
+      "reflow": false,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "rubricaCell",
+        "criterionId": "c4-fora-de-escopo-real",
+        "column": "perCheck"
+      },
+      "sha256": "3686e57d5555d46ffbc65f890d67b92d29067ba94bdaa9961ae7a49324ac373c"
+    },
+    {
+      "role": "perCheck:c5-aceite-verificavel",
+      "file": "rubrica-v1.md",
+      "reflow": false,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "rubricaCell",
+        "criterionId": "c5-aceite-verificavel",
+        "column": "perCheck"
+      },
+      "sha256": "2bdf95d546c30240d7060f3601f6471f943e091860b074e0a9dbbbcb5aad865a"
+    },
+    {
+      "role": "perCheck:c6-spec-fecha-decisoes",
+      "file": "rubrica-v1.md",
+      "reflow": false,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "rubricaCell",
+        "criterionId": "c6-spec-fecha-decisoes",
+        "column": "perCheck"
+      },
+      "sha256": "075c732a309f22e3fbf6a252f434b34d4eac34b40036f1df8a928e6ff5f79c69"
+    },
+    {
+      "role": "perCheck:c7-recibo-honesto",
+      "file": "rubrica-v1.md",
+      "reflow": false,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "rubricaCell",
+        "criterionId": "c7-recibo-honesto",
+        "column": "perCheck"
+      },
+      "sha256": "8cdd1c8ddd84c199824f8b3dfd147c9e43087fe2019a446a996290e92c82b075"
+    }
+  ],
+  "sourceInterface": {
+    "learnerVisibleFiles": [
+      "enunciado.md",
+      "exemplo-trabalhado.md",
+      "insumos/PEDIDO.md",
+      "insumos/inventario-repo.txt",
+      "insumos/verifica_contexto_spec.py",
+      "rubrica-v1.md"
+    ],
+    "provenanceOnlyFiles": [
+      "MANIFEST.md",
+      "guia-de-correcao/solucao.md",
+      "guia-de-correcao/teste_verificador.py",
+      "guia-de-correcao/solucao/CONTEXTO.md",
+      "guia-de-correcao/solucao/PRD.md",
+      "guia-de-correcao/solucao/SPEC.md",
+      "guia-de-correcao/contraexemplos/01-contexto-ruidoso/CONTEXTO.md",
+      "guia-de-correcao/contraexemplos/01-contexto-ruidoso/PRD.md",
+      "guia-de-correcao/contraexemplos/01-contexto-ruidoso/SPEC.md",
+      "guia-de-correcao/contraexemplos/02-prd-sem-limite/CONTEXTO.md",
+      "guia-de-correcao/contraexemplos/02-prd-sem-limite/PRD.md",
+      "guia-de-correcao/contraexemplos/02-prd-sem-limite/SPEC.md",
+      "guia-de-correcao/contraexemplos/03-aceite-vago/CONTEXTO.md",
+      "guia-de-correcao/contraexemplos/03-aceite-vago/PRD.md",
+      "guia-de-correcao/contraexemplos/03-aceite-vago/SPEC.md",
+      "guia-de-correcao/contraexemplos/04-spec-aberta/CONTEXTO.md",
+      "guia-de-correcao/contraexemplos/04-spec-aberta/PRD.md",
+      "guia-de-correcao/contraexemplos/04-spec-aberta/SPEC.md"
+    ]
+  }
+}
