@@ -36,7 +36,8 @@ from learner.gate.evidence_io import (
     bound_evidence_violations,
     canonical_evidence_digest,
 )
-from learner.gate.security import GateSecurityError
+from learner.gate.evidence_validator import validate_teaching_evidence_structure
+from learner.gate.security import GateSecurityError, secure_attempt_path
 from learner.gate.standards import (
     VerifierVerdict,
     challenge_gate_blockers,
@@ -317,12 +318,12 @@ def _is_sha256_hex(value: Any) -> bool:
 
 
 def _attempt_file_digest(rel_path: Path, root: Path) -> str | None:
-    """sha256 of a root-contained file's bytes; None when unreadable/empty."""
+    """sha256 of a canonical attempt's bytes; None when invalid/empty."""
     if rel_path.is_absolute():
         return None
     try:
-        resolved = resolve_contained(rel_path, root)
-        if not resolved.is_file() or resolved.stat().st_size == 0:
+        resolved, errors = secure_attempt_path(root, str(rel_path))
+        if errors or resolved is None or resolved.stat().st_size == 0:
             return None
         return hashlib.sha256(resolved.read_bytes()).hexdigest()
     except (StateCorruptionError, OSError):
@@ -474,6 +475,9 @@ def _chain_ownership_violations(
     if record is None:
         errors.append("cannot establish which producer record backs the gate")
         return errors
+    structure_errors = validate_teaching_evidence_structure(record)
+    if structure_errors:
+        return errors + structure_errors
     if record.get("project") != project_id:
         errors.append("evidence record belongs to another project")
     record_unit = record.get("unit_id")
@@ -523,6 +527,10 @@ def _chain_verdict(
     if verdict is None:
         return None
     if verdict.verdict == "PASS" and unit.get("mastered") is not True:
+        return None
+    if verdict.verdict == "PASS" and gate.get("gate_outcome") not in (
+        "pass", "pass_first_try", "pass_retried", "pass_exceeds"
+    ):
         return None
     return verdict
 
