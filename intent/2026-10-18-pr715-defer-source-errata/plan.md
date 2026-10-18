@@ -30,7 +30,7 @@ code was not evidence of source-contract compatibility.
 After restoration: both adapter checks and catalog probe exited 0 (4 guided
 practices, 43 missions, contentVersion `2026-10-17.1`); all three OS dev
 projection versions equal their frozen contracts. The two existing adapter
-suites passed 82/82. Restored sources are byte-identical to main 82936ac5;
+suites passed 56/56. Restored sources are byte-identical to main 82936ac5;
 W2 YAML/bindings and all adapter/contract/test files are unchanged by this fix.
 `git diff --check` passed. Manual simplification/review found no redundant
 implementation: the functional delta only restores accepted source bytes.
