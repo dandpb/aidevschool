@@ -231,3 +231,15 @@ The ecosystem is complete only when a future agent can:
 6. Verify with an adversarial gate.
 7. Update memory and roadmap.
 8. Repeat the cycle through explicit OpenClaw checklist runs without hidden state.
+
+## Guided-practice scheduling boundary
+
+`learner/substrate/practice.py` verifies the declared conclusion schema, catalog
+identity and rubric policy before a guided-practice FSRS review. Exact receipt
+replay is idempotent; historical receipt files remain bound to their unit and
+review identities. `engines/minimaxDojo/core/fsrs_bridge.py` reports the submitted
+receipt's own outcome and refreshes views only for the actual canonical state
+path. Negative cases are in the new `test_practice_boundary_regressions.py` and
+`test_practice_history_boundary.py` files under `learner/substrate/tests/`.
+Practice reviews do not grant mastery. Legacy snapshot compatibility and native
+acceptance gates remain separate unresolved requirements.

@@ -86,6 +86,7 @@ def record_practice_conclusion(
     from learner.substrate.practice import (
         commit_practice_conclusion,
         practice_unit_id,
+        practice_receipt_digest,
     )
     from learner.substrate.scheduling import derive_next_reviews
 
@@ -95,14 +96,7 @@ def record_practice_conclusion(
 
     load = _substrate()
     state = load(path)
-    catalog = load_practice_catalog(resolved_root)
-    practice_id = receipt.get("practice_id")
-    practice = catalog.get(practice_id)
-    if practice is None:
-        raise ValueError(
-            f"unknown practice {practice_id!r}; canonical catalog has"
-            f" {sorted(catalog)}"
-        )
+    practice_id, practice = _catalog_practice(receipt, resolved_root)
 
     card_before = practice_card_state(state, str(practice_id))
     new_state = commit_practice_conclusion(
@@ -119,34 +113,56 @@ def record_practice_conclusion(
     )
 
     if refresh:
-        _refresh_views()
+        _refresh_views(path)
 
-    unit = next(
-        (
-            entry
-            for entry in new_state.get("units_log") or []
-            if entry.get("unit_id") == practice_unit_id(str(practice_id))
-        ),
-        None,
-    )
-    review = next(
-        (
-            row
-            for row in reversed((unit or {}).get("reviews") or [])
-            if row.get("event") == "gate"
-        ),
-        None,
+    review = _conclusion_review(
+        new_state, practice_unit_id(str(practice_id)), practice_receipt_digest(receipt)
     )
     return {
         "practice_id": practice_id,
         "unit_id": practice_unit_id(str(practice_id)),
-        "outcome": review.get("gate_outcome") if review else None,
-        "rating": review.get("rating") if review else None,
+        "outcome": review.get("gate_outcome"),
+        "rating": review.get("rating"),
         "card_before": card_before,
         "card_after": card_after,
         "queue_after": queue_after,
         "state": new_state,
     }
+
+
+def _catalog_practice(
+    receipt: dict[str, Any], root: Path
+) -> tuple[str, dict[str, Any]]:
+    from learner.substrate.practice import PracticeReceiptError
+
+    if not isinstance(receipt, dict) or not isinstance(receipt.get("practice_id"), str):
+        raise PracticeReceiptError("receipt.practice_id must be a string")
+    practice_id = receipt["practice_id"]
+    catalog = load_practice_catalog(root)
+    practice = catalog.get(practice_id)
+    if practice is None:
+        raise PracticeReceiptError(f"unknown practice {practice_id!r}; canonical catalog has {sorted(catalog)}")
+    return practice_id, practice
+
+
+def _conclusion_review(
+    state: dict[str, Any], unit_id: str, digest: str
+) -> dict[str, Any]:
+    unit = next(
+        (
+            entry
+            for entry in state.get("units_log") or []
+            if entry.get("unit_id") == unit_id
+        ),
+        None,
+    )
+    return next(
+        (
+            row for row in reversed((unit or {}).get("reviews") or [])
+            if row.get("evidence_digest") == digest
+        ),
+        {},
+    )
 
 
 def dojo_queue(
@@ -164,9 +180,9 @@ def dojo_queue(
     return derive_next_reviews(state.get("units_log") or [], [], today or date.today())
 
 
-def _refresh_views() -> None:
+def _refresh_views(path: str | Path) -> None:
     """Regenerate derived views for the repo-canonical state (no-op elsewhere)."""
     from learner.substrate import is_repo_canonical_path, sync
 
-    if is_repo_canonical_path("learner/learning_state.yaml"):
+    if is_repo_canonical_path(path):
         sync()
