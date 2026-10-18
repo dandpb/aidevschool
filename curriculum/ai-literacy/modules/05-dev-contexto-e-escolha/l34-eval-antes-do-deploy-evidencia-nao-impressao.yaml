@@ -1,0 +1,153 @@
+# Lição l34 — Onda W2 dev l33–l35 (brief autoral AID-5011; produção via PR do FPE
+# com emenda T0 da regra 7 do content-contract). Fecha a lacuna U13 (D5 evals)
+# da SEQUENCIA.md (AID-3510 §3): avaliação sistemática de qualidade de saída de
+# IA em produto — não só teste unitário.
+# Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l34
+version: 1
+moduleId: mod-05
+title: "Eval antes do deploy: evidência, não impressão"
+objective: "Dado um recurso de produto que usa saída de IA, montar o eval mínimo antes de promovê-lo — casos representativos com entrada exata e resultado esperado verificável, execução registrada e taxa por critério — e decidir promover, iterar ou cortar com essa evidência, não com a impressão de 'parece bom'."
+estimatedMinutes: 4
+skillIds: [avaliar, integrar]
+prerequisites: [l17]
+competency:
+  primary: D5
+  supporting: [D4]
+
+activities:
+  - id: l34-a1
+    type: sort
+    skillId: avaliar
+    instruction: "A feature de IA está integrada (l17) e a pergunta é: pode subir? Ordene o ciclo de eval mínimo."
+    data:
+      items:
+        - id: casos-representativos
+          text: "Escolher os casos representativos do uso real: entradas típicas, bordas que importam e casos que já deram problema"
+        - id: esperado-verificavel
+          text: "Escrever, para cada caso, o resultado esperado de forma verificável — o que exatamente conta como certo"
+        - id: rodar-contra-atual
+          text: "Rodar os casos contra a versão atual e registrar as saídas reais, caso por caso"
+        - id: taxa-por-criterio
+          text: "Computar a taxa por critério: quantos casos passam em cada critério, com as falhas agrupadas"
+        - id: decidir-com-evidencia
+          text: "Decidir com a evidência: promover, iterar nos critérios reprovados ou cortar — e nomear a próxima ação"
+    evaluation:
+      strategy: deterministic
+      expectedOrder: [casos-representativos, esperado-verificavel, rodar-contra-atual, taxa-por-criterio, decidir-com-evidencia]
+    feedback:
+      onFailure: "O eval começa escolhendo o que é representativo — não rodando 'uns prompts'. Sem esperado verificável por caso não há certo nem errado; sem taxa por critério não há onde atacar; e a decisão final é sobre os números, não sobre o humor do dia. A ordem é: casos, esperados, rodar, taxas, decidir."
+      perCheck:
+        casos-representativos: "Primeiro os casos: uso típico, borda que importa, caso que já doeu. É a amostra que dá ao eval poder de previsão."
+        esperado-verificavel: "Antes de rodar, o esperado por caso — escrito antes de ver a saída. Esperado escrito depois é racionalização."
+        rodar-contra-atual: "Só então rodar contra a versão atual e registrar as saídas reais: eval sem saída registrada é memória, não evidência."
+        taxa-por-criterio: "Depois as taxas por critério: 'formatação 10/10, cita a fonte 6/10' diz onde atacar — '80% bom' não diz nada."
+        decidir-com-evidencia: "Por fim a decisão: promover, iterar ou cortar, citando os números. Sem isso, o eval foi teatro."
+      onSuccess: "Isso: casos → esperados → execução → taxa por critério → decisão. O eval é o que transforma 'parece bom' em 'passa em 9/10 casos, falha em borda X — iterar nela'."
+    storage:
+      policy: structured_only
+    hints:
+      - "O que precisa existir ANTES de qualquer execução para que 'certo' signifique algo?"
+      - "Registrar saídas vem antes de computar taxas — e as taxas alimentam a decisão."
+      - "A última etapa não é 'rodar': é decidir. O que a decisão cita como justificativa?"
+
+  - id: l34-a2
+    type: output_comparison
+    skillId: avaliar
+    instruction: "Dois relatórios do mesmo eval de 10 casos. Qual deles apoia uma decisão de deploy — e por quê?"
+    data:
+      scenario: "A feature 'resumo automático de chamados' rodou 10 casos. Duas pessoas resumiram o resultado. Só um destes relatórios serve para decidir se a feature sobe."
+      outputs:
+        - id: relatorio-taxas
+          text: "10 casos, 3 com falha. Por critério: fidelidade ao original 10/10 · formato exigido 9/10 (1 caso quebrou o limite de 3 linhas) · sem invenção de números 7/10 (3 casos somaram valores que não estavam no chamado). Falhas de invenção agrupadas: todas em chamados com tabela. Recomendação: não promover ainda; próxima ação: testar variação de prompt que exige citar a linha da tabela, re-rodar os 10."
+        - id: relatorio-impressao
+          text: "Rodei uns 10 resumos e a maioria pareceu boa, bem escrita, no formato. Tem umas exceções mas no geral ficou ótimo, dá pra subir tranquilo que depois a gente vai ajustando."
+      criteria:
+        - id: taxa-por-criterio
+          text: "Apresenta a taxa de acerto por critério, não uma média genérica"
+        - id: falhas-agrupadas
+          text: "Agrupa as falhas por padrão (quando/onde elas acontecem)"
+        - id: proxima-acao-nomeada
+          text: "Nomeia a próxima ação concreta a partir das falhas encontradas"
+    evaluation:
+      strategy: deterministic
+      betterOutputId: relatorio-taxas
+      requiredCriterionIds: [taxa-por-criterio, falhas-agrupadas, proxima-acao-nomeada]
+    feedback:
+      onFailure: "'A maioria pareceu boa' não é evidência: é impressão com adversativo. O relatório que serve para decisão mostra taxa por critério (onde dói), agrupa as falhas (quando dói) e nomeia a próxima ação (o que fazer). O outro relatório só embala o deploy de um problema conhecido."
+      perCheck:
+        taxa-por-criterio: "Este critério separa os relatórios: taxas por critério ('sem invenção 7/10') dizem onde atacar; 'maioria boa' não diz nada."
+        falhas-agrupadas: "Falhas agrupadas revelam padrão — 'as invenções acontecem todas em chamados com tabela' vale mais que a contagem crua."
+        proxima-acao-nomeada: "Eval termina com próxima ação nomeada e re-execução — 'depois a gente ajusta' não tem dono, nem gatilho, nem critério de pronto."
+      onSuccess: "Viu a diferença: taxas por critério, padrão nas falhas e ação seguinte — o relatório que transforma eval em decisão."
+    storage:
+      policy: structured_only
+    hints:
+      - "Qual dos dois relatórios você conseguiria reproduzir? Qual deles outra pessoa conferiria?"
+      - "Procure: números por critério, padrão nas falhas, ação com nome."
+      - "'Dá pra subir tranquilo' — baseado em quê, exatamente?"
+
+  - id: l34-a3
+    type: choice
+    skillId: avaliar
+    instruction: "O que faz de um caso de eval um caso ÚTIL para decidir promotion? Marque todos os que valem."
+    data:
+      prompt: "O time está montando o conjunto de casos do eval da feature de resumo. Cada membro sugeriu uma característica. Quais delas fazem o caso servir para decidir?"
+      multiSelect: true
+      options:
+        - id: entrada-real-tipica
+          text: "Entrada real e representativa do uso típico ou de uma borda que importa"
+        - id: esperado-antes-da-saida
+          text: "Resultado esperado escrito antes de rodar, de forma verificável"
+        - id: criterio-objetivo
+          text: "Critério objetivo por caso: o que exatamente conta como aprovado"
+        - id: casos-gerados-pelo-modelo
+          text: "Cases gerados pelo próprio modelo que será avaliado, quantos mais melhor"
+        - id: esperado-apos-ver
+          text: "Escrever o esperado depois de ver a saída, aproveitando o que veio bom"
+        - id: fluente-esta-ok
+          text: "Aceitar qualquer saída fluente e bem formatada como aprovada"
+    evaluation:
+      strategy: deterministic
+      correctOptionIds: [entrada-real-tipica, esperado-antes-da-saida, criterio-objetivo]
+    feedback:
+      onFailure: "Caso de eval decide promotion — então precisa de entrada representativa, esperado escrito antes e critério objetivo. Caso gerado pelo próprio modelo avaliado é prova autoral; esperado escrito depois é racionalização da saída; e 'fluente' não é critério — formato bonito com número inventado continua errado."
+      perCheck:
+        entrada-real-tipica: "Correto: o caso tem que representar o uso real (ou a borda que importa) — é isso que dá ao eval poder de previsão sobre o produção."
+        esperado-antes-da-saida: "Correto: esperado escrito antes de rodar. Depois de ver a saída, tudo parece 'quase isso' — viés de racionalização."
+        criterio-objetivo: "Correto: por caso, o que conta como aprovado. 'Bom' não é veredito; 'cita só números presentes no original' é."
+        casos-gerados-pelo-modelo: "Não: o modelo avaliado gerando os próprios casos é o aluno escrevendo a prova — a amostra herda os vícios do que ele já faz bem."
+        esperado-apos-ver: "Não: esperado pós-saída acompanha o que veio, não o que deveria vir — o caso perde a função de achar falha."
+        fluente-esta-ok: "Não: fluência não é critério de correção. Saída elegante com fato inventado é exatamente a falha que o eval existe para achar."
+      onSuccess: "Três marcadores de caso útil: entrada representativa, esperado antes, critério objetivo — e os três antipadrões sob controle: autoria do modelo, esperado retroativo e fluência como critério."
+    storage:
+      policy: structured_only
+    hints:
+      - "Quem deveria escrever a prova: o modelo que vai ser avaliado?"
+      - "Quando o esperado é escrito — antes ou depois da saída — e o que muda com isso?"
+      - "Se o critério é 'estar bom', duas pessoas dão o mesmo veredito?"
+
+rubric:
+  id: l34-rubric
+  criteria:
+    - id: r-casos-com-esperado
+      text: "Monta casos de eval com entrada representativa e resultado esperado verificável escrito antes da execução."
+      weight: 1
+    - id: r-resultados-por-criterio
+      text: "Lê e produz resultados de eval como taxa por critério com falhas agrupadas, não como impressão agregada."
+      weight: 1
+    - id: r-decisao-cita-evidencia
+      text: "Decide promote/iterate/cut citando as taxas e nomeando a próxima ação — sem terceirizar o julgamento para a fluência da saída."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: lesson_completed
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l34-a1, l34-a2, l34-a3]

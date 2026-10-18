@@ -36,7 +36,7 @@ class CompetencyFieldContractTest(TrackFixtureMixin):
     def test_live_corpus_old_producer_still_validates(self):
         errors, ready, _catalog = validate_track(TRACK_DIR)
         self.assertEqual(errors, [])
-        self.assertEqual(len(ready), 32)
+        self.assertEqual(len(ready), 35)
 
     def test_competency_is_optional_with_registered_default(self):
         import json
