@@ -30,7 +30,7 @@ describe('student desktop catalog', () => {
   })
 
   it('keeps the full operator catalog when requested', () => {
-    expect(visibleAppCatalog(true)).toHaveLength(11)
+    expect(visibleAppCatalog(true)).toHaveLength(12)
     expect(visibleEngineRegistry(true).map((engine) => engine.id)).toContain('miniTown')
     expect(visibleEngineRegistry(true).map((engine) => engine.id)).toContain('openclaw')
     expect(visibleDockAppIds(true)).toContain('engines')

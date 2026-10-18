@@ -9,8 +9,10 @@ import type { ProductAnalyticsEvent } from "../domain/analytics";
 import type { EvaluationResult } from "../domain/evaluation";
 import type { LiteracyEvidenceRecord } from "../domain/evidence";
 import type { AttemptFeedback } from "../domain/feedback";
+import type { JourneyId } from "../domain/journeyProgress";
 import type { LearnerProgress } from "../domain/progress";
 import type { LiteracyVerificationReceipt } from "../domain/verification";
+import type { CutoverSnapshotV1, KeyRead, LearnerStateV1, ResetIntentV1 } from "../domain/xpLedger";
 
 /**
  * Portas do bounded context (plano seção 8). O domínio e os casos de uso
@@ -21,7 +23,13 @@ import type { LiteracyVerificationReceipt } from "../domain/verification";
 
 export interface ContentRepository {
   getTrack(): Track;
-  listModules(): ModuleDefinition[];
+  /**
+   * Módulos de uma jornada na ordem do catálogo. Sem argumento devolve o
+   * percurso público default (`ia_pratica`) — conquistas, checkpoints e
+   * consumidores legados dependem desse default. `"dev"` serve apenas a
+   * navegação opt-in (AID-3584).
+   */
+  listModules(journey?: JourneyId): ModuleDefinition[];
   getLesson(lessonId: string): LessonDefinition | undefined;
   getSkillTitle(skillId: string): string;
   getContentVersion(): string;
@@ -44,6 +52,43 @@ export interface ProgressRepository {
   load(): Promise<LearnerProgress | null>;
   save(progress: LearnerProgress): Promise<void>;
   reset(): Promise<void>;
+  /**
+   * Read-modify-write atômico (AID-3740, S5-RACE): executa `mutate` contra o
+   * estado persistido dentro de UMA transação e devolve o estado commitado.
+   * O callback é síncrono e deve ser puro em relação ao estado passado —
+   * decisões de transição (ex.: firstCompletion de AID-3731) ficam corretas
+   * sob escritores concorrentes (multi-tab) porque leem o estado commitado,
+   * não um snapshot pré-carga. Opcional: repositórios sem atomicidade não
+   * implementam e os casos de uso degradam para o fluxo load→save.
+   */
+  update?(mutate: (current: LearnerProgress | null) => LearnerProgress): Promise<LearnerProgress>;
+}
+
+/**
+ * Porta do estado autoritativo completo (AID-3888: contrato `a0bf3e8a` +
+ * errata `25b51990` + correções `3b9e7f8a`/`46086ca0`/`e3ad989e`).
+ *
+ * Invariantes da porta:
+ * - Leituras por chave NUNCA colapsam ausência confirmada, valor presente
+ *   inválido e erro de leitura (`KeyRead`).
+ * - `persistSnapshot` é o gate de commit do corte: precisa confirmar ANTES
+ *   de qualquer escrita do estado novo (`activateState`).
+ * - Escritas são puts de registro único (atômicos por si); não existe método
+ *   que escreva ou apague o RAMO LEGADO — o legado é preservado.
+ * - `deleteState` só existe para o reset explícito (marker-first: o chamador
+ *   persiste `saveResetIntent` ANTES de apagar o estado).
+ */
+export interface LearnerStateStore {
+  readState(): Promise<KeyRead<LearnerStateV1>>;
+  saveState(state: LearnerStateV1): Promise<void>;
+  activateState(state: LearnerStateV1): Promise<void>;
+  deleteState(): Promise<void>;
+  readLegacyRaw(): Promise<KeyRead<unknown>>;
+  readSnapshot(): Promise<KeyRead<CutoverSnapshotV1>>;
+  persistSnapshot(snapshot: CutoverSnapshotV1): Promise<void>;
+  readResetIntent(): Promise<KeyRead<ResetIntentV1>>;
+  saveResetIntent(intent: ResetIntentV1): Promise<void>;
+  deleteResetIntent(): Promise<void>;
 }
 
 export type EvidenceSink = {

@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101d28">
+<title>AiDevSchool — Catálogo de práticas (preview local)</title>
+<style>
+/* Tokens copiados 1:1 de engines/sdlc-quest/src/style.css (contrato AID-3458 01-tokens-e-identidade.md, v1.3) */
+:root{--paper:#f5f3ec;--card:#fffef9;--ink:#172935;--muted:#4c6057;--line:#d9ded5;--deep:#101d28;--mint:#a7e6cd;--mint-dark:#195d4b;--gold:#e8c888;--coral:#b64c36;--radius:18px;--mono:'SFMono-Regular',Consolas,'Liberation Mono',monospace;--sans:'Avenir Next','Segoe UI',Arial,sans-serif}
+*{box-sizing:border-box}body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--paper);font-synthesis:none}
+button{font:inherit;cursor:pointer;color:inherit}button:disabled{cursor:default;opacity:.55}
+a{color:inherit}
+button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid #12624c;outline-offset:3px}
+::selection{background:var(--mint)}
+.skip{position:fixed;top:-60px;left:15px;z-index:100;background:#fff;padding:12px;border-radius:9px;transition:top .15s}
+.skip:focus{top:10px}
+.shell{max-width:1200px;margin:auto;padding:0 42px}
+.topbar{height:88px;display:flex;align-items:center;border-bottom:1px solid var(--line);gap:24px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;font-size:22px;font-weight:900;letter-spacing:-1px;white-space:nowrap}
+.brand small{font:9px var(--mono);letter-spacing:2.8px;display:block;margin-top:3px;color:#4b6053}
+.brand-mark{width:33px;height:33px;display:grid;grid-template-columns:1fr 1fr;gap:4px;transform:rotate(-8deg)}
+.brand-mark i{background:var(--ink);border-radius:3px}.brand-mark i:nth-child(2){background:#72b69b}.brand-mark i:nth-child(3){background:#d9a768}
+.top-note{margin-left:auto;font:11px var(--mono);letter-spacing:1.2px;color:#617166}
+.heading{padding:30px 0 22px}
+.eyebrow{font:11px var(--mono);font-weight:600;letter-spacing:1.25px;color:#617166}
+.heading h1{font-size:clamp(28px,3.2vw,44px);font-weight:650;line-height:1.14;letter-spacing:-1.8px;margin:11px 0 8px}
+.heading h1 em{font-family:Georgia,serif;font-weight:400;color:#527a69}
+.heading p{margin:0;color:var(--muted);font-size:14px;line-height:1.75;max-width:640px}
+.countbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;border:1px solid var(--line);background:#fbfaf4;border-radius:14px;padding:12px 16px;margin:0 0 14px}
+.countbar .count{font:11px var(--mono);letter-spacing:1.1px;color:#495f50}
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin-left:auto;font:11px var(--mono);color:#4c6057}
+.dot{display:inline-block;width:5px;height:5px;border-radius:50%;vertical-align:middle;margin-right:5px}
+.dot.mint{background:var(--mint);outline:1px solid #86bfa7}
+.dot.gold{background:var(--gold);outline:1px solid #cab995}
+.catalog{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px}
+.practice{border:1px solid var(--line);background:var(--card);border-radius:var(--radius);padding:20px;display:flex;flex-direction:column;gap:0}
+.practice-kicker{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.track{font:11px var(--mono);letter-spacing:1.2px;font-weight:600}
+.track.dev{color:var(--mint-dark)}
+.track.cotidiano{color:#8a6d3b}
+.practice-number{font:11px var(--mono);background:#e9ede3;padding:5px 8px;border-radius:4px;color:var(--muted)}
+.practice h2{font-size:22px;line-height:1.16;letter-spacing:-.5px;margin:14px 0 8px;font-weight:650}
+.practice .outcome{font-size:14px;line-height:1.75;color:#4b6055;margin:0 0 14px}
+.meta{margin:0 0 14px;border-top:1px solid var(--line);display:grid;gap:8px;padding-top:12px}
+.meta-row{display:grid;grid-template-columns:112px 1fr;gap:10px;align-items:start}
+.meta-row dt{font:11px var(--mono);letter-spacing:.8px;color:#495f50;padding-top:3px}
+.meta-row dd{margin:0;font-size:13px;line-height:1.65;color:#3d5347;overflow-wrap:anywhere}
+.steps{margin:0 0 14px;padding:0 0 0 20px;display:grid;gap:7px}
+.steps li{font-size:13px;line-height:1.65;color:#3d5347}
+.steps-label{font:11px var(--mono);letter-spacing:1.2px;color:#495f50;margin:0 0 8px}
+.availability{margin-top:auto;border-top:1px solid var(--line);padding-top:14px;display:flex;flex-direction:column;gap:10px}
+.status{display:flex;align-items:center;gap:8px;font:11px var(--mono);letter-spacing:.9px;color:#4c6057}
+.primary{background:var(--mint);border:1px solid #86bfa7;padding:13px 19px;border-radius:9px;color:#163b2d;font-weight:750;font-size:14px;min-height:46px;box-shadow:0 2px 0 #82b49e;transition:background .15s}
+.primary:hover{background:#baeeda}
+.availability-note{font-size:12px;line-height:1.65;color:#4c6057;margin:0}
+.footer{padding:18px 0 22px;border-top:1px solid var(--line);color:#495f50;font:10px var(--mono);line-height:1.7;margin-top:26px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+@media(max-width:900px){.catalog{grid-template-columns:1fr}.heading h1{font-size:30px;letter-spacing:-1.3px}}
+@media(max-width:630px){
+  /* Tratamento 630px copiado do padrão efetivo da fonte (style.css bloco base + overrides v1.1) */
+  .shell{padding:0 14px}
+  .topbar{height:68px;gap:7px}
+  .brand{font-size:19px;gap:7px}
+  .brand-mark{width:25px;height:25px;gap:3px}
+  .brand small{font-size:6px;letter-spacing:2px}
+  .heading{padding:22px 0 17px}
+  .heading h1{font-size:30px;letter-spacing:-1.3px;margin-top:9px}
+  .heading .eyebrow{font-size:9px;letter-spacing:.8px;line-height:1.7}
+  .heading p{font-size:13px;line-height:1.6}
+  .top-note{font-size:9px;letter-spacing:.6px}
+  .countbar{flex-direction:column;align-items:flex-start;gap:8px}
+  .legend{margin-left:0}
+  .practice{padding:16px}
+  .meta-row{grid-template-columns:96px 1fr}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#conteudo">Pular para o catálogo</a>
+<header class="topbar">
+  <div class="shell" style="display:flex;align-items:center;gap:24px;width:100%">
+    <p class="brand" style="margin:0">
+      <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      <span>AiDevSchool<small>ESCOLA DE IA NA PRÁTICA</small></span>
+    </p>
+    <p class="top-note" style="margin:0 0 0 auto">PREVIEW LOCAL · NÃO PUBLICADO</p>
+  </div>
+</header>
+<main id="conteudo" class="shell">
+  <div class="heading">
+    <p class="eyebrow">CATÁLOGO DE PRÁTICAS</p>
+    <h1>Escolha sua próxima <em>prática</em></h1>
+    <p>Cada card mostra o resultado que você pratica, a duração real, o que é preciso já ter visto, os primeiros passos e a disponibilidade verdadeira. Nesta versão de preview, todas as práticas estão em preparação: ainda não há download — e nenhum link falso aparece no lugar.</p>
+  </div>
+
+  <div class="countbar">
+    <p class="count" style="margin:0">4 PRÁTICAS LISTADAS · 0 DISPONÍVEIS AGORA · 4 EM PREPARAÇÃO</p>
+    <p class="legend" style="margin:0">
+      <span><i class="dot mint" aria-hidden="true"></i>Disponível agora (download real)</span>
+      <span><i class="dot gold" aria-hidden="true"></i>Em preparação (ainda sem download)</span>
+    </p>
+  </div>
+
+  <div class="catalog">
+
+    <article class="practice" aria-labelledby="pratica-u09">
+      <div class="practice-kicker">
+        <span class="track dev">TRILHA IA PARA DEV · PRÁTICA GUIADA</span>
+        <span class="practice-number">U09</span>
+      </div>
+      <h2 id="pratica-u09">Pacote de contexto + PRD e SPEC de uma tarefa pequena</h2>
+      <p class="outcome">Você transforma um pedido (fictício, mas realista) — o e-mail sobre o planejador <strong>rodadia</strong> — em três documentos que deixam a tarefa inequívoca: um CONTEXTO com o menor conjunto de arquivos e regras (cada linha com justificativa), um PRD com uma tarefa de até 30 minutos e o fora de escopo nomeado, e um SPEC que fecha as decisões de borda antes do build.</p>
+      <dl class="meta">
+        <div class="meta-row"><dt>Duração</dt><dd>25–40 min (uma sessão)</dd></div>
+        <div class="meta-row"><dt>Requisitos</dt><dd>Unidade U03 — “pedido de 5 campos” (pg-d02) ou equivalente</dd></div>
+        <div class="meta-row"><dt>Formato</dt><dd>Prática guiada offline: exemplo → tentativa → feedback → tente novamente → takeaway. Sem rede, sem conta, sem chave.</dd></div>
+      </dl>
+      <p class="steps-label">PRIMEIROS PASSOS</p>
+      <ol class="steps">
+        <li>Ler o exemplo trabalhado (~8 min): o CONTEXTO/PRD/SPEC real do workflow-exemplo, com saídas executadas.</li>
+        <li>Dissecar o pedido do e-mail: contar as entregas embutidas (são cinco) e as decisões que ficaram implícitas.</li>
+        <li>Escrever CONTEXTO (tabelas incluído/excluído, cada linha com o porquê), PRD e SPEC — nessa ordem.</li>
+      </ol>
+      <div class="availability">
+        <p class="status" style="margin:0"><i class="dot gold" aria-hidden="true"></i>EM PREPARAÇÃO</p>
+        <button type="button" class="primary" disabled>Ainda não disponível — em preparação</button>
+        <p class="availability-note">Quando o pacote desta prática for aceito, este botão ganha o download real. Neste preview, ele não faz nada — de propósito.</p>
+      </div>
+    </article>
+
+    <article class="practice" aria-labelledby="pratica-u10">
+      <div class="practice-kicker">
+        <span class="track dev">TRILHA IA PARA DEV · PRÁTICA GUIADA</span>
+        <span class="practice-number">U10</span>
+      </div>
+      <h2 id="pratica-u10">Delegação controlada — você é o controlador</h2>
+      <p class="outcome">Você executa o ciclo de delegação controlada de um agente produtor: rejeita a primeira rodada com evidência mecânica (diff fora do escopo do plano), decompõe a alegação dele re-executando tudo, escreve veredito citando as cláusulas violadas e só aceita a segunda rodada com escopo, suíte e aceite congelados conferidos. Regra da casa: produtor ≠ verificador — a verificação começa do contrato e dos artefatos, nunca da narrativa de quem produziu.</p>
+      <dl class="meta">
+        <div class="meta-row"><dt>Duração</dt><dd>25–40 min (uma sessão)</dd></div>
+        <div class="meta-row"><dt>Requisitos</dt><dd>Unidade U07 — refatoração com rede de segurança (pg-d03) ou equivalente. Não exige U09.</dd></div>
+        <div class="meta-row"><dt>Formato</dt><dd>Prática guiada offline: exemplo → tentativa → feedback → tente novamente → takeaway. Sem rede, sem conta, sem chave.</dd></div>
+      </dl>
+      <p class="steps-label">PRIMEIROS PASSOS</p>
+      <ol class="steps">
+        <li>Ler o exemplo (~8 min): proposta com suíte 5/5 verde que ainda devolvia bug — revisão com prova executável.</li>
+        <li>Contrato primeiro, diff depois: ler o plano aprovado e o CONTRATO antes de abrir o diff do produtor.</li>
+        <li>Re-executar tudo, escrever o veredito com as cláusulas e o retrabalho; aceitar a r2 só com as provas.</li>
+      </ol>
+      <div class="availability">
+        <p class="status" style="margin:0"><i class="dot gold" aria-hidden="true"></i>EM PREPARAÇÃO</p>
+        <button type="button" class="primary" disabled>Ainda não disponível — em preparação</button>
+        <p class="availability-note">Quando o pacote desta prática for aceito, este botão ganha o download real. Neste preview, ele não faz nada — de propósito.</p>
+      </div>
+    </article>
+
+    <article class="practice" aria-labelledby="pratica-u13">
+      <div class="practice-kicker">
+        <span class="track dev">TRILHA IA PARA DEV · PRÁTICA GUIADA</span>
+        <span class="practice-number">U13</span>
+      </div>
+      <h2 id="pratica-u13">Evals offline de saídas de modelo</h2>
+      <p class="outcome">Diante da proposta de troca do prompt v1→v2 de um helpdesk, você congela os critérios ANTES de ver as saídas, roda o scoring determinístico A vs B por fatia, diagnostica a melhora agregada que esconde uma fatia que piorou, propõe a correção do prompt e testa em casos NOVOS (held-out). No fim, você diz com números e fonte: o que mudou, qual fatia regrediu, o que o held-out confirma — e o que ainda não está provado.</p>
+      <dl class="meta">
+        <div class="meta-row"><dt>Duração</dt><dd>25–40 min (uma sessão)</dd></div>
+        <div class="meta-row"><dt>Requisitos</dt><dd>Unidade U05 — critérios objetivos: aceitar/recusar com motivo. A pg-d01 ajuda, mas não é obrigatória.</dd></div>
+        <div class="meta-row"><dt>Formato</dt><dd>Prática guiada offline, em etapas (offline → sintético → held-out). Dados 100% sintéticos. Sem rede, sem API, sem credencial.</dd></div>
+      </dl>
+      <p class="steps-label">PRIMEIROS PASSOS</p>
+      <ol class="steps">
+        <li>Ler o exemplo TrilhaFit (~8 min): critérios primeiro, saídas depois.</li>
+        <li>Congelar seus critérios de aceite/recusa antes de ver qualquer saída.</li>
+        <li>Rodar o scorer A vs B, diagnosticar a fatia que piorou e testar a correção nos casos novos.</li>
+      </ol>
+      <div class="availability">
+        <p class="status" style="margin:0"><i class="dot gold" aria-hidden="true"></i>EM PREPARAÇÃO</p>
+        <button type="button" class="primary" disabled>Ainda não disponível — em preparação</button>
+        <p class="availability-note">Quando o pacote desta prática for aceito, este botão ganha o download real. Neste preview, ele não faz nada — de propósito.</p>
+      </div>
+    </article>
+
+    <article class="practice" aria-labelledby="pratica-cotidiano">
+      <div class="practice-kicker">
+        <span class="track cotidiano">TRILHA IA NO COTIDIANO · FOLHA DE EXERCÍCIO</span>
+        <span class="practice-number">PÓS-L32</span>
+      </div>
+      <h2 id="pratica-cotidiano">Corrija a rotina sem começar do zero</h2>
+      <p class="outcome">Uma rotina de IA começou a errar por fora: o sistema mudou os status, e o resumo continuou lendo como antes. Você escreve o reparo mínimo reutilizável: conferir na fonte, por categoria (fonte → soma por categoria → total), manter o que é fixo no pedido e trocar só o que é variável — e testar com os números novos da semana 2. É uma folha de exercício, não um jogo publicado.</p>
+      <dl class="meta">
+        <div class="meta-row"><dt>Duração</dt><dd>~20 min</dd></div>
+        <div class="meta-row"><dt>Requisitos</dt><dd>Lições l30 e l32 da trilha IA Prática (“Quando a automação erra”), progressão natural l30 → l32 → autorar o reparo.</dd></div>
+        <div class="meta-row"><dt>Formato</dt><dd>Folha de exercício para imprimir ou usar no papel/digital, com exemplo resolvido separado do seu caso. Dados inventados, só para treinar: nada é salvo, enviado ou automatizado.</dd></div>
+      </dl>
+      <p class="steps-label">PRIMEIROS PASSOS</p>
+      <ol class="steps">
+        <li>Acompanhar o exemplo resolvido da Mariana (atendimento), com o cálculo trabalhado.</li>
+        <li>No seu caso (pedidos de uma loja): conferir na fonte e escrever o reparo do pedido.</li>
+        <li>Testar com os números novos da semana 2 e autoconferir com nova tentativa.</li>
+      </ol>
+      <div class="availability">
+        <p class="status" style="margin:0"><i class="dot gold" aria-hidden="true"></i>EM PREPARAÇÃO</p>
+        <button type="button" class="primary" disabled>Ainda não disponível — em preparação</button>
+        <p class="availability-note">Quando a folha imprimível for aceita, este botão ganha o download real. Neste preview, ele não faz nada — de propósito.</p>
+      </div>
+    </article>
+
+  </div>
+</main>
+<footer class="footer">
+  <div class="shell">PREVIEW LOCAL DO AIDEVSCHOOL — ARQUIVO ÚNICO, OFFLINE; NADA É SALVO, ENVIADO OU INSTALADO. DADOS CITADOS NAS PRÁTICAS SÃO SINTÉTICOS/FICTÍCIOS. PROCEDÊNCIA, PINS E FRONTEIRAS: README.md QUE ACOMPANHA ESTE DIRETÓRIO. EQUIVALENTE TEXTUAL: catalogo-texto.md.</div>
+</footer>
+</body>
+</html>

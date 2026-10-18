@@ -5,7 +5,8 @@ import { createServices } from "../../src/app/services";
 import type { AnalyticsSink } from "../../src/application/ports";
 import type { ProductAnalyticsEvent } from "../../src/domain/analytics";
 import { MAP_INITIAL_LESSON_ID, createInitialProgress } from "../../src/domain/progress";
-import { InMemoryEvidenceSink, InMemoryProgressRepository, fixedClock } from "../fakes";
+import { emptyXpLedger } from "../../src/domain/xpLedger";
+import { InMemoryEvidenceSink, InMemoryLearnerStateStore, fixedClock } from "../fakes";
 
 // F2 prova 2 (plan §3 / spec R1): `entry_viewed` na PRIMEIRA rota renderizada,
 // qualquer destino de resumeSession — home, retomada pós-reload de lição em
@@ -23,17 +24,23 @@ class InMemoryAnalyticsSink implements AnalyticsSink {
 
 function bootServices() {
   const analytics = new InMemoryAnalyticsSink();
-  const progressRepo = new InMemoryProgressRepository();
+  const stateStore = new InMemoryLearnerStateStore();
   const services = createServices({
-    progressRepo,
+    stateStore,
     evidence: new InMemoryEvidenceSink(),
     clock: fixedClock(FIXED_NOW),
     analytics,
   });
-  progressRepo.seed(
-    createInitialProgress(services.content.listModules(), services.content.getContentVersion()),
-  );
-  return { analytics, progressRepo, services };
+  stateStore.seedState({
+    stateVersion: 1,
+    origin: "fresh-seed",
+    progress: createInitialProgress(
+      services.content.listModules(),
+      services.content.getContentVersion(),
+    ),
+    xpLedger: emptyXpLedger(),
+  });
+  return { analytics, stateStore, services };
 }
 
 async function entryEvents(analytics: InMemoryAnalyticsSink) {
@@ -51,7 +58,7 @@ async function entryEvents(analytics: InMemoryAnalyticsSink) {
 
 describe("entry_viewed na 1ª rota renderizada (F2 R1)", () => {
   it("sessão retomada pós-reload (resumeSession→lesson) emite entry_viewed com entry:'lesson-resume' exatamente 1×", async () => {
-    const { analytics, progressRepo, services } = bootServices();
+    const { analytics, stateStore, services } = bootServices();
     await services.useCases.completeOnboarding({
       goal: "save_time",
       context: "work",
@@ -66,7 +73,7 @@ describe("entry_viewed na 1ª rota renderizada (F2 R1)", () => {
     render(
       <App
         services={createServices({
-          progressRepo,
+          stateStore,
           evidence: new InMemoryEvidenceSink(),
           clock: fixedClock(FIXED_NOW),
           analytics,

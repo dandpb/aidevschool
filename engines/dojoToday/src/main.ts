@@ -118,7 +118,7 @@ function missionCard(a: TodaySnapshot["activeUnit"]): string {
         ${playDetails(a.gameDir)}
         ${
           a.num
-            ? `<div class="play-inline-row"><button id="play-inline-btn" type="button" class="link-btn" data-game="${escapeHtml(a.num)}" aria-expanded="false" aria-controls="play-inline-wrap">▶ Jogar aqui (inline)</button></div>
+            ? `<div class="play-inline-row"><button id="play-inline-btn" type="button" class="link-btn" data-game="${escapeHtml(a.num)}" aria-expanded="false" aria-controls="play-inline-wrap" aria-label="Jogar aqui (inline)"><span aria-hidden="true">▶</span> Jogar aqui (inline)</button></div>
                <div id="play-inline-wrap" class="play-inline-wrap" hidden><iframe id="play-inline-frame" class="play-inline-frame" title="Jogo da missão"></iframe></div>`
             : ""
         }
@@ -133,7 +133,7 @@ function missionCard(a: TodaySnapshot["activeUnit"]): string {
             />
             <button id="soc-send" type="button" class="btn btn-primary socrates-send" data-testid="submit-attempt">Perguntar</button>
           </div>
-          <button id="soc-config-btn" type="button" class="link-btn" aria-expanded="false" aria-controls="soc-config">⚙️ Configurar assistente (opcional)</button>
+          <button id="soc-config-btn" type="button" class="link-btn" aria-expanded="false" aria-controls="soc-config" aria-label="Configurar assistente (opcional)"><span aria-hidden="true">⚙️</span> Configurar assistente (opcional)</button>
           <div id="soc-config" class="socrates-config" hidden>
             <p class="muted socrates-privacy">
               Experimental. Sua chave fica só neste navegador e vai apenas para o endpoint
@@ -314,6 +314,13 @@ function wireInteractions(a: TodaySnapshot["activeUnit"]): void {
   configBtn.addEventListener("click", () => {
     configPanel.hidden = !configPanel.hidden;
     configBtn.setAttribute("aria-expanded", String(!configPanel.hidden));
+    if (!configPanel.hidden) {
+      configBtn.innerHTML = `<span aria-hidden="true">⚙️</span> Ocultar configuração do assistente`;
+      configBtn.setAttribute("aria-label", "Ocultar configuração do assistente");
+    } else {
+      configBtn.innerHTML = `<span aria-hidden="true">⚙️</span> Configurar assistente (opcional)`;
+      configBtn.setAttribute("aria-label", "Configurar assistente (opcional)");
+    }
     fill();
   });
   saveBtn?.addEventListener("click", () => {
@@ -324,6 +331,8 @@ function wireInteractions(a: TodaySnapshot["activeUnit"]): void {
     });
     configPanel.hidden = true;
     configBtn.setAttribute("aria-expanded", "false");
+    configBtn.innerHTML = `<span aria-hidden="true">⚙️</span> Configurar assistente (opcional)`;
+    configBtn.setAttribute("aria-label", "Configurar assistente (opcional)");
     setReply(
       isConfigured(loadConfig())
         ? "Assistente configurado. Pergunte acima."
@@ -343,16 +352,21 @@ function wireInteractions(a: TodaySnapshot["activeUnit"]): void {
   if (playBtn && playWrap && playFrame) {
     playBtn.addEventListener("click", () => {
       if (playWrap.hidden) {
-        if (!playFrame.getAttribute("src")) {
+        // AID-3530: fechar define src="about:blank" (truthy); sem tratar esse
+        // sentinela como "sem jogo", a guarda antiga nunca recarregava na reabertura.
+        const currentSrc = playFrame.getAttribute("src");
+        if (!currentSrc || currentSrc === "about:blank") {
           playFrame.setAttribute("src", `/games/${playBtn.dataset.game}/index.html`);
         }
         playWrap.hidden = false;
-        playBtn.textContent = "▽ Recolher jogo";
+        playBtn.innerHTML = '<span aria-hidden="true">▽</span> Recolher jogo';
+        playBtn.setAttribute("aria-label", "Recolher jogo");
         playBtn.setAttribute("aria-expanded", "true");
       } else {
         playWrap.hidden = true;
         playFrame.setAttribute("src", "about:blank");
-        playBtn.textContent = "▶ Jogar aqui (inline)";
+        playBtn.innerHTML = '<span aria-hidden="true">▶</span> Jogar aqui (inline)';
+        playBtn.setAttribute("aria-label", "Jogar aqui (inline)");
         playBtn.setAttribute("aria-expanded", "false");
       }
     });
@@ -366,10 +380,14 @@ function wireInteractions(a: TodaySnapshot["activeUnit"]): void {
     // W2 §2.3-6 (AID-1089): ação assíncrona — controle desabilita + aria-busy;
     // a região role=status (#soc-reply, aria-live polite) anuncia o andamento.
     send.setAttribute("aria-busy", "true");
+    const originalText = send.innerHTML;
+    send.innerHTML = `<span aria-hidden="true">⏳</span> Pensando…`;
     try {
       if (!isConfigured(cfg)) {
         configPanel.hidden = false;
         configBtn.setAttribute("aria-expanded", "true");
+        configBtn.innerHTML = `<span aria-hidden="true">⚙️</span> Ocultar configuração do assistente`;
+        configBtn.setAttribute("aria-label", "Ocultar configuração do assistente");
         fill();
         setReply(deterministicNudge(mission));
         return;
@@ -383,6 +401,7 @@ function wireInteractions(a: TodaySnapshot["activeUnit"]): void {
     } finally {
       send.disabled = false;
       send.removeAttribute("aria-busy");
+      send.innerHTML = originalText;
     }
   };
   send.addEventListener("click", () => void ask());

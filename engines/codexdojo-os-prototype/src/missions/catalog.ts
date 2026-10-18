@@ -29,6 +29,9 @@ export class GeneratedMissionCatalogRepository implements MissionCatalogReposito
   }
 
   runtimeUrl(mission: MissionDefinition): string {
+    if (mission.runtime.engineId === 'codexdojo-os') {
+      throw new Error(`mission ${mission.id} is OS-native (appId ${mission.runtime.appId}) and has no runtime URL`)
+    }
     const base = configuredUrl(mission.runtime.environmentKey) ?? mission.runtime.entrypoint
     const url = new URL(base, window.location.href)
     url.searchParams.set('hosted', '1')

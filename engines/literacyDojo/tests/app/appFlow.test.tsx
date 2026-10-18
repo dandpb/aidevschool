@@ -7,7 +7,7 @@ import { lessons, modules } from "../../src/data/generated/lessons";
 import { isValidEvidenceRecord } from "../../src/domain/evidence";
 import { MAP_INITIAL_LESSON_ID, createInitialProgress } from "../../src/domain/progress";
 import { readyLessonEntries } from "../../src/domain/track";
-import { InMemoryProgressRepository, createTestServices } from "../fakes";
+import { InMemoryLearnerStateStore, createTestServices } from "../fakes";
 import { FIXED_NOW, makeServices } from "../helpers";
 
 // O percurso público do app standalone é só ia_pratica; as lições dev
@@ -159,7 +159,10 @@ describe("fluxo do app (integração)", () => {
     expect(screen.getByTestId("village-request")).toHaveTextContent(firstLesson.objective);
     expect(screen.getByTestId("task-context")).toHaveTextContent("organizar um agendamento");
     expect(screen.queryByTestId("confidence-support")).not.toBeInTheDocument();
-    expect((await services.progressRepo.load())?.onboarding).toEqual({
+    const bootRead = await services.stateStore.readState();
+    expect(
+      bootRead.status === "present-valid" ? bootRead.value.progress.onboarding : undefined,
+    ).toEqual({
       completed: true,
       goal: "save_time",
       context: "work",
@@ -329,8 +332,8 @@ describe("fluxo do app (integração)", () => {
 
   it("só exibe a lição depois de persistir o estado necessário para retomada", async () => {
     const user = userEvent.setup();
-    const progressRepo = new InMemoryProgressRepository();
-    progressRepo.seed(seededProgress());
+    const stateStore = new InMemoryLearnerStateStore();
+    stateStore.seedProgress(seededProgress());
     let releaseSave = () => {};
     let signalSaveStarted = () => {};
     const saveGate = new Promise<void>((resolve) => {
@@ -339,15 +342,15 @@ describe("fluxo do app (integração)", () => {
     const saveStarted = new Promise<void>((resolve) => {
       signalSaveStarted = resolve;
     });
-    const save = progressRepo.save.bind(progressRepo);
-    vi.spyOn(progressRepo, "save").mockImplementation(async (next) => {
-      if (next.lessonStatus[firstLesson.id] === "in_progress") {
+    const save = stateStore.saveState.bind(stateStore);
+    vi.spyOn(stateStore, "saveState").mockImplementation(async (next) => {
+      if (next.progress.lessonStatus[firstLesson.id] === "in_progress") {
         signalSaveStarted();
         await saveGate;
       }
       await save(next);
     });
-    render(<App services={createTestServices({ progressRepo })} />);
+    render(<App services={createTestServices({ stateStore })} />);
 
     await screen.findByTestId("home-screen");
     await user.click(screen.getByTestId("continue-button"));

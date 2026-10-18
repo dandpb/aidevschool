@@ -61,4 +61,15 @@ export const coreContexts: Readonly<Record<CoreAppId, LearningContext>> = {
     ],
     challenge: 'Abra um motor e identifique qual ação real comprova que ele está utilizável.',
   },
+  practice: {
+    eyebrow: 'Prática guiada',
+    title: 'Reproduza antes de perguntar',
+    summary:
+      'A prática guiada consume o pacote canônico do currículo e conduz o ciclo exemplo, tentativa, rúbrica, retry e takeaway com evidência local.',
+    concepts: [
+      { name: 'Reprodução mínima', detail: 'O bug é reproduzido manualmente antes de qualquer pedido de correção.' },
+      { name: 'Rúbrica objetiva', detail: 'Cada critério tem uma pergunta de verificação executável; retry reabre só o que falhou.' },
+    ],
+    challenge: 'Execute a prática pg-d01 e explique por que a suíte verde não provava ausência de bug.',
+  },
 }

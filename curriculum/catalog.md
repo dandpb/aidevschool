@@ -4,7 +4,7 @@
 > MUST reference this file. Other documents that list projects (e.g. `docs/PROMPTS/IDEIAS/`,
 > `engines/codexDojo/ecosystem/ROADMAP.md`) are derived and must stay aligned with this catalog.
 >
-> **Status:** Canonical · **Total projects:** 19 (00–18) · **Implemented:** 2 (Project 01, Project 02 — both Node.js-only certifications; the status and caveats below are authoritative)
+> **Status:** Canonical · **Total projects:** 20 (00–19; 00 e 19 são famílias de aplicação de IA, 01–18 são projetos de programação) · **Implemented:** 2 certified (Project 01, Project 02 — both Node.js-only certifications) + 3 partially implemented Node-verified (Projects 05, 12, 18; the status and caveats below are authoritative)
 >
 > `BACKLOG_STATUS.md` is a generated projection of this catalog. Edit status here, then run
 > `python3 -m learner.substrate`; never edit the generated backlog directly.
@@ -18,6 +18,12 @@ AI-in-practice entry track (no-code gate, ADR-0004), and Levels 1–6 go from fu
 complex distributed systems. Each Level 1–6 project is implemented **polyglot**
 (Go, Rust, Node.js/TypeScript) to teach comparative engineering through real benchmarks,
 code reviews, and evolution reports.
+
+Level 0 also hosts, as a **parallel application family** (dual-audience AD-004/AD-005),
+the guided Dev journey `19_sequencia_dev-guiada` — guided practices `pg-*` anchored on the
+`dev`-track lessons (`l15–l29`) with local code fixtures. It is numbered after 00–18 to keep
+the parser's contiguous numbering, and documented in its own Level 0 section below; it is
+not a systems project and does not follow the polyglot lifecycle.
 
 Every project follows the same lifecycle:
 ```
@@ -82,7 +88,7 @@ gate de código. Superfície de exploração associada: `engines/miniTown/`.
 | **Directory** | `02_key_value_store/` |
 | **Go coverage** | N/A — `go-impl/` was removed in `1b0a309` (ungated backfill cleanup); no Go implementation exists for this project. |
 | **Rust tests** | N/A — `rust-impl/` was removed in the same commit; no Rust implementation exists for this project. |
-| **Node coverage** | 91.45% stmts / 82.01% branch / 100% funcs / 91.45% lines — 10/10 tests passing (re-verified this cycle after 3 Major bug fixes + regression tests; `tsc`/`eslint` clean) |
+| **Node coverage** | 89.4% stmts / 92.26% branch / 100% funcs / 89.4% lines (v8 All files; `store.ts` 95.91/90.26/100/95.91, `server.ts` 95.89/94.93/100/95.89, `log.ts`/`types.ts` 0%) — 33/33 tests passing across 3 files (`store`, `server`, `mutation`; re-verified 2026-09-13 @ `05fca349`, `tsc`/`eslint` clean) |
 | **Benchmark** | **Node.js only**, N=10 + tolerance re-check PASS, native harness (autocannon substitute for k6, mixed GET/SET/DELETE/EXPIRE/TTL-read workload). Go/Rust not executed — out of scope this cycle by explicit repo-owner decision, not a toolchain failure. Not a 3-language comparison. |
 | **Evolution** | **Node.js only** — 3 Major code-review bugs fixed (expire() key-validation bypass, UTF-16-vs-UTF-8 value-size check, insecure `0.0.0.0` default bind) with regression tests; 1 measured perf optimization applied (rate-limited `/health` expiry sweep) — honest result: a wash on the benchmarked workload (all deltas within measurement noise), reported as-is, not spun as an improvement; 1 optimization rejected (dropping the sweep entirely) with documented reasoning. See `docs/evolution_report.md`. |
 | **Dependencies** | Project 01 (concurrency basics) |
@@ -124,12 +130,15 @@ gate de código. Superfície de exploração associada: `engines/miniTown/`.
 | Field | Value |
 |-------|-------|
 | **Slug** | `05_websocket_chat` |
-| **Status** | scaffolded |
-
+| **Status** | Partially implemented (Node.js: verified green; Go/Rust: removed in `1b0a309` quality cuts) |
+| **Evidence** | Node.js implementation verified 2026-09-13 @ `05fca349` (`npm install`/`lint`/`build`/`test` exit 0; 10/10 tests passing across 2 files: `chatHub`, `config`) with `docs/{spec,code_review,evolution_report,benchmark_results,status}.md` present on disk. Caveat: Node.js-only (`go-impl/` and `rust-impl/` were removed in `1b0a309` and do not exist on disk). |
 | **Concepts** | WebSocket protocol, connection management, fan-out broadcasting, rooms, presence, heartbeats |
 | **Key question** | How does each runtime handle 10k+ concurrent persistent connections? |
 | **Learning goal** | Gerir conexões persistentes e broadcast em escala. |
 | **Directory** | `05_websocket_chat/` |
+| **Go coverage** | N/A — `go-impl/` was removed in `1b0a309`; no Go implementation exists on disk. |
+| **Rust tests** | N/A — `rust-impl/` was removed in `1b0a309`; no Rust implementation exists on disk. |
+| **Node coverage** | 10/10 tests passing across 2 files (`tests/chatHub.test.ts`, `tests/config.test.ts`; verified 2026-09-13 @ `05fca349`, `lint`/`build` exit 0) |
 | **Dependencies** | Projects 01-03 |
 
 ### 06. File Upload/Processing Pipeline
@@ -227,12 +236,15 @@ gate de código. Superfície de exploração associada: `engines/miniTown/`.
 | Field | Value |
 |-------|-------|
 | **Slug** | `12_distributed_job_scheduler` |
-| **Status** | scaffolded |
-
+| **Status** | Partially implemented (Node.js: verified green; Go/Rust: removed in `1b0a309` quality cuts) |
+| **Evidence** | Node.js implementation verified 2026-09-13 @ `05fca349` (`npm install`/`lint`/`build`/`test` exit 0; 7/7 tests passing in 1 file; v8 All files coverage 91.2% stmts / 83.33% branch / 96.42% funcs / 91.2% lines) with `docs/{spec,code_review,evolution_report,benchmark_results,status}.md` present on disk. Caveat: Node.js-only (`go-impl/` and `rust-impl/` were removed in `1b0a309` and do not exist on disk). |
 | **Concepts** | Leader election (Raft simplified), distributed locks, cron-like scheduling, fault tolerance, DAG dependencies, exponential backoff retry |
 | **Key question** | How do leader election implementations compare in split-brain scenarios? |
 | **Learning goal** | Coordenar jobs distribuídos sem split-brain. |
 | **Directory** | `12_distributed_job_scheduler/` |
+| **Go coverage** | N/A — `go-impl/` was removed in `1b0a309`; no Go implementation exists on disk. |
+| **Rust tests** | N/A — `rust-impl/` was removed in `1b0a309`; no Rust implementation exists on disk. |
+| **Node coverage** | 91.2% stmts / 83.33% branch / 96.42% funcs / 91.2% lines (v8 All files) — 7/7 tests passing in 1 file (verified 2026-09-13 @ `05fca349`, `lint`/`build` exit 0) |
 | **Dependencies** | Projects 07-09 |
 
 ---
@@ -317,13 +329,42 @@ gate de código. Superfície de exploração associada: `engines/miniTown/`.
 | Field | Value |
 |-------|-------|
 | **Slug** | `18_search_engine` |
-| **Status** | scaffolded |
-
+| **Status** | Partially implemented (Node.js: verified green; Go/Rust: removed in `1b0a309` quality cuts) |
+| **Evidence** | Node.js implementation verified 2026-09-13 @ `05fca349` (`npm install`/`lint`/`build`/`test` exit 0, `lint` = `tsc --noEmit`; 10/10 tests passing in 1 file: `tests/search.test.ts`) with `docs/{spec,code_review,evolution_report,benchmark_results,status}.md` present on disk. Caveat: Node.js-only (`go-impl/` and `rust-impl/` were removed in `1b0a309` and do not exist on disk). |
 | **Concepts** | Inverted indexes, tokenization, TF-IDF/BM25 ranking, query parsing, fuzzy search, autocomplete, incremental indexing, index persistence |
 | **Key question** | How do inverted index build times and query latencies compare for different corpus sizes? |
 | **Learning goal** | Construir busca com tokenização, ranking e autocomplete. |
 | **Directory** | `18_search_engine/` |
+| **Go coverage** | N/A — `go-impl/` was removed in `1b0a309`; no Go implementation exists on disk. |
+| **Rust tests** | N/A — `rust-impl/` was removed in `1b0a309`; no Rust implementation exists on disk. |
+| **Node coverage** | 10/10 tests passing in 1 file (`tests/search.test.ts`; verified 2026-09-13 @ `05fca349`, `lint` = `tsc --noEmit` / `build` exit 0) |
 | **Dependencies** | Projects 13-15 |
+
+---
+
+## Level 0 — Sequência Dev Guiada (família paralela de aplicação de IA)
+
+**Focus:** aplicar IA no fluxo de desenvolvimento com verificação honesta (debug, teste,
+revisão, spec) — contraparte técnica da aplicação de IA na visão dual-audience
+(AD-004/AD-005), com a mesma fase `aplicacao_ia` do projeto 00. Unidades `pg-*` são práticas
+guiadas que consomem as lições `l15–l29` da trilha `dev` (catálogo ai-literacy) com fixture
+local de código (Python puro, sem rede) e rubrica objetiva; **não** usam o gate no-code
+(AD-006 permanece escopo do projeto 00). Posicionada após os níveis 1–6 e numerada 19
+(contiguidade 00–19 do parser) porque é paralela aos níveis, não um degrau deles; não segue
+o ciclo polyglot dos projetos 01–18.
+
+### 19. Sequência Dev Guiada (práticas guiadas pg-*)
+
+| Field | Value |
+|-------|-------|
+| **Slug** | `19_sequencia_dev_guiada` |
+| **Status** | planned |
+| **Concepts** | Ciclo de debug com assistente (reproduza antes de perguntar), teste/regressão pelo motivo certo, revisão e decisão de aceite, spec planejada, dependências e agentes com controle — competências D1–D7 da jornada IA para Dev |
+| **Key question** | Um dev consegue conduzir o ciclo guia → tentativa → feedback por rubrica → retry → takeaway com IA e provar o resultado com evidência local determinística? |
+| **Learning goal** | Executar as práticas guiadas `pg-*` (25–40 min cada) da jornada IA para Dev, ancoradas nas lições `l15–l29`, com fixture local sem rede e rubrica objetiva. |
+| **Directory** | `sequencia-dev-guiada/` |
+| **Dependencies** | Lições `l15–l29` da trilha `dev` (curriculum/ai-literacy); projeto 00 é paralelo (dual-audience), não pré-requisito |
+| **Evidence** | Sequência r1 versionada em `curriculum/sequencia-dev-guiada/SEQUENCIA.md` (ordem U01–U12 por objetivo/pré-requisito, classificação pronto/adaptação/lacuna) + primeira unidade `pg-d01-debug-reproduza/` (enunciado com lição-âncora l27, exemplo trabalhado citado, insumos/fixture Python puro com 5 testes, rubrica v1 com critérios c-*, guia de correção separado) — PR #620 @ `e01d9d42`, revisão Content Designer da AID-3510 approved 2026-09-30. Ids canônicos p/ bindings (AID-3535): projectId `19_sequencia_dev_guiada`; unitId por unidade no padrão `sequencia-dev-guiada:pg-dNN` (ex.: pg-d01 gera `sequencia-dev-guiada:pg-d01`), espelhando o padrão `ai-literacy:lNN`. Status planned: família com sequência r1 e 1/12 unidades autoradas; promove a scaffolded quando o pipeline de unidades rodar. |
 
 ---
 
@@ -385,4 +426,4 @@ states otherwise.
 
 ---
 
-*This catalog is the canonical source of truth. Last updated: 2026-06-17.*
+*This catalog is the canonical source of truth. Last updated: 2026-09-30.*

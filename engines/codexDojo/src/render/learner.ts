@@ -157,16 +157,13 @@ function renderStreak(snapshot: LearnerSnapshot): string {
     <div class="learner-streak">
       <p class="eyebrow">Sequência</p>
       <div class="streak-row">
-        <strong class="streak-current" role="text" aria-label="${escapeHtml(streakAria)}">
+        <strong class="streak-current">
+          <span class="sr-only">${escapeHtml(streakAria)}</span>
           <span aria-hidden="true">🔥 ${escapeHtml(s.current)}</span>
         </strong>
         <small class="streak-longest">recorde ${escapeHtml(s.longest)}</small>
-        <span
-          class="streak-freezes"
-          title="Streak freezes (cap 2)"
-          role="text"
-          aria-label="${escapeHtml(freezesAria)}"
-        >
+        <span class="streak-freezes" title="Streak freezes (cap 2)">
+          <span class="sr-only">${escapeHtml(freezesAria)}</span>
           <span aria-hidden="true">freezes: ${filled}${empty}</span>
         </span>
       </div>

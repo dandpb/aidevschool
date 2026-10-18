@@ -1,5 +1,9 @@
 import { vi } from 'vitest'
-import type { MissionDefinition } from '../domain'
+import type { HostedMissionRuntime, MissionDefinition } from '../domain'
+
+// Hosted-engine missions only (AID-3527 added OS-native missions without
+// entrypoint); the iframe harness fixtures below are all hosted.
+export type HostedMissionDefinition = MissionDefinition & { runtime: HostedMissionRuntime }
 import type { RendererPreference } from '../rendering/domain'
 import type { EvidenceSubmission } from '../verification/ports'
 import {
@@ -7,7 +11,7 @@ import {
   type MissionSessionControllerInput,
 } from './MissionSessionController'
 
-export const mission: MissionDefinition = {
+export const mission: HostedMissionDefinition = {
   id: 'l02',
   version: 3,
   trackId: 'ai-pratica',
@@ -30,7 +34,7 @@ export const mission: MissionDefinition = {
   fallback: { kind: 'dom', summary: 'Resumo.' },
 }
 
-export const voxelMission: MissionDefinition = {
+export const voxelMission: HostedMissionDefinition = {
   id: 'game-02-warehouse',
   version: 1,
   trackId: 'dev',
@@ -61,7 +65,7 @@ type ControllerOptions = {
 }
 
 export function setupController(
-  selectedMission: MissionDefinition = mission,
+  selectedMission: HostedMissionDefinition = mission,
   options: ControllerOptions = {},
 ) {
   const frame = document.createElement('iframe')

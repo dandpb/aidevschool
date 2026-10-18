@@ -8,6 +8,7 @@ import {
   isCheckpointCompleted,
   isLessonGateLocked,
 } from "./checkpoints";
+import type { JourneyId } from "./journeyProgress";
 import type { DailyGoalStatus, LearnerProgress, LessonStatus, SkillPractice } from "./progress";
 import { dailyGoalStatus, reviewsDue, upcomingReviews } from "./progress";
 import { readyLessonEntries, trackSummary } from "./track";
@@ -51,13 +52,17 @@ export type TrackQueries = {
 /**
  * Modelo de leitura consolidado para as telas da trilha.
  * Centraliza as derivações que antes estavam espelhadas em Home, Progresso e Mapa.
+ *
+ * `journey` (AID-3584) escopa a NAVEGAÇÃO à jornada ativa; sem o argumento o
+ * comportamento é o publicado (percurso default ia_pratica).
  */
 export function buildTrackQueries(
   progress: LearnerProgress,
   content: ContentRepository,
   clock: Clock,
+  journey?: JourneyId,
 ): TrackQueries {
-  const modules = content.listModules();
+  const modules = journey === undefined ? content.listModules() : content.listModules(journey);
   const ready = readyLessonEntries(modules);
   const now = clock();
 

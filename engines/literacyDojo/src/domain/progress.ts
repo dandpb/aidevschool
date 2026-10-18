@@ -1,6 +1,21 @@
 import type { LessonDefinition, ModuleDefinition } from "../data/generated/lessons";
 import { isLessonGateLocked } from "./checkpoints";
 import { nextReadyLessonId, readyLessonEntries } from "./track";
+import {
+  type XpLedgerV1,
+  activityLedgerKey,
+  awardEvaluationToLedger,
+  emptyXpLedger,
+  isEligibleForEvaluationAward,
+  isFirstCompletionAwarded,
+  lessonLedgerKey,
+  localDateKey,
+  markFirstCompletionAwarded,
+} from "./xpLedger";
+
+// Data local canônica (AID-3888): fonte única passa a ser xpLedger.ts;
+// re-export mantém os importadores históricos (streak/meta diária/testes).
+export { localDateKey } from "./xpLedger";
 
 export const PROGRESS_SCHEMA_VERSION = 4;
 export const MAP_INITIAL_LESSON_ID = "l02";
@@ -36,6 +51,26 @@ export type OnboardingConfidence = "low" | "medium" | "high";
 export type OnboardingTaskCategory = "scheduling" | "communication" | "news_research";
 export type LearningRoute = "guided" | "intermediate";
 export type AudienceChoice = "ia_pratica" | "trilha_dev";
+
+/**
+ * Jornadas navegáveis do app standalone (espelha `ModuleDefinition["journey"]`
+ * do read model). `ia_pratica` é o percurso default; `dev` é opt-in explícito
+ * (AID-3584) e NUNCA é inferido de `onboarding.audience`.
+ */
+export type JourneyId = "ia_pratica" | "dev";
+
+/**
+ * Estado OPCIONAL de navegação por jornada (AID-3584), compatível com estados
+ * antigos: ausente = legado (jornada ativa `ia_pratica`, cursor único em
+ * `currentLessonId`). Campos inválidos são normalizados defensivamente pelos
+ * helpers de `domain/journeyProgress.ts` — nunca disparam o caminho
+ * load-error que reinicia o progresso, e o schemaVersion NÃO sobe.
+ */
+export type JourneyNavigation = {
+  active?: JourneyId;
+  /** Cursor ("continuar de onde parou") por jornada; ausente = deriva de `currentLessonId`. */
+  current?: { ia_pratica?: string; dev?: string };
+};
 
 export type MapInitialState = {
   attempts: number;
@@ -144,6 +179,8 @@ export type LearnerProgress = {
   achievements: Achievement[];
   dailyGoal: DailyGoal;
   applications: ApplicationReport[];
+  /** Opcional (AID-3584): navegação por jornada. Legado sem o campo segue com cursor único. */
+  journeys?: JourneyNavigation;
 };
 
 export const XP_PER_ACTIVITY_PASS = 10;
@@ -220,6 +257,16 @@ export function completeOnboarding(
     audience: AudienceChoice;
   },
 ): LearnerProgress {
+  // AID-3718 DELTA3 (stale-onboarding, receipt ddbd967d): re-completar o
+  // onboarding (ex.: aba atrasada na tela inicial) preserva a PRIMEIRA
+  // configuração válida e todo o progresso já commitado. O mapper inicial
+  // (l02 available / l01 locked / currentLessonId=l02) é destrutivo contra
+  // o estado commitado — reabre lição `completed`, re-tranca progressão e
+  // rebobina a lição corrente (não é TOCTOU de snapshot). Primeira
+  // conclusão válida vence: a segunda chamada é idempotente.
+  if (progress.onboarding.completed) {
+    return progress;
+  }
   return {
     ...progress,
     onboarding: {
@@ -281,13 +328,6 @@ function nextLessonIdFor(
   }
   if (completedLessonId === "l01" && progress.onboarding.route === "guided") return "l03";
   return nextReadyLessonId(modules, completedLessonId);
-}
-
-export function localDateKey(date: Date): string {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
 }
 
 /** Sequência por data local: mesma data não repete; dia seguinte incrementa; lacuna recomeça em 1 (sem punição além disso). */
@@ -525,17 +565,72 @@ export function recordMapInitialRetry(progress: LearnerProgress): LearnerProgres
  * Registra uma tentativa de atividade: contador, metadados do Mapa Inicial,
  * prática de skills, sequência e XP. Não emite evidência/analytics — isso
  * continua nos casos de uso (produtor ≠ verificador; side effects isolados).
+ *
+ * XP idempotente (AID-3888, contrato `a0bf3e8a`): 10 XP somente na primeira
+ * avaliação bem-sucedida por (lessonId, activityId, dia local) — elegibilidade
+ * exige data local ESTRITAMENTE posterior à última premiada; falha não
+ * consome elegibilidade; prática/evidência não tocam o ledger.
  */
 export function recordActivityAttempt(
   progress: LearnerProgress,
+  ledger: XpLedgerV1,
   input: {
     lessonId: string;
+    activityId: string;
     evaluation: { pass: boolean; score: number };
     skillIds: string[];
     intervalsDays: number[];
     now: Date;
   },
-): LearnerProgress {
+): { progress: LearnerProgress; ledger: XpLedgerV1 };
+export function recordActivityAttempt(
+  progress: LearnerProgress,
+  input: {
+    lessonId: string;
+    activityId?: string;
+    evaluation: { pass: boolean; score: number };
+    skillIds: string[];
+    intervalsDays: number[];
+    now: Date;
+  },
+): LearnerProgress;
+export function recordActivityAttempt(
+  progress: LearnerProgress,
+  ledgerOrInput:
+    | XpLedgerV1
+    | {
+        lessonId: string;
+        activityId?: string;
+        evaluation: { pass: boolean; score: number };
+        skillIds: string[];
+        intervalsDays: number[];
+        now: Date;
+      },
+  maybeInput?: {
+    lessonId: string;
+    activityId: string;
+    evaluation: { pass: boolean; score: number };
+    skillIds: string[];
+    intervalsDays: number[];
+    now: Date;
+  },
+): { progress: LearnerProgress; ledger: XpLedgerV1 } | LearnerProgress {
+  const isLegacyCall = maybeInput === undefined;
+  const ledger: XpLedgerV1 = isLegacyCall ? emptyXpLedger() : (ledgerOrInput as XpLedgerV1);
+  const input = isLegacyCall
+    ? {
+        ...(ledgerOrInput as {
+          lessonId: string;
+          activityId?: string;
+          evaluation: { pass: boolean; score: number };
+          skillIds: string[];
+          intervalsDays: number[];
+          now: Date;
+        }),
+        activityId: (ledgerOrInput as { activityId?: string }).activityId ?? "__legacy_activity__",
+      }
+    : maybeInput;
+
   let next: LearnerProgress = {
     ...progress,
     counters: { attempts: progress.counters.attempts + 1 },
@@ -552,8 +647,16 @@ export function recordActivityAttempt(
     input.intervalsDays,
   );
   next = applyStreak(next, input.now);
-  if (input.evaluation.pass) next = awardXp(next, XP_PER_ACTIVITY_PASS, input.now);
-  return next;
+  let nextLedger = ledger;
+  if (input.evaluation.pass) {
+    const key = activityLedgerKey(input.lessonId, input.activityId);
+    const today = localDateKey(input.now);
+    if (isEligibleForEvaluationAward(ledger, key, today)) {
+      next = awardXp(next, XP_PER_ACTIVITY_PASS, input.now);
+      nextLedger = awardEvaluationToLedger(ledger, key, today);
+    }
+  }
+  return isLegacyCall ? next : { progress: next, ledger: nextLedger };
 }
 
 /**
@@ -586,27 +689,85 @@ export function scheduleReviewForLesson(
 
 export type CompleteLessonResult = {
   progress: LearnerProgress;
+  ledger: XpLedgerV1;
   outcome: LessonOutcome;
   nextLessonId?: string;
   newlyUnlocked?: Achievement[];
+  /**
+   * True apenas quando esta conclusão é a PRIMEIRA da lição — a transição de
+   * status para `completed` (AID-3731). Replay de lição concluída continua
+   * permitido (prática), mas não é 1ª conclusão: sem +25 XP e sem novo
+   * `lesson_completed`.
+   */
+  firstCompletion: boolean;
 };
 
 /**
  * Conclusão de lição: avalia, marca completo, aplica rota do onboarding no
  * Mapa Inicial, concede XP, agenda revisão, desbloqueia próxima lição,
  * muta currentLessonId e desbloqueia conquistas.
+ *
+ * XP idempotente (AID-3888 / AID-3731): 25 XP somente na PRIMEIRA conclusão —
+ * marcador permanente no ledger; review/replay não re-paga (contrato `a0bf3e8a` §1).
+ *
+ * AID-3584 (separação navegação × conquistas): `modules` orienta a CADEIA DE
+ * DESBLOQUEIO da jornada da lição concluída; `achievementModules` (default =
+ * `modules`, comportamento anterior preservado) é o escopo das conquistas —
+ * o chamador do app standalone passa o percurso público (`ia_pratica`) para
+ * que `track_complete`/`first_module` NÃO sejam redefinidos pela inclusão das
+ * 9 lições Dev na navegação.
  */
+export function completeLesson(
+  progress: LearnerProgress,
+  ledger: XpLedgerV1,
+  lesson: LessonDefinition,
+  bestScores: Record<string, number>,
+  modules: ModuleDefinition[],
+  now: Date,
+  achievementModules?: ModuleDefinition[],
+): CompleteLessonResult;
 export function completeLesson(
   progress: LearnerProgress,
   lesson: LessonDefinition,
   bestScores: Record<string, number>,
   modules: ModuleDefinition[],
   now: Date,
+  achievementModules?: ModuleDefinition[],
+): CompleteLessonResult;
+export function completeLesson(
+  progress: LearnerProgress,
+  ledgerOrLesson: XpLedgerV1 | LessonDefinition,
+  lessonOrScores: LessonDefinition | Record<string, number>,
+  scoresOrModules: Record<string, number> | ModuleDefinition[],
+  modulesOrNow: ModuleDefinition[] | Date,
+  nowOrAchModules?: Date | ModuleDefinition[],
+  maybeAchModules?: ModuleDefinition[],
 ): CompleteLessonResult {
+  const hasLedger = !(ledgerOrLesson && "completion" in ledgerOrLesson);
+  const ledger: XpLedgerV1 = hasLedger ? (ledgerOrLesson as XpLedgerV1) : emptyXpLedger();
+  const lesson: LessonDefinition = hasLedger
+    ? (lessonOrScores as LessonDefinition)
+    : (ledgerOrLesson as LessonDefinition);
+  const bestScores: Record<string, number> = hasLedger
+    ? (scoresOrModules as Record<string, number>)
+    : (lessonOrScores as Record<string, number>);
+  const modules: ModuleDefinition[] = hasLedger
+    ? (modulesOrNow as ModuleDefinition[])
+    : (scoresOrModules as ModuleDefinition[]);
+  const now: Date = hasLedger ? (nowOrAchModules as Date) : (modulesOrNow as Date);
+  const achievementModules: ModuleDefinition[] = hasLedger
+    ? (maybeAchModules ?? modules)
+    : ((nowOrAchModules as ModuleDefinition[] | undefined) ?? modules);
+
   const outcome = evaluateLessonCompletion(lesson, bestScores);
   if (!outcome.completed) {
-    return { progress, outcome };
+    return { progress, ledger, outcome, firstCompletion: false };
   }
+
+  const lessonKey = lessonLedgerKey(lesson.id);
+  const firstCompletion =
+    progress.lessonStatus[lesson.id] !== "completed" &&
+    !isFirstCompletionAwarded(ledger, lessonKey);
 
   let next: LearnerProgress = {
     ...progress,
@@ -618,17 +779,23 @@ export function completeLesson(
       onboarding: { ...next.onboarding, route: mapInitialRoute(next.onboarding.mapInitial) },
     };
   }
-  next = awardXp(next, XP_PER_LESSON_COMPLETE, now);
+  let nextLedger = ledger;
+  if (firstCompletion) {
+    next = awardXp(next, XP_PER_LESSON_COMPLETE, now);
+    nextLedger = markFirstCompletionAwarded(ledger, lessonKey, localDateKey(now));
+  }
   next = scheduleReviewForLesson(next, lesson, now, 0);
   const unlocked = unlockNextReadyLesson(next, modules, lesson.id);
   next = unlocked.progress;
   next = { ...next, currentLessonId: unlocked.unlockedLessonId ?? lesson.id };
-  const withAchievements = applyAchievements(next, modules, now);
+  const withAchievements = applyAchievements(next, achievementModules, now);
   next = withAchievements.progress;
 
   return {
     progress: next,
+    ledger: nextLedger,
     outcome,
+    firstCompletion,
     nextLessonId: unlocked.unlockedLessonId,
     newlyUnlocked: withAchievements.newlyUnlocked,
   };

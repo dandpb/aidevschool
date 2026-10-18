@@ -833,6 +833,37 @@ bindings:
     fallback:
       kind: dom
       summary: "Verifique manutencao, licenca, seguranca e alternativa nativa antes de adicionar a dependencia sugerida, por controles rotulados."
+  # Fatia de app AID-3527 (SEQUENCIA.md §6/P1; contrato substrate AID-3534
+  # @ e376d04f + catálogo AID-3535 @ a4ba6202): pg-d01 é a 17ª missão dev —
+  # prática guiada OS-nativa (engineId codexdojo-os/appId practice) consumindo
+  # o pacote canônico curriculum/sequencia-dev-guiada/pg-d01-debug-reproduza/.
+  # Prereq l27 (lição-âncora, exigida pelo validador guided-practice) + l21
+  # (pré-req declarado no enunciado). contentVersion pinado = projeção do OS
+  # (scripts/gen-guided-practice.mjs) — paridade AID-3534. SEM bump de
+  # contentVersion das tracks (gates de igualdade só ligam ao catálogo
+  # literacy; dev 1–16 intactos).
+  - missionId: pg-d01
+    version: 1
+    chapterOrder: 17
+    prerequisites: [l21, l27]
+    trackId: dev
+    curriculum:
+      kind: guided-practice
+      projectId: 19_sequencia_dev_guiada
+      unitId: sequencia-dev-guiada:pg-d01
+      practiceId: pg-d01
+    runtime:
+      engineId: codexdojo-os
+      appId: practice
+      protocolVersion: "1.0"
+      contentVersion: pg-d01@55882460a2bf
+    evidence:
+      schema: guided-practice-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Execute o ciclo guiado de debug (reproduza, vermelho, fix minimo, suite, diff) registrando comando e saida reais por passo, com retry por criterio da rubrica."
   # Onda W1 (spec AID-1219 §3, doc onda-w1-conteudo; ORDEM CEO AID-1234):
   # l30 abre o mod-08 "Rotina com IA II" como 21ª missão ai-pratica.
   # Primeiro (e único) bloco de bindings da onda: carrega o bump único de

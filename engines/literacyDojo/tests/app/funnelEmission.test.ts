@@ -4,7 +4,8 @@ import type { AnalyticsSink } from "../../src/application/ports";
 import type { ProductAnalyticsEvent } from "../../src/domain/analytics";
 import { isValidAnalyticsEvent } from "../../src/domain/analytics";
 import { MAP_INITIAL_LESSON_ID, createInitialProgress } from "../../src/domain/progress";
-import { InMemoryEvidenceSink, InMemoryProgressRepository, fixedClock } from "../fakes";
+import { emptyXpLedger } from "../../src/domain/xpLedger";
+import { InMemoryEvidenceSink, InMemoryLearnerStateStore, fixedClock } from "../fakes";
 
 // Funil anônimo da ativação O1 (AID-913, emenda ADR-0009): startLesson emite
 // lesson_started; submitActivityAttempt emite activity_attempted (passa ou
@@ -23,16 +24,22 @@ class InMemoryAnalyticsSink implements AnalyticsSink {
 
 function makeServices() {
   const analytics = new InMemoryAnalyticsSink();
-  const progressRepo = new InMemoryProgressRepository();
+  const stateStore = new InMemoryLearnerStateStore();
   const services = createServices({
-    progressRepo,
+    stateStore,
     evidence: new InMemoryEvidenceSink(),
     clock: fixedClock(FIXED_NOW),
     analytics,
   });
-  progressRepo.seed(
-    createInitialProgress(services.content.listModules(), services.content.getContentVersion()),
-  );
+  stateStore.seedState({
+    stateVersion: 1,
+    origin: "fresh-seed",
+    progress: createInitialProgress(
+      services.content.listModules(),
+      services.content.getContentVersion(),
+    ),
+    xpLedger: emptyXpLedger(),
+  });
   return { analytics, services };
 }
 

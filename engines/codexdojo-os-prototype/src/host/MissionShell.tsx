@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { emitAnalyticsSafely } from '../analytics/events'
 import { useServices } from '../app/ServicesProvider'
-import type { LearnerSnapshot, MissionDefinition } from '../domain'
+import type { HostedMissionRuntime, LearnerSnapshot, MissionDefinition } from '../domain'
 import type { MissionSessionController, MissionSessionSnapshot } from './MissionSessionController'
 import type { EvidenceVerificationState } from '../verification/ports'
 import { ResultScreen, type MissionCompletionSummary } from '../journey/ResultScreen'
 import { MentorPanel } from '../mentor/MentorPanel'
+import { GuidedPracticeApp } from '../practice/GuidedPracticeApp'
 import { MissionStatusControls } from './MissionStatusControls'
 import {
   createInitialRendererState,
@@ -56,8 +57,21 @@ export function MissionShell({
   const [completionStatus, setCompletionStatus] = useState<CompletionStatus>('idle')
   const [completionSummary, setCompletionSummary] = useState<MissionCompletionSummary | undefined>()
   const [loadedFrameUrl, setLoadedFrameUrl] = useState<string | null>(null)
-  const frameUrl = useMemo(() => services.missions.runtimeUrl(mission), [mission, services])
-  const trackLabel = mission.trackId === 'dev' ? 'Simulação hospedada' : 'IA Prática'
+  const isNativeMission = mission.runtime.engineId === 'codexdojo-os'
+  // HostedMissionRuntime.engineId is not a single literal, so the union does
+  // not discriminate; the explicit guard keeps the cast local and safe.
+  const hostedMission = useMemo<
+    MissionDefinition & { runtime: HostedMissionRuntime } | null
+  >(() => {
+    if (mission.runtime.engineId === 'codexdojo-os') return null
+    return mission as MissionDefinition & { runtime: HostedMissionRuntime }
+  }, [mission])
+  const frameUrl = useMemo(
+    () => (hostedMission === null ? null : services.missions.runtimeUrl(hostedMission)),
+    [hostedMission, services],
+  )
+  const trackLabel =
+    isNativeMission ? 'Prática guiada' : mission.trackId === 'dev' ? 'Simulação hospedada' : 'IA Prática'
   const rendererPreference = useMemo(requestedRenderer, [])
   const reducedMotion = useMemo(prefersReducedMotion, [])
 
@@ -139,6 +153,7 @@ export function MissionShell({
 
   useEffect(() => {
     const frame = frameRef.current
+    if (hostedMission === null || frameUrl === null) return
     if (loadedFrameUrl !== frameUrl || frame === null) return
     saveInFlightRef.current = false
     setCompletionStatus('idle')
@@ -148,7 +163,7 @@ export function MissionShell({
     const controller = services.host.createSession({
       frame,
       frameUrl,
-      mission,
+      mission: hostedMission,
       rendererPreference,
       reducedMotion,
       onState(snapshot) {
@@ -157,7 +172,7 @@ export function MissionShell({
         if (snapshot.phase === 'completed') saveCompletion()
       },
       async onEvidence(submission) {
-        const state = await services.verification.accept(mission, submission, updateVerification)
+        const state = await services.verification.accept(hostedMission, submission, updateVerification)
         return state.kind === 'rejected'
           ? { accepted: false, code: state.code }
           : { accepted: true }
@@ -169,7 +184,7 @@ export function MissionShell({
           context: {
             ...analyticsContext,
             missionRunId: input.missionRunId,
-            engineId: mission.runtime.engineId,
+            engineId: hostedMission.runtime.engineId,
             engineVersion: input.engineVersion,
             contentVersion: input.contentVersion,
           },
@@ -182,7 +197,30 @@ export function MissionShell({
       if (controllerRef.current === controller) controllerRef.current = null
       controller.close()
     }
-  }, [analyticsContext, frameUrl, loadedFrameUrl, mission, reducedMotion, rendererPreference, saveCompletion, services, updateVerification])
+  }, [analyticsContext, frameUrl, hostedMission, loadedFrameUrl, reducedMotion, rendererPreference, saveCompletion, services, updateVerification])
+
+  // AID-3527: OS-native guided-practice missions have no engine frame — the
+  // practice app itself is the activity. The session runs locally and
+  // completes when the learner concludes the guided cycle (deterministic
+  // receipt); verification still flows through the shared intake.
+  useEffect(() => {
+    if (mission.runtime.engineId !== 'codexdojo-os') return
+    saveInFlightRef.current = false
+    setCompletionStatus('idle')
+    setCompletionSummary(undefined)
+    setSession({
+      phase: 'running',
+      stage: 'apply',
+      progress: 0,
+      renderer: { ...createInitialRendererState(), status: 'ready' },
+    })
+    setVerification({ kind: 'not-submitted' })
+  }, [mission])
+
+  const concludeNativePractice = useCallback(() => {
+    setSession((current) => ({ ...current, phase: 'completed', stage: 'apply', progress: 100 }))
+    saveCompletion()
+  }, [saveCompletion])
 
   useEffect(() => {
     if (session.renderer.status !== 'degraded' || session.renderer.reason === undefined) return
@@ -231,13 +269,19 @@ export function MissionShell({
       />
       <section className="mission-learning-layout" hidden={session.phase === 'completed'}>
         <section className="mission-runtime" aria-label="Atividade da missão">
-          <iframe
-            ref={frameRef}
-            src={frameUrl}
-            title={`Missão ${mission.title}`}
-            sandbox="allow-forms allow-scripts allow-same-origin"
-            onLoad={() => setLoadedFrameUrl(frameUrl)}
-          />
+          {isNativeMission ? (
+            <div className="mission-native-runtime">
+              <GuidedPracticeApp onConcluded={concludeNativePractice} />
+            </div>
+          ) : (
+            <iframe
+              ref={frameRef}
+              src={frameUrl ?? undefined}
+              title={`Missão ${mission.title}`}
+              sandbox="allow-forms allow-scripts allow-same-origin"
+              onLoad={() => setLoadedFrameUrl(frameUrl)}
+            />
+          )}
         </section>
         <MentorPanel mission={mission} stage={session.stage} learner={learner} />
       </section>

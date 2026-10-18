@@ -21,6 +21,12 @@ import { type ActivityAnswer, type EvaluationResult, evaluateActivity } from "..
 import { type LiteracyEvidenceRecord, buildEvidenceRecord } from "../domain/evidence";
 import type { AttemptFeedback } from "../domain/feedback";
 import {
+  type JourneyId,
+  type JourneyModules,
+  reconcileJourneyCursors,
+  selectJourney,
+} from "../domain/journeyProgress";
+import {
   type AudienceChoice,
   type CompleteLessonResult,
   type LearnerProgress,
@@ -39,12 +45,14 @@ import {
   scheduleReviewForLesson,
   startLesson as startLessonInDomain,
 } from "../domain/progress";
-import { parseImportedProgress, serializeProgressForExport } from "../domain/progressBackup";
+import { parseImportedBackup, serializeBackupForExport } from "../domain/progressBackup";
+import type { LearnerStateV1 } from "../domain/xpLedger";
 import type {
   AnalyticsSink,
   ContentRepository,
   EvidenceSink,
   FeedbackProvider,
+  LearnerStateStore,
   ProgressRepository,
 } from "./ports";
 
@@ -56,7 +64,8 @@ import type {
 
 export type UseCaseDeps = {
   content: ContentRepository;
-  progress: ProgressRepository;
+  state: LearnerStateStore;
+  progress?: ProgressRepository;
   evidence: EvidenceSink;
   feedback: FeedbackProvider;
   clock: Clock;
@@ -125,6 +134,21 @@ const HOSTED_OS_MISSION_LESSONS = new Set([
 export class LiteracyUseCases {
   constructor(private readonly deps: UseCaseDeps) {}
 
+  /** Módulos das duas jornadas de navegação (mapa puro sobre o read model). */
+  private journeyModules(): JourneyModules {
+    return {
+      ia_pratica: this.deps.content.listModules("ia_pratica"),
+      dev: this.deps.content.listModules("dev"),
+    };
+  }
+
+  /** Jornada de navegação à qual a lição pertence (default ia_pratica para módulo desconhecido). */
+  private journeyOfLesson(lesson: LessonDefinition): JourneyId {
+    const modules = this.journeyModules();
+    if (modules.dev.some((module) => module.id === lesson.moduleId)) return "dev";
+    return "ia_pratica";
+  }
+
   private requireLesson(lessonId: string): LessonDefinition {
     const lesson = this.deps.content.getLesson(lessonId);
     if (!lesson) throw new Error(`Lição não encontrada no read model: ${lessonId}`);
@@ -138,10 +162,67 @@ export class LiteracyUseCases {
   }
 
   private async requireProgress(): Promise<LearnerProgress> {
-    const progress = await this.deps.progress.load();
-    if (!progress)
+    if (this.deps.progress) {
+      const current = await this.deps.progress.load();
+      if (!current) {
+        throw new Error("Progresso não inicializado — o boot do app deve semear o estado inicial");
+      }
+      return current;
+    }
+    return (await this.requireState()).progress;
+  }
+
+  /**
+   * Carga autoritativa (AID-3888, precedência `e3ad989e`): o estado novo
+   * válido é autoritativo — legado inválido/ilegível não bloqueia esta
+   * carga (só os caminhos de corte/retomada dependem dele).
+   */
+  /** Persiste novo progresso sobre o estado corrente (ledger intacto). */
+  private async withState(next: LearnerProgress): Promise<void> {
+    if (this.deps.progress) {
+      await this.deps.progress.save(next);
+      return;
+    }
+    const state = await this.requireState();
+    await this.deps.state.saveState({ ...state, progress: next });
+  }
+
+  private async withProgress<T>(
+    mutate: (current: LearnerProgress) => { next: LearnerProgress; value: T },
+  ): Promise<T> {
+    if (this.deps.progress && typeof this.deps.progress.update === "function") {
+      let captured: { value: T } | undefined;
+      await this.deps.progress.update((current) => {
+        if (!current) {
+          throw new Error(
+            "Progresso não inicializado — o boot do app deve semear o estado inicial",
+          );
+        }
+        const outcome = mutate(current);
+        captured = { value: outcome.value };
+        return outcome.next;
+      });
+      if (!captured) {
+        throw new Error("Falha invariante: o update atômico não devolveu o valor computado");
+      }
+      return captured.value;
+    }
+    const progress = await this.requireProgress();
+    const outcome = mutate(progress);
+    await this.withState(outcome.next);
+    return outcome.value;
+  }
+
+  async requireState(): Promise<LearnerStateV1> {
+    const read = await this.deps.state.readState();
+    if (read.status === "present-valid") return read.value;
+    if (read.status === "absent")
       throw new Error("Progresso não inicializado — o boot do app deve semear o estado inicial");
-    return progress;
+    if (read.status === "present-invalid")
+      throw new Error(
+        `Progresso local incompatível e preservado (nenhum dado foi apagado): ${read.reason ?? "forma inválida"}`,
+      );
+    throw new Error("Não foi possível ler o progresso local deste navegador (dados preservados).");
   }
 
   async completeOnboarding(input: {
@@ -151,19 +232,20 @@ export class LiteracyUseCases {
     taskCategory: OnboardingTaskCategory;
     audience: AudienceChoice;
   }): Promise<LearnerProgress> {
-    const progress = await this.requireProgress();
-    const next = completeOnboarding(progress, input);
-    await this.deps.progress.save(next);
-    return next;
+    return this.withProgress((current) => {
+      const next = completeOnboarding(current, input);
+      return { next, value: next };
+    });
   }
 
   async startLesson(lessonId: string): Promise<LearnerProgress> {
     const lesson = this.requireLesson(lessonId);
-    const progress = await this.requireProgress();
-    if (!isLessonUnlocked(progress, lessonId))
-      throw new Error(`Lição bloqueada ou sem conteúdo: ${lessonId}`);
-    const next = startLessonInDomain(progress, lessonId);
-    await this.deps.progress.save(next);
+    const next = await this.withProgress((current) => {
+      if (!isLessonUnlocked(current, lessonId))
+        throw new Error(`Lição bloqueada ou sem conteúdo: ${lessonId}`);
+      const started = startLessonInDomain(current, lessonId);
+      return { next: started, value: started };
+    });
     // Funil AID-913: estágio "início de lição". Fire-and-forget após o
     // progresso persistir — o sink nunca lança nem bloqueia a lição.
     this.deps.analytics.track(
@@ -182,34 +264,48 @@ export class LiteracyUseCases {
     return next;
   }
 
+  /**
+   * Escolha explícita de jornada (AID-3584): opt-in da jornada Dev e volta à
+   * IA na Prática. Não infere nada de `onboarding.audience`, não desbloqueia
+   * lições além da primeira da jornada alvo (statuses ausentes apenas) e
+   * nunca sobrescreve status existente. Idempotente.
+   */
+  async switchJourney(journey: JourneyId): Promise<LearnerProgress> {
+    const progress = await this.requireProgress();
+    const next = selectJourney(progress, journey, this.journeyModules());
+    await this.withState(next);
+    return next;
+  }
+
   async prepareHostedMission(lessonId: string): Promise<LearnerProgress> {
     const lesson = this.requireLesson(lessonId);
     if (!HOSTED_OS_MISSION_LESSONS.has(lessonId)) {
       throw new Error(`Lição não autorizada pelo contrato hospedado: ${lessonId}`);
     }
-    let progress = await this.requireProgress();
-    if (!progress.onboarding.completed) {
-      // Lições fora dos módulos do percurso público pertencem à journey dev:
-      // o onboarding hospedado registra a audiência correspondente.
-      const publicModuleIds = new Set(this.deps.content.listModules().map((module) => module.id));
-      const audience = publicModuleIds.has(lesson.moduleId) ? "ia_pratica" : "trilha_dev";
-      progress = completeOnboarding(progress, {
-        goal: "verify_answers",
-        context: "work",
-        confidence: "medium",
-        taskCategory: "news_research",
-        audience,
-      });
-    }
-    if (!isLessonUnlocked(progress, lessonId)) {
-      progress = {
-        ...progress,
-        lessonStatus: { ...progress.lessonStatus, [lessonId]: "available" },
-      };
-    }
-    const next = startLessonInDomain(progress, lessonId);
-    await this.deps.progress.save(next);
-    return next;
+    return this.withProgress((current) => {
+      let progress = current;
+      if (!progress.onboarding.completed) {
+        // Lições fora dos módulos do percurso público pertencem à journey dev:
+        // o onboarding hospedado registra a audiência correspondente.
+        const publicModuleIds = new Set(this.deps.content.listModules().map((module) => module.id));
+        const audience = publicModuleIds.has(lesson.moduleId) ? "ia_pratica" : "trilha_dev";
+        progress = completeOnboarding(progress, {
+          goal: "verify_answers",
+          context: "work",
+          confidence: "medium",
+          taskCategory: "news_research",
+          audience,
+        });
+      }
+      if (!isLessonUnlocked(progress, lessonId)) {
+        progress = {
+          ...progress,
+          lessonStatus: { ...progress.lessonStatus, [lessonId]: "available" },
+        };
+      }
+      const next = startLessonInDomain(progress, lessonId);
+      return { next, value: next };
+    });
   }
 
   async submitActivityAttempt(input: {
@@ -223,16 +319,33 @@ export class LiteracyUseCases {
     const activity = this.requireActivity(lesson, input.activityId);
     const evaluation = evaluateActivity(activity, input.answer);
 
-    const progress = await this.requireProgress();
     const now = this.deps.clock();
-    const next = recordActivityAttempt(progress, {
-      lessonId: lesson.id,
-      evaluation,
-      skillIds: lesson.skillIds,
-      intervalsDays: lesson.review.intervalsDays,
-      now,
-    });
-    await this.deps.progress.save(next);
+    let next: LearnerProgress;
+    if (this.deps.progress) {
+      next = await this.withProgress((current) => {
+        const recorded = recordActivityAttempt(current, {
+          lessonId: lesson.id,
+          activityId: input.activityId,
+          evaluation,
+          skillIds: lesson.skillIds,
+          intervalsDays: lesson.review.intervalsDays,
+          now,
+        });
+        return { next: recorded, value: recorded };
+      });
+    } else {
+      const state = await this.requireState();
+      const transition = recordActivityAttempt(state.progress, state.xpLedger, {
+        lessonId: lesson.id,
+        activityId: input.activityId,
+        evaluation,
+        skillIds: lesson.skillIds,
+        intervalsDays: lesson.review.intervalsDays,
+        now,
+      });
+      next = transition.progress;
+      await this.deps.state.saveState({ ...state, progress: next, xpLedger: transition.ledger });
+    }
 
     const record = buildEvidenceRecord({
       attemptId: `att-${String(next.counters.attempts).padStart(6, "0")}`,
@@ -283,10 +396,11 @@ export class LiteracyUseCases {
     const lesson = this.requireLesson(input.lessonId);
     const activity = this.requireActivity(lesson, input.activityId);
     const hint = this.deps.feedback.hintFor(activity, input.hintIndex);
-    let progress = await this.requireProgress();
     if (input.lessonId === MAP_INITIAL_LESSON_ID) {
-      progress = recordMapInitialHintRequest(progress);
-      await this.deps.progress.save(progress);
+      await this.withProgress((current) => ({
+        next: recordMapInitialHintRequest(current),
+        value: undefined,
+      }));
     }
     return { hint, nextIndex: input.hintIndex + 1 };
   }
@@ -300,9 +414,10 @@ export class LiteracyUseCases {
     const lesson = this.requireLesson(input.lessonId);
     this.requireActivity(lesson, input.activityId);
     if (input.lessonId === MAP_INITIAL_LESSON_ID) {
-      const progress = await this.requireProgress();
-      const next = recordMapInitialRetry(progress);
-      await this.deps.progress.save(next);
+      await this.withProgress((current) => ({
+        next: recordMapInitialRetry(current),
+        value: undefined,
+      }));
     }
   }
 
@@ -312,41 +427,117 @@ export class LiteracyUseCases {
     durationSeconds?: number;
   }): Promise<CompleteLessonResult> {
     const lesson = this.requireLesson(input.lessonId);
-    const progress = await this.requireProgress();
+    const lessonJourney = this.journeyOfLesson(lesson);
+    const journeyMods = this.deps.content.listModules(lessonJourney);
+    const publicMods = this.deps.content.listModules();
+    const now = this.deps.clock();
+
+    if (this.deps.progress) {
+      const reconciled = await this.withProgress((current) => {
+        const result = completeLessonInDomain(
+          current,
+          lesson,
+          input.bestScores,
+          journeyMods,
+          now,
+          publicMods,
+        );
+        if (!result.outcome.completed) {
+          return { next: current, value: result };
+        }
+        const rec = {
+          ...result,
+          progress: reconcileJourneyCursors(
+            result.progress,
+            lessonJourney,
+            lesson.id,
+            result.nextLessonId,
+            this.journeyModules(),
+          ),
+        };
+        return { next: rec.progress, value: rec };
+      });
+      if (!reconciled.outcome.completed) {
+        return reconciled;
+      }
+      if (reconciled.firstCompletion) {
+        this.deps.analytics.track(
+          buildLessonCompletedEvent(
+            {
+              sessionId: this.deps.analyticsIdentity.sessionId,
+              eventId: this.deps.analyticsIdentity.nextEventId(),
+            },
+            {
+              lessonId: lesson.id,
+              lessonVersion: lesson.version,
+              score: reconciled.outcome.lessonScore,
+              durationSeconds: input.durationSeconds,
+            },
+            {
+              occurredAt: now.toISOString(),
+              contentVersion: this.deps.content.getContentVersion(),
+            },
+          ),
+        );
+      }
+      return reconciled;
+    }
+
+    const state = await this.requireState();
     const result = completeLessonInDomain(
-      progress,
+      state.progress,
+      state.xpLedger,
       lesson,
       input.bestScores,
-      this.deps.content.listModules(),
-      this.deps.clock(),
+      journeyMods,
+      now,
+      // AID-3584 (separação navegação × conquistas): o desbloqueio segue a
+      // jornada da lição, mas o escopo das conquistas continua o percurso
+      // público default — track_complete/first_module não são redefinidos
+      // pela inclusão das 9 lições Dev.
+      publicMods,
     );
     if (!result.outcome.completed) {
       return result;
     }
-    await this.deps.progress.save(result.progress);
-    // ADR-0009 (emenda AID-913): exatamente 1× `lesson_completed` por
-    // conclusão, após o progresso persistir. Fire-and-forget — o contrato dos
-    // sinks é nunca lançar nem adiar a resposta; analytics nunca bloqueia a
-    // lição.
-    this.deps.analytics.track(
-      buildLessonCompletedEvent(
-        {
-          sessionId: this.deps.analyticsIdentity.sessionId,
-          eventId: this.deps.analyticsIdentity.nextEventId(),
-        },
-        {
-          lessonId: lesson.id,
-          lessonVersion: lesson.version,
-          score: result.outcome.lessonScore,
-          durationSeconds: input.durationSeconds,
-        },
-        {
-          occurredAt: this.deps.clock().toISOString(),
-          contentVersion: this.deps.content.getContentVersion(),
-        },
+    const reconciled = {
+      ...result,
+      progress: reconcileJourneyCursors(
+        result.progress,
+        lessonJourney,
+        lesson.id,
+        result.nextLessonId,
+        this.journeyModules(),
       ),
-    );
-    return result;
+    };
+    await this.deps.state.saveState({
+      ...state,
+      progress: reconciled.progress,
+      xpLedger: reconciled.ledger,
+    });
+    // ADR-0009 (emendas AID-913 e AID-3731): exatamente 1× `lesson_completed`
+    // por LIÇÃO — emitido somente na primeira conclusão, após o progresso persistir.
+    if (reconciled.firstCompletion) {
+      this.deps.analytics.track(
+        buildLessonCompletedEvent(
+          {
+            sessionId: this.deps.analyticsIdentity.sessionId,
+            eventId: this.deps.analyticsIdentity.nextEventId(),
+          },
+          {
+            lessonId: lesson.id,
+            lessonVersion: lesson.version,
+            score: result.outcome.lessonScore,
+            durationSeconds: input.durationSeconds,
+          },
+          {
+            occurredAt: this.deps.clock().toISOString(),
+            contentVersion: this.deps.content.getContentVersion(),
+          },
+        ),
+      );
+    }
+    return reconciled;
   }
 
   /**
@@ -403,7 +594,8 @@ export class LiteracyUseCases {
   }): Promise<CompleteLessonResult> {
     const lesson = this.requireLesson(input.lessonId);
     const outcome = evaluateLessonCompletion(lesson, input.bestScores);
-    let progress = await this.requireProgress();
+    const state = await this.requireState();
+    let progress = state.progress;
     if (outcome.completed) {
       if (input.intervalIndex !== undefined) {
         progress = scheduleReviewForLesson(
@@ -412,7 +604,7 @@ export class LiteracyUseCases {
           this.deps.clock(),
           input.intervalIndex,
         );
-        await this.deps.progress.save(progress);
+        await this.withState(progress);
       }
       this.deps.analytics.track(
         buildReviewCompletedEvent(
@@ -428,7 +620,7 @@ export class LiteracyUseCases {
         ),
       );
     }
-    return { progress, outcome };
+    return { progress, ledger: state.xpLedger, outcome, firstCompletion: false };
   }
 
   /**
@@ -441,7 +633,7 @@ export class LiteracyUseCases {
   async startCheckpoint(checkpointId: ModuleCheckpointId): Promise<{ progress: LearnerProgress }> {
     const progress = await this.requireProgress();
     const next = startCheckpointSession(progress, this.deps.content.listModules(), checkpointId);
-    await this.deps.progress.save(next);
+    await this.withState(next);
     return { progress: next };
   }
 
@@ -467,10 +659,10 @@ export class LiteracyUseCases {
     bestScores: Record<string, number>;
   }): Promise<CompleteCheckpointResult> {
     const checkpoint = checkpointById(input.checkpointId);
-    const progress = await this.requireProgress();
     const scores = checkpoint.activityRefs.map(
       (ref) => input.bestScores[`${ref.lessonId}:${ref.activityId}`] ?? 0,
     );
+    const progress = await this.requireProgress();
     const result = completeCheckpointSession(
       progress,
       this.deps.content.listModules(),
@@ -478,13 +670,14 @@ export class LiteracyUseCases {
       scores,
       this.deps.clock(),
     );
-    await this.deps.progress.save(result.progress);
+    await this.withState(result.progress);
     return result;
   }
 
   /** Ponto de retomada após reload: onboarding pendente → onboarding; lição em andamento → player; senão → home. */
   async resumeSession(): Promise<ResumeDestination> {
-    const progress = await this.deps.progress.load();
+    const read = await this.deps.state.readState();
+    const progress = read.status === "present-valid" ? read.value.progress : null;
     if (!progress || !progress.onboarding.completed) return { kind: "onboarding" };
     const current = progress.currentLessonId;
     if (current && progress.lessonStatus[current] === "in_progress") {
@@ -493,20 +686,24 @@ export class LiteracyUseCases {
     return { kind: "home" };
   }
 
-  /** Serializa o progresso local. O teto do produtor é `completed`, nunca `mastered`. */
+  /**
+   * Exporta o estado autoritativo completo em envelope v2 (progresso +
+   * ledger). O teto do produtor é `completed`, nunca `mastered`.
+   */
   async exportProgress(): Promise<string> {
-    const progress = await this.requireProgress();
-    return serializeProgressForExport(progress);
+    const state = await this.requireState();
+    return serializeBackupForExport(state);
   }
 
-  /** Importa um backup JSON; a migração forward-only roda antes de persistir. */
+  /**
+   * Importa um backup JSON com rejeição integral ANTES de persistir
+   * (validação total: versão, campos, forma do ledger, datas). A gravação é
+   * um put único do estado — falha não deixa estado parcial. O ramo legado
+   * não é tocado.
+   */
   async importProgress(raw: unknown): Promise<LearnerProgress> {
-    const next = parseImportedProgress(
-      raw,
-      this.deps.content.getContentVersion(),
-      this.deps.clock(),
-    );
-    await this.deps.progress.save(next);
-    return next;
+    const next = parseImportedBackup(raw, this.deps.content.getContentVersion(), this.deps.clock());
+    await this.deps.state.saveState(next);
+    return next.progress;
   }
 }

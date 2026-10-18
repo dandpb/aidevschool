@@ -1,0 +1,23 @@
+{
+  "meta": {
+    "pacote": "pg-e01-evals-offline (AID-3648) — EXEMPLO TRABALHADO",
+    "conjunto": "base (desenvolvimento)",
+    "variante": "B = prompt v2 (proposta da equipe)",
+    "aviso": "SAIDAS 100% SINTETICAS: classificacoes autoralmente fixadas. Nenhum modelo de IA real foi executado.",
+    "rotulo_sintetico": true
+  },
+  "predicoes": [
+    { "id": "TF-001", "area": "bug" },
+    { "id": "TF-002", "area": "bug" },
+    { "id": "TF-003", "area": "bug" },
+    { "id": "TF-004", "area": "bug" },
+    { "id": "TF-005", "area": "bug" },
+    { "id": "TF-006", "area": "bug" },
+    { "id": "TF-007", "area": "duvida" },
+    { "id": "TF-008", "area": "melhoria" },
+    { "id": "TF-009", "area": "duvida" },
+    { "id": "TF-010", "area": "melhoria" },
+    { "id": "TF-011", "area": "bug" },
+    { "id": "TF-012", "area": "duvida" }
+  ]
+}

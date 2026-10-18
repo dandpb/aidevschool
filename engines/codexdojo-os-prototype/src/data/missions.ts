@@ -1378,5 +1378,40 @@ export const missionCatalog: MissionCatalogSnapshot = {
         summary: "Verifique manutencao, licenca, seguranca e alternativa nativa antes de adicionar a dependencia sugerida, por controles rotulados.",
       },
     },
+    {
+      id: "pg-d01",
+      version: 1,
+      trackId: "dev",
+      unitId: "sequencia-dev-guiada:pg-d01",
+      projectId: "19_sequencia_dev_guiada",
+      title: "Prática guiada: debug com assistente, reproduza antes de perguntar",
+      objective: "Diante do bug report de `insumos/bugreport.md`, executar o ciclo completo —\nreprodução manual → teste de regressão vermelho → correção mínima na causa\nraiz → suíte verde → revisão do diff — usando um assistente de IA em cada\npasso **sem terceirizar a prova**: quem roda os comandos e lê as saídas é\nvocê. Ao fim, o pedido de diagnóstico que você montar precisa conter o erro\nreproduzido, o caso mínimo e o esperado-vs-observado.",
+      estimatedMinutes: 40,
+      chapterOrder: 17,
+      prerequisites: [
+        "l21",
+        "l27",
+      ],
+      stages: [
+        "understand",
+        "respond",
+        "apply",
+      ],
+      runtime: {
+        engineId: "codexdojo-os",
+        appId: "practice",
+        protocolVersion: "1.0",
+        contentVersion: "pg-d01@55882460a2bf",
+      },
+      evidence: {
+        schema: "guided-practice-evidence",
+        version: 1,
+        verifierRequired: true,
+      },
+      fallback: {
+        kind: "dom",
+        summary: "Execute o ciclo guiado de debug (reproduza, vermelho, fix minimo, suite, diff) registrando comando e saida reais por passo, com retry por criterio da rubrica.",
+      },
+    },
   ],
 }

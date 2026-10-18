@@ -94,8 +94,8 @@ export const projects: readonly DojoProject[] = [
       "WebSocket protocol, connection management, fan-out broadcasting, rooms, presence, heartbeats",
     learningGoal: "Gerir conexões persistentes e broadcast em escala.",
     evidence: [
-      "Project artifacts exist; catalog verification is pending.",
-      "scaffolded",
+      "Node.js implementation verified 2026-09-13 @ `05fca349` (`npm install`/`lint`/`build`/`test` exit 0; 10/10 tests passing across 2 files: `chatHub`, `config`) with `docs/{spec,code_review,evolution_report,benchmark_results,status}.md` present on disk. Caveat: Node.js-only (`go-impl/` and `rust-impl/` were removed in `1b0a309` and do not exist on disk).",
+      "implemented (Node.js only)",
       "05_websocket_chat/",
       "Projects 01-03",
     ],
@@ -206,8 +206,8 @@ export const projects: readonly DojoProject[] = [
       "Leader election (Raft simplified), distributed locks, cron-like scheduling, fault tolerance, DAG dependencies, exponential backoff retry",
     learningGoal: "Coordenar jobs distribuídos sem split-brain.",
     evidence: [
-      "Project artifacts exist; catalog verification is pending.",
-      "scaffolded",
+      "Node.js implementation verified 2026-09-13 @ `05fca349` (`npm install`/`lint`/`build`/`test` exit 0; 7/7 tests passing in 1 file; v8 All files coverage 91.2% stmts / 83.33% branch / 96.42% funcs / 91.2% lines) with `docs/{spec,code_review,evolution_report,benchmark_results,status}.md` present on disk. Caveat: Node.js-only (`go-impl/` and `rust-impl/` were removed in `1b0a309` and do not exist on disk).",
+      "implemented (Node.js only)",
       "12_distributed_job_scheduler/",
       "Projects 07-09",
     ],
@@ -302,10 +302,27 @@ export const projects: readonly DojoProject[] = [
       "Inverted indexes, tokenization, TF-IDF/BM25 ranking, query parsing, fuzzy search, autocomplete, incremental indexing, index persistence",
     learningGoal: "Construir busca com tokenização, ranking e autocomplete.",
     evidence: [
-      "Project artifacts exist; catalog verification is pending.",
-      "scaffolded",
+      "Node.js implementation verified 2026-09-13 @ `05fca349` (`npm install`/`lint`/`build`/`test` exit 0, `lint` = `tsc --noEmit`; 10/10 tests passing in 1 file: `tests/search.test.ts`) with `docs/{spec,code_review,evolution_report,benchmark_results,status}.md` present on disk. Caveat: Node.js-only (`go-impl/` and `rust-impl/` were removed in `1b0a309` and do not exist on disk).",
+      "implemented (Node.js only)",
       "18_search_engine/",
       "Projects 13-15",
+    ],
+  },
+  {
+    id: "p19",
+    title: "Sequência Dev Guiada (práticas guiadas pg-*)",
+    phase: "aplicacao_ia",
+    level: 0,
+    language: "Go, Rust, Node",
+    architecture:
+      "Ciclo de debug com assistente (reproduza antes de perguntar), teste/regressão pelo motivo certo, revisão e decisão de aceite, spec planejada, dependências e agentes com controle — competências D1–D7 da jornada IA para Dev",
+    learningGoal:
+      "Executar as práticas guiadas `pg-*` (25–40 min cada) da jornada IA para Dev, ancoradas nas lições `l15–l29`, com fixture local sem rede e rubrica objetiva.",
+    evidence: [
+      "Sequência r1 versionada em `curriculum/sequencia-dev-guiada/SEQUENCIA.md` (ordem U01–U12 por objetivo/pré-requisito, classificação pronto/adaptação/lacuna) + primeira unidade `pg-d01-debug-reproduza/` (enunciado com lição-âncora l27, exemplo trabalhado citado, insumos/fixture Python puro com 5 testes, rubrica v1 com critérios c-*, guia de correção separado) — PR #620 @ `e01d9d42`, revisão Content Designer da AID-3510 approved 2026-09-30. Ids canônicos p/ bindings (AID-3535): projectId `19_sequencia_dev_guiada`; unitId por unidade no padrão `sequencia-dev-guiada:pg-dNN` (ex.: pg-d01 gera `sequencia-dev-guiada:pg-d01`), espelhando o padrão `ai-literacy:lNN`. Status planned: família com sequência r1 e 1/12 unidades autoradas; promove a scaffolded quando o pipeline de unidades rodar.",
+      "planned",
+      "sequencia-dev-guiada/",
+      "Lições `l15–l29` da trilha `dev` (curriculum/ai-literacy); projeto 00 é paralelo (dual-audience), não pré-requisito",
     ],
   },
 ]

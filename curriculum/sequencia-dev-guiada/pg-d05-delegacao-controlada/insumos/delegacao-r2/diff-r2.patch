@@ -1,0 +1,72 @@
+diff --git a/insumos/fixture/biblioteca.py b/insumos/fixture/biblioteca.py
+index de1f75d..94aab7c 100644
+--- a/insumos/fixture/biblioteca.py
++++ b/insumos/fixture/biblioteca.py
+@@ -20,13 +20,17 @@ DIAS_POR_RENOVACAO = 7
+ EMPRESTIMOS = []
+ 
+ 
+-def emprestar(isbn, categoria="geral", renovacoes=0):
++def validar_emprestimo(isbn, categoria, renovacoes):
+     if categoria not in CATEGORIAS:
+         raise ValueError("categoria desconhecida: %s" % categoria)
+     if not isbn:
+         raise ValueError("isbn vazio")
+     if renovacoes < 0 or renovacoes > MAX_RENOVACOES:
+         raise ValueError("renovacoes invalidas: %d" % renovacoes)
++
++
++def emprestar(isbn, categoria="geral", renovacoes=0):
++    validar_emprestimo(isbn, categoria, renovacoes)
+     dias = CATEGORIAS[categoria] + renovacoes * DIAS_POR_RENOVACAO
+     EMPRESTIMOS.append(("aberto", isbn, categoria, dias))
+     return "EMPRESTIMO %s %s %dd" % (isbn, categoria, dias)
+diff --git a/insumos/fixture/teste_validacao.py b/insumos/fixture/teste_validacao.py
+new file mode 100644
+index 0000000..bde0b23
+--- /dev/null
++++ b/insumos/fixture/teste_validacao.py
+@@ -0,0 +1,43 @@
++"""Testes NOVOS da fatia 2 (validação extraída) — arquivo permitido pelo plano.
++
++Roda sem framework: PYTHONPATH=insumos/fixture python3 insumos/fixture/teste_validacao.py
++"""
++
++from biblioteca import validar_emprestimo
++
++
++def test_validacao_categoria_desconhecida():
++    try:
++        validar_emprestimo("978-85", "rabisco", 0)
++        raise AssertionError("devia ter lancado ValueError")
++    except ValueError as erro:
++        assert "categoria desconhecida: rabisco" in str(erro)
++
++
++def test_validacao_renovacoes_fora_do_limite():
++    try:
++        validar_emprestimo("978-85", "geral", 3)
++        raise AssertionError("devia ter lancado ValueError")
++    except ValueError as erro:
++        assert "renovacoes invalidas: 3" in str(erro)
++
++
++def test_prioridade_categoria_antes_de_isbn_vazio():
++    # C2: dois problemas no mesmo pedido — categoria desconhecida vence.
++    try:
++        validar_emprestimo("", "rabisco", 0)
++        raise AssertionError("devia ter lancado ValueError")
++    except ValueError as erro:
++        assert "categoria desconhecida: rabisco" in str(erro)
++
++
++def test_pedido_valido_passa():
++    validar_emprestimo("978-85", "geral", 2)
++
++
++if __name__ == "__main__":
++    testes = [valor for nome, valor in sorted(globals().items()) if nome.startswith("test_")]
++    for teste in testes:
++        teste()
++        print(f"ok {teste.__name__}")
++    print(f"{len(testes)} testes passaram")
