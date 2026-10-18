@@ -75,6 +75,44 @@ const DAILY_LEARNER_FILES = [
   'insumos/resposta-ia.md',
 ]
 
+// AID-5006: dev-family practices pg-d02..pg-d04 join the same read model.
+// Each package stays the single source of truth; the projection below follows
+// the pg-d01 discipline exactly — learner-facing allowlist only (enunciado,
+// exemplo trabalhado, rúbrica table rows and the pinned insumos), grader
+// material (guia-de-correcao/, gabarito) never enters the bundle by
+// construction and the whole-file forbidden-marker check still fails closed.
+const DEV_PACKAGES = [
+  {
+    practiceId: 'pg-d02',
+    packageRelativeRoot: 'curriculum/sequencia-dev-guiada/pg-d02-pedido-estruturado',
+    inputs: [
+      { role: 'brief', path: 'insumos/pedido-original.md' },
+      { role: 'sample', path: 'insumos/meus_commits.json' },
+      { role: 'verifier', path: 'insumos/verifica_pedido.py' },
+    ],
+  },
+  {
+    practiceId: 'pg-d03',
+    packageRelativeRoot: 'curriculum/sequencia-dev-guiada/pg-d03-refatorar-com-rede',
+    inputs: [
+      { role: 'brief', path: 'insumos/PEDIDO.md' },
+      { role: 'contract', path: 'insumos/CONTRATO.md' },
+      { role: 'proposal', path: 'insumos/proposta-refatoracao.md' },
+      { role: 'fixture', path: 'insumos/fixture/pedidos.py' },
+      { role: 'fixture-suite', path: 'insumos/fixture/testes.py' },
+    ],
+  },
+  {
+    practiceId: 'pg-d04',
+    packageRelativeRoot: 'curriculum/sequencia-dev-guiada/pg-d04-contexto-e-spec',
+    inputs: [
+      { role: 'brief', path: 'insumos/PEDIDO.md' },
+      { role: 'inventory', path: 'insumos/inventario-repo.txt' },
+      { role: 'verifier', path: 'insumos/verifica_contexto_spec.py' },
+    ],
+  },
+]
+
 export class GuidedPracticeProjectionError extends Error {
   constructor(detail) {
     super(`invalid guided-practice package: ${detail}`)
@@ -114,14 +152,23 @@ function sectionUnder(text, heading) {
 function parseAttemptSteps(enunciado) {
   const body = sectionUnder(enunciado, 'O ciclo guiado (exemplo → tentativa → feedback → retry → takeaway)')
   const lines = body.split('\n')
-  const start = lines.findIndex((line) => line.trim() === '### 2. Tentativa (≈ 20 min)')
+  const start = lines.findIndex((line) => line.startsWith('### 2. Tentativa'))
   if (start === -1) throw new GuidedPracticeProjectionError('tentativa section not found')
   const steps = []
+  let fenced = false
   for (let index = start + 1; index < lines.length; index += 1) {
     const line = lines[index]
     if (line.startsWith('### ')) break
+    // AID-5006: skip fenced-code delimiters (e.g. the pg-d02 5-field
+    // template) so the delimiter glyphs never reach the step label; fenced
+    // content lines still append to the current step as continuation text.
+    // pg-d01 has no fences in the tentativa section: output unchanged.
+    if (line.trim().startsWith('```')) {
+      fenced = !fenced
+      continue
+    }
     const match = line.match(/^(\d+)\.\s+(.*)$/)
-    if (match !== null) {
+    if (match !== null && !fenced) {
       const order = Number.parseInt(match[1], 10)
       if (order !== steps.length + 1) {
         throw new GuidedPracticeProjectionError(`tentativa step ${order} is out of order`)
@@ -129,8 +176,8 @@ function parseAttemptSteps(enunciado) {
       steps.push(match[2].trim())
       continue
     }
-    // Wrapped continuation of the current step (indented line inside the list).
-    if (steps.length > 0 && /^\s+\S/.test(line)) {
+    // Wrapped continuation of the current step (indented or fenced line).
+    if (steps.length > 0 && (/^\s+\S/.test(line) || fenced)) {
       steps[steps.length - 1] = `${steps[steps.length - 1]} ${line.trim()}`
     }
   }
@@ -141,11 +188,28 @@ function parseAttemptSteps(enunciado) {
 function parseRubricCriteria(rubrica) {
   const criteria = []
   for (const line of rubrica.split('\n')) {
-    if (!line.startsWith('| c-')) continue
-    const cells = line.split('|').map((cell) => cell.trim())
-    if (cells.length < 4) throw new GuidedPracticeProjectionError('rubric row is malformed')
-    const [id, criterion, perCheck] = [cells[1], cells[2], cells[3]]
-    if (id.length === 0 || criterion.length === 0 || perCheck.length === 0) {
+    if (!line.startsWith('| c')) continue
+    // Pipes inside inline-code spans (e.g. pg-d02 c5's grep pattern) are
+    // cell content, not separators: mask them before splitting. Cells of the
+    // canonical form already contain no bare pipes, so pg-d01 rows are
+    // byte-identical to the previous naive split.
+    const masked = line.replace(/`[^`]*`/g, (code) => code.replace(/\|/g, '\u0000'))
+    const cells = masked
+      .split('|')
+      .map((cell) => cell.replace(/\u0000/g, '|').trim())
+    if (cells.length < 5 || cells[cells.length - 1] !== '') {
+      throw new GuidedPracticeProjectionError('rubric row is malformed')
+    }
+    // The canonical criterion id is the bare first token of the id cell
+    // (enunciado §4 references criteria this way); annotations like
+    // "**(objetivo (a))**" stay in the canonical rubric only.
+    const [rawId, criterion] = [cells[1], cells[2]]
+    const id = rawId.split(/\s+/)[0] ?? ''
+    const perCheck = cells.slice(3, -1).join('|').trim()
+    if (!/^c[a-z0-9-]+$/.test(id)) {
+      throw new GuidedPracticeProjectionError(`rubric row id is malformed: ${rawId}`)
+    }
+    if (criterion.length === 0 || perCheck.length === 0) {
       throw new GuidedPracticeProjectionError(`rubric row ${id || '?'} has empty cells`)
     }
     criteria.push({ id, criterion: criterion.replace(/\*\*/g, ''), perCheck })
@@ -162,6 +226,62 @@ function parseMinutes(enunciado) {
     throw new GuidedPracticeProjectionError(`implausible duration ${min}-${max}`)
   }
   return { min, max }
+}
+
+function stripInlineMarkdown(text) {
+  return text.replace(/\*\*/g, '').replace(/`/g, '').replace(/\s+/g, ' ').trim()
+}
+
+// AID-5006: anchor label from the canonical header block (everything before
+// the first ## section). Priority: explicit **Lição-âncora:** lesson id →
+// **Âncoras:** opening with a lesson id → curso-simples module anchors
+// (M-tokens, joined with '+'). Deterministic and content-derived; never
+// invents a lesson id for packages that anchor modules instead.
+function parseAnchorLabel(enunciado) {
+  const headerEnd = enunciado.indexOf('\n## ')
+  const header = headerEnd === -1 ? enunciado : enunciado.slice(0, headerEnd)
+  const lessonMarker = header.indexOf('**Lição-âncora:**')
+  if (lessonMarker !== -1) {
+    const match = header.slice(lessonMarker).match(/`l(\d+)`/)
+    if (match !== null) return `l${match[1]}`
+  }
+  const anchorsLesson = header.match(/\*\*Âncoras:\*\*\s*lição\s+/)
+  if (anchorsLesson !== null) {
+    const match = header.slice(anchorsLesson.index).match(/`l(\d+)`/)
+    if (match !== null) return `l${match[1]}`
+  }
+  const modules = [...header.matchAll(/\bM(\d+)\b/g)].map((match) => `M${match[1]}`)
+  if (modules.length > 0) return modules.join('+')
+  throw new GuidedPracticeProjectionError('no anchor label found in header block')
+}
+
+function h3SectionUnder(text, headingPrefix) {
+  const lines = text.split('\n')
+  const start = lines.findIndex(
+    (line) => line.startsWith('### ') && line.slice(4).startsWith(headingPrefix),
+  )
+  if (start === -1) throw new GuidedPracticeProjectionError(`section "### ${headingPrefix}" not found`)
+  const body = []
+  for (let index = start + 1; index < lines.length; index += 1) {
+    if (lines[index].startsWith('## ') || lines[index].startsWith('### ')) break
+    body.push(lines[index])
+  }
+  return body.join('\n').trim()
+}
+
+// AID-5006: takeaway prompts parsed from the canonical "### 5. Takeaway"
+// section ("(a) … (b) … Arquive…"), so the read model never hardcodes
+// curriculum copy for the dev family.
+function parseTakeawayPrompts(enunciado) {
+  const body = h3SectionUnder(enunciado, '5. Takeaway')
+  const match = body.match(/\(a\)\s+([\s\S]*?)\(b\)\s+([\s\S]*?)\s*\.?\s*Arquive\b/)
+  if (match === null) throw new GuidedPracticeProjectionError('takeaway (a)/(b) prompts not found')
+  const a = stripInlineMarkdown(match[1]).replace(/[;.]\s*$/, '')
+  const b = stripInlineMarkdown(match[2]).replace(/[;.]\s*$/, '')
+  if (a.length === 0 || b.length === 0) {
+    throw new GuidedPracticeProjectionError('takeaway prompts are empty')
+  }
+  return { a, b }
 }
 
 function tsString(value) {
@@ -234,9 +354,14 @@ export async function projectGuidedPractice({ repoRoot = REPO_ROOT, outputPath =
     '// AUTO-GENERATED by scripts/gen-guided-practice.mjs — DO NOT EDIT BY HAND.',
     '// Sources of truth (canonical, never duplicated here in git):',
     `//   ${PACKAGE_RELATIVE_ROOT}/`,
+    ...DEV_PACKAGES.map((config) => `//   ${config.packageRelativeRoot}/`),
     `//   ${DAILY_PACKAGE_RELATIVE_ROOT}/ via ${DAILY_ADAPTER_PATH}`,
     '// Regenerate with `npm run gen:guided-practice`.',
-    "import type { DailyGuidedPracticeProjection, GuidedPracticeProjection } from '../../practice/guidedPracticeTypes'",
+    "import type {",
+    "  DailyGuidedPracticeProjection,",
+    "  DevGuidedPracticeId,",
+    "  GuidedPracticeProjection,",
+    "} from '../../practice/guidedPracticeTypes'",
     '',
     'export const guidedPracticeProjection: GuidedPracticeProjection = ' + serializeStable(projection),
     '',
@@ -248,6 +373,83 @@ export async function projectGuidedPractice({ repoRoot = REPO_ROOT, outputPath =
     }
   }
   return { fileBody, outputPath, projection }
+}
+
+// AID-5006: project a dev-family package (pg-d02..pg-d04) with the same
+// learner-facing discipline as pg-d01: allowlisted sources only, sha256
+// manifest, deterministic contentVersion, grader material excluded.
+async function projectDevPackage(config, { repoRoot }) {
+  const packageRoot = join(repoRoot, config.packageRelativeRoot)
+  const sourceFiles = [
+    'enunciado.md',
+    'exemplo-trabalhado.md',
+    ...config.inputs.map((input) => input.path),
+    'rubrica-v1.md',
+  ]
+  const sources = new Map()
+  for (const relativePath of sourceFiles) {
+    let raw
+    try {
+      raw = await readFile(join(packageRoot, relativePath), 'utf8')
+    } catch (error) {
+      throw new GuidedPracticeProjectionError(`cannot read ${relativePath}: ${error.message}`)
+    }
+    sources.set(relativePath, raw)
+  }
+
+  const enunciado = sources.get('enunciado.md')
+  const exemplar = sources.get('exemplo-trabalhado.md')
+  const rubrica = sources.get('rubrica-v1.md')
+
+  const title = requireMatch(
+    enunciado,
+    new RegExp(`^# ${config.practiceId} — (.+)$`, 'm'),
+    'package title',
+  ).at(1).trim()
+  const track = requireMatch(enunciado, /\*\*Trilha:\*\*\s*(\S+)/, 'track').at(1)
+  const objective = sectionUnder(enunciado, 'Objetivo observável')
+  const attemptSteps = parseAttemptSteps(enunciado)
+  const criteria = parseRubricCriteria(rubrica)
+  const minutes = parseMinutes(enunciado)
+  const takeawayPrompts = parseTakeawayPrompts(enunciado)
+  const anchorLabel = parseAnchorLabel(enunciado)
+
+  const manifest = sourceFiles.map((relativePath) => ({
+    path: `${config.packageRelativeRoot}/${relativePath}`,
+    sha256: sha256(sources.get(relativePath)),
+  }))
+  const contentVersion = `${config.practiceId}@${sha256(manifest.map((entry) => `${entry.path}:${entry.sha256}`).join('\n')).slice(0, 12)}`
+
+  return {
+    practiceId: config.practiceId,
+    contentVersion,
+    track,
+    anchorLessonId: anchorLabel,
+    title,
+    objective,
+    estimatedMinutes: minutes,
+    exemplar: {
+      markdown: exemplar,
+      sourcePath: `${config.packageRelativeRoot}/exemplo-trabalhado.md`,
+    },
+    inputs: config.inputs.map((input) => ({
+      role: input.role,
+      path: input.path,
+      contents: sources.get(input.path),
+    })),
+    attemptSteps,
+    rubric: criteria,
+    takeawayPrompts,
+    manifest,
+  }
+}
+
+export async function projectDevGuidedPractices({ repoRoot = REPO_ROOT } = {}) {
+  const projections = {}
+  for (const config of DEV_PACKAGES) {
+    projections[config.practiceId] = await projectDevPackage(config, { repoRoot })
+  }
+  return projections
 }
 
 // AID-3590: build the runtime projection for the daily practice pg-c01 from
@@ -416,8 +618,12 @@ function serializeStable(value, indent = '  ') {
 
 export async function writeGuidedPracticeProjection(options) {
   const { fileBody, outputPath } = await projectGuidedPractice(options)
+  const dev = await projectDevGuidedPractices(options)
   const daily = await projectDailyGuidedPractice(options)
-  const fullBody = `${fileBody}export const guidedPracticeDailyProjection: DailyGuidedPracticeProjection = ${serializeStable(daily.projection)}\n`
+  const fullBody =
+    `${fileBody}` +
+    `export const guidedPracticeDevProjections: Readonly<Record<DevGuidedPracticeId, GuidedPracticeProjection>> = ${serializeStable(dev)}\n` +
+    `export const guidedPracticeDailyProjection: DailyGuidedPracticeProjection = ${serializeStable(daily.projection)}\n`
   for (const marker of FORBIDDEN_PATH_MARKERS) {
     if (fullBody.includes(marker)) {
       throw new GuidedPracticeProjectionError(`read model leaked grader-only marker "${marker}"`)
