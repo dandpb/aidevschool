@@ -1,10 +1,10 @@
 schemaVersion: 1
 tracks:
   - trackId: ai-pratica
-    contentVersion: "2026-09-30.1"
+    contentVersion: "2026-10-17.1"
     recommendedEntryMissionId: l02
   - trackId: dev
-    contentVersion: "2026-09-30.1"
+    contentVersion: "2026-10-17.1"
     recommendedEntryMissionId: game-02-warehouse
 bindings:
   - missionId: l01
@@ -21,7 +21,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-30.1"
+      contentVersion: "2026-10-17.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -43,7 +43,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-30.1"
+      contentVersion: "2026-10-17.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -65,7 +65,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-30.1"
+      contentVersion: "2026-10-17.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -87,7 +87,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-30.1"
+      contentVersion: "2026-10-17.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -109,7 +109,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-30.1"
+      contentVersion: "2026-10-17.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -131,7 +131,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-30.1"
+      contentVersion: "2026-10-17.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -153,7 +153,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-30.1"
+      contentVersion: "2026-10-17.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -175,7 +175,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-30.1"
+      contentVersion: "2026-10-17.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -197,7 +197,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-30.1"
+      contentVersion: "2026-10-17.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -219,7 +219,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-30.1"
+      contentVersion: "2026-10-17.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -241,7 +241,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-30.1"
+      contentVersion: "2026-10-17.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -263,7 +263,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-30.1"
+      contentVersion: "2026-10-17.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -285,7 +285,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-30.1"
+      contentVersion: "2026-10-17.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -307,7 +307,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-30.1"
+      contentVersion: "2026-10-17.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -329,7 +329,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-30.1"
+      contentVersion: "2026-10-17.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -351,7 +351,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-30.1"
+      contentVersion: "2026-10-17.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -373,7 +373,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-30.1"
+      contentVersion: "2026-10-17.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -398,7 +398,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-30.1"
+      contentVersion: "2026-10-17.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -422,7 +422,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-30.1"
+      contentVersion: "2026-10-17.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -447,7 +447,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-30.1"
+      contentVersion: "2026-10-17.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -541,7 +541,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-30.1"
+      contentVersion: "2026-10-17.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -563,7 +563,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-30.1"
+      contentVersion: "2026-10-17.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -585,7 +585,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-30.1"
+      contentVersion: "2026-10-17.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -704,7 +704,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-30.1"
+      contentVersion: "2026-10-17.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -726,7 +726,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-30.1"
+      contentVersion: "2026-10-17.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -748,7 +748,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-30.1"
+      contentVersion: "2026-10-17.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -774,7 +774,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-30.1"
+      contentVersion: "2026-10-17.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -799,7 +799,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-30.1"
+      contentVersion: "2026-10-17.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -825,7 +825,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-30.1"
+      contentVersion: "2026-10-17.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -889,7 +889,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-30.1"
+      contentVersion: "2026-10-17.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -913,7 +913,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-30.1"
+      contentVersion: "2026-10-17.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -938,7 +938,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-30.1"
+      contentVersion: "2026-10-17.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -946,3 +946,85 @@ bindings:
     fallback:
       kind: dom
       summary: "Detecte a rotina automatizada degradada e monte a correcao minima que repoe o contexto por controles rotulados."
+  # Onda W2 dev (pacote autoral AID-5011 r1; produção FPE AID-5046 com emenda
+  # T0 da regra 7 no PR; data-gate AID-1222 §5-R4 desbloqueado pelo founder em
+  # 2026-10-17T16:15Z — walk-through cognitivo + harness E2E de personas
+  # sintéticas em-repo, AID-641): l33 abre a onda como 18ª missão dev
+  # (âncora-lição de pg-d04-contexto-e-spec, U09 da SEQUENCIA.md; prereq
+  # canônico [l16]). Primeiro bloco de bindings da onda: carrega o bump único
+  # de contentVersion 2026-09-30.1 -> 2026-10-17.1 (catálogo canônico +
+  # tracks[ai-pratica] + tracks[dev] + todos os runtime.contentVersion
+  # literacy — gates de igualdade mission_catalog_bindings.py:45,130).
+  - missionId: l33
+    chapterOrder: 18
+    prerequisites: [l16]
+    trackId: dev
+    curriculum:
+      kind: ai-literacy-lesson
+      lessonId: l33
+      projectId: 00_ai_in_practice
+      unitId: ai-literacy:l33
+    runtime:
+      engineId: literacyDojo
+      entrypoint: http://127.0.0.1:5178/?hosted=1
+      environmentKey: VITE_LITERACYDOJO_URL
+      protocolVersion: "1.0"
+      contentVersion: "2026-10-17.1"
+    evidence:
+      schema: literacy-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Monte o pacote de contexto de um pedido com varias entregas: o que entra, o que fica de fora com motivo, PRD com uma entrega e SPEC com bordas decididas."
+  # Onda W2 dev (AID-5011 r1 §2.1): l34 é a 19ª missão dev — fecha a lacuna
+  # U13 (evals sistemáticos de saída de IA, AID-3510 §3; prereq canônico
+  # [l17]). SEM segundo bump — o bump único da onda viaja com l33 acima.
+  - missionId: l34
+    chapterOrder: 19
+    prerequisites: [l17]
+    trackId: dev
+    curriculum:
+      kind: ai-literacy-lesson
+      lessonId: l34
+      projectId: 00_ai_in_practice
+      unitId: ai-literacy:l34
+    runtime:
+      engineId: literacyDojo
+      entrypoint: http://127.0.0.1:5178/?hosted=1
+      environmentKey: VITE_LITERACYDOJO_URL
+      protocolVersion: "1.0"
+      contentVersion: "2026-10-17.1"
+    evidence:
+      schema: literacy-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Ordene o ciclo de eval minimo, compare relatorios por taxa por criterio e marque o que faz um caso de eval servir para decidir."
+  # Onda W2 dev (AID-5011 r1 §2.1): l35 fecha a onda como 20ª missão dev
+  # (âncora-lição de pg-d05-delegacao-controlada, U10 da SEQUENCIA.md;
+  # prereq canônico [l23]). Contiguidade ai-pratica 1-23 e dev 1-20
+  # preservadas; SEM segundo bump — o bump único viaja com l33.
+  - missionId: l35
+    chapterOrder: 20
+    prerequisites: [l23]
+    trackId: dev
+    curriculum:
+      kind: ai-literacy-lesson
+      lessonId: l35
+      projectId: 00_ai_in_practice
+      unitId: ai-literacy:l35
+    runtime:
+      engineId: literacyDojo
+      entrypoint: http://127.0.0.1:5178/?hosted=1
+      environmentKey: VITE_LITERACYDOJO_URL
+      protocolVersion: "1.0"
+      contentVersion: "2026-10-17.1"
+    evidence:
+      schema: literacy-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Ordene a delegacao com contrato, identifique o que falta no pedido de delegacao e revise o relatorio do agente contra criterios."

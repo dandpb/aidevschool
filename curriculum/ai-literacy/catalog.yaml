@@ -1,13 +1,13 @@
 # Catálogo canônico da trilha ai-literacy (bounded context AI Literacy).
 # Fonte de verdade do índice: 23 lições públicas de IA na Prática
-# (l01–l14 + ondas de continuação l18–l20, l24–l26 e l30–l32) e 9 lições
-# da trilha Dev,
+# (l01–l14 + ondas de continuação l18–l20, l24–l26 e l30–l32) e 12 lições
+# da trilha Dev (l15–l17, l21–l23, l27–l29 e onda W2 l33–l35),
 # separadas pelo campo `journey`.
 # Lições com status "ready" têm arquivo próprio em modules/ e são validadas
 # contra schemas/lesson.schema.json. Lições "planned" ainda não exigem arquivo.
 # Regras: docs/design/ai-literacy/content-contract.md.
 schemaVersion: 1
-contentVersion: "2026-09-30.1"
+contentVersion: "2026-10-17.1"
 
 track:
   id: ai-literacy
@@ -360,4 +360,32 @@ lessons:
     estimatedMinutes: 3
     prerequisites: [l19]
     skillIds: [avaliar]
+    status: ready
+
+  # Módulo 5 — Dev: onda W2 l33–l35 (pacote autoral AID-5011 r1; emenda T0
+  # regra 7 via PR do FPE AID-5046; l33 âncora pg-d04/U09, l34 fecha lacuna
+  # U13/AID-3510 §3, l35 âncora pg-d05/U10)
+  - id: l33
+    moduleId: mod-05
+    title: "Do pedido ao pacote: contexto, PRD e SPEC"
+    objective: "Diante de um pedido de feature com várias entregas embutidas e decisões implícitas, transformá-lo em um pacote de execução — CONTEXTO com incluído/excluído justificados por linha, PRD com uma entrega só e fora de escopo nomeado, SPEC com bordas decididas e allowlist de arquivos — que torna a tarefa inequívoca para qualquer executor, humano ou assistente."
+    estimatedMinutes: 5
+    prerequisites: [l16]
+    skillIds: [pedir, decidir]
+    status: ready
+  - id: l34
+    moduleId: mod-05
+    title: "Eval antes do deploy: evidência, não impressão"
+    objective: "Dado um recurso de produto que usa saída de IA, montar o eval mínimo antes de promovê-lo — casos representativos com entrada exata e resultado esperado verificável, execução registrada e taxa por critério — e decidir promover, iterar ou cortar com essa evidência, não com a impressão de 'parece bom'."
+    estimatedMinutes: 4
+    prerequisites: [l17]
+    skillIds: [avaliar, integrar]
+    status: ready
+  - id: l35
+    moduleId: mod-05
+    title: "Delegue com contrato: o aceite é seu"
+    objective: "Diante de uma tarefa a delegar a um agente de código, fechar o contrato da delegação antes de soltar — objetivo circunscrito, allowlist de arquivos, aceite verificável e ponto de checagem humana — e julgar o resultado contra esse contrato, aceitando ou rejeitando com motivo citado, nunca pela afirmação de sucesso do próprio agente."
+    estimatedMinutes: 4
+    prerequisites: [l23]
+    skillIds: [decidir, codificar]
     status: ready
