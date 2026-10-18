@@ -5,7 +5,7 @@
 (teste/debug/review/manutenção)
 **Âncoras:** lição `l28` — "Refatore com assistente sem quebrar
 comportamento" (`curriculum/ai-literacy/modules/05-dev-contexto-e-escolha/l28-refatore-com-assistente-sem-quebrar-comportamento.yaml`,
-blob `386c27fe1a6b`) + workflow testado `03-refatorar-seguro`
+blob `e88dc1192433` (l28 v2→v3 na onda 2026-09-30.1; objetivo inalterado)) + workflow testado `03-refatorar-seguro`
 (`dev-workflow-claude/workflows/03-refatorar-seguro/RESULTADO.md`, blob
 `93087764ac38`). **Pré-requisitos:** l21 (U04, pedir testes) e pg-d01
 (U06, reprodução antes do diagnóstico) ou equivalentes.
