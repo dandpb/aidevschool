@@ -221,6 +221,13 @@ python3 docs/curso/validate_course.py
 
 ## Completion Standard
 
+The canonical verdict fallback in `curriculum/_shared/evidence.py` reuses
+`learner/gate/evidence_validator.py` and `learner/gate/security.py`: producer
+records and attempt paths must satisfy the same validation seams as the gate.
+A PASS receipt cannot override the last failed/unknown gate outcome. Regression
+proof lives in `curriculum/_shared/tests/test_verdict_fallback_boundary_followup.py`;
+the corrective scope is recorded in `intent/2026-10-18-pr709-boundary-followup/plan.md`.
+
 The ecosystem is complete only when a future agent can:
 
 1. Read this manifest.
