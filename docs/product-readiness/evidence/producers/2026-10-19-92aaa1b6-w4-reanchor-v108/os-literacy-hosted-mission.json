@@ -1,0 +1,25 @@
+{
+  "artifacts": [
+    {
+      "path": "engines/codexdojo-os-prototype/tests-pilot/pilot-build.smoke.spec.ts",
+      "sha256": "18c931e0f3a91818abb8e1339fb7b19baaccd862ba78d46b05db2671dfe236dd"
+    }
+  ],
+  "assertions": [
+    {
+      "evidence": "playwright",
+      "id": "hosted-literacy-mounts-on-host-origin",
+      "outcome": "pass"
+    }
+  ],
+  "executedAt": "2026-10-19T20:08:37Z",
+  "executor": "automated",
+  "gaps": [],
+  "gitSha": "92aaa1b694c78ba482a3bcd86aabd7746d26aebe",
+  "manualFingerprint": "a064c2e45011c6ed9aee11bd9f4e4e8e2404a38c798303389c9431801f68cd4c",
+  "outcome": "pass",
+  "runId": "2026-10-19T20:08:37Z-os-literacy-hosted-mission-92aaa1b6",
+  "scenarioId": "os-literacy-hosted-mission",
+  "schemaVersion": 1,
+  "sourceFingerprint": "c810fa2c37a84bb0b829e9c1a909d529447a508034303004cd6085bbc1f4b147"
+}
