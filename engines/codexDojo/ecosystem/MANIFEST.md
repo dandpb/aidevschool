@@ -221,6 +221,13 @@ python3 docs/curso/validate_course.py
 
 ## Completion Standard
 
+The canonical verdict fallback in `curriculum/_shared/evidence.py` reuses
+`learner/gate/evidence_validator.py` and `learner/gate/security.py`: producer
+records and attempt paths must satisfy the same validation seams as the gate.
+A PASS receipt cannot override the last failed/unknown gate outcome. Regression
+proof lives in `curriculum/_shared/tests/test_verdict_fallback_boundary_followup.py`;
+the corrective scope is recorded in `intent/2026-10-18-pr709-boundary-followup/plan.md`.
+
 The ecosystem is complete only when a future agent can:
 
 1. Read this manifest.
@@ -240,3 +247,15 @@ rubric) before computing pg-d02/03/04 contentVersion. The new Node stdlib suite
 `scripts/guided-practice-source-order.test.mjs` beside that generator checks the
 current pg-d02 frozen contract and source-byte binding. This mapping does not
 approve #710/#715 contract composition, UI acceptance or canonical mastery.
+
+## Guided-practice scheduling boundary
+
+`learner/substrate/practice.py` verifies the declared conclusion schema, catalog
+identity and rubric policy before a guided-practice FSRS review. Exact receipt
+replay is idempotent; historical receipt files remain bound to their unit and
+review identities. `engines/minimaxDojo/core/fsrs_bridge.py` reports the submitted
+receipt's own outcome and refreshes views only for the actual canonical state
+path. Negative cases are in the new `test_practice_boundary_regressions.py` and
+`test_practice_history_boundary.py` files under `learner/substrate/tests/`.
+Practice reviews do not grant mastery. Legacy snapshot compatibility and native
+acceptance gates remain separate unresolved requirements.
