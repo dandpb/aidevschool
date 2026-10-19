@@ -150,3 +150,33 @@ Strategy: mixed tonal shift, borders, and restrained functional elevation.
 Accepted debt: the current stylesheet still contains undeclared one-off color values and compact
 measurements. The integration refactor may split files and introduce semantic tokens, but visual
 changes require fresh evidence and must not be bundled into behavior wiring.
+
+## 8. Progress HUD — contrato cross-engine
+
+Os elementos "onde estou" (streak, medidor de progresso, mastery) seguem o
+contrato do HUD de progresso do ecossistema —
+`docs/design/design-foundations.md` **§7** (v2.0, AID-5010; aliases
+AID-5141/W5): **papéis e estados são contratuais, a paleta é engine-local**.
+O OS declara os 11 tokens `--ads-*` enumerados na tabela §7.1 (o titular "10" do plano AID-5010 conta os nomes errado) em `src/styles/foundation.css`
+mapeando os valores locais atuais (zero delta visual):
+
+| Papel | Tokens (§7.1) | Mapeia hoje |
+| --- | --- | --- |
+| Rótulos do HUD | `--ads-progress-text` / `--ads-progress-muted` | `--school-ink` / `--school-muted` (hub-chips, progress-summary) |
+| Medidor | `--ads-progress-track` / `--ads-progress-fill` | `.hub-mission-progress` `#ded8cd` / `#49c98f` |
+| Streak | `--ads-streak-accent` | `--coral` (Flame do topbar do desktop chrome) |
+| Mastery | `--ads-mastery-text` / `--ads-mastery-bg` | nós lavados pós-W4 `#3f4a64` / `--school-primary-soft` (7.68:1 — B9a já coberto) |
+| Revisão devida | `--ads-review-text` / `--ads-review-bg` | "próximo passo": `--school-primary-dark` / `--school-primary-soft` |
+| Atrasada | `--ads-attention-text` / `--ads-attention-bg` | nós in-progress/evidence-pending: `--school-muted` / `#fff6df` |
+
+**FSRS/revisões ficam fora do escopo do OS por design** (§7.4 do contrato:
+experiência read-only; a ausência é documentada, não tratada como dívida) —
+os pares review/attention mapeiam os estados locais mais próximos apenas
+para satisfazer a existência+mapping do contrato. Tier de acessibilidade do
+HUD: **B9** (§7/§4 — AAA 7:1 texto, 3:1 não-texto; B2 AA continua o piso
+geral). Anatomia canônica de 4 papéis, testids
+`hud-streak`/`hud-progress`/`hud-mastery-badge`/`hud-review-due` e
+responsividade 375/768/1280 chegam na W7 (AID-5010) — até lá os tokens são
+declaração+mapping, sem consumidores. Os valores AA-tuned afetados pelo B9
+(`--muted` dark, `--school-muted`) estão marcados `@deprecated →
+--ads-* (B9)`; o retune é a W6, não aqui.
