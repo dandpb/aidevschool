@@ -613,10 +613,10 @@ class TestDashboardSnapshot(unittest.TestCase):
 
     def test_build_snapshot_picks_up_backlog_counts(self):
         snapshot = build_snapshot()
-        # 01/02 certified + 05/12/18 Node-verified; 14 remain scaffolded.
+        # 01/02 certified + 05/06/07/12/18 Node-verified; 12 remain scaffolded.
         # Mastery comes from canonical units_log, independently of backlog status.
         self.assertEqual(snapshot["masteredCount"], 2)
-        self.assertEqual(snapshot["scaffoldedCount"], 14)
+        self.assertEqual(snapshot["scaffoldedCount"], 12)
 
     def test_build_snapshot_includes_typed_challenge_statuses(self):
         snapshot = build_snapshot()

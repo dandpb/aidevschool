@@ -7,6 +7,7 @@ export interface Config {
   maxUploadBytes: number;
   allowedMimeTypes: Set<string>;
   allowedExtensions: Set<string>;
+  allowEmptyFiles: boolean;
 }
 
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
@@ -16,6 +17,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     maxUploadBytes: parsePositiveInt(env.MAX_UPLOAD_BYTES, 1024 * 1024 * 1024),
     allowedMimeTypes: new Set(['text/plain', 'image/png', 'image/jpeg', 'image/gif', 'application/octet-stream']),
     allowedExtensions: new Set(['.txt', '.png', '.jpg', '.jpeg', '.gif', '.bin']),
+    allowEmptyFiles: env.ALLOW_EMPTY_FILES === 'true',
   };
 }
 

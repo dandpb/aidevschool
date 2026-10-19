@@ -67,7 +67,7 @@ export const learnerSnapshot: LearnerSnapshot = {
     },
   ],
   masteredCount: 2,
-  scaffoldedCount: 14,
+  scaffoldedCount: 12,
   streak: {
     current: 0,
     longest: 2,
@@ -103,7 +103,7 @@ export const learnerSnapshot: LearnerSnapshot = {
     {
       id: "01_rate_limiter",
       phase: "cycle-complete",
-      passed: true,
+      passed: false,
       attemptPresent: true,
     },
     {

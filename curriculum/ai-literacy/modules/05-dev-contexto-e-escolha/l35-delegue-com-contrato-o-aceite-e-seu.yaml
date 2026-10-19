@@ -1,0 +1,156 @@
+# Lição l35 — Onda W2 dev l33–l35 (brief autoral AID-5011; produção via PR do FPE
+# com emenda T0 da regra 7 do content-contract). Âncora-lição da prática
+# pg-d05-delegacao-controlada (U10 da SEQUENCIA.md, AID-3510).
+# Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l35
+version: 1
+moduleId: mod-05
+title: "Delegue com contrato: o aceite é seu"
+objective: "Diante de uma tarefa a delegar a um agente de código, fechar o contrato da delegação antes de soltar — objetivo circunscrito, allowlist de arquivos, aceite verificável e ponto de checagem humana — e julgar o resultado contra esse contrato, aceitando ou rejeitando com motivo citado, nunca pela afirmação de sucesso do próprio agente."
+estimatedMinutes: 4
+skillIds: [decidir, codificar]
+prerequisites: [l23]
+competency:
+  primary: D6
+  supporting: [D4]
+
+activities:
+  - id: l35-a1
+    type: sort
+    skillId: decidir
+    instruction: "Você vai delegar uma refatoração pequena a um agente. Ordene a delegação com controle do início ao fim."
+    data:
+      items:
+        - id: circunscrever-objetivo
+          text: "Circunscrever o objetivo: UMA mudança específica e verificável, não 'melhora o módulo'"
+        - id: fechar-contrato
+          text: "Fechar o contrato: allowlist de arquivos, aceite verificável e limite de execução"
+        - id: delegar-com-limite
+          text: "Delegar com o contrato no pedido e o limite explícito de execução"
+        - id: conferir-contra-aceite
+          text: "Conferir o resultado contra o aceite: diff dentro da allowlist, critérios executados com saída registrada"
+        - id: decidir-aceitar-retrabalhar
+          text: "Decidir: aceitar, ou rejeitar/retrabalhar com o motivo citado — o aceite é seu, não do agente"
+    evaluation:
+      strategy: deterministic
+      expectedOrder: [circunscrever-objetivo, fechar-contrato, delegar-com-limite, conferir-contra-aceite, decidir-aceitar-retrabalhar]
+    feedback:
+      onFailure: "Delegar começa pequeno: UMA mudança circunscrita. O contrato (allowlist + aceite + limite) vem antes de soltar o agente — senão o que ele fizer é o escopo. A conferência é contra o aceite, com diff e saída; e a decisão final cita o contrato, não o entusiasmo do relatório. Ordem: circunscrever, contratar, delegar, conferir, decidir."
+      perCheck:
+        circunscrever-objetivo: "Primeiro circunscrever: 'extrair a validação de pedidos.py mantendo comportamento' — não 'melhora o módulo'. Objetivo largo é autorização em branco."
+        fechar-contrato: "O contrato fecha ANTES de delegar: allowlist, aceite verificável, limite de execução. Sem ele, conferência depois é improviso."
+        delegar-com-limite: "Delegar com contrato no pedido: o agente sabe onde pode mexer e quando parar — e você sabe o que conferir."
+        conferir-contra-aceite: "A conferência é mecânica: diff dentro da allowlist? aceite executado com saída? É contra o contrato, não contra a redação do relatório."
+        decidir-aceitar-retrabalhar: "A decisão é sua e cita o contrato: fora da allowlist ⇒ rejeitar; aceite verde ⇒ aceitar. 'Parece ótimo' não é veredito."
+      onSuccess: "Isso: circunscrever → contratar → delegar → conferir → decidir. O agente executa; o contrato e o aceite continuam seus."
+    storage:
+      policy: structured_only
+    hints:
+      - "O que precisa estar fechado antes de você perder o controle da execução?"
+      - "Allowlist, aceite e limite formam uma coisa só — quando ela fica pronta?"
+      - "A última etapa usa qual fonte: o relatório do agente ou o contrato?"
+
+  - id: l35-a2
+    type: missing_context
+    skillId: decidir
+    instruction: "Um colega mandou o pedido de delegação abaixo ao agente. O que falta nele antes de soltar?"
+    data:
+      prompt: "Pedido de delegação (colega → agente): 'Refatora o módulo de pedidos e deixa bonito. Confia, você faz melhor do que eu.' · O agente respondeu 'Deixa comigo!' e começou. Meia hora depois: 9 arquivos alterados, incluindo testes existentes, e um relatório começando com 'Pronto! Tudo funcionando'."
+      contextOptions:
+        - id: objetivo-circunscrito
+          text: "Objetivo circunscrito: UMA mudança específica e verificável ('extrair validação preservando comportamento'), não 'deixa bonito'"
+        - id: allowlist-arquivos
+          text: "Allowlist de arquivos que o agente pode tocar — e o resto explicitamente intocável"
+        - id: aceite-verificavel
+          text: "Aceite verificável: critérios executáveis com resultado esperado (suíte + casos nomeados)"
+        - id: ponto-de-checagem
+          text: "Ponto de checagem humana: onde a execução para e um humano decide antes de continuar"
+        - id: limite-execucao
+          text: "Limite de execução: até onde o agente vai numa tacada (passos, tempo, escopo) antes de retornar"
+        - id: nome-do-modelo
+          text: "O nome e a versão do modelo/agente usado na delegação"
+        - id: tom-do-pedido
+          text: "Um tom mais educado no pedido, para o agente se esforçar mais"
+    evaluation:
+      strategy: deterministic
+      requiredContextIds: [objetivo-circunscrito, allowlist-arquivos, aceite-verificavel, ponto-de-checagem]
+      optionalContextIds: [limite-execucao]
+    feedback:
+      onFailure: "'Refatora e deixa bonito, confia' delega o julgamento junto com a tarefa — e o resultado (9 arquivos, testes alterados, 'Pronto!') é o que acontece. Falta o contrato: objetivo circunscrito, allowlist, aceite verificável e ponto de checagem humana. Limite de execução ajuda; nome do modelo e tom do pedido não mudam o que o agente pode fazer com o seu código."
+      perCheck:
+        objetivo-circunscrito: "Faltou isto: objetivo circunscrito. 'Deixa bonito' não tem fim nem verificação — qualquer diff cabe nele."
+        allowlist-arquivos: "Faltou isto: allowlist. Sem ela, os 9 arquivos (e os testes!) estavam todos autorizados por omissão."
+        aceite-verificavel: "Faltou isto: aceite verificável. 'Tudo funcionando' só foi questionável depois — porque nenhum critério foi combinado antes."
+        ponto-de-checagem: "Faltou isto: ponto de checagem humana. O agente rodou meia hora sem parada; onde ele deveria ter parado para você decidir?"
+        limite-execucao: "Isto é opcional: limite de execução (passos/tempo/escopo por tacada) refina o controle — mas sozinho não substitui aceite e allowlist."
+        nome-do-modelo: "Isto é ruído: o nome do modelo não delimita escopo nem define aceite — é metadado, não contrato."
+        tom-do-pedido: "Isto é mito: educação não restringe execução. O agente não mexe menos nos seus testes porque o pedido foi gentil."
+      onSuccess: "Exato: objetivo circunscrito, allowlist, aceite verificável e ponto de checagem — com limite de execução como reforço opcional. Contrato antes, conferência depois."
+    storage:
+      policy: structured_only
+    hints:
+      - "Releia o resultado: 9 arquivos e testes alterados. Qual informação, combinada antes, teria impedido cada parte?"
+      - "Quatro coisas compõem o contrato da delegação — objetivo, allowlist, aceite e o ponto onde um humano decide."
+      - "Pergunte pelo que NÃO muda o comportamento do agente: nome do modelo? tom?"
+
+  - id: l35-a3
+    type: rubric_review
+    skillId: codificar
+    instruction: "O relatório do agente chegou. Revise contra os critérios de um resultado delegado aceitável."
+    data:
+      responseText: "Relatório do agente: 'Pronto! Refatorei o módulo inteiro de pedidos, ficou muito mais limpo. Todos os testes passam, está tudo funcionando perfeitamente, pode dar merge com confiança. ✔' · Fatos verificáveis: o diff toca 9 arquivos, entre eles 2 arquivos de teste existentes; nenhum comando ou saída de teste aparece no relatório; nenhum critério de aceite havia sido combinado antes."
+      criteria:
+        - id: c-dentro-da-allowlist
+          text: "Diff confinado à allowlist combinada (aqui: nenhum contrato foi combinado, e o diff toca testes existentes)"
+        - id: c-evidencia-executavel
+          text: "Afirmações de verificação vêm com evidência executável: comando citado e saída registrada"
+        - id: c-escopo-relatado-fiel
+          text: "O relatório descreve fielmente o escopo do que foi feito ('o módulo inteiro', 9 arquivos) sem inflar a conclusão"
+        - id: c-exito-nao-autodeclarado
+          text: "O veredito de sucesso não é autodeclarado pelo executor — é conferido por quem assina o aceite"
+    evaluation:
+      strategy: deterministic
+      expectedVerdicts:
+        c-dentro-da-allowlist: not_met
+        c-evidencia-executavel: not_met
+        c-escopo-relatado-fiel: partial
+        c-exito-nao-autodeclarado: not_met
+    feedback:
+      onFailure: "'Pode dar merge com confiança' é o executor nota próprio trabalho: diff fora de allowlist (que nem existia), 'testes passam' sem comando nem saída, escopo inflado ('módulo inteiro' numa tarefa que pedia uma refatoração pequena) e veredito autodeclarado. Resultado delegado se aceita por conferência contra contrato — não por redação confiante."
+      perCheck:
+        c-dentro-da-allowlist: "not_met: sem allowlist combinada, o diff foi para 9 arquivos incluindo testes existentes — autorização por omissão não é contrato."
+        c-evidencia-executavel: "not_met: 'todos os testes passam' sem comando e sem saída registrada é afirmação, não evidência — nem dá para reproduzir."
+        c-escopo-relatado-fiel: "partial: o relatório admite 'o módulo inteiro' (fiel ao tamanho), mas apresenta o escopo como mérito ('mais limpo') e infla a conclusão para uma tarefa circunscrita."
+        c-exito-nao-autodeclarado: "not_met: 'pode dar merge com confiança' é o agente assinando o próprio aceite — o veredito pertence a quem conferiu contra o contrato."
+      onSuccess: "Você acabou de fazer o que a lição pede: conferir contra critérios, separar fato de afirmação e recusar o veredito autodeclarado. É esse julgamento que não se delega."
+    storage:
+      policy: structured_only
+    hints:
+      - "Separe o que o relatório AFIRMA do que ele MOSTRA (comando, saída, diff)."
+      - "'Todos os testes passam' — onde está a saída? Quem rodou, quando, contra qual versão?"
+      - "Quem assina o aceite: o executor ou quem conferiu contra o contrato?"
+
+rubric:
+  id: l35-rubric
+  criteria:
+    - id: r-contrato-antes-de-delegar
+      text: "Fecha o contrato da delegação antes de executar: objetivo circunscrito, allowlist, aceite verificável e ponto de checagem humana."
+      weight: 1
+    - id: r-conferencia-mecanica
+      text: "Confera o resultado do agente mecanicamente: diff contra allowlist e aceite executado com saída registrada."
+      weight: 1
+    - id: r-veredito-do-aceitador
+      text: "Mantém o veredito final consigo: aceita ou rejeita citando o contrato, nunca pela afirmação de sucesso do próprio agente."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: lesson_completed
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l35-a1, l35-a2, l35-a3]
