@@ -324,6 +324,18 @@
 .mission-map-node.verified,
 .mission-map-node.canonical-mastery { background: var(--journey-primary-soft); }
 .mission-map-node.locked { opacity: 0.72; }
+/* AID-5080/W4 (plano AID-5010 §1.2/§W4, defeito AA vigente): o par de texto
+   lavado --journey-muted #657089 sobre o wash --journey-primary-soft #e5f2eb
+   = 4.31:1 (texto normal 0.78rem/0.68rem; WCAG AA exige >=4.5). Override
+   local do par APENAS nos nós lavados: #3f4a64 = 7.68:1 no wash (resolve AA
+   e já cobre B9a/AAA). O --school-muted global sobre --school-paper #f8f4ea
+   (4.52) segue aprovado e permanece para o retune AAA da W6. */
+.mission-map-node.completed p,
+.mission-map-node.verified p,
+.mission-map-node.canonical-mastery p,
+.mission-map-node.completed div > span,
+.mission-map-node.verified div > span,
+.mission-map-node.canonical-mastery div > span { color: #3f4a64; }
 
 .honest-progress {
   display: grid;
