@@ -1,0 +1,29 @@
+literacy-happy-path: same
+literacy-retry: same
+literacy-resume: same
+literacy-corridor-happy-path: same
+literacy-corridor-gate-retry: same
+literacy-corridor-review-window: same
+literacy-corridor-grandfathered-return: same
+literacy-corridor-resume-mid-module: same
+os-literacy-hosted-mission: DRIFT (use case os-literacy-guided-mission)
+os-verification-recovery: DRIFT (use case os-literacy-guided-mission)
+os-literacy-returning-device: DRIFT (use case os-literacy-guided-mission)
+os-voxel-hosted-missions: DRIFT (use case os-voxel-guided-missions)
+os-renderer-accessibility-recovery: DRIFT (use case os-voxel-guided-missions)
+os-voxel-returning-device: DRIFT (use case os-voxel-guided-missions)
+os-onboarding-track-choice: DRIFT (use case os-returning-learner)
+os-returning-recovery: DRIFT (use case os-returning-learner)
+os-returning-device: DRIFT (use case os-returning-learner)
+dojotoday-active-unit-guidance: DRIFT (use case dojotoday-daily-guidance)
+dojotoday-read-only-boundary: DRIFT (use case dojotoday-daily-guidance)
+dojotoday-returning-next-day: DRIFT (use case dojotoday-daily-guidance)
+pixelquest-encounter-evidence: same
+pixelquest-evidence-recovery: same
+pixelquest-returning-evidence-handoff: same
+voxel-standalone-loop: same
+voxel-accessible-renderer: same
+voxel-standalone-return-reentry: same
+minitown-explore-only: same
+
+total drifted: 12/27

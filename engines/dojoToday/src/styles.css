@@ -9,6 +9,8 @@
   /* AID-1023/W0 (auditoria AID-914 §1.4): AA — #8a83a0 = 3.35:1 sobre --bg.
      #686378 mantém matiz/saturação e dá ≥4.5:1 em todos os pares texto/fundo
      (pior caso .track-glyph sobre --line #ece6f5 = 4.72:1). */
+  /* @deprecated → --ads-progress-muted (B9) — AA-tuned, retune AAA (#4e495b)
+     só na W6 (plano AID-5010 §4; janela de 2 ciclos, contrato §5). */
   --muted: #686378;
   --card: #ffffff;
   --line: #ece6f5;
@@ -20,6 +22,9 @@
   /* AID-1027/W1 (auditoria AID-914, achado vizinho do W0): AA — #16a34a sobre
      --success-soft #dcfce7 = 3.0:1. #166534 mantém o matiz verde e dá 6.49:1
      no par .is-mastered .track-glyph (padrão --deep igual a --amber-deep). */
+  /* @deprecated → --ads-mastery-text/--ads-mastery-bg (B9) — par atômico
+     AA-tuned, retune AAA (#12502a) só na W6 (plano AID-5010 §4; janela de
+     2 ciclos, contrato §5). */
   --success-deep: #166534;
   --success-soft: #dcfce7;
   --danger: #e11d48;
@@ -39,6 +44,27 @@
   --ads-success-bg: var(--success-soft);
   --ads-error-text: var(--danger);
   --ads-error-bg: var(--danger-soft);
+
+  /* AID-5141/W5 (contrato do HUD §7, design-foundations v2.0/AID-5010, PR
+     #718): 10 tokens HUD mapeando os valores locais ATUAIS — declaração
+     apenas, zero mudança visual (consumo/testids/anatomia são a W7).
+     Mapping: rótulos do HUD ink/muted; medidor .progress-track/--line +
+     .progress-fill (início do gradiente local --primary); chama de streak
+     .streak-flame.is-lit (drop-shadow âmbar, decorativa aria-hidden); par
+     mastered do glifo .track-node.is-mastered (§ "Track semantics" do
+     DESIGN.md); revisão devida = chip .tone-success pós-W4 (AID-5080);
+     atrasada = chip .tone-danger. Valores seguem engine-local (§7.4). */
+  --ads-progress-text: var(--ink);
+  --ads-progress-muted: var(--muted);
+  --ads-progress-track: var(--line);
+  --ads-progress-fill: var(--primary);
+  --ads-streak-accent: var(--amber);
+  --ads-mastery-text: var(--success-deep);
+  --ads-mastery-bg: var(--success-soft);
+  --ads-review-text: #ffffff;
+  --ads-review-bg: var(--success-deep);
+  --ads-attention-text: #ffffff;
+  --ads-attention-bg: var(--danger);
 }
 
 * {

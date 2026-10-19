@@ -818,6 +818,8 @@ textarea.is-invalid {
   --surface: #fffdf8;
   --surface-strong: #ffffff;
   --text: #17213a;
+  /* @deprecated → --ads-progress-muted (B9) — AA-tuned (4.52:1 sobre --bg),
+     retune AAA (#454f6a) só na W6 (plano AID-5010 §4; janela de 2 ciclos). */
   --muted: #657089;
   --muted-strong: #4f5a75;
   --primary: #6657e8;
@@ -829,7 +831,11 @@ textarea.is-invalid {
   --coral: #ff7d66;
   --sky: #bfe8f8;
   --border: #d9d3c7;
+  /* @deprecated → --ads-mastery-bg (B9) — par stat-done AA-tuned (5.32:1),
+     retune AAA (#0d5c3b) só na W6 (plano AID-5010 §4; janela de 2 ciclos). */
   --success-bg: #e8f8ef;
+  /* @deprecated → --ads-mastery-text (B9) — par atômico com --success-bg;
+     retune AAA na W6 (plano AID-5010 §4; janela de 2 ciclos). */
   --success-text: #14734d;
   --error-bg: #fff0ed;
   --error-text: #b83a31;
@@ -850,6 +856,29 @@ textarea.is-invalid {
   --ads-success-bg: var(--success-bg);
   --ads-error-text: var(--error-text);
   --ads-error-bg: var(--error-bg);
+
+  /* AID-5141/W5 (contrato do HUD §7, design-foundations v2.0/AID-5010, PR
+     #718): 10 tokens HUD mapeando os valores locais ATUAIS — declaração
+     apenas, zero mudança visual (consumo/testids/anatomia são a W7).
+     Mapping: rótulos do HUD text/muted; medidor .progress-track #e5e9f0 +
+     .progress-fill (início do gradiente local #4f46e5); sequência = pill
+     .stat sem glifo — accent mapeia o acento quente local --sun usado nos
+     glifos decorativos (consumo do glifo é W7); par mastered = stat-done
+     (formato de referência do contrato §7.1); revisão devida = itens da
+     lista reviews-due / card-review (texto sobre superfície do card);
+     atrasada/atenção mapeia o par de alerta local (error). Valores seguem
+     engine-local (§7.4). */
+  --ads-progress-text: var(--text);
+  --ads-progress-muted: var(--muted);
+  --ads-progress-track: #e5e9f0;
+  --ads-progress-fill: #4f46e5;
+  --ads-streak-accent: var(--sun);
+  --ads-mastery-text: var(--success-text);
+  --ads-mastery-bg: var(--success-bg);
+  --ads-review-text: var(--text);
+  --ads-review-bg: var(--surface);
+  --ads-attention-text: var(--error-text);
+  --ads-attention-bg: var(--error-bg);
 }
 
 body {
