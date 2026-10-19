@@ -1,3 +1,4 @@
+import { escapeHtml } from "../../../shared/escapeHtml"
 import type { GameController, GameState } from "../game/controller"
 
 /** DOM HUD — briefing, controls per level, metrics. Reads sim state; dispatches controller commands. */
@@ -55,13 +56,16 @@ function renderJob(node: HTMLElement, state: GameState): void {
   const j = state.job
   const mode = state.level.mode
   const parts = [
-    `<span class="mode">${mode.toUpperCase()}</span>`,
-    `<span class="metric">size: ${j.size}</span>`,
-    `<span class="metric">capacity: ${j.capacity}</span>`,
+    `<span class="mode">${escapeHtml(mode.toUpperCase())}</span>`,
+    `<span class="metric">size: ${escapeHtml(j.size)}</span>`,
+    `<span class="metric">capacity: ${escapeHtml(j.capacity)}</span>`,
   ]
-  if (mode === "streaming") parts.push(`<span class="metric">chunk: ${j.chunkSize}</span>`)
+  if (mode === "streaming")
+    parts.push(`<span class="metric">chunk: ${escapeHtml(j.chunkSize)}</span>`)
   if (state.level.backpressure)
-    parts.push(`<span class="metric">drain: ${j.drainRate}/ms · ${j.timeMs}ms</span>`)
+    parts.push(
+      `<span class="metric">drain: ${escapeHtml(j.drainRate)}/ms · ${escapeHtml(j.timeMs)}ms</span>`,
+    )
   node.innerHTML = parts.join(" · ")
 }
 
