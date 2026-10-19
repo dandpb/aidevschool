@@ -20,6 +20,7 @@ types:
     event: presented | gate
     rating: Rating        # present iff event = gate
     gate_outcome: GateOutcome  # present iff event = gate
+    gate_kind: code | no_code | guided_practice  # evidence class (ADR-0004 + AID-5005)
     evidence_ts: ISO-8601 timestamp
     evidence_digest: lowercase SHA-256
     evidence_verifier_source: string
