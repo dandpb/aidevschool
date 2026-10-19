@@ -8,3 +8,4 @@ test-results/
 # Read model gerado por `npm run gen:guided-practice` (nunca editar à mão; regenerar sempre)
 src/data/generated/
 test-results-aid3643/
+test-results-aid5080/
