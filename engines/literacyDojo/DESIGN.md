@@ -105,6 +105,33 @@ Large radii: 18px cards, 24px modals, full pills. Roundness is the brand.
 Buttons use the press shadow (`--shadow-press`) and darken on press; banners
 always use the semantic bg+text pairs; chips are soft-tinted pills.
 
+## Progress HUD — contrato cross-engine
+
+Os elementos "onde estou" (streak, medidor de progresso, mastery, revisões
+FSRS) seguem o contrato do HUD de progresso do ecossistema —
+`docs/design/design-foundations.md` **§7** (v2.0, AID-5010; aliases
+AID-5141/W5): **papéis e estados são contratuais, a paleta é engine-local**.
+O literacyDojo declara os 11 tokens `--ads-*` enumerados na tabela §7.1 (o titular "10" do plano AID-5010 conta os nomes errado) em `src/styles.css`
+mapeando os valores locais atuais (zero delta visual) — este é o formato de
+referência do par mastery (§7.1):
+
+| Papel | Tokens (§7.1) | Mapeia hoje |
+| --- | --- | --- |
+| Rótulos do HUD | `--ads-progress-text` / `--ads-progress-muted` | `--text` / `--muted` |
+| Medidor | `--ads-progress-track` / `--ads-progress-fill` | `#e5e9f0` / `#4f46e5` (início do gradiente local de `.progress-fill`) |
+| Streak | `--ads-streak-accent` | `--sun` (accent quente dos glifos decorativos; pill "Sequência" não tem glifo hoje) |
+| Mastery | `--ads-mastery-text` / `--ads-mastery-bg` | par atômico stat-done `--success-text`/`--success-bg` (referência do contrato) |
+| Revisão devida | `--ads-review-text` / `--ads-review-bg` | lista `reviews-due` / `card-review` (`--text` sobre `--surface`) |
+| Atrasada | `--ads-attention-text` / `--ads-attention-bg` | par de alerta local `--error-text`/`--error-bg` |
+
+Tier de acessibilidade do HUD: **B9** (§7/§4 do contrato — AAA 7:1 texto,
+3:1 não-texto; B2 AA continua o piso geral). Anatomia canônica de 4 papéis,
+testids `hud-streak`/`hud-progress`/`hud-mastery-badge`/`hud-review-due` e
+responsividade 375/768/1280 chegam na W7 (AID-5010) — até lá os tokens são
+declaração+mapping, sem consumidores. Os valores AA-tuned afetados pelo B9
+(`--muted`, par stat-done) estão marcados `@deprecated → --ads-* (B9)`; o
+retune é a W6, não aqui.
+
 ## Do's and Don'ts
 
 - Do keep the violet for interactive elements only.
