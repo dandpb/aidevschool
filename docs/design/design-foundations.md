@@ -180,7 +180,7 @@ remoção verificada 2 ciclos de readiness após a W6.
 | W2 | State contract §2.3 nos controles do loop das 3 engines — **embarcou a alias mínima** que referencia (`--ads-focus` + pares de feedback onde há container) | merge `14121556` (PR #303, re-grant v38, QA countersign AID-1099 GO) |
 | W3 | Este doc (padrão documentado) + adesão §4 FeedbackPanel/ResultScreen + forced-colors wave 1 (B7) | merge via PR AID-1096 |
 | W4 | Defeitos AA vigentes (B2, independentes do v2.0): dojoToday `.tone-success .chip` 3.30:1 → fundo `#166534` (7.13:1); OS journey `--school-muted` sobre wash `--school-primary-soft` 4.31:1 → `#3f4a64` local (7.68:1) | child AID-5080 (FPE) — em andamento |
-| v2.0 | Este change: §7 Contrato do HUD de progresso + tier B9 + 10 tokens HUD | PR AID-5010 (este change) |
+| v2.0 | Este change: §7 Contrato do HUD de progresso + tier B9 + 11 tokens HUD | PR AID-5010 (este change) |
 
 **Ondas aprovadas (confirmation AID-5010 `f04442cd`, 2026-10-19):** W5 aliases HUD
 (zero delta visual; + seção "Progress HUD" nos 3 DESIGN.md) → W6 retune AAA (B9a/B9b) →
@@ -190,7 +190,7 @@ ondas; FPE executa, QA countersign por onda, merge via `scripts/merge_pr.sh`.
 **Métricas de adoção** (acompanhamento da board): % de controles do loop com state
 contract completo por engine; nº de tokens do núcleo mapeados (v1: 5/18 — mínima);
 nº de falhas B1–B3 abertas por ciclo. **Métricas HUD (v2.0):** tokens HUD mapeados
-(0/10 → 10/10 na W5); % de medidores com `role="progressbar"`+`valuetext` (1/3 → 3/3
+(0/11 → 11/11 na W5 — PR #724); % de medidores com `role="progressbar"`+`valuetext` (1/3 → 3/3
 na W7); falhas B9a/B9b abertas por ciclo (meta 0 após W6); nº de specs E2E HUD
 compartilhadas entre engines (0 → ≥1). Sucesso = adoção **e** verificação independente.
 
@@ -201,7 +201,7 @@ trilha, mastery, revisão FSRS). Unificação é **contratual** (papéis, estado
 testids) — **não** paleta única. Auditado em AID-5010 (doc `plan` rev `72b4e9ea`:
 medição WCAG dos 3 HUDs; 0/13 pares de texto ≥7:1; 3 anatomias divergentes).
 
-### 7.1 Núcleo semântico HUD (10 tokens)
+### 7.1 Núcleo semântico HUD (11 tokens)
 
 Mesma regra do §1: o contrato exige **existência e mapping**, não igualdade de valores.
 
