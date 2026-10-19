@@ -35,7 +35,7 @@ function bestScoresFor(lessonId: string): Record<string, number> {
 }
 
 describe("read model das jornadas (pin AID-3584)", () => {
-  it("IA preserva 23 IDs/ordem e Dev 9 IDs/ordem; l14→l18 e l15 primeiro", () => {
+  it("IA preserva 23 IDs/ordem e Dev 12 IDs/ordem; l14→l18 e l15 primeiro", () => {
     expect(iaLessonIds).toHaveLength(23);
     expect(iaLessonIds.slice(0, 14)).toEqual([
       "l01",
@@ -54,7 +54,20 @@ describe("read model das jornadas (pin AID-3584)", () => {
       "l14",
     ]);
     expect(iaLessonIds[14]).toBe("l18");
-    expect(devLessonIds).toEqual(["l15", "l16", "l17", "l21", "l22", "l23", "l27", "l28", "l29"]);
+    expect(devLessonIds).toEqual([
+      "l15",
+      "l16",
+      "l17",
+      "l21",
+      "l22",
+      "l23",
+      "l27",
+      "l28",
+      "l29",
+      "l33",
+      "l34",
+      "l35",
+    ]);
     const l15 = lessons.find((item) => item.id === "l15");
     expect(l15?.prerequisites).toEqual([]);
     // O desbloqueio linear da IA continua l14 → l18 (não salta para lições Dev).

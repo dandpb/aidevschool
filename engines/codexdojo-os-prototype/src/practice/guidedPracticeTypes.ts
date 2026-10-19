@@ -5,7 +5,19 @@
 // app and its tests. Grader-facing material (guia-de-correcao/) is outside
 // this contract by design.
 
-export type GuidedPracticeInputRole = 'bugreport' | 'rule' | 'fixture' | 'fixture-suite'
+// AID-5006: the dev family (pg-d01..pg-d04) shares the graded projection
+// shape; roles extend per package without changing the pg-d01 contract.
+export type GuidedPracticeInputRole =
+  | 'bugreport'
+  | 'rule'
+  | 'fixture'
+  | 'fixture-suite'
+  | 'brief'
+  | 'contract'
+  | 'proposal'
+  | 'sample'
+  | 'inventory'
+  | 'verifier'
 
 export type GuidedPracticeInput = {
   readonly role: GuidedPracticeInputRole
@@ -28,6 +40,9 @@ export type GuidedPracticeProjection = {
   readonly practiceId: string
   readonly contentVersion: string
   readonly track: string
+  // Anchor label from the canonical enunciado header: the lesson id when the
+  // package anchors a lesson (pg-d01 `l27`, pg-d03 `l28`) or the
+  // curso-simples module anchors otherwise (pg-d02 `M3`, pg-d04 `M4+M5`).
   readonly anchorLessonId: string
   readonly title: string
   readonly objective: string
@@ -133,7 +148,11 @@ export type DailyGuidedPracticeProjection = {
   readonly manifest: readonly GuidedPracticeManifestEntry[]
 }
 
-export type GuidedPracticeId = 'pg-d01' | 'pg-c01'
+// AID-5006: dev-family practices playable in the standalone player. The
+// embedded AC1 mission runtime stays pinned to pg-d01 (see GuidedPracticeApp).
+export type DevGuidedPracticeId = 'pg-d02' | 'pg-d03' | 'pg-d04'
+
+export type GuidedPracticeId = 'pg-d01' | DevGuidedPracticeId | 'pg-c01'
 
 export type AnyGuidedPracticeProjection = GuidedPracticeProjection | DailyGuidedPracticeProjection
 
