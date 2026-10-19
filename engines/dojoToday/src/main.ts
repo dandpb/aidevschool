@@ -139,13 +139,13 @@ function missionCard(a: TodaySnapshot["activeUnit"]): string {
               Experimental. Sua chave fica só neste navegador e vai apenas para o endpoint
               configurado. Conversas não são salvas. Opcional e off por padrão.
             </p>
-            <label>Endpoint base (compatível com OpenAI)
+            <label for="soc-baseurl">Endpoint base (compatível com OpenAI)
               <input id="soc-baseurl" type="text" placeholder="https://api.openai.com/v1" />
             </label>
-            <label>Chave API
+            <label for="soc-apikey">Chave API
               <input id="soc-apikey" type="password" placeholder="sk-…" />
             </label>
-            <label>Modelo
+            <label for="soc-model">Modelo
               <input id="soc-model" type="text" placeholder="gpt-4o-mini" />
             </label>
             <div class="socrates-config-actions">
