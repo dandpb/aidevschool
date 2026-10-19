@@ -282,7 +282,12 @@ body {
   background: var(--trap);
 }
 .tone-success .chip {
-  background: var(--success);
+  /* AID-5080/W4 (plano AID-5010 §1.2/§W4, defeito AA vigente): branco sobre
+     --success #16a34a = 3.30:1 no chip (0.72rem = texto normal; WCAG AA
+     exige >=4.5). --success-deep #166534 (mesmo padrão W1/AID-1027) dá
+     7.13:1 — resolve AA e já cobre B9a/AAA. Override local no chip: o
+     --success global (borda de lesson-card e pares soft) permanece. */
+  background: var(--success-deep);
 }
 .due-in {
   font-weight: 800;
