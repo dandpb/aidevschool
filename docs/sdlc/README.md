@@ -502,7 +502,34 @@ comentário com linha `Countersign:`) satisfaz TUDO:
    adendo vence; em modo auditoria, só adendos pré-merge contam). O registro
    é o árbitro: sem casamento, vermelho. Credenciais do registro ausentes,
    erro de transporte ou rejeição de auth → vermelho (fail-closed, mesma
-   doutrina do resolver §2).
+   doutrina do resolver §2);
+   **8c. Janela temporal do run** (AID-5235, incidente AID-5233): o
+   `createdAt` da citação operativa precisa cair DENTRO da janela de
+   execução do run citado (`startedAt` … `finishedAt`, ±120s de tolerância
+   de relógio). O clone do incidente foi postado 82 min DEPOIS do run
+   fechar — todo token era real (agent/task/run/session casavam com o
+   registro), só pertencia a um run já morto. Countersign é ato de um run
+   VIVO; registro sem `startedAt`/`finishedAt` → vermelho (janela
+   improvável, fail-closed);
+9. **Resolução de verdict** (AID-5235, incidente AID-5233): o token de
+   verdict precisa ser um **commentId canônico** — UUID de comentário
+   Paperclip (tarefas AID-) ou id numérico de comentário GitHub (tarefas
+   GH-) — e **resolver**: o comentário existe na thread da tarefa citada,
+   não está deletado, e foi **criado pelo run citado**
+   (`createdByRunId == run=`). O 'GO' free-text do incidente nomeava o
+   verdict de OUTRO PR; verdict free-text é rejeitado;
+10. **Binding task↔PR** (AID-5235, incidente AID-5233): a tarefa citada
+   precisa **nomear este PR** (título/description com `#<n>`/`PR #<n>`; no
+   GH-, title/body da issue). O incidente citou AID-5061 — tarefa da PR
+   #700 — cross-postada nas PRs #714 e #704: clonagem de identidade de run
+   fechado. Tarefa que não nomeia o PR que verifica não o countersigna;
+11. **Alerta de deletação** (AID-5235, incidente AID-5233): runs de gate
+   bem-sucedidos anteriores NESTE head registraram a citação operativa
+   (modo live recupera dos logs dos runs de workflow anteriores — outputs de
+   check-run são vazios no GitHub Actions); se a citação sumiu da conversa
+   (mesmo `createdAt`, mesma linha), o gate fica vermelho com **DELETION
+   ALERT** — as citações do incidente foram deletadas ~5 min após esverdear
+   o gate, deixando check verde stale. Citação nova não lava a deletação.
 
 Linhas dentro de **code fences** (blocos cercados por ```/~~~, AID-2824 — achado
 AID-2818) são template/documentação e **não contam** em nenhum scan de citação
@@ -554,6 +581,14 @@ do registro de runs — ex.: `ses_…` ou UUID); placeholders como
 `opencode_local` são rejeitados (AID-4898). Countersign postado mid-run, antes
 da sessão fechar: poste depois um adendo `Provenance:` com o MESMO
 agent/task/run e a sessão real — sem nova linha `Countersign:` (§8 acima).
+
+`verdict <commentId>` (AID-5235): o id do comentário de verdict que o PRÓPRIO
+run de countersign postou na thread da tarefa citada (UUID Paperclip para
+AID-, id numérico para GH-); o gate resolve o comentário (existe, não
+deletado, `createdByRunId == run=`). A tarefa citada precisa nomear o PR que
+verifica (`#<n>` no título/descrição — binding §10). A citação precisa ser
+postada DENTRO da janela do run (`startedAt`…`finishedAt`, §8c): run fechado
+não countersigna.
 
 ### Helper offline de recibos canônicos (AID-3585)
 
