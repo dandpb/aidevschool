@@ -30,7 +30,7 @@ GATE = REPO_ROOT / "scripts" / "countersign_gate_check.py"
 HEAD = "4df811704408ca1e6fece9c865f00bc16c59d13d"
 
 QA_COUNTERSIGN = (
-    "Countersign: AID-3127 verdict GO head=%s\n"
+    "Countersign: AID-3127 verdict 31270000-0000-4000-8000-000000000001 head=%s\n"
     "Provenance: agent=qa-lead task=AID-3127 run=a3127-hb1 session=11111111-2222-3333-4444-555555555555"
     % HEAD
 )
@@ -81,7 +81,7 @@ def _stub_resolver(tmp_path):
 
 
 def _ctx(body, comments):
-    return {"body": body, "mergedAt": None, "comments": comments}
+    return {"body": body, "mergedAt": None, "number": 597, "comments": comments}
 
 
 def _comment(body, when="2026-09-27T17:00:00Z"):
@@ -126,13 +126,32 @@ def test_gate_passes_with_independent_countersign(tmp_path):
     # AID-4898 §8: a passing citation now anchors its session= to the cited
     # run= in the run registry — stub the registry with the SUCCEEDED fixture
     # run whose registered session matches the trailer (hermetic, no network).
+    # AID-5235: the hardened contract additionally requires the run window
+    # (§8c startedAt/finishedAt covering the comment time), verdict
+    # resolution (§9: the verdict comment lives on the cited task's thread,
+    # created by the cited run) and task↔PR binding (§10: the cited task
+    # names the gated PR #597) — stubbed with the same board fixtures.
     gate.lookup_run = lambda run_id: {
         "id": run_id,
         "status": "succeeded",
+        "startedAt": "2026-09-27T16:00:00Z",
+        "finishedAt": "2026-09-27T18:00:00Z",
         "sessionIdBefore": None,
         "sessionIdAfter": "11111111-2222-3333-4444-555555555555",
         "usageJson": {},
     }
+    board = {
+        "/api/issues/AID-3127": {
+            "identifier": "AID-3127",
+            "title": "Countersign QA — re-grant PR #597",
+            "description": "verificação independente do PR #597",
+        },
+        "/api/issues/AID-3127/comments": [
+            {"id": "31270000-0000-4000-8000-000000000001",
+             "createdByRunId": "a3127-hb1", "deletedAt": None},
+        ],
+    }
+    gate.registry_get = lambda path, context: board[path]
     operative, producer, countersigner, session = gate.evaluate(
         _ctx(body, [_comment(QA_COUNTERSIGN)]), [], HEAD, _stub_resolver(tmp_path)
     )
