@@ -1,0 +1,12 @@
+591dfa4c docs(readiness): auto re-grant producer snapshot @ cc76ee11 (AID-1357)
+cc76ee11 Merge pull request #726 from dandpb/aid5177/w6-hud-aaa-retune
+01da8288 chore(sdlc): autorização de edição dos specs W5 na onda W6 (AID-5177)
+01090e08 chore(sdlc): SDLC-ALLOW-TEST-EDIT: AID-5177 — atualização dos EXPECTED dos specs hud-aliases W5 na onda W6
+07deba65 feat(design): AID-5177 W6 — retune AAA (B9a/B9b) dos pares HUD nas 3 engines + extremo progress-fill literacy ≥3:1
+59111827 Merge pull request #718 from dandpb/aid5010/design-foundations-v2
+40f8e29b update-branch main (35c834f9: re-grant v109/PR#725 merge) into PR #718 (AID-5010; AID-5178 merge-door prerequisite — strict up-to-date branch protection; content delta of this PR unchanged: docs/design/design-foundations.md identical to f81691f6)
+35c834f9 Merge pull request #725 from dandpb/regrant/auto-20261019-a116c1ba
+f81691f6 update-branch main (a116c1ba: W5/PR#724 merge) into PR #718 (AID-5010)
+0deef587 docs(design): corrige contagem HUD 10→11 tokens (AID-5010)
+e3547e3d update-branch main (cdc6d335: W4/PR#720 merge) into PR #718 — docs-only, sem conflitos (AID-5010)
+cef3df3a docs(design): design-foundations v2.0 (AID-5010) — §7 contrato do HUD de progresso + tier B9 (AAA no HUD) + changelog W4/ondas aprovadas

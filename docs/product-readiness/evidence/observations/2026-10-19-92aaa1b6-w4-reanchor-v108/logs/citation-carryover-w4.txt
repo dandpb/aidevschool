@@ -1,0 +1,105 @@
+# AID-5165 — re-verificação de citações v107 na árvore 92aaa1b6 (delta d939e98e..92aaa1b6)
+
+## 1. Arquivos citados nas notas v107 tocados pelo delta? (esperado: nenhum)
+engines/dojoToday/src/main.ts: UNCHANGED
+docs/product-readiness/student-guide.md: UNCHANGED
+learner/substrate/adapters/dojotoday.py: UNCHANGED
+engines/codexdojo-os-prototype/src/components/Onboarding.tsx: UNCHANGED
+engines/codexdojo-os-prototype/src/EngineHubApp.tsx: UNCHANGED
+engines/codexdojo-os-prototype/src/components/Hub.tsx: UNCHANGED
+docs/product-readiness/facilitator-guide.md: UNCHANGED
+engines/dojoToday/tools/selfcheck.py: UNCHANGED
+
+## 2. O que o W4 mudou de fato (estilo/acessibilidade, sem strings de claim)
+ engines/codexdojo-os-prototype/src/styles/journey.css | 12 ++++++++++++
+ engines/dojoToday/src/styles.css                      |  7 ++++++-
+ 2 files changed, 18 insertions(+), 1 deletion(-)
+
+## 3. Localização first-hand das strings de claim na árvore atual (grep -n)
+79:      <p class="muted">O jogo emite evidência bruta; um verificador independente decide o gate. (${escapeHtml(rel)})</p>
+117:        <p class="muted">${challenge} Primeiro você tenta — quem avalia a evidência é o <strong>verificador independente</strong>, não eu.</p>
+118:    """Return the dojoToday snapshot dict derived from the canonical state.
+grep: engines/codexdojo-os-prototype/src/components/Onboarding.tsx: No such file or directory
+grep: engines/codexdojo-os-prototype/src/EngineHubApp.tsx: No such file or directory
+grep: engines/codexdojo-os-prototype/src/components/Hub.tsx: No such file or directory
+121:A paid or long session should not depend on the browser keeping the data. In **Ver seu progresso**, use **Baixar backup JSON** to save a copy of `LearnerProgress`. The file records at most `completed` lesson status — never `mastered`. To restore the same browser profile after a wipe, use **Restaurar backup** and choose that JSON. Import runs the same forward-only migration used on launch, so an older backup can load, but it cannot grant mastery.
+205:If a hosted mission does not load, retry once. If verification is unavailable,
+214:3D nor accessible projection supports the core interaction.
+271:If WebGL is unavailable, use the game's declared accessible projection when it
+139:Concluir uma lição agenda uma revisão para o dia seguinte, depois em 7 dias e depois em 21 dias — é o jeito de fixar o conteúdo, não uma punição. Quando a revisão está no dia, a Home mostra o cartão **Revisão pendente**. Fazer a revisão não muda sua posição na trilha.
+292:| WebGL initialization fails | Select the accessible renderer and retry the core interaction with keyboard controls. | Both projections fail or the accessible projection loses the promised interaction. |
+79:main.ts (dojoToday): 'O jogo emite evidência bruta...' → confirmado acima (linha 79)
+117:main.ts: 'quem avalia a evidência é o verificador independente' → confirmado (linha 117)
+277:main.ts: 'apenas mostra o scheduler — não marca mastered' → confirmado:
+277:      apenas mostra o scheduler — não marca <em>mastered</em>. O verificador independente decide.</p>
+Onboarding.tsx:49:
+49:        <p className="journey-lead">Leva menos de um minuto. Escolha IA Prática ou Dev. Sem conta; o progresso fica neste dispositivo.</p>
+EngineHubApp.tsx:68:
+68:  return 'Evidência bruta · não verificada'
+Hub.tsx:185:
+185:            <h2>Conclusão não é domínio</h2>
+student-guide.md:58-60 (oferta IA Prática no OS):
+## Como fazer IA Prática no OS
+
+Oferta **pronta para cliente** (`os-literacy-guided-mission`, customer-ready). Use o endereço fixo que o facilitador passou. Abra em `/` (não em `/desktop`). Não há conta; o progresso fica neste aparelho. Concluída no host não é domínio verificado.
+student-guide.md:84-87 (retorno mesmo navegador):
+Oferta **pronta para cliente** no OS (`os-returning-learner`, customer-ready **pass**) e no LiteracyDojo avulso. O retorno funciona só no **mesmo navegador e aparelho** onde você começou.
+
+**No OS**
+
+student-guide.md:201-203 (same browser profile):
+The OS saves supported setup and mission state in this browser profile. Reload
+the same device to resume. Another browser, another device, or cleared site data
+starts separately; there is no account or cross-device synchronization.
+student-guide.md:212-214 (accessible projection stop):
+If 3D rendering is unavailable or you prefer reduced motion, use the accessible
+projection and keyboard controls. Stop and ask a facilitator when neither the
+3D nor accessible projection supports the core interaction.
+student-guide.md:233/235-239 (read today's guidance):
+### Read today's guidance in dojoToday
+When embedded in the public OS, dojoToday shows a **sugestão neste dispositivo**
+from local OS progress (active / next guided Dev mission). It is not canonical
+FSRS and does not write `learner/learning_state.yaml`. The standalone generated
+view still reads the canonical projection in lab/operator setups.
+
+diff --git a/engines/codexdojo-os-prototype/src/styles/journey.css b/engines/codexdojo-os-prototype/src/styles/journey.css
+index e98f2e00..c6e70158 100644
+--- a/engines/codexdojo-os-prototype/src/styles/journey.css
++++ b/engines/codexdojo-os-prototype/src/styles/journey.css
+@@ -324,6 +324,18 @@
+ .mission-map-node.verified,
+ .mission-map-node.canonical-mastery { background: var(--journey-primary-soft); }
+ .mission-map-node.locked { opacity: 0.72; }
++/* AID-5080/W4 (plano AID-5010 §1.2/§W4, defeito AA vigente): o par de texto
++   lavado --journey-muted #657089 sobre o wash --journey-primary-soft #e5f2eb
++   = 4.31:1 (texto normal 0.78rem/0.68rem; WCAG AA exige >=4.5). Override
++   local do par APENAS nos nós lavados: #3f4a64 = 7.68:1 no wash (resolve AA
++   e já cobre B9a/AAA). O --school-muted global sobre --school-paper #f8f4ea
++   (4.52) segue aprovado e permanece para o retune AAA da W6. */
++.mission-map-node.completed p,
++.mission-map-node.verified p,
++.mission-map-node.canonical-mastery p,
++.mission-map-node.completed div > span,
++.mission-map-node.verified div > span,
++.mission-map-node.canonical-mastery div > span { color: #3f4a64; }
+ 
+ .honest-progress {
+   display: grid;
+diff --git a/engines/dojoToday/src/styles.css b/engines/dojoToday/src/styles.css
+index 001d1a2a..80d64b4c 100644
+--- a/engines/dojoToday/src/styles.css
++++ b/engines/dojoToday/src/styles.css
+@@ -282,7 +282,12 @@ body {
+   background: var(--trap);
+ }
+ .tone-success .chip {
+-  background: var(--success);
++  /* AID-5080/W4 (plano AID-5010 §1.2/§W4, defeito AA vigente): branco sobre
++     --success #16a34a = 3.30:1 no chip (0.72rem = texto normal; WCAG AA
++     exige >=4.5). --success-deep #166534 (mesmo padrão W1/AID-1027) dá
++     7.13:1 — resolve AA e já cobre B9a/AAA. Override local no chip: o
++     --success global (borda de lesson-card e pares soft) permanece. */
++  background: var(--success-deep);
+ }
+ .due-in {
+   font-weight: 800;
