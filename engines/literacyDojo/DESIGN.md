@@ -7,8 +7,8 @@ colors:
   surface: "#fffdf8"
   surface-strong: "#ffffff"
   text: "#17213a"
-  muted: "#657089"
-  muted-strong: "#4f5a75"
+  muted: "#454f6a"
+  muted-strong: "#3f4a66"
   primary: "#6657e8"
   primary-dark: "#4938c7"
   primary-soft: "#eeeaff"
@@ -20,7 +20,7 @@ colors:
   sky: "#bfe8f8"
   border: "#d9d3c7"
   success-bg: "#e8f8ef"
-  success-text: "#14734d"
+  success-text: "#0d5c3b"
   error-bg: "#fff0ed"
   error-text: "#b83a31"
 typography:
@@ -80,7 +80,7 @@ rounded cards, buttons that visibly press. Never corporate, never dark.
 - **bg/surface** (`#f8f4ea`/`#fffdf8`): warm paper canvas and card surfaces.
 - **Primary violet** (`#6657e8`, dark `#4938c7`, soft `#eeeaff`): the only interactive brand color; soft tint for chips and washes.
 - **Mint/sun/coral/sky**: pastel accents for lesson states and illustrations — friendly, never neon.
-- **Semantic pairs** (bg+text): success `#e8f8ef`/`#14734d`, error `#fff0ed`/`#b83a31`. Keep pairs together; don't mix tints.
+- **Semantic pairs** (bg+text): success `#e8f8ef`/`#0d5c3b`, error `#fff0ed`/`#b83a31`. Keep pairs together; don't mix tints.
 
 ## Typography
 
@@ -128,9 +128,14 @@ Tier de acessibilidade do HUD: **B9** (§7/§4 do contrato — AAA 7:1 texto,
 3:1 não-texto; B2 AA continua o piso geral). Anatomia canônica de 4 papéis,
 testids `hud-streak`/`hud-progress`/`hud-mastery-badge`/`hud-review-due` e
 responsividade 375/768/1280 chegam na W7 (AID-5010) — até lá os tokens são
-declaração+mapping, sem consumidores. Os valores AA-tuned afetados pelo B9
-(`--muted`, par stat-done) estão marcados `@deprecated → --ads-* (B9)`; o
-retune é a W6, não aqui.
+declaração+mapping, sem consumidores. **AID-5177/W6 — retune AAA aplicado**
+(contrato §4 B9a/B9b): `--muted` #657089→#454f6a, `--muted-strong`
+#4f5a75→#3f4a66, par stat-done `--success-text` #14734d→#0d5c3b (fundo
+`#e8f8ef` inalterado) e **extremo do gradiente do medidor** `#0ea5e9`→
+`#0284c7` (não-texto 2.28:1→3.36:1 sobre a trilha `#e5e9f0`, WCAG 1.4.11) —
+os marcadores `@deprecated → --ads-* (B9)` destes pares foram removidos
+(janela fechada na W6). Evidência: `playwright/a11y-w6-hud-aaa.spec.ts`
+(getComputedStyle; 0 falhas B9a/B9b/B2).
 
 ## Do's and Don'ts
 

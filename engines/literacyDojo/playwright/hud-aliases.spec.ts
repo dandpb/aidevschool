@@ -34,11 +34,11 @@ const HUD_TOKENS = [
 // getComputedStyle). Revisar apenas junto com a W6 (retune B9).
 const EXPECTED: Record<(typeof HUD_TOKENS)[number], string> = {
   "--ads-progress-text": "#17213a", // var(--text)
-  "--ads-progress-muted": "#657089", // var(--muted)
+  "--ads-progress-muted": "#454f6a", // var(--muted) — W6 AAA (AID-5177)
   "--ads-progress-track": "#e5e9f0", // .progress-track (literal local)
   "--ads-progress-fill": "#4f46e5", // .progress-fill (início do gradiente local)
   "--ads-streak-accent": "#ffbf47", // var(--sun) — accent quente local
-  "--ads-mastery-text": "#14734d", // var(--success-text) — par stat-done (referência)
+  "--ads-mastery-text": "#0d5c3b", // var(--success-text) — par stat-done, W6 AAA
   "--ads-mastery-bg": "#e8f8ef", // var(--success-bg)
   "--ads-review-text": "#17213a", // var(--text) — reviews-due/card-review
   "--ads-review-bg": "#fffdf8", // var(--surface)

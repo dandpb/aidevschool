@@ -37,15 +37,15 @@ const HUD_TOKENS = [
 // apenas junto com a W6 (retune B9).
 const EXPECTED: Record<(typeof HUD_TOKENS)[number], string> = {
   '--ads-progress-text': '#17213a', // var(--school-ink)
-  '--ads-progress-muted': '#657089', // var(--school-muted)
+  '--ads-progress-muted': '#3f4a64', // var(--school-muted) — W6 AAA (AID-5177)
   '--ads-progress-track': '#ded8cd', // .hub-mission-progress (literal local)
-  '--ads-progress-fill': '#49c98f', // .hub-mission-progress span (literal local)
+  '--ads-progress-fill': '#1f8259', // .hub-mission-progress span — W6 AAA (AID-5177, B9b)
   '--ads-streak-accent': '#ff755d', // var(--coral) — Flame do topbar
-  '--ads-mastery-text': '#3f4a64', // override W4 nos nós lavados
+  '--ads-mastery-text': '#3f4a64', // var(--school-muted) pós-W6 (override W4 removido)
   '--ads-mastery-bg': '#e5f2eb', // var(--school-primary-soft)
   '--ads-review-text': '#1f4034', // var(--school-primary-dark) — "próximo passo"
   '--ads-review-bg': '#e5f2eb', // var(--school-primary-soft)
-  '--ads-attention-text': '#657089', // var(--school-muted) — in-progress/evidence-pending
+  '--ads-attention-text': '#3f4a64', // var(--school-muted) — W6 AAA (AID-5177)
   '--ads-attention-bg': '#fff6df', // wash quente dos nós in-progress/evidence-pending
 }
 

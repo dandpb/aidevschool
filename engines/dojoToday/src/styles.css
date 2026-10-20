@@ -5,13 +5,18 @@
   --bg-grad-a: #fdf6ec;
   --bg-grad-b: #f3e9ff;
   --ink: #1f1b2e;
-  --ink-soft: #5b5570;
+  /* AID-5177/W6 (plano AID-5010 §4/§W6, contrato §4 B9a): retune AAA do par
+     de texto do HUD --ink-soft sobre o gradiente do streak (#fff7ed→#ffffff)
+     — 6.64:1 → 8.00:1; matiz preservada. Mapeado por rótulos do HUD via
+     gradiente (hero-date, streak-sub); nenhum uso fora do escopo texto. */
+  --ink-soft: #4f4a5e;
   /* AID-1023/W0 (auditoria AID-914 §1.4): AA — #8a83a0 = 3.35:1 sobre --bg.
-     #686378 mantém matiz/saturação e dá ≥4.5:1 em todos os pares texto/fundo
-     (pior caso .track-glyph sobre --line #ece6f5 = 4.72:1). */
-  /* @deprecated → --ads-progress-muted (B9) — AA-tuned, retune AAA (#4e495b)
-     só na W6 (plano AID-5010 §4; janela de 2 ciclos, contrato §5). */
-  --muted: #686378;
+     #686378 manteve matiz/saturação com ≥4.5:1 em todos os pares.
+     AID-5177/W6 (contrato §4 B9a; janela de deprecação fechada nesta onda
+     para este par): retune AAA #686378 → #4e495b — 4.72–5.76:1 → 7.98:1
+     (sobre --bg #fdf6ec; 8.65:1 sobre --card), matiz preservada. Valor
+     mapeado por --ads-progress-muted (rótulos do HUD, §7.1). */
+  --muted: #4e495b;
   --card: #ffffff;
   --line: #ece6f5;
   --primary: #4f46e5;
@@ -20,12 +25,13 @@
   --amber-deep: #b45309;
   --success: #16a34a;
   /* AID-1027/W1 (auditoria AID-914, achado vizinho do W0): AA — #16a34a sobre
-     --success-soft #dcfce7 = 3.0:1. #166534 mantém o matiz verde e dá 6.49:1
-     no par .is-mastered .track-glyph (padrão --deep igual a --amber-deep). */
-  /* @deprecated → --ads-mastery-text/--ads-mastery-bg (B9) — par atômico
-     AA-tuned, retune AAA (#12502a) só na W6 (plano AID-5010 §4; janela de
-     2 ciclos, contrato §5). */
-  --success-deep: #166534;
+     --success-soft #dcfce7 = 3.0:1. #166534 manteve o matiz verde a 6.49:1.
+     AID-5177/W6 (contrato §4 B9a/B9b; janela fechada nesta onda): retune
+     AAA #166534 → #12502a — 8.67:1 no glifo .is-mastered .track-glyph e
+     9.20:1 no chip de revisão (branco sobre --success-deep), matiz verde
+     preservada. Par atômico mapeado por --ads-mastery-text/--ads-mastery-bg
+     e --ads-review-bg (§7.1). */
+  --success-deep: #12502a;
   --success-soft: #dcfce7;
   --danger: #e11d48;
   --danger-soft: #ffe4e6;
@@ -101,7 +107,13 @@ body {
   letter-spacing: 0.08em;
   font-size: 0.72rem;
   font-weight: 800;
-  color: var(--primary);
+  /* AID-5177/W6 (plano AID-5010 §1.2/§W6, contrato §4 B9a): retune AAA do
+     eyebrow do HUD — var(--primary) #4f46e5 = 5.86:1 sobre --bg; valor local
+     do PAR (não do token --primary, que segue #4f46e5 para CTAs/medidor):
+     #3b37b6 = 7.44:1 sobre o pior endpoint do gradiente do corpo
+     (--bg-grad-b #f3e9ff; 8.13:1 sobre --bg #fdf6ec), matiz índigo
+     preservada. */
+  color: #3b37b6;
   margin: 0 0 4px;
 }
 

@@ -9,10 +9,12 @@
   --panel-solid: #0d1525;
   --panel-soft: #121d31;
   --line: rgba(255, 255, 255, 0.1);
-  /* @deprecated → --ads-progress-muted (B9) — AA-tuned (4.52:1 sobre
-     --school-paper), retune AAA (#3f4a64) só na W6 (plano AID-5010 §4;
-     janela de 2 ciclos, contrato §5). */
-  --muted: #8f9bb0;
+  /* AID-5177/W6 (plano AID-5010 §4/§W6, contrato §4 B9a; janela de
+     deprecação fechada nesta onda): retune AAA do namespace escuro
+     #8f9bb0 → #a3aec4 — 6.50:1 → 8.17:1 sobre --panel-solid #0d1525 e
+     6.78:1 → 8.53:1 sobre o bg #07101f, matiz preservada (metadata do
+     desktop chrome; rótulos escuros do HUD). */
+  --muted: #a3aec4;
   /* AID-1023/W0 (auditoria AID-914 §1.1-4): --text era fantasma em engine-hub.css:60.
      Declarado no namespace escuro do OS com a cor base de texto do app (:root color),
      preservando a cor efetiva herdada. O par claro é --school-ink (usar este valor em
@@ -26,11 +28,14 @@
   --school-paper: #f8f4ea;
   --school-surface: #fffdf8;
   --school-ink: #17213a;
-  /* @deprecated → --ads-progress-muted (B9) — AA-tuned (4.52:1 sobre
-     --school-paper; 4.96:1 sobre branco), retune AAA (#3f4a64, mesmo valor
-     do override W4 nos nós lavados) só na W6 (plano AID-5010 §4; janela
-     de 2 ciclos, contrato §5). */
-  --school-muted: #657089;
+  /* AID-5177/W6 (plano AID-5010 §4/§W6, contrato §4 B9a; janela fechada
+     nesta onda): retune AAA do par claro do journey #657089 → #3f4a64 —
+     4.52:1 → 8.05:1 sobre --school-paper #f8f4ea e 4.96:1 → 8.84:1 sobre
+     branco (progress-summary/missions 0.7rem), mesmo valor do override W4
+     nos nós lavados (que esta onda torna redundante e remove), matiz
+     preservada. Valor mapeado por --ads-progress-muted e
+     --ads-attention-text (§7.1). */
+  --school-muted: #3f4a64;
   --school-line: #d9d3c7;
   --school-primary: #315c4c;
   --school-primary-dark: #1f4034;
@@ -49,7 +54,8 @@
      apenas, zero mudança visual (consumo/testids/anatomia são a W7).
      Mapping: rótulos do HUD = pares ink/muted do tema journey (hub-chips,
      progress-summary); medidor = .hub-mission-progress (trilha #ded8cd +
-     preenchimento mint #49c98f do journey.css); streak = Flame do topbar do
+     preenchimento mint #1f8259 pós-retune W6/AID-5177 do journey.css);
+     streak = Flame do topbar do
      desktop chrome (--coral); par mastered = nós lavados do mapa pós-W4
      (#3f4a64 sobre --school-primary-soft — já ≥7:1, B9a coberto);
      revisão devida/atrasada: o OS não exibe FSRS por design (§7.4 —
@@ -60,7 +66,7 @@
   --ads-progress-text: var(--school-ink);
   --ads-progress-muted: var(--school-muted);
   --ads-progress-track: #ded8cd;
-  --ads-progress-fill: #49c98f;
+  --ads-progress-fill: #1f8259;
   --ads-streak-accent: var(--coral);
   --ads-mastery-text: #3f4a64;
   --ads-mastery-bg: var(--school-primary-soft);
