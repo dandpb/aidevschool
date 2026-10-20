@@ -1,0 +1,122 @@
+# Citation carry-over v113 (v112/v111 observation notes -> tree 8a5c9d25 = main 32a20e2f + snapshot)
+
+== dojotoday-active-unit-guidance
+   [OK ] docs/product-readiness/evidence/observations/2026-09-16-15d69d50-dojotoday-regrant-v90/observations.json :: exact byte match :: O jogo emite evidência bruta; um verificador independente decide o gate
+   [OK ] docs/product-readiness/evidence/observations/2026-09-03-0b8148e-ready-r1-regrant-v26/observations.json :: exact byte match :: quem avalia a evidência é o verificador independente, não eu
+   [OK ] docs/product-readiness/evidence/observations/2026-09-04-289cdbd-dojotoday-xsschain-regrant-v28/observations.json :: exact byte match :: apenas mostra o scheduler — não marca mastered
+   [OK ] file present :: main.ts -> curriculum/01_rate_limiter/node-impl/src/main.ts
+   [OK ] file present :: engines/dojoToday/src/main.ts -> engines/dojoToday/src/main.ts
+   [OK ] file present :: student-guide.md -> docs/product-readiness/student-guide.md
+== dojotoday-read-only-boundary
+   [OK ] docs/product-readiness/evidence/observations/2026-09-27-c7b996cb-auto-regrant-v99/observations.json :: exact byte match :: Return the dojoToday snapshot dict derived from the canonical state
+   [OK ] file present :: learner/substrate/adapters/dojotoday.py -> learner/substrate/adapters/dojotoday.py
+   [OK ] file present :: engines/dojoToday/tools/selfcheck.py -> engines/dojoToday/tools/selfcheck.py
+   [OK ] file present :: main.ts -> curriculum/01_rate_limiter/node-impl/src/main.ts
+   [OK ] file present :: student-guide.md -> docs/product-readiness/student-guide.md
+== dojotoday-returning-next-day
+   [OK ] docs/product-readiness/evidence/observations/2026-09-28-a02b1833-auto-regrant-v103/observations.json :: exact byte match :: s guidance — o retorno diário lê o scheduler e as revisões devidas, sem avaliação carryove
+   [OK ] file present :: main.ts -> curriculum/01_rate_limiter/node-impl/src/main.ts
+   [OK ] file present :: dojotoday.py -> learner/substrate/adapters/dojotoday.py
+   [OK ] file present :: student-guide.md -> docs/product-readiness/student-guide.md
+== literacy-corridor-gate-retry
+   [OK ] docs/product-readiness/evidence/observations/2026-09-16-cabdc4a1-claims-regrant-v88/observations.json :: exact byte match :: nada é perdido — leia o feedback, peça uma dica e tente de novo
+   [OK ] docs/product-readiness/JORNADA-DEV-QUICKSTART_2026-10-01.md :: exact byte match :: Tentar novamente
+   [OK ] file present :: LessonScreen.tsx -> engines/literacyDojo/src/screens/LessonScreen.tsx
+   [OK ] file present :: student-guide.md -> docs/product-readiness/student-guide.md
+== literacy-corridor-happy-path
+   [OK ] docs/product-readiness/evidence/observations/2026-09-18-4858feab-auto-regrant-v95/observations.json :: exact byte match :: Continuar: Desafio do Módulo {n}
+   [OK ] docs/product-readiness/evidence/observations/2026-10-19-4157850e-auto-regrant-v107/observations.json :: exact byte match :: VILA LUME · Desafio do Módulo {n} · atividade {i} de {t}
+   [OK ] file present :: CheckpointScreen.tsx -> engines/literacyDojo/src/screens/CheckpointScreen.tsx
+   [OK ] file present :: student-guide.md -> docs/product-readiness/student-guide.md
+   [OK ] file present :: HomeScreen.tsx -> engines/literacyDojo/src/screens/HomeScreen.tsx
+== literacy-corridor-review-window
+   [OK ] docs/product-readiness/evidence/observations/2026-09-16-cabdc4a1-claims-regrant-v88/observations.json :: exact byte match :: Por que as revisões voltam
+   [OK ] docs/product-readiness/evidence/observations/2026-09-28-a02b1833-auto-regrant-v103/observations.json :: exact byte match :: é revisão, não conteúdo novo
+   [OK ] docs/product-readiness/evidence/observations/2026-09-16-cabdc4a1-claims-regrant-v88/observations.json :: exact byte match :: Fazer a revisão não muda sua posição na trilha
+   [OK ] docs/product-readiness/evidence/observations/2026-09-06-ba9525b-corridor-regrant-v30/observations.json :: exact byte match :: Revisão pendente
+   [OK ] docs/product-readiness/evidence/observations/2026-10-19-4157850e-auto-regrant-v107/observations.json :: exact byte match :: Revisão pendente agora:
+   [OK ] file present :: ProgressScreen.tsx -> engines/codexdojo-os-prototype/src/journey/ProgressScreen.tsx
+   [OK ] file present :: student-guide.md -> docs/product-readiness/student-guide.md
+   [OK ] file present :: HomeScreen.tsx -> engines/literacyDojo/src/screens/HomeScreen.tsx
+== literacy-happy-path
+   [OK ] docs/product-readiness/evidence/observations/2026-09-03-0b8148e-ready-r1-regrant-v26/observations.json :: exact byte match :: VILA LUME · MISSÃO CONCLUÍDA
+   [OK ] docs/product-readiness/evidence/observations/2026-09-18-4858feab-auto-regrant-v95/observations.json :: exact byte match :: Continuar: Desafio do Módulo {n}
+   [OK ] docs/product-readiness/evidence/observations/2026-09-16-cabdc4a1-claims-regrant-v88/observations.json :: exact byte match :: Continue pela próxima lição do bairro, faça o Desafio do Módulo quando ele abrir, ou compl
+   [OK ] file present :: HomeScreen.tsx -> engines/literacyDojo/src/screens/HomeScreen.tsx
+   [OK ] file present :: student-guide.md -> docs/product-readiness/student-guide.md
+   [OK ] file present :: ResultScreen.tsx -> engines/codexdojo-os-prototype/src/journey/ResultScreen.tsx
+== literacy-resume
+   [OK ] docs/product-readiness/evidence/observations/2026-09-27-c7b996cb-auto-regrant-v99/observations.json :: exact byte match :: Your onboarding and lesson progress are stored locally in this browser... There is no acco
+   [OK ] docs/product-readiness/evidence/observations/2026-09-16-cabdc4a1-claims-regrant-v88/observations.json :: exact byte match :: sempre no mesmo aparelho
+   [OK ] file present :: student-guide.md -> docs/product-readiness/student-guide.md
+== literacy-retry
+   [OK ] docs/product-readiness/JORNADA-DEV-QUICKSTART_2026-10-01.md :: exact byte match :: Tentar novamente
+   [OK ] file present :: LessonScreen.tsx -> engines/literacyDojo/src/screens/LessonScreen.tsx
+   [OK ] file present :: student-guide.md -> docs/product-readiness/student-guide.md
+== minitown-explore-only
+   [OK ] docs/product-readiness/evidence/observations/2026-09-16-cabdc4a1-claims-regrant-v88/observations.json :: exact byte match :: explore-only surface, not a lesson or a customer-ready journey. It makes no promise of com
+   [OK ] docs/product-readiness/evidence/observations/2026-10-19-4157850e-auto-regrant-v107/observations.json :: exact byte match :: Label miniTown as experimental and explore-only before launch
+   [OK ] file present :: student-guide.md -> docs/product-readiness/student-guide.md
+   [OK ] file present :: facilitator-guide.md -> docs/product-readiness/facilitator-guide.md
+== os-literacy-hosted-mission
+   [OK ] docs/product-readiness/evidence/observations/2026-10-19-4157850e-auto-regrant-v107/observations.json :: exact byte match :: Não há conta; o progresso fica neste aparelho. Concluída no host não é domínio verificado
+   [OK ] docs/product-readiness/evidence/observations/2026-09-03-0b8148e-ready-r1-regrant-v26/observations.json :: exact byte match :: Escolha IA Prática ou Dev. Sem conta; o progresso fica neste dispositivo
+   [OK ] file present :: Onboarding.tsx -> engines/codexdojo-os-prototype/src/journey/Onboarding.tsx
+   [OK ] file present :: student-guide.md -> docs/product-readiness/student-guide.md
+== os-literacy-returning-device
+   [OK ] docs/product-readiness/evidence/observations/2026-10-19-4157850e-auto-regrant-v107/observations.json :: exact byte match :: The OS saves supported setup and mission state in this browser profile... there is no acco
+   [OK ] file present :: student-guide.md -> docs/product-readiness/student-guide.md
+== os-onboarding-track-choice
+   [OK ] docs/product-readiness/evidence/observations/2026-09-03-0b8148e-ready-r1-regrant-v26/observations.json :: exact byte match :: Leva menos de um minuto. Escolha IA Prática ou Dev. Sem conta; o progresso fica neste disp
+   [OK ] file present :: Onboarding.tsx -> engines/codexdojo-os-prototype/src/journey/Onboarding.tsx
+   [OK ] file present :: student-guide.md -> docs/product-readiness/student-guide.md
+== os-renderer-accessibility-recovery
+   [OK ] docs/product-readiness/evidence/observations/2026-09-16-cabdc4a1-claims-regrant-v88/observations.json :: exact byte match :: use the accessible projection and keyboard controls. Stop and ask a facilitator when neith
+   [OK ] docs/product-readiness/evidence/observations/2026-09-06-505e7a6-os-c2-regrant-v30/observations.json :: exact byte match :: Both projections fail or the accessible projection loses the promised interaction
+   [OK ] file present :: student-guide.md -> docs/product-readiness/student-guide.md
+   [OK ] file present :: facilitator-guide.md -> docs/product-readiness/facilitator-guide.md
+== os-returning-device
+   [OK ] docs/product-readiness/evidence/observations/2026-08-28-os-voxel-returning-live/observations.json :: exact byte match :: o progresso fica neste dispositivo
+   [OK ] file present :: Onboarding.tsx -> engines/codexdojo-os-prototype/src/journey/Onboarding.tsx
+   [OK ] file present :: student-guide.md -> docs/product-readiness/student-guide.md
+== os-returning-recovery
+   [OK ] docs/product-readiness/evidence/observations/2026-10-19-4157850e-auto-regrant-v107/observations.json :: exact byte match :: If a hosted mission does not load, retry once. If verification is unavailable...
+   [OK ] file present :: student-guide.md -> docs/product-readiness/student-guide.md
+== os-verification-recovery
+   [OK ] docs/product-readiness/evidence/observations/2026-09-15-os-voxel-regrant-v79/observations.json :: exact byte match :: Evidência bruta · não verificada
+   [OK ] file present :: student-guide.md -> docs/product-readiness/student-guide.md
+   [OK ] file present :: EngineHubApp.tsx -> engines/codexdojo-os-prototype/src/engines/EngineHubApp.tsx
+== os-voxel-hosted-missions
+   [OK ] docs/product-readiness/evidence/observations/2026-08-28-os-voxel-returning-live/observations.json :: exact byte match :: Conclusão não é domínio
+   [OK ] docs/product-readiness/evidence/observations/2026-09-15-os-voxel-regrant-v79/observations.json :: exact byte match :: Evidência bruta · não verificada
+   [OK ] file present :: Hub.tsx -> engines/codexdojo-os-prototype/src/journey/Hub.tsx
+   [OK ] file present :: EngineHubApp.tsx -> engines/codexdojo-os-prototype/src/engines/EngineHubApp.tsx
+== os-voxel-returning-device
+   [OK ] docs/product-readiness/evidence/observations/2026-09-16-cabdc4a1-claims-regrant-v88/observations.json :: exact byte match :: O retorno funciona só no mesmo navegador e aparelho
+   [OK ] file present :: student-guide.md -> docs/product-readiness/student-guide.md
+== pixelquest-encounter-evidence
+   [OK ] docs/product-readiness/evidence/observations/2026-09-03-0b8148e-ready-r1-regrant-v26/observations.json :: exact byte match :: That record is raw evidence, not verifier acceptance or mastery
+   [OK ] file present :: student-guide.md -> docs/product-readiness/student-guide.md
+== pixelquest-evidence-recovery
+   [OK ] docs/product-readiness/evidence/observations/2026-09-27-c7b996cb-auto-regrant-v99/observations.json :: exact byte match :: Your supported next action is to hand the record to the independent verifier
+   [OK ] docs/product-readiness/evidence/observations/2026-09-27-c7b996cb-auto-regrant-v99/observations.json :: exact byte match :: do not treat the replay itself as validated
+   [OK ] file present :: student-guide.md -> docs/product-readiness/student-guide.md
+   [OK ] docs/product-readiness/evidence/observations/2026-09-03-0b8148e-ready-r1-regrant-v26/observations.json :: exact byte match :: A screenshot or success message is not a substitute. Stop and ask a facilitator when the r
+   [OK ] file present :: student-guide.md -> docs/product-readiness/student-guide.md
+== pixelquest-returning-evidence-handoff
+   [OK ] file present :: student-guide.md -> docs/product-readiness/student-guide.md
+== voxel-accessible-renderer
+   [OK ] docs/product-readiness/evidence/observations/2026-09-16-voxel-regrant-v82/observations.json :: exact byte match :: use the game
+   [OK ] file present :: shared/sceneHarness.ts -> engines/voxelDojo/shared/sceneHarness.ts
+   [OK ] file present :: voxelDojo/AGENTS.md -> engines/voxelDojo/AGENTS.md
+   [OK ] file present :: student-guide.md -> docs/product-readiness/student-guide.md
+   [OK ] docs/product-readiness/evidence/observations/2026-10-19-4157850e-auto-regrant-v107/observations.json :: exact byte match :: Hand valid raw evidence to the independent verifier, or exit at that unsupported boundary 
+   [OK ] file present :: student-guide.md -> docs/product-readiness/student-guide.md
+== voxel-standalone-loop
+   [OK ] docs/product-readiness/evidence/observations/2026-09-03-0b8148e-ready-r1-regrant-v26/observations.json :: exact byte match :: A passing game validates only that declared package; it says nothing about its siblings an
+   [OK ] file present :: AGENTS.md -> AGENTS.md
+   [OK ] file present :: student-guide.md -> docs/product-readiness/student-guide.md
+== voxel-standalone-return-reentry
+   [OK ] file present :: student-guide.md -> docs/product-readiness/student-guide.md
+
+TOTAL: checked=93 relocated=93 missing=0

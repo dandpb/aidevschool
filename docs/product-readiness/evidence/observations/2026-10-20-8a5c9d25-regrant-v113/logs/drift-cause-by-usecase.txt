@@ -1,0 +1,20 @@
+# Drift cause by use case (v113 window: f2c9d670 -> 32a20e2f, branch 8a5c9d25 = snapshot eb79b737 + main 32a20e2f)
+
+## commits touching engines/dojoToday/src/main.ts:
+2a181e36 update-branch main (41f4419c: PR #722/AID-5221 explicit for-labels + palette entry) into PR #717 (AID-5220; merge-door prerequisite — .jules/palette.md EOF conflict resolved as union preserving both entries verbatim; content delta of this PR unchanged: engines/dojoToday/src/main.ts +5/-1 ask() empty-question feedback, .jules/palette.md +3)
+10289181 Merge branch 'main' into palette-empty-socrates-query-15134654962871991439
+29da3cfe feat(dojoToday): add actionable feedback for empty Socrates queries
+
+## commits touching engines/codexdojo-os-prototype/src/practice/:
+1aec29f6 Merge branch 'main' into aid3772/f1-takeaway-final
+817f77c4 fix(codexdojo-os): AID-3772 — retorno explícito takeaway→feedback (revisao-pedida) preserva a sessão; fim do beco sem saída do pg-c01 (F1, fatia r5 sobre b20fdc74)
+
+## commits touching engines/voxelDojo/game-03-wormhole/:
+3615c286 test(voxelDojo): AID-3275(b) — cobertura permanente de evaluateCollisionPredictions (game-03-wormhole)
+
+## commits touching learner/substrate/:
+
+## commits touching engines/literacyDojo/src/:
+
+## learner/analytics_bridge (new, outside learner/substrate => fingerprint-neutral for dojotoday):
+13
