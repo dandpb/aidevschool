@@ -58,7 +58,7 @@ class CompetencyReadModelContractTest(TrackFixtureMixin):
         with tempfile.TemporaryDirectory() as tmp:
             text = _compile_live(tmp)
             entries = _extract_const(text, "competencyLessons")
-            self.assertEqual(len(entries), 32)
+            self.assertEqual(len(entries), 35)
             by_id = {entry["lessonId"]: entry for entry in entries}
             self.assertEqual(set(by_id), set(RATIFIED))
             for lesson_id, ratified in RATIFIED.items():

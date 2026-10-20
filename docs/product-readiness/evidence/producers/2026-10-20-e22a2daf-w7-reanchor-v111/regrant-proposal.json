@@ -1,0 +1,9 @@
+{
+  "assessmentId": "2026-10-20-e22a2daf-w7-reanchor-v111",
+  "branch": "qa/regrant-w7-observation",
+  "generatedAt": "2026-10-20T04:32:12.362948+00:00",
+  "gitSha": "e22a2daffbc371023e2e6b82a07bdd4d05555836",
+  "schemaVersion": 1,
+  "status": "written",
+  "useCases": []
+}

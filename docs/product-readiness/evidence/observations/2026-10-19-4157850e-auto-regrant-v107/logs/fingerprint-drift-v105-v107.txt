@@ -1,0 +1,30 @@
+dojotoday-active-unit-guidance                DRIFT    changedSourcePaths=-
+dojotoday-read-only-boundary                  OBS-ONLY changedSourcePaths=-
+dojotoday-returning-next-day                  DRIFT    changedSourcePaths=-
+literacy-corridor-gate-retry                  DRIFT    changedSourcePaths=-
+literacy-corridor-grandfathered-return        DRIFT    changedSourcePaths=['engines/literacyDojo/src/domain/migration.ts']
+literacy-corridor-happy-path                  DRIFT    changedSourcePaths=-
+literacy-corridor-resume-mid-module           DRIFT    changedSourcePaths=['engines/literacyDojo/src/domain/trackQueries.ts']
+literacy-corridor-review-window               DRIFT    changedSourcePaths=['engines/literacyDojo/src/domain/progress.ts']
+literacy-happy-path                           DRIFT    changedSourcePaths=['engines/literacyDojo/src/domain/progress.ts']
+literacy-resume                               DRIFT    changedSourcePaths=['engines/literacyDojo/src/adapters/indexedDbProgressRepository.ts']
+literacy-retry                                DRIFT    changedSourcePaths=-
+minitown-explore-only                         DRIFT    changedSourcePaths=-
+os-literacy-hosted-mission                    DRIFT    changedSourcePaths=-
+os-literacy-returning-device                  DRIFT    changedSourcePaths=['engines/codexdojo-os-prototype/tests/chapter-continuity.smoke.spec.ts']
+os-onboarding-track-choice                    DRIFT    changedSourcePaths=-
+os-renderer-accessibility-recovery            DRIFT    changedSourcePaths=-
+os-returning-device                           DRIFT    changedSourcePaths=['engines/codexdojo-os-prototype/tests/chapter-continuity.smoke.spec.ts']
+os-returning-recovery                         DRIFT    changedSourcePaths=-
+os-verification-recovery                      DRIFT    changedSourcePaths=-
+os-voxel-hosted-missions                      DRIFT    changedSourcePaths=-
+os-voxel-returning-device                     DRIFT    changedSourcePaths=['engines/codexdojo-os-prototype/tests/chapter-continuity.smoke.spec.ts']
+pixelquest-encounter-evidence                 SAME     changedSourcePaths=-
+pixelquest-evidence-recovery                  OBS-ONLY changedSourcePaths=-
+pixelquest-returning-evidence-handoff         SAME     changedSourcePaths=-
+voxel-accessible-renderer                     OBS-ONLY changedSourcePaths=-
+voxel-standalone-loop                         SAME     changedSourcePaths=-
+voxel-standalone-return-reentry               SAME     changedSourcePaths=-
+
+drifted scenarios: 20
+obs-only (no factory report): dojotoday-read-only-boundary, pixelquest-evidence-recovery, voxel-accessible-renderer

@@ -23,14 +23,20 @@
  "masteredCount": 2,
  "nextReviews": [
   {
+   "difficulty": 2.1181,
+   "due": "2026-07-09",
    "dueIn": "overdue 70d",
    "reason": "overdue",
+   "stability": 2.3065,
    "title": "GATEKEEPER: token-bucket robustness",
    "unitId": "U0-sonda-rate-limiter-robustness"
   },
   {
+   "difficulty": 2.1181,
+   "due": "2026-08-17",
    "dueIn": "overdue 31d",
    "reason": "overdue",
+   "stability": 2.3065,
    "title": "KV WAREHOUSE: CRUD with TTL",
    "unitId": "U2-key-value-store"
   },

@@ -2,7 +2,11 @@
    engines/school-entry/server/catalog.mjs @ 80c7addc (PR #615 candidate).
    Pure data module (no DOM) so the honesty test can import and diff it.
    Drift rule: any change here requires re-porting from school-entry and
-   updating the pinned hashes in tests/static-entry/escola-honesty.test.ts. */
+   updating the pinned hashes in tests/static-entry/escola-honesty.test.ts.
+   AID-3700 revision: dev-journey copy reflects the app state of this
+   composition — a Jornada Dev está publicada no app (9 lições, l15–l29;
+   journeySwitchFlow 5/5), então o rótulo de prévia herdado de 80c7addc
+   não se sustenta nesta composição. */
 export const SCHOOL_ENTRY = Object.freeze({
   schemaVersion: 1,
   fundamentals: Object.freeze({
@@ -40,15 +44,15 @@ export const SCHOOL_ENTRY = Object.freeze({
     }),
     Object.freeze({
       id: "dev",
-      audience: "JORNADA 2 · PARA QUEM DESENVOLVE · PRÉVIA",
+      audience: "JORNADA 2 · PARA QUEM DESENVOLVE · OPCIONAL",
       title: "IA para Dev",
       description:
-        "Construa software robusto com IA: intenção, plano, construção, teste e review. Comece pelos mesmos fundamentos; a ponte Dev é uma prévia planejada — o destino, não um percurso pronto no app.",
+        "Construa software robusto com IA: intenção, plano, construção, teste e review. Jornada opcional do app de lições: começa do zero dela, sem pré-requisito — a troca de jornada fica no início do app.",
       engineId: "literacyDojo",
-      preview: true,
+      preview: false,
       cta: "Começar pelos fundamentos",
       bridge: Object.freeze({
-        label: "Depois dos fundamentos — ponte Dev (prévia planejada)",
+        label: "Depois dos fundamentos — Jornada Dev no app (9 lições)",
         trackId: "dev",
         moduleId: "mod-05",
         lessons: Object.freeze(
@@ -64,7 +68,7 @@ export const SCHOOL_ENTRY = Object.freeze({
             ["l29", "Avalie as dependências sugeridas"],
           ].map(([id, title]) => Object.freeze([id, title])),
         ),
-        note: "Prévia planejada: hoje o app de lições abre a trilha de fundamentos; esta ponte Dev (módulo 05 do currículo) ainda não faz parte do percurso do app — as lições acima mostram o destino planejado. Laboratórios 3D são prática opcional, não porta de entrada.",
+        note: "Já faz parte do percurso do app: as lições acima estão na Jornada Dev do app de lições, em sequência guiada a partir de l15 — opcionais e sem pré-requisito. Laboratórios 3D são prática opcional, não porta de entrada.",
       }),
     }),
   ]),

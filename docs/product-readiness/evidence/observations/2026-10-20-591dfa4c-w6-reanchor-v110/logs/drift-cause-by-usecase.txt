@@ -1,0 +1,25 @@
+[STALE] literacy-standalone-first-lesson: 1 arquivo(s) do delta W6 sob sourcePaths
+    engines/literacyDojo/src/styles.css  (via engines/literacyDojo/src/)
+[STALE] literacy-standalone-corridor-mod01-03: 1 arquivo(s) do delta W6 sob sourcePaths
+    engines/literacyDojo/src/styles.css  (via engines/literacyDojo/src/)
+[STALE] os-literacy-guided-mission: 3 arquivo(s) do delta W6 sob sourcePaths
+    engines/codexdojo-os-prototype/src/styles/foundation.css  (via engines/codexdojo-os-prototype/src/)
+    engines/codexdojo-os-prototype/src/styles/journey.css  (via engines/codexdojo-os-prototype/src/)
+    engines/literacyDojo/src/styles.css  (via engines/literacyDojo/src/)
+[STALE] os-voxel-guided-missions: 4 arquivo(s) do delta W6 sob sourcePaths
+    engines/codexdojo-os-prototype/src/styles/foundation.css  (via engines/codexdojo-os-prototype/src/)
+    engines/codexdojo-os-prototype/src/styles/journey.css  (via engines/codexdojo-os-prototype/src/)
+    engines/codexdojo-os-prototype/tests/a11y-w6.smoke.spec.ts  (via engines/codexdojo-os-prototype/tests/)
+    engines/codexdojo-os-prototype/tests/hud-aliases.smoke.spec.ts  (via engines/codexdojo-os-prototype/tests/)
+[STALE] os-returning-learner: 4 arquivo(s) do delta W6 sob sourcePaths
+    engines/codexdojo-os-prototype/src/styles/foundation.css  (via engines/codexdojo-os-prototype/src/)
+    engines/codexdojo-os-prototype/src/styles/journey.css  (via engines/codexdojo-os-prototype/src/)
+    engines/codexdojo-os-prototype/tests/a11y-w6.smoke.spec.ts  (via engines/codexdojo-os-prototype/tests/)
+    engines/codexdojo-os-prototype/tests/hud-aliases.smoke.spec.ts  (via engines/codexdojo-os-prototype/tests/)
+[STALE] dojotoday-daily-guidance: 3 arquivo(s) do delta W6 sob sourcePaths
+    engines/dojoToday/playwright/a11y-w6.spec.ts  (via engines/dojoToday/playwright/)
+    engines/dojoToday/playwright/hud-aliases.spec.ts  (via engines/dojoToday/playwright/)
+    engines/dojoToday/src/styles.css  (via engines/dojoToday/src/)
+[clean] pixelquest-evidence-encounter: 0 arquivo(s) do delta W6 sob sourcePaths
+[clean] voxel-standalone-learning-loop: 0 arquivo(s) do delta W6 sob sourcePaths
+[clean] minitown-explore-only: 0 arquivo(s) do delta W6 sob sourcePaths
