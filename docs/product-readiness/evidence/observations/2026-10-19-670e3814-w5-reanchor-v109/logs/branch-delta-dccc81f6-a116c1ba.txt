@@ -1,0 +1,38 @@
+git diff --name-only dccc81f6..a116c1ba (v108 QA-phase anchor -> current main tip):
+
+engines/codexdojo-os-prototype/.gitignore
+engines/codexdojo-os-prototype/DESIGN.md
+engines/codexdojo-os-prototype/playwright.aid5141.config.ts
+engines/codexdojo-os-prototype/src/styles/foundation.css
+engines/codexdojo-os-prototype/src/styles/journey.css
+engines/codexdojo-os-prototype/tests/hud-aliases.smoke.spec.ts
+engines/dojoToday/.gitignore
+engines/dojoToday/DESIGN.md
+engines/dojoToday/playwright.aid5141.config.ts
+engines/dojoToday/playwright/hud-aliases.spec.ts
+engines/dojoToday/src/styles.css
+engines/literacyDojo/.gitignore
+engines/literacyDojo/DESIGN.md
+engines/literacyDojo/playwright.aid5141.config.ts
+engines/literacyDojo/playwright/hud-aliases.spec.ts
+engines/literacyDojo/src/styles.css
+scripts/hud_alias_audit.py
+
+ engines/codexdojo-os-prototype/.gitignore          |   1 +
+ engines/codexdojo-os-prototype/DESIGN.md           |  30 +
+ .../playwright.aid5141.config.ts                   |  32 +
+ .../src/styles/foundation.css                      |  69 +-
+ .../codexdojo-os-prototype/src/styles/journey.css  | 985 +++++++++++++++++----
+ .../tests/hud-aliases.smoke.spec.ts                |  80 ++
+ engines/dojoToday/.gitignore                       |   6 +
+ engines/dojoToday/DESIGN.md                        |  26 +
+ engines/dojoToday/playwright.aid5141.config.ts     |  36 +
+ engines/dojoToday/playwright/hud-aliases.spec.ts   |  76 ++
+ engines/dojoToday/src/styles.css                   |  26 +
+ engines/literacyDojo/.gitignore                    |   3 +
+ engines/literacyDojo/DESIGN.md                     |  27 +
+ engines/literacyDojo/playwright.aid5141.config.ts  |  37 +
+ .../literacyDojo/playwright/hud-aliases.spec.ts    |  77 ++
+ engines/literacyDojo/src/styles.css                |  29 +
+ scripts/hud_alias_audit.py                         | 142 +++
+ 17 files changed, 1513 insertions(+), 169 deletions(-)

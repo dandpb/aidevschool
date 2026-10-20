@@ -52,3 +52,31 @@ and throughput come from k6's summary export.
 - Iterations: 59295
 
 _Generated 2026-07-02 20:19 UTC by `curriculum/_shared/benchmarks/bench_orchestrator.py`._
+## Node re-verification — 2026-10-18 (AID-5013, Onda 2)
+
+Single-machine Linux container (sandbox), Node.js v24.18.0 driver with 50
+keep-alive workers against `node dist/main.js` (fresh `npm install --include=dev`
++ `npm run build` at main `6bd13ed6`). k6 is unavailable in this sandbox, so the
+historical k6 methodology above could not be re-run; this is a real N=1
+measurement with an equivalent read workload (`GET /healthz`), not a continuation
+of the 2026-07-02 series.
+
+| Metric | Value |
+| --- | ---: |
+| Requests | 50,000 |
+| Errors | 0 (fail rate 0.0000) |
+| Throughput | 14,002 req/s |
+| Latency | avg 3.50 ms · p50 3.11 ms · p95 6.31 ms · p99 9.44 ms |
+| Wall time | 3.57 s |
+| Peak RSS (VmHWM) | 93.2 MB |
+
+Functional smoke (same session): `POST /tasks` → task reaches `succeeded` via the
+4-worker pump → `GET /stats` reports `completed_count: 1`, `backpressure: open`.
+
+> Do not compare these rows against the 2026-07-02 macOS/k6 table: different
+> hardware, OS, and load driver. Cross-language rows above remain historical
+> (Go/Rust tracks were removed in `1b0a309` and no longer exist on disk).
+
+_Driver: single-use Node.js script (untracked scratch), session transcript in the
+AID-5013 receipt; methodology recorded in
+`docs/product-readiness/assessments/2026-10-18-6bd13ed6-onda2-03-04.md`._

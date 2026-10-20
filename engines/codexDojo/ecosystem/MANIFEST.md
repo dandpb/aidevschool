@@ -221,6 +221,13 @@ python3 docs/curso/validate_course.py
 
 ## Completion Standard
 
+The canonical verdict fallback in `curriculum/_shared/evidence.py` reuses
+`learner/gate/evidence_validator.py` and `learner/gate/security.py`: producer
+records and attempt paths must satisfy the same validation seams as the gate.
+A PASS receipt cannot override the last failed/unknown gate outcome. Regression
+proof lives in `curriculum/_shared/tests/test_verdict_fallback_boundary_followup.py`;
+the corrective scope is recorded in `intent/2026-10-18-pr709-boundary-followup/plan.md`.
+
 The ecosystem is complete only when a future agent can:
 
 1. Read this manifest.
@@ -232,6 +239,16 @@ The ecosystem is complete only when a future agent can:
 7. Update memory and roadmap.
 8. Repeat the cycle through explicit OpenClaw checklist runs without hidden state.
 
+## Offline analytics bridge boundary
+
+`learner/analytics_bridge/` validates the two source envelopes and projects the
+supported canonical subset without changing emitters or granting competence.
+The report derives synthetic provenance from nonempty input labels and retains
+raw-row deduplication accounting. New boundary regressions are in
+`learner/analytics_bridge/tests/test_report_boundary_followup.py`; source privacy
+and event vocabularies remain authoritative. Offline fixture results are not
+measurements of real learners or a native merge countersign.
+
 ## Dev-family projected content identity
 
 `engines/codexdojo-os-prototype/scripts/gen-guided-practice.mjs` preserves the
@@ -240,3 +257,25 @@ rubric) before computing pg-d02/03/04 contentVersion. The new Node stdlib suite
 `scripts/guided-practice-source-order.test.mjs` beside that generator checks the
 current pg-d02 frozen contract and source-byte binding. This mapping does not
 approve #710/#715 contract composition, UI acceptance or canonical mastery.
+
+## Guided-practice scheduling boundary
+
+`learner/substrate/practice.py` verifies the declared conclusion schema, catalog
+identity and rubric policy before a guided-practice FSRS review. Exact receipt
+replay is idempotent; historical receipt files remain bound to their unit and
+review identities. `engines/minimaxDojo/core/fsrs_bridge.py` reports the submitted
+receipt's own outcome and refreshes views only for the actual canonical state
+path. Negative cases are in the new `test_practice_boundary_regressions.py` and
+`test_practice_history_boundary.py` files under `learner/substrate/tests/`.
+Practice reviews do not grant mastery. Legacy snapshot compatibility and native
+acceptance gates remain separate unresolved requirements.
+
+## Offline media restore boundary
+
+`scripts/storage/offline_package.py` validates the declared manifest schema and
+relative logical/blob paths before restore, confines source bytes to the package
+and targets to the selected destination, and writes through fresh temporary
+files. New negative coverage lives in
+`scripts/storage/test_offline_restore_boundary.py`. The source-byte digest checks
+and partial recovery of valid blobs remain active. This mapping does not grant
+Release URL compatibility, readiness or pedagogical mastery.

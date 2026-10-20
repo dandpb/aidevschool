@@ -128,7 +128,11 @@ def _stacks_l2(
         return None
     pred_top = observations["predictedTop"]
     valid_docs = frozenset(doc_id for doc_id, _ in cfg["docs"])
-    if observations["kind"] != "stacks-L2" or pred_top not in valid_docs:
+    if (
+        observations["kind"] != "stacks-L2"
+        or not isinstance(pred_top, str)
+        or pred_top not in valid_docs
+    ):
         _reject(errors, "L2")
         return None
     ranked = _search(cfg["docs"], cfg["terms"])
@@ -154,7 +158,11 @@ def _stacks_l3(
         return None
     pred_top = observations["predictedTop"]
     docs_map = dict(cfg["docs"])
-    if observations["kind"] != "stacks-L3" or pred_top not in docs_map:
+    if (
+        observations["kind"] != "stacks-L3"
+        or not isinstance(pred_top, str)
+        or pred_top not in docs_map
+    ):
         _reject(errors, "L3")
         return None
     ranked = _search(cfg["docs"], cfg["terms"])
