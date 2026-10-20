@@ -1,0 +1,39 @@
+{
+  "artifacts": [
+    {
+      "path": "engines/literacyDojo/playwright/corridor.spec.ts",
+      "sha256": "5c8e70a100cfbe76b15163d14643808c7870b61c5c062873d324f29a9e797439"
+    },
+    {
+      "path": "engines/literacyDojo/src/domain/checkpoints.ts",
+      "sha256": "2888b64c69013ca957e0adb211c893b7fb7f44f3e5289aa60bb7d9fe745ba7f1"
+    }
+  ],
+  "assertions": [
+    {
+      "evidence": "playwright",
+      "id": "corridor-completes-without-stalling",
+      "outcome": "pass"
+    },
+    {
+      "evidence": "playwright",
+      "id": "gate-opens-only-after-challenge",
+      "outcome": "pass"
+    },
+    {
+      "evidence": "playwright",
+      "id": "result-is-local-completion",
+      "outcome": "pass"
+    }
+  ],
+  "executedAt": "2026-10-20T16:24:58Z",
+  "executor": "automated",
+  "gaps": [],
+  "gitSha": "9b96a4efaf084a6bad607538171af0cbfa6dbafe",
+  "manualFingerprint": "571bff9702625be2e9b4f03bd0b2cc9dde09f13819cde60272ac80ed8279274d",
+  "outcome": "pass",
+  "runId": "2026-10-20T16:24:58Z-literacy-corridor-happy-path-9b96a4ef",
+  "scenarioId": "literacy-corridor-happy-path",
+  "schemaVersion": 1,
+  "sourceFingerprint": "94a3444fedd1d1a729de2930ae61eb4d32ac40be13ad5c045b62b92ac139ca0b"
+}
