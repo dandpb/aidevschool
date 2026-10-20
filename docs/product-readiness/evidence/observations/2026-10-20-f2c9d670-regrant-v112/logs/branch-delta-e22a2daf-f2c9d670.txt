@@ -1,0 +1,36 @@
+f2c9d670 Merge branch 'main' into regrant/auto-20261020-bf9c2bfa
+41f4419c Merge pull request #722 from dandpb/palette-dojotoday-explicit-labels-1639881291545907116
+12d7b492 Merge branch 'main' into palette-dojotoday-explicit-labels-1639881291545907116
+d4cffeaf Merge pull request #723 from dandpb/sentinel-xss-fix-pipeline-plant-hud-5524063343145364872
+8fc7d910 Merge branch 'main' into palette-dojotoday-explicit-labels-1639881291545907116
+15cba88f docs(readiness): auto re-grant producer snapshot @ bf9c2bfa (AID-1357)
+5cc34d49 Merge branch 'main' into sentinel-xss-fix-pipeline-plant-hud-5524063343145364872
+bf9c2bfa Merge pull request #716 from dandpb/aid5013/onda2-03-04-verify
+bc2ae777 Merge branch 'main' into palette-dojotoday-explicit-labels-1639881291545907116
+462fe25e update-branch main (56e27e57: PRs #696/#729/#730 + AID-5012 06/07 verified) into PR #716 (AID-5013; merge-door prerequisite — strict up-to-date branch protection)
+ee8a733b Merge branch 'main' into sentinel-xss-fix-pipeline-plant-hud-5524063343145364872
+56e27e57 Merge pull request #696 from dandpb/aid2928/media-local-fallback
+16566c65 Merge branch 'main' into sentinel-xss-fix-pipeline-plant-hud-5524063343145364872
+4665d57b update-branch main (f3022b9f: PRs #726–#730, docs/curriculum only vs base b08e0096) into PR #696 (AID-2928; merge-door prerequisite — strict up-to-date branch protection; content delta of this PR unchanged: MANIFEST.md conflict resolved as union, PR section appended verbatim; storage suites re-run 9/9 + restore-boundary + self-test 10/10 ok on merge result)
+f3022b9f Merge pull request #729 from dandpb/regrant/auto-20261020-6a1ac151
+e85a38eb update-branch main (c3a66706: PR #730/AID-5198 changelog §6 W4–W7, docs/design only) into PR #729 (regrant W7; merge-door prerequisite — strict up-to-date branch protection; content delta of this PR unchanged: docs/product-readiness only, zero sourcePaths under docs/ in scenarios/inventory — fingerprint-neutral)
+c3a66706 Merge pull request #730 from dandpb/aid5198/s6-changelog
+c478740f docs(readiness): observation-complete re-grant v111 @ e22a2daf (AID-5197 QA-phase, W7 re-anchor)
+f9cdc2e1 docs(design): AID-5198 — changelog §6 W4–W7 done (merges+countersigns) + métricas finais HUD (AID-5010 closure)
+db533caa Fix XSS vulnerability in pipeline-plant HUD numeric fields
+4a5dc51f 🎨 Palette: Add explicit for attributes to assist config labels
+52585bb8 test(substrate): AID-5013 — backlog count 14 -> 12 after 03/04 verified
+1e55fbbd feat(curriculum): AID-5013 Onda 2 — verify 03_url_shortener + 04_concurrent_task_queue (Node green, benchmark real)
+84acdfec fix(storage): confine offline manifest restore paths
+e0795a62 feat(storage): AID-2928 — primeiro upload real (media-v1) + provider file|release + correção empírica de nome de asset
+e233828d feat(storage): AID-2928 — ADR local-first final + offline_package.py + runbook §4c/§10
+94325803 docs(storage): AID-2928 — pivô local-first do pipeline de mídia (Release Assets + kits offline)
+
+=== files changed e22a2daf..f2c9d670 (engines/|learner/):
+M	engines/codexDojo/ecosystem/MANIFEST.md
+M	engines/codexDojo/src/data/learner.ts
+M	engines/codexDojo/src/data/projects.ts
+M	engines/codexdojo-os-prototype/src/data/learner.ts
+M	engines/dojoToday/src/main.ts
+M	engines/voxelDojo/game-06-pipeline-plant/src/scene/hud.ts
+M	learner/substrate/tests/test_substrate.py

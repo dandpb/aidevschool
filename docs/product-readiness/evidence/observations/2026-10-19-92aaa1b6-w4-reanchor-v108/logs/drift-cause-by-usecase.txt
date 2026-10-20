@@ -1,0 +1,16 @@
+literacy-standalone-first-lesson: (no delta file under sourcePaths)
+literacy-standalone-corridor-mod01-03: (no delta file under sourcePaths)
+os-literacy-guided-mission:
+  engines/codexdojo-os-prototype/src/styles/journey.css  (sourcePath engines/codexdojo-os-prototype/src/)
+os-voxel-guided-missions:
+  engines/codexdojo-os-prototype/src/styles/journey.css  (sourcePath engines/codexdojo-os-prototype/src/)
+  engines/codexdojo-os-prototype/tests/a11y-w4.smoke.spec.ts  (sourcePath engines/codexdojo-os-prototype/tests/)
+os-returning-learner:
+  engines/codexdojo-os-prototype/src/styles/journey.css  (sourcePath engines/codexdojo-os-prototype/src/)
+  engines/codexdojo-os-prototype/tests/a11y-w4.smoke.spec.ts  (sourcePath engines/codexdojo-os-prototype/tests/)
+dojotoday-daily-guidance:
+  engines/dojoToday/src/styles.css  (sourcePath engines/dojoToday/src/)
+  engines/dojoToday/playwright/a11y-w4.spec.ts  (sourcePath engines/dojoToday/playwright/)
+pixelquest-evidence-encounter: (no delta file under sourcePaths)
+voxel-standalone-learning-loop: (no delta file under sourcePaths)
+minitown-explore-only: (no delta file under sourcePaths)

@@ -613,10 +613,11 @@ class TestDashboardSnapshot(unittest.TestCase):
 
     def test_build_snapshot_picks_up_backlog_counts(self):
         snapshot = build_snapshot()
-        # 01/02 certified + 05/06/07/12/18 Node-verified; 12 remain scaffolded.
+        # 01/02 certified + 03/04 (AID-5013) + 05/06/07/12/18 (AID-5012)
+        # Node-verified; 10 remain scaffolded.
         # Mastery comes from canonical units_log, independently of backlog status.
         self.assertEqual(snapshot["masteredCount"], 2)
-        self.assertEqual(snapshot["scaffoldedCount"], 12)
+        self.assertEqual(snapshot["scaffoldedCount"], 10)
 
     def test_build_snapshot_includes_typed_challenge_statuses(self):
         snapshot = build_snapshot()
@@ -1482,7 +1483,19 @@ class TestPixelReviewSlice(unittest.TestCase):
 
         slc = build_pixel_review_slice()
         snap = build_snapshot()
-        self.assertEqual(slc["nextReviews"], snap["nextReviews"])
+        # AID-5005: snapshot rows materialize the FSRS card state
+        # (stability/difficulty/due) for the dojoToday/OS surfaces; the game
+        # slice stays frozen on the historical fields, so the truth check
+        # compares the projection row-by-row instead of raw equality.
+        frozen_fields = ("unitId", "title", "dueIn", "reason")
+        expected = [
+            {field: row[field] for field in frozen_fields if field in row}
+            for row in snap["nextReviews"]
+        ]
+        self.assertEqual(slc["nextReviews"], expected)
+        for row in slc["nextReviews"]:
+            for internal in ("stability", "difficulty", "due"):
+                self.assertNotIn(internal, row)
         self.assertEqual(slc["streak"]["current"], snap["streak"]["current"])
         self.assertEqual(slc["streak"]["freezesEquipped"], snap["streak"]["freezesEquipped"])
 

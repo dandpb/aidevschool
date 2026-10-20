@@ -28,6 +28,28 @@ export function canonicalReviewKey(review: CanonicalReviewFact): string {
   return `${review.unitId}:${review.reason}:${review.dueIn}`
 }
 
+/**
+ * W7 AID-5190 (contrato §7.2 — papel ReviewDue): o substrate emite `dueIn`
+ * em formato de máquina ("overdue 43d", "today", "in 5d"); a HUD do OS
+ * apresenta o texto pt-BR legível ("atrasada 43 dias" / "devida hoje").
+ * A projeção canônica permanece intacta — isto é só apresentação.
+ */
+export function formatReviewDuePtBr(dueIn: string): string {
+  const overdue = dueIn.match(/^overdue (\d+)d$/)
+  if (overdue !== null) {
+    const days = Number(overdue[1])
+    return `atrasada ${days} ${days === 1 ? 'dia' : 'dias'}`
+  }
+  if (dueIn === 'today') return 'devida hoje'
+  if (dueIn === 'tomorrow') return 'devida amanhã'
+  const upcoming = dueIn.match(/^in (\d+)d$/)
+  if (upcoming !== null) {
+    const days = Number(upcoming[1])
+    return `em ${days} ${days === 1 ? 'dia' : 'dias'}`
+  }
+  return dueIn
+}
+
 export function mapCanonicalReviews(
   learner: LearnerSnapshot,
   catalog: MissionCatalogRepository,

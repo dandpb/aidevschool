@@ -4,9 +4,10 @@ import { describe, expect, it, vi } from 'vitest'
 import { ServicesProvider } from '../app/ServicesProvider'
 import { createServices } from '../app/createServices'
 import { anonymousPublicLearner } from '../data/anonymousLearner'
+import { learnerSnapshot } from '../data/learner'
 import { missionCatalog } from '../data/missions'
 import { GeneratedMissionCatalogRepository } from '../missions/catalog'
-import { completeOnboarding, createInitialOsProgress, recordMissionCompletion } from '../progress/domain'
+import { completeOnboarding, createInitialOsProgress, missionKey, recordMissionCompletion } from '../progress/domain'
 import type { VerificationService } from '../verification/ports'
 import { Hub } from './Hub'
 
@@ -90,6 +91,64 @@ describe('mission-first hub progression', () => {
       expect(screen.getByTestId('canonical-mastery-count').textContent).toBe(
         '0 competências verificadas',
       )
+    })
+  })
+
+  // AID-5190/W7 (contrato §7.2): o hub público permanece anônimo (ec534f7),
+  // então o papel ReviewDue é coberto aqui com a projeção canônica real
+  // (learnerSnapshot: U2-key-value-store overdue 4d) e progresso dev
+  // concluído — mesma cobertura determinística da superfície de prioridade
+  // de revisão (recommendation.test.ts).
+  it('AID-5190/W7: hud-review-due com reason+dueIn pt-BR e medidor com valuetext + leitura X/Y', async () => {
+    let progress = completeOnboarding(createInitialOsProgress(missionCatalog), {
+      goal: 'build-systems',
+      context: 'personal-project',
+      confidence: 'high',
+      selectedTrackId: 'dev',
+    })
+    for (const mission of new GeneratedMissionCatalogRepository().listLaunchable('dev')) {
+      if (progress.missionStatusByKey[missionKey('dev', mission.id)] === 'completed') continue
+      progress = recordMissionCompletion(progress, mission, missionCatalog, undefined, {
+        now: new Date('2026-07-20T10:00:00-03:00'),
+      })
+    }
+    const services = createServices({
+      verification,
+      clock: () => new Date('2026-10-19T10:00:00-03:00'),
+    })
+
+    render(
+      <ServicesProvider services={services}>
+        <Hub
+          progress={progress}
+          learner={learnerSnapshot}
+          catalog={new GeneratedMissionCatalogRepository()}
+          onLaunch={vi.fn()}
+          onOpenMap={vi.fn()}
+          onOpenProgress={vi.fn()}
+        />
+      </ServicesProvider>,
+    )
+
+    // ReviewDue: reason + dueIn pt-BR ("overdue 4d" → "atrasada 4 dias").
+    await waitFor(() => {
+      expect(screen.getByTestId('hud-review-due').textContent).toBe('Revisão atrasada 4 dias')
+    })
+    // ProgressMeter (B9c): role=progressbar + valuetext "N% concluído".
+    const meter = screen.getByTestId('hud-progress')
+    expect(meter.getAttribute('role')).toBe('progressbar')
+    expect(meter.getAttribute('aria-valuetext')).toBe('100% concluído')
+    // Leitura textual "X/Y missões" adjacente (nunca só barra) — o strong
+    // quebra o text node, então a leitura é feita do parágrafo inteiro.
+    const meterRead = document.querySelector('.hub-meter-read')
+    expect(meterRead?.textContent).toBe('3/3 missões concluídas')
+    // StreakChip: texto de sequência/ritmo local + glifo decorativo aria-hidden.
+    const streak = screen.getByTestId('hud-streak')
+    expect(streak.textContent).toMatch(/Sequência local|ritmo/)
+    expect(streak.querySelector("[aria-hidden='true']")).not.toBeNull()
+    // Live region: anúncio do ritmo local após o render (1×/sessão).
+    await waitFor(() => {
+      expect(screen.getByTestId('hud-live-region').textContent).toContain('Meta de hoje')
     })
   })
 })
