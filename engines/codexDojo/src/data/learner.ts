@@ -20,7 +20,7 @@ export const learnerSnapshot: LearnerSnapshot = {
     unblockCondition: "learner_attempt_evaluated",
   },
   profile: {
-    dreyfus: "competent",
+    dreyfus: "proficient",
     bloom: "analyze",
     activeLanguage: "TypeScript",
     weeklyTimeHours: 5,
@@ -36,7 +36,7 @@ export const learnerSnapshot: LearnerSnapshot = {
     {
       id: "P-001",
       description: "Reivindicar domínio a partir de trabalho de documentação/dashboard",
-      occurrences: 21,
+      occurrences: 1,
       lastSeen: "2026-06-18",
     },
   ],
@@ -46,12 +46,18 @@ export const learnerSnapshot: LearnerSnapshot = {
       title: "GATEKEEPER: token-bucket rate limiter robustness",
       dueIn: "overdue 43d",
       reason: "overdue",
+      stability: 2.31,
+      difficulty: 2.12,
+      due: "2026-07-09",
     },
     {
       unitId: "U2-key-value-store",
       title: "KV WAREHOUSE: hash-map-backed CRUD with TTL expiration",
       dueIn: "overdue 4d",
       reason: "overdue",
+      stability: 2.31,
+      difficulty: 2.12,
+      due: "2026-08-17",
     },
     {
       unitId: "P-001",
@@ -61,7 +67,7 @@ export const learnerSnapshot: LearnerSnapshot = {
     },
   ],
   masteredCount: 2,
-  scaffoldedCount: 14,
+  scaffoldedCount: 12,
   streak: {
     current: 0,
     longest: 2,
@@ -97,7 +103,7 @@ export const learnerSnapshot: LearnerSnapshot = {
     {
       id: "01_rate_limiter",
       phase: "cycle-complete",
-      passed: true,
+      passed: false,
       attemptPresent: true,
     },
     {

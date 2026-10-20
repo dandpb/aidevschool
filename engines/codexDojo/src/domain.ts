@@ -119,6 +119,9 @@ export type LearnerSnapshot = {
     readonly title: string
     readonly dueIn: string
     readonly reason: "overdue" | "due" | "interleaving" | "recurring-trap"
+    readonly stability?: number
+    readonly difficulty?: number
+    readonly due?: string
   }>
   readonly masteredCount: number
   readonly scaffoldedCount: number

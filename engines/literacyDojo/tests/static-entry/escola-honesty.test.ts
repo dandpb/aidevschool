@@ -44,8 +44,13 @@ const SOURCE_PINS_80C7ADDC = {
   "server/catalog.mjs": "3cc1ef56e5c76020c5819de792ca99c6c4d9a2bd4caa951a52dea09ac4527673",
 };
 
-/** Canonical SCHOOL_ENTRY serialized from school-entry @ 80c7addc. */
-const CANONICAL_CONTRACT_80C7ADDC = {
+/**
+ * Canonical SCHOOL_ENTRY: the 80c7addc port revised by AID-3700 — dev-journey
+ * copy now reflects this composition, where the app publishes the Jornada Dev
+ * (9 lições l15–l29; journeySwitchFlow 5/5). The "prévia planejada / fora do
+ * percurso" claim from 80c7addc was true there and false here.
+ */
+const CANONICAL_CONTRACT_AID3700 = {
   schemaVersion: 1,
   fundamentals: {
     engineId: "literacyDojo",
@@ -78,15 +83,15 @@ const CANONICAL_CONTRACT_80C7ADDC = {
     },
     {
       id: "dev",
-      audience: "JORNADA 2 · PARA QUEM DESENVOLVE · PRÉVIA",
+      audience: "JORNADA 2 · PARA QUEM DESENVOLVE · OPCIONAL",
       title: "IA para Dev",
       description:
-        "Construa software robusto com IA: intenção, plano, construção, teste e review. Comece pelos mesmos fundamentos; a ponte Dev é uma prévia planejada — o destino, não um percurso pronto no app.",
+        "Construa software robusto com IA: intenção, plano, construção, teste e review. Jornada opcional do app de lições: começa do zero dela, sem pré-requisito — a troca de jornada fica no início do app.",
       engineId: "literacyDojo",
-      preview: true,
+      preview: false,
       cta: "Começar pelos fundamentos",
       bridge: {
-        label: "Depois dos fundamentos — ponte Dev (prévia planejada)",
+        label: "Depois dos fundamentos — Jornada Dev no app (9 lições)",
         trackId: "dev",
         moduleId: "mod-05",
         lessons: [
@@ -100,7 +105,7 @@ const CANONICAL_CONTRACT_80C7ADDC = {
           ["l28", "Refatore com assistente sem quebrar comportamento"],
           ["l29", "Avalie as dependências sugeridas"],
         ],
-        note: "Prévia planejada: hoje o app de lições abre a trilha de fundamentos; esta ponte Dev (módulo 05 do currículo) ainda não faz parte do percurso do app — as lições acima mostram o destino planejado. Laboratórios 3D são prática opcional, não porta de entrada.",
+        note: "Já faz parte do percurso do app: as lições acima estão na Jornada Dev do app de lições, em sequência guiada a partir de l15 — opcionais e sem pré-requisito. Laboratórios 3D são prática opcional, não porta de entrada.",
       },
     },
   ],
@@ -114,7 +119,7 @@ describe("/escola/ static entry — honest copy (F1/F2)", () => {
       "avaliação",
       "COMECE AQUI",
       "entra na jornada",
-      "prévia planejada",
+      "faz parte do percurso do app",
       "não sincroniza",
       "progresso fica",
     ]) {
@@ -136,6 +141,9 @@ describe("/escola/ static entry — honest copy (F1/F2)", () => {
       "Confirmando disponibilidade",
       "não estão disponíveis agora",
       "Disponibilidade confirmada",
+      "prévia planejada",
+      "ainda não faz",
+      "(prévia)",
     ]) {
       expect(allStatic, `forbidden copy present: ${forbidden}`).not.toContain(forbidden);
     }
@@ -198,8 +206,8 @@ describe("/escola/ static entry — mechanical href allowlist (no invented hostn
 });
 
 describe("/escola/ static entry — contract integrity and drift guard", () => {
-  it("ports SCHOOL_ENTRY verbatim from school-entry @ 80c7addc", () => {
-    expect(SCHOOL_ENTRY).toEqual(CANONICAL_CONTRACT_80C7ADDC);
+  it("keeps SCHOOL_ENTRY at the AID-3700 revision (80c7addc port + Jornada Dev publicada)", () => {
+    expect(SCHOOL_ENTRY).toEqual(CANONICAL_CONTRACT_AID3700);
   });
 
   // R3 (AID-3453, changes-requested FSE): o guard cross-source não pode

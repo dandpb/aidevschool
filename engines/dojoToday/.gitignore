@@ -1,0 +1,6 @@
+node_modules/
+dist/
+
+# Saída da captura escopada AID-5141/W5 (mesma política do config principal)
+test-results/
+test-results-aid5141/

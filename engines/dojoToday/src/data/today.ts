@@ -28,6 +28,9 @@ export const today: TodaySnapshot = {
       "title": "GATEKEEPER: token-bucket rate limiter robustness",
       "dueIn": "overdue 43d",
       "reason": "overdue",
+      "stability": 2.3065,
+      "difficulty": 2.1181,
+      "due": "2026-07-09",
       "gameDir": "engines/pixelDojo",
       "project": "01_rate_limiter"
     },
@@ -36,6 +39,9 @@ export const today: TodaySnapshot = {
       "title": "KV WAREHOUSE: hash-map-backed CRUD with TTL expiration",
       "dueIn": "overdue 4d",
       "reason": "overdue",
+      "stability": 2.3065,
+      "difficulty": 2.1181,
+      "due": "2026-08-17",
       "gameDir": "engines/voxelDojo/game-02-warehouse",
       "project": "02_key_value_store"
     }

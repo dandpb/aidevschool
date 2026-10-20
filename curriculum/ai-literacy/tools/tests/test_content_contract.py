@@ -31,13 +31,16 @@ class TestValidContent(TrackFixtureMixin):
         # Toda lição `ready` do catálogo está validada, na ordem do catálogo.
         # Emenda T0 (AID-1219, card a89a8c94 aceito via ORDEM CEO AID-1234) +
         # onda W1 completa: l30 (T1), l31 (T2) e l32 (T3) pousaram `ready` em
-        # mod-08 — nenhum id `planned` resta; próximo id livre: l33, regra 7.
+        # mod-08 — nenhum id `planned` resta. Emenda T0 W2 dev (AID-5046,
+        # pacote autoral AID-5011 r1; data-gate AID-1222 desbloqueado pelo
+        # founder 2026-10-17): l33–l35 pousaram `ready` em mod-05; próximo id
+        # livre: l36, regra 7.
         entries = json_objects(array_field(required_object(catalog), "lessons"))
         self.assertEqual(
             [string_field(lesson, "id") for lesson in entries if string_field(lesson, "status") == "ready"],
             [string_field(lesson, "id") for lesson in ready],
         )
-        for lesson_id in ("l18", "l19", "l20", "l21", "l22", "l23", "l24", "l25", "l26", "l27", "l28", "l29", "l30", "l31", "l32"):
+        for lesson_id in ("l18", "l19", "l20", "l21", "l22", "l23", "l24", "l25", "l26", "l27", "l28", "l29", "l30", "l31", "l32", "l33", "l34", "l35"):
             self.assertIn(lesson_id, [string_field(lesson, "id") for lesson in ready])
         self.assertEqual(
             [],

@@ -145,7 +145,7 @@ class TokenService {
   }
 
   verifyAccessToken(token: string): Principal {
-    const decoded = jwt.verify(token, this.config.jwtSecret, { issuer: this.config.issuer, audience: this.config.audience, clockTimestamp: Math.floor(this.clock.now().getTime() / 1000) }) as JwtPayload;
+    const decoded = jwt.verify(token, this.config.jwtSecret, { algorithms: ['HS256'], issuer: this.config.issuer, audience: this.config.audience, clockTimestamp: Math.floor(this.clock.now().getTime() / 1000) }) as JwtPayload;
     if (typeof decoded.sub !== 'string' || typeof decoded.email !== 'string' || !Array.isArray(decoded.roles) || typeof decoded.jti !== 'string') {
       throw new Error('missing claims');
     }

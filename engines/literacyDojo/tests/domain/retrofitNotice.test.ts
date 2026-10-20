@@ -22,6 +22,8 @@ const LAUNCHED_WAVES: Record<string, readonly string[]> = {
   "2026-09-04.1": ["l15", "l16", "l17"],
   "2026-09-10.2": ["l08", "l09", "l10", "l11", "l12", "l13"],
   "2026-09-30.1": ["l16", "l27", "l28"],
+  // Onda W2 dev (AID-5011 r1 / PR AID-5046): aditiva (l33–l35), sem retrofit.
+  "2026-10-17.1": [],
 };
 
 function statuses(completed: string[]): Record<string, LessonStatus> {
