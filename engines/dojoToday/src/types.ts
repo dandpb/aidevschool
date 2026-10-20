@@ -10,6 +10,11 @@ export type DueReview = {
   readonly reason: ReviewReason;
   readonly project: string | null;
   readonly gameDir: string | null;
+  // AID-5005: materialized FSRS card state (absent for never-reviewed units
+  // and recurring-trap rows). Read-only scheduling truth from the substrate.
+  readonly stability?: number;
+  readonly difficulty?: number;
+  readonly due?: string;
 };
 
 export type ActiveUnit = {

@@ -1,0 +1,17 @@
+== os-literacy-guided-mission
+os-literacy-hosted-mission	learner-can-state-result-and-next-action	observation	The learner can explain the visible result and supported next action.
+os-literacy-returning-device	learner-understands-literacy-continuity-boundary	observation	The learner can explain that hosted Literacy continuity is limited to the same browser profile.
+os-verification-recovery	facilitator-can-recover-without-repository-intervention	observation	The facilitator can guide a safe retry or exit using the visible state and manual.
+== os-voxel-guided-missions
+os-renderer-accessibility-recovery	facilitator-can-name-escalation-threshold	observation	The facilitator can identify when renderer recovery has failed and the journey must stop.
+os-voxel-hosted-missions	learner-distinguishes-evidence-from-mastery	observation	The learner does not interpret a mission result or raw evidence as canonical mastery.
+os-voxel-returning-device	learner-understands-voxel-continuity-boundary	observation	The learner can explain that hosted voxel mission continuity is limited to the same browser profile.
+== os-returning-learner
+os-onboarding-track-choice	learner-can-explain-track-choice	observation	The learner can state which track was selected and what action comes next.
+os-returning-device	learner-understands-local-boundary	observation	The learner can explain that continuity is limited to the same browser profile.
+os-returning-recovery	facilitator-explains-local-state-loss	observation	The facilitator can explain the loss boundary without undocumented repository intervention.
+== dojotoday-daily-guidance
+dojotoday-active-unit-guidance	learner-understands-guidance-only	observation	The learner understands that dojoToday guides but does not evaluate work.
+dojotoday-read-only-boundary	regeneration-preserves-read-only-boundary	document-review	Recovery regenerates the projection without dojoToday writing learner state or mastery.
+dojotoday-read-only-boundary	stale-guidance-has-bounded-exit	observation	The facilitator can stop rather than presenting stale guidance as current.
+dojotoday-returning-next-day	learner-understands-no-eval-carryover	observation	The learner understands that returning does not evaluate work or mark anything mastered; the view only shows the regenerated scheduler projection.

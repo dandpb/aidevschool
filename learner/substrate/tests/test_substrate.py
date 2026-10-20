@@ -1482,7 +1482,19 @@ class TestPixelReviewSlice(unittest.TestCase):
 
         slc = build_pixel_review_slice()
         snap = build_snapshot()
-        self.assertEqual(slc["nextReviews"], snap["nextReviews"])
+        # AID-5005: snapshot rows materialize the FSRS card state
+        # (stability/difficulty/due) for the dojoToday/OS surfaces; the game
+        # slice stays frozen on the historical fields, so the truth check
+        # compares the projection row-by-row instead of raw equality.
+        frozen_fields = ("unitId", "title", "dueIn", "reason")
+        expected = [
+            {field: row[field] for field in frozen_fields if field in row}
+            for row in snap["nextReviews"]
+        ]
+        self.assertEqual(slc["nextReviews"], expected)
+        for row in slc["nextReviews"]:
+            for internal in ("stability", "difficulty", "due"):
+                self.assertNotIn(internal, row)
         self.assertEqual(slc["streak"]["current"], snap["streak"]["current"])
         self.assertEqual(slc["streak"]["freezesEquipped"], snap["streak"]["freezesEquipped"])
 
