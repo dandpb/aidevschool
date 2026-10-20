@@ -502,7 +502,34 @@ comentário com linha `Countersign:`) satisfaz TUDO:
    adendo vence; em modo auditoria, só adendos pré-merge contam). O registro
    é o árbitro: sem casamento, vermelho. Credenciais do registro ausentes,
    erro de transporte ou rejeição de auth → vermelho (fail-closed, mesma
-   doutrina do resolver §2).
+   doutrina do resolver §2);
+   **8c. Janela temporal do run** (AID-5235, incidente AID-5233): o
+   `createdAt` da citação operativa precisa cair DENTRO da janela de
+   execução do run citado (`startedAt` … `finishedAt`, ±120s de tolerância
+   de relógio). O clone do incidente foi postado 82 min DEPOIS do run
+   fechar — todo token era real (agent/task/run/session casavam com o
+   registro), só pertencia a um run já morto. Countersign é ato de um run
+   VIVO; registro sem `startedAt`/`finishedAt` → vermelho (janela
+   improvável, fail-closed);
+9. **Resolução de verdict** (AID-5235, incidente AID-5233): o token de
+   verdict precisa ser um **commentId canônico** — UUID de comentário
+   Paperclip (tarefas AID-) ou id numérico de comentário GitHub (tarefas
+   GH-) — e **resolver**: o comentário existe na thread da tarefa citada,
+   não está deletado, e foi **criado pelo run citado**
+   (`createdByRunId == run=`). O 'GO' free-text do incidente nomeava o
+   verdict de OUTRO PR; verdict free-text é rejeitado;
+10. **Binding task↔PR** (AID-5235, incidente AID-5233): a tarefa citada
+   precisa **nomear este PR** (título/description com `#<n>`/`PR #<n>`; no
+   GH-, title/body da issue). O incidente citou AID-5061 — tarefa da PR
+   #700 — cross-postada nas PRs #714 e #704: clonagem de identidade de run
+   fechado. Tarefa que não nomeia o PR que verifica não o countersigna;
+11. **Alerta de deletação** (AID-5235, incidente AID-5233): runs de gate
+   bem-sucedidos anteriores NESTE head registraram a citação operativa
+   (modo live recupera dos logs dos runs de workflow anteriores — outputs de
+   check-run são vazios no GitHub Actions); se a citação sumiu da conversa
+   (mesmo `createdAt`, mesma linha), o gate fica vermelho com **DELETION
+   ALERT** — as citações do incidente foram deletadas ~5 min após esverdear
+   o gate, deixando check verde stale. Citação nova não lava a deletação.
 
 Linhas dentro de **code fences** (blocos cercados por ```/~~~, AID-2824 — achado
 AID-2818) são template/documentação e **não contam** em nenhum scan de citação
@@ -554,6 +581,14 @@ do registro de runs — ex.: `ses_…` ou UUID); placeholders como
 `opencode_local` são rejeitados (AID-4898). Countersign postado mid-run, antes
 da sessão fechar: poste depois um adendo `Provenance:` com o MESMO
 agent/task/run e a sessão real — sem nova linha `Countersign:` (§8 acima).
+
+`verdict <commentId>` (AID-5235): o id do comentário de verdict que o PRÓPRIO
+run de countersign postou na thread da tarefa citada (UUID Paperclip para
+AID-, id numérico para GH-); o gate resolve o comentário (existe, não
+deletado, `createdByRunId == run=`). A tarefa citada precisa nomear o PR que
+verifica (`#<n>` no título/descrição — binding §10). A citação precisa ser
+postada DENTRO da janela do run (`startedAt`…`finishedAt`, §8c): run fechado
+não countersigna.
 
 ### Helper offline de recibos canônicos (AID-3585)
 
@@ -751,6 +786,50 @@ trailer**, not a path allowlist in the guard:
   (l21–l23, QA-audited legitimate in the AID-553 GO verdict, obs. 1) —
   predates the trailer practice and is an immutable historical check run,
   not open debt; every main push since is green.
+
+## PROVENANCE git — identidade explícita por operação, fail-loud (AID-5244)
+
+**Precedente (incidente):** achado A1/AID-5241 — o workspace COMPARTILHADO
+`_default` carregava `[user] qa-lead-ca6a3f95` pinado em `file:.git/config`;
+o run CEO `9baf0cd4` rebasou ali às 2026-10-20T13:09:34Z e o commit `29c6e087`
+(do PR #733) nasceu com Author `ceo-agent` / **Committer `qa-lead`** —
+contaminação de identidade, mesma família do incidente AID-5233. Refeito como
+`5e56f29b` (author=committer=ceo-agent, precedente `aca108a2`).
+
+**Normas (binding para agentes que commitem em workspaces compartilhados):**
+
+1. **Fail-loud:** workspace COMPARTILHADO não pin `user.name`/`user.email` em
+   `.git/config` (nem `config.worktree` sob seu gitdir). Commit/rebase/merge
+   sem identidade explícita deve FALHAR ("Committer identity not known"), nunca
+   forjar silenciosamente a identidade de outro agente. Worktree DEDICADO por
+   agente (clone próprio) pode manter seu pin.
+2. **Identidade explícita por operação:** exporte
+   `GIT_COMMITTER_NAME`/`GIT_COMMITTER_EMAIL` (+ `GIT_AUTHOR_*` quando o author
+   deve diferir — trailer commits), coerente com a provenance do run
+   (trailer do owner = identidade do owner; produtor = identidade do produtor).
+   Env é o mecanismo canônico: `-c user.name=…` vale para o commit em si mas é
+   invisível a hooks e ao guard.
+3. **Guard mecânico:** `scripts/git_identity_guard.py` (AID-5244) —
+   `--check` valida a identidade do PRÓXIMO commit: recusa identidade vinda de
+   config pinado em workspace compartilhado, valida contra o mapa
+   `PAPERCLIP_AGENT_ID`→identidade (fail-closed para agente desconhecido,
+   extensão via `GIT_IDENTITY_MAP_JSON` inline ou arquivo), avisa author≠committer
+   (shape do rebase do A1; `--strict-author` para reder). `--audit ROOT` encontra
+   configs pinados (violação sob sufixo compartilhado, default `_default`).
+   `--self-test` hermético roda no CI junto aos self-tests das portas.
+4. **Bypass documentado:** `GIT_IDENTITY_GUARD_BYPASS=<motivo não-vazio>` —
+   imprime warning alto e passa. Use apenas para tooling que legitimamente
+   commita sob identidade de serviço, citando o motivo no recibo.
+
+**Flip operacional (executado com anúncio prévio no board — regra AID-5244):**
+removida a seção `[user]` de `_default/.git/config` (todos os worktrees linkados
+qa5195-*/qa5230-pr695/aid2928-localfirst/aid5013-onda2 herdam do config comum —
+um único flip cobre tudo). A porta `scripts/merge_pr.sh` não depende de
+identidade ambiente: o merge primário é por API (committer = GitHub) e o
+fallback CLI já exige identidade explícita correta (§Merge protocol item 7
+(iv)). Checklist para novos workspaces compartilhados: rode
+`python3 scripts/git_identity_guard.py --audit <raiz>` e `--check` antes de cada
+lote de commits.
 
 ## Governance / audit
 
