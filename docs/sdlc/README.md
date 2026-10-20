@@ -787,6 +787,50 @@ trailer**, not a path allowlist in the guard:
   predates the trailer practice and is an immutable historical check run,
   not open debt; every main push since is green.
 
+## PROVENANCE git — identidade explícita por operação, fail-loud (AID-5244)
+
+**Precedente (incidente):** achado A1/AID-5241 — o workspace COMPARTILHADO
+`_default` carregava `[user] qa-lead-ca6a3f95` pinado em `file:.git/config`;
+o run CEO `9baf0cd4` rebasou ali às 2026-10-20T13:09:34Z e o commit `29c6e087`
+(do PR #733) nasceu com Author `ceo-agent` / **Committer `qa-lead`** —
+contaminação de identidade, mesma família do incidente AID-5233. Refeito como
+`5e56f29b` (author=committer=ceo-agent, precedente `aca108a2`).
+
+**Normas (binding para agentes que commitem em workspaces compartilhados):**
+
+1. **Fail-loud:** workspace COMPARTILHADO não pin `user.name`/`user.email` em
+   `.git/config` (nem `config.worktree` sob seu gitdir). Commit/rebase/merge
+   sem identidade explícita deve FALHAR ("Committer identity not known"), nunca
+   forjar silenciosamente a identidade de outro agente. Worktree DEDICADO por
+   agente (clone próprio) pode manter seu pin.
+2. **Identidade explícita por operação:** exporte
+   `GIT_COMMITTER_NAME`/`GIT_COMMITTER_EMAIL` (+ `GIT_AUTHOR_*` quando o author
+   deve diferir — trailer commits), coerente com a provenance do run
+   (trailer do owner = identidade do owner; produtor = identidade do produtor).
+   Env é o mecanismo canônico: `-c user.name=…` vale para o commit em si mas é
+   invisível a hooks e ao guard.
+3. **Guard mecânico:** `scripts/git_identity_guard.py` (AID-5244) —
+   `--check` valida a identidade do PRÓXIMO commit: recusa identidade vinda de
+   config pinado em workspace compartilhado, valida contra o mapa
+   `PAPERCLIP_AGENT_ID`→identidade (fail-closed para agente desconhecido,
+   extensão via `GIT_IDENTITY_MAP_JSON` inline ou arquivo), avisa author≠committer
+   (shape do rebase do A1; `--strict-author` para reder). `--audit ROOT` encontra
+   configs pinados (violação sob sufixo compartilhado, default `_default`).
+   `--self-test` hermético roda no CI junto aos self-tests das portas.
+4. **Bypass documentado:** `GIT_IDENTITY_GUARD_BYPASS=<motivo não-vazio>` —
+   imprime warning alto e passa. Use apenas para tooling que legitimamente
+   commita sob identidade de serviço, citando o motivo no recibo.
+
+**Flip operacional (executado com anúncio prévio no board — regra AID-5244):**
+removida a seção `[user]` de `_default/.git/config` (todos os worktrees linkados
+qa5195-*/qa5230-pr695/aid2928-localfirst/aid5013-onda2 herdam do config comum —
+um único flip cobre tudo). A porta `scripts/merge_pr.sh` não depende de
+identidade ambiente: o merge primário é por API (committer = GitHub) e o
+fallback CLI já exige identidade explícita correta (§Merge protocol item 7
+(iv)). Checklist para novos workspaces compartilhados: rode
+`python3 scripts/git_identity_guard.py --audit <raiz>` e `--check` antes de cada
+lote de commits.
+
 ## Governance / audit
 
 - The chain of commits is the audit trail: who asked (intent), what was
