@@ -1,0 +1,328 @@
+{
+  "assessmentId": "2026-10-20-9b96a4ef-regrant-v114",
+  "assessorContext": "independent-readiness-review",
+  "gitSha": "9b96a4efaf084a6bad607538171af0cbfa6dbafe",
+  "results": [
+    {
+      "artifacts": [
+        {
+          "path": "engines/literacyDojo/playwright/corridor.spec.ts",
+          "sha256": "5c8e70a100cfbe76b15163d14643808c7870b61c5c062873d324f29a9e797439"
+        },
+        {
+          "path": "engines/literacyDojo/src/screens/CheckpointScreen.tsx",
+          "sha256": "7a810fd213d7cfef28a3e58eba5d5ebf01959cf3b7cb6ff9b57067159b0563f1"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-10-20-9b96a4ef-regrant-v114/literacy-corridor-gate-retry.json",
+          "sha256": "b9de2c2add7b8dab7636935e346467acd3ac5e0e750216a43d55a55223c378a2"
+        },
+        {
+          "path": "docs/product-readiness/evidence/observations/2026-10-20-9b96a4ef-regrant-v114/observations.json",
+          "sha256": "fc87e8efa605639a3e0ce2cf9c02dc96272cef17f89ea88a937fe2ea0076644d"
+        }
+      ],
+      "executedAt": "2026-10-20T16:26:36Z",
+      "executor": "mixed",
+      "gaps": [],
+      "gitSha": "9b96a4efaf084a6bad607538171af0cbfa6dbafe",
+      "manualFingerprint": "571bff9702625be2e9b4f03bd0b2cc9dde09f13819cde60272ac80ed8279274d",
+      "outcome": "pass",
+      "runId": "2026-10-20T16:26:36Z-literacy-corridor-gate-retry-mixed-9b96a4ef",
+      "scenarioId": "literacy-corridor-gate-retry",
+      "schemaVersion": 1,
+      "sourceFingerprint": "94a3444fedd1d1a729de2930ae61eb4d32ac40be13ad5c045b62b92ac139ca0b"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/literacyDojo/playwright/corridor.spec.ts",
+          "sha256": "5c8e70a100cfbe76b15163d14643808c7870b61c5c062873d324f29a9e797439"
+        },
+        {
+          "path": "engines/literacyDojo/src/domain/migration.ts",
+          "sha256": "626fe86f6e21f4e913f980c91f24b8573287aa638fc5d5c7b183732b45e71ce0"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-10-20-9b96a4ef-regrant-v114/literacy-corridor-grandfathered-return.json",
+          "sha256": "c36008409b356077397f2de1e77213e7ab32e3e3e29aab34ca89c6c60267b0aa"
+        },
+        {
+          "path": "docs/product-readiness/evidence/observations/2026-10-20-9b96a4ef-regrant-v114/observations.json",
+          "sha256": "fc87e8efa605639a3e0ce2cf9c02dc96272cef17f89ea88a937fe2ea0076644d"
+        }
+      ],
+      "executedAt": "2026-10-20T16:26:36Z",
+      "executor": "mixed",
+      "gaps": [],
+      "gitSha": "9b96a4efaf084a6bad607538171af0cbfa6dbafe",
+      "manualFingerprint": "571bff9702625be2e9b4f03bd0b2cc9dde09f13819cde60272ac80ed8279274d",
+      "outcome": "pass",
+      "runId": "2026-10-20T16:26:36Z-literacy-corridor-grandfathered-return-mixed-9b96a4ef",
+      "scenarioId": "literacy-corridor-grandfathered-return",
+      "schemaVersion": 1,
+      "sourceFingerprint": "94a3444fedd1d1a729de2930ae61eb4d32ac40be13ad5c045b62b92ac139ca0b"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/literacyDojo/playwright/corridor.spec.ts",
+          "sha256": "5c8e70a100cfbe76b15163d14643808c7870b61c5c062873d324f29a9e797439"
+        },
+        {
+          "path": "engines/literacyDojo/src/domain/checkpoints.ts",
+          "sha256": "2888b64c69013ca957e0adb211c893b7fb7f44f3e5289aa60bb7d9fe745ba7f1"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-10-20-9b96a4ef-regrant-v114/literacy-corridor-happy-path.json",
+          "sha256": "20f04af7c4ece4569a42de52fbcd8376eae494bcd5b30345d023642c5aaa4d30"
+        },
+        {
+          "path": "docs/product-readiness/evidence/observations/2026-10-20-9b96a4ef-regrant-v114/observations.json",
+          "sha256": "fc87e8efa605639a3e0ce2cf9c02dc96272cef17f89ea88a937fe2ea0076644d"
+        }
+      ],
+      "executedAt": "2026-10-20T16:26:36Z",
+      "executor": "mixed",
+      "gaps": [],
+      "gitSha": "9b96a4efaf084a6bad607538171af0cbfa6dbafe",
+      "manualFingerprint": "571bff9702625be2e9b4f03bd0b2cc9dde09f13819cde60272ac80ed8279274d",
+      "outcome": "pass",
+      "runId": "2026-10-20T16:26:36Z-literacy-corridor-happy-path-mixed-9b96a4ef",
+      "scenarioId": "literacy-corridor-happy-path",
+      "schemaVersion": 1,
+      "sourceFingerprint": "94a3444fedd1d1a729de2930ae61eb4d32ac40be13ad5c045b62b92ac139ca0b"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/literacyDojo/playwright/corridor.spec.ts",
+          "sha256": "5c8e70a100cfbe76b15163d14643808c7870b61c5c062873d324f29a9e797439"
+        },
+        {
+          "path": "engines/literacyDojo/src/domain/trackQueries.ts",
+          "sha256": "edb2ab87d86b0dbd2022457bc7d96278e93098021b490ba29c03ed938a762088"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-10-20-9b96a4ef-regrant-v114/literacy-corridor-resume-mid-module.json",
+          "sha256": "7beb3015c9e6cf2e6e3afb25d6f414f1fdea59f701f2fb76c4f77f7b3daa6c41"
+        },
+        {
+          "path": "docs/product-readiness/evidence/observations/2026-10-20-9b96a4ef-regrant-v114/observations.json",
+          "sha256": "fc87e8efa605639a3e0ce2cf9c02dc96272cef17f89ea88a937fe2ea0076644d"
+        }
+      ],
+      "executedAt": "2026-10-20T16:26:36Z",
+      "executor": "mixed",
+      "gaps": [],
+      "gitSha": "9b96a4efaf084a6bad607538171af0cbfa6dbafe",
+      "manualFingerprint": "571bff9702625be2e9b4f03bd0b2cc9dde09f13819cde60272ac80ed8279274d",
+      "outcome": "pass",
+      "runId": "2026-10-20T16:26:36Z-literacy-corridor-resume-mid-module-mixed-9b96a4ef",
+      "scenarioId": "literacy-corridor-resume-mid-module",
+      "schemaVersion": 1,
+      "sourceFingerprint": "94a3444fedd1d1a729de2930ae61eb4d32ac40be13ad5c045b62b92ac139ca0b"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/literacyDojo/playwright/corridor.spec.ts",
+          "sha256": "5c8e70a100cfbe76b15163d14643808c7870b61c5c062873d324f29a9e797439"
+        },
+        {
+          "path": "engines/literacyDojo/src/domain/progress.ts",
+          "sha256": "ac4166e5d9fc1e4ee274916422c0189618970d663b42390c2af54991d3e413e5"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-10-20-9b96a4ef-regrant-v114/literacy-corridor-review-window.json",
+          "sha256": "79b99e94126e14343d08bfb75a36b648a97c6c02f3716eb3cd4c930f1728d753"
+        },
+        {
+          "path": "docs/product-readiness/evidence/observations/2026-10-20-9b96a4ef-regrant-v114/observations.json",
+          "sha256": "fc87e8efa605639a3e0ce2cf9c02dc96272cef17f89ea88a937fe2ea0076644d"
+        }
+      ],
+      "executedAt": "2026-10-20T16:26:36Z",
+      "executor": "mixed",
+      "gaps": [],
+      "gitSha": "9b96a4efaf084a6bad607538171af0cbfa6dbafe",
+      "manualFingerprint": "571bff9702625be2e9b4f03bd0b2cc9dde09f13819cde60272ac80ed8279274d",
+      "outcome": "pass",
+      "runId": "2026-10-20T16:26:36Z-literacy-corridor-review-window-mixed-9b96a4ef",
+      "scenarioId": "literacy-corridor-review-window",
+      "schemaVersion": 1,
+      "sourceFingerprint": "94a3444fedd1d1a729de2930ae61eb4d32ac40be13ad5c045b62b92ac139ca0b"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/literacyDojo/playwright/vertical-slice.spec.ts",
+          "sha256": "45e53c9d3c0d9b36ca44b5b1e69c2bcbeba1a5ea4c51c766359b112b6e4bf73c"
+        },
+        {
+          "path": "engines/literacyDojo/src/domain/progress.ts",
+          "sha256": "ac4166e5d9fc1e4ee274916422c0189618970d663b42390c2af54991d3e413e5"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-10-20-9b96a4ef-regrant-v114/literacy-happy-path.json",
+          "sha256": "802b5110199a252cbd6791135ebd4f9566fb758cb5ea6a350e2cc45404171a50"
+        },
+        {
+          "path": "docs/product-readiness/evidence/observations/2026-10-20-9b96a4ef-regrant-v114/observations.json",
+          "sha256": "fc87e8efa605639a3e0ce2cf9c02dc96272cef17f89ea88a937fe2ea0076644d"
+        }
+      ],
+      "executedAt": "2026-10-20T16:26:36Z",
+      "executor": "mixed",
+      "gaps": [],
+      "gitSha": "9b96a4efaf084a6bad607538171af0cbfa6dbafe",
+      "manualFingerprint": "63d81c0960c54ed315306959bf663a689c1713854d95f9dcbeec5c5297c831ad",
+      "outcome": "pass",
+      "runId": "2026-10-20T16:26:36Z-literacy-happy-path-mixed-9b96a4ef",
+      "scenarioId": "literacy-happy-path",
+      "schemaVersion": 1,
+      "sourceFingerprint": "6c51bce15f534091974afbe9b32235e2a599189caaf5653508cc8642996a8e9e"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/literacyDojo/playwright/vertical-slice.spec.ts",
+          "sha256": "45e53c9d3c0d9b36ca44b5b1e69c2bcbeba1a5ea4c51c766359b112b6e4bf73c"
+        },
+        {
+          "path": "engines/literacyDojo/src/adapters/indexedDbProgressRepository.ts",
+          "sha256": "a68977d9ba1fb8653a5d794d20cffa6bed2f353183ce26785fb5fb306e0a34f0"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-10-20-9b96a4ef-regrant-v114/literacy-resume.json",
+          "sha256": "5400a3980806bb9cff513e76d55094dfa372fde6304ab2a65891c473b9954385"
+        },
+        {
+          "path": "docs/product-readiness/evidence/observations/2026-10-20-9b96a4ef-regrant-v114/observations.json",
+          "sha256": "fc87e8efa605639a3e0ce2cf9c02dc96272cef17f89ea88a937fe2ea0076644d"
+        }
+      ],
+      "executedAt": "2026-10-20T16:26:36Z",
+      "executor": "mixed",
+      "gaps": [],
+      "gitSha": "9b96a4efaf084a6bad607538171af0cbfa6dbafe",
+      "manualFingerprint": "63d81c0960c54ed315306959bf663a689c1713854d95f9dcbeec5c5297c831ad",
+      "outcome": "pass",
+      "runId": "2026-10-20T16:26:36Z-literacy-resume-mixed-9b96a4ef",
+      "scenarioId": "literacy-resume",
+      "schemaVersion": 1,
+      "sourceFingerprint": "6c51bce15f534091974afbe9b32235e2a599189caaf5653508cc8642996a8e9e"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/literacyDojo/playwright/vertical-slice.spec.ts",
+          "sha256": "45e53c9d3c0d9b36ca44b5b1e69c2bcbeba1a5ea4c51c766359b112b6e4bf73c"
+        },
+        {
+          "path": "engines/literacyDojo/src/domain/lessonSession.ts",
+          "sha256": "51276032a7547d9da2fc4c83e25e8f46968e50a95f87dfdb3afdca56fb0a59c3"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-10-20-9b96a4ef-regrant-v114/literacy-retry.json",
+          "sha256": "97e72eb8fba20abea6bba6c6421b3dacdf8631e4377ef6c3db1350755b43eb1c"
+        },
+        {
+          "path": "docs/product-readiness/evidence/observations/2026-10-20-9b96a4ef-regrant-v114/observations.json",
+          "sha256": "fc87e8efa605639a3e0ce2cf9c02dc96272cef17f89ea88a937fe2ea0076644d"
+        }
+      ],
+      "executedAt": "2026-10-20T16:26:36Z",
+      "executor": "mixed",
+      "gaps": [],
+      "gitSha": "9b96a4efaf084a6bad607538171af0cbfa6dbafe",
+      "manualFingerprint": "63d81c0960c54ed315306959bf663a689c1713854d95f9dcbeec5c5297c831ad",
+      "outcome": "pass",
+      "runId": "2026-10-20T16:26:36Z-literacy-retry-mixed-9b96a4ef",
+      "scenarioId": "literacy-retry",
+      "schemaVersion": 1,
+      "sourceFingerprint": "6c51bce15f534091974afbe9b32235e2a599189caaf5653508cc8642996a8e9e"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/codexdojo-os-prototype/tests-pilot/pilot-build.smoke.spec.ts",
+          "sha256": "18c931e0f3a91818abb8e1339fb7b19baaccd862ba78d46b05db2671dfe236dd"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-10-20-9b96a4ef-regrant-v114/os-literacy-hosted-mission.json",
+          "sha256": "1c936f61fad504e662b06319d7942fb735e61c41266ddde5007abefcb7c74f46"
+        },
+        {
+          "path": "docs/product-readiness/evidence/observations/2026-10-20-9b96a4ef-regrant-v114/observations.json",
+          "sha256": "fc87e8efa605639a3e0ce2cf9c02dc96272cef17f89ea88a937fe2ea0076644d"
+        }
+      ],
+      "executedAt": "2026-10-20T16:26:36Z",
+      "executor": "mixed",
+      "gaps": [],
+      "gitSha": "9b96a4efaf084a6bad607538171af0cbfa6dbafe",
+      "manualFingerprint": "a064c2e45011c6ed9aee11bd9f4e4e8e2404a38c798303389c9431801f68cd4c",
+      "outcome": "pass",
+      "runId": "2026-10-20T16:26:36Z-os-literacy-hosted-mission-mixed-9b96a4ef",
+      "scenarioId": "os-literacy-hosted-mission",
+      "schemaVersion": 1,
+      "sourceFingerprint": "b417638ae4843ce9ec978ceb8967176d9b524d238d9019f34617f78f3aed056a"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/codexdojo-os-prototype/tests/chapter-continuity.smoke.spec.ts",
+          "sha256": "29fc0695c4600bdb9f86cd243f7e7b7dbcc9b803aa58e797d91350306f01002c"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-10-20-9b96a4ef-regrant-v114/os-literacy-returning-device.json",
+          "sha256": "88f1e88e6feaf66c3a650ff426b7fa892218e9e9df982262478c5c1786918d3f"
+        },
+        {
+          "path": "docs/product-readiness/evidence/observations/2026-10-20-9b96a4ef-regrant-v114/observations.json",
+          "sha256": "fc87e8efa605639a3e0ce2cf9c02dc96272cef17f89ea88a937fe2ea0076644d"
+        }
+      ],
+      "executedAt": "2026-10-20T16:26:36Z",
+      "executor": "mixed",
+      "gaps": [],
+      "gitSha": "9b96a4efaf084a6bad607538171af0cbfa6dbafe",
+      "manualFingerprint": "a064c2e45011c6ed9aee11bd9f4e4e8e2404a38c798303389c9431801f68cd4c",
+      "outcome": "pass",
+      "runId": "2026-10-20T16:26:36Z-os-literacy-returning-device-mixed-9b96a4ef",
+      "scenarioId": "os-literacy-returning-device",
+      "schemaVersion": 1,
+      "sourceFingerprint": "b417638ae4843ce9ec978ceb8967176d9b524d238d9019f34617f78f3aed056a"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/codexdojo-os-prototype/tests-pilot/pilot-build.smoke.spec.ts",
+          "sha256": "18c931e0f3a91818abb8e1339fb7b19baaccd862ba78d46b05db2671dfe236dd"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-10-20-9b96a4ef-regrant-v114/os-verification-recovery.json",
+          "sha256": "2dc276effdf98096a0b333d523a6305c11ab72e3d2cf1f45e78626542cf22fc4"
+        },
+        {
+          "path": "docs/product-readiness/evidence/observations/2026-10-20-9b96a4ef-regrant-v114/observations.json",
+          "sha256": "fc87e8efa605639a3e0ce2cf9c02dc96272cef17f89ea88a937fe2ea0076644d"
+        }
+      ],
+      "executedAt": "2026-10-20T16:26:36Z",
+      "executor": "mixed",
+      "gaps": [],
+      "gitSha": "9b96a4efaf084a6bad607538171af0cbfa6dbafe",
+      "manualFingerprint": "a064c2e45011c6ed9aee11bd9f4e4e8e2404a38c798303389c9431801f68cd4c",
+      "outcome": "pass",
+      "runId": "2026-10-20T16:26:36Z-os-verification-recovery-mixed-9b96a4ef",
+      "scenarioId": "os-verification-recovery",
+      "schemaVersion": 1,
+      "sourceFingerprint": "b417638ae4843ce9ec978ceb8967176d9b524d238d9019f34617f78f3aed056a"
+    }
+  ],
+  "revalidateBy": "2026-11-19",
+  "schemaVersion": 1,
+  "verifiedAt": "2026-10-20T16:26:36Z"
+}
