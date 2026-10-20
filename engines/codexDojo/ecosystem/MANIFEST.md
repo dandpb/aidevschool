@@ -239,6 +239,16 @@ The ecosystem is complete only when a future agent can:
 7. Update memory and roadmap.
 8. Repeat the cycle through explicit OpenClaw checklist runs without hidden state.
 
+## Offline analytics bridge boundary
+
+`learner/analytics_bridge/` validates the two source envelopes and projects the
+supported canonical subset without changing emitters or granting competence.
+The report derives synthetic provenance from nonempty input labels and retains
+raw-row deduplication accounting. New boundary regressions are in
+`learner/analytics_bridge/tests/test_report_boundary_followup.py`; source privacy
+and event vocabularies remain authoritative. Offline fixture results are not
+measurements of real learners or a native merge countersign.
+
 ## Dev-family projected content identity
 
 `engines/codexdojo-os-prototype/scripts/gen-guided-practice.mjs` preserves the
