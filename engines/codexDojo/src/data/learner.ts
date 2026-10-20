@@ -67,7 +67,7 @@ export const learnerSnapshot: LearnerSnapshot = {
     },
   ],
   masteredCount: 2,
-  scaffoldedCount: 12,
+  scaffoldedCount: 10,
   streak: {
     current: 0,
     longest: 2,
