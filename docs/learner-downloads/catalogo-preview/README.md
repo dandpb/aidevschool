@@ -18,27 +18,44 @@ lições, gates, bindings, IDs, progresso, dominância, engines ou runtime.
    para acessibilidade/baixa banda, usar `catalogo-texto.md`.
 2. O objetivo de escolha: o aprendiz escolhe atividade por **resultado, duração real, requisitos,
    primeiros passos e disponibilidade VERDADEIRA**.
-3. Disponibilidade verdadeira nesta versão: **as quatro práticas estão em preparação** — os botões
-   ficam nativamente `disabled` (inertes), sem link falso, download simulado ou rota pública
-   inventada. Quando os kits forem aceitos/existentes, o botão ganha o link relativo real.
+3. Disponibilidade verdadeira nesta versão (incremento 2026-10-17): **as oito práticas estão
+   disponíveis** — os botões são links reais e relativos ao repositório: ZIPs dos kits offline
+   (`../pg-d04-contexto-e-spec/zips/…`, `../pg-d05-delegacao-controlada/zips/…`,
+   `../pg-e01-evals-offline/zips/…`), enunciados dos pacotes de currículo
+   (`../../curriculum/…`) e a folha pronta (`../worksheets/reparo-de-rotina/worksheet-visual.html`).
+   Nenhum link falso, download simulado ou rota inventada.
 
-## Práticas listadas e fontes aceitas (pins inspecionados antes da autoria — 2026-10-01)
+## Práticas listadas e fontes (pins inspecionados antes da autoria — 2026-10-01 e 2026-10-17)
 
-| Prática | Kit (issue) | Status do kit | Fonte aceita (pin) |
-| --- | --- | --- | --- |
-| U09 — pg-d04 contexto + PRD/SPEC | AID-3665 | em produção | PR #643 @ `32888d9f03006f3dbcdaa57811b29c54a2c09146` |
-| U10 — pg-d05 delegação controlada | AID-3668 | em produção | PR #646 @ `f7e3228a80cecc68e426e7d59d080a234d249104` |
-| U13 — pg-e01 evals offline | AID-3667 | em produção | PR #645 @ `b028652d7853cbd4efdf15035d9f9414aeb76094` |
-| Cotidiano — folha “reparo de rotina” | AID-3666 (folha imprimível) | em produção | PR #644 @ `fb8b4fe7e1a1cfe21708197761ef54987a0c95d9` |
+| Prática | Fonte aceita (pin) | Disponibilidade verificada em `main` |
+| --- | --- | --- |
+| PG-C01 dados mínimos e verificação (cotidiano) | pacote aprovado AID-3565 → AID-3573 @ `88ca305e` | `curriculum/praticas-guiadas-cotidiano/pg-c01-dados-minimos-e-verificacao/` |
+| U06 pg-d01 reproduza antes de perguntar | AID-3510 sequência Dev guiada @ `e01d9d42` (merge PR #673 @ `42386f5d`) | `curriculum/sequencia-dev-guiada/pg-d01-debug-reproduza/` |
+| U03 pg-d02 pedido de 5 campos | AID-3553 PR #631 @ `f6411e31` (errata `4cabf984`) | `curriculum/sequencia-dev-guiada/pg-d02-pedido-estruturado/` |
+| U07 pg-d03 refatoração com rede | AID-3562 @ `353aec42` | `curriculum/sequencia-dev-guiada/pg-d03-refatorar-com-rede/` |
+| U09 pg-d04 contexto + PRD/SPEC | fonte PR #643 @ `32888d9f`; kit AID-3665 @ `e001e548` | `docs/learner-downloads/pg-d04-contexto-e-spec/` (ZIP) + pacote |
+| U10 pg-d05 delegação controlada | fonte PR #646 @ `f7e3228a`; kit AID-3668 @ `87d6441f` (byte-idêntico, 18/18 hashes) | `docs/learner-downloads/pg-d05-delegacao-controlada/` (2 ZIPs) + pacote |
+| U13 pg-e01 evals offline | fonte PR #645 @ `b028652d`; kit AID-3667 @ `3b17ebaf` (byte-idêntico, 28/28 hashes) | `docs/learner-downloads/pg-e01-evals-offline/` (5 ZIPs) + pacote |
+| Cotidiano — folha “reparo de rotina” | PR #644 @ `fb8b4fe7` (r2 PO/CD) | `docs/worksheets/reparo-de-rotina/` |
 
-Pré-requisitos declarados conforme as fontes: U09 exige U03 (ou equivalente); U10 exige U07 (ou
-equivalente) e **não** exige U09; U13 exige U05 (pg-d01 ajuda, não é obrigatória); a folha cotidiana
-aplica-se após l30 → l32 e é folha de exercício, não jogo publicado. U13 é apresentada como offline /
-sintética / held-out em etapas. Textos e conteúdo dos pacotes aceitos preservados (nenhum gabarito,
-resposta ou preload de solução; sem claims de eficácia/nota/mastery).
+Pré-requisitos declarados conforme as fontes: pg-c01 ancorado em l09–l12, l20 e l25; pg-d01 exige
+l16 e l21; pg-d02 exige l16; pg-d03 exige l21 e pg-d01; U09 (pg-d04) exige U03 (ou equivalente);
+U10 (pg-d05) exige U07 (pg-d03) (ou equivalente) e **não** exige U09; U13 (pg-e01) exige U05
+(pg-d01 ajuda, não é obrigatória); a folha cotidiana aplica-se após l30 → l32 e é folha de
+exercício, não jogo publicado. U13 é apresentada como offline / sintética / held-out em etapas;
+os kits pg-d05 (2 etapas) e pg-e01 (5 etapas) preservam essas fronteiras por desenho. Textos e
+conteúdo dos pacotes aceitos preservados (nenhum gabarito, resposta ou preload de solução no
+caminho do aprendiz; sem claims de eficácia/nota/mastery). Duração de pg-c01: o pacote não fixa
+tempo — o catálogo declara “uma sessão, no seu ritmo” em vez de inventar número.
 
 ## Desenho (decisões registradas)
 
+- **Incremento 2026-10-17 (pós-wave #657):** o catálogo passa de 4 para 8 práticas — entram
+  pg-c01 (cotidiano) e pg-d01/pg-d02/pg-d03 (sequência Dev guiada), todas com links reais; as
+  quatro cards originais (U09, U10, U13, folha) migram de “em preparação” para “disponível agora”,
+  porque os kits offline e a folha r2 estão em `main` (pins na tabela acima). Nenhum conteúdo de
+  exercício foi reautorado: a copy do catálogo resume os pacotes aceitos; os links relativos só
+  apontam para o que já existe.
 - **Identidade visual:** tokens SDLCQuest v1.3 copiados 1:1 (paper/card/ink/muted/line/deep/mint/
   menta-escuro/gold/coral, raios 18/10/9, foco visível 3 px `#12624c` offset 3, corpo ≥14 px/1.75,
   eyebrow/mono 11 px, h1 com `em` em Georgia, seleção menta, reduced-motion zera transições) —
@@ -48,9 +65,10 @@ resposta ou preload de solução; sem claims de eficácia/nota/mastery).
   documentada: rótulo de trilha (ouro p/ “IA no cotidiano”, menta-escuro p/ “IA para Dev”) e ponto
   ouro p/ status “em preparação” na legenda, ambos com tokens existentes (mesma regra bounded do
   contrato AID-3458).
-- **Estrutura pronta para integração:** o grid de cards, a barra de contagem e a legenda de status
-  já distinguem “disponível agora” (ponto menta) de “em preparação” (ponto ouro); a integração de QA
-  acontece uma vez que existam pacotes reais, trocando apenas o estado/botão por link relativo real.
+- **Estrutura integrada (2026-10-17):** o grid de cards, a barra de contagem e a legenda de status
+  distinguem “disponível agora” (ponto menta, link real) de “em preparação” (ponto ouro, botão
+  inerte). Com os kits e pacotes em `main`, as oito práticas estão no estado menta; o estado ouro
+  permanece disponível para futuras práticas sem download.
 - **Sem JS:** catálogo estático em HTML semântico; botões indisponíveis são `disabled` nativos
   (não recebem foco por Tab e não disparam nada — verificação registrada no issue).
 - **Linguagem simples na copy do aprendiz:** “prática”, “folha de exercício”, “tente novamente”;
