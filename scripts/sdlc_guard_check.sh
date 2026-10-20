@@ -262,8 +262,9 @@ run_checks() {
 
   # PR conversation context (AID-2318 Stage 1 + AID-2428 Stage 2): one JSON
   # document with everything the gate needs — author (bot detection), body +
-  # comments (citation sources), mergedAt + per-comment createdAt (ordering).
-  # Canonical source: gh pr view --json author,body,comments,mergedAt.
+  # comments (citation sources), mergedAt + per-comment createdAt (ordering),
+  # headRefName (agent-lane detection for the AID-3722 open-body notice).
+  # Canonical source: gh pr view --json author,body,comments,mergedAt,headRefName.
   # Deterministic/hermetic overrides, first match wins:
   #   SDLC_PR_CONTEXT_FILE   full JSON in that same shape (Stage 2)
   #   SDLC_COUNTERSIGN_FILE  Stage 1 flat text — read as an unmerged,
@@ -288,7 +289,7 @@ run_checks() {
       prn="$(jq -r '.number // empty' "${GITHUB_EVENT_PATH}" 2>/dev/null)"
     fi
     [ -n "$prn" ] || return 1
-    gh pr view "$prn" --json author,body,comments,mergedAt 2>/dev/null || return 1
+    gh pr view "$prn" --json author,body,comments,mergedAt,headRefName 2>/dev/null || return 1
   }
 
   # 4. Countersign citation gate (AID-2318 Stage 1 + AID-2428 Stage 2). In PR
@@ -440,6 +441,25 @@ run_checks() {
         else
           echo "::notice::provenance trailer missing in process comment (AID-2493): '${pv_line:0:60}' (posted: $pv_t) — add 'Provenance: agent=<slug> task=<AID-ID> run=<runId> session=<sessionId>'"
         fi
+      done
+    # Pass C (AID-3722, 6th recurrence): agent-lane PR body without a trailer
+    # AT OPEN. The single-account reality (every lane posts as the same user)
+    # makes author-based detection impossible, so the lane name is the
+    # carrier: agent branches are `aid<n>/…`, `gh<n>/…` or `codex/…`. Open
+    # PRs only (mergedAt null — merged forensics stay quiet); notice-only,
+    # never reddens. Parallel to the AID-2493 process-comment notices above:
+    # the fix is adding the trailer to the body (the PR template prefills
+    # it; API-opened PRs must append it themselves).
+    printf '%s' "$ctx" | jq -r '
+      (.mergedAt // "") as $m
+      | (.headRefName // "") as $br
+      | select($m == "")
+      | select($br | test("^(aid|gh)[0-9]+/|^codex/"))
+      | select(([(.body // "" | split("\n")[]? | select(test("'"$prov_re"'")))] | length) == 0)
+      | $br' \
+      2>/dev/null | while IFS= read -r pv_br; do
+        [ -n "$pv_br" ] || continue
+        echo "::notice::provenance trailer missing in agent-lane PR body at open (AID-2493/AID-3722): branch '$pv_br' — add 'Provenance: agent=<slug> task=<AID-ID|GH-n> run=<runId> session=<sessionId>' to the body at open (.github/PULL_REQUEST_TEMPLATE.md prefills it)"
       done
   fi
 
@@ -793,9 +813,9 @@ $big_filler"
   # context JSON — the same shape `gh pr view --json author,body,comments,
   # mergedAt` returns — so author, comment createdAt and mergedAt are all
   # hermetic. The stub resolver (AID-9006 only) is reused.
-  mk_ctx() { # $1=author-type $2=login $3=mergedAt(""=null) $4=body-file $5=comments-json
-    jq -nc --arg t "$1" --arg l "$2" --arg m "$3" --rawfile b "$4" --argjson c "$5" \
-      '{author:{__typename:$t,login:$l},body:$b,mergedAt:($m|if .=="" then null else . end),comments:$c}'
+  mk_ctx() { # $1=author-type $2=login $3=mergedAt(""=null) $4=body-file $5=comments-json [$6=headRefName]
+    jq -nc --arg t "$1" --arg l "$2" --arg m "$3" --rawfile b "$4" --argjson c "$5" --arg br "${6:-}" \
+      '{author:{__typename:$t,login:$l},body:$b,mergedAt:($m|if .=="" then null else . end),comments:$c,headRefName:$br}'
   }
   pr2_scenario() { # $1=ctx-file; remaining args = scenario args
     local ctxf="$1"; shift
@@ -934,6 +954,22 @@ $big_filler"
     "provenance trailer malformed in process comment (AID-2493): 'Provenance: agent=qa-lead run=519e2558'"
   prov_scenario "$T3/plain"     "plain comment without trailer -> no provenance notice (AID-2493)" \
     "NOT:provenance trailer"
+
+  # AID-3722 (6th recurrence): agent-lane PR opened with NO trailer in the
+  # body — the recurring class (PRs #638/#644-#647/#653). The open-body
+  # notice fires for agent-lane branches only (headRefName), at open only
+  # (mergedAt null), and never reddens; a body carrying a valid trailer and
+  # non-agent branches stay quiet. Same hermetic source as AID-2493 above.
+  printf 'Provenance: agent=platform-release-engineer task=AID-3722 run=r20261017a session=ses_3722w0rk\n' > "$T3/body_ok"
+  mk_ctx User "dandpb" "" "$T2/empty" '[]' "aid3722/prov-at-open-template" > "$T3/agent_open_no"
+  mk_ctx User "dandpb" "" "$T3/body_ok" '[]' "aid3722/prov-at-open-template" > "$T3/agent_open_ok"
+  mk_ctx User "dandpb" "" "$T2/empty" '[]' "feature/human-lane" > "$T3/human_open_no"
+  prov_scenario "$T3/agent_open_no" "agent-lane PR body without trailer at open -> notice, rc 0 (AID-3722)" \
+    "provenance trailer missing in agent-lane PR body at open (AID-2493/AID-3722): branch 'aid3722/prov-at-open-template'"
+  prov_scenario "$T3/agent_open_ok" "agent-lane PR body with valid trailer -> no open-body notice (AID-3722)" \
+    "NOT:missing in agent-lane PR body"
+  prov_scenario "$T3/human_open_no" "non-agent branch body without trailer -> no open-body notice (AID-3722)" \
+    "NOT:missing in agent-lane PR body"
 
   # AID-2481 (vii): new-shape gh bot PR (is_bot:true, app/<slug> login, no
   # __typename, no [bot] suffix), engine-only diff, NO citation -> must FAIL
