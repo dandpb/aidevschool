@@ -1,0 +1,11 @@
+== dojotoday-active-unit-guidance
+   [OK ] engines/dojoToday/src/main.ts :: exact byte match
+   [OK ] engines/dojoToday/src/main.ts :: fragment-wise (markup-elided citation): quem avalia a evidência é o | verificador independente | , não eu
+   [OK ] engines/dojoToday/src/main.ts :: fragment-wise (markup-elided citation): apenas mostra o scheduler — não marca | mastered
+== os-voxel-hosted-missions
+   [OK ] engines/codexdojo-os-prototype/src/journey/Hub.tsx :: exact byte match
+   [OK ] engines/codexdojo-os-prototype/src/engines/EngineHubApp.tsx :: exact byte match
+
+TOTAL: relocated=18 missing=0
+Note: interval delta on cited files = label for= attributes only (PR #722, 3 lines);
+Hub.tsx/EngineHubApp.tsx byte-identical in interval (no delta file touches them).
