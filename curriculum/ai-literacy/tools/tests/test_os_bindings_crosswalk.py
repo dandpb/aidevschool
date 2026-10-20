@@ -77,9 +77,9 @@ class OsBindingsCrosswalkAuditTest(unittest.TestCase):
 
     def test_binding_counts_pinned(self):
         counts = Counter(b["trackId"] for b in self.bindings)
-        self.assertEqual(len(self.bindings), 40)
+        self.assertEqual(len(self.bindings), 43)
         self.assertEqual(
-            dict(counts), {"ai-pratica": 23, "dev": 17}
+            dict(counts), {"ai-pratica": 23, "dev": 20}
         )
 
     def test_every_ready_lesson_bound_exactly_once(self):
@@ -88,7 +88,7 @@ class OsBindingsCrosswalkAuditTest(unittest.TestCase):
             for b in self.bindings
             if b["curriculum"]["kind"] == LESSON_KIND
         ]
-        self.assertEqual(len(lesson_bindings), 32)
+        self.assertEqual(len(lesson_bindings), 35)
         bound_ids = [b["missionId"] for b in lesson_bindings]
         self.assertEqual(sorted(bound_ids), sorted(self.lesson_entries))
         self.assertEqual(len(bound_ids), len(set(bound_ids)))

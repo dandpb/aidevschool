@@ -1,0 +1,499 @@
+{
+  "schema": "aidevschool/sequencia-dev-guiada/source-contract@1",
+  "package": {
+    "id": "pg-d03-refatorar-com-rede",
+    "version": "rubrica-v1",
+    "practiceId": "pg-d03",
+    "contentVersion": "pg-d03@20b608d64a13",
+    "contentVersionBasis": {
+      "formula": "<practiceId>@<sha256-12>",
+      "entries": "path:sha256 (sha256 do conteúdo UTF-8), path = curriculum/sequencia-dev-guiada/pg-d03-refatorar-com-rede/<relative>",
+      "join": "newline",
+      "order": "allowlist canônica congelada (contentVersionBasis.allowlist), não lexicográfica",
+      "allowlist": [
+        "enunciado.md",
+        "exemplo-trabalhado.md",
+        "insumos/PEDIDO.md",
+        "insumos/CONTRATO.md",
+        "insumos/proposta-refatoracao.md",
+        "insumos/fixture/pedidos.py",
+        "insumos/fixture/testes.py",
+        "rubrica-v1.md"
+      ],
+      "excludes": [
+        "guia-de-correcao/caracterizacao/teste_caracterizacao.py",
+        "guia-de-correcao/armadilha/pedidos.py",
+        "guia-de-correcao/solucao/pedidos.py",
+        "guia-de-correcao/solucao.md"
+      ],
+      "parity": [
+        {
+          "source": "learner/substrate/mission_catalog_guided_practice.py",
+          "commit": "e376d04f6ea7eb7a7be664eb9e6e15305ea675e9",
+          "pullRequest": 628,
+          "symbols": [
+            "Parity contract (AID-3534)",
+            "GUIDED_PRACTICE_LEARNER_FILES",
+            "compute_content_version"
+          ]
+        },
+        {
+          "source": "engines/codexdojo-os-prototype/scripts/gen-guided-practice.mjs",
+          "pullRequest": 625,
+          "symbols": [
+            "SOURCE_FILES",
+            "contentVersion"
+          ]
+        },
+        {
+          "source": "curriculum/sequencia-dev-guiada/tools/fixtures/pg-d02-source-contract.json",
+          "pullRequest": 631,
+          "symbols": [
+            "contentVersionBasis (AID-3617 interface delta)",
+            "sourceInterface"
+          ]
+        }
+      ],
+      "correction": "Ordem canônica do pg-d03 segue a ordem de uso no ciclo guiado do enunciado (pedido → contrato → proposta → fixture → suíte), padrão da família desde o pg-d01 (bugreport/REGRA/fixture). Hashes do guia-de-correcao não entram nas entradas learner."
+    },
+    "anchors": {
+      "unit": "U07",
+      "unitRef": "SEQUENCIA.md §2",
+      "competencyPrimary": "D4",
+      "anchorLesson": {
+        "id": "l28",
+        "title": "Refatore com assistente sem quebrar comportamento",
+        "file": "curriculum/ai-literacy/modules/05-dev-contexto-e-escolha/l28-refatore-com-assistente-sem-quebrar-comportamento.yaml",
+        "blob": "386c27fe1a6b"
+      },
+      "workedWorkflow": {
+        "id": "03-refatorar-seguro",
+        "file": "dev-workflow-claude/workflows/03-refatorar-seguro/RESULTADO.md",
+        "blob": "93087764ac38"
+      },
+      "prerequisiteLesson": {
+        "id": "l21",
+        "unit": "U04",
+        "label": "pedir testes",
+        "equivalence": "ou equivalentes"
+      },
+      "prerequisitePractice": {
+        "id": "pg-d01",
+        "unit": "U06",
+        "label": "reprodução antes do diagnóstico"
+      }
+    }
+  },
+  "pin": {
+    "repo": "dandpb/aidevschool",
+    "pullRequest": 633,
+    "head": "353aec424142c6ef74f7ed030b32724c067e23e7",
+    "merge": "5679b8b5fe4f29549fd258b9a3c4046cbf4b9a6f",
+    "base": {
+      "pullRequest": 620,
+      "head": "e01d9d42b99434c10d8f155cde0cbbc57b25cf61"
+    },
+    "byteIdenticalAtMainHead": "b08e00962f33645578878346af6f83218317f2f5"
+  },
+  "files": [
+    {
+      "path": "enunciado.md",
+      "sha256": "2fc66bb5286bdbf9991c2407017bac03d4caae857b3e31394a0f960afa4a4d00",
+      "bytes": 6543
+    },
+    {
+      "path": "exemplo-trabalhado.md",
+      "sha256": "2e195b46c27a482325a07c4d7761698956ae108b0bf44927e1b1a11f9dd6e2cd",
+      "bytes": 4090
+    },
+    {
+      "path": "insumos/PEDIDO.md",
+      "sha256": "87e5114dccb97f61b6932ea4764ab2953e4e88749870871a4b289948d0eaff5e",
+      "bytes": 1239
+    },
+    {
+      "path": "insumos/CONTRATO.md",
+      "sha256": "3af07129448826ea7edc3936e692c422683b18aeddcfc00354be556f7151c049",
+      "bytes": 1998
+    },
+    {
+      "path": "insumos/proposta-refatoracao.md",
+      "sha256": "8938ae97823bd0a7df389e2d87802d99dabc510ade42521c0bca4996dca12d27",
+      "bytes": 1563
+    },
+    {
+      "path": "insumos/fixture/pedidos.py",
+      "sha256": "707ecb8c0a979d92f37373b5fbb34fdd0f75889eba9c9ea036ec32265744f792",
+      "bytes": 1402
+    },
+    {
+      "path": "insumos/fixture/testes.py",
+      "sha256": "28ad46c4bcb5650dbf156fe42093f1a8ed0093a781ad64aa6c122c23a9ac5014",
+      "bytes": 1972
+    },
+    {
+      "path": "rubrica-v1.md",
+      "sha256": "58aa759b8c76c00a4abc12d174d4e5527d4fb0aeda6cc113737411a02da6da8d",
+      "bytes": 3733
+    },
+    {
+      "path": "guia-de-correcao/caracterizacao/teste_caracterizacao.py",
+      "sha256": "23b536b280682225f3f908cba525b9e6040aa6bc0ab38682d4388cfa21d262ba",
+      "bytes": 2302
+    },
+    {
+      "path": "guia-de-correcao/armadilha/pedidos.py",
+      "sha256": "f009996048e319db6556a4568d1904f3a48a5aa797a8c001a7c1c221524084b4",
+      "bytes": 1379
+    },
+    {
+      "path": "guia-de-correcao/solucao/pedidos.py",
+      "sha256": "d8a21372dedd0a3ca416c553ab31734a15a302fa0c0055a9fb210558d146e054",
+      "bytes": 1488
+    },
+    {
+      "path": "guia-de-correcao/solucao.md",
+      "sha256": "0ab4f5f45f07bc87f2f3980733dfe2519a734673cb67f6397059c13a9d4aea07",
+      "bytes": 7782
+    }
+  ],
+  "structure": {
+    "steps": {
+      "first": 1,
+      "last": 6,
+      "count": 6
+    },
+    "contractClauseIds": [
+      "C1",
+      "C2",
+      "C3",
+      "C4",
+      "C5"
+    ],
+    "criteriaIds": [
+      "c1-baseline-verde",
+      "c2-caracterizacao-antes",
+      "c3-armadilha-executada",
+      "c4-veredito-fundamentado",
+      "c5-passos-pequenos",
+      "c6-testes-existentes-intocados",
+      "c7-comportamento-preservado"
+    ],
+    "objectiveTags": {
+      "c2-caracterizacao-antes": "a",
+      "c3-armadilha-executada": "b",
+      "c5-passos-pequenos": "c"
+    },
+    "takeawayPrompts": 2,
+    "verdicts": [
+      "met",
+      "partial",
+      "not_met"
+    ]
+  },
+  "extractions": [
+    {
+      "role": "metaBlock",
+      "file": "enunciado.md",
+      "reflow": true,
+      "selector": {
+        "kind": "leadParagraph"
+      },
+      "sha256": "b8ed39cf4c3e9de32adbc02410e1a68fb029ae1936406530a25fb52827326e79"
+    },
+    {
+      "role": "anchorsMeta",
+      "file": "enunciado.md",
+      "selector": {
+        "kind": "leadParagraph"
+      },
+      "reviewRequired": true,
+      "sha256": "a2b0cfba68bd36378adb8e91611c936c1c5f7dc429093511b7bdc66bf00c302d"
+    },
+    {
+      "role": "objective",
+      "file": "enunciado.md",
+      "reflow": false,
+      "selector": {
+        "kind": "section",
+        "heading": "Objetivo observável"
+      },
+      "sha256": "f457a878889362c32e9ff300c1e1964b133362b9ab93cb17ad453b67d8da7456"
+    },
+    {
+      "role": "houseRule",
+      "file": "enunciado.md",
+      "reflow": true,
+      "selector": {
+        "kind": "paragraph",
+        "section": "Objetivo observável",
+        "prefix": "A regra da casa que esta prática instala"
+      },
+      "reviewRequired": true,
+      "sha256": "99eaac5b384bc38ba4d2202d949f83d0804b9e3e61dcc13249b3ece2c0644b46"
+    },
+    {
+      "role": "contractClauses",
+      "file": "insumos/CONTRATO.md",
+      "selector": {
+        "kind": "contractClauses"
+      },
+      "reviewRequired": true,
+      "sha256": "df2b14914b87edaf3bb8c56fdf8fb76e9db5fc4590f1e4d765e0c3b9e667695e"
+    },
+    {
+      "role": "steps",
+      "file": "enunciado.md",
+      "reflow": true,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "numberedSteps",
+        "section": "2. Tentativa (≈ 20 min)",
+        "first": 1,
+        "last": 6
+      },
+      "sha256": "6ab8b6c8ee26269804985f8f45dd4e0a78f28675a0214821e87e01bc3f520e2c"
+    },
+    {
+      "role": "receiptInstruction",
+      "file": "enunciado.md",
+      "reflow": true,
+      "selector": {
+        "kind": "paragraph",
+        "section": "2. Tentativa (≈ 20 min)",
+        "prefix": "Guarde:"
+      },
+      "sha256": "7043eb7fffc55c391c72e223a22c14af7244eff38596d4ca7367ce5c58083916"
+    },
+    {
+      "role": "feedbackInstruction",
+      "file": "enunciado.md",
+      "reflow": true,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "paragraph",
+        "section": "3. Feedback (rúbrica)",
+        "index": 0
+      },
+      "sha256": "b4a2ae568f101c0c73eb471073cdb39740abdc48532744111ea870c7bc5b6a25"
+    },
+    {
+      "role": "retryInstruction",
+      "file": "enunciado.md",
+      "reflow": true,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "paragraph",
+        "section": "4. Retry (se algum critério não passar)",
+        "index": 0
+      },
+      "sha256": "66367197397ec9a68a4806344fb0693c2868f0e6d525d06d80aa79f900b17cbb"
+    },
+    {
+      "role": "takeawayInstruction",
+      "file": "enunciado.md",
+      "reflow": true,
+      "selector": {
+        "kind": "paragraph",
+        "section": "5. Takeaway (≈ 5 min)",
+        "index": 0
+      },
+      "sha256": "4fd5262c0d1a615f56270f054559ab1d89bd2c2e3b94fd4a5f7b4e7247660cd1"
+    },
+    {
+      "role": "takeawayPrompts",
+      "file": "enunciado.md",
+      "reflow": true,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "labeledSubPrompts",
+        "section": "5. Takeaway (≈ 5 min)",
+        "lead": "Responda em duas frases:",
+        "labels": [
+          "(a)",
+          "(b)"
+        ]
+      },
+      "sha256": "ca085f5a6fd27705d677a13c42097c9a7af8829564569d472deafde47a2a22f6"
+    },
+    {
+      "role": "scopeNote",
+      "file": "enunciado.md",
+      "reflow": true,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "bulletByPrefix",
+        "section": "Limites explícitos",
+        "prefix": "Esta prática avalia o"
+      },
+      "sha256": "0d30c9051b8e73f7683845f8d6cf5eacbe4f9110ffa6de59b979d49736567121"
+    },
+    {
+      "role": "guiaGuard",
+      "file": "enunciado.md",
+      "reflow": true,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "bulletByPrefix",
+        "section": "Limites explícitos",
+        "prefix": "Solução e vereditos de referência ficam em"
+      },
+      "sha256": "45e8ff999ae63b41c31c034513608ee0308e473d4341fc98afc259bb01120839"
+    },
+    {
+      "role": "verdictHeader",
+      "file": "rubrica-v1.md",
+      "reflow": true,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "leadParagraph"
+      },
+      "sha256": "5b7b6224c2ae0ca3b53c6024401268293d0da74daa0090d2140aa5244755d822"
+    },
+    {
+      "role": "verdictRules",
+      "file": "rubrica-v1.md",
+      "reflow": true,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "bulletByPrefix",
+        "section": "Notas de aplicação",
+        "prefix": "`partial` exige"
+      },
+      "sha256": "2cd4dacaa16ab64091dc8d4d4b25620b24566d4e4a102ecbd3d53b9d30915e76"
+    },
+    {
+      "role": "criteriaRows",
+      "file": "rubrica-v1.md",
+      "reflow": false,
+      "selector": {
+        "kind": "criteriaRows"
+      },
+      "sha256": "d22524676c30ad1d04e7a46a1a05f0bb84c4ebf2e3424e16be28da9b0347fcec"
+    },
+    {
+      "role": "pedidoOriginal",
+      "file": "insumos/PEDIDO.md",
+      "reflow": true,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "proseParagraphs",
+        "skipBlockquote": true
+      },
+      "sha256": "ca35b77369d5cf8eda7f7c8a170f4a41c36d80afefc091f8d0d71eec96afe246"
+    },
+    {
+      "role": "propostaResumo",
+      "file": "insumos/proposta-refatoracao.md",
+      "reflow": true,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "docParagraphByPrefix",
+        "prefix": "A proposta promete:"
+      },
+      "sha256": "afed50ab957bf0aa32809d0fc98a595b562a68912c356524ded53543dd5d0cb7"
+    },
+    {
+      "role": "perCheck:c1-baseline-verde",
+      "file": "rubrica-v1.md",
+      "reflow": false,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "rubricaCell",
+        "criterionId": "c1-baseline-verde",
+        "column": "perCheck"
+      },
+      "sha256": "010061cf8985827bb6b19e6a0dafde2dcc5ea1416e5e3c8a36706b9133cca35a"
+    },
+    {
+      "role": "perCheck:c2-caracterizacao-antes",
+      "file": "rubrica-v1.md",
+      "reflow": false,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "rubricaCell",
+        "criterionId": "c2-caracterizacao-antes",
+        "column": "perCheck"
+      },
+      "sha256": "b962b71c50361471558cb9a9576be42d1721f28ea63b7314b6ae01451bf28bee"
+    },
+    {
+      "role": "perCheck:c3-armadilha-executada",
+      "file": "rubrica-v1.md",
+      "reflow": false,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "rubricaCell",
+        "criterionId": "c3-armadilha-executada",
+        "column": "perCheck"
+      },
+      "sha256": "cb12b075ab08918dbdf5ef504339e569f9a0885c4b8fc7c1de0fc018b44f5618"
+    },
+    {
+      "role": "perCheck:c4-veredito-fundamentado",
+      "file": "rubrica-v1.md",
+      "reflow": false,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "rubricaCell",
+        "criterionId": "c4-veredito-fundamentado",
+        "column": "perCheck"
+      },
+      "sha256": "f11c0f3ce2e5e15c33566b09d8fc243b4c038d41248c72008cb903b1f946f05d"
+    },
+    {
+      "role": "perCheck:c5-passos-pequenos",
+      "file": "rubrica-v1.md",
+      "reflow": false,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "rubricaCell",
+        "criterionId": "c5-passos-pequenos",
+        "column": "perCheck"
+      },
+      "sha256": "d0b02849da6a91fd05eb2bac24339b9cecf32731d1caeabebabca3fa49ed075e"
+    },
+    {
+      "role": "perCheck:c6-testes-existentes-intocados",
+      "file": "rubrica-v1.md",
+      "reflow": false,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "rubricaCell",
+        "criterionId": "c6-testes-existentes-intocados",
+        "column": "perCheck"
+      },
+      "sha256": "055deb5d3ba7e3d2245c7a1bf7cc3cc02d95a82b829dbe989bfa861315e10cda"
+    },
+    {
+      "role": "perCheck:c7-comportamento-preservado",
+      "file": "rubrica-v1.md",
+      "reflow": false,
+      "reviewRequired": true,
+      "selector": {
+        "kind": "rubricaCell",
+        "criterionId": "c7-comportamento-preservado",
+        "column": "perCheck"
+      },
+      "sha256": "61ea2cb5512a66d70bd48052819714c5fd33bbfd0e9eb2ad8233b507ae44b912"
+    }
+  ],
+  "sourceInterface": {
+    "learnerVisibleFiles": [
+      "enunciado.md",
+      "exemplo-trabalhado.md",
+      "insumos/PEDIDO.md",
+      "insumos/CONTRATO.md",
+      "insumos/proposta-refatoracao.md",
+      "insumos/fixture/pedidos.py",
+      "insumos/fixture/testes.py",
+      "rubrica-v1.md"
+    ],
+    "provenanceOnlyFiles": [
+      "guia-de-correcao/caracterizacao/teste_caracterizacao.py",
+      "guia-de-correcao/armadilha/pedidos.py",
+      "guia-de-correcao/solucao/pedidos.py",
+      "guia-de-correcao/solucao.md"
+    ]
+  }
+}

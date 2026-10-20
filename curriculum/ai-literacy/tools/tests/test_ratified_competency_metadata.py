@@ -62,6 +62,14 @@ RATIFIED: dict[str, dict[str, object]] = {
     "l30": {"primary": "F3", "supporting": ["F2"]},
     "l31": {"primary": "F3", "supporting": ["F2"]},
     "l32": {"primary": "F4", "supporting": ["F3"]},
+    # Onda W2 dev (l33–l35): parecer do Content Designer no pacote autoral
+    # AID-5011 r1 §2.1 (attachment e7cc0e4f; D2 fecha a lacuna de âncora,
+    # D5 fecha a lacuna U13/AID-3510 §3, D6 ancora pg-d05/U10) RATIFICADO
+    # pelo FPE no PR AID-5046 — mesma regra de decisão AID-3505 ("CD decide
+    # primária/apoio com rationale, FPE ratifica"), matriz r3 -> r4.
+    "l33": {"primary": "D2", "supporting": ["D3"]},
+    "l34": {"primary": "D5", "supporting": ["D4"]},
+    "l35": {"primary": "D6", "supporting": ["D4"]},
 }
 
 GLOSSARY_IDS = ["F1", "F2", "F3", "F4", "D1", "D2", "D3", "D4", "D5", "D6", "D7"]
@@ -111,10 +119,10 @@ class RatifiedCompetencyMetadataTest(TrackFixtureMixin):
     def test_live_corpus_matches_ratified_matrix_exactly(self):
         self.assertEqual(_fidelity_mismatches(TRACK_DIR), [])
 
-    def test_corpus_has_32_unique_ids_l01_to_l32(self):
+    def test_corpus_has_35_unique_ids_l01_to_l35(self):
         lessons = _live_lessons(TRACK_DIR)
-        self.assertEqual(sorted(lessons), ["l%02d" % n for n in range(1, 33)])
-        self.assertEqual(len(RATIFIED), 32)
+        self.assertEqual(sorted(lessons), ["l%02d" % n for n in range(1, 36)])
+        self.assertEqual(len(RATIFIED), 35)
 
     def test_assignments_use_glossary_ids_and_never_support_the_primary(self):
         for lesson_id, competency in RATIFIED.items():
@@ -183,7 +191,7 @@ class RatifiedCompetencyMetadataTest(TrackFixtureMixin):
 
         errors, ready, _catalog = validate_track(TRACK_DIR)
         self.assertEqual(errors, [])
-        self.assertEqual(len(ready), 32)
+        self.assertEqual(len(ready), 35)
 
         with tempfile.TemporaryDirectory() as tmp:
             with_meta = Path(tmp) / "out-with-meta"
