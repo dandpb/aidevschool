@@ -179,20 +179,27 @@ remoção verificada 2 ciclos de readiness após a W6.
 | W1 | Defeito AA: dojoToday `.is-mastered .track-glyph` 3.0:1→6.49:1 — a "alias layer" completa da proposta ficou deferral | merge `cf85504c` (PR #298, re-grant v37, QA countersign AID-1033 CONFORME) |
 | W2 | State contract §2.3 nos controles do loop das 3 engines — **embarcou a alias mínima** que referencia (`--ads-focus` + pares de feedback onde há container) | merge `14121556` (PR #303, re-grant v38, QA countersign AID-1099 GO) |
 | W3 | Este doc (padrão documentado) + adesão §4 FeedbackPanel/ResultScreen + forced-colors wave 1 (B7) | merge via PR AID-1096 |
-| W4 | Defeitos AA vigentes (B2, independentes do v2.0): dojoToday `.tone-success .chip` 3.30:1 → fundo `#166534` (7.13:1); OS journey `--school-muted` sobre wash `--school-primary-soft` 4.31:1 → `#3f4a64` local (7.68:1) | child AID-5080 (FPE) — em andamento |
-| v2.0 | Este change: §7 Contrato do HUD de progresso + tier B9 + 11 tokens HUD | PR AID-5010 (este change) |
+| W4 | Defeitos AA vigentes (B2, independentes do v2.0): dojoToday `.tone-success .chip` 3.30:1 → fundo `#166534` (7.13:1); OS journey `--school-muted` sobre wash `--school-primary-soft` 4.31:1 → `#3f4a64` local (7.68:1) | **done** — merge `cdc6d335` (PR #720, head `628e2ba4`; child AID-5080/FPE; QA countersign AID-5143 GO) |
+| v2.0 | Este change: §7 Contrato do HUD de progresso + tier B9 + 11 tokens HUD | merge `59111827` (PR #718; QA countersign AID-5178) |
+| W5 | Aliases HUD `--ads-*` (11 tokens) nas 3 engines mapeando valores vigentes — zero delta visual; valores AA-tuned marcados `@deprecated → --ads-* (B9)` (janela §5); seção "Progress HUD" nos 3 DESIGN.md | **done** — merge `a116c1ba` (PR #724, head `b58a3d08`; QA countersign AID-5173) |
+| W6 | Retune AAA (B9a/B9b) dos pares HUD nas 3 engines + extremo `progress-fill` literacy ≥3:1 (1.4.11); remoção dos nomes deprecados ao fim da janela (specs de re-medição travam o ratchet) | **done** — merge `cc76ee11` (PR #726, head `01da8288`; QA countersign AID-5187; re-grant do lote: PR #727 merged) |
+| W7 | Contrato de componentes HUD: `ProgressMeter` `role="progressbar"`+`valuetext` 3/3 (inclui grids OS), `MasteryBadge`, `ReviewDue` pt-BR, testids `hud-*`, live region, responsivo 375/768/1280 | **done** — merge `6a1ac151` (PR #728, head `e857eef8`; QA countersign AID-5195 GO — mutation-guard 8/8, screenshots 375/768/1280; re-grant do lote: PR #729 em observação — child QA AID-5197) |
 
-**Ondas aprovadas (confirmation AID-5010 `f04442cd`, 2026-10-19):** W5 aliases HUD
+**Ondas aprovadas (confirmation AID-5010 `f04442cd`, 2026-10-19; W4–W7 concluídas
+2026-10-19/20 — merges e countersigns na tabela acima):** W5 aliases HUD
 (zero delta visual; + seção "Progress HUD" nos 3 DESIGN.md) → W6 retune AAA (B9a/B9b) →
 W7 contrato de componentes (anatomia/testids/a11y funcional). Sequência única entre
 ondas; FPE executa, QA countersign por onda, merge via `scripts/merge_pr.sh`.
 
 **Métricas de adoção** (acompanhamento da board): % de controles do loop com state
 contract completo por engine; nº de tokens do núcleo mapeados (v1: 5/18 — mínima);
-nº de falhas B1–B3 abertas por ciclo. **Métricas HUD (v2.0):** tokens HUD mapeados
-(0/11 → 11/11 na W5 — PR #724); % de medidores com `role="progressbar"`+`valuetext` (1/3 → 3/3
-na W7); falhas B9a/B9b abertas por ciclo (meta 0 após W6); nº de specs E2E HUD
-compartilhadas entre engines (0 → ≥1). Sucesso = adoção **e** verificação independente.
+nº de falhas B1–B3 abertas por ciclo. **Métricas HUD (v2.0) — finais pós-W7
+(2026-10-20):** tokens HUD mapeados **11/11** (W5 — PR #724); medidores com
+`role="progressbar"`+`valuetext` **3/3** (W7 — PR #728); falhas B9a/B9b abertas
+**0** (W6 — PR #726; specs de re-medição travam o ratchet); specs E2E HUD
+compartilhadas entre engines **0→3** (`hud-contract.spec.ts` em dojoToday e
+literacyDojo + `hud-contract.smoke.spec.ts` no OS). Sucesso = adoção **e**
+verificação independente (countersign QA distinto por onda — tabela acima).
 
 ## 7. Contrato do HUD de progresso (v2.0 — AID-5010)
 
