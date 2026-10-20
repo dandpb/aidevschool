@@ -1,7 +1,9 @@
+import { useEffect, useState } from 'react'
 import { useServices } from '../app/ServicesProvider'
 import type { LearnerSnapshot, MissionDefinition } from '../domain'
 import type { MissionCatalogRepository } from '../missions/catalog'
 import { recommendMission } from '../missions/recommendation'
+import { formatReviewDuePtBr } from '../missions/reviewMapping'
 import {
   dailyGoalMet,
   dailyXp,
@@ -92,6 +94,26 @@ export function Hub({
             ? 'Praticar novamente'
             : 'Começar missão'
 
+  // W7 AID-5190 (contrato §7.2 — anúncio de mudança): a live region
+  // journey-sr-only anuncia o estado de sequência/meta (e revisão devida,
+  // quando é o caso) 1× por sessão do hub — texto inserido depois do render.
+  const [hudAnnouncement, setHudAnnouncement] = useState('')
+  useEffect(() => {
+    const streakDays = progress.localEngagementStreak.current
+    const streakNote =
+      lastActiveDate === toLocalDateKey(now)
+        ? `Sequência local ativa: ${streakDays} ${streakDays === 1 ? 'dia' : 'dias'}.`
+        : 'Sequência local pausada. Uma prática hoje reacende.'
+    const reviewNote = recommendation.kind === 'review'
+      ? ` Revisão ${formatReviewDuePtBr(recommendation.dueIn)}.`
+      : ''
+    const t = window.setTimeout(() => {
+      setHudAnnouncement(`${streakNote} Meta de hoje: ${todayXp}/${progress.dailyGoalXp} XP.${reviewNote}`)
+    }, 0)
+    return () => window.clearTimeout(t)
+  }, [progress.localEngagementStreak.current, lastActiveDate, now, recommendation, todayXp, progress.dailyGoalXp])
+  const trackPct = Math.round((completedInTrack / Math.max(trackRail.length, 1)) * 100)
+
   return (
     <main className="journey-page hub-page">
       <header className="hub-topbar">
@@ -111,6 +133,10 @@ export function Hub({
         <h1>Aprenda uma coisa útil agora.</h1>
         <p>Uma missão em destaque, com prática observável e progresso que não confunde conclusão com competência.</p>
       </section>
+
+      <p className="journey-sr-only" role="status" aria-live="polite" data-testid="hud-live-region">
+        {hudAnnouncement}
+      </p>
 
       {verificationAvailability === 'unavailable' ? (
         <p className="journey-eyebrow" role="status">Verificação indisponível no momento. Seu progresso local continua salvo.</p>
@@ -146,18 +172,28 @@ export function Hub({
               <p className="journey-eyebrow">
                 {recommendationLabel} · {mission.estimatedMinutes} min
               </p>
+              {recommendation.kind === 'review' ? (
+                <p className="journey-eyebrow" data-testid="hud-review-due">
+                  Revisão {formatReviewDuePtBr(recommendation.dueIn)}
+                </p>
+              ) : null}
               <h2>{mission.title}</h2>
               <p>{mission.objective}</p>
               <div
                 className="hub-mission-progress"
                 role="progressbar"
+                data-testid="hud-progress"
                 aria-label="Missões concluídas nesta trilha"
                 aria-valuemin={0}
                 aria-valuemax={Math.max(trackRail.length, 1)}
                 aria-valuenow={completedInTrack}
+                aria-valuetext={`${trackPct}% concluído`}
               >
-                <span style={{ width: `${Math.round((completedInTrack / Math.max(trackRail.length, 1)) * 100)}%` }} />
+                <span style={{ width: `${trackPct}%` }} />
               </div>
+              <p className="hub-meter-read">
+                <strong>{completedInTrack}</strong>/{trackRail.length} missões concluídas
+              </p>
               <p className="mission-expected"><strong>Resultado esperado:</strong> {mission.fallback.summary}</p>
               <ol className="mission-stages">
                 <li><span>1</span>Entender</li><li><span>2</span>Responder</li><li><span>3</span>Aplicar</li>
@@ -177,7 +213,7 @@ export function Hub({
           <article>
             <p className="journey-eyebrow">Ritmo local</p>
             <h2>{dailyGoalMet(progress, now) ? 'Meta de hoje alcançada' : `${Math.max(0, progress.dailyGoalXp - todayXp)} XP para a meta`}</h2>
-            <p>{streakCopy}</p>
+            <p data-testid="hud-streak"><span aria-hidden="true">🔥 </span>{streakCopy}</p>
             <strong>{progress.achievements.length} conquistas locais</strong>
           </article>
           <article>

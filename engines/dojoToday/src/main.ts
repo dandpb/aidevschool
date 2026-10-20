@@ -29,6 +29,28 @@ const REASON_LABEL: Record<DueReview["reason"], string> = {
   "recurring-trap": "Pegadinha recorrente",
 };
 
+/**
+ * W7 AID-5190 (contrato §7.2 — papel ReviewDue): o substrato emite `dueIn`
+ * em formato de máquina ("overdue 43d", "today", "in 5d"); a apresentação
+ * pt-BR legível ("atrasada 43 dias" / "devida hoje") é papel da HUD, não do
+ * agendador — o read model canônico permanece intacto.
+ */
+function dueInPtBr(raw: string): string {
+  const overdue = raw.match(/^overdue (\d+)d$/);
+  if (overdue) {
+    const days = Number(overdue[1]);
+    return `atrasada ${days} ${days === 1 ? "dia" : "dias"}`;
+  }
+  if (raw === "today") return "devida hoje";
+  if (raw === "tomorrow") return "devida amanhã";
+  const upcoming = raw.match(/^in (\d+)d$/);
+  if (upcoming) {
+    const days = Number(upcoming[1]);
+    return `em ${days} ${days === 1 ? "dia" : "dias"}`;
+  }
+  return raw;
+}
+
 function voxelCore(): string {
   // Herói voxel: torre de cubos com sombra isométrica (estilo da casa).
   return `
@@ -57,7 +79,7 @@ function streakCard(s: TodaySnapshot["streak"]): string {
       ? `Recorde: ${escapeHtml(s.longest)}. Passe um gate para manter o fogo.`
       : "Passe um gate executável para acender a sequência.";
   return `
-    <section class="card streak-card" aria-label="Sequência">
+    <section class="card streak-card" data-testid="hud-streak" aria-label="Sequência">
       <div class="streak-flame ${s.current > 0 ? "is-lit" : "is-out"}" aria-hidden="true">${flames}</div>
       <div class="streak-body">
         <p class="streak-current">${headline}</p>
@@ -88,10 +110,10 @@ function reviewCard(r: DueReview, index: number): string {
         ? "tone-trap"
         : "tone-success";
   return `
-    <article class="card lesson-card ${tone}" style="--i:${index}">
+    <article class="card lesson-card ${tone}" data-testid="hud-review-due" style="--i:${index}">
       <div class="lesson-head">
         <span class="chip">${REASON_LABEL[r.reason]}</span>
-        <span class="due-in">${escapeHtml(r.dueIn)}</span>
+        <span class="due-in">${escapeHtml(dueInPtBr(r.dueIn))}</span>
       </div>
       <h3 class="lesson-title">${escapeHtml(r.title)}</h3>
       ${r.project ? `<p class="lesson-project">${escapeHtml(r.project)}</p>` : ""}
@@ -139,13 +161,13 @@ function missionCard(a: TodaySnapshot["activeUnit"]): string {
               Experimental. Sua chave fica só neste navegador e vai apenas para o endpoint
               configurado. Conversas não são salvas. Opcional e off por padrão.
             </p>
-            <label>Endpoint base (compatível com OpenAI)
+            <label for="soc-baseurl">Endpoint base (compatível com OpenAI)
               <input id="soc-baseurl" type="text" placeholder="https://api.openai.com/v1" />
             </label>
-            <label>Chave API
+            <label for="soc-apikey">Chave API
               <input id="soc-apikey" type="password" placeholder="sk-…" />
             </label>
-            <label>Modelo
+            <label for="soc-model">Modelo
               <input id="soc-model" type="text" placeholder="gpt-4o-mini" />
             </label>
             <div class="socrates-config-actions">
@@ -173,11 +195,11 @@ function progressCard(s: TodaySnapshot): string {
     s.totalUnits > 0 ? Math.round((Number(s.masteredCount) / Number(s.totalUnits)) * 100) : 0;
   return `
     <section class="card progress-card" aria-label="Progresso verificado">
-      <div class="progress-row">
-        <span><strong>${escapeHtml(s.masteredCount)}</strong>/${escapeHtml(s.totalUnits)} dominadas</span>
+      <div class="progress-row" data-testid="hud-mastery-badge">
+        <span><strong>${escapeHtml(s.masteredCount)}</strong>/${escapeHtml(s.totalUnits)} dominadas <span class="hud-glyph" aria-hidden="true">✅</span></span>
         <span class="muted">verificadas por gate</span>
       </div>
-      <div class="progress-track" role="progressbar" aria-valuenow="${escapeHtml(pct)}" aria-valuemin="0" aria-valuemax="100" aria-valuetext="${escapeHtml(pct)}% concluído"><div class="progress-fill" style="width:${escapeHtml(pct)}%"></div></div>
+      <div class="progress-track" role="progressbar" data-testid="hud-progress" aria-valuenow="${escapeHtml(pct)}" aria-valuemin="0" aria-valuemax="100" aria-valuetext="${escapeHtml(pct)}% concluído"><div class="progress-fill" style="width:${escapeHtml(pct)}%"></div></div>
     </section>`;
 }
 
@@ -190,8 +212,12 @@ function trackSection(nodes: readonly TrackNode[], nextNum: string | null): stri
     .map((n) => {
       const isNext = n.num === nextNum && n.status === "active";
       const cls = `track-node is-${n.status}${isNext ? " is-next" : ""}`;
+      // W7 AID-5190 (contrato §7.2 — vocabulário canônico do MasteryBadge):
+      // a trilha do dojoToday é a projeção canônica do substrate, então o
+      // estado verificado lê "dominada" — "concluída" fica reservado ao
+      // progresso local das engines (completed ≠ mastered).
       const stateText =
-        n.status === "mastered" ? "concluída" : n.status === "active" ? "ativa" : "disponível";
+        n.status === "mastered" ? "dominada" : n.status === "active" ? "ativa" : "disponível";
       const ariaLabel = `Lição ${n.num}: ${n.title} (${stateText})`;
       const play =
         isNext && n.gameDir
@@ -257,6 +283,8 @@ function render(s: TodaySnapshot): string {
       <h1>Sua lição de hoje</h1>
       <p class="hero-date">${dateLabel}</p>
     </header>
+
+    <p id="hud-live" class="sr-only" role="status" aria-live="polite" aria-atomic="true" data-testid="hud-live-region"></p>
 
     ${demoNotice()}
 
@@ -413,6 +441,30 @@ function wireInteractions(a: TodaySnapshot["activeUnit"]): void {
   });
 }
 
+/**
+ * W7 AID-5190 (contrato §7.2 — anúncio de mudança): a HUD anuncia, 1× por
+ * abertura diária, o estado de sequência e as revisões devidas na live
+ * region #hud-live. O texto é inserido DEPOIS do render inicial, então
+ * leitores de tela o anunciam como mudança (conteúdo presente no load
+ * silencioso não é anunciado).
+ */
+function announceHud(s: TodaySnapshot): void {
+  const live = document.getElementById("hud-live");
+  if (!live) return;
+  const streak =
+    s.streak.current > 0
+      ? `Sequência de ${s.streak.current} ${s.streak.current === 1 ? "dia" : "dias"}.`
+      : "Sequência apagada. Passe um gate executável para acender.";
+  const reviews = s.reviews.length;
+  const reviewNote =
+    reviews === 0
+      ? " Nenhuma revisão devida."
+      : ` ${reviews} ${reviews === 1 ? "revisão devida" : "revisões devidas"}.`;
+  window.requestAnimationFrame(() => {
+    live.textContent = `${streak}${reviewNote}`;
+  });
+}
+
 async function boot(): Promise<void> {
   const root = document.getElementById("root");
   if (!root) throw new Error("Elemento #root não encontrado");
@@ -427,6 +479,7 @@ async function boot(): Promise<void> {
   // fica de fora para não duplo-contar o funil do host.
   emitFunnelEvent("dojotoday", "daily-view-open");
   root.innerHTML = render(today);
+  announceHud(today);
   wireInteractions(today.activeUnit);
 }
 

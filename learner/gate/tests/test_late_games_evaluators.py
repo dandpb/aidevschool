@@ -330,3 +330,23 @@ def test_bridge_verifies_late_games_across_all_levels(
     assert receipt["verdict"] == "PASS"
     assert receipt["producer_writes_mastered"] is False
     assert receipt["unit_id"] == unit_id
+
+
+@pytest.mark.parametrize("bad_top", [[], ["doc-a"], {"doc": "a"}, None, 7])
+def test_stacks_rejects_unhashable_or_non_string_predicted_top_without_typeerror(
+    bad_top: object,
+) -> None:
+    # AID-5002: an unhashable predictedTop used to raise
+    # TypeError: unhashable type before any verdict; the contract is a
+    # structured FAIL with the closed-scenario rejection.
+    for level, kind in (("L2", "stacks-L2"), ("L3", "stacks-L3")):
+        errors: list[str] = []
+        assert (
+            evaluate_stacks(
+                level, {"kind": kind, "predictedTop": bad_top}, {}, errors
+            )
+            is False
+        )
+        assert errors == [
+            f"observations do not match the closed {level} scenario trace"
+        ]
