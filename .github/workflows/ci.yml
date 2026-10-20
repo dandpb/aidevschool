@@ -76,6 +76,14 @@ jobs:
       # pending-null and malformed inputs (never "success").
       - name: merge door self-test (§3 extraction vs the real endpoint shape)
         run: bash scripts/merge_pr.sh --self-test
+      # AID-5244 (finding A1/AID-5241): the shared workspace _default carried
+      # a pinned [user] qa-lead config, so a rebase by ANOTHER agent silently
+      # forged the QA Lead as committer (29c6e087, PR #733). The guard's
+      # self-test pins the fail-loud contract: pinned identity in a shared
+      # workspace fails, agent-map mismatches (the contamination shape) fail,
+      # unknown PAPERCLIP_AGENT_ID fails closed, explicit env identity passes.
+      - name: git identity guard self-test (synthetic contamination must fail)
+        run: python3 scripts/git_identity_guard.py --self-test
       - name: guardrail check (changed files vs base)
         env:
           GH_TOKEN: ${{ github.token }}
