@@ -4,7 +4,7 @@
 > MUST reference this file. Other documents that list projects (e.g. `docs/PROMPTS/IDEIAS/`,
 > `engines/codexDojo/ecosystem/ROADMAP.md`) are derived and must stay aligned with this catalog.
 >
-> **Status:** Canonical · **Total projects:** 20 (00–19; 00 e 19 são famílias de aplicação de IA, 01–18 são projetos de programação) · **Implemented:** 2 certified (Project 01, Project 02 — both Node.js-only certifications) + 3 partially implemented Node-verified (Projects 05, 12, 18; the status and caveats below are authoritative)
+> **Status:** Canonical · **Total projects:** 20 (00–19; 00 e 19 são famílias de aplicação de IA, 01–18 são projetos de programação) · **Implemented:** 2 certified (Project 01, Project 02 — both Node.js-only certifications) + 5 partially implemented Node-verified (Projects 05, 06, 07, 12, 18; the status and caveats below are authoritative)
 >
 > `BACKLOG_STATUS.md` is a generated projection of this catalog. Edit status here, then run
 > `python3 -m learner.substrate`; never edit the generated backlog directly.
@@ -148,12 +148,15 @@ gate de código. Superfície de exploração associada: `engines/miniTown/`.
 | Field | Value |
 |-------|-------|
 | **Slug** | `06_file_upload_pipeline` |
-| **Status** | scaffolded |
-
+| **Status** | Partially implemented (Node.js: verified green; Go/Rust: removed in `1b0a309` quality cuts) |
+| **Evidence** | Node.js implementation verified 2026-10-17 (AID-5012) via `curriculum/_shared/verify_node_impl.sh` (`npm ci --include=dev`/`lint`/`build`/`test` exit 0; 11/11 tests passing across 2 files: `server` 4, `edge` 7 — zero-byte policy, artifact cleanup after 413/409, concurrent same-file uploads, traversal containment, pagination/filter 400s, cursor walk, chunked transfer without Content-Length) with `docs/{spec,code_review,evolution_report,benchmark_results,status}.md` present on disk. Caveat: Node.js-only (`go-impl/` and `rust-impl/` were removed in `1b0a309` and do not exist on disk); RNF-002/003/004/005 measurements and durable registry (RNF-008) remain open. |
 | **Concepts** | Streaming I/O, chunked processing, multipart upload, memory management, parallel processing, bounded memory |
 | **Key question** | How do streaming vs buffering approaches compare for large file handling? |
 | **Learning goal** | Processar uploads grandes sem estourar memória. |
 | **Directory** | `06_file_upload_pipeline/` |
+| **Go coverage** | N/A — `go-impl/` was removed in `1b0a309`; no Go implementation exists on disk. |
+| **Rust tests** | N/A — `rust-impl/` was removed in `1b0a309`; no Rust implementation exists on disk. |
+| **Node coverage** | 11/11 tests passing across 2 files (`src/__tests__/server.test.ts` 4, `src/__tests__/edge.test.ts` 7; verified 2026-10-17 AID-5012, `lint`/`build` exit 0) |
 | **Dependencies** | Projects 01-03 |
 
 ---
@@ -167,12 +170,15 @@ gate de código. Superfície de exploração associada: `engines/miniTown/`.
 | Field | Value |
 |-------|-------|
 | **Slug** | `07_rest_api_auth` |
-| **Status** | scaffolded |
-
+| **Status** | Partially implemented (Node.js: verified green; Go: removed in `1b0a309` quality cuts) |
+| **Evidence** | Node.js implementation verified 2026-10-17 (AID-5012) via `curriculum/_shared/verify_node_impl.sh` (`npm ci --include=dev`/`lint`/`build`/`test` exit 0; 17/17 tests passing across 3 files: `app` 6, `jwt-secret` 2, `security` 9 — forged/wrong-secret tokens, HS256 algorithm pinning, expired access/refresh tokens via injected clock, cross-user update denial with audit, unknown-target 404, disabled-user login/refresh, replayed ancestors after rotation, password/email shape) with `docs/{spec,code_review,evolution_report,benchmark_results,status}.md` present on disk. Caveat: Node.js-only (`go-impl/` was removed in `1b0a309`; no Rust implementation ever existed on disk); security-sensitive project — atomic rotation, KDF review, and middleware-latency evidence remain open, so this is not a production security sign-off. |
 | **Concepts** | JWT (sign/verify), RBAC, middleware chains, layered architecture, dependency injection, input validation, versioning |
 | **Key question** | How does auth middleware composition differ across frameworks in each language? |
 | **Learning goal** | Separar identidade, sessão, autorização e versionamento. |
 | **Directory** | `07_rest_api_auth/` |
+| **Go coverage** | N/A — `go-impl/` was removed in `1b0a309`; no Go implementation exists on disk. |
+| **Rust tests** | N/A — no `rust-impl/` exists on disk for this project. |
+| **Node coverage** | 17/17 tests passing across 3 files (`src/__tests__/app.test.ts` 6, `src/__tests__/jwt-secret.test.ts` 2, `src/__tests__/security.test.ts` 9; verified 2026-10-17 AID-5012, `lint`/`build` exit 0) |
 | **Dependencies** | Projects 04-06 |
 
 ### 08. Event-Driven Order System

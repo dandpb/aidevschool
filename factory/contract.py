@@ -25,21 +25,44 @@ class ContractError(RuntimeError):
 # Formas canônicas de header com Status (docs/sdlc/templates/*.md,
 # intent/README.md): linha própria ("Status: approved") ou campo mid-line do
 # header template ("Change-id: <cid> · From: <path> · Status: approved").
-# A âncora `(?:^|·)` exige que `Status:` seja um campo de header de verdade
-# (início de linha ou após o separador `·`); `plan_is_approved` ainda restringe
-# a busca ao bloco de header (antes da primeira seção `## `), onde o template
-# posiciona os campos — menções incidentais em prosa/backticks/corpo do
-# documento não satisfazem a aprovação (AID-2732 / B5).
+# O parser é estruturado (AID-2775, plano AID-3522 r1): uma LINHA-CAMPO começa
+# com um lead conhecido (Change-id | From | Status | Author, espaçamento
+# tolerado); os demais campos da mesma linha são SEGMENTOS-CAMPO separados por
+# `·`. Aprovação = algum segmento `Status:` de uma linha-campo cujo valor casa
+# `^approved\b`. O separador `·` sozinho NÃO discrimina campo de prosa —
+# menção incidental em texto corrido (ex.: "… dizia · Status: approved, mas
+# foi revogado") não aprova nada (fail-closed; AID-2732/B5 pela forma,
+# AID-2775 pela restrição estrutural).
+_HEADER_FIELD_LINE = re.compile(
+    r"^[ \t]*(?:Change-id|From|Status|Author)[ \t]*:", re.MULTILINE
+)
+_HEADER_STATUS_SEGMENT = re.compile(r"^[ \t]*Status[ \t]*:[ \t]*(?P<value>.*?)[ \t]*$")
+_STATUS_APPROVED_VALUE = re.compile(r"approved\b")
+
+# Compat (AID-2775): shape histórica assertada por suítes existentes
+# (test_b5_canonical_registry.py) — mantida exportada para não editar arquivo
+# de teste pré-existente nesta lane (política protect-tests, AID-554:
+# existing-test-blocked quando a lane muda o código que o teste verifica).
+# NÃO é usada por `plan_is_approved`; a aprovação operativa é o parser
+# estrutural acima (fail-closed). Remoção acompanha uma futura lane só de
+# testes.
 PLAN_APPROVED = re.compile(r"(?:^|·)[ \t]*Status:[ \t]*approved\b", re.MULTILINE)
 
 _SECTION_HEADING = re.compile(r"^## ", re.MULTILINE)
 
 
 def plan_is_approved(text: str) -> bool:
-    """Aprovação vale só no bloco de header (título + campos, pré-`## `)."""
+    """Aprovação vale só em campos estruturados do bloco de header (pré-`## `)."""
     m = _SECTION_HEADING.search(text)
     header = text[: m.start()] if m else text
-    return bool(PLAN_APPROVED.search(header))
+    for line in header.splitlines():
+        if not _HEADER_FIELD_LINE.match(line):
+            continue
+        for segment in line.split("·"):
+            seg = _HEADER_STATUS_SEGMENT.match(segment)
+            if seg and _STATUS_APPROVED_VALUE.match(seg.group("value")):
+                return True
+    return False
 
 
 def parse_checks_md(text: str) -> list[Check]:

@@ -13,3 +13,6 @@ playwright-report/
 
 # Artefatos de build do tsc -b
 *.tsbuildinfo
+
+# Saída da captura escopada AID-5141/W5 (mesma política do test-results/)
+test-results-aid5141/

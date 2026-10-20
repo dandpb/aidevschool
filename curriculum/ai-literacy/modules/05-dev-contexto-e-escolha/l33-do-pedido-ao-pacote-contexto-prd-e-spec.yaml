@@ -1,0 +1,171 @@
+# Lição l33 — Onda W2 dev l33–l35 (brief autoral AID-5011; produção via PR do FPE
+# com emenda T0 da regra 7 do content-contract — ids alocados sequencialmente l33–l35).
+# Âncora da prática pg-d04-contexto-e-spec (U09 da SEQUENCIA.md, AID-3510).
+# Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l33
+version: 1
+moduleId: mod-05
+title: "Do pedido ao pacote: contexto, PRD e SPEC"
+objective: "Diante de um pedido de feature com várias entregas embutidas e decisões implícitas, transformá-lo em um pacote de execução — CONTEXTO com incluído/excluído justificados por linha, PRD com uma entrega só e fora de escopo nomeado, SPEC com bordas decididas e allowlist de arquivos — que torna a tarefa inequívoca para qualquer executor, humano ou assistente."
+estimatedMinutes: 5
+skillIds: [pedir, decidir]
+prerequisites: [l16]
+competency:
+  primary: D2
+  supporting: [D3]
+
+activities:
+  - id: l33-a1
+    type: missing_context
+    skillId: pedir
+    instruction: "O e-mail chegou: 'me ordena as tarefas por dependência e aproveita renomeia a pasta docs, deixa o relatório colorido e roda bonito no Windows'. Antes de escrever uma linha de código, o que entra no CONTEXTO desta tarefa?"
+    data:
+      prompt: "Pedido (e-mail da Bia): 'Preciso que o planejador ordene as tarefas pela dependência e mostre o total do dia. Aproveitando: renomeia a pasta docs/, deixa o relatório colorido e faz rodar bonito no Windows. Não quebra nada!' · A tarefa real — ordenar por dependência + total do dia — depende de um punhado de arquivos e regras. O CONTEXTO é o menor conjunto que torna essa tarefa inequívoca: nem ruído, nem buraco."
+      contextOptions:
+        - id: regra-permanente
+          text: "A regra permanente do domínio que a tarefa toca: como uma tarefa referencia dependências hoje (depends_on) e o que o sistema faz com dependência inexistente"
+        - id: modelo-atual
+          text: "O trecho do modelo/estrutura atual que a mudança afeta: a lista de tarefas e o campo depends_on, como estão hoje"
+        - id: suite-existente
+          text: "Os testes que já cobrem o comportamento visível da área tocada — o que a suíte enxerga hoje é o ponto de partida da mudança"
+        - id: issue-antiga
+          text: "A issue antiga que motivou o pedido — ajuda a entender o porquê, mas a tarefa não fica ambígua sem ela"
+        - id: lockfile
+          text: "O lockfile completo do projeto (package-lock / poetry.lock)"
+        - id: log-de-build
+          text: "O log de build da última semana inteiro, sem recorte"
+        - id: view-gerada
+          text: "O arquivo relatorios/plano.view.md — relatório gerado por build, não fonte da verdade"
+    evaluation:
+      strategy: deterministic
+      requiredContextIds: [regra-permanente, modelo-atual, suite-existente]
+      optionalContextIds: [issue-antiga]
+    feedback:
+      onFailure: "CONTEXTO não é despejo: é o menor conjunto que torna a tarefa inequívoca. Faltou incluir regra permanente, modelo atual ou suíte existente — sem eles, quem executa (humano ou assistente) vai adivinhar o comportamento. E lockfile, log inteiro e view gerada são ruído: entulham o pedido e escondem o que importa."
+      perCheck:
+        regra-permanente: "Faltou isto: a regra permanente do domínio. Sem saber como depends_on funciona hoje, qualquer implementação chuta o comportamento."
+        modelo-atual: "Faltou isto: o trecho do modelo que a mudança afeta. A ordenação vai ler e respeitar essa estrutura — ela precisa estar no pacote."
+        suite-existente: "Faltou isto: a suíte existente da área. Ela é o contrato visível que a mudança precisa continuar satisfazendo — entra no CONTEXTO."
+        issue-antiga: "Isto é opcional: a issue antiga dá o porquê do pedido, mas a tarefa não nasce ambígua sem ela — peso de contexto a mais, não buraco."
+        lockfile: "Isto é ruído: lockfile é estado de dependências, não regra da tarefa. Se precisar de versão exata, cita-se a versão — não o arquivo inteiro."
+        log-de-build: "Isto é ruído: log sem recorte é paisagem. O que importa de um log é o trecho que explica o problema — com recorte e motivo."
+        view-gerada: "Isto é ruído: plano.view.md é gerado por build — produto, não fonte. Citar view como contexto instala uma fonte falsa de verdade."
+      onSuccess: "Isso: regra permanente, modelo atual e suíte existente no pacote; issue antiga como apoio opcional; lockfile, log e view gerada fora. O executor pode começar sem adivinhar nada do domínio."
+    storage:
+      policy: structured_only
+    hints:
+      - "Para cada candidato, pergunte: sem isto, a tarefa fica ambígua ou muda de resultado?"
+      - "Três coisas tornam a tarefa inequívoca: a regra que governa o comportamento, a estrutura que ela lê e o contrato que ela precisa respeitar."
+      - "Ruído é o que existe no repo mas não muda o resultado desta tarefa: dependências pinadas, histórico de build, arquivo que nasce de comando."
+
+  - id: l33-a2
+    type: prompt_builder
+    skillId: decidir
+    instruction: "Agora o PRD. O pedido embute cinco entregas — o PRD escolhe UMA e corta o resto com nome. Preencha os campos."
+    data:
+      scenario: "O e-mail da Bia pede: ordenar por dependência, mostrar o total do dia, renomear docs/, relatório colorido e suporte a Windows. Cinco entregas num pedido só. O PRD transforma isso em uma tarefa de até 30 minutos: uma entrega coerente, o resto nomeado no Fora de escopo — 'pedidos com múltiplos e-também produzem entregas medíocres'."
+      genericPrompt: "faz tudo o que a Bia pediu"
+      fields:
+        - id: entrega-unica
+          label: "Entrega única"
+          hint: "Uma entrega coerente que cabe nos 30 min — qual delas? (as outras não morrem: vão para o Fora de escopo)"
+        - id: limite
+          label: "Limite declarado"
+          hint: "O tempo máximo de tarefa declarado no próprio PRD"
+        - id: fora-de-escopo
+          label: "Fora de escopo"
+          hint: "Pelo menos dois extras do pedido, nomeados — renomear? cores? Windows?"
+        - id: aceite
+          label: "Critério de aceite verificável"
+          hint: "Um teste em linguagem humana: dado isto, esperar aquilo — de preferência citando um comando executável"
+    evaluation:
+      strategy: deterministic
+      fields:
+        entrega-unica:
+          minLength: 8
+          mustIncludeAny: ["orden", "depend", "total"]
+        limite:
+          minLength: 4
+          mustIncludeAny: ["30 min", "30min", "30 minutos", "meia hora"]
+        fora-de-escopo:
+          minLength: 8
+          mustIncludeAny: ["renome", "cor", "color", "windows"]
+        aceite:
+          minLength: 10
+          mustIncludeAny: ["esperado", "resultado", "ordenado", "igual", "teste"]
+    feedback:
+      onFailure: "'Faz tudo' não é PRD: são cinco entregas brigando por 30 minutos. O PRD que fecha antes do build declara UMA entrega, o limite de tempo, o que ficou de fora (nomeado, com o motivo implícito de não caber) e um aceite que dá para imaginar como teste."
+      perCheck:
+        entrega-unica: "Aqui vai UMA entrega — a que sozinha cabe no limite. Se o campo menciona renomear ou cores junto com ordenar, ainda são várias."
+        limite: "Declare o limite da tarefa (ex.: 30 min). Sem limite declarado, o escopo cresce até estourar o dia — e ninguém percebe quando estourou."
+        fora-de-escopo: "Nomeie pelo menos dois cortes: renomear docs/, relatório colorido, Windows. Extra sem nome volta pelo ouvido do executor como 'aproveitando...'."
+        aceite: "Escreva o aceite como teste: 'dado um dia com 3 tarefas encadeadas, o plano sai na ordem a→b→c'. Se você não consegue imaginar o teste, o critério ainda está vago."
+      onSuccess: "PRD fechado: uma entrega, limite declarado, cortes nomeados e aceite imaginável como teste. É o documento que impede o pedido de virar cinco entregas medíocres."
+    storage:
+      policy: structured_only
+    hints:
+      - "Qual das cinco entregas, sozinha, resolve a dor do pedido e cabe em 30 minutos?"
+      - "O campo mais subestimado do PRD é o Fora de escopo — sem ele, os extras voltam."
+      - "No aceite, complete a frase: 'dado ___, esperar ___'."
+
+  - id: l33-a3
+    type: rubric_review
+    skillId: decidir
+    instruction: "A SPEC chegou. Revise contra os critérios — o que está fechado e o que ainda está aberto?"
+    data:
+      responseText: "SPEC (rascunho do time): 'função ordenar_por_dependencia(tarefas: list[Tarefa]) -> list[Tarefa], retorna lista na ordem de execução. B1 (ciclo em depends_on): lançar ValueError com mensagem 'ciclo detectado'. B2 (dependência inexistente) e B3 (lista vazia): a cargo da implementação — usar bom senso. Arquivos: o time pode alterar os que julgar necessários. Estratégia de teste: testar bem.'"
+      criteria:
+        - id: c-interface
+          text: "Interface exata: assinatura, tipos e retorno fechados"
+        - id: c-bordas
+          text: "Casos de borda numerados e DECIDIDOS: ciclo, dependência inexistente e lista vazia têm comportamento definido"
+        - id: c-allowlist
+          text: "Allowlist de arquivos permitidos e não-metas explícitas"
+        - id: c-estrategia-teste
+          text: "Estratégia de teste concreta: quais comportamentos, em que nível, com quais casos"
+    evaluation:
+      strategy: deterministic
+      expectedVerdicts:
+        c-interface: met
+        c-bordas: not_met
+        c-allowlist: not_met
+        c-estrategia-teste: not_met
+    feedback:
+      onFailure: "'A cargo da implementação' e 'alterar os que julgar necessários' são decisões abertas: quem decide depois é o executor — e se o executor for um agente, ele decide sozinho no seu código. SPEC que não fecha borda, allowlist e estratégia de teste não está pronta; B1 decidido não compensa B2 e B3 abertos."
+      perCheck:
+        c-interface: "Fechada mesmo: nome, tipos, retorno — este critério está met."
+        c-bordas: "B1 foi decidido (ciclo → ValueError), mas B2 e B3 ficaram 'a cargo da implementação': borda aberta é decisão terceirizada — not_met."
+        c-allowlist: "'Os que julgar necessários' é o oposto de allowlist: sem lista de arquivos permitidos e não-metas, o diff pode crescer para qualquer lugar — not_met."
+        c-estrategia-teste: "'Testar bem' não é estratégia: falta dizer quais comportamentos, em que nível e com quais casos — not_met."
+      onSuccess: "Você viu o que a SPEC fecha (interface) e o que ela finge que fecha (bordas, allowlist, testes). SPEC pronta é aquela em que nenhuma decisão importante sobra para o executor."
+    storage:
+      policy: structured_only
+    hints:
+      - "Para cada critério, pergunte: lendo só a SPEC, eu sei exatamente o que acontece — sem perguntar a ninguém?"
+      - "'A cargo da implementação', 'bom senso', 'julgar necessários': marca de decisão não tomada."
+      - "B1 decidido não fecha B2 e B3 — cada borda aberta é uma decisão que o executor vai tomar por você."
+
+rubric:
+  id: l33-rubric
+  criteria:
+    - id: r-contexto-minimo-justificado
+      text: "Monta o CONTEXTO como menor conjunto justificado: regras permanentes, trecho afetado e suíte existente dentro; ruído (lockfile, log sem recorte, views geradas) fora."
+      weight: 1
+    - id: r-prd-uma-entrega
+      text: "Fecha o PRD com uma entrega que cabe no limite declarado e Fora de escopo nomeando os extras cortados."
+      weight: 1
+    - id: r-spec-sem-decisao-aberta
+      text: "Revisa SPEC exigindo bordas decididas, allowlist de arquivos e estratégia de teste concreta — sem decisão importante 'a cargo da implementação'."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: lesson_completed
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l33-a1, l33-a2, l33-a3]
