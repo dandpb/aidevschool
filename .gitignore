@@ -180,3 +180,6 @@ engines/codexdojo-os-prototype/netlify/functions/
 .cursor/hooks.json
 .claude/settings.json
 .harness-eval/
+
+# AID-2928 — pacotes offline de mídia (zona de aterrissagem local, provider file://)
+learner/downloads/

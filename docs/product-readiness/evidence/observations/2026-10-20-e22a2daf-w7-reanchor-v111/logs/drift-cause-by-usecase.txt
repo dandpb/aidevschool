@@ -1,0 +1,42 @@
+[STALE] dojotoday-daily-guidance: 4 arquivo(s) do delta W7 sob sourcePaths
+    engines/dojoToday/playwright/continuity.spec.ts  (via engines/dojoToday/playwright/)
+    engines/dojoToday/playwright/hud-contract.spec.ts  (via engines/dojoToday/playwright/)
+    engines/dojoToday/src/main.ts  (via engines/dojoToday/src/)
+    engines/dojoToday/src/styles.css  (via engines/dojoToday/src/)
+[STALE] literacy-standalone-corridor-mod01-03: 2 arquivo(s) do delta W7 sob sourcePaths
+    engines/literacyDojo/src/domain/reviewDue.ts  (via engines/literacyDojo/src/)
+    engines/literacyDojo/src/screens/HomeScreen.tsx  (via engines/literacyDojo/src/)
+[STALE] literacy-standalone-first-lesson: 2 arquivo(s) do delta W7 sob sourcePaths
+    engines/literacyDojo/src/domain/reviewDue.ts  (via engines/literacyDojo/src/)
+    engines/literacyDojo/src/screens/HomeScreen.tsx  (via engines/literacyDojo/src/)
+[clean] minitown-explore-only: 0 arquivo(s) do delta W7 sob sourcePaths
+[STALE] os-literacy-guided-mission: 9 arquivo(s) do delta W7 sob sourcePaths
+    engines/codexdojo-os-prototype/src/apps/DojoApp.tsx  (via engines/codexdojo-os-prototype/src/)
+    engines/codexdojo-os-prototype/src/journey/Hub.test.tsx  (via engines/codexdojo-os-prototype/src/)
+    engines/codexdojo-os-prototype/src/journey/Hub.tsx  (via engines/codexdojo-os-prototype/src/)
+    engines/codexdojo-os-prototype/src/journey/MapScreen.tsx  (via engines/codexdojo-os-prototype/src/)
+    engines/codexdojo-os-prototype/src/missions/reviewMapping.test.ts  (via engines/codexdojo-os-prototype/src/)
+    engines/codexdojo-os-prototype/src/missions/reviewMapping.ts  (via engines/codexdojo-os-prototype/src/)
+    engines/codexdojo-os-prototype/src/styles/journey.css  (via engines/codexdojo-os-prototype/src/)
+    engines/literacyDojo/src/domain/reviewDue.ts  (via engines/literacyDojo/src/)
+    engines/literacyDojo/src/screens/HomeScreen.tsx  (via engines/literacyDojo/src/)
+[STALE] os-returning-learner: 8 arquivo(s) do delta W7 sob sourcePaths
+    engines/codexdojo-os-prototype/src/apps/DojoApp.tsx  (via engines/codexdojo-os-prototype/src/)
+    engines/codexdojo-os-prototype/src/journey/Hub.test.tsx  (via engines/codexdojo-os-prototype/src/)
+    engines/codexdojo-os-prototype/src/journey/Hub.tsx  (via engines/codexdojo-os-prototype/src/)
+    engines/codexdojo-os-prototype/src/journey/MapScreen.tsx  (via engines/codexdojo-os-prototype/src/)
+    engines/codexdojo-os-prototype/src/missions/reviewMapping.test.ts  (via engines/codexdojo-os-prototype/src/)
+    engines/codexdojo-os-prototype/src/missions/reviewMapping.ts  (via engines/codexdojo-os-prototype/src/)
+    engines/codexdojo-os-prototype/src/styles/journey.css  (via engines/codexdojo-os-prototype/src/)
+    engines/codexdojo-os-prototype/tests/hud-contract.smoke.spec.ts  (via engines/codexdojo-os-prototype/tests/)
+[STALE] os-voxel-guided-missions: 8 arquivo(s) do delta W7 sob sourcePaths
+    engines/codexdojo-os-prototype/src/apps/DojoApp.tsx  (via engines/codexdojo-os-prototype/src/)
+    engines/codexdojo-os-prototype/src/journey/Hub.test.tsx  (via engines/codexdojo-os-prototype/src/)
+    engines/codexdojo-os-prototype/src/journey/Hub.tsx  (via engines/codexdojo-os-prototype/src/)
+    engines/codexdojo-os-prototype/src/journey/MapScreen.tsx  (via engines/codexdojo-os-prototype/src/)
+    engines/codexdojo-os-prototype/src/missions/reviewMapping.test.ts  (via engines/codexdojo-os-prototype/src/)
+    engines/codexdojo-os-prototype/src/missions/reviewMapping.ts  (via engines/codexdojo-os-prototype/src/)
+    engines/codexdojo-os-prototype/src/styles/journey.css  (via engines/codexdojo-os-prototype/src/)
+    engines/codexdojo-os-prototype/tests/hud-contract.smoke.spec.ts  (via engines/codexdojo-os-prototype/tests/)
+[clean] pixelquest-evidence-encounter: 0 arquivo(s) do delta W7 sob sourcePaths
+[clean] voxel-standalone-learning-loop: 0 arquivo(s) do delta W7 sob sourcePaths
