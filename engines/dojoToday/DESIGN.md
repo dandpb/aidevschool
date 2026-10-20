@@ -7,8 +7,8 @@ colors:
   bg-grad-a: "#fdf6ec"
   bg-grad-b: "#f3e9ff"
   ink: "#1f1b2e"
-  ink-soft: "#5b5570"
-  muted: "#686378"
+  ink-soft: "#4f4a5e"
+  muted: "#4e495b"
   card: "#ffffff"
   line: "#ece6f5"
   primary: "#4f46e5"
@@ -16,7 +16,7 @@ colors:
   amber: "#f59e0b"
   amber-deep: "#b45309"
   success: "#16a34a"
-  success-deep: "#166534"
+  success-deep: "#12502a"
   success-soft: "#dcfce7"
   danger: "#e11d48"
   danger-soft: "#ffe4e6"
@@ -73,9 +73,9 @@ gradient, white cards, indigo CTA. It informs and sends you off; it never nags.
 ## Colors
 
 - **bg gradient** (`#fdf6ec` → `#f3e9ff`): warm cream fading to soft lavender.
-- **Ink ladder** (`#1f1b2e` → `#5b5570` → `#686378`): text at three volumes; `--muted` was AA-tuned in AID-1023/W0 (≥4.5:1 on every pair) — don't lighten it.
-- **Primary indigo** (`#4f46e5` / deep `#312e81`): single interactive color; pill CTAs.
-- **Track semantics** (soft bg + saturated text): success `#dcfce7`/`#166534` (deep per AID-1027/W1 — 6.49:1), review/trap `#f3e8ff`/`#7c3aed`, attention `#ffe4e6`/`#e11d48`, amber `#f59e0b`/`#b45309`. Pairs are atomic — never recombine.
+- **Ink ladder** (`#1f1b2e` → `#4f4a5e` → `#4e495b`): text at three volumes; `--muted`/`--ink-soft` were AAA-retuned in AID-5177/W6 (HUD pairs ≥7:1, hue preserved) — don't lighten them.
+- **Primary indigo** (`#4f46e5` / deep `#312e81`): single interactive color; pill CTAs. HUD eyebrows use the W6 local pair value `#3b37b6` (≥7.4:1 on the worst gradient endpoint, same hue).
+- **Track semantics** (soft bg + saturated text): success `#dcfce7`/`#12502a` (deep per AID-5177/W6 — 8.67:1), review/trap `#f3e8ff`/`#7c3aed`, attention `#ffe4e6`/`#e11d48`, amber `#f59e0b`/`#b45309`. Pairs are atomic — never recombine.
 
 ## Typography
 
@@ -122,13 +122,17 @@ Tier de acessibilidade do HUD: **B9** (§7/§4 do contrato — AAA 7:1 texto,
 3:1 não-texto; B2 AA continua o piso geral). Anatomia canônica de 4 papéis,
 testids `hud-streak`/`hud-progress`/`hud-mastery-badge`/`hud-review-due` e
 responsividade 375/768/1280 chegam na W7 (AID-5010) — até lá os tokens são
-declaração+mapping, sem consumidores. Os valores AA-tuned afetados pelo B9
-(`--muted`, par mastered) estão marcados `@deprecated → --ads-* (B9)`; o
-retune é a W6, não aqui.
+declaração+mapping, sem consumidores. **AID-5177/W6 — retune AAA aplicado**
+(contrato §4 B9a/B9b): `--muted` #686378→#4e495b, `--ink-soft`
+#5b5570→#4f4a5e, eyebrow do HUD `#3b37b6` (valor local do par; `--primary`
+segue #4f46e5 em CTAs/medidor), `--success-deep` #166534→#12502a — os
+marcadores `@deprecated → --ads-* (B9)` destes pares foram removidos
+(janela fechada na W6; remoção final auditada 2 ciclos após). Evidência:
+`playwright/a11y-w6.spec.ts` (getComputedStyle; 0 falhas B9a/B9b/B2).
 
 ## Do's and Don'ts
 
-- Do keep AA-tuned values (`--muted`, `--success-deep`) — audits AID-914/1023/1027 fixed them deliberately.
+- Do keep the AAA-retuned values (`--muted`, `--ink-soft`, `--success-deep` eyebrow `#3b37b6`) — AID-914/1023/1027 fixed AA deliberately and AID-5177/W6 raised the HUD pairs to AAA; don't lighten them.
 - Don't add new accent hues; track semantics cover the states.
 - Do keep it read-only in spirit: one primary CTA, quiet everything else.
 - Don't hard-code colors in components — use the CSS variables.

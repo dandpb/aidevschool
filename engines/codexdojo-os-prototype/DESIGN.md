@@ -19,7 +19,7 @@ wallpaper. This document codifies the existing prototype; it does not redesign i
 | Surface/solid | `--panel-solid` | `#0d1525` | Application bodies |
 | Surface/soft | `--panel-soft` | `#121d31` | Controls and nested surfaces |
 | Text/primary | root foreground | `#eef3ff` | Primary labels and headings |
-| Text/muted | `--muted` | `#8f9bb0` | Secondary copy and metadata |
+| Text/muted | `--muted` | `#a3aec4` | Secondary copy and metadata |
 | Border/default | `--line` | `rgba(255, 255, 255, 0.1)` | Layer boundaries |
 | Accent/action | `--coral` | `#ff755d` | Current mission and primary action |
 | Accent/mentor | `--violet` | `#9b82ff` | Mentor and laboratory state |
@@ -163,7 +163,7 @@ mapeando os valores locais atuais (zero delta visual):
 | Papel | Tokens (§7.1) | Mapeia hoje |
 | --- | --- | --- |
 | Rótulos do HUD | `--ads-progress-text` / `--ads-progress-muted` | `--school-ink` / `--school-muted` (hub-chips, progress-summary) |
-| Medidor | `--ads-progress-track` / `--ads-progress-fill` | `.hub-mission-progress` `#ded8cd` / `#49c98f` |
+| Medidor | `--ads-progress-track` / `--ads-progress-fill` | `.hub-mission-progress` `#ded8cd` / `#1f8259` (W6: fill #49c98f→#1f8259, B9b 1.48→3.37:1) |
 | Streak | `--ads-streak-accent` | `--coral` (Flame do topbar do desktop chrome) |
 | Mastery | `--ads-mastery-text` / `--ads-mastery-bg` | nós lavados pós-W4 `#3f4a64` / `--school-primary-soft` (7.68:1 — B9a já coberto) |
 | Revisão devida | `--ads-review-text` / `--ads-review-bg` | "próximo passo": `--school-primary-dark` / `--school-primary-soft` |
@@ -177,6 +177,12 @@ HUD: **B9** (§7/§4 — AAA 7:1 texto, 3:1 não-texto; B2 AA continua o piso
 geral). Anatomia canônica de 4 papéis, testids
 `hud-streak`/`hud-progress`/`hud-mastery-badge`/`hud-review-due` e
 responsividade 375/768/1280 chegam na W7 (AID-5010) — até lá os tokens são
-declaração+mapping, sem consumidores. Os valores AA-tuned afetados pelo B9
-(`--muted` dark, `--school-muted`) estão marcados `@deprecated →
---ads-* (B9)`; o retune é a W6, não aqui.
+declaração+mapping, sem consumidores. **AID-5177/W6 — retune AAA aplicado**
+(contrato §4 B9a): `--school-muted` #657089→#3f4a64 (8.05:1 sobre
+`--school-paper`, 8.84:1 sobre branco) e `--muted` dark #8f9bb0→#a3aec4
+(8.17:1 sobre `--panel-solid`) — os marcadores `@deprecated → --ads-* (B9)`
+destes pares foram removidos (janela fechada na W6) e o override local W4
+dos nós lavados (journey.css) saiu: os nós lavados herdam
+`var(--journey-muted)` = `var(--school-muted)` = `#3f4a64` (7.68:1 no wash,
+mesmo valor computado). Evidência: `tests/a11y-w6.smoke.spec.ts` +
+`playwright.aid5177.config.ts` (getComputedStyle; 0 falhas B9a/B9b/B2).

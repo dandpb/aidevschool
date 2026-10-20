@@ -395,7 +395,13 @@
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: #49c98f;
+  /* AID-5177/W6 (contrato §4 B9b — WCAG 1.4.11): preenchimento do medidor
+     do hub retunado #49c98f → #1f8259 — 1.48:1 → 3.37:1 sobre a trilha
+     #ded8cd (não-texto ≥3:1), matiz mint preservada. Par mapeado por
+     --ads-progress-fill (§7.1). Achado da re-medição W6: o audit §1.2 não
+     media este par. Usos decorativos de #49c98f (cubes/voxels/borda)
+     seguem intocados (1.4.11 isenta decorativos). */
+  background: #1f8259;
 }
 .next-mission-card .mission-expected {
   max-width: 50ch;
@@ -585,24 +591,14 @@
 .mission-map-node.locked {
   opacity: 0.72;
 }
-/* AID-5080/W4 (plano AID-5010 §1.2/§W4, defeito AA vigente): o par de texto
-   lavado --journey-muted #657089 sobre o wash --journey-primary-soft #e5f2eb
-   = 4.31:1 (texto normal 0.78rem/0.68rem; WCAG AA exige >=4.5). Override
-   local do par APENAS nos nós lavados: #3f4a64 = 7.68:1 no wash (resolve AA
-   e já cobre B9a/AAA). O --school-muted global sobre --school-paper #f8f4ea
-   (4.52) segue aprovado e permanece para o retune AAA da W6. */
-/* AID-5141/W5: #3f4a64 abaixo é o valor mapeado por --ads-mastery-text
-   (foundation.css). @deprecated → --ads-mastery-text (B9) — quando a W6
-   retunar --school-muted para #3f4a64, este override local se torna
-   redundante e sai (plano AID-5010 §4). */
-.mission-map-node.completed p,
-.mission-map-node.verified p,
-.mission-map-node.canonical-mastery p,
-.mission-map-node.completed div > span,
-.mission-map-node.verified div > span,
-.mission-map-node.canonical-mastery div > span {
-  color: #3f4a64;
-}
+/* AID-5080/W4 resolveu o par lavado (--journey-muted #657089 sobre o wash
+   --journey-primary-soft #e5f2eb = 4.31:1) com override local #3f4a64
+   (7.68:1). AID-5177/W6 (plano AID-5010 §4): o retune AAA global
+   --school-muted #657089 → #3f4a64 (foundation.css) torna o override
+   redundante — removido; os seletores lavados herdam
+   var(--journey-muted) = var(--school-muted) = #3f4a64, mesmo valor
+   computado, zero delta visual. O valor segue mapeado por
+   --ads-mastery-text (§7.1). */
 
 .honest-progress {
   display: grid;

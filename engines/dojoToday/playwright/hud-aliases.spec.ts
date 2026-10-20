@@ -29,18 +29,20 @@ const HUD_TOKENS = [
   "--ads-attention-bg",
 ] as const;
 
-// Valores locais ATUAIS mapeados (styles.css :root; var() resolve no
-// getComputedStyle). Revisar apenas junto com a W6 (retune B9).
+// Valores locais mapeados (styles.css :root; var() resolve no
+// getComputedStyle). AID-5177/W6 (retune B9): --muted #686378 → #4e495b e
+// --success-deep #166534 → #12502a — os aliases SEGUEM mapeando os mesmos
+// tokens locais; apenas os valores-base subiram para AAA (contrato §4 B9).
 const EXPECTED: Record<(typeof HUD_TOKENS)[number], string> = {
   "--ads-progress-text": "#1f1b2e", // var(--ink)
-  "--ads-progress-muted": "#686378", // var(--muted)
+  "--ads-progress-muted": "#4e495b", // var(--muted) — W6 AAA
   "--ads-progress-track": "#ece6f5", // var(--line)
   "--ads-progress-fill": "#4f46e5", // var(--primary)
   "--ads-streak-accent": "#f59e0b", // var(--amber)
-  "--ads-mastery-text": "#166534", // var(--success-deep)
+  "--ads-mastery-text": "#12502a", // var(--success-deep) — W6 AAA
   "--ads-mastery-bg": "#dcfce7", // var(--success-soft)
   "--ads-review-text": "#ffffff", // chip .tone-success (AID-5080/W4)
-  "--ads-review-bg": "#166534", // var(--success-deep)
+  "--ads-review-bg": "#12502a", // var(--success-deep) — W6 AAA
   "--ads-attention-text": "#ffffff", // chip .tone-danger
   "--ads-attention-bg": "#e11d48", // var(--danger)
 };
