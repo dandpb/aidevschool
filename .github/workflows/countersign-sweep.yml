@@ -1,0 +1,114 @@
+name: countersign-sweep
+
+# Proactive ~hourly deletion detector for Countersign citations
+# (AID-5243 — follow-up AID-5235 item 4; §11 lazy deviation ratified in
+# AID-5241/A3, 2026-10-20).
+#
+# The countersign-gate detects citation deletion LAZILY (re-run on the same
+# head: new push or merge attempt through the single door). The gap: an
+# ABANDONED open PR with a stale green check whose citations get deleted is
+# never re-evaluated — exactly the AID-5233 shape (~5 min after the green).
+# This sweep samples every open PR ~hourly and closes that gap:
+#
+#   1. snapshots, per open PR, the comment ids carrying a canonical
+#      'Countersign: <AID|GH>-<n> verdict <ref> [head=<40-hex>]' line
+#      (scripts/countersign_sweep.py — same CITATION_RE as the gate);
+#   2. on a CONFIRMED disappearance (double read) posts a DELETION ALERT
+#      comment on the PR + ::error annotations, and the run reddens (rc 1 —
+#      an honest detector signal; this workflow is NOT a required check
+#      and blocks nothing);
+#   3. snapshot state lives ONLY in the Actions cache — never a repo commit
+#      (restore below, save after each run; cache eviction re-baselines
+#      silently — fail-safe, never alerting from an absent baseline);
+#   4. detection is post-hoc: it does not replace or relax the gate, and
+#      alert comments carry no operative 'Countersign:'/'Provenance:' lines
+#      (quoted citations are fenced — AID-2824 doctrine).
+#
+# Scheduled runs execute from main (GitHub schedules only fire on the
+# default branch), so the operative logic is always main's copy.
+# workflow_dispatch (optional --only-pr input) drills the exact production
+# path on a single PR. Serialized via concurrency: overlapping hourly ticks
+# skip (the next tick re-sweeps; sampling cadence, not a queue).
+
+on:
+  schedule:
+    # ~hourly, off the top of the hour (GH schedule congestion window)
+    - cron: "23 * * * *"
+  workflow_dispatch:
+    inputs:
+      only_pr:
+        description: "Restrict the sweep to one PR number (drill)"
+        required: false
+        default: ""
+
+concurrency:
+  group: countersign-sweep
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  sweep:
+    name: countersign-sweep
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # list open PRs, read conversations, post DELETION ALERT comments
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      # Fail-closed: a broken detector never posts alerts (same doctrine as
+      # the gate's self-test step — no verdict from a broken evaluator).
+      - name: sweep self-test (synthetic deletions must alert, state must round-trip)
+        run: python3 scripts/countersign_sweep.py --self-test
+      # Snapshot cache: restore the most recent snapshot written by any
+      # previous run (exact key first, then the newest v1-* prefix match).
+      # A miss (first run / eviction) is the documented re-baseline path.
+      - name: restore snapshot cache
+        uses: actions/cache/restore@v4
+        with:
+          path: countersign-sweep-snapshot.json
+          key: countersign-sweep-snapshot-v1-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            countersign-sweep-snapshot-v1-
+      - name: run sweep
+        id: sweep
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set +e
+          args=""
+          if [ -n "${{ github.event.inputs.only_pr }}" ]; then
+            args="--only-pr ${{ github.event.inputs.only_pr }}"
+          fi
+          python3 scripts/countersign_sweep.py --run \
+            --snapshot-file countersign-sweep-snapshot.json $args 2>&1 | tee sweep-output.txt
+          rc="${PIPESTATUS[0]}"
+          echo "SWEEP_RC=$rc" >> "$GITHUB_ENV"
+          # rc 1 (new deletion alerts posted) reddens this run on purpose —
+          # the detector's honest signal. rc 2 (fail-closed) also reddens;
+          # the snapshot step below then keeps the restored previous state.
+          exit "$rc"
+      # Always save (also on rc 1 after alerts, and on rc 2 — same file
+      # content restored, which just refreshes the cache's TTL). A fresh
+      # unique key per run keeps 'newest snapshot wins' on restore.
+      - name: save snapshot cache
+        if: always() && steps.sweep.conclusion != 'cancelled'
+        uses: actions/cache/save@v4
+        with:
+          path: countersign-sweep-snapshot.json
+          key: countersign-sweep-snapshot-v1-${{ github.run_id }}-${{ github.run_attempt }}
+      - name: sweep summary
+        if: always()
+        run: |
+          {
+            echo "## countersign-sweep"
+            echo
+            grep -E '^countersign-sweep: (PASS|DELETION ALERT|fail-closed)' \
+              sweep-output.txt || echo "countersign-sweep: no summary line (rc=${SWEEP_RC:-?})"
+            echo
+            echo "rc: ${SWEEP_RC:-?} — 0 clean · 1 deletion alert(s) posted (red on purpose) · 2 fail-closed"
+          } >> "$GITHUB_STEP_SUMMARY"
