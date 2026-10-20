@@ -1,0 +1,23 @@
+schemaVersion: 1
+assessmentId: 2026-10-20-f2c9d670-regrant-v112
+assessorContext: independent-readiness-review
+verifiedAt: '2026-10-20T11:05:49Z'
+revalidateBy: '2026-11-19'
+gitSha: f2c9d67009558faef95e799529c7c8c848680f66
+decisions:
+- useCaseId: os-voxel-guided-missions
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-10-20T11:05:39Z-os-voxel-hosted-missions-mixed-f2c9d670
+  - 2026-10-20T11:05:39Z-os-renderer-accessibility-recovery-mixed-f2c9d670
+  - 2026-10-20T11:05:39Z-os-voxel-returning-device-mixed-f2c9d670
+- useCaseId: dojotoday-daily-guidance
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-10-20T11:05:39Z-dojotoday-active-unit-guidance-mixed-f2c9d670
+  - 2026-10-20T11:05:39Z-dojotoday-read-only-boundary-observed-f2c9d670
+  - 2026-10-20T11:05:39Z-dojotoday-returning-next-day-mixed-f2c9d670

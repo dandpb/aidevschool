@@ -1,0 +1,21 @@
+red-gate stale scenario names: 20
+   stale: dojotoday-active-unit-guidance
+   stale: dojotoday-read-only-boundary
+   stale: dojotoday-returning-next-day
+   stale: literacy-corridor-gate-retry
+   stale: literacy-corridor-grandfathered-return
+   stale: literacy-corridor-happy-path
+   stale: literacy-corridor-resume-mid-module
+   stale: literacy-corridor-review-window
+   stale: literacy-happy-path
+   stale: literacy-resume
+   stale: literacy-retry
+   stale: os-literacy-hosted-mission
+   stale: os-literacy-returning-device
+   stale: os-onboarding-track-choice
+   stale: os-renderer-accessibility-recovery
+   stale: os-returning-device
+   stale: os-returning-recovery
+   stale: os-verification-recovery
+   stale: os-voxel-hosted-missions
+   stale: os-voxel-returning-device
