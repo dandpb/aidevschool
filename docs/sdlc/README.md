@@ -656,6 +656,44 @@ relay no board/FPE. A aceitação da regra é observável na próxima corrida de
 update-branch/re-pin: exatamente 1 issue de countersign por (PR, head)
 (critério AID-2844).
 
+## SWEEP pró-ativo de deletação `countersign-sweep` (AID-5243 — follow-up AID-5235 item 4)
+
+O `countersign-gate` detecta deletação de citação **lazy**: só quando o gate
+re-roda no mesmo head (push novo ou tentativa de merge pela porta única). O
+desvio foi ratificado como suficiente para o merge (disposição A3 no recibo
+da AID-5241, 2026-10-20), mas o gap permanece: um **PR aberto abandonado com
+check verde stale** cujas citações forem deletadas nunca é re-avaliado —
+exatamente o shape do incidente AID-5233 (clones deletados ~5 min depois do
+verde). O sweep (`scripts/countersign_sweep.py` +
+`.github/workflows/countersign-sweep.yml`, cron ~hourly) fecha esse gap com
+amostragem pró-ativa:
+
+1. fotografa, por PR aberto, os ids dos comentários com linha canônica
+   `Countersign:` (mesma `CITATION_RE` do gate — importada, sem drift; linha
+   em code fence é documentação, nunca citação, AID-2824);
+2. desaparecimento **confirmado por segunda leitura** (guard de glitch de
+   paginação) → comenta **DELETION ALERT** no PR + annotations `::error`,
+   e o run do sweep fica vermelho de propósito (sinal honesto do detector;
+   NÃO é required check e não bloqueia nada);
+3. estado do snapshot: **cache da Actions apenas** — nunca commit no repo
+   (evicção/ausência de snapshot re-baselineia em silêncio — fail-safe,
+   nunca alerta a partir de baseline ausente);
+4. detecção **pós-hoc**: não substitui nem relaxa o gate; comentários de
+   alerta não carregam linha `Countersign:`/`Provenance:` operativa
+   (citação quotada vai em fence) e não alteram atribuição de produtor (§5).
+
+Fail-closed onde importa: falha de transporte/parse em qualquer PR → rc 2,
+snapshot intacto, sem alertas; deleção inconfirmável → rc 2 com estado
+anterior preservado; alerta é idempotente (marker por comment id escaneado
+na conversa viva) e o snapshot é persistido após cada post; citação nova
+não lava deletação (registro permanente no snapshot), mas cada id deletado
+alerta exatamente uma vez.
+
+```bash
+python3 scripts/countersign_sweep.py --self-test   # hermético 21/21
+python3 scripts/countersign_sweep.py --run --dry-run --snapshot-file snap.json
+```
+
 ## Guardrails (what is enforced, and how)
 
 | Control | Type | Enforcement |
