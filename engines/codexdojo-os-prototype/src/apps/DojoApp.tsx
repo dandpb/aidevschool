@@ -42,8 +42,21 @@ export function DojoApp({ learner, onTeach, onOpenApp }: { readonly learner: Lea
           <button type="button"><Gauge /> Progresso</button>
         </nav>
         <div className="sidebar-goal">
-          <div><span>Meta diária</span><strong>2 de 3</strong></div>
-          <div className="progress"><i style={{ width: '66%' }} /></div>
+          <div><span>Meta diária</span><strong>2 de 3 missões</strong></div>
+          {/* W7 AID-5190 (contrato §7.2/B9c — medidor dos grids do OS com
+              role=progressbar + valuetext; leitura textual X/Y adjacente). */}
+          <div
+            className="progress"
+            role="progressbar"
+            data-testid="hud-progress"
+            aria-label="Meta diária"
+            aria-valuenow={66}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuetext="66% concluído"
+          >
+            <i style={{ width: '66%' }} />
+          </div>
           <small>Mais uma missão para manter sua sequência.</small>
         </div>
       </aside>

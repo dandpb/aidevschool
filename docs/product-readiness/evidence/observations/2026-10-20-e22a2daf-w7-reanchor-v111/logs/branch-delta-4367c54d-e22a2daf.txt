@@ -1,0 +1,6 @@
+e22a2daf docs(readiness): auto re-grant producer snapshot @ 6a1ac151 (AID-1357)
+6a1ac151 Merge pull request #728 from dandpb/aid5190/w7-hud-components
+e857eef8 update-branch main (9d62d8c0: re-grant v110/PR#727 merge batch) into PR #728 (AID-5190; merge-door prerequisite — strict up-to-date branch protection; content delta of this PR unchanged: 3 engines HUD §7.2/§7.3, main delta is docs/product-readiness only)
+cfe9b7e8 chore(sdlc): autorização de edição dos specs existentes na onda W7 (AID-5190)
+1da89996 feat(design): AID-5190 W7 — contrato de componentes HUD nas 3 engines (anatomia/testids hud-*/a11y funcional)
+9d62d8c0 Merge pull request #727 from dandpb/regrant/auto-20261020-cc76ee11

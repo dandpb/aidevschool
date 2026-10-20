@@ -5,11 +5,18 @@
   --bg-grad-a: #fdf6ec;
   --bg-grad-b: #f3e9ff;
   --ink: #1f1b2e;
-  --ink-soft: #5b5570;
+  /* AID-5177/W6 (plano AID-5010 §4/§W6, contrato §4 B9a): retune AAA do par
+     de texto do HUD --ink-soft sobre o gradiente do streak (#fff7ed→#ffffff)
+     — 6.64:1 → 8.00:1; matiz preservada. Mapeado por rótulos do HUD via
+     gradiente (hero-date, streak-sub); nenhum uso fora do escopo texto. */
+  --ink-soft: #4f4a5e;
   /* AID-1023/W0 (auditoria AID-914 §1.4): AA — #8a83a0 = 3.35:1 sobre --bg.
-     #686378 mantém matiz/saturação e dá ≥4.5:1 em todos os pares texto/fundo
-     (pior caso .track-glyph sobre --line #ece6f5 = 4.72:1). */
-  --muted: #686378;
+     #686378 manteve matiz/saturação com ≥4.5:1 em todos os pares.
+     AID-5177/W6 (contrato §4 B9a; janela de deprecação fechada nesta onda
+     para este par): retune AAA #686378 → #4e495b — 4.72–5.76:1 → 7.98:1
+     (sobre --bg #fdf6ec; 8.65:1 sobre --card), matiz preservada. Valor
+     mapeado por --ads-progress-muted (rótulos do HUD, §7.1). */
+  --muted: #4e495b;
   --card: #ffffff;
   --line: #ece6f5;
   --primary: #4f46e5;
@@ -18,9 +25,13 @@
   --amber-deep: #b45309;
   --success: #16a34a;
   /* AID-1027/W1 (auditoria AID-914, achado vizinho do W0): AA — #16a34a sobre
-     --success-soft #dcfce7 = 3.0:1. #166534 mantém o matiz verde e dá 6.49:1
-     no par .is-mastered .track-glyph (padrão --deep igual a --amber-deep). */
-  --success-deep: #166534;
+     --success-soft #dcfce7 = 3.0:1. #166534 manteve o matiz verde a 6.49:1.
+     AID-5177/W6 (contrato §4 B9a/B9b; janela fechada nesta onda): retune
+     AAA #166534 → #12502a — 8.67:1 no glifo .is-mastered .track-glyph e
+     9.20:1 no chip de revisão (branco sobre --success-deep), matiz verde
+     preservada. Par atômico mapeado por --ads-mastery-text/--ads-mastery-bg
+     e --ads-review-bg (§7.1). */
+  --success-deep: #12502a;
   --success-soft: #dcfce7;
   --danger: #e11d48;
   --danger-soft: #ffe4e6;
@@ -39,6 +50,27 @@
   --ads-success-bg: var(--success-soft);
   --ads-error-text: var(--danger);
   --ads-error-bg: var(--danger-soft);
+
+  /* AID-5141/W5 (contrato do HUD §7, design-foundations v2.0/AID-5010, PR
+     #718): 10 tokens HUD mapeando os valores locais ATUAIS — declaração
+     apenas, zero mudança visual (consumo/testids/anatomia são a W7).
+     Mapping: rótulos do HUD ink/muted; medidor .progress-track/--line +
+     .progress-fill (início do gradiente local --primary); chama de streak
+     .streak-flame.is-lit (drop-shadow âmbar, decorativa aria-hidden); par
+     mastered do glifo .track-node.is-mastered (§ "Track semantics" do
+     DESIGN.md); revisão devida = chip .tone-success pós-W4 (AID-5080);
+     atrasada = chip .tone-danger. Valores seguem engine-local (§7.4). */
+  --ads-progress-text: var(--ink);
+  --ads-progress-muted: var(--muted);
+  --ads-progress-track: var(--line);
+  --ads-progress-fill: var(--primary);
+  --ads-streak-accent: var(--amber);
+  --ads-mastery-text: var(--success-deep);
+  --ads-mastery-bg: var(--success-soft);
+  --ads-review-text: #ffffff;
+  --ads-review-bg: var(--success-deep);
+  --ads-attention-text: #ffffff;
+  --ads-attention-bg: var(--danger);
 }
 
 * {
@@ -75,7 +107,13 @@ body {
   letter-spacing: 0.08em;
   font-size: 0.72rem;
   font-weight: 800;
-  color: var(--primary);
+  /* AID-5177/W6 (plano AID-5010 §1.2/§W6, contrato §4 B9a): retune AAA do
+     eyebrow do HUD — var(--primary) #4f46e5 = 5.86:1 sobre --bg; valor local
+     do PAR (não do token --primary, que segue #4f46e5 para CTAs/medidor):
+     #3b37b6 = 7.44:1 sobre o pior endpoint do gradiente do corpo
+     (--bg-grad-b #f3e9ff; 8.13:1 sobre --bg #fdf6ec), matiz índigo
+     preservada. */
+  color: #3b37b6;
   margin: 0 0 4px;
 }
 
@@ -282,7 +320,12 @@ body {
   background: var(--trap);
 }
 .tone-success .chip {
-  background: var(--success);
+  /* AID-5080/W4 (plano AID-5010 §1.2/§W4, defeito AA vigente): branco sobre
+     --success #16a34a = 3.30:1 no chip (0.72rem = texto normal; WCAG AA
+     exige >=4.5). --success-deep #166534 (mesmo padrão W1/AID-1027) dá
+     7.13:1 — resolve AA e já cobre B9a/AAA. Override local no chip: o
+     --success global (borda de lesson-card e pares soft) permanece. */
+  background: var(--success-deep);
 }
 .due-in {
   font-weight: 800;
@@ -421,6 +464,26 @@ body {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
+}
+/* W7 AID-5190 (contrato §7.2 — MasteryBadge cor+texto+glifo): o glifo do
+   resumo "dominadas" usa o par mastery §7.1 (--ads-mastery-text/--ads-mastery-bg
+   = --success-deep/--success-soft, retunado AAA na W6). */
+.hud-glyph {
+  color: var(--success-deep);
+  font-size: 0.95em;
+}
+/* W7 AID-5190 (contrato §4 B8): .sr-only disponível e usado — live region
+   #hud-live (anúncio 1×/dia de sequência/revisões). */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
 .progress-track {
   margin-top: 10px;
@@ -586,6 +649,15 @@ body {
   color: var(--muted);
   text-decoration: line-through;
   cursor: not-allowed;
+}
+/* W7 AID-5190 (contrato §7.3/B6): alvo de toque ≥44px nos controles do HUD
+   no mobile — botões-link ganham altura mínima abaixo de 768px; desktop
+   compacto permanece inalterado (zero delta visual ≥768px). */
+@media (max-width: 767px) {
+  .link-btn {
+    min-height: 44px;
+    padding: 10px 4px;
+  }
 }
 
 /* Foco visível para navegação por teclado (AID-1023/W0, auditoria AID-914 §1.2 —

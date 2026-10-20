@@ -7,8 +7,8 @@ colors:
   bg-grad-a: "#fdf6ec"
   bg-grad-b: "#f3e9ff"
   ink: "#1f1b2e"
-  ink-soft: "#5b5570"
-  muted: "#686378"
+  ink-soft: "#4f4a5e"
+  muted: "#4e495b"
   card: "#ffffff"
   line: "#ece6f5"
   primary: "#4f46e5"
@@ -16,7 +16,7 @@ colors:
   amber: "#f59e0b"
   amber-deep: "#b45309"
   success: "#16a34a"
-  success-deep: "#166534"
+  success-deep: "#12502a"
   success-soft: "#dcfce7"
   danger: "#e11d48"
   danger-soft: "#ffe4e6"
@@ -73,9 +73,9 @@ gradient, white cards, indigo CTA. It informs and sends you off; it never nags.
 ## Colors
 
 - **bg gradient** (`#fdf6ec` → `#f3e9ff`): warm cream fading to soft lavender.
-- **Ink ladder** (`#1f1b2e` → `#5b5570` → `#686378`): text at three volumes; `--muted` was AA-tuned in AID-1023/W0 (≥4.5:1 on every pair) — don't lighten it.
-- **Primary indigo** (`#4f46e5` / deep `#312e81`): single interactive color; pill CTAs.
-- **Track semantics** (soft bg + saturated text): success `#dcfce7`/`#166534` (deep per AID-1027/W1 — 6.49:1), review/trap `#f3e8ff`/`#7c3aed`, attention `#ffe4e6`/`#e11d48`, amber `#f59e0b`/`#b45309`. Pairs are atomic — never recombine.
+- **Ink ladder** (`#1f1b2e` → `#4f4a5e` → `#4e495b`): text at three volumes; `--muted`/`--ink-soft` were AAA-retuned in AID-5177/W6 (HUD pairs ≥7:1, hue preserved) — don't lighten them.
+- **Primary indigo** (`#4f46e5` / deep `#312e81`): single interactive color; pill CTAs. HUD eyebrows use the W6 local pair value `#3b37b6` (≥7.4:1 on the worst gradient endpoint, same hue).
+- **Track semantics** (soft bg + saturated text): success `#dcfce7`/`#12502a` (deep per AID-5177/W6 — 8.67:1), review/trap `#f3e8ff`/`#7c3aed`, attention `#ffe4e6`/`#e11d48`, amber `#f59e0b`/`#b45309`. Pairs are atomic — never recombine.
 
 ## Typography
 
@@ -100,9 +100,51 @@ than a spreadsheet.
 Lesson cards are the unit; track glyphs use the soft+tint pairs with the deep
 variant for text (the AA-corrected pattern).
 
+## Progress HUD — contrato cross-engine
+
+Os elementos "onde estou" (streak, medidor de progresso, mastery, revisões
+FSRS) seguem o contrato do HUD de progresso do ecossistema —
+`docs/design/design-foundations.md` **§7** (v2.0, AID-5010; aliases
+AID-5141/W5): **papéis e estados são contratuais, a paleta é engine-local**.
+O dojoToday declara os 11 tokens `--ads-*` enumerados na tabela §7.1 (o titular "10" do plano AID-5010 conta os nomes errado) em `src/styles.css`
+mapeando os valores locais atuais (zero delta visual):
+
+| Papel | Tokens (§7.1) | Mapeia hoje |
+| --- | --- | --- |
+| Rótulos do HUD | `--ads-progress-text` / `--ads-progress-muted` | `--ink` / `--muted` |
+| Medidor | `--ads-progress-track` / `--ads-progress-fill` | `--line` / `--primary` (início do gradiente local) |
+| Streak | `--ads-streak-accent` | `--amber` (chama `.streak-flame.is-lit`, decorativa `aria-hidden`) |
+| Mastery | `--ads-mastery-text` / `--ads-mastery-bg` | par atômico `--success-deep`/`--success-soft` |
+| Revisão devida | `--ads-review-text` / `--ads-review-bg` | chip `.tone-success` pós-W4 (`#ffffff` sobre `--success-deep`) |
+| Atrasada | `--ads-attention-text` / `--ads-attention-bg` | chip `.tone-danger` (`#ffffff` sobre `--danger`) |
+
+Tier de acessibilidade do HUD: **B9** (§7/§4 do contrato — AAA 7:1 texto,
+3:1 não-texto; B2 AA continua o piso geral). **AID-5190/W7 — anatomia
+aplicada** (contrato §7.2/§7.3): os 4 papéis canônicos têm testids estáveis
+e leitura textual sempre adjacente ao medidor:
+
+| Papel (testid) | Onde vive | Anatomia |
+| --- | --- | --- |
+| `hud-streak` | `.streak-card` | texto "N dias de sequência" + glifo 🔥 `aria-hidden` |
+| `hud-progress` | `.progress-track` do card "Progresso verificado" | `role="progressbar"` + `aria-valuetext "N% concluído"` + leitura textual "X/Y dominadas" adjacente |
+| `hud-mastery-badge` | `.progress-row` ("X/Y dominadas ✅ · verificadas por gate") | cor + texto + glifo (B3); vocabulário canônico — trilha é projeção canônica, nó mastered lê "dominada" (completed ≠ mastered) |
+| `hud-review-due` | cada `.lesson-card` de revisão | chip reason (`REASON_LABEL`) + dueIn pt-BR (`atrasada N dias` / `devida hoje`) formatado do `dueIn` de máquina do substrate |
+| `hud-live-region` | `#hud-live` (`sr-only role="status"` pós-hero) | anuncia sequência/revisões 1×/abertura diária (§7.2) |
+
+Responsividade 375/768/1280 (§7.3): cards do HUD empilham verticalmente
+abaixo de 768px, alvos ≥44px (B6) — verificados em
+`playwright/hud-contract.spec.ts` com screenshots por breakpoint.
+**AID-5177/W6 — retune AAA aplicado**
+(contrato §4 B9a/B9b): `--muted` #686378→#4e495b, `--ink-soft`
+#5b5570→#4f4a5e, eyebrow do HUD `#3b37b6` (valor local do par; `--primary`
+segue #4f46e5 em CTAs/medidor), `--success-deep` #166534→#12502a — os
+marcadores `@deprecated → --ads-* (B9)` destes pares foram removidos
+(janela fechada na W6; remoção final auditada 2 ciclos após). Evidência:
+`playwright/a11y-w6.spec.ts` (getComputedStyle; 0 falhas B9a/B9b/B2).
+
 ## Do's and Don'ts
 
-- Do keep AA-tuned values (`--muted`, `--success-deep`) — audits AID-914/1023/1027 fixed them deliberately.
+- Do keep the AAA-retuned values (`--muted`, `--ink-soft`, `--success-deep` eyebrow `#3b37b6`) — AID-914/1023/1027 fixed AA deliberately and AID-5177/W6 raised the HUD pairs to AAA; don't lighten them.
 - Don't add new accent hues; track semantics cover the states.
 - Do keep it read-only in spirit: one primary CTA, quiet everything else.
 - Don't hard-code colors in components — use the CSS variables.
