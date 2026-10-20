@@ -515,6 +515,40 @@ def _validate_evidence_files(state: dict[str, Any], root: Path = ROOT) -> list[s
                 )
             )
             continue
+        if gate_kind == "guided_practice":
+            # AID-5005: guided-practice conclusions are digest-bound receipts
+            # (learner/practice_receipts/), never mastery writes. The unit may
+            # conclude several practices, each with its own receipt; the
+            # evidence_file must back at least one recorded digest and every
+            # review's own receipt must still match its digest.
+            from learner.substrate.practice import (
+                bound_practice_receipt_violations,
+                practice_review_trail_violations,
+            )
+
+            practice_digests = [
+                review.get("evidence_digest")
+                for review in reviews
+                if isinstance(review, dict)
+                and review.get("gate_kind") == "guided_practice"
+                and isinstance(review.get("evidence_digest"), str)
+            ]
+            errors.extend(
+                f"units_log[{index}].{error}"
+                for error in bound_practice_receipt_violations(
+                    evidence_path, practice_digests or [expected_digest], root
+                )
+            )
+            errors.extend(
+                f"units_log[{index}].{error}"
+                for error in practice_review_trail_violations(unit, root)
+            )
+            if unit.get("mastered"):
+                errors.append(
+                    f"units_log[{index}] is a guided_practice gate with"
+                    " mastered = true; a practice conclusion never masters"
+                )
+            continue
         errors.extend(
             f"units_log[{index}].{error}"
             for error in bound_evidence_violations(

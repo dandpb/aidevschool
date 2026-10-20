@@ -111,6 +111,15 @@ export function MapScreen({
                     <span className="mission-map-order">{mission.chapterOrder}</span>
                     <div>
                       <small data-testid={`map-overlay-${mission.id}`}>{OVERLAY_LABEL[overlay]}</small>
+                      {overlay === 'verified' || overlay === 'canonical-mastery' ? (
+                        // W7 AID-5190 (contrato §7.2 — papel MasteryBadge nos
+                        // grids do OS): cor + texto + glifo (B3); vocabulário
+                        // canônico dominada/verificada ≠ concluída.
+                        <span className="map-mastery-badge" data-testid="hud-mastery-badge">
+                          <span aria-hidden="true">{overlay === 'canonical-mastery' ? '✅' : '✔'}</span>{' '}
+                          {overlay === 'canonical-mastery' ? 'Dominada' : 'Verificada'}
+                        </span>
+                      ) : null}
                       {showStartHere ? (
                         <strong className="journey-eyebrow" data-testid={`map-start-here-${mission.id}`}>
                           Comece aqui

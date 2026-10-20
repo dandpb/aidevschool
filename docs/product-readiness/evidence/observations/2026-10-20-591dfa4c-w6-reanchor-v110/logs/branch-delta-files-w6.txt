@@ -1,0 +1,16 @@
+docs/design/design-foundations.md
+engines/codexdojo-os-prototype/DESIGN.md
+engines/codexdojo-os-prototype/playwright.aid5177.config.ts
+engines/codexdojo-os-prototype/src/styles/foundation.css
+engines/codexdojo-os-prototype/src/styles/journey.css
+engines/codexdojo-os-prototype/tests/a11y-w6.smoke.spec.ts
+engines/codexdojo-os-prototype/tests/hud-aliases.smoke.spec.ts
+engines/dojoToday/DESIGN.md
+engines/dojoToday/playwright/a11y-w6.spec.ts
+engines/dojoToday/playwright/hud-aliases.spec.ts
+engines/dojoToday/src/styles.css
+engines/literacyDojo/DESIGN.md
+engines/literacyDojo/playwright/a11y-axe-baseline.json
+engines/literacyDojo/playwright/a11y-w6-hud-aaa.spec.ts
+engines/literacyDojo/playwright/hud-aliases.spec.ts
+engines/literacyDojo/src/styles.css

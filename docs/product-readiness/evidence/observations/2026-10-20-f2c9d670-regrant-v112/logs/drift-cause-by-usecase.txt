@@ -1,0 +1,18 @@
+Delta e22a2daf..f2c9d670 (engines/|learner/): 7 files; generated-marker status:
+  source          engines/codexDojo/ecosystem/MANIFEST.md
+  GENERATED(neutral) engines/codexDojo/src/data/learner.ts
+  GENERATED(neutral) engines/codexDojo/src/data/projects.ts
+  GENERATED(neutral) engines/codexdojo-os-prototype/src/data/learner.ts
+  source          engines/dojoToday/src/main.ts
+  source          engines/voxelDojo/game-06-pipeline-plant/src/scene/hud.ts
+  source          learner/substrate/tests/test_substrate.py
+
+literacy-standalone-first-lesson: clean
+literacy-standalone-corridor-mod01-03: clean
+os-literacy-guided-mission: clean
+os-voxel-guided-missions: STALE (drift cause: engines/voxelDojo/game-06-pipeline-plant/src/scene/hud.ts)
+os-returning-learner: clean
+dojotoday-daily-guidance: STALE (drift cause: engines/dojoToday/src/main.ts; learner/substrate/tests/test_substrate.py)
+pixelquest-evidence-encounter: clean
+voxel-standalone-learning-loop: clean
+minitown-explore-only: clean
