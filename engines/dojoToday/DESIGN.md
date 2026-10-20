@@ -119,10 +119,22 @@ mapeando os valores locais atuais (zero delta visual):
 | Atrasada | `--ads-attention-text` / `--ads-attention-bg` | chip `.tone-danger` (`#ffffff` sobre `--danger`) |
 
 Tier de acessibilidade do HUD: **B9** (§7/§4 do contrato — AAA 7:1 texto,
-3:1 não-texto; B2 AA continua o piso geral). Anatomia canônica de 4 papéis,
-testids `hud-streak`/`hud-progress`/`hud-mastery-badge`/`hud-review-due` e
-responsividade 375/768/1280 chegam na W7 (AID-5010) — até lá os tokens são
-declaração+mapping, sem consumidores. **AID-5177/W6 — retune AAA aplicado**
+3:1 não-texto; B2 AA continua o piso geral). **AID-5190/W7 — anatomia
+aplicada** (contrato §7.2/§7.3): os 4 papéis canônicos têm testids estáveis
+e leitura textual sempre adjacente ao medidor:
+
+| Papel (testid) | Onde vive | Anatomia |
+| --- | --- | --- |
+| `hud-streak` | `.streak-card` | texto "N dias de sequência" + glifo 🔥 `aria-hidden` |
+| `hud-progress` | `.progress-track` do card "Progresso verificado" | `role="progressbar"` + `aria-valuetext "N% concluído"` + leitura textual "X/Y dominadas" adjacente |
+| `hud-mastery-badge` | `.progress-row` ("X/Y dominadas ✅ · verificadas por gate") | cor + texto + glifo (B3); vocabulário canônico — trilha é projeção canônica, nó mastered lê "dominada" (completed ≠ mastered) |
+| `hud-review-due` | cada `.lesson-card` de revisão | chip reason (`REASON_LABEL`) + dueIn pt-BR (`atrasada N dias` / `devida hoje`) formatado do `dueIn` de máquina do substrate |
+| `hud-live-region` | `#hud-live` (`sr-only role="status"` pós-hero) | anuncia sequência/revisões 1×/abertura diária (§7.2) |
+
+Responsividade 375/768/1280 (§7.3): cards do HUD empilham verticalmente
+abaixo de 768px, alvos ≥44px (B6) — verificados em
+`playwright/hud-contract.spec.ts` com screenshots por breakpoint.
+**AID-5177/W6 — retune AAA aplicado**
 (contrato §4 B9a/B9b): `--muted` #686378→#4e495b, `--ink-soft`
 #5b5570→#4f4a5e, eyebrow do HUD `#3b37b6` (valor local do par; `--primary`
 segue #4f46e5 em CTAs/medidor), `--success-deep` #166534→#12502a — os

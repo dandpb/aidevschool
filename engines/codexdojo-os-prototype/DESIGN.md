@@ -174,10 +174,22 @@ experiência read-only; a ausência é documentada, não tratada como dívida) �
 os pares review/attention mapeiam os estados locais mais próximos apenas
 para satisfazer a existência+mapping do contrato. Tier de acessibilidade do
 HUD: **B9** (§7/§4 — AAA 7:1 texto, 3:1 não-texto; B2 AA continua o piso
-geral). Anatomia canônica de 4 papéis, testids
-`hud-streak`/`hud-progress`/`hud-mastery-badge`/`hud-review-due` e
-responsividade 375/768/1280 chegam na W7 (AID-5010) — até lá os tokens são
-declaração+mapping, sem consumidores. **AID-5177/W6 — retune AAA aplicado**
+geral). **AID-5190/W7 — anatomia aplicada** (contrato §7.2/§7.3): os 4
+papéis canônicos têm testids estáveis, com leitura textual sempre adjacente
+ao medidor — incluindo os medidores dos grids do OS (B9c):
+
+| Papel (testid) | Onde vive | Anatomia |
+| --- | --- | --- |
+| `hud-streak` | parágrafo "Ritmo local" do Hub (`streakCopy`) | texto "Sequência local ativa: N dias" + glifo 🔥 `aria-hidden` |
+| `hud-progress` | `.hub-mission-progress` do Hub **e** medidor "Meta diária" do app Trilhas Dojo (grid) | `role="progressbar"` + `aria-valuetext "N% concluído"` + leitura textual "X/Y missões" adjacente (`.hub-meter-read` / `2 de 3 missões`) |
+| `hud-mastery-badge` | badges dos nós `verified`/`canonical-mastery` do mapa (`.map-mastery-badge`); contagem "N competências verificadas ✅" do Hub mantém `canonical-mastery-count` | cor + texto + glifo (B3); vocabulário canônico Dominada/Verificada ≠ Concluída (§7.4: OS nunca marca mastery, só projeta a leitura canônica) |
+| `hud-review-due` | eyebrow "Revisão atrasada N dias / devida hoje" do Hub quando a recomendação é `review` | reason + dueIn pt-BR (`formatReviewDuePtBr`, apresentação da projeção canônica — o OS não agenda FSRS) |
+| `hud-live-region` | `p.journey-sr-only role="status"` no Hub | anuncia sequência local/meta/revisão 1×/sessão (§7.2) |
+
+Responsividade 375/768/1280 (§7.3): stack vertical dos papéis abaixo de
+768px, alvos ≥44px (B6) — verificados em `tests/hud-contract.smoke.spec.ts`
+com screenshots por breakpoint (projetos mobile-375/tablet-768/desktop-1280
+já vigentes). **AID-5177/W6 — retune AAA aplicado**
 (contrato §4 B9a): `--school-muted` #657089→#3f4a64 (8.05:1 sobre
 `--school-paper`, 8.84:1 sobre branco) e `--muted` dark #8f9bb0→#a3aec4
 (8.17:1 sobre `--panel-solid`) — os marcadores `@deprecated → --ads-* (B9)`

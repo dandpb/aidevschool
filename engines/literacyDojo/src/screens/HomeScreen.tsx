@@ -1,9 +1,11 @@
+import { useEffect, useRef, useState } from "react";
 import { useServices } from "../app/services";
 import { MentorGuide } from "../components/MentorGuide";
 import { VoxelWorld } from "../components/VoxelWorld";
 import { type JourneyId, activeJourneyOf } from "../domain/journeyProgress";
 import type { LearnerProgress } from "../domain/progress";
 import { RETROFIT_NOTICE_S1, isRetrofittedLesson } from "../domain/retrofitNotice";
+import { reviewDueInfo } from "../domain/reviewDue";
 import { buildTrackQueries } from "../domain/trackQueries";
 
 /**
@@ -36,6 +38,31 @@ export function HomeScreen({
   const { mission, reviewLesson, dailyGoal: goal, trackSummary: summary, dueReviews } = queries;
   const pendingCheckpoint = queries.pendingCheckpoint;
 
+  // W7 AID-5190 (contrato §7.2 — anúncio de mudança): a live region sr-only
+  // anuncia o estado de sequência/revisões 1× por sessão (montagem) e a cada
+  // mudança de streak — o texto é inserido depois do render, então leitores
+  // de tela o anunciam como atualização.
+  const [liveMessage, setLiveMessage] = useState("");
+  const announcedStreak = useRef<number | null>(null);
+  useEffect(() => {
+    const current = progress.streak.current;
+    if (announcedStreak.current === null) {
+      const reviewNote =
+        dueReviews.length === 0
+          ? ""
+          : ` ${dueReviews.length} ${dueReviews.length === 1 ? "revisão devida" : "revisões devidas"}.`;
+      setLiveMessage(`Sequência: ${current} ${current === 1 ? "dia" : "dias"}.${reviewNote}`);
+    } else if (announcedStreak.current !== current) {
+      setLiveMessage(`Sequência agora: ${current} ${current === 1 ? "dia" : "dias"}.`);
+    }
+    announcedStreak.current = current;
+  }, [progress.streak.current, dueReviews.length]);
+
+  const reviewDue =
+    dueReviews.length > 0 && dueReviews[0].nextReviewAt !== undefined
+      ? reviewDueInfo(dueReviews[0].nextReviewAt as string, services.clock())
+      : undefined;
+
   const handleReset = () => {
     if (window.confirm("Apagar todo o progresso deste aparelho e recomeçar do zero?")) {
       void onReset();
@@ -57,8 +84,14 @@ export function HomeScreen({
         <span className="stat" data-testid="xp-value">
           {progress.xp} XP
         </span>
-        <span className="stat" data-testid="streak-value">
-          Sequência: {progress.streak.current} {progress.streak.current === 1 ? "dia" : "dias"}
+        {/* W7 AID-5190 (contrato §7.2 — papel StreakChip): o wrapper carrega o
+            testid canônico hud-streak; o span interno mantém streak-value
+            (contrato E2E existente da gamification). */}
+        <span className="stat" data-testid="hud-streak">
+          <span data-testid="streak-value">
+            <span aria-hidden="true">🔥 </span>
+            Sequência: {progress.streak.current} {progress.streak.current === 1 ? "dia" : "dias"}
+          </span>
         </span>
         <span
           className={goal.done ? "stat stat-done" : "stat"}
@@ -67,6 +100,12 @@ export function HomeScreen({
         >
           Meta de hoje: {goal.earned}/{goal.goal} XP{goal.done ? " ✅" : ""}
         </span>
+        {/* W7 AID-5190 (contrato §7.2): <output> carrega role="status"
+            implícito (aria-live polite) — padrão do OnboardingScreen; o
+            texto muda depois do render, então leitores de tela anunciam. */}
+        <output className="sr-only" data-testid="hud-live-region">
+          {liveMessage}
+        </output>
       </div>
 
       <MentorGuide compact>
@@ -165,16 +204,27 @@ export function HomeScreen({
 
       <div className="card">
         <h2>Sua trilha</h2>
-        <p data-testid="track-progress">
-          {summary.completed} de {summary.total} lições concluídas
+        {/* W7 AID-5190 (contrato §7.2 — papel MasteryBadge): bounded context
+            local — o máximo que a HUD da literacy mostra é "concluídas"
+            (completed), nunca mastered. Glifo aria-hidden completa
+            cor+texto+glifo (B3). */}
+        <p data-testid="hud-mastery-badge">
+          <span data-testid="track-progress">
+            {summary.completed} de {summary.total} lições concluídas
+          </span>{" "}
+          <span aria-hidden="true">✅</span>
         </p>
         <div
           className="progress-track"
           role="progressbar"
+          data-testid="hud-progress"
           tabIndex={0}
           aria-valuenow={summary.completed}
           aria-valuemin={0}
           aria-valuemax={summary.total}
+          aria-valuetext={`${
+            summary.total === 0 ? 0 : Math.round((summary.completed / summary.total) * 100)
+          }% concluído`}
           aria-label="Progresso da trilha"
         >
           <div
@@ -205,6 +255,9 @@ export function HomeScreen({
       {dueReviews.length > 0 && reviewLesson && (
         <div className="card card-review">
           <h2>Revisão pendente</h2>
+          {/* W7 AID-5190 (contrato §7.2 — papel ReviewDue): reason + dueIn em
+              pt-BR legível derivado do nextReviewAt agendado. */}
+          {reviewDue ? <p data-testid="hud-review-due">Revisão {reviewDue.dueIn}</p> : null}
           <p>
             Hora de revisar:{" "}
             {dueReviews.map((skill) => services.content.getSkillTitle(skill.skillId)).join(", ")}.
