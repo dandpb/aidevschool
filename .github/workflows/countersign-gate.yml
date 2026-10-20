@@ -37,6 +37,24 @@ name: countersign-gate
 #      'Countersign:' line; latest wins; pre-merge only in audit mode).
 #      Unconfigured registry credentials / transport / auth failures fail
 #      CLOSED.
+#      8c. RUN TEMPORAL WINDOW (AID-5235, incident AID-5233): the citation's
+#      createdAt must fall inside the cited run's [startedAt, finishedAt]
+#      (±120s). The incident's clone was posted 82 min AFTER the run closed;
+#      a countersign is an act of a LIVE run.
+#   9. VERDICT RESOLUTION (AID-5235, incident AID-5233): the verdict token
+#      must be a canonical comment id (Paperclip UUID for AID-, numeric GH
+#      comment id for GH-) that RESOLVES: the comment exists on the cited
+#      task's thread, is not deleted, and was created by the CITED RUN
+#      (createdByRunId == run=). Free-text verdicts ('GO') are rejected.
+#  10. TASK↔PR BINDING (AID-5235, incident AID-5233): the cited task's
+#      title/description must reference THIS PR number — the incident's
+#      citation cited AID-5061 (bound to PR #700) on PR #714/#704.
+#  11. DELETION ALERT (AID-5235, incident AID-5233): prior successful gate
+#      runs on the CURRENT head recorded the operative citation (recovered
+#      from the prior runs' logs); if it is no longer in the conversation,
+#      the gate reddens with a DELETION ALERT — the incident's citations
+#      were deleted ~5 min after greening the gate. A newer citation does
+#      not launder a deletion.
 #
 # Triggers — two tiers, same check-run name, DIFFERENT contracts (AID-3278):
 #   pull_request (opened/synchronize/reopened/ready_for_review): runs the
@@ -102,6 +120,9 @@ jobs:
       contents: read
       issues: read
       pull-requests: read
+      # AID-5235 §11: the live gate reads prior countersign-gate workflow
+      # runs (and their logs) for the PR head to detect citation deletion.
+      actions: read
     steps:
       - uses: actions/checkout@v4
         with:
