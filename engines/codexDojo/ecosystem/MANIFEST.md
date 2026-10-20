@@ -259,3 +259,13 @@ path. Negative cases are in the new `test_practice_boundary_regressions.py` and
 `test_practice_history_boundary.py` files under `learner/substrate/tests/`.
 Practice reviews do not grant mastery. Legacy snapshot compatibility and native
 acceptance gates remain separate unresolved requirements.
+
+## Offline media restore boundary
+
+`scripts/storage/offline_package.py` validates the declared manifest schema and
+relative logical/blob paths before restore, confines source bytes to the package
+and targets to the selected destination, and writes through fresh temporary
+files. New negative coverage lives in
+`scripts/storage/test_offline_restore_boundary.py`. The source-byte digest checks
+and partial recovery of valid blobs remain active. This mapping does not grant
+Release URL compatibility, readiness or pedagogical mastery.
