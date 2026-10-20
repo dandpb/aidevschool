@@ -1,0 +1,1 @@
+STALE-WINDOW: dojotoday-daily-guidance: recorded pass/customer-ready vs current stale/None; reasons=scenario dojotoday-active-unit-guidance source fingerprint is stale; scenario dojotoday-read-only-boundary source fingerprint is stale; scenario dojotoday-returning-next-day source fingerprint is stale

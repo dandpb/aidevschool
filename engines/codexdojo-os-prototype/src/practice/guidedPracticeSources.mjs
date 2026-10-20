@@ -22,6 +22,13 @@ export async function readCanonicalSource(relativePath) {
   return readFile(join(packageRoot, relativePath), 'utf8')
 }
 
+// AID-5006: repo-root-relative read for the dev-family packages (manifest
+// paths are already repo-relative, e.g.
+// curriculum/sequencia-dev-guiada/pg-d02-pedido-estruturado/enunciado.md).
+export async function readRepoFile(relativePath) {
+  return readFile(join(repoRoot, relativePath), 'utf8')
+}
+
 export async function readGeneratedReadModel() {
   return readFile(generatedReadModelPath, 'utf8')
 }
@@ -29,6 +36,16 @@ export async function readGeneratedReadModel() {
 export async function regenerateProjection() {
   const { projectGuidedPractice } = await import(join(engineRoot, 'scripts/gen-guided-practice.mjs'))
   return projectGuidedPractice()
+}
+
+export async function regenerateDevProjections() {
+  const { projectDevGuidedPractices } = await import(join(engineRoot, 'scripts/gen-guided-practice.mjs'))
+  return projectDevGuidedPractices()
+}
+
+export async function regenerateDevProjectionsFrom(customRepoRoot) {
+  const { projectDevGuidedPractices } = await import(join(engineRoot, 'scripts/gen-guided-practice.mjs'))
+  return projectDevGuidedPractices({ repoRoot: customRepoRoot })
 }
 
 export async function regenerateProjectionFrom(customRepoRoot) {

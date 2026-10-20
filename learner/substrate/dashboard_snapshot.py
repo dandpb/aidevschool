@@ -219,12 +219,23 @@ def build_pixel_review_slice(snapshot: dict[str, Any] | None = None) -> dict[str
     units_log (GameNeverMarksMastery / evidence_only invariants). The streak is
     passed through unchanged: ``_streak_view`` (via ``build_snapshot``) already
     produces the exact shape pixelDojo needs, so there is nothing to rebuild.
+    Review rows are projected to the frozen slice fields; the FSRS card state
+    (AID-5005) is for the dojoToday/OS surfaces, not the games.
     """
     snap = snapshot or build_snapshot()
     return {
-        "nextReviews": snap.get("nextReviews", []),
+        "nextReviews": [_slice_review_row(r) for r in snap.get("nextReviews", [])],
         "streak": snap.get("streak", {}),
     }
+
+
+#: Fields the pixel/voxel review slices have always carried. Keep frozen so
+#: the generated slices stay byte-stable and the game-side types never drift.
+_SLICE_REVIEW_FIELDS = ("unitId", "title", "dueIn", "reason")
+
+
+def _slice_review_row(review: dict[str, Any]) -> dict[str, Any]:
+    return {field: review[field] for field in _SLICE_REVIEW_FIELDS if field in review}
 
 
 def build_voxel_per_game_review_slices(
@@ -252,7 +263,7 @@ def build_voxel_per_game_review_slices(
     snap = snapshot or build_snapshot()
     by_unit: dict[str, list[dict[str, Any]]] = {}
     for review in snap.get("nextReviews", []):
-        by_unit.setdefault(review.get("unitId"), []).append(review)
+        by_unit.setdefault(review.get("unitId"), []).append(_slice_review_row(review))
     streak = snap.get("streak", {})
     return {
         game_id: {
@@ -272,6 +283,6 @@ def build_voxel_review_slice(snapshot: dict[str, Any] | None = None) -> dict[str
     """
     snap = snapshot or build_snapshot()
     return {
-        "nextReviews": snap.get("nextReviews", []),
+        "nextReviews": [_slice_review_row(r) for r in snap.get("nextReviews", [])],
         "streak": snap.get("streak", {}),
     }

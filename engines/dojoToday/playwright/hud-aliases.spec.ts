@@ -1,0 +1,78 @@
+import { expect, test } from "@playwright/test";
+
+/**
+ * AID-5141/W5 — evidência executável dos 10 aliases HUD (design-foundations
+ * v2.0 §7.1, AID-5010): os tokens `--ads-*` são DECLARADOS mapeando os
+ * valores locais atuais (zero delta visual — nenhum consumidor até a W7).
+ *
+ * Este spec resolve os tokens no render vivo (getComputedStyle em :root) e
+ * afirma que cada um resolve EXATAMENTE para o valor local que ele mapeia —
+ * se alguém trocar um mapping ou retunar um valor-base sem atualizar o
+ * contrato, o spec falha (guard de drift entre alias e valor local).
+ *
+ * Mutation-guard: remover qualquer declaração, ou apontá-la para outro
+ * valor, falha este spec. Adicionar declaração sem consumidor não muda
+ * pixel algum — zero delta é a pré-condição da W5.
+ */
+
+const HUD_TOKENS = [
+  "--ads-progress-text",
+  "--ads-progress-muted",
+  "--ads-progress-track",
+  "--ads-progress-fill",
+  "--ads-streak-accent",
+  "--ads-mastery-text",
+  "--ads-mastery-bg",
+  "--ads-review-text",
+  "--ads-review-bg",
+  "--ads-attention-text",
+  "--ads-attention-bg",
+] as const;
+
+// Valores locais mapeados (styles.css :root; var() resolve no
+// getComputedStyle). AID-5177/W6 (retune B9): --muted #686378 → #4e495b e
+// --success-deep #166534 → #12502a — os aliases SEGUEM mapeando os mesmos
+// tokens locais; apenas os valores-base subiram para AAA (contrato §4 B9).
+const EXPECTED: Record<(typeof HUD_TOKENS)[number], string> = {
+  "--ads-progress-text": "#1f1b2e", // var(--ink)
+  "--ads-progress-muted": "#4e495b", // var(--muted) — W6 AAA
+  "--ads-progress-track": "#ece6f5", // var(--line)
+  "--ads-progress-fill": "#4f46e5", // var(--primary)
+  "--ads-streak-accent": "#f59e0b", // var(--amber)
+  "--ads-mastery-text": "#12502a", // var(--success-deep) — W6 AAA
+  "--ads-mastery-bg": "#dcfce7", // var(--success-soft)
+  "--ads-review-text": "#ffffff", // chip .tone-success (AID-5080/W4)
+  "--ads-review-bg": "#12502a", // var(--success-deep) — W6 AAA
+  "--ads-attention-text": "#ffffff", // chip .tone-danger
+  "--ads-attention-bg": "#e11d48", // var(--danger)
+};
+
+test("w5-1: 10 tokens HUD resolvem para os valores locais atuais (zero delta) — AID-5010/W5", async ({
+  page,
+}) => {
+  await page.goto("/", { waitUntil: "networkidle" });
+  // O OS substitui a rota de boot (navigation.replace) — esperar os estilos
+  // estarem vivos antes de ler :root (self-stabilizing em qualquer engine).
+  await page.waitForFunction(
+    () =>
+      getComputedStyle(document.documentElement).getPropertyValue("--ads-progress-text").trim()
+        .length > 0,
+  );
+
+  const resolved = await page.evaluate(
+    (tokens: string[]) => {
+      const cs = getComputedStyle(document.documentElement);
+      const out: Record<string, string> = {};
+      for (const token of tokens) {
+        out[token] = cs.getPropertyValue(token).trim().toLowerCase();
+      }
+      return out;
+    },
+    [...HUD_TOKENS],
+  );
+
+  expect(Object.keys(resolved)).toHaveLength(11);
+  for (const token of HUD_TOKENS) {
+    expect(resolved[token], `${token} deve mapear o valor local atual`).toBe(EXPECTED[token]);
+  }
+});

@@ -88,6 +88,9 @@ describe("startLesson", () => {
     "l30",
     "l31",
     "l32",
+    "l33",
+    "l34",
+    "l35",
   ])("prepara a missão hospedada declarada %s", async (lessonId) => {
     const { services } = makeServices();
     const progress = await services.useCases.prepareHostedMission(lessonId);

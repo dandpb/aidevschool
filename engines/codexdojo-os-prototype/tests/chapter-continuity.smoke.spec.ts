@@ -297,6 +297,15 @@ test('preserves completed first-release missions across switches and reloads', a
   await expect(page.getByRole('heading', { name: 'Seu primeiro código com um assistente de IA' })).toBeVisible()
   await completeLiteracyMission(page, 'l16')
 
+  // Wave W2 dev (authoring package AID-5011 r1, FPE PR AID-5046): l34
+  // "Eval antes do deploy" anchors on the canonical prerequisite l17, so
+  // complete the l17 anchor here (before the wave missions below) to keep
+  // the unlock chain explicit. Completes end-to-end through
+  // safety_classification, output_comparison, and sort.
+  await page.goto('/mission/dev/l17')
+  await expect(page.getByRole('heading', { name: 'Integre uma API de IA em um projeto real' })).toBeVisible()
+  await completeLiteracyMission(page, 'l17')
+
   // Wave dev l21 (spec AID-528 rev 2): l21 "Peça testes que valem a pena" is
   // published as the 11th dev mission (chapterOrder 11, canonical prereq l16).
   // Completes end-to-end through prompt_builder, missing_context, and
@@ -370,6 +379,32 @@ test('preserves completed first-release missions across switches and reloads', a
   await expect(page.getByRole('heading', { name: 'Quando a automação erra' })).toBeVisible()
   await completeLiteracyMission(page, 'l32')
 
+  // Wave W2 dev T1 (authoring package AID-5011 r1 §2.1, FPE PR AID-5046):
+  // l33 "Do pedido ao pacote" opens the W2 dev wave as the 18th dev
+  // mission (chapterOrder 18, canonical prereq l16 — completed above;
+  // anchor lesson of pg-d04, SEQUENCIA.md U09). Completes end-to-end
+  // through missing_context, prompt_builder, and rubric_review.
+  await page.goto('/mission/dev/l33')
+  await expect(page.getByRole('heading', { name: 'Do pedido ao pacote: contexto, PRD e SPEC' })).toBeVisible()
+  await completeLiteracyMission(page, 'l33')
+
+  // Wave W2 dev T2 (AID-5011 r1 §2.1): l34 "Eval antes do deploy" is the
+  // 19th dev mission (chapterOrder 19, canonical prereq l17 — completed
+  // above; closes the U13 evals gap, AID-3510 §3). Completes end-to-end
+  // through sort, output_comparison, and multiSelect choice.
+  await page.goto('/mission/dev/l34')
+  await expect(page.getByRole('heading', { name: 'Eval antes do deploy: evidência, não impressão' })).toBeVisible()
+  await completeLiteracyMission(page, 'l34')
+
+  // Wave W2 dev T3 (AID-5011 r1 §2.1): l35 "Delegue com contrato" closes
+  // the W2 dev wave as the 20th dev mission (chapterOrder 20, canonical
+  // prereq l23 — completed above; anchor lesson of pg-d05, SEQUENCIA.md
+  // U10). Completes end-to-end through sort, missing_context, and
+  // rubric_review.
+  await page.goto('/mission/dev/l35')
+  await expect(page.getByRole('heading', { name: 'Delegue com contrato: o aceite é seu' })).toBeVisible()
+  await completeLiteracyMission(page, 'l35')
+
   await page.goto('/mission/dev/game-06-pipeline-plant')
   await expect(page.getByRole('heading', { name: 'PIPELINE PLANT: File Upload/Processing Pipeline' })).toBeVisible()
   await completePipeline(await gameFrame(page, 5206))
@@ -424,12 +459,16 @@ test('preserves completed first-release missions across switches and reloads', a
     'dev:game-09-docking-bay',
     'dev:l15',
     'dev:l16',
+    'dev:l17',
     'dev:l21',
     'dev:l22',
     'dev:l23',
     'dev:l27',
     'dev:l28',
     'dev:l29',
+    'dev:l33',
+    'dev:l34',
+    'dev:l35',
   ]) {
     expect(progress.missionStatusByKey[key]).toBe('completed')
   }

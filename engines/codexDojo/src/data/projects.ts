@@ -62,8 +62,8 @@ export const projects: readonly DojoProject[] = [
       "Hashing (base62, SHA-256 trunc), relational DB design, HTTP redirects (301/302), unique ID generation, analytics pipeline",
     learningGoal: "Explorar hashing, geração de IDs e redirecionamento seguro.",
     evidence: [
-      "Project artifacts exist; catalog verification is pending.",
-      "scaffolded",
+      "Node.js implementation verified 2026-10-18 @ `6bd13ed6` (AID-5013): `npm install --include=dev`/`lint`/`build`/`test` exit 0; 8/8 tests across 2 files (`src/__tests__/core.test.ts`, `src/__tests__/server.test.ts`); local HTTP benchmark (50k req, 0 errors, 12,566 rps, p95 7.12 ms, Node.js driver, k6 unavailable) and live smoke (shorten → 301 → stats) recorded in `docs/benchmark_results.md`; `docs/{spec,code_review,evolution_report,benchmark_results,status}.md` on disk. Caveat: Node.js-only, in-memory store (durability pending); Go/Rust rows in `docs/benchmark_results.md` are historical (`1b0a309`).",
+      "implemented (Node.js only)",
       "03_url_shortener/",
       "Project 02 (storage basics)",
     ],
@@ -78,8 +78,8 @@ export const projects: readonly DojoProject[] = [
       "Worker pools, job scheduling, backpressure, priorities, timeouts, retry policies, dead-letter queues, idempotency",
     learningGoal: "Orquestrar jobs concorrentes com prioridades e retry.",
     evidence: [
-      "Project artifacts exist; catalog verification is pending.",
-      "scaffolded",
+      "Node.js implementation verified 2026-10-18 @ `6bd13ed6` (AID-5013): `npm install --include=dev`/`lint`/`build`/`test` exit 0; 5/5 tests across 2 files (`src/__tests__/taskQueue.test.ts`, `src/__tests__/server.test.ts`); local HTTP benchmark (50k req, 0 errors, 14,002 rps, p95 6.31 ms, Node.js driver, k6 unavailable) and live smoke (enqueue → succeeded via 4-worker pump → stats) recorded in `docs/benchmark_results.md`; `docs/{spec,code_review,evolution_report,benchmark_results,status}.md` on disk. Caveat: Node.js-only, in-memory queue (durability pending); Go/Rust rows in `docs/benchmark_results.md` are historical (`1b0a309`).",
+      "implemented (Node.js only)",
       "04_concurrent_task_queue/",
       "Projects 01-03",
     ],
@@ -110,8 +110,8 @@ export const projects: readonly DojoProject[] = [
       "Streaming I/O, chunked processing, multipart upload, memory management, parallel processing, bounded memory",
     learningGoal: "Processar uploads grandes sem estourar memória.",
     evidence: [
-      "Project artifacts exist; catalog verification is pending.",
-      "scaffolded",
+      "Node.js implementation verified 2026-10-17 (AID-5012) via `curriculum/_shared/verify_node_impl.sh` (`npm ci --include=dev`/`lint`/`build`/`test` exit 0; 11/11 tests passing across 2 files: `server` 4, `edge` 7 — zero-byte policy, artifact cleanup after 413/409, concurrent same-file uploads, traversal containment, pagination/filter 400s, cursor walk, chunked transfer without Content-Length) with `docs/{spec,code_review,evolution_report,benchmark_results,status}.md` present on disk. Caveat: Node.js-only (`go-impl/` and `rust-impl/` were removed in `1b0a309` and do not exist on disk); RNF-002/003/004/005 measurements and durable registry (RNF-008) remain open.",
+      "implemented (Node.js only)",
       "06_file_upload_pipeline/",
       "Projects 01-03",
     ],
@@ -126,8 +126,8 @@ export const projects: readonly DojoProject[] = [
       "JWT (sign/verify), RBAC, middleware chains, layered architecture, dependency injection, input validation, versioning",
     learningGoal: "Separar identidade, sessão, autorização e versionamento.",
     evidence: [
-      "Project artifacts exist; catalog verification is pending.",
-      "scaffolded",
+      "Node.js implementation verified 2026-10-17 (AID-5012) via `curriculum/_shared/verify_node_impl.sh` (`npm ci --include=dev`/`lint`/`build`/`test` exit 0; 17/17 tests passing across 3 files: `app` 6, `jwt-secret` 2, `security` 9 — forged/wrong-secret tokens, HS256 algorithm pinning, expired access/refresh tokens via injected clock, cross-user update denial with audit, unknown-target 404, disabled-user login/refresh, replayed ancestors after rotation, password/email shape) with `docs/{spec,code_review,evolution_report,benchmark_results,status}.md` present on disk. Caveat: Node.js-only (`go-impl/` was removed in `1b0a309`; no Rust implementation ever existed on disk); security-sensitive project — atomic rotation, KDF review, and middleware-latency evidence remain open, so this is not a production security sign-off.",
+      "implemented (Node.js only)",
       "07_rest_api_auth/",
       "Projects 04-06",
     ],

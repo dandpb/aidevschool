@@ -4167,7 +4167,428 @@ export const literacyCorpus = {
       "avaliar"
     ],
     "version": 2
+  },
+  "l33": {
+    "activities": [
+      {
+        "data": {
+          "contextOptions": [
+            {
+              "id": "regra-permanente",
+              "text": "A regra permanente do domínio que a tarefa toca: como uma tarefa referencia dependências hoje (depends_on) e o que o sistema faz com dependência inexistente"
+            },
+            {
+              "id": "modelo-atual",
+              "text": "O trecho do modelo/estrutura atual que a mudança afeta: a lista de tarefas e o campo depends_on, como estão hoje"
+            },
+            {
+              "id": "suite-existente",
+              "text": "Os testes que já cobrem o comportamento visível da área tocada — o que a suíte enxerga hoje é o ponto de partida da mudança"
+            },
+            {
+              "id": "issue-antiga",
+              "text": "A issue antiga que motivou o pedido — ajuda a entender o porquê, mas a tarefa não fica ambígua sem ela"
+            },
+            {
+              "id": "lockfile",
+              "text": "O lockfile completo do projeto (package-lock / poetry.lock)"
+            },
+            {
+              "id": "log-de-build",
+              "text": "O log de build da última semana inteiro, sem recorte"
+            },
+            {
+              "id": "view-gerada",
+              "text": "O arquivo relatorios/plano.view.md — relatório gerado por build, não fonte da verdade"
+            }
+          ],
+          "prompt": "Pedido (e-mail da Bia): 'Preciso que o planejador ordene as tarefas pela dependência e mostre o total do dia. Aproveitando: renomeia a pasta docs/, deixa o relatório colorido e faz rodar bonito no Windows. Não quebra nada!' · A tarefa real — ordenar por dependência + total do dia — depende de um punhado de arquivos e regras. O CONTEXTO é o menor conjunto que torna essa tarefa inequívoca: nem ruído, nem buraco."
+        },
+        "evaluation": {
+          "optionalContextIds": [
+            "issue-antiga"
+          ],
+          "requiredContextIds": [
+            "regra-permanente",
+            "modelo-atual",
+            "suite-existente"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l33-a1",
+        "type": "missing_context"
+      },
+      {
+        "data": {
+          "fields": [
+            {
+              "hint": "Uma entrega coerente que cabe nos 30 min — qual delas? (as outras não morrem: vão para o Fora de escopo)",
+              "id": "entrega-unica",
+              "label": "Entrega única"
+            },
+            {
+              "hint": "O tempo máximo de tarefa declarado no próprio PRD",
+              "id": "limite",
+              "label": "Limite declarado"
+            },
+            {
+              "hint": "Pelo menos dois extras do pedido, nomeados — renomear? cores? Windows?",
+              "id": "fora-de-escopo",
+              "label": "Fora de escopo"
+            },
+            {
+              "hint": "Um teste em linguagem humana: dado isto, esperar aquilo — de preferência citando um comando executável",
+              "id": "aceite",
+              "label": "Critério de aceite verificável"
+            }
+          ],
+          "genericPrompt": "faz tudo o que a Bia pediu",
+          "scenario": "O e-mail da Bia pede: ordenar por dependência, mostrar o total do dia, renomear docs/, relatório colorido e suporte a Windows. Cinco entregas num pedido só. O PRD transforma isso em uma tarefa de até 30 minutos: uma entrega coerente, o resto nomeado no Fora de escopo — 'pedidos com múltiplos e-também produzem entregas medíocres'."
+        },
+        "evaluation": {
+          "fields": {
+            "aceite": {
+              "minLength": 10,
+              "mustIncludeAny": [
+                "esperado",
+                "resultado",
+                "ordenado",
+                "igual",
+                "teste"
+              ]
+            },
+            "entrega-unica": {
+              "minLength": 8,
+              "mustIncludeAny": [
+                "orden",
+                "depend",
+                "total"
+              ]
+            },
+            "fora-de-escopo": {
+              "minLength": 8,
+              "mustIncludeAny": [
+                "renome",
+                "cor",
+                "color",
+                "windows"
+              ]
+            },
+            "limite": {
+              "minLength": 4,
+              "mustIncludeAny": [
+                "30 min",
+                "30min",
+                "30 minutos",
+                "meia hora"
+              ]
+            }
+          },
+          "strategy": "deterministic"
+        },
+        "id": "l33-a2",
+        "type": "prompt_builder"
+      },
+      {
+        "data": {
+          "criteria": [
+            {
+              "id": "c-interface",
+              "text": "Interface exata: assinatura, tipos e retorno fechados"
+            },
+            {
+              "id": "c-bordas",
+              "text": "Casos de borda numerados e DECIDIDOS: ciclo, dependência inexistente e lista vazia têm comportamento definido"
+            },
+            {
+              "id": "c-allowlist",
+              "text": "Allowlist de arquivos permitidos e não-metas explícitas"
+            },
+            {
+              "id": "c-estrategia-teste",
+              "text": "Estratégia de teste concreta: quais comportamentos, em que nível, com quais casos"
+            }
+          ],
+          "responseText": "SPEC (rascunho do time): 'função ordenar_por_dependencia(tarefas: list[Tarefa]) -> list[Tarefa], retorna lista na ordem de execução. B1 (ciclo em depends_on): lançar ValueError com mensagem 'ciclo detectado'. B2 (dependência inexistente) e B3 (lista vazia): a cargo da implementação — usar bom senso. Arquivos: o time pode alterar os que julgar necessários. Estratégia de teste: testar bem.'"
+        },
+        "evaluation": {
+          "expectedVerdicts": {
+            "c-allowlist": "not_met",
+            "c-bordas": "not_met",
+            "c-estrategia-teste": "not_met",
+            "c-interface": "met"
+          },
+          "strategy": "deterministic"
+        },
+        "id": "l33-a3",
+        "type": "rubric_review"
+      }
+    ],
+    "skillIds": [
+      "pedir",
+      "decidir"
+    ],
+    "version": 1
+  },
+  "l34": {
+    "activities": [
+      {
+        "data": {
+          "items": [
+            {
+              "id": "casos-representativos",
+              "text": "Escolher os casos representativos do uso real: entradas típicas, bordas que importam e casos que já deram problema"
+            },
+            {
+              "id": "esperado-verificavel",
+              "text": "Escrever, para cada caso, o resultado esperado de forma verificável — o que exatamente conta como certo"
+            },
+            {
+              "id": "rodar-contra-atual",
+              "text": "Rodar os casos contra a versão atual e registrar as saídas reais, caso por caso"
+            },
+            {
+              "id": "taxa-por-criterio",
+              "text": "Computar a taxa por critério: quantos casos passam em cada critério, com as falhas agrupadas"
+            },
+            {
+              "id": "decidir-com-evidencia",
+              "text": "Decidir com a evidência: promover, iterar nos critérios reprovados ou cortar — e nomear a próxima ação"
+            }
+          ]
+        },
+        "evaluation": {
+          "expectedOrder": [
+            "casos-representativos",
+            "esperado-verificavel",
+            "rodar-contra-atual",
+            "taxa-por-criterio",
+            "decidir-com-evidencia"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l34-a1",
+        "type": "sort"
+      },
+      {
+        "data": {
+          "criteria": [
+            {
+              "id": "taxa-por-criterio",
+              "text": "Apresenta a taxa de acerto por critério, não uma média genérica"
+            },
+            {
+              "id": "falhas-agrupadas",
+              "text": "Agrupa as falhas por padrão (quando/onde elas acontecem)"
+            },
+            {
+              "id": "proxima-acao-nomeada",
+              "text": "Nomeia a próxima ação concreta a partir das falhas encontradas"
+            }
+          ],
+          "outputs": [
+            {
+              "id": "relatorio-taxas",
+              "text": "10 casos, 3 com falha. Por critério: fidelidade ao original 10/10 · formato exigido 9/10 (1 caso quebrou o limite de 3 linhas) · sem invenção de números 7/10 (3 casos somaram valores que não estavam no chamado). Falhas de invenção agrupadas: todas em chamados com tabela. Recomendação: não promover ainda; próxima ação: testar variação de prompt que exige citar a linha da tabela, re-rodar os 10."
+            },
+            {
+              "id": "relatorio-impressao",
+              "text": "Rodei uns 10 resumos e a maioria pareceu boa, bem escrita, no formato. Tem umas exceções mas no geral ficou ótimo, dá pra subir tranquilo que depois a gente vai ajustando."
+            }
+          ],
+          "scenario": "A feature 'resumo automático de chamados' rodou 10 casos. Duas pessoas resumiram o resultado. Só um destes relatórios serve para decidir se a feature sobe."
+        },
+        "evaluation": {
+          "betterOutputId": "relatorio-taxas",
+          "requiredCriterionIds": [
+            "taxa-por-criterio",
+            "falhas-agrupadas",
+            "proxima-acao-nomeada"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l34-a2",
+        "type": "output_comparison"
+      },
+      {
+        "data": {
+          "multiSelect": true,
+          "options": [
+            {
+              "id": "entrada-real-tipica",
+              "text": "Entrada real e representativa do uso típico ou de uma borda que importa"
+            },
+            {
+              "id": "esperado-antes-da-saida",
+              "text": "Resultado esperado escrito antes de rodar, de forma verificável"
+            },
+            {
+              "id": "criterio-objetivo",
+              "text": "Critério objetivo por caso: o que exatamente conta como aprovado"
+            },
+            {
+              "id": "casos-gerados-pelo-modelo",
+              "text": "Cases gerados pelo próprio modelo que será avaliado, quantos mais melhor"
+            },
+            {
+              "id": "esperado-apos-ver",
+              "text": "Escrever o esperado depois de ver a saída, aproveitando o que veio bom"
+            },
+            {
+              "id": "fluente-esta-ok",
+              "text": "Aceitar qualquer saída fluente e bem formatada como aprovada"
+            }
+          ],
+          "prompt": "O time está montando o conjunto de casos do eval da feature de resumo. Cada membro sugeriu uma característica. Quais delas fazem o caso servir para decidir?"
+        },
+        "evaluation": {
+          "correctOptionIds": [
+            "entrada-real-tipica",
+            "esperado-antes-da-saida",
+            "criterio-objetivo"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l34-a3",
+        "type": "choice"
+      }
+    ],
+    "skillIds": [
+      "avaliar",
+      "integrar"
+    ],
+    "version": 1
+  },
+  "l35": {
+    "activities": [
+      {
+        "data": {
+          "items": [
+            {
+              "id": "circunscrever-objetivo",
+              "text": "Circunscrever o objetivo: UMA mudança específica e verificável, não 'melhora o módulo'"
+            },
+            {
+              "id": "fechar-contrato",
+              "text": "Fechar o contrato: allowlist de arquivos, aceite verificável e limite de execução"
+            },
+            {
+              "id": "delegar-com-limite",
+              "text": "Delegar com o contrato no pedido e o limite explícito de execução"
+            },
+            {
+              "id": "conferir-contra-aceite",
+              "text": "Conferir o resultado contra o aceite: diff dentro da allowlist, critérios executados com saída registrada"
+            },
+            {
+              "id": "decidir-aceitar-retrabalhar",
+              "text": "Decidir: aceitar, ou rejeitar/retrabalhar com o motivo citado — o aceite é seu, não do agente"
+            }
+          ]
+        },
+        "evaluation": {
+          "expectedOrder": [
+            "circunscrever-objetivo",
+            "fechar-contrato",
+            "delegar-com-limite",
+            "conferir-contra-aceite",
+            "decidir-aceitar-retrabalhar"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l35-a1",
+        "type": "sort"
+      },
+      {
+        "data": {
+          "contextOptions": [
+            {
+              "id": "objetivo-circunscrito",
+              "text": "Objetivo circunscrito: UMA mudança específica e verificável ('extrair validação preservando comportamento'), não 'deixa bonito'"
+            },
+            {
+              "id": "allowlist-arquivos",
+              "text": "Allowlist de arquivos que o agente pode tocar — e o resto explicitamente intocável"
+            },
+            {
+              "id": "aceite-verificavel",
+              "text": "Aceite verificável: critérios executáveis com resultado esperado (suíte + casos nomeados)"
+            },
+            {
+              "id": "ponto-de-checagem",
+              "text": "Ponto de checagem humana: onde a execução para e um humano decide antes de continuar"
+            },
+            {
+              "id": "limite-execucao",
+              "text": "Limite de execução: até onde o agente vai numa tacada (passos, tempo, escopo) antes de retornar"
+            },
+            {
+              "id": "nome-do-modelo",
+              "text": "O nome e a versão do modelo/agente usado na delegação"
+            },
+            {
+              "id": "tom-do-pedido",
+              "text": "Um tom mais educado no pedido, para o agente se esforçar mais"
+            }
+          ],
+          "prompt": "Pedido de delegação (colega → agente): 'Refatora o módulo de pedidos e deixa bonito. Confia, você faz melhor do que eu.' · O agente respondeu 'Deixa comigo!' e começou. Meia hora depois: 9 arquivos alterados, incluindo testes existentes, e um relatório começando com 'Pronto! Tudo funcionando'."
+        },
+        "evaluation": {
+          "optionalContextIds": [
+            "limite-execucao"
+          ],
+          "requiredContextIds": [
+            "objetivo-circunscrito",
+            "allowlist-arquivos",
+            "aceite-verificavel",
+            "ponto-de-checagem"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l35-a2",
+        "type": "missing_context"
+      },
+      {
+        "data": {
+          "criteria": [
+            {
+              "id": "c-dentro-da-allowlist",
+              "text": "Diff confinado à allowlist combinada (aqui: nenhum contrato foi combinado, e o diff toca testes existentes)"
+            },
+            {
+              "id": "c-evidencia-executavel",
+              "text": "Afirmações de verificação vêm com evidência executável: comando citado e saída registrada"
+            },
+            {
+              "id": "c-escopo-relatado-fiel",
+              "text": "O relatório descreve fielmente o escopo do que foi feito ('o módulo inteiro', 9 arquivos) sem inflar a conclusão"
+            },
+            {
+              "id": "c-exito-nao-autodeclarado",
+              "text": "O veredito de sucesso não é autodeclarado pelo executor — é conferido por quem assina o aceite"
+            }
+          ],
+          "responseText": "Relatório do agente: 'Pronto! Refatorei o módulo inteiro de pedidos, ficou muito mais limpo. Todos os testes passam, está tudo funcionando perfeitamente, pode dar merge com confiança. ✔' · Fatos verificáveis: o diff toca 9 arquivos, entre eles 2 arquivos de teste existentes; nenhum comando ou saída de teste aparece no relatório; nenhum critério de aceite havia sido combinado antes."
+        },
+        "evaluation": {
+          "expectedVerdicts": {
+            "c-dentro-da-allowlist": "not_met",
+            "c-escopo-relatado-fiel": "partial",
+            "c-evidencia-executavel": "not_met",
+            "c-exito-nao-autodeclarado": "not_met"
+          },
+          "strategy": "deterministic"
+        },
+        "id": "l35-a3",
+        "type": "rubric_review"
+      }
+    ],
+    "skillIds": [
+      "decidir",
+      "codificar"
+    ],
+    "version": 1
   }
 }
 
-export const literacyCorpusVersion = "2026-09-30.1"
+export const literacyCorpusVersion = "2026-10-17.1"

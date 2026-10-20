@@ -1,0 +1,59 @@
+# Citation carry-over v108 -> v109 (interval dccc81f6..a116c1ba = W5 #724 + v108 merge)
+# files cited by v108 observation notes: 7; overlap with delta files: ['engines/codexdojo-os-prototype/src/styles/journey.css', 'engines/dojoToday/src/styles.css']
+# W5 deltas are additive --ads-* alias declarations + Progress HUD DESIGN.md sections + hud-alias specs;
+# claim/boundary strings re-located first-hand below for every overlapping or material file.
+
+dojotoday-active-unit-guidance :: learner-understands-guidance-only :: OK   :: O jogo emite evidência bruta; um verificador independente decide o gate
+dojotoday-active-unit-guidance :: learner-understands-guidance-only :: OK   :: quem avalia a evidência é o verificador independente, não eu
+dojotoday-active-unit-guidance :: learner-understands-guidance-only :: OK   :: apenas mostra o scheduler — não marca mastered
+dojotoday-read-only-boundary :: regeneration-preserves-read-only-boundary :: OK   :: Return the dojoToday snapshot dict derived from the canonical state
+dojotoday-returning-next-day :: learner-understands-no-eval-carryover :: OK   :: s guidance — o retorno diário lê o scheduler e as revisões devidas, sem avaliação carryover (
+literacy-corridor-gate-retry :: learner-understands-retry-without-internal-language :: OK   :: nada é perdido — leia o feedback, peça uma dica e tente de novo
+literacy-corridor-gate-retry :: learner-understands-retry-without-internal-language :: OK   :: Tentar novamente
+literacy-corridor-gate-retry :: learner-understands-retry-without-internal-language :: OK   :: product readiness (claims)
+literacy-corridor-happy-path :: learner-names-next-action-after-cp-03 :: OK   :: Continuar: Desafio do Módulo {n}
+literacy-corridor-happy-path :: learner-names-next-action-after-cp-03 :: OK   :: VILA LUME · Desafio do Módulo {n} · atividade {i} de {t}
+literacy-corridor-happy-path :: learner-names-next-action-after-cp-03 :: OK   :: product readiness (claims)
+literacy-corridor-review-window :: learner-distinguishes-review-from-new-content :: OK   :: Por que as revisões voltam
+literacy-corridor-review-window :: learner-distinguishes-review-from-new-content :: OK   :: é revisão, não conteúdo novo
+literacy-corridor-review-window :: learner-distinguishes-review-from-new-content :: OK   :: Fazer a revisão não muda sua posição na trilha
+literacy-corridor-review-window :: learner-distinguishes-review-from-new-content :: OK   :: Revisão pendente
+literacy-corridor-review-window :: learner-distinguishes-review-from-new-content :: OK   :: Revisão pendente agora:
+literacy-corridor-review-window :: learner-distinguishes-review-from-new-content :: OK   :: product readiness (claims)
+literacy-happy-path :: learner-can-name-next-action :: OK   :: VILA LUME · MISSÃO CONCLUÍDA
+literacy-happy-path :: learner-can-name-next-action :: OK   :: Continuar: Desafio do Módulo {n}
+literacy-happy-path :: learner-can-name-next-action :: OK   :: Continue pela próxima lição do bairro, faça o Desafio do Módulo quando ele abrir, ou complete a revi
+literacy-happy-path :: learner-can-name-next-action :: OK   :: product readiness (claims)
+literacy-resume :: learner-understands-device-boundary :: OK   :: Your onboarding and lesson progress are stored locally in this browser... There is no account or cro
+literacy-resume :: learner-understands-device-boundary :: OK   :: sempre no mesmo aparelho
+literacy-resume :: learner-understands-device-boundary :: OK   :: product readiness (claims)
+literacy-retry :: learner-understands-retry :: OK   :: Tentar novamente
+literacy-retry :: learner-understands-retry :: OK   :: product readiness (claims)
+minitown-explore-only :: experimental-boundary-is-understood :: OK   :: ; facilitator-guide.md:217-223 §Prepare — 
+minitown-explore-only :: experimental-boundary-is-understood :: OK   :: product readiness (claims)
+os-literacy-hosted-mission :: learner-can-state-result-and-next-action :: OK   :: Não há conta; o progresso fica neste aparelho. Concluída no host não é domínio verificado
+os-literacy-hosted-mission :: learner-can-state-result-and-next-action :: OK   :: Escolha IA Prática ou Dev. Sem conta; o progresso fica neste dispositivo
+os-literacy-returning-device :: learner-understands-literacy-continuity-boundary :: OK   :: The OS saves supported setup and mission state in this browser profile... there is no account or cro
+os-onboarding-track-choice :: learner-can-explain-track-choice :: OK   :: Leva menos de um minuto. Escolha IA Prática ou Dev. Sem conta; o progresso fica neste dispositivo
+os-renderer-accessibility-recovery :: facilitator-can-name-escalation-threshold :: OK   :: ; facilitator-guide.md:292 — tabela de recuperação WebGL (
+os-returning-device :: learner-understands-local-boundary :: OK   :: o progresso fica neste dispositivo
+os-returning-recovery :: facilitator-explains-local-state-loss :: OK   :: If a hosted mission does not load, retry once. If verification is unavailable...
+os-verification-recovery :: facilitator-can-recover-without-repository-intervention :: OK   :: Evidência bruta · não verificada
+os-voxel-hosted-missions :: learner-distinguishes-evidence-from-mastery :: OK   :: Conclusão não é domínio
+os-voxel-hosted-missions :: learner-distinguishes-evidence-from-mastery :: OK   :: Evidência bruta · não verificada
+os-voxel-returning-device :: learner-understands-voxel-continuity-boundary :: OK   :: O retorno funciona só no mesmo navegador e aparelho
+pixelquest-encounter-evidence :: learner-distinguishes-evidence-from-mastery :: OK   :: That record is raw evidence, not verifier acceptance or mastery
+pixelquest-encounter-evidence :: learner-distinguishes-evidence-from-mastery :: OK   :: product readiness (claims)
+pixelquest-evidence-recovery :: replay-recovers-evidence-without-state-promotion :: OK   :: Your supported next action is to hand the record to the independent verifier
+pixelquest-evidence-recovery :: replay-recovers-evidence-without-state-promotion :: OK   :: do not treat the replay itself as validated
+pixelquest-evidence-recovery :: replay-recovers-evidence-without-state-promotion :: OK   :: product readiness (claims)
+pixelquest-evidence-recovery :: missing-evidence-does-not-count-as-completion :: OK   :: A screenshot or success message is not a substitute. Stop and ask a facilitator when the replay stil
+pixelquest-evidence-recovery :: missing-evidence-does-not-count-as-completion :: OK   :: product readiness (claims)
+pixelquest-returning-evidence-handoff :: no-false-mastery-on-return :: OK   :: product readiness (claims)
+voxel-accessible-renderer :: accessible-projection-preserves-supported-interaction :: OK   :: use the game
+voxel-accessible-renderer :: accessible-projection-preserves-supported-interaction :: OK   :: product readiness (claims)
+voxel-accessible-renderer :: unsupported-renderer-has-honest-exit :: OK   :: Hand valid raw evidence to the independent verifier, or exit at that unsupported boundary without cl
+voxel-accessible-renderer :: unsupported-renderer-has-honest-exit :: OK   :: product readiness (claims)
+voxel-standalone-loop :: learner-understands-game-specific-scope :: OK   :: A passing game validates only that declared package; it says nothing about its siblings and does not
+voxel-standalone-loop :: learner-understands-game-specific-scope :: OK   :: product readiness (claims)
+voxel-standalone-return-reentry :: no-false-mastery-on-return :: OK   :: product readiness (claims)
