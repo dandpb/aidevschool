@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { App } from "../../src/app/App";
 import { MAP_INITIAL_LESSON_ID } from "../../src/domain/progress";
 import { makeServices } from "../helpers";
@@ -103,5 +103,100 @@ describe("jornada Dev opcional (AID-3584) — fluxo no app", () => {
     // cursor espelhado da jornada ativa).
     expect(await screen.findByTestId("lesson-intro")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /Quando usar IA e quando não usar/i }));
+  });
+});
+
+describe("?journey= no boot + volta para /escola/ (AID-3705)", () => {
+  afterEach(() => {
+    window.localStorage.clear();
+    window.history.replaceState(null, "", "/");
+  });
+
+  it("?journey=dev seta Dev como jornada inicial e persiste", async () => {
+    window.history.replaceState(null, "", "/?journey=dev");
+    const { services, stateStore } = seedReturningLearner();
+    render(<App services={services} />);
+
+    await screen.findByTestId("home-screen");
+    expect(screen.getByTestId("journey-switch-dev")).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByTestId("journey-switch-ia_pratica")).toHaveAttribute(
+      "aria-pressed",
+      "false",
+    );
+    expect(screen.getByTestId("open-map")).toHaveTextContent("Explorar Jornada Dev");
+
+    const saved = await stateStore.loadProgress();
+    expect(saved?.journeys?.active).toBe("dev");
+    expect(saved?.lessonStatus.l15).toBe("available");
+    // Status IA preservado (mesma semântica do switch manual).
+    expect(saved?.lessonStatus[MAP_INITIAL_LESSON_ID]).toBe("available");
+  });
+
+  it("?journey=ia ativa a IA para retornante que estava em Dev (cursor Dev preservado)", async () => {
+    window.history.replaceState(null, "", "/?journey=ia");
+    const { services, stateStore } = seedReturningLearner();
+    await services.useCases.switchJourney("dev");
+    render(<App services={services} />);
+
+    await screen.findByTestId("home-screen");
+    expect(screen.getByTestId("journey-switch-ia_pratica")).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByTestId("open-map")).toHaveTextContent("Explorar Vila Lume");
+
+    const saved = await stateStore.loadProgress();
+    expect(saved?.journeys?.active).toBe("ia_pratica");
+    expect(saved?.journeys?.current?.dev).toBe("l15");
+  });
+
+  it("param inválido é ignorado: retornante em Dev permanece em Dev", async () => {
+    window.history.replaceState(null, "", "/?journey=banana");
+    const { services, stateStore } = seedReturningLearner();
+    await services.useCases.switchJourney("dev");
+    render(<App services={services} />);
+
+    await screen.findByTestId("home-screen");
+    expect(screen.getByTestId("journey-switch-dev")).toHaveAttribute("aria-pressed", "true");
+
+    const saved = await stateStore.loadProgress();
+    expect(saved?.journeys?.active).toBe("dev");
+  });
+
+  it("sem param: comportamento atual — retornante em Dev permanece em Dev", async () => {
+    window.history.replaceState(null, "", "/");
+    const { services, stateStore } = seedReturningLearner();
+    await services.useCases.switchJourney("dev");
+    render(<App services={services} />);
+
+    await screen.findByTestId("home-screen");
+    expect(screen.getByTestId("journey-switch-dev")).toHaveAttribute("aria-pressed", "true");
+
+    const saved = await stateStore.loadProgress();
+    expect(saved?.journeys?.active).toBe("dev");
+  });
+
+  it("?journey=dev não afeta aprendiz sem onboarding completo", async () => {
+    window.history.replaceState(null, "", "/?journey=dev");
+    const { services, stateStore } = makeServices();
+    render(<App services={services} />);
+
+    expect(await screen.findByTestId("onboarding-screen")).toBeInTheDocument();
+
+    // O param só vale para aprendiz onboarded: nada é persistido no boot.
+    const saved = await stateStore.loadProgress();
+    expect(saved?.journeys?.active).toBeUndefined();
+  });
+
+  it("Home linka de volta para /escola/ no rodapé (same-origin, nada no header)", async () => {
+    const { services } = seedReturningLearner();
+    render(<App services={services} />);
+
+    await screen.findByTestId("home-screen");
+    const link = screen.getByTestId("escola-link");
+    expect(link).toHaveAttribute("href", "/escola/");
+    expect(link).toHaveTextContent("Escola de IA · ver as duas jornadas");
+    // Same-origin: href relativo resolve contra o origin atual.
+    const resolved = new URL(link.getAttribute("href") ?? "", window.location.origin);
+    expect(resolved.origin).toBe(window.location.origin);
+    // D2: link discreto — fora do header/loop de aprendizado.
+    expect(document.querySelector(".product-bar a[href='/escola/']")).toBeNull();
   });
 });

@@ -280,6 +280,11 @@ export function HomeScreen({
       )}
 
       <footer className="screen-footer">
+        {/* AID-3705 (D2): porta de volta à entrada /escola/ — link discreto no
+        rodapé da Home, fora do loop de aprendizado (nada no header). */}
+        <a className="btn btn-link" data-testid="escola-link" href="/escola/">
+          Escola de IA · ver as duas jornadas
+        </a>
         <button
           type="button"
           className="btn btn-link"
