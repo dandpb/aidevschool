@@ -125,10 +125,21 @@ referência do par mastery (§7.1):
 | Atrasada | `--ads-attention-text` / `--ads-attention-bg` | par de alerta local `--error-text`/`--error-bg` |
 
 Tier de acessibilidade do HUD: **B9** (§7/§4 do contrato — AAA 7:1 texto,
-3:1 não-texto; B2 AA continua o piso geral). Anatomia canônica de 4 papéis,
-testids `hud-streak`/`hud-progress`/`hud-mastery-badge`/`hud-review-due` e
-responsividade 375/768/1280 chegam na W7 (AID-5010) — até lá os tokens são
-declaração+mapping, sem consumidores. **AID-5177/W6 — retune AAA aplicado**
+3:1 não-texto; B2 AA continua o piso geral). **AID-5190/W7 — anatomia
+aplicada** (contrato §7.2/§7.3): os 4 papéis canônicos têm testids estáveis
+na HUD diária (HomeScreen) e leitura textual sempre adjacente ao medidor:
+
+| Papel (testid) | Onde vive | Anatomia |
+| --- | --- | --- |
+| `hud-streak` | stat "Sequência" do `stats-row` (wrapper; o span interno mantém `streak-value`) | texto "N dias" + glifo 🔥 `aria-hidden` |
+| `hud-progress` | `.progress-track` da trilha (HomeScreen) | `role="progressbar"` + `aria-valuetext "N% concluído"` + leitura textual "X de Y lições concluídas" adjacente |
+| `hud-mastery-badge` | resumo "X de Y lições concluídas ✅" da trilha (wrapper do `track-progress`) | cor + texto + glifo (B3); bounded context local — máximo `concluídas`, nunca mastered (§7.4) |
+| `hud-review-due` | linha "Revisão atrasada N dias / devida hoje" do `card-review` | reason + dueIn pt-BR derivado de `nextReviewAt` (`src/domain/reviewDue.ts`) |
+| `hud-live-region` | span `sr-only role="status"` no `stats-row` | anuncia sequência/revisões 1×/sessão e mudanças de streak (§7.2) |
+
+Responsividade 375/768/1280 (§7.3): stack vertical abaixo de 768px, alvos
+≥44px (B6) — verificados em `playwright/hud-contract.spec.ts` com screenshots
+por breakpoint. **AID-5177/W6 — retune AAA aplicado**
 (contrato §4 B9a/B9b): `--muted` #657089→#454f6a, `--muted-strong`
 #4f5a75→#3f4a66, par stat-done `--success-text` #14734d→#0d5c3b (fundo
 `#e8f8ef` inalterado) e **extremo do gradiente do medidor** `#0ea5e9`→

@@ -391,6 +391,32 @@
   border-radius: 999px;
   background: #ded8cd;
 }
+/* W7 AID-5190 (contrato §7.2 — ProgressMeter): leitura textual "X/Y <termo>"
+   sempre adjacente à barra (nunca só barra). Cores herdadas do par
+   --ads-progress-text/--ads-progress-muted (§7.1) — nenhum valor novo. */
+.hub-meter-read {
+  margin: -4px 0 12px;
+  color: var(--journey-muted);
+  font-size: 0.78rem;
+}
+.hub-meter-read strong {
+  color: var(--journey-ink);
+}
+/* W7 AID-5190 (contrato §7.2 — MasteryBadge nos grids): cor + texto + glifo
+   (B3) nos nós verified/canonical-mastery; par §7.1 mastery via tokens
+   locais — nenhum valor novo. */
+.map-mastery-badge {
+  display: inline-block;
+  margin: 2px 0;
+  padding: 2px 8px;
+  border: 1px solid var(--journey-ink);
+  border-radius: 999px;
+  background: var(--school-paper);
+  color: var(--journey-ink);
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
 .hub-mission-progress span {
   display: block;
   height: 100%;

@@ -20,7 +20,10 @@ test("readiness dojotoday-returning-next-day: schedule updates across days witho
   await expect(page.getByRole("heading", { name: "Sua lição de hoje" })).toBeVisible();
   await expect(page.locator(".hero-date")).toContainText("segunda-feira, 7 de setembro");
   await expect(page.getByText("3 dias de sequência")).toBeVisible();
-  await expect(page.getByText("overdue 44d").first()).toBeVisible();
+  // AID-5190/W7 (contrato §7.2 — ReviewDue): a HUD apresenta o dueIn do
+  // substrate em pt-BR legível ("overdue 44d" → "atrasada 44 dias"); os
+  // fixtures continuam emitindo o formato de máquina do scheduler.
+  await expect(page.getByText("atrasada 44 dias").first()).toBeVisible();
   // Day-N queue: the overdue GATEKEEPER review AND the U2 review due today.
   await expect(page.getByRole("heading", { name: "Retome por aqui" })).toBeVisible();
   await expect(
@@ -36,9 +39,9 @@ test("readiness dojotoday-returning-next-day: schedule updates across days witho
   await expect(page.getByRole("heading", { name: "Sua lição de hoje" })).toBeVisible();
   await expect(page.locator(".hero-date")).toContainText("terça-feira, 8 de setembro");
   await expect(page.getByText("4 dias de sequência")).toBeVisible();
-  await expect(page.getByText("overdue 45d").first()).toBeVisible();
-  await expect(page.getByText("overdue 44d")).toHaveCount(0);
-  await expect(page.getByText("due hoje")).toHaveCount(0);
+  await expect(page.getByText("atrasada 45 dias").first()).toBeVisible();
+  await expect(page.getByText("atrasada 44 dias")).toHaveCount(0);
+  await expect(page.getByText("devida hoje")).toHaveCount(0);
 
   // The active unit stays consistent with the track across the day change.
   await expect(page.getByText("Sua próxima missão é")).toBeVisible();
