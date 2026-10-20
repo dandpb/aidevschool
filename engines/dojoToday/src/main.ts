@@ -402,7 +402,11 @@ function wireInteractions(a: TodaySnapshot["activeUnit"]): void {
 
   const ask = async () => {
     const question = q.value.trim();
-    if (!question) return;
+    if (!question) {
+      setReply("Por favor, escreva uma pergunta antes de enviar.", true);
+      q.focus();
+      return;
+    }
     const cfg = loadConfig();
     send.disabled = true;
     // W2 §2.3-6 (AID-1089): ação assíncrona — controle desabilita + aria-busy;
