@@ -49,3 +49,6 @@
 ## 2026-10-25 - Context-Aware Input Attributes
 **Learning:** Inputs accepting system strings like API keys (`sk-...`) or model names (`gpt-4o-mini`) trigger noisy red squiggles from native browser spellcheckers, degrading visual polish. Additionally, generic text inputs for URLs fail to trigger the optimized virtual keyboard layout (with `.com` and `/` keys) on mobile devices.
 **Action:** Always apply `spellcheck="false"` to inputs that accept API keys, model names, or system IDs. For URL inputs, explicitly set `type="url"` and `autocomplete="url"` to ensure optimal virtual keyboard invocation and browser autocomplete behavior.
+## 2026-10-25 - Resubmitting with fresh branch to update PR body
+**Learning:** When resubmitting PRs to resolve `countersign-gate` failures (such as missing `Provenance:` trailers), the `submit` tool does not update the body description of an existing PR. Pass a fresh branch name to `submit` so a new PR is opened with the updated description containing the `Provenance:` trailer.
+**Action:** Always use a fresh branch name when calling `submit` to fix missing `Provenance:` trailers.
