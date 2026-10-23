@@ -156,25 +156,25 @@ function missionCard(a: TodaySnapshot["activeUnit"]): string {
             <button id="soc-send" type="button" class="btn btn-primary socrates-send" data-testid="submit-attempt">Perguntar</button>
           </div>
           <button id="soc-config-btn" type="button" class="link-btn" aria-expanded="false" aria-controls="soc-config" aria-label="Configurar assistente (opcional)"><span aria-hidden="true">⚙️</span> Configurar assistente (opcional)</button>
-          <div id="soc-config" class="socrates-config" hidden>
+          <form id="soc-config" class="socrates-config" hidden>
             <p class="muted socrates-privacy">
               Experimental. Sua chave fica só neste navegador e vai apenas para o endpoint
               configurado. Conversas não são salvas. Opcional e off por padrão.
             </p>
             <label for="soc-baseurl">Endpoint base (compatível com OpenAI)
-              <input id="soc-baseurl" type="text" placeholder="https://api.openai.com/v1" />
+              <input id="soc-baseurl" type="url" spellcheck="false" placeholder="https://api.openai.com/v1" />
             </label>
             <label for="soc-apikey">Chave API
-              <input id="soc-apikey" type="password" placeholder="sk-…" />
+              <input id="soc-apikey" type="password" spellcheck="false" placeholder="sk-…" />
             </label>
             <label for="soc-model">Modelo
-              <input id="soc-model" type="text" placeholder="gpt-4o-mini" />
+              <input id="soc-model" type="text" spellcheck="false" placeholder="gpt-4o-mini" />
             </label>
             <div class="socrates-config-actions">
-              <button id="soc-save" type="button" class="btn btn-primary">Salvar</button>
+              <button id="soc-save" type="submit" class="btn btn-primary">Salvar</button>
               <button id="soc-clear" type="button" class="link-btn">Limpar</button>
             </div>
-          </div>
+          </form>
           <!-- W3 §4.3-4 (AID-1096): testid canônico do papel feedback-panel do loop
                (docs/design/design-foundations.md §3.4 — mapeamento dojoToday). -->
           <div
@@ -321,7 +321,6 @@ function wireInteractions(a: TodaySnapshot["activeUnit"]): void {
   const baseInput = document.getElementById("soc-baseurl") as HTMLInputElement | null;
   const keyInput = document.getElementById("soc-apikey") as HTMLInputElement | null;
   const modelInput = document.getElementById("soc-model") as HTMLInputElement | null;
-  const saveBtn = document.getElementById("soc-save") as HTMLButtonElement | null;
   const clearBtn = document.getElementById("soc-clear") as HTMLButtonElement | null;
   const reply = document.getElementById("soc-reply") as HTMLElement | null;
   if (!q || !send || !configBtn || !configPanel || !reply) return;
@@ -351,7 +350,8 @@ function wireInteractions(a: TodaySnapshot["activeUnit"]): void {
     }
     fill();
   });
-  saveBtn?.addEventListener("click", () => {
+  configPanel?.addEventListener("submit", (e) => {
+    e.preventDefault();
     saveConfig({
       baseUrl: baseInput?.value.trim() || "https://api.openai.com/v1",
       apiKey: keyInput?.value.trim() || "",
