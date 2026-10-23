@@ -321,7 +321,6 @@ function wireInteractions(a: TodaySnapshot["activeUnit"]): void {
   const baseInput = document.getElementById("soc-baseurl") as HTMLInputElement | null;
   const keyInput = document.getElementById("soc-apikey") as HTMLInputElement | null;
   const modelInput = document.getElementById("soc-model") as HTMLInputElement | null;
-  const saveBtn = document.getElementById("soc-save") as HTMLButtonElement | null;
   const clearBtn = document.getElementById("soc-clear") as HTMLButtonElement | null;
   const reply = document.getElementById("soc-reply") as HTMLElement | null;
   if (!q || !send || !configBtn || !configPanel || !reply) return;
