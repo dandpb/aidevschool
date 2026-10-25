@@ -36,10 +36,10 @@ const l16 = lessons.find((lesson) => lesson.id === "l16");
 if (!l16) throw new Error("l16 ausente do read model");
 if (l16.version !== 4)
   throw new Error(`l16 deveria estar em v4 após o bump (está v${l16.version})`);
-// Tripwire de frescor (atualizado pela onda W2 dev, PR AID-5046): a prova do
+// Tripwire de frescor (atualizado pela onda AID-5216, l27 v3→v4): a prova do
 // caminho real do bump r2.1 continua válida sob o contentVersion corrente.
-if (contentVersion !== "2026-10-17.1") {
-  throw new Error(`contentVersion esperado 2026-10-17.1 (é ${contentVersion})`);
+if (contentVersion !== "2026-10-25.1") {
+  throw new Error(`contentVersion esperado 2026-10-25.1 (é ${contentVersion})`);
 }
 
 const MIGRATION_NOW = new Date("2026-09-30T13:30:00.000Z");

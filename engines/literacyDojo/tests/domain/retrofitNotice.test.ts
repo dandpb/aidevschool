@@ -16,6 +16,9 @@ import {
  * - O3-C2 (spec AID-1220/B3, ruling AID-640): l08–l13 sob 2026-09-10.2.
  * - r2.1 AID-3453 (content-contract regra 3): l16/l27/l28 sob 2026-09-30.1
  *   (critérios revisados — conclusão anterior continua valendo).
+ * - AID-5216 (achado F1 da auditoria AID-641 §0.2): l27 v3→v4 relaxa as
+ *   famílias de keyword mustIncludeAny de l27-a2 — sem atividades novas,
+ *   entrada vazia registra a onda sem disparar aviso.
  */
 const LAUNCHED_WAVES: Record<string, readonly string[]> = {
   "2026-09-02.3": ["l01", "l02", "l03", "l04", "l05", "l06", "l07"],
@@ -24,6 +27,8 @@ const LAUNCHED_WAVES: Record<string, readonly string[]> = {
   "2026-09-30.1": ["l16", "l27", "l28"],
   // Onda W2 dev (AID-5011 r1 / PR AID-5046): aditiva (l33–l35), sem retrofit.
   "2026-10-17.1": [],
+  // AID-5216: relaxação de aceitação em l27-a2 (sem atividades novas).
+  "2026-10-25.1": [],
 };
 
 function statuses(completed: string[]): Record<string, LessonStatus> {

@@ -22,6 +22,13 @@ export const RETROFITTED_LESSONS_BY_CONTENT_VERSION: Record<string, readonly str
   // novas; nenhuma lição existente ganhou atividades). Entrada vazia
   // registra a onda sem disparar aviso para nenhum learner.
   "2026-10-17.1": [],
+  // AID-5216 (achado F1 da auditoria AID-641 §0.2): l27 v3 → v4 amplia as
+  // famílias de keyword mustIncludeAny de l27-a2 (erro e
+  // esperado-vs-observado) para aceitar colagem realista na 1ª tentativa.
+  // Relaxação de aceitação sem atividades novas — entrada vazia registra a
+  // onda sem disparar aviso (o texto do aviso fala de "atividades novas",
+  // que não é o caso desta onda).
+  "2026-10-25.1": [],
 };
 
 /** S1 — linha adicional do card "Revisão pendente" do Home (spec §3, verbatim). */
