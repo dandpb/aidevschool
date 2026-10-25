@@ -37,7 +37,19 @@ function stable(value) {
     return `{${Object.entries(value).sort(([a], [b]) => a.localeCompare(b))
       .map(([key, item]) => `${pyAsciiEscaped(JSON.stringify(key))}:${stable(item)}`).join(",")}}`;
   }
-  return pyAsciiEscaped(JSON.stringify(value));
+  // JSON-parsed bodies (the only inputs with Python digest parity) never
+  // contain functions, symbols, bigints, or explicit undefined; JSON.stringify
+  // returns undefined or throws for those. Totalize the leaf so a hostile
+  // in-process record still gets a FAIL receipt instead of a TypeError with
+  // no receipt (AID-3717 key-coercion class, AID-3738 sweep).
+  let json;
+  try {
+    json = JSON.stringify(value);
+  } catch {
+    json = undefined;
+  }
+  if (json === undefined) json = JSON.stringify(String(value));
+  return pyAsciiEscaped(json);
 }
 
 function digest(record) {
@@ -1165,7 +1177,11 @@ function validateStructure(record) {
   if (typeof record.ts !== "string"
     || !/^\d{4}-\d{2}-\d{2}[Tt ].*(?:[Zz]|[+-]\d{2}:?\d{2})$/.test(record.ts)
     || !Number.isFinite(Date.parse(record.ts))) {
-    errors.push(`evidence ts '${record.ts}' is not a valid timezone-aware ISO-8601 timestamp`);
+    // Python f-string coercion never throws; JS template literals call
+    // ToString, which throws on {toString: null}. Echo non-string ts through
+    // pyRepr so an invalid ts still yields a FAIL receipt, never a throw.
+    const rawTs = typeof record.ts === "string" ? record.ts : pyRepr(record.ts);
+    errors.push(`evidence ts '${rawTs}' is not a valid timezone-aware ISO-8601 timestamp`);
   }
   if ("verifier" in record) {
     errors.push(
@@ -1188,7 +1204,14 @@ function validateIdentity(record) {
     && (typeof attemptId !== "string" || attemptId === "")) {
     errors.push("attempt_id must be a non-empty string when present");
   }
-  const spec = GAME_SPECS[record.game];
+  // Parity with the canonical Python bridge (`GAME_SPECS.get(game) if
+  // isinstance(game, str) else None`): the typeof guard must short-circuit
+  // BEFORE the spec lookup. GAME_SPECS[record.game] coerces the key
+  // (["KV WAREHOUSE"] passed as "KV WAREHOUSE" -> PASS with a coerced receipt
+  // echo) and throws a TypeError for {toString: null} instead of failing
+  // closed with a receipt (AID-3717 key-coercion class, AID-3738 sweep).
+  const game = record.game;
+  const spec = typeof game === "string" ? GAME_SPECS[game] : undefined;
   if (spec === undefined) {
     errors.push("game is not supported");
     return errors;
@@ -1223,16 +1246,26 @@ function verifyTeachingGameEvidence(record) {
     errors.push("producer pass claim disagrees with the fixed independent evaluator");
   }
   const passed = independentlyPassed && errors.length === 0;
+  // str(record.get(field, "")) in Python never throws; String() throws on
+  // {toString: null} and would turn a FAIL verdict into a 500 without a
+  // receipt. Safe echo keeps every coerced-identity value inside a receipt.
+  const echoString = (value) => {
+    try {
+      return String(value ?? "");
+    } catch {
+      return "";
+    }
+  };
   const receipt = {
     schema_version: 1,
     verdict: passed ? "PASS" : "FAIL",
     context_isolated: true,
     source: "independent-teaching-game-verifier",
     evidence_digest: digest(record ?? {}),
-    unit_id: String(record?.unit_id ?? ""),
-    project: String(record?.project ?? ""),
-    scenario_id: String(record?.scenario_id ?? ""),
-    game: String(record?.game ?? ""),
+    unit_id: echoString(record?.unit_id),
+    project: echoString(record?.project),
+    scenario_id: echoString(record?.scenario_id),
+    game: echoString(record?.game),
     producer_pass_claim: producerClaim,
     independent_pass: passed,
     errors,
@@ -1616,8 +1649,15 @@ function literacyFailedVerdict(evidence, errors) {
   const rawScore = raw.score;
   const score = typeof rawScore === "number" && !Number.isNaN(rawScore) ? rawScore : null;
   const producerPass = raw.pass;
-  // str(raw.get(field) or "") — Python falsy producer values bind to "".
-  const orEmpty = (value) => String(value ? value : "");
+  // str(raw.get(field) or "") in Python never throws; String() throws on
+  // {toString: null} while building the FAIL receipt (no receipt at all).
+  const orEmpty = (value) => {
+    try {
+      return String(value ? value : "");
+    } catch {
+      return "";
+    }
+  };
   return {
     verdict: "FAIL",
     context_isolated: true,
