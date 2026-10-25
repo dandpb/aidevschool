@@ -70,6 +70,56 @@ test("L4 resolve: picking salted resolves the forced collision and emits a passi
   await page.screenshot({ path: ".logs/smoke-L4-cleared.png" })
 })
 
+test("L3 collision counter: HUD collisions-so-far tracks actual collisions during predicting", async ({
+  page,
+}) => {
+  const consoleLines: string[] = []
+  page.on("console", (msg) => consoleLines.push(msg.text()))
+  await page.goto("/")
+
+  await page.evaluate(() => window.__wormhole?.game.loadLevel("L3"))
+  await expect(page.getByTestId("hud-title")).toContainText("L3")
+  await page.getByTestId("start").click()
+
+  // Deliberately pessimistic play: predict "collide" for EVERY url, so the count of
+  // *predicted* collisions grows every step. The HUD counter and the wave metrics must
+  // track *actual* collisions only — the first url can never collide with an empty map,
+  // so from step 1 on the two counts differ deterministically (negative control).
+  const urlCount = 6
+  for (let i = 0; i < urlCount; i++) {
+    const phase = await page.evaluate(() => window.__wormhole?.game.snapshot.phase)
+    expect(phase).toBe("predicting")
+
+    const actualSoFar = await page.evaluate(
+      () =>
+        window.__wormhole?.game.snapshot.collisionPredictions.filter((p) => p.actualCollision)
+          .length ?? -1,
+    )
+    await expect(page.getByTestId("collisions-so-far")).toHaveText(
+      `colisões detectadas: ${actualSoFar}`,
+    )
+    if (i >= 1) expect(actualSoFar).toBeLessThan(i) // counter is NOT counting predictions
+
+    await page.getByTestId("predict-collide").click()
+  }
+
+  // All-true predictions on a wave with a single forced collision stay below the gate.
+  await expect(page.getByTestId("hud-status")).toContainText("ainda não atendido")
+  const record = collectEvidence(consoleLines).find((r) => r.scenario_id === "wormhole-L3")
+  expect(record).toBeDefined()
+  expect(record?.pass).toBe(false)
+  expect(record?.metrics.collision_predictions).toBe(6)
+  const actualTotal = await page.evaluate(
+    () =>
+      window.__wormhole?.game.snapshot.collisionPredictions.filter((p) => p.actualCollision)
+        .length ?? -1,
+  )
+  expect(record?.metrics.collisions_present).toBe(actualTotal)
+  expect(record?.metrics.collisions_present).toBeLessThan(6)
+
+  await page.screenshot({ path: ".logs/smoke-L3-collision-counter.png" })
+})
+
 test("renders an actual WebGL canvas (not a blank shell)", async ({ page }) => {
   await page.goto("/")
   const hasContext = await page.evaluate(() => {

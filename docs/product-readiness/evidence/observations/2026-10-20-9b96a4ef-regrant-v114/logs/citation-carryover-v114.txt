@@ -1,0 +1,53 @@
+# Citation carry-over v114 (v113/v111/v46 observation notes -> tree 9b96a4ef = v113-branch + main 855dd9fb)
+
+== literacy-corridor-gate-retry
+   [OK ] docs/product-readiness/evidence/observations/2026-09-16-cabdc4a1-claims-regrant-v88/observations.json :: exact :: nada é perdido — leia o feedback, peça uma dica e tente de novo
+   [OK ] docs/product-readiness/JORNADA-DEV-QUICKSTART_2026-10-01.md :: exact :: Tentar novamente
+   [OK ] file present :: student-guide.md
+   [OK ] file present :: LessonScreen.tsx
+== literacy-corridor-grandfathered-return
+== literacy-corridor-happy-path
+   [OK ] docs/product-readiness/evidence/observations/2026-09-18-4858feab-auto-regrant-v95/observations.json :: exact :: Continuar: Desafio do Módulo {n}
+   [OK ] docs/product-readiness/evidence/observations/2026-10-19-4157850e-auto-regrant-v107/observations.json :: exact :: VILA LUME · Desafio do Módulo {n} · atividade {i} de {t}
+   [OK ] file present :: student-guide.md
+   [OK ] file present :: HomeScreen.tsx
+   [OK ] file present :: CheckpointScreen.tsx
+== literacy-corridor-resume-mid-module
+== literacy-corridor-review-window
+   [OK ] docs/product-readiness/evidence/observations/2026-09-16-cabdc4a1-claims-regrant-v88/observations.json :: exact :: Por que as revisões voltam
+   [OK ] docs/product-readiness/evidence/observations/2026-09-28-a02b1833-auto-regrant-v103/observations.json :: exact :: é revisão, não conteúdo novo
+   [OK ] docs/product-readiness/evidence/observations/2026-09-16-cabdc4a1-claims-regrant-v88/observations.json :: exact :: Fazer a revisão não muda sua posição na trilha
+   [OK ] docs/product-readiness/evidence/observations/2026-09-06-ba9525b-corridor-regrant-v30/observations.json :: exact :: Revisão pendente
+   [OK ] docs/product-readiness/evidence/observations/2026-10-19-4157850e-auto-regrant-v107/observations.json :: exact :: Revisão pendente agora:
+   [OK ] file present :: student-guide.md
+   [OK ] file present :: HomeScreen.tsx
+   [OK ] file present :: ProgressScreen.tsx
+== literacy-happy-path
+   [OK ] docs/product-readiness/evidence/observations/2026-09-03-0b8148e-ready-r1-regrant-v26/observations.json :: exact :: VILA LUME · MISSÃO CONCLUÍDA
+   [OK ] docs/product-readiness/evidence/observations/2026-09-18-4858feab-auto-regrant-v95/observations.json :: exact :: Continuar: Desafio do Módulo {n}
+   [OK ] docs/product-readiness/evidence/observations/2026-09-16-cabdc4a1-claims-regrant-v88/observations.json :: exact :: Continue pela próxima lição do bairro, faça o Desafio do Módulo quando ele abrir
+   [OK ] file present :: student-guide.md
+   [OK ] file present :: HomeScreen.tsx
+   [OK ] file present :: ResultScreen.tsx
+== literacy-resume
+   [OK ] docs/product-readiness/evidence/observations/2026-09-27-c7b996cb-auto-regrant-v99/observations.json :: exact :: Your onboarding and lesson progress are stored locally in this browser... There 
+   [OK ] docs/product-readiness/evidence/observations/2026-09-16-cabdc4a1-claims-regrant-v88/observations.json :: exact :: sempre no mesmo aparelho
+   [OK ] file present :: student-guide.md
+== literacy-retry
+   [OK ] docs/product-readiness/JORNADA-DEV-QUICKSTART_2026-10-01.md :: exact :: Tentar novamente
+   [OK ] file present :: student-guide.md
+   [OK ] file present :: LessonScreen.tsx
+== os-literacy-hosted-mission
+   [OK ] docs/product-readiness/evidence/observations/2026-10-19-4157850e-auto-regrant-v107/observations.json :: exact :: Não há conta; o progresso fica neste aparelho. Concluída no host não é domínio v
+   [OK ] docs/product-readiness/evidence/observations/2026-09-03-0b8148e-ready-r1-regrant-v26/observations.json :: exact :: Escolha IA Prática ou Dev. Sem conta; o progresso fica neste dispositivo
+   [OK ] file present :: student-guide.md
+   [OK ] file present :: Onboarding.tsx
+== os-literacy-returning-device
+   [OK ] docs/product-readiness/evidence/observations/2026-10-19-4157850e-auto-regrant-v107/observations.json :: exact :: The OS saves supported setup and mission state in this browser profile... there 
+   [OK ] file present :: student-guide.md
+== os-verification-recovery
+   [OK ] docs/product-readiness/evidence/observations/2026-09-15-os-voxel-regrant-v79/observations.json :: exact :: Evidência bruta · não verificada
+   [OK ] file present :: EngineHubApp.tsx
+   [OK ] file present :: student-guide.md
+
+TOTAL: checked=38 relocated=38 missing=0

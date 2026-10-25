@@ -5,7 +5,7 @@ import { buildEntryViewedEvent } from "../domain/analytics";
 import type { ModuleCheckpointId } from "../domain/checkpoints";
 import type { LiteracyEvidenceRecord } from "../domain/evidence";
 import type { AttemptFeedback } from "../domain/feedback";
-import type { JourneyId } from "../domain/journeyProgress";
+import { type JourneyId, activeJourneyOf } from "../domain/journeyProgress";
 import type { Achievement, LearnerProgress } from "../domain/progress";
 import { isRetrofitNoticeDue } from "../domain/retrofitNotice";
 import { LiteracyMissionAdapter, isHostedMission } from "../host/LiteracyMissionAdapter";
@@ -56,6 +56,17 @@ export type Route =
     }
   | { name: "checkpoint"; checkpointId: ModuleCheckpointId }
   | { name: "result"; summary: LessonSummary };
+
+/**
+ * Token `?journey=` da URL (AID-3705/D1): `dev|ia` mapeia para a jornada
+ * inicial do boot; qualquer outro valor (ou ausência) é ignorado e o boot
+ * segue o comportamento atual (visão de duas jornadas).
+ */
+export function journeyParamToJourneyId(value: string | null): JourneyId | undefined {
+  if (value === "dev") return "dev";
+  if (value === "ia") return "ia_pratica";
+  return undefined;
+}
 
 export function AppShell({
   services,
@@ -122,13 +133,33 @@ export function AppShell({
         setProgress(seeded);
         return;
       }
+      // AID-3705 (D1): `?journey=dev|ia` define a jornada inicial no boot,
+      // antes do resume (o cursor espelhado da jornada passa a valer já na
+      // retomada). Só para aprendiz onboarded; falha ao persistir não quebra
+      // o boot — segue com o progresso existente (comportamento atual).
+      let bootProgress = seeded;
+      const requestedJourney = journeyParamToJourneyId(
+        new URLSearchParams(window.location.search).get("journey"),
+      );
+      if (
+        requestedJourney !== undefined &&
+        seeded.onboarding.completed &&
+        activeJourneyOf(seeded) !== requestedJourney
+      ) {
+        try {
+          bootProgress = await services.useCases.switchJourney(requestedJourney);
+        } catch {
+          bootProgress = seeded;
+        }
+        if (cancelled) return;
+      }
       const destination = await services.useCases.resumeSession();
       if (cancelled) return;
-      setProgress(seeded);
+      setProgress(bootProgress);
       if (destination.kind === "onboarding") {
         setRoute({ name: "onboarding" });
       } else if (destination.kind === "lesson") {
-        openLessonRoute(destination.lessonId, undefined, seeded);
+        openLessonRoute(destination.lessonId, undefined, bootProgress);
       } else {
         setRoute({ name: "home" });
       }
