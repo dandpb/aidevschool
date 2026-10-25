@@ -1,6 +1,6 @@
 import { Bug, CheckCircle2, ClipboardCopy, ListChecks, RotateCcw } from 'lucide-react'
 import { useEffect, useReducer, useRef, useState } from 'react'
-import { guidedPracticeDailyProjection, guidedPracticeProjection } from '../data/generated/guidedPractice'
+import { guidedPracticeDailyProjection, guidedPracticeDevProjections, guidedPracticeProjection } from '../data/generated/guidedPractice'
 import type { LearningContext } from '../domain'
 import { coreContexts } from '../learning/learningContexts'
 import {
@@ -22,12 +22,14 @@ import { DAILY_PRACTICE_CHOICE, dailyLearningContext } from './dailyPresentation
 import { StructuredMarkdown, renderInlineMarkdown } from './structuredMarkdown'
 
 // Single projection registry (AID-3590): pg-d01 stays the DEFAULT and the
-// only practice the embedded AC1 mission runtime ever renders; pg-c01 is the
-// daily practice, selectable only on the standalone surface.
+// only practice the embedded AC1 mission runtime ever renders; AID-5006 adds
+// the dev-family practices pg-d02..pg-d04; pg-c01 is the daily practice.
+// All non-default practices are selectable only on the standalone surface.
 export const GUIDED_PRACTICE_PROJECTIONS: Readonly<
   Record<GuidedPracticeId, AnyGuidedPracticeProjection>
 > = {
   'pg-d01': guidedPracticeProjection,
+  ...guidedPracticeDevProjections,
   'pg-c01': guidedPracticeDailyProjection,
 }
 
@@ -249,7 +251,16 @@ export function GuidedPracticeApp({ practiceId = 'pg-d01', onTeach, onConcluded,
               </button>
             )}
             {state.phase === 'takeaway' && blockers.length > 0 && (
-              <small className="practice-note">Pendências antes de concluir: {blockers.join(', ')}</small>
+              <>
+                <button type="button" onClick={() => dispatch({ type: 'revisao-pedida' })}>
+                  <RotateCcw size={14} aria-hidden />{' '}
+                  {isDaily ? 'Revisar critérios — voltar ao feedback' : 'Revisar rúbrica — voltar ao feedback'}
+                </button>
+                <small className="practice-note">
+                  Pendências antes de concluir: {blockers.join(', ')} — a conclusão fica indisponível até todas
+                  resolvidas; revisar não consome tentativa e preserva esta sessão.
+                </small>
+              </>
             )}
           </>
         )}
@@ -692,6 +703,21 @@ const PRACTICE_CHOICES: readonly {
   {
     id: 'pg-d01',
     label: 'pg-d01 · Dev: reproduza antes de perguntar',
+    detail: 'Trilha Dev — rúbrica com vereditos atendido/parcial/não atendido.',
+  },
+  {
+    id: 'pg-d02',
+    label: 'pg-d02 · Dev: o pedido estruturado de 5 campos',
+    detail: 'Trilha Dev — rúbrica com vereditos atendido/parcial/não atendido.',
+  },
+  {
+    id: 'pg-d03',
+    label: 'pg-d03 · Dev: refatoração com rede de segurança',
+    detail: 'Trilha Dev — rúbrica com vereditos atendido/parcial/não atendido.',
+  },
+  {
+    id: 'pg-d04',
+    label: 'pg-d04 · Dev: pacote de contexto + PRD/SPEC',
     detail: 'Trilha Dev — rúbrica com vereditos atendido/parcial/não atendido.',
   },
   {

@@ -1,0 +1,34 @@
+{
+  "artifacts": [
+    {
+      "path": "engines/literacyDojo/playwright/corridor.spec.ts",
+      "sha256": "5c8e70a100cfbe76b15163d14643808c7870b61c5c062873d324f29a9e797439"
+    },
+    {
+      "path": "engines/literacyDojo/src/domain/progress.ts",
+      "sha256": "ac4166e5d9fc1e4ee274916422c0189618970d663b42390c2af54991d3e413e5"
+    }
+  ],
+  "assertions": [
+    {
+      "evidence": "playwright",
+      "id": "windows-1-7-21-observable-in-storage",
+      "outcome": "pass"
+    },
+    {
+      "evidence": "playwright",
+      "id": "review-evidence-emitted-and-valid",
+      "outcome": "pass"
+    }
+  ],
+  "executedAt": "2026-10-20T16:24:58Z",
+  "executor": "automated",
+  "gaps": [],
+  "gitSha": "9b96a4efaf084a6bad607538171af0cbfa6dbafe",
+  "manualFingerprint": "571bff9702625be2e9b4f03bd0b2cc9dde09f13819cde60272ac80ed8279274d",
+  "outcome": "pass",
+  "runId": "2026-10-20T16:24:58Z-literacy-corridor-review-window-9b96a4ef",
+  "scenarioId": "literacy-corridor-review-window",
+  "schemaVersion": 1,
+  "sourceFingerprint": "94a3444fedd1d1a729de2930ae61eb4d32ac40be13ad5c045b62b92ac139ca0b"
+}

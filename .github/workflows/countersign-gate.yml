@@ -37,15 +37,54 @@ name: countersign-gate
 #      'Countersign:' line; latest wins; pre-merge only in audit mode).
 #      Unconfigured registry credentials / transport / auth failures fail
 #      CLOSED.
+#      8c. RUN TEMPORAL WINDOW (AID-5235, incident AID-5233): the citation's
+#      createdAt must fall inside the cited run's [startedAt, finishedAt]
+#      (±120s). The incident's clone was posted 82 min AFTER the run closed;
+#      a countersign is an act of a LIVE run.
+#   9. VERDICT RESOLUTION (AID-5235, incident AID-5233): the verdict token
+#      must be a canonical comment id (Paperclip UUID for AID-, numeric GH
+#      comment id for GH-) that RESOLVES: the comment exists on the cited
+#      task's thread, is not deleted, and was created by the CITED RUN
+#      (createdByRunId == run=). Free-text verdicts ('GO') are rejected.
+#  10. TASK↔PR BINDING (AID-5235, incident AID-5233): the cited task's
+#      title/description must reference THIS PR number — the incident's
+#      citation cited AID-5061 (bound to PR #700) on PR #714/#704.
+#  11. DELETION ALERT (AID-5235, incident AID-5233): prior successful gate
+#      runs on the CURRENT head recorded the operative citation (recovered
+#      from the prior runs' logs); if it is no longer in the conversation,
+#      the gate reddens with a DELETION ALERT — the incident's citations
+#      were deleted ~5 min after greening the gate. A newer citation does
+#      not launder a deletion.
 #
-# Triggers — two authority tiers, same check-run name:
+# Triggers — two tiers, same check-run name, DIFFERENT contracts (AID-3278):
 #   pull_request (opened/synchronize/reopened/ready_for_review): runs the
 #     workflow FROM THE PR (needed for dogfooding the introducing PR). A PR
-#     could weaken this copy in its own branch, but…
-#   issue_comment (created, PRs only) + workflow_dispatch: run the workflow
-#     FROM MAIN — the authoritative version. The countersign comment itself
-#     is a comment, so every real acceptance re-evaluates the PR with main's
-#     logic and overwrites the check to its true verdict.
+#     could weaken this copy in its own branch, but the merge door re-runs
+#     the gate live from main's script at merge time. This tier is the GATE:
+#     its check-run attaches to the PR head and red/green is the real,
+#     REQUIRED verdict that GitHub enforces.
+#   issue_comment (created, PRs only): runs the workflow FROM MAIN — the
+#     authoritative LOGIC — but is a VERDICT EMITTER, never a gate
+#     (AID-3278): the check-run of an issue_comment run natively attaches to
+#     main's HEAD (github.sha), never to the PR head, so a red conclusion
+#     only paints UNRELATED merge commits — cross-PR noise (evidence
+#     2026-09-28: 18 red countersign-gate check-runs from other PRs'
+#     comments on 7 distinct main HEADs contaminating push-run receipts;
+#     anchor run 36492377134, PR #547's guard comment vs main HEAD
+#     a02b1833 = PR #604's merge commit). This tier therefore evaluates the
+#     target PR with main's pinned logic, emits a STRUCTURED VERDICT (job
+#     summary + annotation) pinned to the exact evaluated head, and the job
+#     NEVER reddens main: gate violations and fail-closed evaluator errors
+#     (incl. self-test failures) are verdict values, not job conclusions.
+#     Enforcement is unchanged: the required check on the PR head is served
+#     by the pull_request tier, and scripts/merge_pr.sh re-runs this gate
+#     live at merge time. Comment-tier evaluations are serialized per PR
+#     (concurrency below) so racing parallel heartbeats (AID-2840) cannot
+#     interleave verdicts. Only raw runner/checkout infra failures can still
+#     redden main from this tier — an honest "CI itself is broken" signal.
+#   workflow_dispatch: manual backfill for open PRs — keeps classic
+#     red/green semantics (an intentional operator action; out of AID-3278
+#     scope).
 #
 # Merges go through scripts/merge_pr.sh (the single merge door), which
 # re-runs this gate live at merge time and requires this check-run green on
@@ -70,10 +109,20 @@ jobs:
     runs-on: ubuntu-latest
     # issue_comment also fires on plain issues; only PR conversations count.
     if: github.event_name != 'issue_comment' || github.event.issue.pull_request != null
+    # AID-3278: serialize comment-tier evaluations per PR (queued runs
+    # execute in order; cancel-in-progress off so every comment gets a
+    # verdict; verdicts are pinned to the evaluated SHA and ordered by
+    # emission time). Other tiers get a unique group (no behavior change).
+    concurrency:
+      group: countersign-gate-${{ github.event_name }}-${{ github.event.issue.number || github.event.pull_request.number || github.run_id }}
+      cancel-in-progress: false
     permissions:
       contents: read
       issues: read
       pull-requests: read
+      # AID-5235 §11: the live gate reads prior countersign-gate workflow
+      # runs (and their logs) for the PR head to detect citation deletion.
+      actions: read
     steps:
       - uses: actions/checkout@v4
         with:
@@ -86,14 +135,92 @@ jobs:
             workflow_dispatch) echo "PR=${{ inputs.pr }}" >> "$GITHUB_ENV" ;;
             *) echo "unsupported event ${{ github.event_name }}" >&2; exit 2 ;;
           esac
+      # AID-3278: on the comment tier a self-test failure is a fail-closed
+      # VERDICT (see the emitter step below) — no verdict is trusted from a
+      # broken evaluator, and main never gets a red check-run from another
+      # PR's comment.
       - name: countersign gate self-test (synthetic violations must fail)
+        id: csg_selftest
+        continue-on-error: ${{ github.event_name == 'issue_comment' }}
         run: python3 scripts/countersign_gate_check.py --self-test
       - name: merge door self-test (§3 extraction vs the real endpoint shape)
+        id: door_selftest
+        continue-on-error: ${{ github.event_name == 'issue_comment' }}
         run: bash scripts/merge_pr.sh --self-test
       - name: countersign gate (live, at the current PR head)
+        id: gate
+        # AID-3278: the comment tier never reddens main — the gate's outcome
+        # is DATA (emitted below), not a job conclusion. pull_request and
+        # workflow_dispatch keep classic semantics (red = real gate signal
+        # on the PR head / intentional backfill).
+        continue-on-error: ${{ github.event_name == 'issue_comment' }}
         env:
           GH_TOKEN: ${{ github.token }}
           SDLC_GUARD_AID_RESOLVER: scripts/sdlc_aid_resolve.sh
           PAPERCLIP_API_URL: ${{ secrets.PAPERCLIP_API_URL }}
           PAPERCLIP_API_TOKEN: ${{ secrets.PAPERCLIP_API_TOKEN }}
-        run: python3 scripts/countersign_gate_check.py --pr "$PR"
+        run: |
+          set +e
+          python3 scripts/countersign_gate_check.py --pr "$PR" 2>&1 | tee gate-output.txt
+          rc="${PIPESTATUS[0]}"
+          echo "GATE_RC=$rc" >> "$GITHUB_ENV"
+          exit "$rc"
+      - name: emit structured verdict (issue_comment tier, AID-3278)
+        if: github.event_name == 'issue_comment'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          COMMENT_ID: ${{ github.event.comment.id }}
+        run: |
+          set -eu
+          st_csg="${{ steps.csg_selftest.outcome }}"
+          st_door="${{ steps.door_selftest.outcome }}"
+          grc="${GATE_RC:-2}"
+          head_sha="$(gh pr view "$PR" --json headRefOid --jq .headRefOid || true)"
+          reason="$(grep -m1 -E '^countersign-gate: (FAIL|PASS)|^::error::' gate-output.txt || true)"
+          python3 - "$PR" "$head_sha" "$grc" "$st_csg" "$st_door" "$reason" \
+            >> "$GITHUB_STEP_SUMMARY" <<'PY'
+          import json, os, sys
+
+          pr, head, grc, st_csg, st_door, reason = sys.argv[1:7]
+          if "failure" in (st_csg, st_door):
+              verdict = "FAIL_CLOSED"
+              why = ("evaluator self-test failed (countersign gate self-test=%s, "
+                     "merge door self-test=%s) — no verdict is trusted from a "
+                     "broken evaluator" % (st_csg, st_door))
+          elif grc == "0":
+              verdict, why = "PASS", (reason or "gate PASS")
+          elif grc == "1":
+              verdict, why = "FAIL", (reason or "gate violation (AID-2768 acceptance contract)")
+          else:
+              verdict = "FAIL_CLOSED"
+              why = "gate exited rc=%s (usage/environment, fail-closed) — %s" % (grc, reason or "no output")
+
+          doc = {
+              "schema": "countersign-gate.verdict/1",
+              "issue": "AID-3278",
+              "evaluator_version": os.environ.get("GITHUB_SHA", ""),
+              "run_id": os.environ.get("GITHUB_RUN_ID", ""),
+              "event": "issue_comment",
+              "event_id": os.environ.get("COMMENT_ID", ""),
+              "evaluated_pr": int(pr) if pr.isdigit() else pr,
+              "evaluated_head": head,
+              "verdict": verdict,
+              "reason": why[:500],
+              "note": ("issue_comment tier: verdict only. This run does not gate any "
+                       "merge and never reddens main (its check-run natively attaches "
+                       "to main's HEAD). Enforcement: pull_request tier (required "
+                       "check on the PR head) + scripts/merge_pr.sh live re-run."),
+          }
+          print("## countersign-gate — structured verdict (issue_comment tier, AID-3278)")
+          print("")
+          print("```json")
+          print(json.dumps(doc, indent=2, ensure_ascii=False))
+          print("```")
+          print("")
+          print("VERDICT:" + json.dumps(
+              {"pr": doc["evaluated_pr"], "head": head, "verdict": verdict},
+              separators=(",", ":")))
+          anno = "notice" if verdict == "PASS" else "warning"
+          print("::%s::countersign-gate verdict=%s PR=#%s @ %s — %s"
+                % (anno, verdict, pr, head or "?", why[:200]), file=sys.stderr)
+          PY

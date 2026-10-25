@@ -19,7 +19,7 @@ wallpaper. This document codifies the existing prototype; it does not redesign i
 | Surface/solid | `--panel-solid` | `#0d1525` | Application bodies |
 | Surface/soft | `--panel-soft` | `#121d31` | Controls and nested surfaces |
 | Text/primary | root foreground | `#eef3ff` | Primary labels and headings |
-| Text/muted | `--muted` | `#8f9bb0` | Secondary copy and metadata |
+| Text/muted | `--muted` | `#a3aec4` | Secondary copy and metadata |
 | Border/default | `--line` | `rgba(255, 255, 255, 0.1)` | Layer boundaries |
 | Accent/action | `--coral` | `#ff755d` | Current mission and primary action |
 | Accent/mentor | `--violet` | `#9b82ff` | Mentor and laboratory state |
@@ -150,3 +150,51 @@ Strategy: mixed tonal shift, borders, and restrained functional elevation.
 Accepted debt: the current stylesheet still contains undeclared one-off color values and compact
 measurements. The integration refactor may split files and introduce semantic tokens, but visual
 changes require fresh evidence and must not be bundled into behavior wiring.
+
+## 8. Progress HUD — contrato cross-engine
+
+Os elementos "onde estou" (streak, medidor de progresso, mastery) seguem o
+contrato do HUD de progresso do ecossistema —
+`docs/design/design-foundations.md` **§7** (v2.0, AID-5010; aliases
+AID-5141/W5): **papéis e estados são contratuais, a paleta é engine-local**.
+O OS declara os 11 tokens `--ads-*` enumerados na tabela §7.1 (o titular "10" do plano AID-5010 conta os nomes errado) em `src/styles/foundation.css`
+mapeando os valores locais atuais (zero delta visual):
+
+| Papel | Tokens (§7.1) | Mapeia hoje |
+| --- | --- | --- |
+| Rótulos do HUD | `--ads-progress-text` / `--ads-progress-muted` | `--school-ink` / `--school-muted` (hub-chips, progress-summary) |
+| Medidor | `--ads-progress-track` / `--ads-progress-fill` | `.hub-mission-progress` `#ded8cd` / `#1f8259` (W6: fill #49c98f→#1f8259, B9b 1.48→3.37:1) |
+| Streak | `--ads-streak-accent` | `--coral` (Flame do topbar do desktop chrome) |
+| Mastery | `--ads-mastery-text` / `--ads-mastery-bg` | nós lavados pós-W4 `#3f4a64` / `--school-primary-soft` (7.68:1 — B9a já coberto) |
+| Revisão devida | `--ads-review-text` / `--ads-review-bg` | "próximo passo": `--school-primary-dark` / `--school-primary-soft` |
+| Atrasada | `--ads-attention-text` / `--ads-attention-bg` | nós in-progress/evidence-pending: `--school-muted` / `#fff6df` |
+
+**FSRS/revisões ficam fora do escopo do OS por design** (§7.4 do contrato:
+experiência read-only; a ausência é documentada, não tratada como dívida) —
+os pares review/attention mapeiam os estados locais mais próximos apenas
+para satisfazer a existência+mapping do contrato. Tier de acessibilidade do
+HUD: **B9** (§7/§4 — AAA 7:1 texto, 3:1 não-texto; B2 AA continua o piso
+geral). **AID-5190/W7 — anatomia aplicada** (contrato §7.2/§7.3): os 4
+papéis canônicos têm testids estáveis, com leitura textual sempre adjacente
+ao medidor — incluindo os medidores dos grids do OS (B9c):
+
+| Papel (testid) | Onde vive | Anatomia |
+| --- | --- | --- |
+| `hud-streak` | parágrafo "Ritmo local" do Hub (`streakCopy`) | texto "Sequência local ativa: N dias" + glifo 🔥 `aria-hidden` |
+| `hud-progress` | `.hub-mission-progress` do Hub **e** medidor "Meta diária" do app Trilhas Dojo (grid) | `role="progressbar"` + `aria-valuetext "N% concluído"` + leitura textual "X/Y missões" adjacente (`.hub-meter-read` / `2 de 3 missões`) |
+| `hud-mastery-badge` | badges dos nós `verified`/`canonical-mastery` do mapa (`.map-mastery-badge`); contagem "N competências verificadas ✅" do Hub mantém `canonical-mastery-count` | cor + texto + glifo (B3); vocabulário canônico Dominada/Verificada ≠ Concluída (§7.4: OS nunca marca mastery, só projeta a leitura canônica) |
+| `hud-review-due` | eyebrow "Revisão atrasada N dias / devida hoje" do Hub quando a recomendação é `review` | reason + dueIn pt-BR (`formatReviewDuePtBr`, apresentação da projeção canônica — o OS não agenda FSRS) |
+| `hud-live-region` | `p.journey-sr-only role="status"` no Hub | anuncia sequência local/meta/revisão 1×/sessão (§7.2) |
+
+Responsividade 375/768/1280 (§7.3): stack vertical dos papéis abaixo de
+768px, alvos ≥44px (B6) — verificados em `tests/hud-contract.smoke.spec.ts`
+com screenshots por breakpoint (projetos mobile-375/tablet-768/desktop-1280
+já vigentes). **AID-5177/W6 — retune AAA aplicado**
+(contrato §4 B9a): `--school-muted` #657089→#3f4a64 (8.05:1 sobre
+`--school-paper`, 8.84:1 sobre branco) e `--muted` dark #8f9bb0→#a3aec4
+(8.17:1 sobre `--panel-solid`) — os marcadores `@deprecated → --ads-* (B9)`
+destes pares foram removidos (janela fechada na W6) e o override local W4
+dos nós lavados (journey.css) saiu: os nós lavados herdam
+`var(--journey-muted)` = `var(--school-muted)` = `#3f4a64` (7.68:1 no wash,
+mesmo valor computado). Evidência: `tests/a11y-w6.smoke.spec.ts` +
+`playwright.aid5177.config.ts` (getComputedStyle; 0 falhas B9a/B9b/B2).

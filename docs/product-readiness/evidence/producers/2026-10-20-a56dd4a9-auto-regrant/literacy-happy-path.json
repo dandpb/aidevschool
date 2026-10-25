@@ -1,0 +1,29 @@
+{
+  "artifacts": [
+    {
+      "path": "engines/literacyDojo/playwright/vertical-slice.spec.ts",
+      "sha256": "45e53c9d3c0d9b36ca44b5b1e69c2bcbeba1a5ea4c51c766359b112b6e4bf73c"
+    },
+    {
+      "path": "engines/literacyDojo/src/domain/progress.ts",
+      "sha256": "ac4166e5d9fc1e4ee274916422c0189618970d663b42390c2af54991d3e413e5"
+    }
+  ],
+  "assertions": [
+    {
+      "evidence": "playwright",
+      "id": "lesson-result-is-local-completion",
+      "outcome": "pass"
+    }
+  ],
+  "executedAt": "2026-10-20T12:49:55Z",
+  "executor": "automated",
+  "gaps": [],
+  "gitSha": "a56dd4a935d15972c19bc453ff371acde67eac2d",
+  "manualFingerprint": "63d81c0960c54ed315306959bf663a689c1713854d95f9dcbeec5c5297c831ad",
+  "outcome": "pass",
+  "runId": "2026-10-20T12:49:55Z-literacy-happy-path-a56dd4a9",
+  "scenarioId": "literacy-happy-path",
+  "schemaVersion": 1,
+  "sourceFingerprint": "1b6125a373b2f4d41a5d43a2ffa854b9ce9f9d6a97a8ce8c3667c8653e1ab59d"
+}

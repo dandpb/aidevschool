@@ -1,5 +1,32 @@
 {
   "schemaVersion": 1,
-  "entries": [],
-  "generatedAt": null
+  "generatedAt": "2026-10-18T00:55:50Z",
+  "release": "media-v1",
+  "drill": "DRILL-20261018T005550Z-offline-package.log",
+  "entries": [
+    {
+      "path": "literacyDojo/icon-192.png",
+      "sha256": "3721f4feab3f2153e276b7979bd63fd7c1e1c8d7792222d2eff5c92360b7b999",
+      "size": 573,
+      "provider": "release",
+      "asset": "blobs.3721f4feab3f2153e276b7979bd63fd7c1e1c8d7792222d2eff5c92360b7b999.png",
+      "url": "https://github.com/dandpb/aidevschool/releases/download/media-v1/blobs.3721f4feab3f2153e276b7979bd63fd7c1e1c8d7792222d2eff5c92360b7b999.png"
+    },
+    {
+      "path": "literacyDojo/icon-512.png",
+      "sha256": "1c1bc9590164e5410a823196f65bc3625313c74a8a29c795903b7dff716f4c6d",
+      "size": 2480,
+      "provider": "release",
+      "asset": "blobs.1c1bc9590164e5410a823196f65bc3625313c74a8a29c795903b7dff716f4c6d.png",
+      "url": "https://github.com/dandpb/aidevschool/releases/download/media-v1/blobs.1c1bc9590164e5410a823196f65bc3625313c74a8a29c795903b7dff716f4c6d.png"
+    },
+    {
+      "path": "kits/media-kit-1.0.0.zip",
+      "sha256": "006132237a514e706cd26fe22db27fb26e2ef29e5b48822e3365815ecd9cfed1",
+      "size": 2087,
+      "provider": "release",
+      "asset": "media-kit-1.0.0.zip",
+      "url": "https://github.com/dandpb/aidevschool/releases/download/media-v1/media-kit-1.0.0.zip"
+    }
+  ]
 }
