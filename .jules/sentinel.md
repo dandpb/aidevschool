@@ -28,3 +28,7 @@
 **Vulnerability:** Audit alert reported `CorsLayer::permissive()` in `curriculum/15_metrics_collector/rust-impl/src/lib.rs`.
 **Learning:** The legacy `rust-impl` directory was deleted in AID-1671 as part of standardizing on Node/TS across curriculum projects. The current `node-impl` in `curriculum/15_metrics_collector/node-impl/src/server.ts` does not enable CORS or use permissive origins.
 **Prevention:** When investigating legacy implementation vulnerability reports, verify if the implementation track was removed or superseded by curriculum policy changes.
+## 2024-10-26 - Enhance security of BYOK config inputs
+**Vulnerability:** The Bring Your Own Key (BYOK) configuration inputs in `dojoToday` for API keys, endpoints, and models lacked basic HTML security attributes (`spellcheck="false"`, `autocomplete="off"`, and `type="url"`).
+**Learning:** Even when sensitive data is only stored in `localStorage` and never sent to a central server, OS-level spellcheckers or browser autocomplete features can inadvertently cache, expose, or leak the data to third-party cloud services or local users.
+**Prevention:** Always apply `spellcheck="false"` and `autocomplete="off"` to sensitive input fields (like API keys and model names), and use strict input types like `type="url"` for endpoints to prevent accidental leakage and improve mobile keyboard UX.
