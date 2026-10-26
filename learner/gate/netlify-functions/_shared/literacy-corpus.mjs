@@ -3452,16 +3452,23 @@ export const literacyCorpus = {
               "minLength": 5,
               "mustIncludeAny": [
                 "erro",
+                "typeerror",
+                "error",
                 "exception",
+                "exceção",
+                "undefined",
                 "stack",
+                "trace",
                 "falha",
-                "trace"
+                "não funciona"
               ]
             },
             "esperado-vs-observado": {
               "minLength": 5,
               "mustIncludeAny": [
                 "esperado",
+                "deveria",
+                "acontece",
                 "retorna",
                 "ocorre",
                 "recebe"
@@ -3532,7 +3539,7 @@ export const literacyCorpus = {
       "codificar",
       "avaliar"
     ],
-    "version": 3
+    "version": 4
   },
   "l28": {
     "activities": [
@@ -4591,4 +4598,4 @@ export const literacyCorpus = {
   }
 }
 
-export const literacyCorpusVersion = "2026-10-17.1"
+export const literacyCorpusVersion = "2026-10-25.1"

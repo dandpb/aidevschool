@@ -1,10 +1,19 @@
 schemaVersion: 1
+# Bump único 2026-10-17.1 -> 2026-10-25.1 (AID-5216, retrabalho l27-a2 achado
+# F1 da auditoria AID-641 §0.2): famílias de keyword mustIncludeAny ampliadas
+# no campo erro (typeerror|error|exception|exceção|undefined|stack|trace|falha|
+# não funciona) e no esperado-vs-observado (deveria|acontece) — colagem
+# realista passa a casar na 1ª tentativa; l27 v3 -> v4 (regra 3 do
+# content-contract). Propagação: catálogo canônico + tracks[ai-pratica] +
+# tracks[dev] + todos os runtime.contentVersion literacy (gates de igualdade
+# mission_catalog_bindings.py). Onda sem atividades novas -> retrofitNotice
+# registra "2026-10-25.1": [] (sem aviso ao learner).
 tracks:
   - trackId: ai-pratica
-    contentVersion: "2026-10-17.1"
+    contentVersion: "2026-10-25.1"
     recommendedEntryMissionId: l02
   - trackId: dev
-    contentVersion: "2026-10-17.1"
+    contentVersion: "2026-10-25.1"
     recommendedEntryMissionId: game-02-warehouse
 bindings:
   - missionId: l01
@@ -21,7 +30,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-10-17.1"
+      contentVersion: "2026-10-25.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -43,7 +52,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-10-17.1"
+      contentVersion: "2026-10-25.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -65,7 +74,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-10-17.1"
+      contentVersion: "2026-10-25.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -87,7 +96,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-10-17.1"
+      contentVersion: "2026-10-25.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -109,7 +118,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-10-17.1"
+      contentVersion: "2026-10-25.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -131,7 +140,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-10-17.1"
+      contentVersion: "2026-10-25.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -153,7 +162,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-10-17.1"
+      contentVersion: "2026-10-25.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -175,7 +184,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-10-17.1"
+      contentVersion: "2026-10-25.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -197,7 +206,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-10-17.1"
+      contentVersion: "2026-10-25.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -219,7 +228,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-10-17.1"
+      contentVersion: "2026-10-25.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -241,7 +250,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-10-17.1"
+      contentVersion: "2026-10-25.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -263,7 +272,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-10-17.1"
+      contentVersion: "2026-10-25.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -285,7 +294,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-10-17.1"
+      contentVersion: "2026-10-25.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -307,7 +316,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-10-17.1"
+      contentVersion: "2026-10-25.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -329,7 +338,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-10-17.1"
+      contentVersion: "2026-10-25.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -351,7 +360,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-10-17.1"
+      contentVersion: "2026-10-25.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -373,7 +382,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-10-17.1"
+      contentVersion: "2026-10-25.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -398,7 +407,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-10-17.1"
+      contentVersion: "2026-10-25.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -422,7 +431,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-10-17.1"
+      contentVersion: "2026-10-25.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -447,7 +456,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-10-17.1"
+      contentVersion: "2026-10-25.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -541,7 +550,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-10-17.1"
+      contentVersion: "2026-10-25.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -563,7 +572,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-10-17.1"
+      contentVersion: "2026-10-25.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -585,7 +594,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-10-17.1"
+      contentVersion: "2026-10-25.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -704,7 +713,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-10-17.1"
+      contentVersion: "2026-10-25.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -726,7 +735,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-10-17.1"
+      contentVersion: "2026-10-25.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -748,7 +757,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-10-17.1"
+      contentVersion: "2026-10-25.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -774,7 +783,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-10-17.1"
+      contentVersion: "2026-10-25.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -799,7 +808,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-10-17.1"
+      contentVersion: "2026-10-25.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -825,7 +834,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-10-17.1"
+      contentVersion: "2026-10-25.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -889,7 +898,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-10-17.1"
+      contentVersion: "2026-10-25.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -913,7 +922,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-10-17.1"
+      contentVersion: "2026-10-25.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -938,7 +947,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-10-17.1"
+      contentVersion: "2026-10-25.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -969,7 +978,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-10-17.1"
+      contentVersion: "2026-10-25.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -994,7 +1003,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-10-17.1"
+      contentVersion: "2026-10-25.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -1020,7 +1029,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-10-17.1"
+      contentVersion: "2026-10-25.1"
     evidence:
       schema: literacy-evidence
       version: 1
