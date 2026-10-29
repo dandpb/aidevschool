@@ -28,6 +28,7 @@
 **Vulnerability:** Audit alert reported `CorsLayer::permissive()` in `curriculum/15_metrics_collector/rust-impl/src/lib.rs`.
 **Learning:** The legacy `rust-impl` directory was deleted in AID-1671 as part of standardizing on Node/TS across curriculum projects. The current `node-impl` in `curriculum/15_metrics_collector/node-impl/src/server.ts` does not enable CORS or use permissive origins.
 **Prevention:** When investigating legacy implementation vulnerability reports, verify if the implementation track was removed or superseded by curriculum policy changes.
+
 ## 2026-10-29 - Prevent sensitive data leakage to third-party spell checkers
 **Vulnerability:** Technical and sensitive inputs like API keys, model names, and base URLs lacked `spellcheck="false"` in `engines/dojoToday/src/main.ts`.
 **Learning:** While `type="password"` disables native spellchecking, inputs using `type="text"` (like base URLs and model names) can inadvertently leak sensitive configuration data to OS-level or cloud-based spell checking services.
