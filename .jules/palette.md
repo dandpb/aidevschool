@@ -43,6 +43,6 @@
 **Action:** When a user triggers an action that requires input but none is provided, explicitly communicate the missing requirement using the existing error feedback patterns (e.g., `setReply` with an error state) and return focus to the input field so they can correct the issue immediately.
 ## 2026-10-23 - Explicit `for` attributes in implicit labels\n**Learning:** While wrapping an `<input>` inside a `<label>` (implicit labeling) is valid HTML and implicitly associates them, explicitly providing the `for` attribute is a robust accessibility best practice that ensures better support across a wider range of screen readers and assistive technologies.\n**Action:** In vanilla JS HTML string templates (e.g., `dojoToday`), use explicit `for` attributes on `<label>` elements matching the corresponding `<input>`'s `id`, rather than relying solely on implicit nesting, to ensure robust screen reader support and click-to-focus behavior.
 
-## 2023-10-24 - Semantic Form Wrapping for Config Panels
+## 2026-10-24 - Semantic Form Wrapping for Config Panels
 **Learning:** Relying on generic <div> tags and button clicks for configuration panels removes implicit form submission (e.g. Enter key) which harms keyboard accessibility.
 **Action:** Always wrap input groups in semantic <form> tags, listen to the submit event, and add e.preventDefault(). Enhance inputs with context-aware attributes like type="url" and spellcheck="false".
