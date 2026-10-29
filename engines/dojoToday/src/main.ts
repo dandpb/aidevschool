@@ -162,13 +162,13 @@ function missionCard(a: TodaySnapshot["activeUnit"]): string {
               configurado. Conversas não são salvas. Opcional e off por padrão.
             </p>
             <label for="soc-baseurl">Endpoint base (compatível com OpenAI)
-              <input id="soc-baseurl" type="text" placeholder="https://api.openai.com/v1" />
+              <input id="soc-baseurl" type="url" spellcheck="false" placeholder="https://api.openai.com/v1" />
             </label>
             <label for="soc-apikey">Chave API
-              <input id="soc-apikey" type="password" placeholder="sk-…" />
+              <input id="soc-apikey" type="password" spellcheck="false" placeholder="sk-…" />
             </label>
             <label for="soc-model">Modelo
-              <input id="soc-model" type="text" placeholder="gpt-4o-mini" />
+              <input id="soc-model" type="text" spellcheck="false" placeholder="gpt-4o-mini" />
             </label>
             <div class="socrates-config-actions">
               <button id="soc-save" type="button" class="btn btn-primary">Salvar</button>
