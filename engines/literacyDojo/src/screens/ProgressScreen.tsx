@@ -101,7 +101,7 @@ export function ProgressScreen({
       );
       setBackupStatus({
         kind: "ok",
-        text: "Backup baixado. Concluir uma lição não comprova competência.",
+        text: "Download solicitado. Confira se o arquivo foi salvo antes de apagar dados. Concluir uma lição não comprova competência.",
       });
     } catch (error) {
       setBackupStatus({
