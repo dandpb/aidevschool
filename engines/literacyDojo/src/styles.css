@@ -2728,12 +2728,17 @@ a.audience-route-dev .route-badge {
    distinção pass/fail/inválido exista sem cor (largura/estilo de borda). Geometria +
    system colors — sem forced-color-adjust: none (não quebramos temas de alto contraste). */
 @media (forced-colors: active) {
+  .onboarding-question-layout .option-card input,
   .activity .option-card input {
     position: static;
     width: 20px;
     height: 20px;
     margin-top: 0;
     opacity: 1;
+  }
+
+  .onboarding-question-layout .option-check {
+    display: none;
   }
 
   .feedback-pass {
