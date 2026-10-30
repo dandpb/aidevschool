@@ -17,6 +17,13 @@ export function MissingContextView({
 }) {
   const { prompt, contextOptions } = activity.data;
   const selected = new Set(answer.contextIds);
+  const invalidContext = new Set(invalidIds);
+  if (invalidIds.includes("noExtraContext")) {
+    const required = new Set(activity.evaluation.requiredContextIds);
+    for (const id of selected) {
+      if (!required.has(id)) invalidContext.add(id);
+    }
+  }
 
   const toggle = (contextId: string) => {
     onChange({ contextIds: toggleId(answer.contextIds, contextId) });
@@ -34,13 +41,14 @@ export function MissingContextView({
           <label
             key={option.id}
             className={`option-card option-inline${selected.has(option.id) ? " is-selected" : ""}${
-              invalidIds.includes(option.id) ? " is-invalid" : ""
+              invalidContext.has(option.id) ? " is-invalid" : ""
             }`}
           >
             <input
               type="checkbox"
               data-testid={`context-${option.id}`}
               checked={selected.has(option.id)}
+              aria-invalid={invalidContext.has(option.id) || undefined}
               disabled={disabled}
               onChange={() => toggle(option.id)}
             />
