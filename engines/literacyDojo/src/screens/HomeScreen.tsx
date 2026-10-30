@@ -137,6 +137,10 @@ export function HomeScreen({
               {pendingCheckpoint.module.title} — menos de 3 minutos. Complete para entrar no próximo
               bairro.
             </p>
+            <p className="muted" data-testid="checkpoint-continuity-home">
+              Ao reabrir, o desafio volta à primeira atividade; tentativas já registradas ficam
+              neste navegador.
+            </p>
             <button
               type="button"
               className="btn btn-primary"
@@ -144,7 +148,7 @@ export function HomeScreen({
               aria-disabled={mutationBlocked}
               onClick={() => onOpenCheckpoint(pendingCheckpoint.checkpoint.id)}
             >
-              Continuar: Desafio do Módulo {pendingCheckpoint.module.order}
+              Abrir desafio do Módulo {pendingCheckpoint.module.order}
             </button>
           </>
         ) : mission ? (

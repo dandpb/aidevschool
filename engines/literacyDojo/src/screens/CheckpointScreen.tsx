@@ -272,6 +272,11 @@ export function CheckpointScreen({
             você já sabe — se travar, peça uma dica.
           </p>
         </MentorGuide>
+        <p className="muted" data-testid="checkpoint-continuity-intro">
+          <strong>Se precisar parar:</strong> ao sair ou recarregar, as respostas e a etapa atual do
+          desafio não são recuperadas. As tentativas e o progresso já registrados ficam neste
+          navegador.
+        </p>
         {operationError === "start" && (
           <p role="alert" className="feedback feedback-fail">
             Não foi possível confirmar o início. Ele pode já ter sido registrado; tentar de novo
