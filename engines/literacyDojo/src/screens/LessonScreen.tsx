@@ -73,6 +73,7 @@ export type MissionExposureEvents = {
 export function LessonScreen({
   lessonId,
   mode = "initial",
+  replay = false,
   onboarding,
   retrofitNotice = false,
   reviewStage,
@@ -85,6 +86,7 @@ export function LessonScreen({
 }: {
   lessonId: string;
   mode?: LessonMode;
+  replay?: boolean;
   onboarding: OnboardingState;
   /** Aviso S2 (retrofit O3-C1): exibido 1× por learner/lição/bump na intro. */
   retrofitNotice?: boolean;
@@ -418,6 +420,7 @@ export function LessonScreen({
       }
       const summary = buildSummary(lesson, session.best, result.outcome.lessonScore, {
         mode,
+        replay,
         nextLessonId: result.nextLessonId,
         newlyUnlocked: result.newlyUnlocked,
         evidenceRecord: latestPassingEvidence.current,
@@ -752,6 +755,7 @@ function buildSummary(
   lessonScore: number,
   options: {
     mode: LessonMode;
+    replay?: boolean;
     nextLessonId?: string;
     newlyUnlocked?: Achievement[];
     evidenceRecord?: LiteracyEvidenceRecord;
@@ -771,6 +775,7 @@ function buildSummary(
     lessonScore,
     activityResults,
     mode: options.mode,
+    replay: options.replay,
     nextLessonId: options.nextLessonId,
     newlyUnlocked: options.newlyUnlocked,
     evidenceRecord: options.evidenceRecord,

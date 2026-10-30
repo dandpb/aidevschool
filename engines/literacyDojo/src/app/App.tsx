@@ -38,6 +38,7 @@ export type LessonSummary = {
   lessonScore: number;
   activityResults: ActivityResultSummary[];
   mode?: LessonMode;
+  replay?: boolean;
   nextLessonId?: string;
   newlyUnlocked?: Achievement[];
   evidenceRecord?: LiteracyEvidenceRecord;
@@ -52,6 +53,7 @@ export type Route =
       name: "lesson";
       lessonId: string;
       mode?: LessonMode;
+      replay?: boolean;
       retrofitNotice?: boolean;
       reviewStage?: number;
     }
@@ -150,7 +152,14 @@ export function AppShell({
       if (due) {
         setRetrofitAcks(saveRetrofitAck(lessonId, services.content.getContentVersion()));
       }
-      navigate({ name: "lesson", lessonId, mode, retrofitNotice: due, reviewStage });
+      navigate({
+        name: "lesson",
+        lessonId,
+        mode,
+        replay: mode !== "review" && learner?.lessonStatus[lessonId] === "completed",
+        retrofitNotice: due,
+        reviewStage,
+      });
     },
     [navigate, progress, retrofitAcks, services],
   );
@@ -587,6 +596,7 @@ export function AppShell({
               key={`${route.lessonId}:${route.mode ?? "initial"}`}
               lessonId={route.lessonId}
               mode={route.mode ?? "initial"}
+              replay={route.replay ?? false}
               onboarding={progress.onboarding}
               retrofitNotice={route.retrofitNotice ?? false}
               reviewStage={route.reviewStage}

@@ -1,0 +1,7 @@
+# Independent review
+
+A reviewer reproduced a seeded l04 in-progress cursor being replaced by l02 when an old lesson was reopened. After the change, local replay/reload and completion preserved l04 and the independent Dev cursor, and the standalone result returned to the village instead of directing to an old next lesson. The replay flag is captured from the confirmed opening state, so a simulated post-commit failure and retry of a first completion retains first-session presentation.
+
+Before-fix domain and browser tests failed. Afterward, local browser cases covered interruption/reload, completion, simulated first-completion post-commit retry and interrupted review. Both state-store branches and both cross-journey directions passed, as did a local AppShell/adapter hosted replay verifying the existing `publishCompleted('l03')` signal. A first browser assertion incorrectly expected the lesson title in the button instead of the adjacent mission title; the corrected flow passed. Independent review reran 57 domain/use-case/host tests and found no blocking issue.
+
+The full suite passed 508 tests with one skipped before an unreachable TypeScript comparison was simplified; afterward 18 focused tests and the build passed. Lint passed. Previously rewound cursors are not repaired; existing next-lesson unlocking, legacy missing-route fallback and review rescheduling remain unchanged. Separate mounts, other tabs and real screen-reader speech were not tested. The build retains its large-chunk warning.

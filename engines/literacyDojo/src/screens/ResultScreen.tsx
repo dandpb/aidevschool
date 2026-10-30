@@ -227,7 +227,7 @@ export function ResultScreen({
         {!summary.evidenceRecord && <p>Nenhuma tentativa aprovada disponível para verificação.</p>}
       </div>
 
-      {lesson.id === MAP_INITIAL_LESSON_ID && summary.nextLessonId && (
+      {lesson.id === MAP_INITIAL_LESSON_ID && summary.nextLessonId && !summary.replay && (
         <>
           {taskCategory && (
             <div className="card task-context" data-testid="result-task-context">
@@ -259,7 +259,7 @@ export function ResultScreen({
           <output className="muted">
             Sinal de conclusão enviado. Acompanhe a conclusão no aplicativo que abriu esta missão.
           </output>
-        ) : summary.nextLessonId ? (
+        ) : summary.nextLessonId && !summary.replay ? (
           <button
             type="button"
             className="btn btn-primary"

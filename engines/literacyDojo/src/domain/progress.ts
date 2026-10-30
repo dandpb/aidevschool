@@ -237,12 +237,13 @@ export function isLessonUnlocked(progress: LearnerProgress, lessonId: string): b
 
 export function startLesson(progress: LearnerProgress, lessonId: string): LearnerProgress {
   const current = progress.lessonStatus[lessonId];
+  if (current === "completed") return progress;
   return {
     ...progress,
     currentLessonId: lessonId,
     lessonStatus: {
       ...progress.lessonStatus,
-      [lessonId]: current === "completed" ? "completed" : "in_progress",
+      [lessonId]: "in_progress",
     },
   };
 }
@@ -800,7 +801,13 @@ export function completeLesson(
   next = scheduleReviewForLesson(next, lesson, now, 0);
   const unlocked = unlockNextReadyLesson(next, modules, lesson.id);
   next = unlocked.progress;
-  next = { ...next, currentLessonId: unlocked.unlockedLessonId ?? lesson.id };
+  next = {
+    ...next,
+    currentLessonId:
+      progress.lessonStatus[lesson.id] === "completed"
+        ? progress.currentLessonId
+        : (unlocked.unlockedLessonId ?? lesson.id),
+  };
   const withAchievements = applyAchievements(next, achievementModules, now);
   next = withAchievements.progress;
 

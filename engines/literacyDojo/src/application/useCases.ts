@@ -478,13 +478,16 @@ export class LiteracyUseCases {
         }
         const rec = {
           ...result,
-          progress: reconcileJourneyCursors(
-            result.progress,
-            lessonJourney,
-            lesson.id,
-            result.nextLessonId,
-            this.journeyModules(),
-          ),
+          progress:
+            current.lessonStatus[lesson.id] === "completed"
+              ? result.progress
+              : reconcileJourneyCursors(
+                  result.progress,
+                  lessonJourney,
+                  lesson.id,
+                  result.nextLessonId,
+                  this.journeyModules(),
+                ),
         };
         return { next: rec.progress, value: rec };
       });
@@ -533,13 +536,16 @@ export class LiteracyUseCases {
     }
     const reconciled = {
       ...result,
-      progress: reconcileJourneyCursors(
-        result.progress,
-        lessonJourney,
-        lesson.id,
-        result.nextLessonId,
-        this.journeyModules(),
-      ),
+      progress:
+        state.progress.lessonStatus[lesson.id] === "completed"
+          ? result.progress
+          : reconcileJourneyCursors(
+              result.progress,
+              lessonJourney,
+              lesson.id,
+              result.nextLessonId,
+              this.journeyModules(),
+            ),
     };
     await this.deps.state.saveState({
       ...state,
