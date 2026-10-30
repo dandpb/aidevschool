@@ -80,7 +80,7 @@ export function LessonScreen({
   missionEvents,
   hosted = false,
   mutationBlocked = false,
-  onUncertainAttempt,
+  onUncertainProgress,
   canMutate = () => true,
   onProgressChange,
   onCompleted,
@@ -98,7 +98,7 @@ export function LessonScreen({
   missionEvents?: MissionExposureEvents;
   hosted?: boolean;
   mutationBlocked?: boolean;
-  onUncertainAttempt?: () => Promise<void>;
+  onUncertainProgress?: () => Promise<void>;
   canMutate?: () => boolean;
   onProgressChange: (progress: LearnerProgress) => void;
   onCompleted: (progress: LearnerProgress, summary: LessonSummary) => void;
@@ -324,7 +324,7 @@ export function LessonScreen({
       onProgressChange(result.progress);
     } catch {
       setAttemptError(true);
-      await onUncertainAttempt?.();
+      await onUncertainProgress?.();
       setAttemptFailureCount((count) => count + 1);
     } finally {
       submissionBusy.current = false;
@@ -464,6 +464,7 @@ export function LessonScreen({
       onCompleted(result.progress, summary);
     } catch {
       setCompletionError(true);
+      await onUncertainProgress?.();
     } finally {
       submissionBusy.current = false;
       setSubmitting(false);
@@ -738,7 +739,7 @@ export function LessonScreen({
             className="btn btn-primary"
             data-testid="next-activity"
             ref={nextActionRef}
-            disabled={submitting || hintLoading || retryLoading}
+            disabled={submitting || hintLoading || retryLoading || mutationBlocked}
             onClick={handleNextActivity}
           >
             Próxima atividade
@@ -750,11 +751,14 @@ export function LessonScreen({
             className="btn btn-primary"
             data-testid="finish-lesson"
             ref={nextActionRef}
-            aria-disabled={!requiredPassed || submitting || hintLoading || retryLoading}
+            aria-disabled={
+              !requiredPassed || submitting || hintLoading || retryLoading || mutationBlocked
+            }
             aria-busy={submitting}
             onClick={() => {
               if (
                 !requiredPassed ||
+                !canMutate() ||
                 submissionBusy.current ||
                 hintBusy.current ||
                 retryBusy.current

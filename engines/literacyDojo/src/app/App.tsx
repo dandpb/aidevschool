@@ -348,7 +348,7 @@ export function AppShell({
     }
   }, [blockForRecovery, services]);
 
-  const reconcileAttempt = useCallback(
+  const reconcileLessonProgress = useCallback(
     async (originRevision: number) => {
       if (routeRevision.current !== originRevision || !beginOperation("reconcile")) {
         blockForRecovery();
@@ -649,8 +649,8 @@ export function AppShell({
               }}
               hosted={hostAdapter !== null}
               mutationBlocked={operation !== null || recoveryBlocked}
-              onUncertainAttempt={
-                hostAdapter === null ? () => reconcileAttempt(renderedRevision) : undefined
+              onUncertainProgress={
+                hostAdapter === null ? () => reconcileLessonProgress(renderedRevision) : undefined
               }
               canMutate={canMutateOnScreen}
               onExit={() => {
