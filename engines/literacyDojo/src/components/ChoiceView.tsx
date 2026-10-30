@@ -47,9 +47,20 @@ export function ChoiceView({
               /* W3 §4.1 (AID-1096): checks falhando marcados com aria-invalid,
                  não só com a affordance visual .is-invalid. */
               aria-invalid={isInvalid(option.id) || undefined}
+              aria-labelledby={`${activity.id}-${option.id}-label`}
+              aria-describedby={
+                multiSelect && isInvalid(option.id) ? `${activity.id}-${option.id}-note` : undefined
+              }
               onChange={() => handleChange(option.id)}
             />
-            <span>{option.text}</span>
+            <span>
+              <span id={`${activity.id}-${option.id}-label`}>{option.text}</span>
+              {multiSelect && isInvalid(option.id) && (
+                <strong id={`${activity.id}-${option.id}-note`}>
+                  {selected.has(option.id) ? "Desmarque esta opção." : "Falta marcar esta opção."}
+                </strong>
+              )}
+            </span>
           </label>
         ))}
       </fieldset>

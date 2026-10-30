@@ -25,4 +25,9 @@ it("mantém os checks de opções extras e ausentes em multiseleção", () => {
   );
   expect(screen.getByTestId("option-extra")).toHaveAttribute("aria-invalid", "true");
   expect(screen.getByTestId("option-missing")).toHaveAttribute("aria-invalid", "true");
+  expect(screen.getByTestId("option-extra")).toHaveAccessibleName("Extra");
+  expect(screen.getByTestId("option-extra")).toHaveAccessibleDescription("Desmarque esta opção.");
+  expect(screen.getByTestId("option-missing")).toHaveAccessibleDescription(
+    "Falta marcar esta opção.",
+  );
 });
