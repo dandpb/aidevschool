@@ -214,7 +214,10 @@ export function CheckpointScreen({
     if (busyRef.current || !canMutate()) return;
     setOperationError(null);
     setAnswerEdited(false);
-    setCurrent((index) => Math.min(index + 1, activityRefs.length - 1));
+    // Multiple activations from this render must advance only the current item.
+    setCurrent((index) =>
+      index === current ? Math.min(index + 1, activityRefs.length - 1) : index,
+    );
   };
 
   const handleFinish = async () => {
