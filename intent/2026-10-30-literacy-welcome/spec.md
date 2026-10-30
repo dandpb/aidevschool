@@ -9,3 +9,4 @@
 
 - At 320×740 the welcome start action and consent must fit on the first screen without reducing text size for consent or hiding content; retain reflow at 375 and 1280.
 - Task illustrations expose a named image role in lesson and result; the same artwork is decorative inside onboarding radio labels so choices are not announced twice; remove resolved exceptions from the axe baseline without hiding new violations.
+- When an unlocked first mission exists and no challenge is pending, the map offers a control that focuses that existing mission row; it does not start the lesson or change progress. Keyboard activation places focus on the identified row, and its existing start control remains the only launcher there.

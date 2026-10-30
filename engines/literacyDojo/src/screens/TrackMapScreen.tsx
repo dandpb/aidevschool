@@ -53,6 +53,13 @@ export function TrackMapScreen({
   const queries = buildTrackQueries(progress, services.content, services.clock, activeJourney);
   const { trackSummary: summary, statusLabel } = queries;
   const modules = services.content.listModules(activeJourney);
+  const firstMission =
+    summary.completed === 0 &&
+    !queries.pendingCheckpoint &&
+    queries.mission &&
+    isLessonUnlocked(progress, queries.mission.id)
+      ? queries.mission
+      : undefined;
 
   return (
     <section className="screen map-screen" data-testid="map-screen" aria-labelledby="map-title">
@@ -67,6 +74,19 @@ export function TrackMapScreen({
               ? "Pedidos curtos de engenharia com assistentes de IA — tentar, receber feedback e avançar."
               : "Cada pedido leva de 3 a 5 minutos. Tente primeiro, receba feedback e ilumine o próximo caminho."}
           </p>
+          {firstMission && (
+            <button
+              type="button"
+              className="btn btn-secondary map-wayfinding"
+              onClick={() => {
+                const row = document.getElementById(`map-lesson-${firstMission.id}`);
+                row?.focus({ preventScroll: true });
+                row?.scrollIntoView({ block: "center", behavior: "auto" });
+              }}
+            >
+              Ir ao pedido: {firstMission.title} ↓
+            </button>
+          )}
           <div className="map-summary" aria-label="Resumo da trilha">
             <span>
               <strong>{summary.completed}</strong>/{summary.total} missões
@@ -151,6 +171,8 @@ export function TrackMapScreen({
                     key={entry.id}
                     className={`lesson-row lesson-row-${status}`}
                     data-testid={`map-lesson-${entry.id}`}
+                    id={`map-lesson-${entry.id}`}
+                    tabIndex={-1}
                   >
                     <span className={`lesson-node lesson-node-${status}`} aria-hidden="true">
                       {STATUS_ICON[status]}

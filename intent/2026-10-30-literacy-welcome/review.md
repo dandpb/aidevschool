@@ -13,3 +13,7 @@ At 320×740 the test failed before the change at y=799.8 and passed afterward at
 Independent review confirmed that all three task choices have their label and guidance as the radio name without repeated artwork descriptions; keyboard selection worked. The named image role was verified in the intro and result, and axe WCAG 2/2.1 A/AA returned zero violations on those screens and the task-choice screen. The two resolved entries were removed from the axe baseline, making the gate stricter. A lesson-intro reorder was discarded because essential educational context would have moved below the action that leaves the screen.
 
 Cycle 3 final verification: `npm run test:e2e` passed all 50 browser tests with one worker, including the axe ratchet, hosted/PWA flows and the new task-art test; `npm run lint` and `npm run build` passed. Unit suite before this last semantics-only change: 392 passed, 1 skipped.
+
+## Map wayfinding
+
+Independent browser review at 320/375/1280 verified keyboard focus and Tab to the original launcher, repeated activation with no `lesson_started` event or IndexedDB mutation, resumed IA and fresh Dev destinations, and zero axe WCAG 2/2.1 A/AA violations on the map. Review found that an initial fragment URL persisted misleadingly after navigation; the implementation was changed to focus and scroll without a fragment. A visible 3px focus outline and targeted test were added.

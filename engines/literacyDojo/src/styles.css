@@ -2095,6 +2095,17 @@ a.audience-route-dev .route-badge {
   color: var(--muted);
 }
 
+.map-wayfinding {
+  margin-top: 12px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.lesson-row:focus {
+  outline: 3px solid var(--ads-focus);
+  outline-offset: 3px;
+}
+
 .map-hero .voxel-world {
   min-width: 0;
   height: 270px;
