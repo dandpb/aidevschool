@@ -178,7 +178,11 @@ export function ResultScreen({
             <li key={criterion.id}>{criterion.text}</li>
           ))}
         </ul>
-        <p className="muted">Vamos lembrar você de revisar esta lição nos próximos dias.</p>
+        <p className="muted">
+          {hosted
+            ? "Acompanhe os próximos passos no aplicativo que abriu esta missão."
+            : "Quando houver revisões disponíveis, elas aparecerão em seu progresso neste navegador."}
+        </p>
       </div>
 
       <div className="card card-note" data-testid="completion-distinction">
