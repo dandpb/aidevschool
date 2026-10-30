@@ -14,6 +14,9 @@ import { buildTrackQueries } from "../domain/trackQueries";
  */
 export function HomeScreen({
   progress,
+  mutationBlocked = false,
+  navigationBlocked = false,
+  canMutate = () => true,
   onContinue,
   onReview,
   onOpenCheckpoint,
@@ -23,6 +26,9 @@ export function HomeScreen({
   onReset,
 }: {
   progress: LearnerProgress;
+  mutationBlocked?: boolean;
+  navigationBlocked?: boolean;
+  canMutate?: () => boolean;
   onContinue: (lessonId: string) => void;
   onReview: (lessonId: string) => void;
   onOpenCheckpoint: (checkpointId: "cp-01" | "cp-02" | "cp-03") => void;
@@ -64,6 +70,7 @@ export function HomeScreen({
       : undefined;
 
   const handleReset = () => {
+    if (!canMutate()) return;
     if (window.confirm("Apagar todo o progresso deste aparelho e recomeçar do zero?")) {
       void onReset();
     }
@@ -128,6 +135,7 @@ export function HomeScreen({
               type="button"
               className="btn btn-primary"
               data-testid="continue-button"
+              aria-disabled={mutationBlocked}
               onClick={() => onOpenCheckpoint(pendingCheckpoint.checkpoint.id)}
             >
               Continuar: Desafio do Módulo {pendingCheckpoint.module.order}
@@ -147,6 +155,7 @@ export function HomeScreen({
               type="button"
               className="btn btn-primary"
               data-testid="continue-button"
+              aria-disabled={mutationBlocked}
               onClick={() => onContinue(mission.id)}
             >
               {progress.lessonStatus[mission.id] === "in_progress"
@@ -177,6 +186,7 @@ export function HomeScreen({
             data-testid="journey-switch-ia_pratica"
             aria-pressed={activeJourney === "ia_pratica"}
             disabled={activeJourney === "ia_pratica"}
+            aria-disabled={mutationBlocked || activeJourney === "ia_pratica"}
             onClick={() => onSwitchJourney("ia_pratica")}
           >
             <strong>Vila Lume · IA na Prática</strong>
@@ -190,6 +200,7 @@ export function HomeScreen({
             data-testid="journey-switch-dev"
             aria-pressed={activeJourney === "dev"}
             disabled={activeJourney === "dev"}
+            aria-disabled={mutationBlocked || activeJourney === "dev"}
             onClick={() => onSwitchJourney("dev")}
           >
             <strong>Jornada Dev</strong>
@@ -238,6 +249,7 @@ export function HomeScreen({
           type="button"
           className="btn btn-secondary"
           data-testid="open-map"
+          aria-disabled={navigationBlocked}
           onClick={onOpenMap}
         >
           {activeJourney === "dev" ? "Explorar Jornada Dev" : "Explorar Vila Lume"}
@@ -246,6 +258,7 @@ export function HomeScreen({
           type="button"
           className="btn btn-secondary"
           data-testid="open-progress"
+          aria-disabled={navigationBlocked}
           onClick={onOpenProgress}
         >
           Ver seu progresso
@@ -272,6 +285,7 @@ export function HomeScreen({
             type="button"
             className="btn btn-secondary"
             data-testid="review-button"
+            aria-disabled={mutationBlocked}
             onClick={() => onReview(reviewLesson.id)}
           >
             Revisar agora
@@ -289,6 +303,7 @@ export function HomeScreen({
           type="button"
           className="btn btn-link"
           data-testid="reset-progress"
+          aria-disabled={mutationBlocked}
           onClick={handleReset}
         >
           Apagar progresso e recomeçar

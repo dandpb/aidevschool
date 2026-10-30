@@ -28,12 +28,16 @@ type AttemptState = {
 
 export function CheckpointScreen({
   checkpointId,
+  mutationBlocked = false,
+  canMutate = () => true,
   onProgressChange,
   onFinished,
   onExit,
   onStartNextLesson,
 }: {
   checkpointId: ModuleCheckpointId;
+  mutationBlocked?: boolean;
+  canMutate?: () => boolean;
   onProgressChange: (progress: LearnerProgress) => void;
   onFinished: (passed: boolean) => void;
   onExit: () => void;
@@ -114,7 +118,7 @@ export function CheckpointScreen({
   const answer = answers[key] ?? emptyAnswerFor(activity);
 
   const handleStart = async () => {
-    if (busyRef.current) return;
+    if (busyRef.current || !canMutate()) return;
     busyRef.current = true;
     setSubmitting(true);
     setOperationError(null);
@@ -131,7 +135,7 @@ export function CheckpointScreen({
   };
 
   const handleSubmit = async () => {
-    if (busyRef.current || !answer) return;
+    if (busyRef.current || !canMutate() || !answer) return;
     restoreNextFocus.current = document.activeElement === submitRef.current;
     busyRef.current = true;
     setSubmitting(true);
@@ -187,7 +191,7 @@ export function CheckpointScreen({
   };
 
   const handleFinish = async () => {
-    if (busyRef.current) return;
+    if (busyRef.current || !canMutate()) return;
     busyRef.current = true;
     setSubmitting(true);
     setOperationError(null);
@@ -258,7 +262,7 @@ export function CheckpointScreen({
           type="button"
           className="btn btn-primary"
           data-testid="start-checkpoint"
-          aria-disabled={submitting}
+          aria-disabled={submitting || mutationBlocked}
           onClick={() => void handleStart()}
         >
           Começar desafio
@@ -315,6 +319,7 @@ export function CheckpointScreen({
             type="button"
             className="btn btn-primary"
             data-testid="checkpoint-next-lesson"
+            aria-disabled={mutationBlocked}
             onClick={() => onStartNextLesson(unlockedLessonId)}
           >
             Ir para {nextModule.title}
@@ -396,7 +401,7 @@ export function CheckpointScreen({
             data-testid="submit-attempt"
             ref={submitRef}
             disabled={!isAnswerComplete(activity, answer)}
-            aria-disabled={submitting}
+            aria-disabled={submitting || mutationBlocked}
             onClick={() => void handleSubmit()}
           >
             {attempt ? "Verificar de novo" : "Verificar resposta"}
@@ -443,7 +448,7 @@ export function CheckpointScreen({
             data-testid="finish-checkpoint"
             ref={nextActionRef}
             disabled={!allPassed}
-            aria-disabled={submitting}
+            aria-disabled={submitting || mutationBlocked}
             onClick={() => void handleFinish()}
           >
             Concluir desafio

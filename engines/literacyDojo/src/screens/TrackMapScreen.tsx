@@ -39,11 +39,13 @@ const DEV_ZONE_COPY =
  */
 export function TrackMapScreen({
   progress,
+  mutationBlocked = false,
   onBack,
   onStartLesson,
   onOpenCheckpoint,
 }: {
   progress: LearnerProgress;
+  mutationBlocked?: boolean;
   onBack: () => void;
   onStartLesson: (lessonId: string) => void;
   onOpenCheckpoint: (checkpointId: ModuleCheckpointId) => void;
@@ -190,6 +192,7 @@ export function TrackMapScreen({
                         type="button"
                         className="btn btn-small"
                         data-testid={`map-start-${entry.id}`}
+                        aria-disabled={mutationBlocked}
                         onClick={() => onStartLesson(entry.id)}
                       >
                         {status === "completed"
@@ -239,6 +242,7 @@ export function TrackMapScreen({
                         type="button"
                         className="btn btn-primary"
                         data-testid={`checkpoint-start-${item.checkpoint.id}`}
+                        aria-disabled={mutationBlocked}
                         onClick={() => onOpenCheckpoint(item.checkpoint.id)}
                       >
                         Fazer desafio

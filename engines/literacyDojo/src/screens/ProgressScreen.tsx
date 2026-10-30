@@ -22,12 +22,16 @@ function formatDate(iso: string): string {
  */
 export function ProgressScreen({
   progress,
+  mutationBlocked = false,
+  canMutate = () => true,
   onBack,
   onStartLesson,
   onReview,
   onProgressImported,
 }: {
   progress: LearnerProgress;
+  mutationBlocked?: boolean;
+  canMutate?: () => boolean;
   onBack: () => void;
   onStartLesson: (lessonId: string) => void;
   onReview: (lessonId: string) => void;
@@ -63,7 +67,7 @@ export function ProgressScreen({
   const practicedSkills = Object.values(progress.skills);
 
   const handleExport = async () => {
-    if (backupBusyRef.current) return;
+    if (backupBusyRef.current || !canMutate()) return;
     backupBusyRef.current = true;
     setBackupOperation("export");
     setBackupStatus(null);
@@ -90,7 +94,7 @@ export function ProgressScreen({
   };
 
   const handleImportFile = async (file: File) => {
-    if (backupBusyRef.current) return;
+    if (backupBusyRef.current || !canMutate()) return;
     backupBusyRef.current = true;
     setBackupOperation("import");
     setBackupStatus(null);
@@ -202,9 +206,9 @@ export function ProgressScreen({
                           type="button"
                           className="btn btn-small"
                           data-testid={`progress-review-${lesson.id}`}
-                          aria-disabled={backupBusy}
+                          aria-disabled={backupBusy || mutationBlocked}
                           onClick={() => {
-                            if (!backupBusyRef.current) onReview(lesson.id);
+                            if (!backupBusyRef.current && canMutate()) onReview(lesson.id);
                           }}
                         >
                           Revisar
@@ -248,9 +252,9 @@ export function ProgressScreen({
                     type="button"
                     className="btn btn-small"
                     data-testid={`progress-start-${entry.id}`}
-                    aria-disabled={backupBusy}
+                    aria-disabled={backupBusy || mutationBlocked}
                     onClick={() => {
-                      if (!backupBusyRef.current) onStartLesson(entry.id);
+                      if (!backupBusyRef.current && canMutate()) onStartLesson(entry.id);
                     }}
                   >
                     {status === "in_progress" ? "Continuar" : "Começar"}
@@ -275,7 +279,7 @@ export function ProgressScreen({
             type="button"
             className="btn btn-secondary"
             data-testid="export-progress"
-            aria-disabled={backupBusy}
+            aria-disabled={backupBusy || mutationBlocked}
             onClick={() => void handleExport()}
           >
             Baixar backup JSON
@@ -284,9 +288,9 @@ export function ProgressScreen({
             type="button"
             className="btn btn-secondary"
             data-testid="import-progress"
-            aria-disabled={backupBusy}
+            aria-disabled={backupBusy || mutationBlocked}
             onClick={() => {
-              if (!backupBusyRef.current) fileInputRef.current?.click();
+              if (!backupBusyRef.current && canMutate()) fileInputRef.current?.click();
             }}
           >
             Restaurar backup

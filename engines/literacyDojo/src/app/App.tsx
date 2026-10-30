@@ -76,10 +76,47 @@ export function AppShell({
   hostAdapter: LiteracyMissionAdapter | null;
 }) {
   const [progress, setProgress] = useState<LearnerProgress | null>(null);
-  const [route, setRoute] = useState<Route | null>(null);
+  const [route, setRouteState] = useState<Route | null>(null);
+  const routeRevision = useRef(0);
+  const navigate = useCallback((next: Route) => {
+    routeRevision.current += 1;
+    setRouteState(next);
+  }, []);
+  const operationRef = useRef<"open" | "review" | "switch" | "reset" | null>(null);
+  const recoveryBlockedRef = useRef(false);
+  const [operation, setOperation] = useState<"open" | "review" | "switch" | "reset" | null>(null);
+  const [recoveryBlocked, setRecoveryBlocked] = useState(false);
+  const [uncertainNotice, setUncertainNotice] = useState<string | null>(null);
+  const canMutate = useCallback(
+    () => operationRef.current === null && !recoveryBlockedRef.current,
+    [],
+  );
+  const beginOperation = useCallback(
+    (kind: "open" | "review" | "switch" | "reset") => {
+      if (!canMutate()) return false;
+      operationRef.current = kind;
+      setUncertainNotice(null);
+      setOperation(kind);
+      return true;
+    },
+    [canMutate],
+  );
+  const finishOperation = useCallback(() => {
+    operationRef.current = null;
+    setOperation(null);
+  }, []);
+  const blockForRecovery = useCallback(() => {
+    recoveryBlockedRef.current = true;
+    setRecoveryBlocked(true);
+  }, []);
   const [bootError, setBootError] = useState<string | null>(null);
-  const [lessonOpenError, setLessonOpenError] = useState<string | null>(null);
-  const [journeySwitchError, setJourneySwitchError] = useState<string | null>(null);
+  const [lessonOpenError, setLessonOpenError] = useState<{ text: string; revision: number } | null>(
+    null,
+  );
+  const [journeySwitchError, setJourneySwitchError] = useState<{
+    text: string;
+    revision: number;
+  } | null>(null);
   const [retrofitAcks, setRetrofitAcks] = useState(() => loadRetrofitAcks());
   const hostReady = progress !== null;
 
@@ -107,9 +144,9 @@ export function AppShell({
       if (due) {
         setRetrofitAcks(saveRetrofitAck(lessonId, services.content.getContentVersion()));
       }
-      setRoute({ name: "lesson", lessonId, mode, retrofitNotice: due, reviewStage });
+      navigate({ name: "lesson", lessonId, mode, retrofitNotice: due, reviewStage });
     },
-    [progress, retrofitAcks, services],
+    [navigate, progress, retrofitAcks, services],
   );
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: boot único por sessão de host/serviços; o destino usa `seeded` explícito e openLessonRoute não deve re-disparar o boot.
@@ -157,11 +194,11 @@ export function AppShell({
       if (cancelled) return;
       setProgress(bootProgress);
       if (destination.kind === "onboarding") {
-        setRoute({ name: "onboarding" });
+        navigate({ name: "onboarding" });
       } else if (destination.kind === "lesson") {
         openLessonRoute(destination.lessonId, undefined, bootProgress);
       } else {
-        setRoute({ name: "home" });
+        navigate({ name: "home" });
       }
     })();
     return () => {
@@ -229,61 +266,120 @@ export function AppShell({
     );
   }, [route, services]);
 
-  const handleReset = useCallback(async () => {
-    // Reset explícito (AID-3888): marker-first — o boot seguinte semeia do
-    // zero sem restaurar do snapshot (preservado como histórico).
-    await explicitReset(services);
-    resetRetrofitAcks();
-    setRetrofitAcks({});
-    const fresh = await loadOrActivateState(services);
-    setProgress(fresh.progress);
-    setRoute({ name: "onboarding" });
-  }, [services]);
+  const reconcileUncertainProgress = useCallback(async () => {
+    try {
+      const current = await services.useCases.readProgressForRecovery();
+      setProgress(current);
+    } catch {
+      blockForRecovery();
+    }
+  }, [blockForRecovery, services]);
+
+  const handleReset = useCallback(
+    async (originRevision: number) => {
+      if (routeRevision.current !== originRevision || !beginOperation("reset")) return;
+      setLessonOpenError(null);
+      setJourneySwitchError(null);
+      try {
+        // Reset marker-first: uma falha parcial exige novo boot, não uma suposição.
+        await explicitReset(services);
+        resetRetrofitAcks();
+        setRetrofitAcks({});
+        const fresh = await loadOrActivateState(services);
+        setProgress(fresh.progress);
+        navigate({ name: "onboarding" });
+      } catch {
+        blockForRecovery();
+      } finally {
+        finishOperation();
+      }
+    },
+    [beginOperation, blockForRecovery, finishOperation, navigate, services],
+  );
 
   const handleOpenLesson = useCallback(
-    async (lessonId: string) => {
+    async (lessonId: string, originRevision: number) => {
+      if (routeRevision.current !== originRevision || !beginOperation("open")) return;
+      const revision = originRevision;
       setLessonOpenError(null);
+      setJourneySwitchError(null);
       try {
         const updated = await services.useCases.startLesson(lessonId);
         setProgress(updated);
-        openLessonRoute(lessonId, undefined, updated);
+        if (routeRevision.current === revision) openLessonRoute(lessonId, undefined, updated);
       } catch {
-        setLessonOpenError(
-          "Não foi possível salvar seu progresso. Tente abrir a missão novamente.",
-        );
+        await reconcileUncertainProgress();
+        if (routeRevision.current === revision) {
+          setLessonOpenError({
+            revision,
+            text: "Não foi possível salvar seu progresso. A tentativa de abertura pode já ter sido registrada; confira o progresso antes de tentar novamente.",
+          });
+        } else {
+          setUncertainNotice(
+            "A abertura solicitada antes de mudar de tela não foi confirmada. Ela pode já ter sido registrada; confira o progresso antes de tentar novamente.",
+          );
+        }
+      } finally {
+        finishOperation();
       }
     },
-    [openLessonRoute, services],
+    [beginOperation, finishOperation, openLessonRoute, reconcileUncertainProgress, services],
   );
 
   const handleOpenReview = useCallback(
-    async (lessonId: string) => {
+    async (lessonId: string, originRevision: number) => {
+      if (routeRevision.current !== originRevision || !beginOperation("review")) return;
+      const revision = originRevision;
       setLessonOpenError(null);
+      setJourneySwitchError(null);
       try {
         const { progress: updated, stage } = await services.useCases.startReview(lessonId);
         setProgress(updated);
-        openLessonRoute(lessonId, "review", updated, stage);
+        if (routeRevision.current === revision) openLessonRoute(lessonId, "review", updated, stage);
       } catch {
-        setLessonOpenError("Não foi possível iniciar esta revisão. Tente novamente.");
+        await reconcileUncertainProgress();
+        if (routeRevision.current === revision) {
+          setLessonOpenError({
+            revision,
+            text: "Não foi possível iniciar esta revisão. Confira o progresso antes de tentar novamente.",
+          });
+        } else {
+          setUncertainNotice("A revisão solicitada antes de mudar de tela não pôde ser iniciada.");
+        }
+      } finally {
+        finishOperation();
       }
     },
-    [openLessonRoute, services],
+    [beginOperation, finishOperation, openLessonRoute, reconcileUncertainProgress, services],
   );
 
   const handleSwitchJourney = useCallback(
-    async (journey: JourneyId) => {
+    async (journey: JourneyId, originRevision: number) => {
+      if (routeRevision.current !== originRevision || !beginOperation("switch")) return;
+      const revision = originRevision;
       setJourneySwitchError(null);
+      setLessonOpenError(null);
       try {
         const updated = await services.useCases.switchJourney(journey);
         setProgress(updated);
-        setRoute({ name: "map" });
+        if (routeRevision.current === revision) navigate({ name: "map" });
       } catch {
-        setJourneySwitchError(
-          "Não foi possível salvar a troca de jornada. Tente novamente em instantes.",
-        );
+        await reconcileUncertainProgress();
+        if (routeRevision.current === revision) {
+          setJourneySwitchError({
+            revision,
+            text: "Não foi possível salvar a troca de jornada. Ela pode já ter sido registrada; confira o progresso antes de tentar novamente.",
+          });
+        } else {
+          setUncertainNotice(
+            "A troca de jornada solicitada antes de mudar de tela não foi confirmada. Ela pode já ter sido registrada; confira o progresso antes de tentar novamente.",
+          );
+        }
+      } finally {
+        finishOperation();
       }
     },
-    [services],
+    [beginOperation, finishOperation, navigate, reconcileUncertainProgress, services],
   );
 
   if (bootError) {
@@ -303,6 +399,13 @@ export function AppShell({
       </main>
     );
   }
+
+  const renderedRevision = routeRevision.current;
+  const isCurrentScreen = () => routeRevision.current === renderedRevision;
+  const canMutateOnScreen = () => isCurrentScreen() && canMutate();
+  const navigateFromScreen = (next: Route) => {
+    if (isCurrentScreen()) navigate(next);
+  };
 
   return (
     <ServicesProvider value={services}>
@@ -327,50 +430,92 @@ export function AppShell({
           )}
         </header>
         <main className="app-stage">
+          {operation && (
+            <output>
+              {operation === "reset" ? "Reiniciando" : "Preparando"} progresso… aguarde antes de
+              iniciar outra ação.
+            </output>
+          )}
+          {recoveryBlocked && (
+            <div className="feedback feedback-fail" role="alert">
+              Não foi possível confirmar o estado salvo. Recarregue e confira o progresso; a
+              operação pode ter ficado incompleta.
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={() => window.location.reload()}
+              >
+                Recarregar página
+              </button>
+            </div>
+          )}
+          {uncertainNotice && (
+            <p className="feedback feedback-fail" role="alert">
+              {uncertainNotice}
+            </p>
+          )}
           {lessonOpenError && (
             <p className="feedback feedback-fail" role="alert" data-testid="lesson-open-error">
-              {lessonOpenError}
+              {lessonOpenError.revision === routeRevision.current
+                ? lessonOpenError.text
+                : "A solicitação anterior não foi confirmada. Confira o progresso antes de tentar novamente."}
             </p>
           )}
           {journeySwitchError && (
             <p className="feedback feedback-fail" role="alert" data-testid="journey-switch-error">
-              {journeySwitchError}
+              {journeySwitchError.revision === routeRevision.current
+                ? journeySwitchError.text
+                : "A troca de jornada anterior não foi confirmada. Confira o progresso antes de tentar novamente."}
             </p>
           )}
           {route.name === "onboarding" && (
             <OnboardingScreen
               onDone={(updated) => {
                 setProgress(updated);
-                setRoute({ name: "map" });
+                navigate({ name: "map" });
               }}
             />
           )}
           {route.name === "home" && (
             <HomeScreen
               progress={progress}
-              onContinue={(lessonId) => void handleOpenLesson(lessonId)}
-              onReview={(lessonId) => void handleOpenReview(lessonId)}
-              onOpenCheckpoint={(checkpointId) => setRoute({ name: "checkpoint", checkpointId })}
-              onOpenMap={() => setRoute({ name: "map" })}
-              onOpenProgress={() => setRoute({ name: "progress" })}
-              onSwitchJourney={(journey) => void handleSwitchJourney(journey)}
-              onReset={handleReset}
+              mutationBlocked={operation !== null || recoveryBlocked}
+              navigationBlocked={operation === "reset"}
+              canMutate={canMutateOnScreen}
+              onContinue={(lessonId) => void handleOpenLesson(lessonId, renderedRevision)}
+              onReview={(lessonId) => void handleOpenReview(lessonId, renderedRevision)}
+              onOpenCheckpoint={(checkpointId) => {
+                if (canMutateOnScreen()) navigateFromScreen({ name: "checkpoint", checkpointId });
+              }}
+              onOpenMap={() => {
+                if (operationRef.current !== "reset") navigateFromScreen({ name: "map" });
+              }}
+              onOpenProgress={() => {
+                if (operationRef.current !== "reset") navigateFromScreen({ name: "progress" });
+              }}
+              onSwitchJourney={(journey) => void handleSwitchJourney(journey, renderedRevision)}
+              onReset={() => void handleReset(renderedRevision)}
             />
           )}
           {route.name === "map" && (
             <TrackMapScreen
               progress={progress}
-              onBack={() => setRoute({ name: "home" })}
-              onStartLesson={(lessonId) => void handleOpenLesson(lessonId)}
-              onOpenCheckpoint={(checkpointId) => setRoute({ name: "checkpoint", checkpointId })}
+              mutationBlocked={operation !== null || recoveryBlocked}
+              onBack={() => navigateFromScreen({ name: "home" })}
+              onStartLesson={(lessonId) => void handleOpenLesson(lessonId, renderedRevision)}
+              onOpenCheckpoint={(checkpointId) => {
+                if (canMutateOnScreen()) navigateFromScreen({ name: "checkpoint", checkpointId });
+              }}
             />
           )}
           {route.name === "progress" && (
             <ProgressScreen
               progress={progress}
-              onBack={() => setRoute({ name: "home" })}
-              onStartLesson={(lessonId) => void handleOpenLesson(lessonId)}
-              onReview={(lessonId) => void handleOpenReview(lessonId)}
+              mutationBlocked={operation !== null || recoveryBlocked}
+              canMutate={canMutateOnScreen}
+              onBack={() => navigateFromScreen({ name: "home" })}
+              onStartLesson={(lessonId) => void handleOpenLesson(lessonId, renderedRevision)}
+              onReview={(lessonId) => void handleOpenReview(lessonId, renderedRevision)}
               onProgressImported={setProgress}
             />
           )}
@@ -397,32 +542,36 @@ export function AppShell({
               onProgressChange={setProgress}
               onCompleted={(updated, summary) => {
                 setProgress(updated);
-                setRoute({ name: "result", summary });
+                navigate({ name: "result", summary });
                 hostAdapter?.publishCompleted(summary.nextLessonId);
               }}
               hosted={hostAdapter !== null}
+              canMutate={canMutateOnScreen}
               onExit={() => {
-                if (hostAdapter === null) setRoute({ name: "map" });
+                if (hostAdapter === null) navigateFromScreen({ name: "map" });
               }}
             />
           )}
           {route.name === "checkpoint" && (
             <CheckpointScreen
+              mutationBlocked={operation !== null || recoveryBlocked}
+              canMutate={canMutateOnScreen}
               key={route.checkpointId}
               checkpointId={route.checkpointId}
               onProgressChange={setProgress}
-              onFinished={() => setRoute({ name: "home" })}
-              onExit={() => setRoute({ name: "map" })}
-              onStartNextLesson={(lessonId) => void handleOpenLesson(lessonId)}
+              onFinished={() => navigateFromScreen({ name: "home" })}
+              onExit={() => navigateFromScreen({ name: "map" })}
+              onStartNextLesson={(lessonId) => void handleOpenLesson(lessonId, renderedRevision)}
             />
           )}
           {route.name === "result" && (
             <ResultScreen
+              mutationBlocked={operation !== null || recoveryBlocked}
               summary={route.summary}
               hosted={hostAdapter !== null}
-              onNextLesson={(lessonId) => void handleOpenLesson(lessonId)}
-              onHome={() => setRoute({ name: "home" })}
-              onMap={() => setRoute({ name: "map" })}
+              onNextLesson={(lessonId) => void handleOpenLesson(lessonId, renderedRevision)}
+              onHome={() => navigateFromScreen({ name: "home" })}
+              onMap={() => navigateFromScreen({ name: "map" })}
             />
           )}
         </main>

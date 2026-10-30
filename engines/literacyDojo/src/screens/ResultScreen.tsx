@@ -19,12 +19,14 @@ import type { LiteracyVerificationReceipt } from "../domain/verification";
  */
 export function ResultScreen({
   summary,
+  mutationBlocked = false,
   onNextLesson,
   onHome,
   onMap,
   hosted = false,
 }: {
   summary: LessonSummary;
+  mutationBlocked?: boolean;
   onNextLesson: (lessonId: string) => void;
   onHome: () => void;
   onMap: () => void;
@@ -206,6 +208,7 @@ export function ResultScreen({
             type="button"
             className="btn btn-primary"
             data-testid="next-lesson"
+            aria-disabled={mutationBlocked}
             onClick={() => onNextLesson(summary.nextLessonId as string)}
           >
             Próximo pedido

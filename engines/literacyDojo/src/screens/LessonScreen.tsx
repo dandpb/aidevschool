@@ -78,6 +78,7 @@ export function LessonScreen({
   reviewStage,
   missionEvents,
   hosted = false,
+  canMutate = () => true,
   onProgressChange,
   onCompleted,
   onExit,
@@ -92,6 +93,7 @@ export function LessonScreen({
   /** Presente somente em missão hospedada (forwarding mission-event ao host). */
   missionEvents?: MissionExposureEvents;
   hosted?: boolean;
+  canMutate?: () => boolean;
   onProgressChange: (progress: LearnerProgress) => void;
   onCompleted: (progress: LearnerProgress, summary: LessonSummary) => void;
   onExit: () => void;
@@ -231,15 +233,24 @@ export function LessonScreen({
   };
 
   const updateAnswer = (next: ActivityAnswer) => {
+    if (!canMutate()) return;
     setSession((previous) => setAnswer(previous, lesson, next));
   };
 
   const handleStart = () => {
+    if (!canMutate()) return;
     applyTransition({ session: startSession(session, services.clock()) });
   };
 
   const handleSubmit = async () => {
-    if (submissionBusy.current || hintBusy.current || retryBusy.current || !activity) return;
+    if (
+      !canMutate() ||
+      submissionBusy.current ||
+      hintBusy.current ||
+      retryBusy.current ||
+      !activity
+    )
+      return;
     restoreSubmitFocus.current = document.activeElement === submitButtonRef.current;
     submissionBusy.current = true;
     setSubmitting(true);
@@ -269,6 +280,7 @@ export function LessonScreen({
 
   const handleHint = async () => {
     if (
+      !canMutate() ||
       !activity ||
       !hasMoreHints ||
       submissionBusy.current ||
@@ -296,7 +308,14 @@ export function LessonScreen({
   };
 
   const handleRetry = async () => {
-    if (!activity || submissionBusy.current || hintBusy.current || retryBusy.current) return;
+    if (
+      !canMutate() ||
+      !activity ||
+      submissionBusy.current ||
+      hintBusy.current ||
+      retryBusy.current
+    )
+      return;
     retryBusy.current = true;
     setRetryLoading(true);
     setRetryError(false);
@@ -324,7 +343,7 @@ export function LessonScreen({
   };
 
   const handleFinish = async (payload: FinishPayload) => {
-    if (submissionBusy.current || hintBusy.current || retryBusy.current) return;
+    if (!canMutate() || submissionBusy.current || hintBusy.current || retryBusy.current) return;
     submissionBusy.current = true;
     setSubmitting(true);
     setCompleting(true);

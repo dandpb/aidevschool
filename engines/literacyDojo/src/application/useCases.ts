@@ -175,6 +175,11 @@ export class LiteracyUseCases {
     return (await this.requireState()).progress;
   }
 
+  /** Lê o progresso autoritativo sem alterá-lo, para reconciliar uma gravação incerta. */
+  async readProgressForRecovery(): Promise<LearnerProgress> {
+    return this.requireProgress();
+  }
+
   /**
    * Carga autoritativa (AID-3888, precedência `e3ad989e`): o estado novo
    * válido é autoritativo — legado inválido/ilegível não bloqueia esta
