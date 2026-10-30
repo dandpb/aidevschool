@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { completeOnboarding, wrongOutput } from "./support";
 
-for (const choice of ["exit", "empty", "none"] as const) {
+for (const choice of ["exit", "empty", "wheel", "pageup", "none"] as const) {
   test(`feedback respeita interação durante a espera: ${choice}`, async ({ page }) => {
     await completeOnboarding(page);
     await page.getByTestId(`output-${wrongOutput.id}`).check();
@@ -31,10 +31,18 @@ for (const choice of ["exit", "empty", "none"] as const) {
     const exit = page.getByRole("button", { name: "Sair da lição" });
     if (choice === "exit") await exit.focus();
     if (choice === "empty") await page.mouse.click(3, 3);
+    if (choice === "wheel" || choice === "pageup") {
+      const beforeScroll = await page.evaluate(() => window.scrollY);
+      if (choice === "wheel") await page.mouse.wheel(0, -300);
+      else await page.keyboard.press("PageUp");
+      await expect.poll(() => page.evaluate(() => window.scrollY)).toBeLessThan(beforeScroll);
+    }
     await page.evaluate(() => (window as unknown as { releaseAnswer: () => void }).releaseAnswer());
     await expect(page.getByTestId("feedback-panel")).toBeVisible();
     if (choice === "exit") await expect(exit).toBeFocused();
     if (choice === "empty") await expect(page.locator("body")).toBeFocused();
-    if (choice === "none") await expect(page.locator("#activity-heading")).toBeFocused();
+    if (choice === "wheel" || choice === "pageup")
+      await expect(page.getByTestId("feedback-panel")).not.toBeFocused();
+    if (choice === "none") await expect(page.getByTestId("feedback-panel")).toBeFocused();
   });
 }

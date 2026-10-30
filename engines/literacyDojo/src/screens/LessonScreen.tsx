@@ -126,6 +126,7 @@ export function LessonScreen({
   const preserveFeedbackFocus = useRef(false);
   const latestPassingEvidence = useRef<LiteracyEvidenceRecord>();
   const headingRef = useRef<HTMLHeadingElement | null>(null);
+  const feedbackRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     if (
       attemptFailureCount > 0 &&
@@ -151,11 +152,20 @@ export function LessonScreen({
       restoreSubmitFocus.current = false;
       if (submissionBusy.current) preserveFeedbackFocus.current = true;
     };
+    const cancelForScrollKey = (event: KeyboardEvent) => {
+      if (["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End", " "].includes(event.key)) {
+        cancelFocusRestore();
+      }
+    };
     document.addEventListener("pointerdown", cancelFocusRestore);
     document.addEventListener("focusin", cancelFocusRestore);
+    document.addEventListener("wheel", cancelFocusRestore, { passive: true });
+    document.addEventListener("keydown", cancelForScrollKey);
     return () => {
       document.removeEventListener("pointerdown", cancelFocusRestore);
       document.removeEventListener("focusin", cancelFocusRestore);
+      document.removeEventListener("wheel", cancelFocusRestore);
+      document.removeEventListener("keydown", cancelForScrollKey);
     };
   }, [submitting]);
   // Exposição (F2 R2, emenda ADR-0009): brief 1× por mount (a intro não
@@ -171,7 +181,11 @@ export function LessonScreen({
       return;
     }
     preserveFeedbackFocus.current = false;
-    headingRef.current?.focus();
+    if (session.phase === "feedback" && feedbackRef.current) {
+      feedbackRef.current.focus();
+    } else {
+      headingRef.current?.focus();
+    }
   }, [session.phase, session.currentActivityIndex]);
   useEffect(() => {
     if (!lesson) return;
@@ -562,7 +576,13 @@ export function LessonScreen({
         onChange={updateAnswer}
       />
 
-      {attempt && <FeedbackPanel feedback={attempt.feedback} hintsShown={hints.shown} />}
+      {attempt && (
+        <FeedbackPanel
+          feedback={attempt.feedback}
+          hintsShown={hints.shown}
+          focusRef={feedbackRef}
+        />
+      )}
       {attempt?.evaluation.pass && (
         <p className="muted">Resposta aprovada. Continue pela próxima ação.</p>
       )}
