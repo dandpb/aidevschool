@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useServices } from "../app/services";
 import { MentorGuide } from "../components/MentorGuide";
+import { TabSafetyNotice } from "../components/TabSafetyNotice";
 import { VoxelTaskArt, taskDetails } from "../components/VoxelTaskArt";
 import { VoxelWorld } from "../components/VoxelWorld";
 import type {
@@ -292,6 +293,11 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
         </p>
       )}
       <div aria-live="polite">{submitting ? "Salvando suas escolhas…" : ""}</div>
+      {currentStep.key === "task" && (
+        <p className="muted">
+          <TabSafetyNotice />
+        </p>
+      )}
       {step > 0 && (
         <div className="onboarding-actions">
           {step > 0 && (
