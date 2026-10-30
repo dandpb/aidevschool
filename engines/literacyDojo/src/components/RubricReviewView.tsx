@@ -48,6 +48,17 @@ export function RubricReviewView({
                   name={`rubric-${criterion.id}`}
                   data-testid={`rubric-${criterion.id}-${verdict.value}`}
                   checked={answer.verdicts[criterion.id] === verdict.value}
+                  aria-invalid={
+                    (invalidIds.includes(criterion.id) &&
+                      answer.verdicts[criterion.id] === verdict.value) ||
+                    undefined
+                  }
+                  aria-describedby={
+                    invalidIds.includes(criterion.id) &&
+                    answer.verdicts[criterion.id] === verdict.value
+                      ? `${activity.id}-${criterion.id}-invalid`
+                      : undefined
+                  }
                   disabled={disabled}
                   onChange={() =>
                     onChange({
@@ -59,6 +70,11 @@ export function RubricReviewView({
               </label>
             ))}
           </div>
+          {invalidIds.includes(criterion.id) && (
+            <p className="activity-invalid-note" id={`${activity.id}-${criterion.id}-invalid`}>
+              Revise esta resposta.
+            </p>
+          )}
         </fieldset>
       ))}
     </div>

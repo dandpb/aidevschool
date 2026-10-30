@@ -15,12 +15,19 @@ export class DeterministicFeedbackProvider implements FeedbackProvider {
       pass: evaluation.pass,
       score: evaluation.score,
       summary: evaluation.pass
-        ? (activity.feedback.onSuccess ?? "Muito bem!")
+        ? evaluation.checks.some((check) => !check.passed)
+          ? "Você atingiu a pontuação para avançar, mas ainda há pontos para revisar."
+          : (activity.feedback.onSuccess ?? "Muito bem!")
         : activity.feedback.onFailure,
       perCheck: evaluation.checks.map((check) => ({
         checkId: check.id,
         passed: check.passed,
-        message: check.passed ? undefined : activity.feedback.perCheck?.[check.id],
+        message: check.passed
+          ? undefined
+          : (activity.feedback.perCheck?.[check.id] ??
+            (activity.type === "output_comparison" && check.id === "noExtraCriteria"
+              ? "Nesta atividade, a avaliação aceita somente os critérios exigidos; você também selecionou outro motivo."
+              : undefined)),
       })),
     };
   }

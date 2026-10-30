@@ -37,6 +37,8 @@ const literacyEvidenceSchema: JsonSchema = sharedEvidenceSchema;
 
 export const EVIDENCE_SCHEMA_VERSION = 1;
 export const EVIDENCE_SOURCE = "literacydojo";
+/** Maximum text field length in learner/gate/literacy_evidence.schema.json. */
+export const EVIDENCE_TEXT_MAX_LENGTH = 2000;
 const VERIFIER_REQUIRED = true;
 
 export type StructuredEvidenceAnswer =

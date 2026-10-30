@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useServices } from "../app/services";
 import { MentorGuide } from "../components/MentorGuide";
+import { TabSafetyNotice } from "../components/TabSafetyNotice";
 import { VoxelTaskArt, taskDetails } from "../components/VoxelTaskArt";
 import { VoxelWorld } from "../components/VoxelWorld";
 import type {
@@ -57,6 +58,8 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
   const [confidence, setConfidence] = useState<OnboardingConfidence | null>(null);
   const [taskCategory, setTaskCategory] = useState<OnboardingTaskCategory | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const submitBusy = useRef(false);
+  const [saveError, setSaveError] = useState(false);
 
   // AID-1150/AID-1134 T1: a mudança de etapa precisa ser anunciada — foco no h1
   // da nova etapa (padrão do LessonScreen/CheckpointScreen) reposiciona a
@@ -93,6 +96,7 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
           : TASK_OPTIONS;
 
   const handleSelect = (value: string) => {
+    if (submitBusy.current) return;
     if (currentStep.key === "goal") setGoal(value as OnboardingGoal);
     else if (currentStep.key === "context") setContext(value as OnboardingContext);
     else if (currentStep.key === "confidence") setConfidence(value as OnboardingConfidence);
@@ -100,21 +104,31 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
   };
 
   const handleNext = async () => {
+    if (submitBusy.current) return;
     if (step < STEPS.length - 1) {
       setStep(step + 1);
       return;
     }
-    if (!goal || !context || !confidence || !taskCategory || submitting) return;
+    if (!goal || !context || !confidence || !taskCategory) return;
+    submitBusy.current = true;
     setSubmitting(true);
-    const updated = await services.useCases.completeOnboarding({
-      goal,
-      context,
-      confidence,
-      taskCategory,
-      // Standalone app stays IA na Prática. Trilha Dev is a CTA to the public OS.
-      audience: "ia_pratica",
-    });
-    onDone(updated);
+    setSaveError(false);
+    try {
+      const updated = await services.useCases.completeOnboarding({
+        goal,
+        context,
+        confidence,
+        taskCategory,
+        // Standalone app stays IA na Prática. Trilha Dev is a CTA to the public OS.
+        audience: "ia_pratica",
+      });
+      onDone(updated);
+    } catch {
+      setSaveError(true);
+    } finally {
+      submitBusy.current = false;
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -143,17 +157,62 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
 
       {currentStep.key === "welcome" ? (
         <div className="welcome-layout">
-          <VoxelWorld variant="welcome" />
           <div className="welcome-content">
-            <MentorGuide testId="assistant-welcome">
-              <p>
-                Eu sou a Lumi. Os moradores trazem pedidos curtos e você aprende a usar IA ajudando
-                a vila, uma escolha de cada vez.
-              </p>
-              <p className="muted">
-                Aqui não existe pressa nem punição: tente, confira, peça uma dica e ajuste quando
-                precisar.
-              </p>
+            <div className="welcome-briefing">
+              <p className="welcome-briefing-label">Sua jornada começa aqui</p>
+              <h2>Aprenda IA ajudando a vila</h2>
+              <p>Explore situações do dia a dia em exercícios simulados, sem IA ao vivo:</p>
+              <ol className="welcome-steps">
+                <li>
+                  <span>1</span> Escolha uma situação
+                </li>
+                <li>
+                  <span>2</span> Pratique uma resposta
+                </li>
+                <li>
+                  <span>3</span> Receba feedback e ajuste
+                </li>
+              </ol>
+              <div className="privacy-note">
+                <span aria-hidden="true">◆</span>
+                <p>
+                  <strong>Piloto gratuito para maiores de 18 anos.</strong> Seu progresso fica neste
+                  navegador, sem conta. Respostas podem ser compartilhadas, conforme o{" "}
+                  <a
+                    href="./privacidade.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-describedby="welcome-policy-new-tab"
+                  >
+                    aviso de privacidade <span aria-hidden="true">↗</span>
+                  </a>
+                  . Ao continuar, você concorda com os{" "}
+                  <a
+                    href="./termos.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-describedby="welcome-policy-new-tab"
+                  >
+                    termos do piloto <span aria-hidden="true">↗</span>
+                  </a>{" "}
+                  e leu o aviso.
+                  <span id="welcome-policy-new-tab" className="sr-only">
+                    Abre em nova aba
+                  </span>
+                </p>
+              </div>
+              <button
+                type="button"
+                className="btn btn-primary welcome-start"
+                data-testid="onboarding-next"
+                onClick={() => void handleNext()}
+              >
+                Começar na Vila Lume <span aria-hidden="true">→</span>
+              </button>
+            </div>
+
+            <MentorGuide testId="assistant-welcome" compact>
+              <p>Eu sou a Lumi, sua guia. Tente, confira, peça uma dica e ajuste sem pressa.</p>
             </MentorGuide>
 
             <div className="audience-routes" aria-label="Trilhas do AI Dev School">
@@ -182,25 +241,25 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
                 <span className="route-badge">Abrir no OS</span>
               </a>
             </div>
-
-            <div className="privacy-note">
-              <span aria-hidden="true">◆</span>
-              <p>
-                <strong>Piloto gratuito para maiores de 18 anos.</strong> Seu progresso fica somente
-                neste navegador, sem conta e sem registrar detalhes das suas tarefas. Ao continuar,
-                você concorda com os <a href="./termos.html">termos do piloto</a> e leu o{" "}
-                <a href="./privacidade.html">aviso de privacidade</a>.
-              </p>
-            </div>
           </div>
+          <VoxelWorld variant="welcome" />
         </div>
       ) : (
         <div className="onboarding-question-layout">
           <div>
             <p className="step-copy">
-              Etapa {step + 1} de {STEPS.length} · personalize seu primeiro mundo
+              Etapa {step + 1} de {STEPS.length} · conheça a Vila Lume
             </p>
-            <div className="option-list" role="radiogroup" aria-label={currentStep.question}>
+            <p className="muted" id="onboarding-required-hint">
+              Escolha uma opção para continuar.
+            </p>
+            <div
+              className="option-list"
+              role="radiogroup"
+              aria-label={currentStep.question}
+              aria-describedby="onboarding-required-hint"
+              aria-required="true"
+            >
               {options.map((option) => {
                 const task = typeof option === "string" ? taskDetails(option) : undefined;
                 const value = typeof option === "string" ? option : option.value;
@@ -215,10 +274,11 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
                       name={`onboarding-${currentStep.key}`}
                       value={value}
                       checked={currentValue === value}
+                      disabled={submitting}
                       data-testid={`onboarding-option-${value}`}
                       onChange={() => handleSelect(value)}
                     />
-                    {task && <VoxelTaskArt category={value as OnboardingTaskCategory} />}
+                    {task && <VoxelTaskArt category={value as OnboardingTaskCategory} decorative />}
                     <span>
                       <strong>{label}</strong>
                       {task && <small>{task.guidance}</small>}
@@ -232,28 +292,63 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
             </div>
           </div>
           <MentorGuide compact>
-            <p>Não existe resposta certa aqui. Isso só ajuda a escolher exemplos mais úteis.</p>
+            <p>
+              Não existe resposta certa aqui.{" "}
+              {currentStep.key === "confidence"
+                ? "Sua escolha pode mudar a dica inicial para quem está começando."
+                : currentStep.key === "task"
+                  ? "Sua escolha aparece como aplicação sugerida na primeira missão; os exercícios são os mesmos."
+                  : "Esta escolha não muda os exercícios e será guardada neste navegador ao concluir."}
+            </p>
           </MentorGuide>
         </div>
       )}
 
-      <div className="onboarding-actions">
-        {step > 0 && (
-          <button type="button" className="btn btn-link btn-back" onClick={() => setStep(step - 1)}>
-            Voltar
+      {saveError && (
+        <p role="alert" className="feedback feedback-fail">
+          Não foi possível confirmar suas escolhas. Elas podem já ter sido salvas; nesse caso, as
+          primeiras escolhas serão mantidas. Tente novamente ou recarregue: o aplicativo tenta abrir
+          o progresso salvo, e respostas ainda não salvas serão perdidas.
+        </p>
+      )}
+      <div aria-live="polite">{submitting ? "Salvando suas escolhas…" : ""}</div>
+      {currentStep.key === "task" && (
+        <p className="muted">
+          <TabSafetyNotice />
+        </p>
+      )}
+      {step > 0 && (
+        <div className="onboarding-actions">
+          {step > 0 && (
+            <button
+              type="button"
+              className="btn btn-link btn-back"
+              aria-disabled={submitting}
+              onClick={() => {
+                if (!submitBusy.current) setStep(step - 1);
+              }}
+            >
+              Voltar
+            </button>
+          )}
+          <button
+            type="button"
+            className="btn btn-primary"
+            data-testid="onboarding-next"
+            disabled={currentStep.key !== "welcome" && currentValue === null}
+            aria-disabled={submitting}
+            aria-busy={submitting}
+            onClick={() => void handleNext()}
+          >
+            {submitting
+              ? "Salvando…"
+              : step < STEPS.length - 1
+                ? "Continuar jornada"
+                : "Abrir mapa da Vila Lume"}
+            <span aria-hidden="true">→</span>
           </button>
-        )}
-        <button
-          type="button"
-          className="btn btn-primary"
-          data-testid="onboarding-next"
-          disabled={(currentStep.key !== "welcome" && currentValue === null) || submitting}
-          onClick={() => void handleNext()}
-        >
-          {step < STEPS.length - 1 ? "Continuar jornada" : "Abrir mapa da Vila Lume"}
-          <span aria-hidden="true">→</span>
-        </button>
-      </div>
+        </div>
+      )}
     </section>
   );
 }

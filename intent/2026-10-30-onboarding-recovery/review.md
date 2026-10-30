@@ -1,0 +1,5 @@
+# Review and verification
+
+Independent local review reproduced a storage error that left the onboarding button disabled indefinitely and emitted an unhandled rejection, and reproduced duplicate same-event writes. A synchronous guard now blocks repeated saves, editing and back navigation during the operation; a mounted live region and focusable busy button communicate progress. Failure preserves the selections and explains that the first saved choices can prevail if the outcome was uncertain.
+
+Three local browser tests passed for failure before a write, a simulated error notification after a real commit with edited retry, and delayed duplicate activation with keyboard/focus and editing blocked. Four relevant component tests passed; lint passed. Independent review verified the post-commit scenario and corrected wording that could imply every choice would be visible after reload. The post-commit notification is simulated and actual screen-reader speech was not tested. External navigation, other tabs and concurrent independent clients are not covered. No formal approval was granted.

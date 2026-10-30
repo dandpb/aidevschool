@@ -19,11 +19,16 @@ export function taskDetails(category: OnboardingTaskCategory) {
   return TASK_DETAILS[category];
 }
 
-export function VoxelTaskArt({ category }: { category: OnboardingTaskCategory }) {
+export function VoxelTaskArt({
+  category,
+  decorative = false,
+}: { category: OnboardingTaskCategory; decorative?: boolean }) {
   return (
     <span
       className={`voxel-task voxel-task-${category}`}
-      aria-label={`Ilustração de ${taskDetails(category).label}`}
+      role={decorative ? undefined : "img"}
+      aria-hidden={decorative || undefined}
+      aria-label={decorative ? undefined : `Ilustração de ${taskDetails(category).label}`}
     >
       <span />
       <span />

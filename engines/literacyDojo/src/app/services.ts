@@ -144,9 +144,11 @@ export class BootBlockedError extends Error {
   constructor(
     public readonly reason: BootBlockedReason,
     detail: string,
+    cause?: unknown,
   ) {
     super(
       `Seu progresso local está em um formato não reconhecido por esta versão (${detail}). Nada foi apagado — os dados estão preservados neste navegador. Recarregar a página é seguro; se o problema persistir, use a versão mais recente do app.`,
+      { cause },
     );
     this.name = "BootBlockedError";
   }
@@ -157,7 +159,11 @@ function noReadError<T>(
   reason: BootBlockedReason,
 ): Exclude<KeyRead<T>, { status: "read-error" }> {
   if (read.status === "read-error") {
-    throw new BootBlockedError(reason, String((read.error as Error)?.message ?? read.error));
+    throw new BootBlockedError(
+      reason,
+      String((read.error as Error)?.message ?? read.error),
+      read.error,
+    );
   }
   return read as Exclude<KeyRead<T>, { status: "read-error" }>;
 }
@@ -219,6 +225,7 @@ export async function loadOrActivateState(services: Services): Promise<LearnerSt
     throw new BootBlockedError(
       "state-read-error",
       String((stateRead.error as Error)?.message ?? stateRead.error),
+      stateRead.error,
     );
   if (stateRead.status === "present-invalid")
     throw new BootBlockedError("state-invalid", stateRead.reason ?? "forma inválida");

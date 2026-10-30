@@ -1,5 +1,6 @@
 import type { LessonDefinition, ModuleDefinition } from "../data/generated/lessons";
 import { isLessonGateLocked } from "./checkpoints";
+import { parseReviewTimestamp } from "./reviewTimestamp";
 import { nextReadyLessonId, readyLessonEntries } from "./track";
 import {
   type XpLedgerV1,
@@ -122,7 +123,8 @@ export const ACHIEVEMENT_DEFINITIONS: {
   {
     id: "track_complete",
     title: "Trilha completa",
-    description: "Concluiu todas as 14 lições da trilha.",
+    description:
+      "Concluiu todas as lições publicadas da jornada IA na Prática à época da conquista.",
   },
   {
     id: "streak_3",
@@ -237,12 +239,13 @@ export function isLessonUnlocked(progress: LearnerProgress, lessonId: string): b
 
 export function startLesson(progress: LearnerProgress, lessonId: string): LearnerProgress {
   const current = progress.lessonStatus[lessonId];
+  if (current === "completed") return progress;
   return {
     ...progress,
     currentLessonId: lessonId,
     lessonStatus: {
       ...progress.lessonStatus,
-      [lessonId]: current === "completed" ? "completed" : "in_progress",
+      [lessonId]: "in_progress",
     },
   };
 }
@@ -330,12 +333,40 @@ function nextLessonIdFor(
   return nextReadyLessonId(modules, completedLessonId);
 }
 
+/** Dia civil anterior no calendário local, sem assumir 24 horas por dia. */
+function previousLocalDateKey(now: Date): string {
+  const previousDate = new Date(0);
+  previousDate.setUTCFullYear(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+  return `${previousDate.getUTCFullYear()}-${String(previousDate.getUTCMonth() + 1).padStart(2, "0")}-${String(previousDate.getUTCDate()).padStart(2, "0")}`;
+}
+
+/** Projeção de leitura; null indica data ausente, inválida ou futura sem conclusão segura. */
+export function currentStreakForDate(streak: LearnerProgress["streak"], now: Date): number | null {
+  if (!Number.isSafeInteger(streak.current) || streak.current < 0) return null;
+  if (streak.current === 0) return 0;
+  const last = streak.lastActivityDate;
+  if (typeof last !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(last) || Number.isNaN(now.getTime()))
+    return null;
+  const [year, month, day] = last.split("-").map(Number);
+  const parsed = new Date(0);
+  parsed.setUTCFullYear(year, month - 1, day);
+  if (
+    parsed.getUTCFullYear() !== year ||
+    parsed.getUTCMonth() !== month - 1 ||
+    parsed.getUTCDate() !== day
+  )
+    return null;
+  const today = localDateKey(now);
+  if (last > today) return null;
+  return last === today || last === previousLocalDateKey(now) ? streak.current : 0;
+}
+
 /** Sequência por data local: mesma data não repete; dia seguinte incrementa; lacuna recomeça em 1 (sem punição além disso). */
 export function applyStreak(progress: LearnerProgress, now: Date): LearnerProgress {
   const today = localDateKey(now);
   const last = progress.streak.lastActivityDate;
   if (last === today) return progress;
-  const yesterday = localDateKey(new Date(now.getTime() - DAY_MS));
+  const yesterday = previousLocalDateKey(now);
   const current = last === yesterday ? progress.streak.current + 1 : 1;
   return {
     ...progress,
@@ -381,6 +412,7 @@ export function applyAttemptToSkills(
   passed: boolean,
   now: Date,
   intervalsDays: number[],
+  scheduleOnPass = true,
 ): LearnerProgress {
   const skills = { ...progress.skills };
   const iso = now.toISOString();
@@ -397,7 +429,11 @@ export function applyAttemptToSkills(
       nextReviewAt: previous?.nextReviewAt,
       reviewStage: previous?.reviewStage,
     };
-    if (passed && intervalsDays.length > 0) {
+    if (!scheduleOnPass && next.reviewStage === undefined && intervalsDays.length > 0) {
+      // Congela o estágio legado antes de contar a tentativa da sessão atual.
+      next.reviewStage = clampStage((previous?.passes ?? 1) - 1, intervalsDays.length - 1);
+    }
+    if (passed && scheduleOnPass && intervalsDays.length > 0) {
       // Com estágio persistido (corredor §4.4), cada aprovação avança 1 hop a
       // partir dele; legado sem estágio deriva de passes (semântica anterior).
       const stage =
@@ -413,18 +449,25 @@ export function applyAttemptToSkills(
 }
 
 export function reviewsDue(progress: LearnerProgress, now: Date): SkillPractice[] {
-  const iso = now.toISOString();
-  return Object.values(progress.skills).filter(
-    (skill) => skill.nextReviewAt !== undefined && skill.nextReviewAt <= iso,
-  );
+  const instant = now.getTime();
+  return Object.values(progress.skills).filter((skill) => {
+    const due = parseReviewTimestamp(skill.nextReviewAt);
+    return due !== null && due <= instant;
+  });
 }
 
 /** Agenda de revisões futuras (nextReviewAt no futuro), ordenada por data. */
 export function upcomingReviews(progress: LearnerProgress, now: Date): SkillPractice[] {
-  const iso = now.toISOString();
+  const instant = now.getTime();
   return Object.values(progress.skills)
-    .filter((skill) => skill.nextReviewAt !== undefined && skill.nextReviewAt > iso)
-    .sort((a, b) => (a.nextReviewAt ?? "").localeCompare(b.nextReviewAt ?? ""));
+    .filter((skill) => {
+      const due = parseReviewTimestamp(skill.nextReviewAt);
+      return due !== null && due > instant;
+    })
+    .sort(
+      (a, b) =>
+        (parseReviewTimestamp(a.nextReviewAt) ?? 0) - (parseReviewTimestamp(b.nextReviewAt) ?? 0),
+    );
 }
 
 export type LessonOutcome = {
@@ -535,6 +578,8 @@ function updateMapInitial(
   progress: LearnerProgress,
   update: (current: MapInitialState) => MapInitialState,
 ): LearnerProgress {
+  // These markers describe the initial route decision, not later practice.
+  if (progress.lessonStatus[MAP_INITIAL_LESSON_ID] === "completed") return progress;
   const current = progress.onboarding.mapInitial ?? emptyMapInitialState();
   return {
     ...progress,
@@ -581,6 +626,7 @@ export function recordActivityAttempt(
     skillIds: string[];
     intervalsDays: number[];
     now: Date;
+    deferReviewSchedule?: boolean;
   },
 ): { progress: LearnerProgress; ledger: XpLedgerV1 };
 export function recordActivityAttempt(
@@ -592,6 +638,7 @@ export function recordActivityAttempt(
     skillIds: string[];
     intervalsDays: number[];
     now: Date;
+    deferReviewSchedule?: boolean;
   },
 ): LearnerProgress;
 export function recordActivityAttempt(
@@ -605,6 +652,7 @@ export function recordActivityAttempt(
         skillIds: string[];
         intervalsDays: number[];
         now: Date;
+        deferReviewSchedule?: boolean;
       },
   maybeInput?: {
     lessonId: string;
@@ -613,6 +661,7 @@ export function recordActivityAttempt(
     skillIds: string[];
     intervalsDays: number[];
     now: Date;
+    deferReviewSchedule?: boolean;
   },
 ): { progress: LearnerProgress; ledger: XpLedgerV1 } | LearnerProgress {
   const isLegacyCall = maybeInput === undefined;
@@ -626,6 +675,7 @@ export function recordActivityAttempt(
           skillIds: string[];
           intervalsDays: number[];
           now: Date;
+          deferReviewSchedule?: boolean;
         }),
         activityId: (ledgerOrInput as { activityId?: string }).activityId ?? "__legacy_activity__",
       }
@@ -645,6 +695,7 @@ export function recordActivityAttempt(
     input.evaluation.pass,
     input.now,
     input.intervalsDays,
+    !input.deferReviewSchedule,
   );
   next = applyStreak(next, input.now);
   let nextLedger = ledger;
@@ -773,7 +824,7 @@ export function completeLesson(
     ...progress,
     lessonStatus: { ...progress.lessonStatus, [lesson.id]: "completed" },
   };
-  if (lesson.id === MAP_INITIAL_LESSON_ID) {
+  if (lesson.id === MAP_INITIAL_LESSON_ID && progress.lessonStatus[lesson.id] !== "completed") {
     next = {
       ...next,
       onboarding: { ...next.onboarding, route: mapInitialRoute(next.onboarding.mapInitial) },
@@ -787,7 +838,13 @@ export function completeLesson(
   next = scheduleReviewForLesson(next, lesson, now, 0);
   const unlocked = unlockNextReadyLesson(next, modules, lesson.id);
   next = unlocked.progress;
-  next = { ...next, currentLessonId: unlocked.unlockedLessonId ?? lesson.id };
+  next = {
+    ...next,
+    currentLessonId:
+      progress.lessonStatus[lesson.id] === "completed"
+        ? progress.currentLessonId
+        : (unlocked.unlockedLessonId ?? lesson.id),
+  };
   const withAchievements = applyAchievements(next, achievementModules, now);
   next = withAchievements.progress;
 

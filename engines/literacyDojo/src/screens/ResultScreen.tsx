@@ -1,6 +1,8 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { LessonSummary } from "../app/App";
 import { useServices } from "../app/services";
+import { VerificationNotConfiguredError } from "../application/verificationErrors";
+import { ReviewPoints } from "../components/ReviewPoints";
 import { VoxelSkillArt } from "../components/VoxelSkillArt";
 import { VoxelTaskArt, taskDetails } from "../components/VoxelTaskArt";
 import { VoxelWorld } from "../components/VoxelWorld";
@@ -19,47 +21,104 @@ import type { LiteracyVerificationReceipt } from "../domain/verification";
  */
 export function ResultScreen({
   summary,
+  mutationBlocked = false,
   onNextLesson,
   onHome,
   onMap,
   hosted = false,
+  taskCategory,
 }: {
   summary: LessonSummary;
+  mutationBlocked?: boolean;
   onNextLesson: (lessonId: string) => void;
   onHome: () => void;
   onMap: () => void;
   hosted?: boolean;
+  taskCategory?: OnboardingTaskCategory;
 }) {
   const services = useServices();
-  const [taskCategory, setTaskCategory] = useState<OnboardingTaskCategory>();
   const [receipt, setReceipt] = useState<LiteracyVerificationReceipt>();
-  const [verificationError, setVerificationError] = useState<string>();
+  const [verificationError, setVerificationError] = useState<{
+    message: string;
+    retryable: boolean;
+  }>();
   const [verifying, setVerifying] = useState(false);
+  const verificationBusy = useRef(false);
+  const retryRef = useRef<HTMLButtonElement | null>(null);
+  const verificationHeadingRef = useRef<HTMLHeadingElement | null>(null);
+  const restoreVerificationFocus = useRef(false);
   const { lesson } = summary;
+  const verifiedActivityIndex =
+    receipt &&
+    summary.evidenceRecord &&
+    receipt.lesson_id === lesson.id &&
+    receipt.activity_id === summary.evidenceRecord.activityId
+      ? lesson.activities.findIndex((activity) => activity.id === receipt.activity_id)
+      : -1;
   const successMessages = summary.activityResults
-    .filter((result) => result.pass && result.feedback.summary)
+    .filter(
+      (result) =>
+        result.pass &&
+        result.feedback.summary &&
+        result.feedback.perCheck.every((check) => check.passed),
+    )
     .map((result) => result.feedback.summary);
+  const reviewActivities = summary.activityResults.map((result) => {
+    const index = lesson.activities.findIndex((activity) => activity.id === result.activityId);
+    return {
+      id: result.activityId,
+      index,
+      instruction: lesson.activities[index]?.instruction,
+      pass: result.pass,
+      feedback: result.feedback,
+    };
+  });
 
   useEffect(() => {
-    void services.stateStore.readState().then((read) => {
-      if (read.status === "present-valid") {
-        setTaskCategory(read.value.progress.onboarding.taskCategory);
-      }
-    });
-  }, [services]);
+    const terminal = receipt || (verificationError && !verificationError.retryable);
+    if (terminal && restoreVerificationFocus.current && document.activeElement === document.body) {
+      verificationHeadingRef.current?.focus();
+    }
+    if (terminal) restoreVerificationFocus.current = false;
+  }, [receipt, verificationError]);
+
+  useEffect(() => {
+    if (!verifying) return;
+    const cancelRestore = () => {
+      restoreVerificationFocus.current = false;
+    };
+    document.addEventListener("pointerdown", cancelRestore);
+    document.addEventListener("focusin", cancelRestore);
+    document.addEventListener("wheel", cancelRestore);
+    document.addEventListener("keydown", cancelRestore);
+    return () => {
+      document.removeEventListener("pointerdown", cancelRestore);
+      document.removeEventListener("focusin", cancelRestore);
+      document.removeEventListener("wheel", cancelRestore);
+      document.removeEventListener("keydown", cancelRestore);
+    };
+  }, [verifying]);
 
   const verifyAttempt = useCallback(async () => {
-    if (!summary.evidenceRecord) return;
+    if (!summary.evidenceRecord || verificationBusy.current) return;
+    restoreVerificationFocus.current =
+      retryRef.current !== null && document.activeElement === retryRef.current;
+    verificationBusy.current = true;
     setVerifying(true);
-    setVerificationError(undefined);
     try {
       setReceipt(await services.verification.verify(summary.evidenceRecord));
+      setVerificationError(undefined);
     } catch (error) {
+      if (!(error instanceof VerificationNotConfiguredError))
+        restoreVerificationFocus.current = false;
       setReceipt(undefined);
-      setVerificationError(
-        error instanceof Error ? error.message : "Não foi possível verificar esta tentativa.",
-      );
+      setVerificationError({
+        message:
+          error instanceof Error ? error.message : "Não foi possível verificar esta tentativa.",
+        retryable: !(error instanceof VerificationNotConfiguredError),
+      });
     } finally {
+      verificationBusy.current = false;
       setVerifying(false);
     }
   }, [services.verification, summary.evidenceRecord]);
@@ -82,7 +141,7 @@ export function ResultScreen({
             {lesson.title}
           </h1>
           <p className="result-score">
-            {summary.mode === "review" ? "Revisão registrada" : "XP conquistado"} ·{" "}
+            {summary.mode === "review" ? "Revisão registrada · " : ""}
             {Math.round(summary.lessonScore * 100)}% de pontuação
           </p>
         </div>
@@ -122,6 +181,8 @@ export function ResultScreen({
         </div>
       )}
 
+      <ReviewPoints activities={reviewActivities} />
+
       <div className="card">
         <h2>Para fixar</h2>
         <ul>
@@ -129,7 +190,11 @@ export function ResultScreen({
             <li key={criterion.id}>{criterion.text}</li>
           ))}
         </ul>
-        <p className="muted">Vamos lembrar você de revisar esta lição nos próximos dias.</p>
+        <p className="muted">
+          {hosted
+            ? "Acompanhe os próximos passos no aplicativo que abriu esta missão."
+            : "Quando houver revisões disponíveis, elas aparecerão em seu progresso neste navegador."}
+        </p>
       </div>
 
       <div className="card card-note" data-testid="completion-distinction">
@@ -138,38 +203,54 @@ export function ResultScreen({
           <strong>Lição concluída</strong> registra o seu progresso neste aparelho. Isso é diferente
           de <strong>competência verificada</strong>.{" "}
           {hosted
-            ? "A evidência seguirá para verificação independente, mas este fluxo não altera o estado canônico."
-            : "Ela depende de uma verificação independente, que ainda não faz parte deste aplicativo."}
+            ? "A comprovação exige verificação independente. Acompanhe o resultado da tentativa abaixo e, se disponível, no aplicativo que abriu esta missão. Este fluxo não altera o estado canônico."
+            : "A comprovação de competência exige verificação independente."}
         </p>
       </div>
 
       <div className="card" data-testid="verification-status" aria-live="polite">
-        <h2>Verificação da tentativa</h2>
+        <h2 ref={verificationHeadingRef} tabIndex={-1}>
+          Verificação da tentativa
+        </h2>
         {verifying && <p>Enviando evidência estruturada para verificação independente…</p>}
         {receipt && (
           <p>
-            <strong>Recibo independente: {receipt.verdict}</strong>. Ele corresponde à tentativa{" "}
-            {receipt.attempt_id}. A lição continua concluída somente neste aparelho; este recibo não
-            altera domínio canônico.
+            <strong>
+              Recibo independente: tentativa{" "}
+              {receipt.verdict === "PASS" ? "aprovada" : "não confirmada"}
+            </strong>
+            {receipt.verdict === "FAIL" &&
+              ". Isso não significa necessariamente que sua resposta esteja errada"}
+            . Este resultado se refere somente à tentativa
+            {verifiedActivityIndex >= 0
+              ? ` da atividade ${verifiedActivityIndex + 1} de ${lesson.activities.length}`
+              : " de uma atividade"}
+            . Identificador da tentativa: {receipt.attempt_id}. A lição continua concluída somente
+            neste aparelho; este recibo não altera domínio canônico.
           </p>
         )}
         {verificationError && (
           <>
-            <p role="alert">{verificationError}</p>
-            <button
-              type="button"
-              className="btn btn-secondary"
-              data-testid="retry-verification"
-              onClick={() => void verifyAttempt()}
-            >
-              Tentar verificação novamente
-            </button>
+            {!verifying && <p role="alert">{verificationError.message}</p>}
+            {verificationError.retryable && (
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-testid="retry-verification"
+                ref={retryRef}
+                aria-disabled={verifying}
+                aria-busy={verifying}
+                onClick={() => void verifyAttempt()}
+              >
+                {verifying ? "Verificando…" : "Tentar verificação novamente"}
+              </button>
+            )}
           </>
         )}
         {!summary.evidenceRecord && <p>Nenhuma tentativa aprovada disponível para verificação.</p>}
       </div>
 
-      {lesson.id === MAP_INITIAL_LESSON_ID && summary.nextLessonId && (
+      {lesson.id === MAP_INITIAL_LESSON_ID && summary.nextLessonId && !summary.replay && (
         <>
           {taskCategory && (
             <div className="card task-context" data-testid="result-task-context">
@@ -199,13 +280,14 @@ export function ResultScreen({
       <div className="actions">
         {hosted ? (
           <output className="muted">
-            Sinal de conclusão enviado ao hub. Use o botão Voltar ao hub ao redor da missão.
+            Sinal de conclusão enviado. Acompanhe a conclusão no aplicativo que abriu esta missão.
           </output>
-        ) : summary.nextLessonId ? (
+        ) : summary.nextLessonId && !summary.replay ? (
           <button
             type="button"
             className="btn btn-primary"
             data-testid="next-lesson"
+            aria-disabled={mutationBlocked}
             onClick={() => onNextLesson(summary.nextLessonId as string)}
           >
             Próximo pedido

@@ -1,0 +1,5 @@
+# Independent review
+
+A reviewer completed l12 with a partial pass in local Chromium. The result grouped the existing password explanation with its activity, without displaying the submitted answer; after reload, the app returned Home, so the summary remains transient. At 360×740 and 1280×800 no horizontal overflow or axe WCAG 2/2.1 A/AA violations were reported. The diff reads feedback already in the in-memory summary and does not read evidence answers or change progress.
+
+The before-fix full-lesson browser test failed; afterward it passed. Eight component tests cover grouped and missing messages, all-correct results, hosted review rendering and existing verification retry; lint/build and independent review passed. The partial hosted case was rendered as a component, not run in a real host; actual screen-reader speech was not tested. Existing future custom providers are not guaranteed to return only static text, though this change renders their feedback as React text and adds no persistence. The build retains the large-chunk warning.

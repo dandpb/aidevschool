@@ -18,6 +18,8 @@ export function ChoiceView({
   const { prompt, multiSelect, options } = activity.data;
   const selected = new Set(answer.optionIds);
   const inputType = multiSelect ? "checkbox" : "radio";
+  const isInvalid = (optionId: string) =>
+    invalidIds.includes(optionId) && (multiSelect || selected.has(optionId));
 
   const handleChange = (optionId: string) => {
     onChange({ optionIds: multiSelect ? toggleId(answer.optionIds, optionId) : [optionId] });
@@ -32,7 +34,7 @@ export function ChoiceView({
           <label
             key={option.id}
             className={`option-card${selected.has(option.id) ? " is-selected" : ""}${
-              invalidIds.includes(option.id) ? " is-invalid" : ""
+              isInvalid(option.id) ? " is-invalid" : ""
             }`}
           >
             <input
@@ -44,10 +46,21 @@ export function ChoiceView({
               disabled={disabled}
               /* W3 §4.1 (AID-1096): checks falhando marcados com aria-invalid,
                  não só com a affordance visual .is-invalid. */
-              aria-invalid={invalidIds.includes(option.id) || undefined}
+              aria-invalid={isInvalid(option.id) || undefined}
+              aria-labelledby={`${activity.id}-${option.id}-label`}
+              aria-describedby={
+                multiSelect && isInvalid(option.id) ? `${activity.id}-${option.id}-note` : undefined
+              }
               onChange={() => handleChange(option.id)}
             />
-            <span>{option.text}</span>
+            <span>
+              <span id={`${activity.id}-${option.id}-label`}>{option.text}</span>
+              {multiSelect && isInvalid(option.id) && (
+                <strong id={`${activity.id}-${option.id}-note`}>
+                  {selected.has(option.id) ? "Desmarque esta opção." : "Falta marcar esta opção."}
+                </strong>
+              )}
+            </span>
           </label>
         ))}
       </fieldset>

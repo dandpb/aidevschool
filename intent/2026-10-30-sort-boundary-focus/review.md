@@ -1,0 +1,5 @@
+# Review and verification
+
+A local browser test reproduced focus loss when a sort item reached the top. Both boundaries now retain focus using guarded aria-disabled controls; a polite live region reports the new position. Repeated boundary activation does not change the order. Independent review found that retry could leave a misleading position; the message is now hidden when the current order differs from the announced order, and the browser test covers retry. A full unit run initially exposed a duplicate implicit status role; changing the new region to aria-live without a status role resolved that conflict without modifying the existing test. The full unit suite then passed 421 tests with one skipped; the corridor and final focused browser test passed, as did lint.
+
+Independent review checked both boundaries and retry. Actual screen-reader speech was not tested. A previous message can reappear if the exact same activity and order recur without remounting, but the reported position remains accurate; no claim is made about that announcement being a new movement. No formal approval was granted.

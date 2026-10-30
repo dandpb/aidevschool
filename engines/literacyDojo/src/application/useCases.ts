@@ -17,6 +17,7 @@ import {
   isCheckpointCompleted,
   startCheckpointSession,
 } from "../domain/checkpoints";
+import { addExtraContextFeedback, selectedExtraContextIds } from "../domain/contextFeedback";
 import { type ActivityAnswer, type EvaluationResult, evaluateActivity } from "../domain/evaluation";
 import { type LiteracyEvidenceRecord, buildEvidenceRecord } from "../domain/evidence";
 import type { AttemptFeedback } from "../domain/feedback";
@@ -26,6 +27,7 @@ import {
   reconcileJourneyCursors,
   selectJourney,
 } from "../domain/journeyProgress";
+import { UnmigratableProgressError } from "../domain/migration";
 import {
   type AudienceChoice,
   type CompleteLessonResult,
@@ -46,7 +48,8 @@ import {
   startLesson as startLessonInDomain,
 } from "../domain/progress";
 import { parseImportedBackup, serializeBackupForExport } from "../domain/progressBackup";
-import type { LearnerStateV1 } from "../domain/xpLedger";
+import { type LearnerStateV1, XpLedgerInvalidError } from "../domain/xpLedger";
+import { BackupImportValidationError, BackupImportWriteError } from "./backupImportErrors";
 import type {
   AnalyticsSink,
   ContentRepository,
@@ -82,10 +85,33 @@ export type SubmitAttemptResult = {
   record: LiteracyEvidenceRecord;
 };
 
+/** Capture the caller's answer before asynchronous storage work begins. */
+function snapshotAnswer(answer: ActivityAnswer): ActivityAnswer {
+  if ("optionIds" in answer) return { optionIds: [...answer.optionIds] };
+  if ("orderedIds" in answer) return { orderedIds: [...answer.orderedIds] };
+  if ("contextIds" in answer) return { contextIds: [...answer.contextIds] };
+  if ("criterionIds" in answer) {
+    return { outputId: answer.outputId, criterionIds: [...answer.criterionIds] };
+  }
+  if ("labels" in answer) return { labels: { ...answer.labels } };
+  if ("verdicts" in answer) return { verdicts: { ...answer.verdicts } };
+  return { values: { ...answer.values } };
+}
+
 export type ResumeDestination =
   | { kind: "onboarding" }
   | { kind: "home" }
   | { kind: "lesson"; lessonId: string };
+
+/** Derive the destination from one confirmed progress snapshot. */
+export function resumeDestinationForProgress(progress: LearnerProgress | null): ResumeDestination {
+  if (!progress || !progress.onboarding.completed) return { kind: "onboarding" };
+  const current = progress.currentLessonId;
+  if (current && progress.lessonStatus[current] === "in_progress") {
+    return { kind: "lesson", lessonId: current };
+  }
+  return { kind: "home" };
+}
 
 /**
  * Lições autorizadas pelo contrato hospedado (missões publicadas pelo OS).
@@ -172,6 +198,17 @@ export class LiteracyUseCases {
       }
       return current;
     }
+    return (await this.requireState()).progress;
+  }
+
+  /** Lê o progresso autoritativo sem alterá-lo, para reconciliar uma gravação incerta. */
+  async readProgressForRecovery(): Promise<LearnerProgress> {
+    return this.requireProgress();
+  }
+
+  /** Backup grava o estado completo. Um repo legado separado não pode ser reconciliado aqui. */
+  async readBackupProgressForRecovery(): Promise<LearnerProgress> {
+    if (this.deps.progress) throw new Error("Repositório legado separado requer recarga segura");
     return (await this.requireState()).progress;
   }
 
@@ -317,22 +354,41 @@ export class LiteracyUseCases {
     answer: ActivityAnswer;
     /** "review" quando a tentativa faz parte de uma revisão espaçada. */
     context?: "initial" | "review";
+    /** Somente revisão de lição em andamento; desafios também usam context=review. */
+    deferReviewSchedule?: boolean;
   }): Promise<SubmitAttemptResult> {
     const lesson = this.requireLesson(input.lessonId);
     const activity = this.requireActivity(lesson, input.activityId);
-    const evaluation = evaluateActivity(activity, input.answer);
+    const answer = snapshotAnswer(input.answer);
+    const evaluation = evaluateActivity(activity, answer);
+    const extraContextIds = selectedExtraContextIds(activity, answer);
+    const context = input.context ?? "initial";
+    const deferReviewSchedule = context === "review" && input.deferReviewSchedule === true;
 
     const now = this.deps.clock();
+    // Validate the immutable attempt before saving progress. The real attempt ID
+    // is assigned after the write, but all answer/content constraints are known now.
+    buildEvidenceRecord({
+      attemptId: "preflight",
+      lessonId: lesson.id,
+      lessonVersion: lesson.version,
+      skillIds: [...lesson.skillIds],
+      evaluation,
+      answer,
+      timestamp: now.toISOString(),
+      context,
+    });
     let next: LearnerProgress;
     if (this.deps.progress) {
       next = await this.withProgress((current) => {
         const recorded = recordActivityAttempt(current, {
           lessonId: lesson.id,
-          activityId: input.activityId,
+          activityId: activity.id,
           evaluation,
           skillIds: lesson.skillIds,
           intervalsDays: lesson.review.intervalsDays,
           now,
+          deferReviewSchedule,
         });
         return { next: recorded, value: recorded };
       });
@@ -340,11 +396,12 @@ export class LiteracyUseCases {
       const state = await this.requireState();
       const transition = recordActivityAttempt(state.progress, state.xpLedger, {
         lessonId: lesson.id,
-        activityId: input.activityId,
+        activityId: activity.id,
         evaluation,
         skillIds: lesson.skillIds,
         intervalsDays: lesson.review.intervalsDays,
         now,
+        deferReviewSchedule,
       });
       next = transition.progress;
       await this.deps.state.saveState({ ...state, progress: next, xpLedger: transition.ledger });
@@ -356,9 +413,9 @@ export class LiteracyUseCases {
       lessonVersion: lesson.version,
       skillIds: [...lesson.skillIds],
       evaluation,
-      answer: input.answer,
+      answer,
       timestamp: now.toISOString(),
-      context: input.context ?? "initial",
+      context,
     });
     this.deps.evidence.emit(record);
 
@@ -386,7 +443,12 @@ export class LiteracyUseCases {
     return {
       progress: next,
       evaluation,
-      feedback: this.deps.feedback.feedbackFor(activity, evaluation),
+      feedback: addExtraContextFeedback(
+        activity,
+        evaluation,
+        this.deps.feedback.feedbackFor(activity, evaluation),
+        extraContextIds,
+      ),
       record,
     };
   }
@@ -450,13 +512,16 @@ export class LiteracyUseCases {
         }
         const rec = {
           ...result,
-          progress: reconcileJourneyCursors(
-            result.progress,
-            lessonJourney,
-            lesson.id,
-            result.nextLessonId,
-            this.journeyModules(),
-          ),
+          progress:
+            current.lessonStatus[lesson.id] === "completed"
+              ? result.progress
+              : reconcileJourneyCursors(
+                  result.progress,
+                  lessonJourney,
+                  lesson.id,
+                  result.nextLessonId,
+                  this.journeyModules(),
+                ),
         };
         return { next: rec.progress, value: rec };
       });
@@ -505,13 +570,16 @@ export class LiteracyUseCases {
     }
     const reconciled = {
       ...result,
-      progress: reconcileJourneyCursors(
-        result.progress,
-        lessonJourney,
-        lesson.id,
-        result.nextLessonId,
-        this.journeyModules(),
-      ),
+      progress:
+        state.progress.lessonStatus[lesson.id] === "completed"
+          ? result.progress
+          : reconcileJourneyCursors(
+              result.progress,
+              lessonJourney,
+              lesson.id,
+              result.nextLessonId,
+              this.journeyModules(),
+            ),
     };
     await this.deps.state.saveState({
       ...state,
@@ -598,7 +666,7 @@ export class LiteracyUseCases {
     const lesson = this.requireLesson(input.lessonId);
     const outcome = evaluateLessonCompletion(lesson, input.bestScores);
     const state = await this.requireState();
-    let progress = state.progress;
+    let progress = this.deps.progress ? await this.requireProgress() : state.progress;
     if (outcome.completed) {
       if (input.intervalIndex !== undefined) {
         progress = scheduleReviewForLesson(
@@ -673,20 +741,22 @@ export class LiteracyUseCases {
       scores,
       this.deps.clock(),
     );
-    await this.withState(result.progress);
+    if (result.progress !== progress) await this.withState(result.progress);
     return result;
   }
 
   /** Ponto de retomada após reload: onboarding pendente → onboarding; lição em andamento → player; senão → home. */
-  async resumeSession(): Promise<ResumeDestination> {
+  async resumeSession(options: { requireExisting?: boolean } = {}): Promise<ResumeDestination> {
     const read = await this.deps.state.readState();
-    const progress = read.status === "present-valid" ? read.value.progress : null;
-    if (!progress || !progress.onboarding.completed) return { kind: "onboarding" };
-    const current = progress.currentLessonId;
-    if (current && progress.lessonStatus[current] === "in_progress") {
-      return { kind: "lesson", lessonId: current };
+    if (
+      read.status === "read-error" ||
+      read.status === "present-invalid" ||
+      (read.status === "absent" && options.requireExisting)
+    ) {
+      throw new Error("Não foi possível confirmar o estado da retomada.");
     }
-    return { kind: "home" };
+    const progress = read.status === "present-valid" ? read.value.progress : null;
+    return resumeDestinationForProgress(progress);
   }
 
   /**
@@ -705,8 +775,23 @@ export class LiteracyUseCases {
    * não é tocado.
    */
   async importProgress(raw: unknown): Promise<LearnerProgress> {
-    const next = parseImportedBackup(raw, this.deps.content.getContentVersion(), this.deps.clock());
-    await this.deps.state.saveState(next);
+    const contentVersion = this.deps.content.getContentVersion();
+    const now = this.deps.clock();
+    let next: LearnerStateV1;
+    try {
+      next = parseImportedBackup(raw, contentVersion, now);
+    } catch (error) {
+      if (error instanceof UnmigratableProgressError) {
+        throw new BackupImportValidationError(error.reason);
+      }
+      if (error instanceof XpLedgerInvalidError) throw new BackupImportValidationError("corrupt");
+      throw error;
+    }
+    try {
+      await this.deps.state.saveState(next);
+    } catch {
+      throw new BackupImportWriteError();
+    }
     return next.progress;
   }
 }

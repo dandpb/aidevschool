@@ -1,0 +1,5 @@
+# Review and verification
+
+The browser test failed before the notice existed. A local first-lesson test then recorded one attempt, entered a second activity, reloaded and confirmed the intro/first activity return while the recorded attempt remains. Fourteen component tests covered the notice before the action in review and hosted variants plus existing first-touch behavior; six focused browser tests passed, including the partial-session reload and completion recovery. Lint/build passed with the existing bundle-size warning.
+
+Independent review checked 320/375/1280, confirmed no overflow or axe violations and tested a hosted-protocol harness locally; this is not production OS evidence. Review found that partial reviews can be rescheduled before completion, so an earlier promise to restart the session was removed. The final notice does not claim a due review remains available after interruption. The early rescheduling behavior is a separate issue and is not corrected here. No formal approval or countersign.

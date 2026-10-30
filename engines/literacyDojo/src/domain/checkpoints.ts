@@ -1,4 +1,5 @@
 import type { CatalogLessonEntry, ModuleDefinition } from "../data/generated/lessons";
+import { activeJourneyOf } from "./journeyProgress";
 import type { LearnerProgress } from "./progress";
 import { readyLessonEntries } from "./track";
 
@@ -195,6 +196,7 @@ export function startCheckpointSession(
 export type CompleteCheckpointResult = {
   progress: LearnerProgress;
   outcome: CheckpointOutcome;
+  /** Lição recém-liberada ou cursor elegível já liberado em retry da mesma conclusão. */
   unlockedLessonId?: string;
 };
 
@@ -214,6 +216,21 @@ export function completeCheckpointSession(
   const outcome = evaluateCheckpointOutcome(bestScores);
   const current = progress.moduleCheckpoints[checkpoint.moduleId];
   const bestScore = Math.max(current?.bestScore ?? 0, outcome.score);
+  if (current?.status === "completed") {
+    // Uma resposta perdida após o commit pode levar a um retry da mesma sessão.
+    // Não regrave a conclusão nem ofereça uma lição que deixou de ser o cursor.
+    const targetModule = Object.entries(CHECKPOINT_ACTIVATION).find(
+      ([, gate]) => gate === checkpointId,
+    )?.[0];
+    const target = targetModule ? firstReadyLessonOfModule(modules, targetModule) : undefined;
+    const status = target ? progress.lessonStatus[target.id] : undefined;
+    const canContinue =
+      outcome.passed &&
+      activeJourneyOf(progress) === "ia_pratica" &&
+      target?.id === progress.currentLessonId &&
+      (status === "available" || status === "in_progress");
+    return { progress, outcome, ...(canContinue && target ? { unlockedLessonId: target.id } : {}) };
+  }
   if (!outcome.passed) {
     return {
       progress: {

@@ -1,18 +1,33 @@
 import { useEffect, useRef, useState } from "react";
 import { downloadTextFile } from "../adapters/downloadText";
 import { useServices } from "../app/services";
+import { BackupImportValidationError } from "../application/backupImportErrors";
+import { TabSafetyNotice } from "../components/TabSafetyNotice";
 import { activeJourneyOf } from "../domain/journeyProgress";
 import type { LearnerProgress } from "../domain/progress";
-import { ACHIEVEMENT_DEFINITIONS, localDateKey } from "../domain/progress";
+import { ACHIEVEMENT_DEFINITIONS, currentStreakForDate, localDateKey } from "../domain/progress";
+import { parseReviewTimestamp } from "../domain/reviewTimestamp";
 import { readyLessonEntries } from "../domain/track";
 import { buildTrackQueries } from "../domain/trackQueries";
 
 function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString("pt-BR", {
+  const instant = parseReviewTimestamp(iso);
+  if (instant === null) return "data indisponível";
+  return new Date(instant).toLocaleDateString("pt-BR", {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
   });
+}
+
+function formatUpcomingReview(iso: string): string {
+  const instant = parseReviewTimestamp(iso);
+  if (instant === null) return "data indisponível";
+  const date = new Date(instant);
+  const offset = -date.getTimezoneOffset();
+  const pad = (value: number) => String(value).padStart(2, "0");
+  const zone = `UTC${offset < 0 ? "-" : "+"}${pad(Math.floor(Math.abs(offset) / 60))}:${pad(Math.abs(offset) % 60)}`;
+  return `${formatDate(iso)}, por volta de ${pad(date.getHours())}:${pad(date.getMinutes())} (hora local, ${zone})`;
 }
 
 /**
@@ -22,19 +37,28 @@ function formatDate(iso: string): string {
  */
 export function ProgressScreen({
   progress,
+  mutationBlocked = false,
+  canMutate = () => true,
   onBack,
   onStartLesson,
   onReview,
   onProgressImported,
+  onUncertainProgress,
 }: {
   progress: LearnerProgress;
+  mutationBlocked?: boolean;
+  canMutate?: () => boolean;
   onBack: () => void;
   onStartLesson: (lessonId: string) => void;
   onReview: (lessonId: string) => void;
   onProgressImported: (progress: LearnerProgress) => void;
+  onUncertainProgress?: () => Promise<void>;
 }) {
   const services = useServices();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const backupBusyRef = useRef(false);
+  const [backupOperation, setBackupOperation] = useState<"import" | "export" | null>(null);
+  const backupBusy = backupOperation !== null;
   // AID-1755/T3 (padrão AID-1150): a tela possui o contrato de foco do seu
   // próprio h1 (tabIndex=-1 + refocus na montagem, padrão do
   // LessonScreen/CheckpointScreen) — a troca de rota SPA reposiciona a
@@ -56,12 +80,23 @@ export function ProgressScreen({
     activeJourneyOf(progress),
   );
   const { dailyGoal: goal, dueReviews: due, upcomingReviews: upcoming } = queries;
+  const currentStreak = currentStreakForDate(progress.streak, services.clock());
   const unlockedIds = new Set(progress.achievements.map((achievement) => achievement.id));
   const practicedSkills = Object.values(progress.skills);
+  const invalidReviewDate = practicedSkills.some(
+    (skill) =>
+      skill.nextReviewAt !== undefined && parseReviewTimestamp(skill.nextReviewAt) === null,
+  );
 
   const handleExport = async () => {
+    if (backupBusyRef.current || !canMutate()) return;
+    backupBusyRef.current = true;
+    setBackupOperation("export");
+    setBackupStatus(null);
+    let downloadMayHaveStarted = false;
     try {
       const json = await services.useCases.exportProgress();
+      downloadMayHaveStarted = true;
       downloadTextFile(
         `literacydojo-progress-${localDateKey(services.clock())}.json`,
         json,
@@ -69,33 +104,69 @@ export function ProgressScreen({
       );
       setBackupStatus({
         kind: "ok",
-        text: "Backup baixado. O arquivo registra no máximo lições concluídas — nunca mastery.",
+        text: "Download solicitado. Confira se o arquivo foi salvo antes de apagar dados. Concluir uma lição não comprova competência.",
       });
-    } catch (error) {
+    } catch {
       setBackupStatus({
         kind: "error",
-        text: error instanceof Error ? error.message : "Não foi possível exportar o progresso.",
+        text: downloadMayHaveStarted
+          ? "Não foi possível confirmar o download. Confira os downloads do navegador antes de tentar novamente."
+          : "Não foi possível preparar o backup. Nenhum download foi solicitado nesta tentativa. Tente novamente.",
       });
+    } finally {
+      backupBusyRef.current = false;
+      setBackupOperation(null);
     }
   };
 
   const handleImportFile = async (file: File) => {
+    if (backupBusyRef.current || !canMutate()) return;
+    backupBusyRef.current = true;
+    setBackupOperation("import");
+    setBackupStatus(null);
+    let importStarted = false;
     try {
-      const next = await services.useCases.importProgress(await file.text());
+      const raw = await file.text();
+      let next: LearnerProgress;
+      try {
+        importStarted = true;
+        next = await services.useCases.importProgress(raw);
+      } catch (error) {
+        if (error instanceof BackupImportValidationError) {
+          setBackupStatus({
+            kind: "error",
+            text:
+              error.reason === "corrupt"
+                ? "O arquivo é inválido ou incompleto, ou usa um formato incompatível. Esta restauração não gravou dados; escolha outro backup."
+                : "Este formato de backup não é compatível. Esta restauração não gravou dados; escolha um backup compatível.",
+          });
+          return;
+        }
+        throw error;
+      }
       onProgressImported(next);
       setBackupStatus({
         kind: "ok",
-        text: "Backup restaurado neste navegador. completed não significa mastered.",
+        text: "Backup restaurado neste navegador. Concluir uma lição não comprova competência.",
       });
-    } catch (error) {
+    } catch {
+      if (importStarted) await onUncertainProgress?.();
       setBackupStatus({
         kind: "error",
-        text: error instanceof Error ? error.message : "Backup inválido ou não migrável.",
+        text: importStarted
+          ? "Não foi possível confirmar a restauração. Confira o arquivo; a gravação pode já ter ocorrido. Recarregue para verificar o progresso antes de tentar de novo."
+          : "Não foi possível ler o arquivo. Nenhuma restauração foi iniciada nesta tentativa. Escolha o arquivo novamente.",
       });
+    } finally {
+      backupBusyRef.current = false;
+      setBackupOperation(null);
     }
   };
 
-  const readyLessons = readyLessonEntries(services.content.listModules(activeJourneyOf(progress)));
+  const activeJourney = activeJourneyOf(progress);
+  const otherJourney = activeJourney === "ia_pratica" ? "dev" : "ia_pratica";
+  const readyLessons = readyLessonEntries(services.content.listModules(activeJourney));
+  const otherReadyLessons = readyLessonEntries(services.content.listModules(otherJourney));
   const lessonBySkillId = new Map<string, (typeof readyLessons)[number]>();
   for (const entry of readyLessons) {
     if (progress.lessonStatus[entry.id] !== "completed") continue;
@@ -114,8 +185,11 @@ export function ProgressScreen({
       <div className="card">
         <h2>Engajamento</h2>
         <p data-testid="progress-xp">
-          {progress.xp} XP · sequência atual de {progress.streak.current}{" "}
-          {progress.streak.current === 1 ? "dia" : "dias"} (recorde: {progress.streak.longest})
+          {progress.xp} XP ·{" "}
+          {currentStreak === null
+            ? "sequência atual indisponível"
+            : `sequência atual de ${currentStreak} ${currentStreak === 1 ? "dia" : "dias"}`}{" "}
+          (recorde: {progress.streak.longest})
         </p>
         <p className="muted">
           Meta de hoje: {goal.earned}/{goal.goal} XP {goal.done ? "— cumprida ✅" : ""}
@@ -138,9 +212,13 @@ export function ProgressScreen({
                 data-testid={`achievement-${definition.id}`}
               >
                 <strong>
-                  {unlocked ? "🏆 " : "🔒 "}
+                  <span aria-hidden="true">{unlocked ? "🏆 " : "🔒 "}</span>
                   {definition.title}
                 </strong>
+                <span className="muted">
+                  {" "}
+                  — {unlocked ? "Conquistada" : "Ainda não conquistada"}
+                </span>
                 <br />
                 <span className="muted">{definition.description}</span>
               </li>
@@ -169,27 +247,53 @@ export function ProgressScreen({
 
       <div className="card">
         <h2>Revisões</h2>
+        {invalidReviewDate && (
+          <p className="muted">
+            Algumas datas de revisão estão indisponíveis e não aparecem na agenda.
+          </p>
+        )}
         {due.length > 0 && (
           <>
             <p>Revisão pendente agora:</p>
             <ul data-testid="reviews-due">
               {due.map((skill) => {
                 const lesson = lessonForSkill(skill.skillId);
+                const otherLesson = otherReadyLessons.find(
+                  (entry) =>
+                    progress.lessonStatus[entry.id] === "completed" &&
+                    entry.skillIds.some((id) => id === skill.skillId),
+                );
                 return (
                   <li key={skill.skillId}>
                     {services.content.getSkillTitle(skill.skillId)}
-                    {lesson && (
+                    {lesson ? (
                       <>
                         {" "}
                         <button
                           type="button"
                           className="btn btn-small"
                           data-testid={`progress-review-${lesson.id}`}
-                          onClick={() => onReview(lesson.id)}
+                          aria-label={`Revisar ${services.content.getSkillTitle(skill.skillId)}: ${lesson.title}`}
+                          aria-disabled={backupBusy || mutationBlocked}
+                          onClick={() => {
+                            if (!backupBusyRef.current && canMutate()) onReview(lesson.id);
+                          }}
                         >
                           Revisar
                         </button>
                       </>
+                    ) : otherLesson ? (
+                      <span className="muted">
+                        {" "}
+                        — Volte ao início, escolha{" "}
+                        {otherJourney === "dev" ? "Jornada Dev" : "Vila Lume · IA na Prática"},
+                        depois volte do mapa e abra seu progresso para revisar.
+                      </span>
+                    ) : (
+                      <span className="muted">
+                        {" "}
+                        — Nenhuma lição concluída disponível para revisar esta habilidade.
+                      </span>
                     )}
                   </li>
                 );
@@ -204,13 +308,14 @@ export function ProgressScreen({
               {upcoming.map((skill) => (
                 <li key={skill.skillId}>
                   {services.content.getSkillTitle(skill.skillId)} —{" "}
-                  {formatDate(skill.nextReviewAt ?? "")}
+                  {formatUpcomingReview(skill.nextReviewAt ?? "")}
                 </li>
               ))}
             </ul>
           </>
         ) : (
-          due.length === 0 && <p className="muted">Nenhuma revisão agendada ainda.</p>
+          due.length === 0 &&
+          !invalidReviewDate && <p className="muted">Nenhuma revisão agendada ainda.</p>
         )}
       </div>
 
@@ -228,7 +333,11 @@ export function ProgressScreen({
                     type="button"
                     className="btn btn-small"
                     data-testid={`progress-start-${entry.id}`}
-                    onClick={() => onStartLesson(entry.id)}
+                    aria-label={`${status === "in_progress" ? "Continuar" : "Começar"} ${entry.title}`}
+                    aria-disabled={backupBusy || mutationBlocked}
+                    onClick={() => {
+                      if (!backupBusyRef.current && canMutate()) onStartLesson(entry.id);
+                    }}
                   >
                     {status === "in_progress" ? "Continuar" : "Começar"}
                   </button>
@@ -242,16 +351,27 @@ export function ProgressScreen({
       <div className="card" data-testid="progress-backup">
         <h2>Backup neste aparelho</h2>
         <p className="muted">
-          O progresso mora só neste navegador: não há conta nem sincronização. Limpar dados do site,
-          trocar de aparelho ou de perfil apaga o histórico. Exporte um JSON para guardar uma cópia;
-          ao importar, a migração atualiza o formato antigo e o teto continua <code>completed</code>{" "}
-          — nunca <code>mastered</code>.
+          O progresso mora só neste navegador: não há conta nem sincronização. Limpar os dados deste
+          site pode apagar o histórico; outro aparelho ou perfil não recebe o progresso
+          automaticamente. Exporte um JSON para guardar uma cópia e importe-o no outro aparelho ou
+          perfil. Ao importar, formatos antigos compatíveis são atualizados. O progresso registra
+          lições concluídas. Concluir uma lição não comprova competência; essa comprovação exige
+          verificação independente.
+        </p>
+        <p className="muted">
+          <TabSafetyNotice />
+        </p>
+        <p className="muted" id="backup-restore-notice">
+          Restaurar substitui o progresso atual das duas jornadas neste navegador pelo do arquivo;
+          os progressos não são combinados. Para preservar o progresso atual, baixe um backup antes
+          e confira se o arquivo foi salvo.
         </p>
         <div className="backup-actions">
           <button
             type="button"
             className="btn btn-secondary"
             data-testid="export-progress"
+            aria-disabled={backupBusy || mutationBlocked}
             onClick={() => void handleExport()}
           >
             Baixar backup JSON
@@ -260,7 +380,11 @@ export function ProgressScreen({
             type="button"
             className="btn btn-secondary"
             data-testid="import-progress"
-            onClick={() => fileInputRef.current?.click()}
+            aria-describedby="backup-restore-notice"
+            aria-disabled={backupBusy || mutationBlocked}
+            onClick={() => {
+              if (!backupBusyRef.current && canMutate()) fileInputRef.current?.click();
+            }}
           >
             Restaurar backup
           </button>
@@ -277,6 +401,12 @@ export function ProgressScreen({
             }}
           />
         </div>
+        {backupBusy && (
+          <output>
+            {backupOperation === "import" ? "Restaurando" : "Preparando"} backup… aguarde antes de
+            continuar.
+          </output>
+        )}
         {backupStatus ? (
           <p
             className={backupStatus.kind === "error" ? "backup-status is-error" : "backup-status"}
@@ -292,7 +422,10 @@ export function ProgressScreen({
         type="button"
         className="btn btn-secondary"
         data-testid="progress-back"
-        onClick={onBack}
+        aria-disabled={backupBusy}
+        onClick={() => {
+          if (!backupBusyRef.current) onBack();
+        }}
       >
         Voltar
       </button>

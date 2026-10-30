@@ -4,6 +4,7 @@ import type { CatalogLessonEntry, ModuleDefinition, SkillId } from "../data/gene
 import {
   CHECKPOINT_SELECTION,
   type CheckpointDefinition,
+  gateForModule,
   isCheckpointAvailable,
   isCheckpointCompleted,
   isLessonGateLocked,
@@ -41,6 +42,7 @@ export type TrackQueries = {
   pendingCheckpoint: CheckpointSummary | undefined;
   checkpointSummaries: CheckpointSummary[];
   reviewLesson: CatalogLessonEntry | undefined;
+  reviewSkill: SkillPractice | undefined;
   dailyGoal: DailyGoalStatus;
   trackSummary: { completed: number; total: number };
   dueReviews: SkillPractice[];
@@ -69,7 +71,9 @@ export function buildTrackQueries(
   const mission =
     ready.find(
       (entry) =>
-        entry.id === progress.currentLessonId && progress.lessonStatus[entry.id] !== "completed",
+        entry.id === progress.currentLessonId &&
+        (progress.lessonStatus[entry.id] === "available" ||
+          progress.lessonStatus[entry.id] === "in_progress"),
     ) ??
     ready.find((entry) => {
       const status = progress.lessonStatus[entry.id];
@@ -77,14 +81,20 @@ export function buildTrackQueries(
     });
 
   const due = reviewsDue(progress, now);
-  const reviewLesson =
-    due.length > 0
-      ? ready.find(
-          (entry) =>
-            progress.lessonStatus[entry.id] === "completed" &&
-            entry.skillIds.includes(due[0].skillId as SkillId),
-        )
-      : undefined;
+  let reviewLesson: CatalogLessonEntry | undefined;
+  let reviewSkill: SkillPractice | undefined;
+  for (const skill of due) {
+    const lesson = ready.find(
+      (entry) =>
+        progress.lessonStatus[entry.id] === "completed" &&
+        entry.skillIds.includes(skill.skillId as SkillId),
+    );
+    if (lesson) {
+      reviewLesson = lesson;
+      reviewSkill = skill;
+      break;
+    }
+  }
 
   const moduleSummaries: ModuleSummary[] = modules.map((module) => ({
     module,
@@ -111,7 +121,12 @@ export function buildTrackQueries(
   for (const summary of checkpointSummaries) {
     for (const other of moduleSummaries) {
       const first = other.module.lessons.find((lesson) => lesson.hasContent);
-      if (first && isLessonGateLocked(progress, modules, first.id)) {
+      if (
+        first &&
+        gateForModule(other.module.id) === summary.checkpoint.id &&
+        (progress.lessonStatus[first.id] ?? "locked") === "locked" &&
+        isLessonGateLocked(progress, modules, first.id)
+      ) {
         summary.gatesModuleTitle = other.module.title;
       }
     }
@@ -126,6 +141,7 @@ export function buildTrackQueries(
     pendingCheckpoint,
     checkpointSummaries,
     reviewLesson,
+    reviewSkill,
     dailyGoal: dailyGoalStatus(progress, now),
     trackSummary: trackSummary(modules, progress),
     dueReviews: due,

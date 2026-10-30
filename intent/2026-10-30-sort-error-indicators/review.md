@@ -1,0 +1,5 @@
+# Independent review
+
+A reviewer reproduced the missing indication in cp-01 at 375×812: two out-of-position items had an error class but no visible difference in normal or forced colors. After the change, only those two showed text and a border, both movement controls described the error, and moving by Enter kept focus and cleared stale marks. A successful recheck removed the indicators. The reviewer did not test a separate lesson; a subsequent local browser test did so.
+
+Before-fix normal/forced-color tests failed; after the change, four browser cases cover both modes, keyboard boundary focus and an actual lesson, with lint/build and independent review passing. Evaluation and scoring are unchanged. All 14 current sorting activities have 4 or 5 items, so a valid incorrect permutation is below the pass threshold; future larger activities may be partially accepted and are not marked by this failed-attempt behavior. Actual screen-reader speech was not tested; build retains the large-chunk warning.

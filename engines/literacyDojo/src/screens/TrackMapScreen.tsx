@@ -1,10 +1,16 @@
 import { useServices } from "../app/services";
 import { MentorGuide } from "../components/MentorGuide";
+import { TabSafetyNotice } from "../components/TabSafetyNotice";
 import { VoxelWorld } from "../components/VoxelWorld";
 import type { ModuleCheckpointId } from "../domain/checkpoints";
 import { isLessonGateLocked } from "../domain/checkpoints";
 import { activeJourneyOf } from "../domain/journeyProgress";
-import { type LearnerProgress, type LessonStatus, isLessonUnlocked } from "../domain/progress";
+import {
+  type LearnerProgress,
+  type LessonStatus,
+  currentStreakForDate,
+  isLessonUnlocked,
+} from "../domain/progress";
 import { buildTrackQueries } from "../domain/trackQueries";
 
 const STATUS_ICON: Record<LessonStatus, string> = {
@@ -39,20 +45,30 @@ const DEV_ZONE_COPY =
  */
 export function TrackMapScreen({
   progress,
+  mutationBlocked = false,
   onBack,
   onStartLesson,
   onOpenCheckpoint,
 }: {
   progress: LearnerProgress;
+  mutationBlocked?: boolean;
   onBack: () => void;
   onStartLesson: (lessonId: string) => void;
   onOpenCheckpoint: (checkpointId: ModuleCheckpointId) => void;
 }) {
   const services = useServices();
   const activeJourney = activeJourneyOf(progress);
+  const currentStreak = currentStreakForDate(progress.streak, services.clock());
   const queries = buildTrackQueries(progress, services.content, services.clock, activeJourney);
   const { trackSummary: summary, statusLabel } = queries;
   const modules = services.content.listModules(activeJourney);
+  const firstMission =
+    summary.completed === 0 &&
+    !queries.pendingCheckpoint &&
+    queries.mission &&
+    isLessonUnlocked(progress, queries.mission.id)
+      ? queries.mission
+      : undefined;
 
   return (
     <section className="screen map-screen" data-testid="map-screen" aria-labelledby="map-title">
@@ -67,6 +83,22 @@ export function TrackMapScreen({
               ? "Pedidos curtos de engenharia com assistentes de IA — tentar, receber feedback e avançar."
               : "Cada pedido leva de 3 a 5 minutos. Tente primeiro, receba feedback e ilumine o próximo caminho."}
           </p>
+          <p className="muted">
+            <TabSafetyNotice />
+          </p>
+          {firstMission && (
+            <button
+              type="button"
+              className="btn btn-secondary map-wayfinding"
+              onClick={() => {
+                const row = document.getElementById(`map-lesson-${firstMission.id}`);
+                row?.focus({ preventScroll: true });
+                row?.scrollIntoView({ block: "center", behavior: "auto" });
+              }}
+            >
+              Ir ao pedido: {firstMission.title} ↓
+            </button>
+          )}
           <div className="map-summary" aria-label="Resumo da trilha">
             <span>
               <strong>{summary.completed}</strong>/{summary.total} missões
@@ -75,7 +107,14 @@ export function TrackMapScreen({
               <strong>{progress.xp}</strong> XP
             </span>
             <span>
-              <strong>{progress.streak.current}</strong> dias de sequência
+              {currentStreak === null ? (
+                "Sequência atual indisponível"
+              ) : (
+                <>
+                  <strong>{currentStreak}</strong> {currentStreak === 1 ? "dia" : "dias"} de
+                  sequência
+                </>
+              )}
             </span>
           </div>
         </div>
@@ -84,8 +123,15 @@ export function TrackMapScreen({
 
       <MentorGuide compact testId="map-guide">
         <p>
-          Comece pelo pedido marcado como Disponível. Os bairros seguintes aparecem conforme você
-          pratica.
+          {queries.pendingCheckpoint
+            ? "Há um desafio aberto no mapa. Você também pode explorar os pedidos já desbloqueados."
+            : queries.mission && progress.lessonStatus[queries.mission.id] === "in_progress"
+              ? "Continue o pedido marcado como Em andamento."
+              : queries.mission
+                ? activeJourney === "dev"
+                  ? "Comece pelo pedido marcado como Disponível e avance pelos módulos."
+                  : "Comece pelo pedido marcado como Disponível. Os bairros seguintes aparecem conforme você pratica."
+                : "Confira o estado dos pedidos e dos desafios no mapa."}
         </p>
       </MentorGuide>
 
@@ -144,6 +190,12 @@ export function TrackMapScreen({
 
                 const status = progress.lessonStatus[entry.id] ?? "locked";
                 const unlocked = isLessonUnlocked(progress, entry.id);
+                const action =
+                  status === "completed"
+                    ? "Refazer"
+                    : status === "in_progress"
+                      ? "Continuar"
+                      : "Começar";
                 const gateLocked =
                   status === "locked" && isLessonGateLocked(progress, modules, entry.id);
                 return (
@@ -151,6 +203,8 @@ export function TrackMapScreen({
                     key={entry.id}
                     className={`lesson-row lesson-row-${status}`}
                     data-testid={`map-lesson-${entry.id}`}
+                    id={`map-lesson-${entry.id}`}
+                    tabIndex={-1}
                   >
                     <span className={`lesson-node lesson-node-${status}`} aria-hidden="true">
                       {STATUS_ICON[status]}
@@ -168,13 +222,11 @@ export function TrackMapScreen({
                         type="button"
                         className="btn btn-small"
                         data-testid={`map-start-${entry.id}`}
+                        aria-label={`${action} ${entry.title}`}
+                        aria-disabled={mutationBlocked}
                         onClick={() => onStartLesson(entry.id)}
                       >
-                        {status === "completed"
-                          ? "Refazer"
-                          : status === "in_progress"
-                            ? "Continuar"
-                            : "Começar"}
+                        {action}
                       </button>
                     ) : gateLocked ? (
                       <span className="chip chip-locked" data-testid={`map-gate-${entry.id}`}>
@@ -209,7 +261,7 @@ export function TrackMapScreen({
                     </h3>
                     <p className="muted">
                       {item.completed
-                        ? `Bairro ${module.order} completo! Sua próxima revisão já está agendada.`
+                        ? `Bairro ${module.order} completo! Confira suas revisões em Progresso.`
                         : `Revisão rápida de ${module.title} — menos de 3 minutos.`}
                     </p>
                     {!item.completed && (
@@ -217,6 +269,7 @@ export function TrackMapScreen({
                         type="button"
                         className="btn btn-primary"
                         data-testid={`checkpoint-start-${item.checkpoint.id}`}
+                        aria-disabled={mutationBlocked}
                         onClick={() => onOpenCheckpoint(item.checkpoint.id)}
                       >
                         Fazer desafio
@@ -227,7 +280,8 @@ export function TrackMapScreen({
                         className="checkpoint-gate-hint"
                         data-testid={`checkpoint-gate-${item.checkpoint.id}`}
                       >
-                        Complete o Desafio do Módulo {module.order} para entrar no próximo bairro.
+                        Complete o Desafio do Módulo {module.order} para desbloquear a primeira
+                        missão do próximo bairro.
                       </p>
                     )}
                   </div>

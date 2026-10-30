@@ -1,0 +1,5 @@
+# Review and verification
+
+A delayed-attempt component test reproduced that in-app exit was available while a write remained pending. The exit now uses the existing synchronous busy refs and exposes aria-disabled while remaining focusable. Three component tests cover attempts, hints, retry and review completion, including release after success or failure. A local browser test holds the attempt transaction callback, verifies Enter on exit does not leave, then releases it and exits. The pre-existing successful-feedback transition moves focus to the activity heading, so the browser test explicitly refocuses exit afterward rather than claiming focus stays there.
+
+Independent review reran the component tests and verified delayed hint/failure and retry/success in Chromium. Initial lesson completion shares the same guard as review completion but was not separately exercised. Browser navigation, reload, host controls, other tabs and operations started elsewhere remain outside this guard. No formal approval was granted.

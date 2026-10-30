@@ -17,6 +17,13 @@ export function OutputComparisonView({
 }) {
   const { scenario, outputs, criteria } = activity.data;
   const selectedCriteria = new Set(answer.criterionIds);
+  const invalidCriteria = new Set(invalidIds);
+  if (invalidIds.includes("noExtraCriteria")) {
+    const required = new Set(activity.evaluation.requiredCriterionIds);
+    for (const id of selectedCriteria) {
+      if (!required.has(id)) invalidCriteria.add(id);
+    }
+  }
   const groupName = `output-${activity.id}`;
 
   const toggleCriterion = (criterionId: string) => {
@@ -28,12 +35,16 @@ export function OutputComparisonView({
       {scenario && <p className="scenario">{scenario}</p>}
 
       <fieldset className="fieldset" aria-describedby={`${activity.id}-outputs-legend`}>
-        <legend id={`${activity.id}-outputs-legend`}>Qual resposta é mais confiável?</legend>
+        <legend id={`${activity.id}-outputs-legend`}>
+          Escolha uma opção conforme a instrução da atividade
+        </legend>
         {outputs.map((output, index) => (
           <label
             key={output.id}
             className={`option-card${answer.outputId === output.id ? " is-selected" : ""}${
-              invalidIds.includes("betterOutputId") ? " is-invalid" : ""
+              invalidIds.includes("betterOutputId") && answer.outputId === output.id
+                ? " is-invalid"
+                : ""
             }`}
           >
             <input
@@ -42,11 +53,15 @@ export function OutputComparisonView({
               value={output.id}
               data-testid={`output-${output.id}`}
               checked={answer.outputId === output.id}
+              aria-invalid={
+                (invalidIds.includes("betterOutputId") && answer.outputId === output.id) ||
+                undefined
+              }
               disabled={disabled}
               onChange={() => onChange({ ...answer, outputId: output.id })}
             />
             <span>
-              <strong>Resposta {String.fromCharCode(65 + index)}</strong>
+              <strong>Opção {String.fromCharCode(65 + index)}</strong>
               <br />
               {output.text}
             </span>
@@ -60,13 +75,14 @@ export function OutputComparisonView({
           <label
             key={criterion.id}
             className={`option-card option-inline${selectedCriteria.has(criterion.id) ? " is-selected" : ""}${
-              invalidIds.includes(criterion.id) ? " is-invalid" : ""
+              invalidCriteria.has(criterion.id) ? " is-invalid" : ""
             }`}
           >
             <input
               type="checkbox"
               data-testid={`criterion-${criterion.id}`}
               checked={selectedCriteria.has(criterion.id)}
+              aria-invalid={invalidCriteria.has(criterion.id) || undefined}
               disabled={disabled}
               onChange={() => toggleCriterion(criterion.id)}
             />

@@ -1,0 +1,3 @@
+# Specification
+
+Opening and completing an already completed lesson as practice must preserve the current lesson and per-journey cursors; first completion remains unchanged. In standalone replay results, offer a return to the village rather than a misleading old next lesson or first-time route explanation. Preserve the existing hosted next-lesson signal, review mode, XP, evidence and review scheduling. Existing next-lesson unlock behavior, including legacy missing-route fallback, is outside this change. Verify interruption/reload, full replay, cursor separation, first completion, hosted protocol and independent review.
