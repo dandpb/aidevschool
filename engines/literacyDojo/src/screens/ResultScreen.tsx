@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { LessonSummary } from "../app/App";
 import { useServices } from "../app/services";
 import { VoxelSkillArt } from "../components/VoxelSkillArt";
@@ -37,6 +37,7 @@ export function ResultScreen({
   const [receipt, setReceipt] = useState<LiteracyVerificationReceipt>();
   const [verificationError, setVerificationError] = useState<string>();
   const [verifying, setVerifying] = useState(false);
+  const verificationBusy = useRef(false);
   const { lesson } = summary;
   const successMessages = summary.activityResults
     .filter((result) => result.pass && result.feedback.summary)
@@ -51,17 +52,19 @@ export function ResultScreen({
   }, [services]);
 
   const verifyAttempt = useCallback(async () => {
-    if (!summary.evidenceRecord) return;
+    if (!summary.evidenceRecord || verificationBusy.current) return;
+    verificationBusy.current = true;
     setVerifying(true);
-    setVerificationError(undefined);
     try {
       setReceipt(await services.verification.verify(summary.evidenceRecord));
+      setVerificationError(undefined);
     } catch (error) {
       setReceipt(undefined);
       setVerificationError(
         error instanceof Error ? error.message : "Não foi possível verificar esta tentativa.",
       );
     } finally {
+      verificationBusy.current = false;
       setVerifying(false);
     }
   }, [services.verification, summary.evidenceRecord]);
@@ -157,14 +160,16 @@ export function ResultScreen({
         )}
         {verificationError && (
           <>
-            <p role="alert">{verificationError}</p>
+            {!verifying && <p role="alert">{verificationError}</p>}
             <button
               type="button"
               className="btn btn-secondary"
               data-testid="retry-verification"
+              aria-disabled={verifying}
+              aria-busy={verifying}
               onClick={() => void verifyAttempt()}
             >
-              Tentar verificação novamente
+              {verifying ? "Verificando…" : "Tentar verificação novamente"}
             </button>
           </>
         )}
