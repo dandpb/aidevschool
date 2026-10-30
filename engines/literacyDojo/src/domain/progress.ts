@@ -122,7 +122,8 @@ export const ACHIEVEMENT_DEFINITIONS: {
   {
     id: "track_complete",
     title: "Trilha completa",
-    description: "Concluiu todas as 14 lições da trilha.",
+    description:
+      "Concluiu todas as lições publicadas da jornada IA na Prática à época da conquista.",
   },
   {
     id: "streak_3",
