@@ -224,8 +224,10 @@ export function ResultScreen({
           <p>
             <strong>
               Recibo independente: tentativa{" "}
-              {receipt.verdict === "PASS" ? "aprovada" : "não aprovada"}
+              {receipt.verdict === "PASS" ? "aprovada" : "não confirmada"}
             </strong>
+            {receipt.verdict === "FAIL" &&
+              ". Isso não significa necessariamente que sua resposta esteja errada"}
             . Este resultado se refere somente à tentativa
             {verifiedActivityIndex >= 0
               ? ` da atividade ${verifiedActivityIndex + 1} de ${lesson.activities.length}`

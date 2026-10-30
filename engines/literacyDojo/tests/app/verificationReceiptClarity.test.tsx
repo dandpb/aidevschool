@@ -64,8 +64,12 @@ it.each([
     );
     const card = screen.getByTestId("verification-status");
     expect(await within(card).findByText(/Recibo independente:/)).toHaveTextContent(
-      verdict === "PASS" ? "tentativa aprovada" : "tentativa não aprovada",
+      verdict === "PASS" ? "tentativa aprovada" : "tentativa não confirmada",
     );
+    if (verdict === "FAIL")
+      expect(card).toHaveTextContent(
+        "não significa necessariamente que sua resposta esteja errada",
+      );
     expect(card).toHaveTextContent(
       unknown
         ? "somente à tentativa de uma atividade"

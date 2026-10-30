@@ -122,7 +122,7 @@ describe("retry de verificação", () => {
     await act(async () => {
       release();
     });
-    expect(screen.getByText(/Recibo independente: tentativa não aprovada/)).toBeVisible();
+    expect(screen.getByText(/Recibo independente: tentativa não confirmada/)).toBeVisible();
     expect(screen.getByRole("heading", { name: "Verificação da tentativa" })).toHaveFocus();
   });
   it("não desloca foco escolhido durante retry pendente", async () => {
@@ -158,7 +158,7 @@ describe("retry de verificação", () => {
     await act(async () => {
       release();
     });
-    expect(screen.getByText(/Recibo independente: tentativa não aprovada/)).toBeVisible();
+    expect(screen.getByText(/Recibo independente: tentativa não confirmada/)).toBeVisible();
     expect(map).toHaveFocus();
   });
   it("verificação automática não desloca o foco já escolhido", async () => {
@@ -187,7 +187,7 @@ describe("retry de verificação", () => {
     await act(async () => {
       release();
     });
-    expect(screen.getByText(/Recibo independente: tentativa não aprovada/)).toBeVisible();
+    expect(screen.getByText(/Recibo independente: tentativa não confirmada/)).toBeVisible();
     expect(map).toHaveFocus();
   });
   it("não restaura foco após clique deliberado na área vazia", async () => {
@@ -222,7 +222,7 @@ describe("retry de verificação", () => {
     await act(async () => {
       release();
     });
-    expect(screen.getByText(/Recibo independente: tentativa não aprovada/)).toBeVisible();
+    expect(screen.getByText(/Recibo independente: tentativa não confirmada/)).toBeVisible();
     expect(screen.getByRole("heading", { name: "Verificação da tentativa" })).not.toHaveFocus();
   });
 });
