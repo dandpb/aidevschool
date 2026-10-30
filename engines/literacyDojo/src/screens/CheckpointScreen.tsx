@@ -64,6 +64,7 @@ export function CheckpointScreen({
   const [unlockedLessonId, setUnlockedLessonId] = useState<string | undefined>();
   const headingRef = useRef<HTMLHeadingElement | null>(null);
   const submitRef = useRef<HTMLButtonElement | null>(null);
+  const retryActivityRef = useRef<HTMLButtonElement | null>(null);
   const nextActionRef = useRef<HTMLButtonElement | null>(null);
   const feedbackRef = useRef<HTMLDivElement | null>(null);
   const rechecking = useRef(false);
@@ -188,6 +189,9 @@ export function CheckpointScreen({
 
   const handleRetry = () => {
     if (busyRef.current) return;
+    // O botão será removido ao limpar a tentativa. Preserve um destino de
+    // teclado sem mover um foco que já esteja em outro controle.
+    if (document.activeElement === retryActivityRef.current) headingRef.current?.focus();
     setOperationError(null);
     setAnswerEdited(false);
     setAttempts((previous) => {
@@ -477,6 +481,7 @@ export function CheckpointScreen({
             type="button"
             className="btn btn-secondary"
             data-testid="retry-activity"
+            ref={retryActivityRef}
             aria-disabled={submitting}
             onClick={handleRetry}
           >

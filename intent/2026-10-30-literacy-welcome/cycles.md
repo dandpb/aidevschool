@@ -75,6 +75,8 @@ Baseline: local main 12dd8bdf, screenshots at /workspace/ux-evidence/before-loca
 
 | 48 | Home advertised 9 Dev lessons although the available map contained 12. Derive the journey choice count from the same ready-content catalog as the map. | Before-fix local browser test failed; map comparison, 12 component cases including a one-lesson catalog, lint/build and independent mobile keyboard review passed. | Complete for the app's Home; the separate static entry contract still advertises 9 and requires its own coordinated update. |
 
+| 49 | Restarting a failed challenge activity removed its focused retry button, leaving keyboard focus on the page body. Move focus to the activity instruction when that button held focus. | Before-fix local browser test failed; four browser cases, two recovery component tests, lint/build and independent keyboard, mouse and deliberate-focus review passed. | Complete for tested challenge retries; screen-reader speech was not tested. |
+
 Independent review initially found DOM reading order inconsistent with the mobile visual order and copy suggesting a live AI service. Both were corrected and rechecked; an existing Dev badge contrast issue was also corrected. No formal approval or production deployment is implied. Screenshots and videos are local artifacts under `/workspace/ux-evidence/`, not production evidence.
 
 The next map shortcut was prototyped and discarded before commit: independent review reproduced duplicate `lesson_started` events on rapid clicks and identified stale progress or overwritten state when navigation, journey switching, reset, review or other writes overlap a pending start. A safe fix needs broader concurrency and reconciliation design and tests; it is not counted as a completed cycle.
