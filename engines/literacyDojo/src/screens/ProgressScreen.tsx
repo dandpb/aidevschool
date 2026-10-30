@@ -4,7 +4,7 @@ import { useServices } from "../app/services";
 import { BackupImportValidationError } from "../application/backupImportErrors";
 import { activeJourneyOf } from "../domain/journeyProgress";
 import type { LearnerProgress } from "../domain/progress";
-import { ACHIEVEMENT_DEFINITIONS, localDateKey } from "../domain/progress";
+import { ACHIEVEMENT_DEFINITIONS, currentStreakForDate, localDateKey } from "../domain/progress";
 import { readyLessonEntries } from "../domain/track";
 import { buildTrackQueries } from "../domain/trackQueries";
 
@@ -64,6 +64,7 @@ export function ProgressScreen({
     activeJourneyOf(progress),
   );
   const { dailyGoal: goal, dueReviews: due, upcomingReviews: upcoming } = queries;
+  const currentStreak = currentStreakForDate(progress.streak, services.clock());
   const unlockedIds = new Set(progress.achievements.map((achievement) => achievement.id));
   const practicedSkills = Object.values(progress.skills);
 
@@ -155,8 +156,11 @@ export function ProgressScreen({
       <div className="card">
         <h2>Engajamento</h2>
         <p data-testid="progress-xp">
-          {progress.xp} XP · sequência atual de {progress.streak.current}{" "}
-          {progress.streak.current === 1 ? "dia" : "dias"} (recorde: {progress.streak.longest})
+          {progress.xp} XP ·{" "}
+          {currentStreak === null
+            ? "sequência atual indisponível"
+            : `sequência atual de ${currentStreak} ${currentStreak === 1 ? "dia" : "dias"}`}{" "}
+          (recorde: {progress.streak.longest})
         </p>
         <p className="muted">
           Meta de hoje: {goal.earned}/{goal.goal} XP {goal.done ? "— cumprida ✅" : ""}

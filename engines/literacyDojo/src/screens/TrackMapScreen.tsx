@@ -4,7 +4,12 @@ import { VoxelWorld } from "../components/VoxelWorld";
 import type { ModuleCheckpointId } from "../domain/checkpoints";
 import { isLessonGateLocked } from "../domain/checkpoints";
 import { activeJourneyOf } from "../domain/journeyProgress";
-import { type LearnerProgress, type LessonStatus, isLessonUnlocked } from "../domain/progress";
+import {
+  type LearnerProgress,
+  type LessonStatus,
+  currentStreakForDate,
+  isLessonUnlocked,
+} from "../domain/progress";
 import { buildTrackQueries } from "../domain/trackQueries";
 
 const STATUS_ICON: Record<LessonStatus, string> = {
@@ -52,6 +57,7 @@ export function TrackMapScreen({
 }) {
   const services = useServices();
   const activeJourney = activeJourneyOf(progress);
+  const currentStreak = currentStreakForDate(progress.streak, services.clock());
   const queries = buildTrackQueries(progress, services.content, services.clock, activeJourney);
   const { trackSummary: summary, statusLabel } = queries;
   const modules = services.content.listModules(activeJourney);
@@ -97,7 +103,14 @@ export function TrackMapScreen({
               <strong>{progress.xp}</strong> XP
             </span>
             <span>
-              <strong>{progress.streak.current}</strong> dias de sequência
+              {currentStreak === null ? (
+                "Sequência atual indisponível"
+              ) : (
+                <>
+                  <strong>{currentStreak}</strong> {currentStreak === 1 ? "dia" : "dias"} de
+                  sequência
+                </>
+              )}
             </span>
           </div>
         </div>

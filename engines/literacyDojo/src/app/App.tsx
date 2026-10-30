@@ -8,6 +8,7 @@ import type { LiteracyEvidenceRecord } from "../domain/evidence";
 import type { AttemptFeedback } from "../domain/feedback";
 import { type JourneyId, activeJourneyOf } from "../domain/journeyProgress";
 import type { Achievement, LearnerProgress } from "../domain/progress";
+import { currentStreakForDate } from "../domain/progress";
 import { isRetrofitNoticeDue } from "../domain/retrofitNotice";
 import { LiteracyMissionAdapter, isHostedMission } from "../host/LiteracyMissionAdapter";
 import { CheckpointScreen } from "../screens/CheckpointScreen";
@@ -473,6 +474,7 @@ export function AppShell({
   }
 
   const renderedRevision = routeRevision.current;
+  const currentStreak = currentStreakForDate(progress.streak, services.clock());
   const isCurrentScreen = () => routeRevision.current === renderedRevision;
   const canMutateOnScreen = () => isCurrentScreen() && canMutate();
   const navigateFromScreen = (next: Route) => {
@@ -497,7 +499,11 @@ export function AppShell({
           {route.name !== "onboarding" && (
             <div className="product-stats" aria-label="Resumo do progresso">
               <span>⚡ {progress.xp} XP</span>
-              <span>🔥 {progress.streak.current}</span>
+              <span
+                aria-label={currentStreak === null ? "Sequência atual indisponível" : undefined}
+              >
+                🔥 {currentStreak ?? "—"}
+              </span>
             </div>
           )}
         </header>

@@ -331,16 +331,40 @@ function nextLessonIdFor(
   return nextReadyLessonId(modules, completedLessonId);
 }
 
+/** Dia civil anterior no calendário local, sem assumir 24 horas por dia. */
+function previousLocalDateKey(now: Date): string {
+  const previousDate = new Date(0);
+  previousDate.setUTCFullYear(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+  return `${previousDate.getUTCFullYear()}-${String(previousDate.getUTCMonth() + 1).padStart(2, "0")}-${String(previousDate.getUTCDate()).padStart(2, "0")}`;
+}
+
+/** Projeção de leitura; null indica data ausente, inválida ou futura sem conclusão segura. */
+export function currentStreakForDate(streak: LearnerProgress["streak"], now: Date): number | null {
+  if (!Number.isSafeInteger(streak.current) || streak.current < 0) return null;
+  if (streak.current === 0) return 0;
+  const last = streak.lastActivityDate;
+  if (typeof last !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(last) || Number.isNaN(now.getTime()))
+    return null;
+  const [year, month, day] = last.split("-").map(Number);
+  const parsed = new Date(0);
+  parsed.setUTCFullYear(year, month - 1, day);
+  if (
+    parsed.getUTCFullYear() !== year ||
+    parsed.getUTCMonth() !== month - 1 ||
+    parsed.getUTCDate() !== day
+  )
+    return null;
+  const today = localDateKey(now);
+  if (last > today) return null;
+  return last === today || last === previousLocalDateKey(now) ? streak.current : 0;
+}
+
 /** Sequência por data local: mesma data não repete; dia seguinte incrementa; lacuna recomeça em 1 (sem punição além disso). */
 export function applyStreak(progress: LearnerProgress, now: Date): LearnerProgress {
   const today = localDateKey(now);
   const last = progress.streak.lastActivityDate;
   if (last === today) return progress;
-  // Subtraia um dia do calendário local, não 24 horas do instante: dias de
-  // transição de fuso podem ter 23 ou 25 horas.
-  const previousDate = new Date(0);
-  previousDate.setUTCFullYear(now.getFullYear(), now.getMonth(), now.getDate() - 1);
-  const yesterday = `${previousDate.getUTCFullYear()}-${String(previousDate.getUTCMonth() + 1).padStart(2, "0")}-${String(previousDate.getUTCDate()).padStart(2, "0")}`;
+  const yesterday = previousLocalDateKey(now);
   const current = last === yesterday ? progress.streak.current + 1 : 1;
   return {
     ...progress,

@@ -4,6 +4,7 @@ import { MentorGuide } from "../components/MentorGuide";
 import { VoxelWorld } from "../components/VoxelWorld";
 import { type JourneyId, activeJourneyOf } from "../domain/journeyProgress";
 import type { LearnerProgress } from "../domain/progress";
+import { currentStreakForDate } from "../domain/progress";
 import { RETROFIT_NOTICE_S1, isRetrofittedLesson } from "../domain/retrofitNotice";
 import { reviewDueInfo } from "../domain/reviewDue";
 import { readyLessonEntries } from "../domain/track";
@@ -41,6 +42,7 @@ export function HomeScreen({
   const services = useServices();
   const track = services.content.getTrack();
   const activeJourney = activeJourneyOf(progress);
+  const currentStreak = currentStreakForDate(progress.streak, services.clock());
   const devLessonCount = readyLessonEntries(services.content.listModules("dev")).length;
   const queries = buildTrackQueries(progress, services.content, services.clock, activeJourney);
   const {
@@ -58,20 +60,26 @@ export function HomeScreen({
   // mudança de streak — o texto é inserido depois do render, então leitores
   // de tela o anunciam como atualização.
   const [liveMessage, setLiveMessage] = useState("");
-  const announcedStreak = useRef<number | null>(null);
+  const announcedStreak = useRef<number | null | undefined>(undefined);
   useEffect(() => {
-    const current = progress.streak.current;
-    if (announcedStreak.current === null) {
+    const current = currentStreak;
+    if (announcedStreak.current === undefined) {
       const reviewNote =
         dueReviews.length === 0
           ? ""
           : ` ${dueReviews.length} ${dueReviews.length === 1 ? "revisão devida" : "revisões devidas"} no total entre jornadas.`;
-      setLiveMessage(`Sequência: ${current} ${current === 1 ? "dia" : "dias"}.${reviewNote}`);
+      setLiveMessage(
+        `${current === null ? "Sequência atual indisponível." : `Sequência: ${current} ${current === 1 ? "dia" : "dias"}.`}${reviewNote}`,
+      );
     } else if (announcedStreak.current !== current) {
-      setLiveMessage(`Sequência agora: ${current} ${current === 1 ? "dia" : "dias"}.`);
+      setLiveMessage(
+        current === null
+          ? "Sequência atual indisponível."
+          : `Sequência agora: ${current} ${current === 1 ? "dia" : "dias"}.`,
+      );
     }
     announcedStreak.current = current;
-  }, [progress.streak.current, dueReviews.length]);
+  }, [currentStreak, dueReviews.length]);
 
   const reviewDue = reviewSkill?.nextReviewAt
     ? reviewDueInfo(reviewSkill.nextReviewAt, services.clock())
@@ -105,7 +113,9 @@ export function HomeScreen({
         <span className="stat" data-testid="hud-streak">
           <span data-testid="streak-value">
             <span aria-hidden="true">🔥 </span>
-            Sequência: {progress.streak.current} {progress.streak.current === 1 ? "dia" : "dias"}
+            {currentStreak === null
+              ? "Sequência atual indisponível"
+              : `Sequência: ${currentStreak} ${currentStreak === 1 ? "dia" : "dias"}`}
           </span>
         </span>
         <span
