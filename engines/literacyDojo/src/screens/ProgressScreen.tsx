@@ -32,6 +32,7 @@ export function ProgressScreen({
   onStartLesson,
   onReview,
   onProgressImported,
+  onUncertainProgress,
 }: {
   progress: LearnerProgress;
   mutationBlocked?: boolean;
@@ -40,6 +41,7 @@ export function ProgressScreen({
   onStartLesson: (lessonId: string) => void;
   onReview: (lessonId: string) => void;
   onProgressImported: (progress: LearnerProgress) => void;
+  onUncertainProgress?: () => Promise<void>;
 }) {
   const services = useServices();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -107,10 +109,12 @@ export function ProgressScreen({
     backupBusyRef.current = true;
     setBackupOperation("import");
     setBackupStatus(null);
+    let importStarted = false;
     try {
       const raw = await file.text();
       let next: LearnerProgress;
       try {
+        importStarted = true;
         next = await services.useCases.importProgress(raw);
       } catch (error) {
         if (error instanceof BackupImportValidationError) {
@@ -131,6 +135,7 @@ export function ProgressScreen({
         text: "Backup restaurado neste navegador. completed não significa mastered.",
       });
     } catch {
+      if (importStarted) await onUncertainProgress?.();
       setBackupStatus({
         kind: "error",
         text: "Não foi possível confirmar a restauração. Confira o arquivo; a gravação pode já ter ocorrido. Recarregue para verificar o progresso antes de tentar de novo.",

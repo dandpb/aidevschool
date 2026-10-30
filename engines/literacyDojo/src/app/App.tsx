@@ -349,13 +349,16 @@ export function AppShell({
   }, [blockForRecovery, services]);
 
   const reconcileScreenProgress = useCallback(
-    async (originRevision: number) => {
+    async (originRevision: number, source: "progress" | "backup" = "progress") => {
       if (routeRevision.current !== originRevision || !beginOperation("reconcile")) {
         blockForRecovery();
         return;
       }
       try {
-        const current = await services.useCases.readProgressForRecovery();
+        const current =
+          source === "backup"
+            ? await services.useCases.readBackupProgressForRecovery()
+            : await services.useCases.readProgressForRecovery();
         if (routeRevision.current === originRevision) setProgress(current);
         else blockForRecovery();
       } catch {
@@ -624,6 +627,7 @@ export function AppShell({
               onStartLesson={(lessonId) => void handleOpenLesson(lessonId, renderedRevision)}
               onReview={(lessonId) => void handleOpenReview(lessonId, renderedRevision)}
               onProgressImported={setProgress}
+              onUncertainProgress={() => reconcileScreenProgress(renderedRevision, "backup")}
             />
           )}
           {route.name === "lesson" && (

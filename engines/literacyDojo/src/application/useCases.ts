@@ -193,6 +193,12 @@ export class LiteracyUseCases {
     return this.requireProgress();
   }
 
+  /** Backup grava o estado completo. Um repo legado separado não pode ser reconciliado aqui. */
+  async readBackupProgressForRecovery(): Promise<LearnerProgress> {
+    if (this.deps.progress) throw new Error("Repositório legado separado requer recarga segura");
+    return (await this.requireState()).progress;
+  }
+
   /**
    * Carga autoritativa (AID-3888, precedência `e3ad989e`): o estado novo
    * válido é autoritativo — legado inválido/ilegível não bloqueia esta
