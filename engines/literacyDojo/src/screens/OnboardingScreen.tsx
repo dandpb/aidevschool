@@ -228,7 +228,7 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
         <div className="onboarding-question-layout">
           <div>
             <p className="step-copy">
-              Etapa {step + 1} de {STEPS.length} · personalize seu primeiro mundo
+              Etapa {step + 1} de {STEPS.length} · conheça a Vila Lume
             </p>
             <div className="option-list" role="radiogroup" aria-label={currentStep.question}>
               {options.map((option) => {
@@ -263,7 +263,14 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
             </div>
           </div>
           <MentorGuide compact>
-            <p>Não existe resposta certa aqui. Isso só ajuda a escolher exemplos mais úteis.</p>
+            <p>
+              Não existe resposta certa aqui.{" "}
+              {currentStep.key === "confidence"
+                ? "Sua escolha pode mudar a dica inicial para quem está começando."
+                : currentStep.key === "task"
+                  ? "Sua escolha aparece como aplicação sugerida na primeira missão; os exercícios são os mesmos."
+                  : "Esta escolha não muda os exercícios e será guardada neste navegador ao concluir."}
+            </p>
           </MentorGuide>
         </div>
       )}
