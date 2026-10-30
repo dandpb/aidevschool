@@ -17,6 +17,13 @@ export function OutputComparisonView({
 }) {
   const { scenario, outputs, criteria } = activity.data;
   const selectedCriteria = new Set(answer.criterionIds);
+  const invalidCriteria = new Set(invalidIds);
+  if (invalidIds.includes("noExtraCriteria")) {
+    const required = new Set(activity.evaluation.requiredCriterionIds);
+    for (const id of selectedCriteria) {
+      if (!required.has(id)) invalidCriteria.add(id);
+    }
+  }
   const groupName = `output-${activity.id}`;
 
   const toggleCriterion = (criterionId: string) => {
@@ -33,7 +40,9 @@ export function OutputComparisonView({
           <label
             key={output.id}
             className={`option-card${answer.outputId === output.id ? " is-selected" : ""}${
-              invalidIds.includes("betterOutputId") ? " is-invalid" : ""
+              invalidIds.includes("betterOutputId") && answer.outputId === output.id
+                ? " is-invalid"
+                : ""
             }`}
           >
             <input
@@ -42,6 +51,10 @@ export function OutputComparisonView({
               value={output.id}
               data-testid={`output-${output.id}`}
               checked={answer.outputId === output.id}
+              aria-invalid={
+                (invalidIds.includes("betterOutputId") && answer.outputId === output.id) ||
+                undefined
+              }
               disabled={disabled}
               onChange={() => onChange({ ...answer, outputId: output.id })}
             />
@@ -60,13 +73,14 @@ export function OutputComparisonView({
           <label
             key={criterion.id}
             className={`option-card option-inline${selectedCriteria.has(criterion.id) ? " is-selected" : ""}${
-              invalidIds.includes(criterion.id) ? " is-invalid" : ""
+              invalidCriteria.has(criterion.id) ? " is-invalid" : ""
             }`}
           >
             <input
               type="checkbox"
               data-testid={`criterion-${criterion.id}`}
               checked={selectedCriteria.has(criterion.id)}
+              aria-invalid={invalidCriteria.has(criterion.id) || undefined}
               disabled={disabled}
               onChange={() => toggleCriterion(criterion.id)}
             />

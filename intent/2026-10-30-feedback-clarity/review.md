@@ -1,0 +1,5 @@
+# Review and verification
+
+Independent review reproduced the first lesson marking both output choices as invalid after the wrong choice and continuing to mark the newly edited choice. It also found that a selected extra criterion was not marked. The selected submitted output and failed criteria now expose invalid state; when the learner edits a failed answer, old marks clear and a live note identifies the feedback as belonging to the prior attempt. The same treatment applies to the checkpoint player.
+
+Three final local browser tests passed for lesson, checkpoint with forced colors, and an extra criterion; the previous seven-test batch also covered recheck and review. The full unit suite passed 443 with one skipped; lint passed. Independent browser review also tested a simulated write failure after editing and confirmed the prior-feedback note remains. Actual screen-reader speech was not tested. Editing an already-passed answer without updating its success feedback remains a separate pre-existing issue. No formal approval was granted.

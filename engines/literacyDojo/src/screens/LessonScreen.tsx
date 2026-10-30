@@ -109,6 +109,7 @@ export function LessonScreen({
   const [submitting, setSubmitting] = useState(false);
   const [completing, setCompleting] = useState(false);
   const [attemptError, setAttemptError] = useState(false);
+  const [answerEdited, setAnswerEdited] = useState(false);
   const [attemptFailureCount, setAttemptFailureCount] = useState(0);
   const [recheckFocus, setRecheckFocus] = useState<{ passed: boolean } | null>(null);
   const [completionError, setCompletionError] = useState(false);
@@ -253,6 +254,7 @@ export function LessonScreen({
 
   const updateAnswer = (next: ActivityAnswer) => {
     if (!canMutate()) return;
+    if (attempt && !attempt.evaluation.pass) setAnswerEdited(true);
     setSession((previous) => setAnswer(previous, lesson, next));
   };
 
@@ -288,6 +290,7 @@ export function LessonScreen({
       applyTransition({
         session: submitAttempt(session, lesson, result.evaluation, result.feedback),
       });
+      setAnswerEdited(false);
       if (result.evaluation.pass) latestPassingEvidence.current = result.record;
       if (isRecheck) setRecheckFocus({ passed: result.evaluation.pass });
       onProgressChange(result.progress);
@@ -345,6 +348,7 @@ export function LessonScreen({
       await services.useCases.retryActivity({ lessonId: lesson.id, activityId: activity.id });
       setAttemptError(false);
       setHintError(false);
+      setAnswerEdited(false);
       applyTransition({ session: retryCurrentActivity(session, lesson) });
     } catch {
       setRetryError(true);
@@ -359,6 +363,7 @@ export function LessonScreen({
   };
 
   const handleNextActivity = () => {
+    setAnswerEdited(false);
     setHintError(false);
     setRetryError(false);
     applyTransition({ session: nextActivity(session, lesson) });
@@ -549,12 +554,21 @@ export function LessonScreen({
       <ActivityRenderer
         activity={activity}
         answer={answer}
-        invalidIds={attempt && !attempt.evaluation.pass ? failedCheckIds(attempt) : []}
+        invalidIds={
+          attempt && !attempt.evaluation.pass && !answerEdited ? failedCheckIds(attempt) : []
+        }
         disabled={submitting || hintLoading || retryLoading}
         onChange={updateAnswer}
       />
 
       {attempt && <FeedbackPanel feedback={attempt.feedback} hintsShown={hints.shown} />}
+      <div aria-live="polite">
+        {attempt && answerEdited && (
+          <p className="muted" data-testid="prior-feedback-note">
+            Você está editando a resposta; o feedback acima é da tentativa anterior.
+          </p>
+        )}
+      </div>
       {!attempt && (
         <div aria-live="polite" aria-atomic="true">
           <HintList hints={hints.shown} />

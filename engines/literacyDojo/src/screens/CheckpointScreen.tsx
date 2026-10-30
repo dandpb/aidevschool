@@ -54,6 +54,7 @@ export function CheckpointScreen({
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState<Record<string, ActivityAnswer>>({});
   const [attempts, setAttempts] = useState<Record<string, AttemptState>>({});
+  const [answerEdited, setAnswerEdited] = useState(false);
   const [shownHints, setShownHints] = useState<Record<string, string[]>>({});
   const [submitting, setSubmitting] = useState(false);
   const busyRef = useRef(false);
@@ -148,6 +149,7 @@ export function CheckpointScreen({
         context: "review",
       });
       setAttempts((previous) => ({ ...previous, [key]: result }));
+      setAnswerEdited(false);
       onProgressChange(result.progress);
     } catch {
       restoreNextFocus.current = false;
@@ -171,6 +173,7 @@ export function CheckpointScreen({
   const handleRetry = () => {
     if (busyRef.current) return;
     setOperationError(null);
+    setAnswerEdited(false);
     setAttempts((previous) => {
       const next = { ...previous };
       delete next[key];
@@ -187,6 +190,7 @@ export function CheckpointScreen({
   const handleNext = () => {
     if (busyRef.current) return;
     setOperationError(null);
+    setAnswerEdited(false);
     setCurrent((index) => Math.min(index + 1, activityRefs.length - 1));
   };
 
@@ -216,6 +220,7 @@ export function CheckpointScreen({
 
   const handleRetrySession = () => {
     setAttempts({});
+    setAnswerEdited(false);
     setShownHints({});
     setCurrent(0);
     setPhase("intro");
@@ -366,14 +371,26 @@ export function CheckpointScreen({
       <ActivityRenderer
         activity={activity}
         answer={answer}
-        invalidIds={attempt && !attempt.evaluation.pass ? failedCheckIds(attempt) : []}
+        invalidIds={
+          attempt && !attempt.evaluation.pass && !answerEdited ? failedCheckIds(attempt) : []
+        }
         disabled={submitting}
         onChange={(next) => {
-          if (!busyRef.current) setAnswers((previous) => ({ ...previous, [key]: next }));
+          if (!busyRef.current && canMutate()) {
+            if (attempt && !attempt.evaluation.pass) setAnswerEdited(true);
+            setAnswers((previous) => ({ ...previous, [key]: next }));
+          }
         }}
       />
 
       {attempt && <FeedbackPanel feedback={attempt.feedback} hintsShown={hints} />}
+      <div aria-live="polite">
+        {attempt && answerEdited && (
+          <p className="muted" data-testid="prior-feedback-note">
+            Você está editando a resposta; o feedback acima é da tentativa anterior.
+          </p>
+        )}
+      </div>
       {!attempt && (
         <div aria-live="polite" aria-atomic="true">
           <HintList hints={hints} />
