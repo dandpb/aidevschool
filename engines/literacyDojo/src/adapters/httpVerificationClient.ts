@@ -27,6 +27,12 @@ export class HttpVerificationClient implements VerificationClient {
       throw new Error("Não foi possível conectar ao verificador. Tente novamente.");
     }
     if (!response.ok) throw new Error("O verificador está indisponível. Tente novamente.");
-    return validateReceipt(await response.json(), record);
+    let payload: unknown;
+    try {
+      payload = await response.json();
+    } catch {
+      throw new Error("Não foi possível ler a resposta do verificador. Tente novamente.");
+    }
+    return validateReceipt(payload, record);
   }
 }
