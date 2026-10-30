@@ -65,6 +65,8 @@ export function CheckpointScreen({
   const headingRef = useRef<HTMLHeadingElement | null>(null);
   const submitRef = useRef<HTMLButtonElement | null>(null);
   const nextActionRef = useRef<HTMLButtonElement | null>(null);
+  const feedbackRef = useRef<HTMLDivElement | null>(null);
+  const rechecking = useRef(false);
   const restoreNextFocus = useRef(false);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: o efeito deve re-executar a cada mudança de fase/atividade (padrão do LessonScreen), embora não leia os valores.
@@ -81,12 +83,15 @@ export function CheckpointScreen({
   const hintCount = activity ? services.feedback.hintCount(activity) : 0;
   const hasMoreHints = hintCount > hints.length;
   useEffect(() => {
-    if (
-      attempt?.evaluation.pass &&
-      restoreNextFocus.current &&
-      document.activeElement === document.body
-    ) {
+    if (!attempt || !restoreNextFocus.current) return;
+    if (attempt.evaluation.pass && document.activeElement === document.body) {
       nextActionRef.current?.focus();
+    } else if (
+      rechecking.current &&
+      !attempt.evaluation.pass &&
+      (document.activeElement === document.body || document.activeElement === submitRef.current)
+    ) {
+      feedbackRef.current?.focus();
     }
   }, [attempt]);
   useEffect(() => {
@@ -94,11 +99,20 @@ export function CheckpointScreen({
     const cancelRestore = () => {
       restoreNextFocus.current = false;
     };
+    const cancelForScrollKey = (event: KeyboardEvent) => {
+      if (["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End", " "].includes(event.key)) {
+        cancelRestore();
+      }
+    };
     document.addEventListener("pointerdown", cancelRestore);
     document.addEventListener("focusin", cancelRestore);
+    document.addEventListener("wheel", cancelRestore, { passive: true });
+    document.addEventListener("keydown", cancelForScrollKey);
     return () => {
       document.removeEventListener("pointerdown", cancelRestore);
       document.removeEventListener("focusin", cancelRestore);
+      document.removeEventListener("wheel", cancelRestore);
+      document.removeEventListener("keydown", cancelForScrollKey);
     };
   }, [submitting]);
   const isLast = current === activityRefs.length - 1;
@@ -139,6 +153,7 @@ export function CheckpointScreen({
   const handleSubmit = async () => {
     if (busyRef.current || !canMutate() || !answer) return;
     restoreNextFocus.current = document.activeElement === submitRef.current;
+    rechecking.current = Boolean(attempt);
     busyRef.current = true;
     setSubmitting(true);
     setOperationError(null);
@@ -406,7 +421,9 @@ export function CheckpointScreen({
         }}
       />
 
-      {attempt && <FeedbackPanel feedback={attempt.feedback} hintsShown={hints} />}
+      {attempt && (
+        <FeedbackPanel feedback={attempt.feedback} hintsShown={hints} focusRef={feedbackRef} />
+      )}
       {attempt?.evaluation.pass && (
         <p className="muted">Resposta aprovada. Continue pela próxima ação.</p>
       )}
