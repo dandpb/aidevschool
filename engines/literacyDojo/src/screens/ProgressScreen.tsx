@@ -247,6 +247,7 @@ export function ProgressScreen({
                           type="button"
                           className="btn btn-small"
                           data-testid={`progress-review-${lesson.id}`}
+                          aria-label={`Revisar ${services.content.getSkillTitle(skill.skillId)}: ${lesson.title}`}
                           aria-disabled={backupBusy || mutationBlocked}
                           onClick={() => {
                             if (!backupBusyRef.current && canMutate()) onReview(lesson.id);

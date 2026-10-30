@@ -67,7 +67,7 @@ describe("orientação de revisão entre jornadas", () => {
   it("mantém ação da jornada ativa quando a habilidade é compartilhada", async () => {
     const services = setup("ia_pratica", { shared: true });
     const row = await dueRow(services.content.getSkillTitle("avaliar"));
-    expect(within(row).getByRole("button", { name: "Revisar" })).toBeEnabled();
+    expect(within(row).getByRole("button", { name: /^Revisar / })).toBeEnabled();
     expect(row).not.toHaveTextContent(/volte ao início/i);
   });
   it("explica o caminho inverso para a Vila Lume", async () => {
