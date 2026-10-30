@@ -57,10 +57,11 @@ export function HomeScreen({
 
   // W7 AID-5190 (contrato §7.2 — anúncio de mudança): a live region sr-only
   // anuncia o estado de sequência/revisões 1× por sessão (montagem) e a cada
-  // mudança de streak — o texto é inserido depois do render, então leitores
+  // mudança de streak ou revisões — o texto é inserido depois do render, então leitores
   // de tela o anunciam como atualização.
   const [liveMessage, setLiveMessage] = useState("");
   const announcedStreak = useRef<number | null | undefined>(undefined);
+  const announcedReviews = useRef<number | undefined>(undefined);
   useEffect(() => {
     const current = currentStreak;
     if (announcedStreak.current === undefined) {
@@ -71,14 +72,24 @@ export function HomeScreen({
       setLiveMessage(
         `${current === null ? "Sequência atual indisponível." : `Sequência: ${current} ${current === 1 ? "dia" : "dias"}.`}${reviewNote}`,
       );
-    } else if (announcedStreak.current !== current) {
-      setLiveMessage(
-        current === null
-          ? "Sequência atual indisponível."
-          : `Sequência agora: ${current} ${current === 1 ? "dia" : "dias"}.`,
-      );
+    } else {
+      const changes: string[] = [];
+      if (announcedStreak.current !== current) {
+        changes.push(
+          current === null
+            ? "Sequência atual indisponível."
+            : `Sequência agora: ${current} ${current === 1 ? "dia" : "dias"}.`,
+        );
+      }
+      if (announcedReviews.current !== dueReviews.length) {
+        changes.push(
+          `${dueReviews.length} ${dueReviews.length === 1 ? "revisão devida" : "revisões devidas"} no total entre jornadas.`,
+        );
+      }
+      if (changes.length > 0) setLiveMessage(changes.join(" "));
     }
     announcedStreak.current = current;
+    announcedReviews.current = dueReviews.length;
   }, [currentStreak, dueReviews.length]);
 
   const reviewDue = reviewSkill?.nextReviewAt

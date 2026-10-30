@@ -5,11 +5,14 @@ import { BackupImportValidationError } from "../application/backupImportErrors";
 import { activeJourneyOf } from "../domain/journeyProgress";
 import type { LearnerProgress } from "../domain/progress";
 import { ACHIEVEMENT_DEFINITIONS, currentStreakForDate, localDateKey } from "../domain/progress";
+import { parseReviewTimestamp } from "../domain/reviewTimestamp";
 import { readyLessonEntries } from "../domain/track";
 import { buildTrackQueries } from "../domain/trackQueries";
 
 function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString("pt-BR", {
+  const instant = parseReviewTimestamp(iso);
+  if (instant === null) return "data indisponível";
+  return new Date(instant).toLocaleDateString("pt-BR", {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
@@ -67,6 +70,10 @@ export function ProgressScreen({
   const currentStreak = currentStreakForDate(progress.streak, services.clock());
   const unlockedIds = new Set(progress.achievements.map((achievement) => achievement.id));
   const practicedSkills = Object.values(progress.skills);
+  const invalidReviewDate = practicedSkills.some(
+    (skill) =>
+      skill.nextReviewAt !== undefined && parseReviewTimestamp(skill.nextReviewAt) === null,
+  );
 
   const handleExport = async () => {
     if (backupBusyRef.current || !canMutate()) return;
@@ -214,6 +221,11 @@ export function ProgressScreen({
 
       <div className="card">
         <h2>Revisões</h2>
+        {invalidReviewDate && (
+          <p className="muted">
+            Algumas datas de revisão estão indisponíveis e não aparecem na agenda.
+          </p>
+        )}
         {due.length > 0 && (
           <>
             <p>Revisão pendente agora:</p>
@@ -275,7 +287,8 @@ export function ProgressScreen({
             </ul>
           </>
         ) : (
-          due.length === 0 && <p className="muted">Nenhuma revisão agendada ainda.</p>
+          due.length === 0 &&
+          !invalidReviewDate && <p className="muted">Nenhuma revisão agendada ainda.</p>
         )}
       </div>
 

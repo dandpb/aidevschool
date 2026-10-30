@@ -26,7 +26,7 @@ import {
   explicitReset,
   loadOrActivateState,
 } from "./services";
-import { useLocalDayRefresh } from "./useLocalDayRefresh";
+import { useTimeBasedRefresh } from "./useTimeBasedRefresh";
 
 export type ActivityResultSummary = {
   activityId: string;
@@ -80,8 +80,8 @@ export function AppShell({
   services: Services;
   hostAdapter: LiteracyMissionAdapter | null;
 }) {
-  useLocalDayRefresh(services.clock);
   const [progress, setProgress] = useState<LearnerProgress | null>(null);
+  useTimeBasedRefresh(services.clock, progress?.skills);
   const [route, setRouteState] = useState<Route | null>(null);
   const routeRevision = useRef(0);
   const bootSwitchRef = useRef<{

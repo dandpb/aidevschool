@@ -1,5 +1,6 @@
 import type { LessonDefinition, ModuleDefinition } from "../data/generated/lessons";
 import { isLessonGateLocked } from "./checkpoints";
+import { parseReviewTimestamp } from "./reviewTimestamp";
 import { nextReadyLessonId, readyLessonEntries } from "./track";
 import {
   type XpLedgerV1,
@@ -448,18 +449,25 @@ export function applyAttemptToSkills(
 }
 
 export function reviewsDue(progress: LearnerProgress, now: Date): SkillPractice[] {
-  const iso = now.toISOString();
-  return Object.values(progress.skills).filter(
-    (skill) => skill.nextReviewAt !== undefined && skill.nextReviewAt <= iso,
-  );
+  const instant = now.getTime();
+  return Object.values(progress.skills).filter((skill) => {
+    const due = parseReviewTimestamp(skill.nextReviewAt);
+    return due !== null && due <= instant;
+  });
 }
 
 /** Agenda de revisões futuras (nextReviewAt no futuro), ordenada por data. */
 export function upcomingReviews(progress: LearnerProgress, now: Date): SkillPractice[] {
-  const iso = now.toISOString();
+  const instant = now.getTime();
   return Object.values(progress.skills)
-    .filter((skill) => skill.nextReviewAt !== undefined && skill.nextReviewAt > iso)
-    .sort((a, b) => (a.nextReviewAt ?? "").localeCompare(b.nextReviewAt ?? ""));
+    .filter((skill) => {
+      const due = parseReviewTimestamp(skill.nextReviewAt);
+      return due !== null && due > instant;
+    })
+    .sort(
+      (a, b) =>
+        (parseReviewTimestamp(a.nextReviewAt) ?? 0) - (parseReviewTimestamp(b.nextReviewAt) ?? 0),
+    );
 }
 
 export type LessonOutcome = {
