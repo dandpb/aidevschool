@@ -44,5 +44,11 @@ test("aprovação parcial alerta para classificação incorreta sem mudar a prog
   await page.getByTestId("submit-attempt").click();
   await page.getByTestId("finish-lesson").click();
   await expect(page.getByTestId("result-screen")).toContainText("pontos para revisar");
+  await expect(page.getByTestId("result-review-points")).toContainText(
+    "Senhas e credenciais nunca",
+  );
+  await expect(page.getByTestId("result-review-points")).toContainText(
+    "Para cada informação abaixo",
+  );
   expect((await readProgress(page))?.lessonStatus?.l12).toBe("completed");
 });

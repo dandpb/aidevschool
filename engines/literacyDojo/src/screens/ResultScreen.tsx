@@ -43,8 +43,33 @@ export function ResultScreen({
   const restoreVerificationFocus = useRef(false);
   const { lesson } = summary;
   const successMessages = summary.activityResults
-    .filter((result) => result.pass && result.feedback.summary)
+    .filter(
+      (result) =>
+        result.pass &&
+        result.feedback.summary &&
+        result.feedback.perCheck.every((check) => check.passed),
+    )
     .map((result) => result.feedback.summary);
+  const reviewPoints = summary.activityResults
+    .filter((result) => result.pass && result.feedback.perCheck.some((check) => !check.passed))
+    .map((result) => {
+      const index = lesson.activities.findIndex((activity) => activity.id === result.activityId);
+      const failed = result.feedback.perCheck.filter((check) => !check.passed);
+      return {
+        activityId: result.activityId,
+        index,
+        instruction: lesson.activities[index]?.instruction,
+        summary: result.feedback.summary,
+        messages: [
+          ...new Set(
+            failed
+              .map((check) => check.message)
+              .filter((message): message is string => Boolean(message)),
+          ),
+        ],
+        missingDetail: failed.some((check) => !check.message),
+      };
+    });
 
   useEffect(() => {
     void services.stateStore.readState().then((read) => {
@@ -150,6 +175,29 @@ export function ResultScreen({
               <li key={index}>{message}</li>
             ))}
           </ul>
+        </div>
+      )}
+
+      {reviewPoints.length > 0 && (
+        <div className="card" data-testid="result-review-points">
+          <h2>Pontos para revisar</h2>
+          {reviewPoints.map((point) => (
+            <section key={point.activityId}>
+              <h3>{point.index >= 0 ? `Atividade ${point.index + 1}` : "Atividade"}</h3>
+              {point.instruction && <p>{point.instruction}</p>}
+              <p>{point.summary}</p>
+              {point.messages.length > 0 && (
+                <ul>
+                  {point.messages.map((message) => (
+                    <li key={message}>{message}</li>
+                  ))}
+                </ul>
+              )}
+              {point.missingDetail && (
+                <p>Alguns detalhes desta tentativa não estão disponíveis aqui.</p>
+              )}
+            </section>
+          ))}
         </div>
       )}
 
