@@ -1,5 +1,6 @@
 import type { PromptBuilderActivity } from "../data/generated/lessons";
 import type { PromptBuilderAnswer } from "../domain/evaluation";
+import { EVIDENCE_TEXT_MAX_LENGTH } from "../domain/evidence";
 
 export function PromptBuilderView({
   activity,
@@ -41,6 +42,7 @@ export function PromptBuilderView({
       {fields.map((field) => {
         const value = answer.values[field.id] ?? "";
         const invalid = invalidIds.includes(field.id);
+        const tooLong = value.length > EVIDENCE_TEXT_MAX_LENGTH;
         return (
           <div className="field" key={field.id}>
             <label className="field-label" htmlFor={`${activity.id}-${field.id}`}>
@@ -49,6 +51,11 @@ export function PromptBuilderView({
             <p className="field-hint" id={`${activity.id}-${field.id}-hint`}>
               {field.hint}
             </p>
+            {tooLong && (
+              <p className="field-hint" id={`${activity.id}-${field.id}-length`}>
+                Este campo está longo demais para enviar. Reduza o texto e tente novamente.
+              </p>
+            )}
             <textarea
               id={`${activity.id}-${field.id}`}
               data-testid={`field-${field.id}`}
@@ -56,9 +63,9 @@ export function PromptBuilderView({
               value={value}
               disabled={disabled}
               readOnly={readOnly}
-              aria-describedby={`${activity.id}-${field.id}-hint ${activity.id}-privacy-notice${readOnly ? ` ${activity.id}-answer-locked` : ""}`}
-              aria-invalid={invalid}
-              className={invalid ? "is-invalid" : undefined}
+              aria-describedby={`${activity.id}-${field.id}-hint ${activity.id}-privacy-notice${tooLong ? ` ${activity.id}-${field.id}-length` : ""}${readOnly ? ` ${activity.id}-answer-locked` : ""}`}
+              aria-invalid={invalid || tooLong}
+              className={invalid || tooLong ? "is-invalid" : undefined}
               onChange={(event) =>
                 onChange({ values: { ...answer.values, [field.id]: event.target.value } })
               }

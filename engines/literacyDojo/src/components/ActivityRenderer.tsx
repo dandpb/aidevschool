@@ -18,6 +18,7 @@ import type {
   SafetyClassificationAnswer,
   SortAnswer,
 } from "../domain/evaluation";
+import { EVIDENCE_TEXT_MAX_LENGTH } from "../domain/evidence";
 import { ChoiceView } from "./ChoiceView";
 import { MissingContextView } from "./MissingContextView";
 import { OutputComparisonView } from "./OutputComparisonView";
@@ -138,9 +139,10 @@ export function isAnswerComplete(activity: ActivityDefinition, answer: ActivityA
     case "output_comparison":
       return (answer as OutputComparisonAnswer).outputId !== undefined;
     case "prompt_builder":
-      return activity.data.fields.every(
-        (field) => ((answer as PromptBuilderAnswer).values[field.id] ?? "").trim().length > 0,
-      );
+      return activity.data.fields.every((field) => {
+        const value = (answer as PromptBuilderAnswer).values[field.id] ?? "";
+        return value.trim().length > 0 && value.length <= EVIDENCE_TEXT_MAX_LENGTH;
+      });
     case "safety_classification":
       return activity.data.items.every(
         (item) => (answer as SafetyClassificationAnswer).labels[item.id] !== undefined,

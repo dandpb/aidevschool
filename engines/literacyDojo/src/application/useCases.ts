@@ -85,6 +85,19 @@ export type SubmitAttemptResult = {
   record: LiteracyEvidenceRecord;
 };
 
+/** Capture the caller's answer before asynchronous storage work begins. */
+function snapshotAnswer(answer: ActivityAnswer): ActivityAnswer {
+  if ("optionIds" in answer) return { optionIds: [...answer.optionIds] };
+  if ("orderedIds" in answer) return { orderedIds: [...answer.orderedIds] };
+  if ("contextIds" in answer) return { contextIds: [...answer.contextIds] };
+  if ("criterionIds" in answer) {
+    return { outputId: answer.outputId, criterionIds: [...answer.criterionIds] };
+  }
+  if ("labels" in answer) return { labels: { ...answer.labels } };
+  if ("verdicts" in answer) return { verdicts: { ...answer.verdicts } };
+  return { values: { ...answer.values } };
+}
+
 export type ResumeDestination =
   | { kind: "onboarding" }
   | { kind: "home" }
@@ -346,21 +359,36 @@ export class LiteracyUseCases {
   }): Promise<SubmitAttemptResult> {
     const lesson = this.requireLesson(input.lessonId);
     const activity = this.requireActivity(lesson, input.activityId);
-    const evaluation = evaluateActivity(activity, input.answer);
-    const extraContextIds = selectedExtraContextIds(activity, input.answer);
+    const answer = snapshotAnswer(input.answer);
+    const evaluation = evaluateActivity(activity, answer);
+    const extraContextIds = selectedExtraContextIds(activity, answer);
+    const context = input.context ?? "initial";
+    const deferReviewSchedule = context === "review" && input.deferReviewSchedule === true;
 
     const now = this.deps.clock();
+    // Validate the immutable attempt before saving progress. The real attempt ID
+    // is assigned after the write, but all answer/content constraints are known now.
+    buildEvidenceRecord({
+      attemptId: "preflight",
+      lessonId: lesson.id,
+      lessonVersion: lesson.version,
+      skillIds: [...lesson.skillIds],
+      evaluation,
+      answer,
+      timestamp: now.toISOString(),
+      context,
+    });
     let next: LearnerProgress;
     if (this.deps.progress) {
       next = await this.withProgress((current) => {
         const recorded = recordActivityAttempt(current, {
           lessonId: lesson.id,
-          activityId: input.activityId,
+          activityId: activity.id,
           evaluation,
           skillIds: lesson.skillIds,
           intervalsDays: lesson.review.intervalsDays,
           now,
-          deferReviewSchedule: input.context === "review" && input.deferReviewSchedule === true,
+          deferReviewSchedule,
         });
         return { next: recorded, value: recorded };
       });
@@ -368,12 +396,12 @@ export class LiteracyUseCases {
       const state = await this.requireState();
       const transition = recordActivityAttempt(state.progress, state.xpLedger, {
         lessonId: lesson.id,
-        activityId: input.activityId,
+        activityId: activity.id,
         evaluation,
         skillIds: lesson.skillIds,
         intervalsDays: lesson.review.intervalsDays,
         now,
-        deferReviewSchedule: input.context === "review" && input.deferReviewSchedule === true,
+        deferReviewSchedule,
       });
       next = transition.progress;
       await this.deps.state.saveState({ ...state, progress: next, xpLedger: transition.ledger });
@@ -385,9 +413,9 @@ export class LiteracyUseCases {
       lessonVersion: lesson.version,
       skillIds: [...lesson.skillIds],
       evaluation,
-      answer: input.answer,
+      answer,
       timestamp: now.toISOString(),
-      context: input.context ?? "initial",
+      context,
     });
     this.deps.evidence.emit(record);
 
