@@ -11,6 +11,10 @@ test("backup explica que trocar de perfil não transfere nem apaga o original", 
   await page.getByTestId("map-back").click();
   await page.getByTestId("open-progress").click();
   const backup = page.getByTestId("progress-backup");
+  await expect(backup).toContainText("Restaurar substitui o progresso atual das duas jornadas");
+  await expect(page.getByTestId("import-progress")).toHaveAccessibleDescription(
+    /substitui o progresso atual/,
+  );
   await expect(backup).toContainText("Limpar os dados deste site pode apagar o histórico");
   await expect(backup).toContainText(
     "outro aparelho ou perfil não recebe o progresso automaticamente",

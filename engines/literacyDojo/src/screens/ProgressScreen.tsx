@@ -361,6 +361,11 @@ export function ProgressScreen({
         <p className="muted">
           <TabSafetyNotice />
         </p>
+        <p className="muted" id="backup-restore-notice">
+          Restaurar substitui o progresso atual das duas jornadas neste navegador pelo do arquivo;
+          os progressos não são combinados. Para preservar o progresso atual, baixe um backup antes
+          e confira se o arquivo foi salvo.
+        </p>
         <div className="backup-actions">
           <button
             type="button"
@@ -375,6 +380,7 @@ export function ProgressScreen({
             type="button"
             className="btn btn-secondary"
             data-testid="import-progress"
+            aria-describedby="backup-restore-notice"
             aria-disabled={backupBusy || mutationBlocked}
             onClick={() => {
               if (!backupBusyRef.current && canMutate()) fileInputRef.current?.click();
