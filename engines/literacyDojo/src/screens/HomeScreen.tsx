@@ -99,7 +99,11 @@ export function HomeScreen({
 
   const handleReset = () => {
     if (!canMutate()) return;
-    if (window.confirm("Apagar todo o progresso deste aparelho e recomeçar do zero?")) {
+    if (
+      window.confirm(
+        "Recomeçar o progresso atual das duas jornadas deste aplicativo neste navegador? Cópias antigas, backups e dados enviados anteriormente podem permanecer.",
+      )
+    ) {
       void onReset();
     }
   };
@@ -347,7 +351,7 @@ export function HomeScreen({
           aria-disabled={mutationBlocked}
           onClick={handleReset}
         >
-          Apagar progresso e recomeçar
+          Recomeçar progresso
         </button>
       </footer>
     </section>
