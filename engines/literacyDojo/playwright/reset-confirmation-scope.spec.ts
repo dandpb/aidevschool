@@ -15,6 +15,8 @@ test("confirmação de reinício descreve o alcance e permite cancelar", async (
   await click;
   expect(type).toBe("confirm");
   expect(message).toContain("progresso atual das duas jornadas deste aplicativo neste navegador");
+  expect(message).toContain("cancele e solicite um backup em Progresso");
+  expect(message).toContain("Confira se o arquivo foi salvo antes de recomeçar");
   expect(message).toContain(
     "Cópias antigas, backups e dados enviados anteriormente podem permanecer",
   );

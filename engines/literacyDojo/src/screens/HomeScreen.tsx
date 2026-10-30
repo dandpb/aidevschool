@@ -101,7 +101,7 @@ export function HomeScreen({
     if (!canMutate()) return;
     if (
       window.confirm(
-        "Recomeçar o progresso atual das duas jornadas deste aplicativo neste navegador? Cópias antigas, backups e dados enviados anteriormente podem permanecer.",
+        "Recomeçar o progresso atual das duas jornadas deste aplicativo neste navegador? Para guardar o progresso atual, cancele e solicite um backup em Progresso. Confira se o arquivo foi salvo antes de recomeçar. Cópias antigas, backups e dados enviados anteriormente podem permanecer.",
       )
     ) {
       void onReset();
