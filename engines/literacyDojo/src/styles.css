@@ -2531,6 +2531,24 @@ a.audience-route-dev .route-badge {
     padding: 14px;
   }
 
+  .onboarding-question-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .onboarding-question-layout > .mentor-guide {
+    grid-template-columns: 58px minmax(0, 1fr);
+  }
+
+  .onboarding-question-layout .mentor-copy,
+  .onboarding-question-layout .option-card > span:not(.option-check):not(.voxel-task) {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .onboarding-question-layout .option-check {
+    flex: 0 0 26px;
+  }
+
   .mentor-avatar {
     transform: scale(0.72);
     transform-origin: center;
