@@ -334,10 +334,11 @@ export function ProgressScreen({
       <div className="card" data-testid="progress-backup">
         <h2>Backup neste aparelho</h2>
         <p className="muted">
-          O progresso mora só neste navegador: não há conta nem sincronização. Limpar dados do site,
-          trocar de aparelho ou de perfil apaga o histórico. Exporte um JSON para guardar uma cópia;
-          ao importar, a migração atualiza o formato antigo e o teto continua <code>completed</code>{" "}
-          — nunca <code>mastered</code>.
+          O progresso mora só neste navegador: não há conta nem sincronização. Limpar os dados deste
+          site pode apagar o histórico; outro aparelho ou perfil não recebe o progresso
+          automaticamente. Exporte um JSON para guardar uma cópia e importe-o no outro aparelho ou
+          perfil; ao importar, a migração atualiza o formato antigo e o teto continua{" "}
+          <code>completed</code> — nunca <code>mastered</code>.
         </p>
         <div className="backup-actions">
           <button
