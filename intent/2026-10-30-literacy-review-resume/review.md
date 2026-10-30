@@ -1,0 +1,7 @@
+# Review and verification
+
+A browser test reproduced the missing due-review action after one successful activity and reload. The corrected path preserves the effective date/stage during a due lesson-review session; the attempt, skill practice, XP and structured evidence still occur. After completing the restarted session, the existing completion path advances one stage. Module challenges also mark evidence `review`, so an explicit due-review flag is set only by `LessonScreen` in review mode; the checkpoint caller keeps its previous scheduling behavior.
+
+Independent review found two legacy cases: an absent stored stage could advance through newly counted passes, and completing via `progressRepo` could overwrite fresh progress with a stale state-store snapshot. Tests reproduced both before correction. The former now materializes the equivalent prior stage when intervals exist; the latter reads the current legacy progress before completing. Tests also cover failed answers, multiple skill stages, no intervals, default initial/challenge scheduling and both store paths. No cross-tab atomicity or navigation-interruption guarantee is added.
+
+Producer checks: lint/build passed with the existing bundle warning; full unit suite passed 411 tests with 1 skipped before the final additional XP assertion; 8 browser tests passed covering interruption, completed review, the corridor/challenges and session continuity. Independent review ran 78 application/domain tests and reviewed the final diff; no formal approval or countersign.

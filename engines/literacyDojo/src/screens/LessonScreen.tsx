@@ -217,6 +217,7 @@ export function LessonScreen({
         activityId: activity.id,
         answer,
         context: mode,
+        deferReviewSchedule: mode === "review",
       });
       applyTransition({
         session: submitAttempt(session, lesson, result.evaluation, result.feedback),

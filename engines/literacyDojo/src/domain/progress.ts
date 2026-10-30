@@ -381,6 +381,7 @@ export function applyAttemptToSkills(
   passed: boolean,
   now: Date,
   intervalsDays: number[],
+  scheduleOnPass = true,
 ): LearnerProgress {
   const skills = { ...progress.skills };
   const iso = now.toISOString();
@@ -397,7 +398,11 @@ export function applyAttemptToSkills(
       nextReviewAt: previous?.nextReviewAt,
       reviewStage: previous?.reviewStage,
     };
-    if (passed && intervalsDays.length > 0) {
+    if (!scheduleOnPass && next.reviewStage === undefined && intervalsDays.length > 0) {
+      // Congela o estágio legado antes de contar a tentativa da sessão atual.
+      next.reviewStage = clampStage((previous?.passes ?? 1) - 1, intervalsDays.length - 1);
+    }
+    if (passed && scheduleOnPass && intervalsDays.length > 0) {
       // Com estágio persistido (corredor §4.4), cada aprovação avança 1 hop a
       // partir dele; legado sem estágio deriva de passes (semântica anterior).
       const stage =
@@ -581,6 +586,7 @@ export function recordActivityAttempt(
     skillIds: string[];
     intervalsDays: number[];
     now: Date;
+    deferReviewSchedule?: boolean;
   },
 ): { progress: LearnerProgress; ledger: XpLedgerV1 };
 export function recordActivityAttempt(
@@ -592,6 +598,7 @@ export function recordActivityAttempt(
     skillIds: string[];
     intervalsDays: number[];
     now: Date;
+    deferReviewSchedule?: boolean;
   },
 ): LearnerProgress;
 export function recordActivityAttempt(
@@ -605,6 +612,7 @@ export function recordActivityAttempt(
         skillIds: string[];
         intervalsDays: number[];
         now: Date;
+        deferReviewSchedule?: boolean;
       },
   maybeInput?: {
     lessonId: string;
@@ -613,6 +621,7 @@ export function recordActivityAttempt(
     skillIds: string[];
     intervalsDays: number[];
     now: Date;
+    deferReviewSchedule?: boolean;
   },
 ): { progress: LearnerProgress; ledger: XpLedgerV1 } | LearnerProgress {
   const isLegacyCall = maybeInput === undefined;
@@ -626,6 +635,7 @@ export function recordActivityAttempt(
           skillIds: string[];
           intervalsDays: number[];
           now: Date;
+          deferReviewSchedule?: boolean;
         }),
         activityId: (ledgerOrInput as { activityId?: string }).activityId ?? "__legacy_activity__",
       }
@@ -645,6 +655,7 @@ export function recordActivityAttempt(
     input.evaluation.pass,
     input.now,
     input.intervalsDays,
+    !input.deferReviewSchedule,
   );
   next = applyStreak(next, input.now);
   let nextLedger = ledger;

@@ -19,6 +19,11 @@ e o ADR [`docs/design/adr/0005-ai-literacy-bounded-context.md`](../../docs/desig
 | Progresso | A UI registra no máximo `completed`; `mastered` requer verificação independente. |
 | Verificação | Rode os comandos desta página no checkout atual; contagens e deploys históricos não são status de release. |
 
+As tentativas dentro de uma sessão de revisão não reagendam suas habilidades;
+a conclusão da revisão as agenda. Tentativas de uma revisão interrompida
+continuam registradas sem afastar a data devida. Outras práticas, inclusive os
+Desafios de Módulo, mantêm seu comportamento de agendamento.
+
 O app é local-first, sem backend e sem chamada de IA no caminho de
 aprendizagem. A UI registra no máximo `completed`; nunca `mastered`.
 Julgamento independente de evidência bruta (fora deste app):

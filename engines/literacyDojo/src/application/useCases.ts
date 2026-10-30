@@ -317,6 +317,8 @@ export class LiteracyUseCases {
     answer: ActivityAnswer;
     /** "review" quando a tentativa faz parte de uma revisão espaçada. */
     context?: "initial" | "review";
+    /** Somente revisão de lição em andamento; desafios também usam context=review. */
+    deferReviewSchedule?: boolean;
   }): Promise<SubmitAttemptResult> {
     const lesson = this.requireLesson(input.lessonId);
     const activity = this.requireActivity(lesson, input.activityId);
@@ -333,6 +335,7 @@ export class LiteracyUseCases {
           skillIds: lesson.skillIds,
           intervalsDays: lesson.review.intervalsDays,
           now,
+          deferReviewSchedule: input.context === "review" && input.deferReviewSchedule === true,
         });
         return { next: recorded, value: recorded };
       });
@@ -345,6 +348,7 @@ export class LiteracyUseCases {
         skillIds: lesson.skillIds,
         intervalsDays: lesson.review.intervalsDays,
         now,
+        deferReviewSchedule: input.context === "review" && input.deferReviewSchedule === true,
       });
       next = transition.progress;
       await this.deps.state.saveState({ ...state, progress: next, xpLedger: transition.ledger });
@@ -598,7 +602,7 @@ export class LiteracyUseCases {
     const lesson = this.requireLesson(input.lessonId);
     const outcome = evaluateLessonCompletion(lesson, input.bestScores);
     const state = await this.requireState();
-    let progress = state.progress;
+    let progress = this.deps.progress ? await this.requireProgress() : state.progress;
     if (outcome.completed) {
       if (input.intervalIndex !== undefined) {
         progress = scheduleReviewForLesson(
