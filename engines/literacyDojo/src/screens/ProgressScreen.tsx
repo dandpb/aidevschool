@@ -19,6 +19,16 @@ function formatDate(iso: string): string {
   });
 }
 
+function formatUpcomingReview(iso: string): string {
+  const instant = parseReviewTimestamp(iso);
+  if (instant === null) return "data indisponível";
+  const date = new Date(instant);
+  const offset = -date.getTimezoneOffset();
+  const pad = (value: number) => String(value).padStart(2, "0");
+  const zone = `UTC${offset < 0 ? "-" : "+"}${pad(Math.floor(Math.abs(offset) / 60))}:${pad(Math.abs(offset) % 60)}`;
+  return `${formatDate(iso)}, por volta de ${pad(date.getHours())}:${pad(date.getMinutes())} (hora local, ${zone})`;
+}
+
 /**
  * Área de progresso (plano seção 9 — "Progresso"): módulos e lições, skills
  * praticadas, revisões futuras, conquistas e engajamento. Sem texto livre —
@@ -291,7 +301,7 @@ export function ProgressScreen({
               {upcoming.map((skill) => (
                 <li key={skill.skillId}>
                   {services.content.getSkillTitle(skill.skillId)} —{" "}
-                  {formatDate(skill.nextReviewAt ?? "")}
+                  {formatUpcomingReview(skill.nextReviewAt ?? "")}
                 </li>
               ))}
             </ul>
