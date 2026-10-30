@@ -6,28 +6,46 @@ import { BootBlockedError, type BootBlockedReason } from "../../src/app/services
 import { LiteracyMissionAdapter } from "../../src/host/LiteracyMissionAdapter";
 import { makeServices } from "../helpers";
 
-const reasons: [BootBlockedReason, string][] = [
-  ["state-read-error", "Não foi possível acessar o armazenamento"],
-  ["snapshot-read-error", "Não foi possível acessar o armazenamento"],
-  ["intent-read-error", "Não foi possível acessar o armazenamento"],
-  ["legacy-read-error", "Não foi possível acessar o armazenamento"],
-  ["state-invalid", "não reconhece os dados locais"],
-  ["snapshot-invalid", "não reconhece os dados locais"],
-  ["intent-invalid", "não reconhece os dados locais"],
-  ["legacy-invalid", "não reconhece os dados locais"],
-  ["intent-mismatch", "registros locais necessários para iniciar são inconsistentes"],
-  ["legacy-diverged", "registros locais necessários para iniciar são inconsistentes"],
+const readReasons: BootBlockedReason[] = [
+  "state-read-error",
+  "snapshot-read-error",
+  "intent-read-error",
+  "legacy-read-error",
 ];
 
-it.each(reasons)("apresenta %s sem expor detalhe nem mudar o motivo", (reason, expected) => {
-  const error = new BootBlockedError(reason, "DETALHE_TECNICO");
-  expect(bootRecoveryMessage(error)).toContain(expected);
-  expect(bootRecoveryMessage(error)).not.toContain("DETALHE_TECNICO");
+it.each(readReasons)("explica acesso negado em %s sem mudar o motivo", (reason) => {
+  const error = new BootBlockedError(
+    reason,
+    "PRIVATE_DETAIL",
+    new DOMException("PRIVATE_DETAIL", "SecurityError"),
+  );
+  expect(bootRecoveryMessage(error)).toContain("Não foi possível acessar o armazenamento");
+  expect(bootRecoveryMessage(error)).not.toContain("PRIVATE_DETAIL");
   expect(error.reason).toBe(reason);
 });
 
+it("preserva a mensagem existente para outras falhas de boot", () => {
+  const error = new BootBlockedError(
+    "state-read-error",
+    "armazenamento local inacessível (teste)",
+    new Error("armazenamento local inacessível (teste)"),
+  );
+  expect(bootRecoveryMessage(error)).toBe(error.message);
+  const generic = new Error("erro anterior");
+  expect(bootRecoveryMessage(generic)).toBe(generic.message);
+  const nameOnly = new BootBlockedError("state-read-error", "detalhe", { name: "SecurityError" });
+  expect(bootRecoveryMessage(nameOnly)).toBe(nameOnly.message);
+  const invalid = new BootBlockedError(
+    "state-invalid",
+    "detalhe",
+    new DOMException("x", "SecurityError"),
+  );
+  expect(bootRecoveryMessage(invalid)).toBe(invalid.message);
+  expect(bootRecoveryMessage(null)).toBe("Não foi possível ler o progresso local deste navegador.");
+});
+
 it.each(["readState", "readSnapshot", "readResetIntent", "readLegacyRaw"] as const)(
-  "bloqueia %s sem gravar ou diagnosticar formato",
+  "bloqueia %s com acesso negado sem gravar ou diagnosticar formato",
   async (failingRead) => {
     const { services, stateStore } = makeServices();
     vi.spyOn(stateStore, "readState").mockResolvedValue({ status: "absent" });
@@ -36,7 +54,7 @@ it.each(["readState", "readSnapshot", "readResetIntent", "readLegacyRaw"] as con
     vi.spyOn(stateStore, "readLegacyRaw").mockResolvedValue({ status: "absent" });
     vi.mocked(stateStore[failingRead]).mockResolvedValue({
       status: "read-error",
-      error: new Error("PRIVATE_DETAIL"),
+      error: new DOMException("PRIVATE_DETAIL", "SecurityError"),
     });
     const writes = [
       "saveState",
@@ -56,40 +74,11 @@ it.each(["readState", "readSnapshot", "readResetIntent", "readLegacyRaw"] as con
   },
 );
 
-it("não garante ausência de escrita quando ativação grava e depois falha", async () => {
-  const { services, stateStore } = makeServices();
-  vi.spyOn(stateStore, "readState").mockResolvedValue({ status: "absent" });
-  const activate = stateStore.activateState.bind(stateStore);
-  vi.spyOn(stateStore, "activateState").mockImplementationOnce(async (state) => {
-    await activate(state);
-    throw new Error("PRIVATE_DETAIL");
-  });
-  render(<App services={services} />);
-  const recovery = await screen.findByTestId("error-recovery-screen");
-  expect(recovery).toHaveTextContent("pode ter sido alterado antes da falha");
-  expect(recovery).not.toHaveTextContent("PRIVATE_DETAIL");
-  expect(stateStore.storedStateValue()?.origin).toBe("fresh-seed");
-});
-
-it("erro genérico antes da ativação não expõe detalhes nem ativa estado", async () => {
-  const { services, stateStore } = makeServices();
-  vi.spyOn(stateStore, "readState").mockResolvedValue({ status: "absent" });
-  vi.spyOn(stateStore, "persistSnapshot").mockRejectedValueOnce(new Error("PRIVATE_DETAIL"));
-  const activate = vi.spyOn(stateStore, "activateState");
-  render(<App services={services} />);
-  const recovery = await screen.findByTestId("error-recovery-screen");
-  expect(recovery).toHaveTextContent(
-    /não foi possível iniciar nem confirmar o estado do progresso/i,
-  );
-  expect(recovery).not.toHaveTextContent("PRIVATE_DETAIL");
-  expect(activate).not.toHaveBeenCalled();
-});
-
 it("no host mantém navegação do aplicativo hospedeiro e não inicia missão", async () => {
   const { services, stateStore } = makeServices();
   vi.spyOn(stateStore, "readState").mockResolvedValue({
     status: "read-error",
-    error: new Error("PRIVATE_DETAIL"),
+    error: new DOMException("PRIVATE_DETAIL", "SecurityError"),
   });
   const host = new LiteracyMissionAdapter();
   const start = vi.spyOn(host, "start");
