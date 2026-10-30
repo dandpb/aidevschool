@@ -5,10 +5,12 @@ import { SupportCta } from "../components/SupportCta";
 export function ErrorRecoveryScreen({
   message,
   onBack,
+  onReload,
   hosted = false,
 }: {
   message: string;
   onBack?: () => void;
+  onReload?: () => void;
   hosted?: boolean;
 }) {
   // AID-1755/T3 (padrão AID-1150): o h1 é focável (tabIndex=-1) e recebe
@@ -31,9 +33,16 @@ export function ErrorRecoveryScreen({
       <p className="muted">
         {hosted
           ? "Para sair, use a navegação do aplicativo que abriu esta missão. Isso não conclui a lição e não é competência verificada."
-          : "Recarregar a página ou voltar ao mapa é seguro. Isso não conclui a lição e não é competência verificada."}
+          : onBack
+            ? "Recarregar a página ou voltar ao mapa é seguro. Isso não conclui a lição e não é competência verificada."
+            : "Recarregar a página não conclui a lição e não é competência verificada."}
       </p>
       <SupportCta />
+      {onReload ? (
+        <button type="button" className="btn btn-secondary" onClick={onReload}>
+          Recarregar página
+        </button>
+      ) : null}
       {onBack ? (
         <button
           type="button"

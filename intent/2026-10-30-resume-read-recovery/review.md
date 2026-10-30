@@ -1,0 +1,7 @@
+# Independent review
+
+Before the change, focused App tests reproduced unreadable, invalid and unexpectedly absent second reads leading to onboarding rather than recovery. A reviewer inspected the original rejected-promise path and confirmed it could leave loading unresolved. After the change, component tests cover all three states, a rejected promise, unmount and hosted flow; existing tests preserve the default confirmed-absent behavior.
+
+In local Chromium a simulated read failure during StrictMode boot showed the recovery screen, and a deliberate reload returned to Home with the complete learner-state record unchanged. Initial browser fault-injection attempts targeted a different boot read or a cancelled StrictMode effect; the corrected test fails reads from the third onward, restores the interceptor and passed. The reviewer independently checked the full stored record and reload. 56 focused component/use-case tests, local browser, lint/build and independent review passed.
+
+The use-case now rejects invalid/read-error results and has an optional require-existing mode; callers that relied on treating those states as absent must handle the error. A separate preexisting uncertainty remains if a journey switch during boot commits and then reports failure; this change does not reconcile that case. Other tabs and real screen-reader speech were not tested. Build retains its large-chunk warning.

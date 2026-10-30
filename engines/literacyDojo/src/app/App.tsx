@@ -190,7 +190,16 @@ export function AppShell({
         }
         if (cancelled) return;
       }
-      const destination = await services.useCases.resumeSession();
+      let destination: Awaited<ReturnType<typeof services.useCases.resumeSession>>;
+      try {
+        destination = await services.useCases.resumeSession({ requireExisting: true });
+      } catch {
+        if (cancelled) return;
+        setBootError(
+          "Não foi possível confirmar o progresso salvo. Recarregue para tentar novamente.",
+        );
+        return;
+      }
       if (cancelled) return;
       setProgress(bootProgress);
       if (destination.kind === "onboarding") {
@@ -385,7 +394,11 @@ export function AppShell({
   if (bootError) {
     return (
       <main className="app-shell">
-        <ErrorRecoveryScreen message={bootError} hosted={hostAdapter !== null} />
+        <ErrorRecoveryScreen
+          message={bootError}
+          hosted={hostAdapter !== null}
+          onReload={hostAdapter === null ? () => window.location.reload() : undefined}
+        />
       </main>
     );
   }

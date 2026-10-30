@@ -696,8 +696,15 @@ export class LiteracyUseCases {
   }
 
   /** Ponto de retomada após reload: onboarding pendente → onboarding; lição em andamento → player; senão → home. */
-  async resumeSession(): Promise<ResumeDestination> {
+  async resumeSession(options: { requireExisting?: boolean } = {}): Promise<ResumeDestination> {
     const read = await this.deps.state.readState();
+    if (
+      read.status === "read-error" ||
+      read.status === "present-invalid" ||
+      (read.status === "absent" && options.requireExisting)
+    ) {
+      throw new Error("Não foi possível confirmar o estado da retomada.");
+    }
     const progress = read.status === "present-valid" ? read.value.progress : null;
     if (!progress || !progress.onboarding.completed) return { kind: "onboarding" };
     const current = progress.currentLessonId;
