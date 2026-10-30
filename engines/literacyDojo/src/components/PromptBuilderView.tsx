@@ -6,12 +6,14 @@ export function PromptBuilderView({
   answer,
   invalidIds,
   disabled,
+  readOnly = false,
   onChange,
 }: {
   activity: PromptBuilderActivity;
   answer: PromptBuilderAnswer;
   invalidIds: string[];
   disabled: boolean;
+  readOnly?: boolean;
   onChange: (answer: PromptBuilderAnswer) => void;
 }) {
   const { scenario, genericPrompt, fields } = activity.data;
@@ -24,6 +26,11 @@ export function PromptBuilderView({
         <br />“{genericPrompt}”
       </blockquote>
 
+      {readOnly && (
+        <p className="muted" id={`${activity.id}-answer-locked`}>
+          Resposta aprovada: você pode selecionar e copiar o texto, mas não alterá-lo.
+        </p>
+      )}
       {fields.map((field) => {
         const value = answer.values[field.id] ?? "";
         const invalid = invalidIds.includes(field.id);
@@ -41,7 +48,8 @@ export function PromptBuilderView({
               rows={2}
               value={value}
               disabled={disabled}
-              aria-describedby={`${activity.id}-${field.id}-hint`}
+              readOnly={readOnly}
+              aria-describedby={`${activity.id}-${field.id}-hint${readOnly ? ` ${activity.id}-answer-locked` : ""}`}
               aria-invalid={invalid}
               className={invalid ? "is-invalid" : undefined}
               onChange={(event) =>

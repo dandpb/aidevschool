@@ -253,7 +253,7 @@ export function LessonScreen({
   };
 
   const updateAnswer = (next: ActivityAnswer) => {
-    if (!canMutate()) return;
+    if (!canMutate() || attempt?.evaluation.pass) return;
     if (attempt && !attempt.evaluation.pass) setAnswerEdited(true);
     setSession((previous) => setAnswer(previous, lesson, next));
   };
@@ -558,10 +558,14 @@ export function LessonScreen({
           attempt && !attempt.evaluation.pass && !answerEdited ? failedCheckIds(attempt) : []
         }
         disabled={submitting || hintLoading || retryLoading}
+        answerLocked={attempt?.evaluation.pass === true}
         onChange={updateAnswer}
       />
 
       {attempt && <FeedbackPanel feedback={attempt.feedback} hintsShown={hints.shown} />}
+      {attempt?.evaluation.pass && (
+        <p className="muted">Resposta aprovada. Continue pela próxima ação.</p>
+      )}
       <div aria-live="polite">
         {attempt && answerEdited && (
           <p className="muted" data-testid="prior-feedback-note">

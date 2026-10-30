@@ -31,6 +31,7 @@ export type ActivityViewProps = {
   answer: ActivityAnswer;
   invalidIds: string[];
   disabled: boolean;
+  answerLocked?: boolean;
   onChange: (answer: ActivityAnswer) => void;
 };
 
@@ -40,6 +41,7 @@ export function ActivityRenderer({
   answer,
   invalidIds,
   disabled,
+  answerLocked = false,
   onChange,
 }: ActivityViewProps) {
   switch (activity.type) {
@@ -49,7 +51,7 @@ export function ActivityRenderer({
           activity={activity as ChoiceActivity}
           answer={answer as ChoiceAnswer}
           invalidIds={invalidIds}
-          disabled={disabled}
+          disabled={disabled || answerLocked}
           onChange={onChange}
         />
       );
@@ -59,7 +61,7 @@ export function ActivityRenderer({
           activity={activity as SortActivity}
           answer={answer as SortAnswer}
           invalidIds={invalidIds}
-          disabled={disabled}
+          disabled={disabled || answerLocked}
           onChange={onChange}
         />
       );
@@ -69,7 +71,7 @@ export function ActivityRenderer({
           activity={activity as MissingContextActivity}
           answer={answer as MissingContextAnswer}
           invalidIds={invalidIds}
-          disabled={disabled}
+          disabled={disabled || answerLocked}
           onChange={onChange}
         />
       );
@@ -79,7 +81,7 @@ export function ActivityRenderer({
           activity={activity as OutputComparisonActivity}
           answer={answer as OutputComparisonAnswer}
           invalidIds={invalidIds}
-          disabled={disabled}
+          disabled={disabled || answerLocked}
           onChange={onChange}
         />
       );
@@ -90,6 +92,7 @@ export function ActivityRenderer({
           answer={answer as PromptBuilderAnswer}
           invalidIds={invalidIds}
           disabled={disabled}
+          readOnly={answerLocked}
           onChange={onChange}
         />
       );
@@ -99,7 +102,7 @@ export function ActivityRenderer({
           activity={activity as SafetyClassificationActivity}
           answer={answer as SafetyClassificationAnswer}
           invalidIds={invalidIds}
-          disabled={disabled}
+          disabled={disabled || answerLocked}
           onChange={onChange}
         />
       );
@@ -109,7 +112,7 @@ export function ActivityRenderer({
           activity={activity as RubricReviewActivity}
           answer={answer as RubricReviewAnswer}
           invalidIds={invalidIds}
-          disabled={disabled}
+          disabled={disabled || answerLocked}
           onChange={onChange}
         />
       );

@@ -375,8 +375,9 @@ export function CheckpointScreen({
           attempt && !attempt.evaluation.pass && !answerEdited ? failedCheckIds(attempt) : []
         }
         disabled={submitting}
+        answerLocked={attempt?.evaluation.pass === true}
         onChange={(next) => {
-          if (!busyRef.current && canMutate()) {
+          if (!busyRef.current && canMutate() && !attempt?.evaluation.pass) {
             if (attempt && !attempt.evaluation.pass) setAnswerEdited(true);
             setAnswers((previous) => ({ ...previous, [key]: next }));
           }
@@ -384,6 +385,9 @@ export function CheckpointScreen({
       />
 
       {attempt && <FeedbackPanel feedback={attempt.feedback} hintsShown={hints} />}
+      {attempt?.evaluation.pass && (
+        <p className="muted">Resposta aprovada. Continue pela próxima ação.</p>
+      )}
       <div aria-live="polite">
         {attempt && answerEdited && (
           <p className="muted" data-testid="prior-feedback-note">
