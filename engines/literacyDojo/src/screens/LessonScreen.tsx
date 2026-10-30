@@ -103,7 +103,9 @@ export function LessonScreen({
     onboarding,
   }));
   const [submitting, setSubmitting] = useState(false);
+  const [completing, setCompleting] = useState(false);
   const [attemptError, setAttemptError] = useState(false);
+  const [completionError, setCompletionError] = useState(false);
   const [hintLoading, setHintLoading] = useState(false);
   const [hintError, setHintError] = useState(false);
   const [retryLoading, setRetryLoading] = useState(false);
@@ -188,9 +190,10 @@ export function LessonScreen({
   const requiredPassed = requiredActivitiesPassed(session, lesson.completion.requiredActivityIds);
 
   const applyTransition = (result: { session: LessonSession; finishPayload?: FinishPayload }) => {
-    setSession(result.session);
     if (result.finishPayload) {
       void handleFinish(result.finishPayload);
+    } else {
+      setSession(result.session);
     }
   };
 
@@ -288,6 +291,8 @@ export function LessonScreen({
     if (submissionBusy.current || hintBusy.current || retryBusy.current) return;
     submissionBusy.current = true;
     setSubmitting(true);
+    setCompleting(true);
+    setCompletionError(false);
     try {
       if (mode === "review") {
         const result = await services.useCases.completeReview({
@@ -295,7 +300,10 @@ export function LessonScreen({
           bestScores: payload.bestScores,
           intervalIndex: reviewStage === undefined ? undefined : reviewStage + 1,
         });
-        if (!result.outcome.completed) return;
+        if (!result.outcome.completed) {
+          setCompletionError(true);
+          return;
+        }
         const summary = buildSummary(lesson, session.best, result.outcome.lessonScore, {
           mode,
           evidenceRecord: latestPassingEvidence.current,
@@ -308,7 +316,10 @@ export function LessonScreen({
         bestScores: payload.bestScores,
         durationSeconds: payload.durationSeconds,
       });
-      if (!result.outcome.completed) return;
+      if (!result.outcome.completed) {
+        setCompletionError(true);
+        return;
+      }
       const summary = buildSummary(lesson, session.best, result.outcome.lessonScore, {
         mode,
         nextLessonId: result.nextLessonId,
@@ -316,9 +327,12 @@ export function LessonScreen({
         evidenceRecord: latestPassingEvidence.current,
       });
       onCompleted(result.progress, summary);
+    } catch {
+      setCompletionError(true);
     } finally {
       submissionBusy.current = false;
       setSubmitting(false);
+      setCompleting(false);
     }
   };
 
@@ -474,13 +488,19 @@ export function LessonScreen({
           Não foi possível reiniciar a tentativa. Tente novamente.
         </p>
       )}
+      {completionError && (
+        <p className="feedback feedback-fail" role="alert">
+          Não foi possível confirmar a conclusão. Ela pode já ter sido registrada. Ao recarregar, o
+          aplicativo tenta abrir o progresso salvo, mas as respostas desta sessão serão perdidas.
+        </p>
+      )}
 
       {/* AID-1089/W2 (state contract §2.3-6): região role=status do loading —
           a ação assíncrona desabilita o controle e anuncia o andamento.
           <output> carrega role=status implícito (biome useSemanticElements). */}
       {submitting && (
         <output className="sr-only" data-testid="lesson-busy">
-          Verificando sua resposta…
+          {completing ? "Registrando conclusão…" : "Verificando sua resposta…"}
         </output>
       )}
       {hintLoading && (
@@ -553,11 +573,24 @@ export function LessonScreen({
             type="button"
             className="btn btn-primary"
             data-testid="finish-lesson"
-            disabled={!requiredPassed || submitting || hintLoading || retryLoading}
+            aria-disabled={!requiredPassed || submitting || hintLoading || retryLoading}
             aria-busy={submitting}
-            onClick={() => void applyTransition(finishLesson(session, lesson, services.clock()))}
+            onClick={() => {
+              if (
+                !requiredPassed ||
+                submissionBusy.current ||
+                hintBusy.current ||
+                retryBusy.current
+              )
+                return;
+              applyTransition(finishLesson(session, lesson, services.clock()));
+            }}
           >
-            {mode === "review" ? "Concluir revisão" : "Concluir lição"}
+            {completing
+              ? "Registrando conclusão…"
+              : mode === "review"
+                ? "Concluir revisão"
+                : "Concluir lição"}
           </button>
         )}
       </div>

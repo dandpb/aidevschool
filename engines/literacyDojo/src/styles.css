@@ -148,12 +148,13 @@ ol {
   transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.15s ease;
 }
 
-.btn-primary:active:not(:disabled) {
+.btn-primary:active:not(:disabled):not([aria-disabled="true"]) {
   transform: translateY(3px);
   box-shadow: 0 0 0 var(--primary-dark);
 }
 
-.btn-primary:disabled {
+.btn-primary:disabled,
+.btn-primary[aria-disabled="true"] {
   background: #93a8d8;
   cursor: not-allowed;
 }
@@ -1127,13 +1128,13 @@ h2 {
   box-shadow: 0 7px 18px rgba(73, 56, 199, 0.2);
 }
 
-.btn-primary:hover:not(:disabled) {
+.btn-primary:hover:not(:disabled):not([aria-disabled="true"]) {
   background: linear-gradient(180deg, #6557e8, #5646d7);
   transform: translateY(-2px);
   box-shadow: 0 9px 24px rgba(73, 56, 199, 0.25);
 }
 
-.btn-primary:active:not(:disabled) {
+.btn-primary:active:not(:disabled):not([aria-disabled="true"]) {
   transform: translateY(2px);
   border-bottom-width: 2px;
 }
