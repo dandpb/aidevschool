@@ -57,6 +57,9 @@ export function CheckpointScreen({
   const [passed, setPassed] = useState(false);
   const [unlockedLessonId, setUnlockedLessonId] = useState<string | undefined>();
   const headingRef = useRef<HTMLHeadingElement | null>(null);
+  const submitRef = useRef<HTMLButtonElement | null>(null);
+  const nextActionRef = useRef<HTMLButtonElement | null>(null);
+  const restoreNextFocus = useRef(false);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: o efeito deve re-executar a cada mudança de fase/atividade (padrão do LessonScreen), embora não leia os valores.
   useEffect(() => {
@@ -71,6 +74,27 @@ export function CheckpointScreen({
   const hints = shownHints[key] ?? [];
   const hintCount = activity ? services.feedback.hintCount(activity) : 0;
   const hasMoreHints = hintCount > hints.length;
+  useEffect(() => {
+    if (
+      attempt?.evaluation.pass &&
+      restoreNextFocus.current &&
+      document.activeElement === document.body
+    ) {
+      nextActionRef.current?.focus();
+    }
+  }, [attempt]);
+  useEffect(() => {
+    if (!submitting) return;
+    const cancelRestore = () => {
+      restoreNextFocus.current = false;
+    };
+    document.addEventListener("pointerdown", cancelRestore);
+    document.addEventListener("focusin", cancelRestore);
+    return () => {
+      document.removeEventListener("pointerdown", cancelRestore);
+      document.removeEventListener("focusin", cancelRestore);
+    };
+  }, [submitting]);
   const isLast = current === activityRefs.length - 1;
   const allPassed = activityRefs.every(
     (item) => attempts[`${item.lessonId}:${item.activityId}`]?.evaluation.pass,
@@ -108,6 +132,7 @@ export function CheckpointScreen({
 
   const handleSubmit = async () => {
     if (busyRef.current || !answer) return;
+    restoreNextFocus.current = document.activeElement === submitRef.current;
     busyRef.current = true;
     setSubmitting(true);
     setOperationError(null);
@@ -121,6 +146,7 @@ export function CheckpointScreen({
       setAttempts((previous) => ({ ...previous, [key]: result }));
       onProgressChange(result.progress);
     } catch {
+      restoreNextFocus.current = false;
       setOperationError("attempt");
     } finally {
       busyRef.current = false;
@@ -368,6 +394,7 @@ export function CheckpointScreen({
             type="button"
             className="btn btn-primary"
             data-testid="submit-attempt"
+            ref={submitRef}
             disabled={!isAnswerComplete(activity, answer)}
             aria-disabled={submitting}
             onClick={() => void handleSubmit()}
@@ -402,6 +429,7 @@ export function CheckpointScreen({
             type="button"
             className="btn btn-primary"
             data-testid="next-activity"
+            ref={nextActionRef}
             aria-disabled={submitting}
             onClick={handleNext}
           >
@@ -413,6 +441,7 @@ export function CheckpointScreen({
             type="button"
             className="btn btn-primary"
             data-testid="finish-checkpoint"
+            ref={nextActionRef}
             disabled={!allPassed}
             aria-disabled={submitting}
             onClick={() => void handleFinish()}
