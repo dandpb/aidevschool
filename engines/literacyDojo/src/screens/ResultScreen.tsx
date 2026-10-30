@@ -38,6 +38,9 @@ export function ResultScreen({
   const [verificationError, setVerificationError] = useState<string>();
   const [verifying, setVerifying] = useState(false);
   const verificationBusy = useRef(false);
+  const retryRef = useRef<HTMLButtonElement | null>(null);
+  const verificationHeadingRef = useRef<HTMLHeadingElement | null>(null);
+  const restoreVerificationFocus = useRef(false);
   const { lesson } = summary;
   const successMessages = summary.activityResults
     .filter((result) => result.pass && result.feedback.summary)
@@ -51,14 +54,37 @@ export function ResultScreen({
     });
   }, [services]);
 
+  useEffect(() => {
+    if (receipt && restoreVerificationFocus.current && document.activeElement === document.body) {
+      verificationHeadingRef.current?.focus();
+    }
+    if (receipt) restoreVerificationFocus.current = false;
+  }, [receipt]);
+
+  useEffect(() => {
+    if (!verifying) return;
+    const cancelRestore = () => {
+      restoreVerificationFocus.current = false;
+    };
+    document.addEventListener("pointerdown", cancelRestore);
+    document.addEventListener("focusin", cancelRestore);
+    return () => {
+      document.removeEventListener("pointerdown", cancelRestore);
+      document.removeEventListener("focusin", cancelRestore);
+    };
+  }, [verifying]);
+
   const verifyAttempt = useCallback(async () => {
     if (!summary.evidenceRecord || verificationBusy.current) return;
+    restoreVerificationFocus.current =
+      retryRef.current !== null && document.activeElement === retryRef.current;
     verificationBusy.current = true;
     setVerifying(true);
     try {
       setReceipt(await services.verification.verify(summary.evidenceRecord));
       setVerificationError(undefined);
     } catch (error) {
+      restoreVerificationFocus.current = false;
       setReceipt(undefined);
       setVerificationError(
         error instanceof Error ? error.message : "Não foi possível verificar esta tentativa.",
@@ -149,7 +175,9 @@ export function ResultScreen({
       </div>
 
       <div className="card" data-testid="verification-status" aria-live="polite">
-        <h2>Verificação da tentativa</h2>
+        <h2 ref={verificationHeadingRef} tabIndex={-1}>
+          Verificação da tentativa
+        </h2>
         {verifying && <p>Enviando evidência estruturada para verificação independente…</p>}
         {receipt && (
           <p>
@@ -165,6 +193,7 @@ export function ResultScreen({
               type="button"
               className="btn btn-secondary"
               data-testid="retry-verification"
+              ref={retryRef}
               aria-disabled={verifying}
               aria-busy={verifying}
               onClick={() => void verifyAttempt()}
