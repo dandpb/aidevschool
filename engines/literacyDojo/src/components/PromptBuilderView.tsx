@@ -26,6 +26,13 @@ export function PromptBuilderView({
         <br />“{genericPrompt}”
       </blockquote>
 
+      <p className="muted" id={`${activity.id}-privacy-notice`} data-testid="prompt-privacy-notice">
+        Não inclua dados pessoais ou confidenciais. Ao enviar a resposta, o texto pode aparecer no
+        console deste navegador e ser compartilhado com o aplicativo que abriu a missão. Ao
+        concluir, uma tentativa aprovada pode ser enviada automaticamente ao verificador, se
+        configurado.
+      </p>
+
       {readOnly && (
         <p className="muted" id={`${activity.id}-answer-locked`}>
           Resposta aprovada: você pode selecionar e copiar o texto, mas não alterá-lo.
@@ -49,7 +56,7 @@ export function PromptBuilderView({
               value={value}
               disabled={disabled}
               readOnly={readOnly}
-              aria-describedby={`${activity.id}-${field.id}-hint${readOnly ? ` ${activity.id}-answer-locked` : ""}`}
+              aria-describedby={`${activity.id}-${field.id}-hint ${activity.id}-privacy-notice${readOnly ? ` ${activity.id}-answer-locked` : ""}`}
               aria-invalid={invalid}
               className={invalid ? "is-invalid" : undefined}
               onChange={(event) =>

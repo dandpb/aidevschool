@@ -83,7 +83,9 @@ it("falha ao ler arquivo não bloqueia ações nem tenta reler estado", async ()
     },
   });
   fireEvent.change(screen.getByTestId("import-progress-file"), { target: { files: [file] } });
-  expect(await screen.findByTestId("backup-status")).toHaveTextContent("pode já ter ocorrido");
+  expect(await screen.findByTestId("backup-status")).toHaveTextContent(
+    "Nenhuma restauração foi iniciada nesta tentativa",
+  );
   expect(recover).not.toHaveBeenCalled();
   expect(screen.getByTestId("import-progress")).toHaveAttribute("aria-disabled", "false");
 });
