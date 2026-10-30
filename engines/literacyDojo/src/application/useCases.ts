@@ -17,6 +17,7 @@ import {
   isCheckpointCompleted,
   startCheckpointSession,
 } from "../domain/checkpoints";
+import { addExtraContextFeedback, selectedExtraContextIds } from "../domain/contextFeedback";
 import { type ActivityAnswer, type EvaluationResult, evaluateActivity } from "../domain/evaluation";
 import { type LiteracyEvidenceRecord, buildEvidenceRecord } from "../domain/evidence";
 import type { AttemptFeedback } from "../domain/feedback";
@@ -328,6 +329,7 @@ export class LiteracyUseCases {
     const lesson = this.requireLesson(input.lessonId);
     const activity = this.requireActivity(lesson, input.activityId);
     const evaluation = evaluateActivity(activity, input.answer);
+    const extraContextIds = selectedExtraContextIds(activity, input.answer);
 
     const now = this.deps.clock();
     let next: LearnerProgress;
@@ -395,7 +397,12 @@ export class LiteracyUseCases {
     return {
       progress: next,
       evaluation,
-      feedback: this.deps.feedback.feedbackFor(activity, evaluation),
+      feedback: addExtraContextFeedback(
+        activity,
+        evaluation,
+        this.deps.feedback.feedbackFor(activity, evaluation),
+        extraContextIds,
+      ),
       record,
     };
   }

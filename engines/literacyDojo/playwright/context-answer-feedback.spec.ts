@@ -27,6 +27,9 @@ test("contexto extra é identificado, e marcas desaparecem durante correção", 
   await expect(page.getByTestId("feedback-panel")).toHaveClass(/feedback-fail/);
   const extra = page.getByTestId("context-temperatura");
   await expect(extra).toHaveAttribute("aria-invalid", "true");
+  await expect(page.getByTestId("feedback-check-temperatura")).toContainText(
+    "temperatura é configuração interna",
+  );
   await expect(extra.locator("..")).toHaveClass(/is-invalid/);
   await expect(extra.locator("..")).toHaveCSS("border-top-style", "dashed");
   await expect(page.getByTestId("context-tarefa-definida")).not.toHaveAttribute(
@@ -37,6 +40,8 @@ test("contexto extra é identificado, e marcas desaparecem durante correção", 
   await page.keyboard.press("Space");
   await expect(extra).not.toHaveAttribute("aria-invalid", "true");
   await expect(page.getByTestId("prior-feedback-note")).toBeVisible();
+  await expect(page.getByTestId("feedback-check-temperatura")).toBeVisible();
   await page.getByTestId("submit-attempt").click();
   await expect(page.getByTestId("feedback-panel")).toHaveClass(/feedback-pass/);
+  await expect(page.getByTestId("feedback-check-temperatura")).toHaveCount(0);
 });
