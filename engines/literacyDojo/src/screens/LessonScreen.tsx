@@ -3,6 +3,7 @@ import type { ActivityResultSummary, LessonSummary } from "../app/App";
 import { useServices } from "../app/services";
 import { ActivityRenderer, isAnswerComplete } from "../components/ActivityRenderer";
 import { FeedbackPanel } from "../components/FeedbackPanel";
+import { HintList } from "../components/HintList";
 import { MentorGuide } from "../components/MentorGuide";
 import { VoxelSkillArt } from "../components/VoxelSkillArt";
 import { VoxelTaskArt, taskDetails } from "../components/VoxelTaskArt";
@@ -103,6 +104,13 @@ export function LessonScreen({
   }));
   const [submitting, setSubmitting] = useState(false);
   const [attemptError, setAttemptError] = useState(false);
+  const [hintLoading, setHintLoading] = useState(false);
+  const [hintError, setHintError] = useState(false);
+  const [retryLoading, setRetryLoading] = useState(false);
+  const [retryError, setRetryError] = useState(false);
+  const hintBusy = useRef(false);
+  const retryBusy = useRef(false);
+  const submissionBusy = useRef(false);
   const latestPassingEvidence = useRef<LiteracyEvidenceRecord>();
   const headingRef = useRef<HTMLHeadingElement | null>(null);
   // Exposição (F2 R2, emenda ADR-0009): brief 1× por mount (a intro não
@@ -174,7 +182,8 @@ export function LessonScreen({
   const answer = currentAnswer(session, activity);
   const attempt = latestAttempt(session, activity.id);
   const hints = hintsFor(session, activity.id);
-  const hasMoreHints = services.feedback.hintCount(activity) > hints.index;
+  const hintCount = services.feedback.hintCount(activity);
+  const hasMoreHints = hintCount > hints.index;
   const lastActivity = isLastActivity(session, lesson);
   const requiredPassed = requiredActivitiesPassed(session, lesson.completion.requiredActivityIds);
 
@@ -194,9 +203,11 @@ export function LessonScreen({
   };
 
   const handleSubmit = async () => {
-    if (submitting || !activity) return;
+    if (submissionBusy.current || hintBusy.current || retryBusy.current || !activity) return;
+    submissionBusy.current = true;
     setSubmitting(true);
     setAttemptError(false);
+    setRetryError(false);
     try {
       const result = await services.useCases.submitActivityAttempt({
         lessonId: lesson.id,
@@ -212,25 +223,55 @@ export function LessonScreen({
     } catch {
       setAttemptError(true);
     } finally {
+      submissionBusy.current = false;
       setSubmitting(false);
     }
   };
 
   const handleHint = async () => {
-    if (!activity) return;
-    const result = await services.useCases.requestHint({
-      lessonId: lesson.id,
-      activityId: activity.id,
-      hintIndex: hints.index,
-    });
-    applyTransition({ session: recordHint(session, lesson, result.hint) });
+    if (
+      !activity ||
+      !hasMoreHints ||
+      submissionBusy.current ||
+      hintBusy.current ||
+      retryBusy.current
+    )
+      return;
+    hintBusy.current = true;
+    setHintLoading(true);
+    setHintError(false);
+    setRetryError(false);
+    try {
+      const result = await services.useCases.requestHint({
+        lessonId: lesson.id,
+        activityId: activity.id,
+        hintIndex: hints.index,
+      });
+      applyTransition({ session: recordHint(session, lesson, result.hint) });
+    } catch {
+      setHintError(true);
+    } finally {
+      hintBusy.current = false;
+      setHintLoading(false);
+    }
   };
 
   const handleRetry = async () => {
-    if (!activity) return;
-    await services.useCases.retryActivity({ lessonId: lesson.id, activityId: activity.id });
-    setAttemptError(false);
-    applyTransition({ session: retryCurrentActivity(session, lesson) });
+    if (!activity || submissionBusy.current || hintBusy.current || retryBusy.current) return;
+    retryBusy.current = true;
+    setRetryLoading(true);
+    setRetryError(false);
+    try {
+      await services.useCases.retryActivity({ lessonId: lesson.id, activityId: activity.id });
+      setAttemptError(false);
+      setHintError(false);
+      applyTransition({ session: retryCurrentActivity(session, lesson) });
+    } catch {
+      setRetryError(true);
+    } finally {
+      retryBusy.current = false;
+      setRetryLoading(false);
+    }
     // AID-1089/W2 (state contract §2.3, preservação de foco no retry): o botão
     // "Tentar novamente" desmonta quando a tentativa é limpa; o efeito de fase
     // (feedback→attempting) já refoca o heading tabIndex=-1 — o comportamento
@@ -238,11 +279,14 @@ export function LessonScreen({
   };
 
   const handleNextActivity = () => {
+    setHintError(false);
+    setRetryError(false);
     applyTransition({ session: nextActivity(session, lesson) });
   };
 
   const handleFinish = async (payload: FinishPayload) => {
-    if (submitting) return;
+    if (submissionBusy.current || hintBusy.current || retryBusy.current) return;
+    submissionBusy.current = true;
     setSubmitting(true);
     try {
       if (mode === "review") {
@@ -273,6 +317,7 @@ export function LessonScreen({
       });
       onCompleted(result.progress, summary);
     } finally {
+      submissionBusy.current = false;
       setSubmitting(false);
     }
   };
@@ -402,16 +447,31 @@ export function LessonScreen({
         activity={activity}
         answer={answer}
         invalidIds={attempt && !attempt.evaluation.pass ? failedCheckIds(attempt) : []}
-        disabled={false}
+        disabled={submitting || hintLoading || retryLoading}
         onChange={updateAnswer}
       />
 
       {attempt && <FeedbackPanel feedback={attempt.feedback} hintsShown={hints.shown} />}
+      {!attempt && (
+        <div aria-live="polite" aria-atomic="true">
+          <HintList hints={hints.shown} />
+        </div>
+      )}
 
       {attemptError && (
         <p className="feedback feedback-fail" role="alert">
           Não foi possível confirmar o resultado. Ao tentar novamente, a tentativa anterior pode já
           ter sido registrada.
+        </p>
+      )}
+      {hintError && (
+        <p className="feedback feedback-fail" role="alert">
+          Não foi possível carregar a dica. Tente novamente.
+        </p>
+      )}
+      {retryError && (
+        <p className="feedback feedback-fail" role="alert">
+          Não foi possível reiniciar a tentativa. Tente novamente.
         </p>
       )}
 
@@ -423,6 +483,16 @@ export function LessonScreen({
           Verificando sua resposta…
         </output>
       )}
+      {hintLoading && (
+        <output className="sr-only" data-testid="hint-busy">
+          Buscando dica…
+        </output>
+      )}
+      {retryLoading && (
+        <output className="sr-only" data-testid="retry-busy">
+          Reiniciando tentativa…
+        </output>
+      )}
 
       <div className="actions">
         {!attempt?.evaluation.pass && (
@@ -430,11 +500,13 @@ export function LessonScreen({
             type="button"
             className="btn btn-primary"
             data-testid="submit-attempt"
-            disabled={!isAnswerComplete(activity, answer) || submitting}
+            disabled={
+              !isAnswerComplete(activity, answer) || submitting || hintLoading || retryLoading
+            }
             aria-busy={submitting}
             onClick={() => void handleSubmit()}
           >
-            {attempt ? "Verificar de novo" : "Verificar resposta"}
+            {submitting ? "Verificando…" : attempt ? "Verificar de novo" : "Verificar resposta"}
           </button>
         )}
         {attempt && !attempt.evaluation.pass && (
@@ -442,19 +514,27 @@ export function LessonScreen({
             type="button"
             className="btn btn-secondary"
             data-testid="retry-activity"
+            aria-disabled={submitting || hintLoading || retryLoading}
+            aria-busy={retryLoading}
             onClick={() => void handleRetry()}
           >
-            Tentar novamente
+            {retryLoading ? "Reiniciando…" : "Tentar novamente"}
           </button>
         )}
-        {hasMoreHints && (
+        {hintCount > 0 && (
           <button
             type="button"
             className="btn btn-secondary"
             data-testid="hint-button"
+            aria-disabled={!hasMoreHints || submitting || hintLoading || retryLoading}
+            aria-busy={hintLoading}
             onClick={() => void handleHint()}
           >
-            Pedir dica
+            {hintLoading
+              ? "Buscando dica…"
+              : hasMoreHints
+                ? "Pedir dica"
+                : "Todas as dicas exibidas"}
           </button>
         )}
         {attempt?.evaluation.pass && !lastActivity && (
@@ -462,6 +542,7 @@ export function LessonScreen({
             type="button"
             className="btn btn-primary"
             data-testid="next-activity"
+            disabled={submitting || hintLoading || retryLoading}
             onClick={handleNextActivity}
           >
             Próxima atividade
@@ -472,7 +553,7 @@ export function LessonScreen({
             type="button"
             className="btn btn-primary"
             data-testid="finish-lesson"
-            disabled={!requiredPassed || submitting}
+            disabled={!requiredPassed || submitting || hintLoading || retryLoading}
             aria-busy={submitting}
             onClick={() => void applyTransition(finishLesson(session, lesson, services.clock()))}
           >

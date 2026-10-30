@@ -165,12 +165,12 @@ ol {
   transition: transform 0.08s ease, box-shadow 0.12s ease, background 0.12s ease;
 }
 
-.btn-secondary:hover:not(:disabled) {
+.btn-secondary:hover:not(:disabled):not([aria-disabled="true"]) {
   background: #f5f7ff;
   box-shadow: var(--shadow-soft);
 }
 
-.btn-secondary:active:not(:disabled) {
+.btn-secondary:active:not(:disabled):not([aria-disabled="true"]) {
   transform: translateY(1px);
 }
 
@@ -184,6 +184,13 @@ ol {
   color: var(--muted);
   cursor: not-allowed;
   box-shadow: none;
+}
+
+.btn-secondary[aria-disabled="true"] {
+  background: #ece9f7;
+  border-color: var(--border);
+  color: var(--muted);
+  cursor: not-allowed;
 }
 
 .btn-link:hover:not(:disabled),

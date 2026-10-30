@@ -1,4 +1,5 @@
 import type { AttemptFeedback } from "../domain/feedback";
+import { HintList } from "./HintList";
 
 /** Painel de feedback formativo: "ainda falta X" por check + dicas progressivas. */
 export function FeedbackPanel({
@@ -29,16 +30,7 @@ export function FeedbackPanel({
           ))}
         </ul>
       )}
-      {hintsShown.length > 0 && (
-        <div className="hints" data-testid="hints-list">
-          <p className="muted">Dicas:</p>
-          <ol>
-            {hintsShown.map((hint, index) => (
-              <li key={index}>{hint}</li>
-            ))}
-          </ol>
-        </div>
-      )}
+      <HintList hints={hintsShown} />
     </div>
   );
 }
