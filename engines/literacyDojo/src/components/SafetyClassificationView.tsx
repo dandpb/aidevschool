@@ -40,6 +40,10 @@ export function SafetyClassificationView({
                     name={`classify-${item.id}`}
                     data-testid={`item-${item.id}-safe`}
                     checked={value === "safe"}
+                    aria-invalid={(invalid && value === "safe") || undefined}
+                    aria-describedby={
+                      invalid && value === "safe" ? `${activity.id}-${item.id}-invalid` : undefined
+                    }
                     disabled={disabled}
                     onChange={() => choose(item.id, "safe")}
                   />
@@ -53,12 +57,23 @@ export function SafetyClassificationView({
                     name={`classify-${item.id}`}
                     data-testid={`item-${item.id}-sensitive`}
                     checked={value === "sensitive"}
+                    aria-invalid={(invalid && value === "sensitive") || undefined}
+                    aria-describedby={
+                      invalid && value === "sensitive"
+                        ? `${activity.id}-${item.id}-invalid`
+                        : undefined
+                    }
                     disabled={disabled}
                     onChange={() => choose(item.id, "sensitive")}
                   />
                   {labels.sensitive}
                 </label>
               </div>
+              {invalid && (
+                <p className="activity-invalid-note" id={`${activity.id}-${item.id}-invalid`}>
+                  Revise esta resposta.
+                </p>
+              )}
             </li>
           );
         })}
