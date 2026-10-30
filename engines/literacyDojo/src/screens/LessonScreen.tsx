@@ -102,6 +102,7 @@ export function LessonScreen({
     onboarding,
   }));
   const [submitting, setSubmitting] = useState(false);
+  const [attemptError, setAttemptError] = useState(false);
   const latestPassingEvidence = useRef<LiteracyEvidenceRecord>();
   const headingRef = useRef<HTMLHeadingElement | null>(null);
   // Exposição (F2 R2, emenda ADR-0009): brief 1× por mount (a intro não
@@ -195,6 +196,7 @@ export function LessonScreen({
   const handleSubmit = async () => {
     if (submitting || !activity) return;
     setSubmitting(true);
+    setAttemptError(false);
     try {
       const result = await services.useCases.submitActivityAttempt({
         lessonId: lesson.id,
@@ -207,6 +209,8 @@ export function LessonScreen({
       });
       if (result.evaluation.pass) latestPassingEvidence.current = result.record;
       onProgressChange(result.progress);
+    } catch {
+      setAttemptError(true);
     } finally {
       setSubmitting(false);
     }
@@ -225,6 +229,7 @@ export function LessonScreen({
   const handleRetry = async () => {
     if (!activity) return;
     await services.useCases.retryActivity({ lessonId: lesson.id, activityId: activity.id });
+    setAttemptError(false);
     applyTransition({ session: retryCurrentActivity(session, lesson) });
     // AID-1089/W2 (state contract §2.3, preservação de foco no retry): o botão
     // "Tentar novamente" desmonta quando a tentativa é limpa; o efeito de fase
@@ -402,6 +407,13 @@ export function LessonScreen({
       />
 
       {attempt && <FeedbackPanel feedback={attempt.feedback} hintsShown={hints.shown} />}
+
+      {attemptError && (
+        <p className="feedback feedback-fail" role="alert">
+          Não foi possível confirmar o resultado. Ao tentar novamente, a tentativa anterior pode já
+          ter sido registrada.
+        </p>
+      )}
 
       {/* AID-1089/W2 (state contract §2.3-6): região role=status do loading —
           a ação assíncrona desabilita o controle e anuncia o andamento.
