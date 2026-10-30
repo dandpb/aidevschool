@@ -123,12 +123,16 @@ export function LessonScreen({
   const retryBusy = useRef(false);
   const submissionBusy = useRef(false);
   const submitButtonRef = useRef<HTMLButtonElement | null>(null);
+  const retryButtonRef = useRef<HTMLButtonElement | null>(null);
+  const preserveRetryFocus = useRef(false);
+  const retryFocusCleanup = useRef<(() => void) | null>(null);
   const nextActionRef = useRef<HTMLButtonElement | null>(null);
   const restoreSubmitFocus = useRef(false);
   const preserveFeedbackFocus = useRef(false);
   const latestPassingEvidence = useRef<LiteracyEvidenceRecord>();
   const headingRef = useRef<HTMLHeadingElement | null>(null);
   const feedbackRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => () => retryFocusCleanup.current?.(), []);
   useEffect(() => {
     if (
       attemptFailureCount > 0 &&
@@ -178,6 +182,10 @@ export function LessonScreen({
   const presentedActivityKeysRef = useRef<Set<string>>(new Set());
   // biome-ignore lint/correctness/useExhaustiveDependencies: mudança de atividade também requer foco, mesmo sem ler o índice.
   useEffect(() => {
+    if (session.phase === "attempting" && preserveRetryFocus.current) {
+      preserveRetryFocus.current = false;
+      return;
+    }
     if (session.phase === "feedback" && preserveFeedbackFocus.current) {
       preserveFeedbackFocus.current = false;
       return;
@@ -360,8 +368,30 @@ export function LessonScreen({
     retryBusy.current = true;
     setRetryLoading(true);
     setRetryError(false);
+    let interacted = false;
+    const cancelFocus = () => {
+      interacted = true;
+    };
+    const cancelForScrollKey = (event: KeyboardEvent) => {
+      if (["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End", " "].includes(event.key)) {
+        cancelFocus();
+      }
+    };
+    document.addEventListener("pointerdown", cancelFocus);
+    document.addEventListener("focusin", cancelFocus);
+    document.addEventListener("wheel", cancelFocus, { passive: true });
+    document.addEventListener("keydown", cancelForScrollKey);
+    const cleanupFocusListeners = () => {
+      document.removeEventListener("pointerdown", cancelFocus);
+      document.removeEventListener("focusin", cancelFocus);
+      document.removeEventListener("wheel", cancelFocus);
+      document.removeEventListener("keydown", cancelForScrollKey);
+      if (retryFocusCleanup.current === cleanupFocusListeners) retryFocusCleanup.current = null;
+    };
+    retryFocusCleanup.current = cleanupFocusListeners;
     try {
       await services.useCases.retryActivity({ lessonId: lesson.id, activityId: activity.id });
+      preserveRetryFocus.current = interacted || document.activeElement !== retryButtonRef.current;
       setAttemptError(false);
       setHintError(false);
       setAnswerEdited(false);
@@ -369,6 +399,7 @@ export function LessonScreen({
     } catch {
       setRetryError(true);
     } finally {
+      cleanupFocusListeners();
       retryBusy.current = false;
       setRetryLoading(false);
     }
@@ -665,6 +696,7 @@ export function LessonScreen({
             type="button"
             className="btn btn-secondary"
             data-testid="retry-activity"
+            ref={retryButtonRef}
             aria-disabled={submitting || hintLoading || retryLoading}
             aria-busy={retryLoading}
             onClick={() => void handleRetry()}
