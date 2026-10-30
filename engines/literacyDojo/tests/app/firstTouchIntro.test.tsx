@@ -306,6 +306,16 @@ describe("F1 R1/P1+P2: intro declara o 1º toque (mapa fechado, Anexo A verbatim
     const block = within(intro).getByTestId("first-touch");
     expect(block).toHaveTextContent(FIRST_TOUCH_LEAD_IN);
     expect(block).toHaveTextContent(FIRST_TOUCH_PHRASES.output_comparison);
+    expect(within(intro).queryByRole("button", { name: "Sair da lição" })).not.toBeInTheDocument();
+    expect(
+      within(intro).getByText(/use a navegação do aplicativo que abriu esta missão/i),
+    ).toBeVisible();
+    await userEvent.setup().click(within(intro).getByTestId("start-lesson"));
+    const player = await screen.findByTestId("lesson-player");
+    expect(within(player).queryByRole("button", { name: "Sair da lição" })).not.toBeInTheDocument();
+    expect(
+      within(player).getByText(/use a navegação do aplicativo que abriu esta missão/i),
+    ).toBeVisible();
   });
 });
 

@@ -5,9 +5,11 @@ import { SupportCta } from "../components/SupportCta";
 export function ErrorRecoveryScreen({
   message,
   onBack,
+  hosted = false,
 }: {
   message: string;
   onBack?: () => void;
+  hosted?: boolean;
 }) {
   // AID-1755/T3 (padrão AID-1150): o h1 é focável (tabIndex=-1) e recebe
   // foco na montagem — quando a tela de recuperação entra (ex.: boot com
@@ -27,8 +29,9 @@ export function ErrorRecoveryScreen({
       </h1>
       <p role="alert">{message}</p>
       <p className="muted">
-        Recarregar a página ou voltar ao mapa é seguro. Isso não conclui a lição e não é competência
-        verificada.
+        {hosted
+          ? "Para sair, use a navegação do aplicativo que abriu esta missão. Isso não conclui a lição e não é competência verificada."
+          : "Recarregar a página ou voltar ao mapa é seguro. Isso não conclui a lição e não é competência verificada."}
       </p>
       <SupportCta />
       {onBack ? (

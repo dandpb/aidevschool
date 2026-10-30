@@ -77,6 +77,7 @@ export function LessonScreen({
   retrofitNotice = false,
   reviewStage,
   missionEvents,
+  hosted = false,
   onProgressChange,
   onCompleted,
   onExit,
@@ -90,6 +91,7 @@ export function LessonScreen({
   reviewStage?: number;
   /** Presente somente em missão hospedada (forwarding mission-event ao host). */
   missionEvents?: MissionExposureEvents;
+  hosted?: boolean;
   onProgressChange: (progress: LearnerProgress) => void;
   onCompleted: (progress: LearnerProgress, summary: LessonSummary) => void;
   onExit: () => void;
@@ -191,7 +193,13 @@ export function LessonScreen({
   }, [session.phase, session.currentActivityIndex, lesson, services, missionEvents]);
 
   if (!lesson) {
-    return <ErrorRecoveryScreen message="Lição não encontrada." onBack={onExit} />;
+    return (
+      <ErrorRecoveryScreen
+        message="Lição não encontrada."
+        onBack={hosted ? undefined : onExit}
+        hosted={hosted}
+      />
+    );
   }
 
   const activity = currentActivity(session, lesson);
@@ -200,7 +208,8 @@ export function LessonScreen({
     return (
       <ErrorRecoveryScreen
         message="Nenhuma atividade encontrada para esta lição."
-        onBack={onExit}
+        onBack={hosted ? undefined : onExit}
+        hosted={hosted}
       />
     );
   }
@@ -447,9 +456,13 @@ export function LessonScreen({
         >
           {mode === "review" ? "Começar revisão" : "Começar missão"}
         </button>
-        <button type="button" className="btn btn-link" onClick={onExit}>
-          {mode === "review" ? "Sair da revisão" : "Sair da lição"}
-        </button>
+        {hosted ? (
+          <p className="muted">Para sair, use a navegação do aplicativo que abriu esta missão.</p>
+        ) : (
+          <button type="button" className="btn btn-link" onClick={onExit}>
+            {mode === "review" ? "Sair da revisão" : "Sair da lição"}
+          </button>
+        )}
       </section>
     );
   }
@@ -458,9 +471,13 @@ export function LessonScreen({
     return (
       <section className="screen">
         <p role="alert">Nenhuma atividade encontrada para esta lição.</p>
-        <button type="button" className="btn btn-secondary" onClick={onExit}>
-          Voltar
-        </button>
+        {hosted ? (
+          <p className="muted">Para sair, use a navegação do aplicativo que abriu esta missão.</p>
+        ) : (
+          <button type="button" className="btn btn-secondary" onClick={onExit}>
+            Voltar
+          </button>
+        )}
       </section>
     );
   }
@@ -626,9 +643,13 @@ export function LessonScreen({
           </button>
         )}
       </div>
-      <button type="button" className="btn btn-link" onClick={onExit}>
-        {mode === "review" ? "Sair da revisão" : "Sair da lição"}
-      </button>
+      {hosted ? (
+        <p className="muted">Para sair, use a navegação do aplicativo que abriu esta missão.</p>
+      ) : (
+        <button type="button" className="btn btn-link" onClick={onExit}>
+          {mode === "review" ? "Sair da revisão" : "Sair da lição"}
+        </button>
+      )}
     </section>
   );
 }

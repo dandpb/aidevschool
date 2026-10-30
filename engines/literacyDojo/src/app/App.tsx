@@ -289,7 +289,7 @@ export function AppShell({
   if (bootError) {
     return (
       <main className="app-shell">
-        <ErrorRecoveryScreen message={bootError} />
+        <ErrorRecoveryScreen message={bootError} hosted={hostAdapter !== null} />
       </main>
     );
   }
@@ -400,6 +400,7 @@ export function AppShell({
                 setRoute({ name: "result", summary });
                 hostAdapter?.publishCompleted(summary.nextLessonId);
               }}
+              hosted={hostAdapter !== null}
               onExit={() => {
                 if (hostAdapter === null) setRoute({ name: "map" });
               }}

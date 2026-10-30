@@ -199,7 +199,7 @@ export function ResultScreen({
       <div className="actions">
         {hosted ? (
           <output className="muted">
-            Sinal de conclusão enviado ao hub. Use o botão Voltar ao hub ao redor da missão.
+            Sinal de conclusão enviado. Acompanhe a conclusão no aplicativo que abriu esta missão.
           </output>
         ) : summary.nextLessonId ? (
           <button
