@@ -93,9 +93,11 @@ export function AppShell({
     routeRevision.current += 1;
     setRouteState(next);
   }, []);
-  const operationRef = useRef<"open" | "review" | "switch" | "reset" | null>(null);
+  const operationRef = useRef<"open" | "review" | "switch" | "reset" | "reconcile" | null>(null);
   const recoveryBlockedRef = useRef(false);
-  const [operation, setOperation] = useState<"open" | "review" | "switch" | "reset" | null>(null);
+  const [operation, setOperation] = useState<
+    "open" | "review" | "switch" | "reset" | "reconcile" | null
+  >(null);
   const [recoveryBlocked, setRecoveryBlocked] = useState(false);
   const [uncertainNotice, setUncertainNotice] = useState<string | null>(null);
   const canMutate = useCallback(
@@ -103,7 +105,7 @@ export function AppShell({
     [],
   );
   const beginOperation = useCallback(
-    (kind: "open" | "review" | "switch" | "reset") => {
+    (kind: "open" | "review" | "switch" | "reset" | "reconcile") => {
       if (!canMutate()) return false;
       operationRef.current = kind;
       setUncertainNotice(null);
@@ -345,6 +347,25 @@ export function AppShell({
       blockForRecovery();
     }
   }, [blockForRecovery, services]);
+
+  const reconcileAttempt = useCallback(
+    async (originRevision: number) => {
+      if (routeRevision.current !== originRevision || !beginOperation("reconcile")) {
+        blockForRecovery();
+        return;
+      }
+      try {
+        const current = await services.useCases.readProgressForRecovery();
+        if (routeRevision.current === originRevision) setProgress(current);
+        else blockForRecovery();
+      } catch {
+        blockForRecovery();
+      } finally {
+        finishOperation();
+      }
+    },
+    [beginOperation, blockForRecovery, finishOperation, services],
+  );
 
   const handleReset = useCallback(
     async (originRevision: number) => {
@@ -627,6 +648,10 @@ export function AppShell({
                 hostAdapter?.publishCompleted(summary.nextLessonId);
               }}
               hosted={hostAdapter !== null}
+              mutationBlocked={operation !== null || recoveryBlocked}
+              onUncertainAttempt={
+                hostAdapter === null ? () => reconcileAttempt(renderedRevision) : undefined
+              }
               canMutate={canMutateOnScreen}
               onExit={() => {
                 if (hostAdapter === null) navigateFromScreen({ name: "map" });

@@ -79,6 +79,8 @@ export function LessonScreen({
   reviewStage,
   missionEvents,
   hosted = false,
+  mutationBlocked = false,
+  onUncertainAttempt,
   canMutate = () => true,
   onProgressChange,
   onCompleted,
@@ -95,6 +97,8 @@ export function LessonScreen({
   /** Presente somente em missão hospedada (forwarding mission-event ao host). */
   missionEvents?: MissionExposureEvents;
   hosted?: boolean;
+  mutationBlocked?: boolean;
+  onUncertainAttempt?: () => Promise<void>;
   canMutate?: () => boolean;
   onProgressChange: (progress: LearnerProgress) => void;
   onCompleted: (progress: LearnerProgress, summary: LessonSummary) => void;
@@ -320,6 +324,7 @@ export function LessonScreen({
       onProgressChange(result.progress);
     } catch {
       setAttemptError(true);
+      await onUncertainAttempt?.();
       setAttemptFailureCount((count) => count + 1);
     } finally {
       submissionBusy.current = false;
@@ -546,6 +551,7 @@ export function LessonScreen({
           type="button"
           className="btn btn-primary"
           data-testid="start-lesson"
+          disabled={mutationBlocked}
           onClick={handleStart}
         >
           {mode === "review" ? "Começar revisão" : "Começar missão"}
@@ -605,7 +611,7 @@ export function LessonScreen({
         invalidIds={
           attempt && !attempt.evaluation.pass && !answerEdited ? failedCheckIds(attempt) : []
         }
-        disabled={submitting || hintLoading || retryLoading}
+        disabled={submitting || hintLoading || retryLoading || mutationBlocked}
         answerLocked={attempt?.evaluation.pass === true}
         onChange={updateAnswer}
       />
@@ -683,7 +689,11 @@ export function LessonScreen({
             data-testid="submit-attempt"
             ref={submitButtonRef}
             disabled={
-              !isAnswerComplete(activity, answer) || submitting || hintLoading || retryLoading
+              !isAnswerComplete(activity, answer) ||
+              submitting ||
+              hintLoading ||
+              retryLoading ||
+              mutationBlocked
             }
             aria-busy={submitting}
             onClick={() => void handleSubmit()}
@@ -697,7 +707,7 @@ export function LessonScreen({
             className="btn btn-secondary"
             data-testid="retry-activity"
             ref={retryButtonRef}
-            aria-disabled={submitting || hintLoading || retryLoading}
+            aria-disabled={submitting || hintLoading || retryLoading || mutationBlocked}
             aria-busy={retryLoading}
             onClick={() => void handleRetry()}
           >
@@ -709,7 +719,9 @@ export function LessonScreen({
             type="button"
             className="btn btn-secondary"
             data-testid="hint-button"
-            aria-disabled={!hasMoreHints || submitting || hintLoading || retryLoading}
+            aria-disabled={
+              !hasMoreHints || submitting || hintLoading || retryLoading || mutationBlocked
+            }
             aria-busy={hintLoading}
             onClick={() => void handleHint()}
           >
