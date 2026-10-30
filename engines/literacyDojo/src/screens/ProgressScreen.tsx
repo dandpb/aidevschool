@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { downloadTextFile } from "../adapters/downloadText";
 import { useServices } from "../app/services";
+import { BackupImportValidationError } from "../application/backupImportErrors";
 import { activeJourneyOf } from "../domain/journeyProgress";
 import type { LearnerProgress } from "../domain/progress";
 import { ACHIEVEMENT_DEFINITIONS, localDateKey } from "../domain/progress";
@@ -99,7 +100,23 @@ export function ProgressScreen({
     setBackupOperation("import");
     setBackupStatus(null);
     try {
-      const next = await services.useCases.importProgress(await file.text());
+      const raw = await file.text();
+      let next: LearnerProgress;
+      try {
+        next = await services.useCases.importProgress(raw);
+      } catch (error) {
+        if (error instanceof BackupImportValidationError) {
+          setBackupStatus({
+            kind: "error",
+            text:
+              error.reason === "corrupt"
+                ? "O arquivo é inválido ou incompleto, ou usa um formato incompatível. Esta restauração não gravou dados; escolha outro backup."
+                : "Este formato de backup não é compatível. Esta restauração não gravou dados; escolha um backup compatível.",
+          });
+          return;
+        }
+        throw error;
+      }
       onProgressImported(next);
       setBackupStatus({
         kind: "ok",

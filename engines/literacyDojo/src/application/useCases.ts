@@ -27,6 +27,7 @@ import {
   reconcileJourneyCursors,
   selectJourney,
 } from "../domain/journeyProgress";
+import { UnmigratableProgressError } from "../domain/migration";
 import {
   type AudienceChoice,
   type CompleteLessonResult,
@@ -47,7 +48,8 @@ import {
   startLesson as startLessonInDomain,
 } from "../domain/progress";
 import { parseImportedBackup, serializeBackupForExport } from "../domain/progressBackup";
-import type { LearnerStateV1 } from "../domain/xpLedger";
+import { type LearnerStateV1, XpLedgerInvalidError } from "../domain/xpLedger";
+import { BackupImportValidationError, BackupImportWriteError } from "./backupImportErrors";
 import type {
   AnalyticsSink,
   ContentRepository,
@@ -721,8 +723,23 @@ export class LiteracyUseCases {
    * não é tocado.
    */
   async importProgress(raw: unknown): Promise<LearnerProgress> {
-    const next = parseImportedBackup(raw, this.deps.content.getContentVersion(), this.deps.clock());
-    await this.deps.state.saveState(next);
+    const contentVersion = this.deps.content.getContentVersion();
+    const now = this.deps.clock();
+    let next: LearnerStateV1;
+    try {
+      next = parseImportedBackup(raw, contentVersion, now);
+    } catch (error) {
+      if (error instanceof UnmigratableProgressError) {
+        throw new BackupImportValidationError(error.reason);
+      }
+      if (error instanceof XpLedgerInvalidError) throw new BackupImportValidationError("corrupt");
+      throw error;
+    }
+    try {
+      await this.deps.state.saveState(next);
+    } catch {
+      throw new BackupImportWriteError();
+    }
     return next.progress;
   }
 }

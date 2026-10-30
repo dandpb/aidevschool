@@ -55,6 +55,8 @@ Baseline: local main 12dd8bdf, screenshots at /workspace/ux-evidence/before-loca
 
 | 38 | A 23-hour daylight-saving day caused yesterday’s due review to be labeled “today”. Count local calendar dates for the display instead of elapsed hours. | Before-fix unit/browser tests failed; local timezone browser/HUD tests, calendar boundaries, full suite (467 passed, 1 skipped), lint/build and independent review passed. | Complete for tested local time zones; saved timestamps, review selection and scheduling remain unchanged. |
 
+| 39 | Invalid or incompatible backups were described as uncertain writes even when parsing rejected them before saving. Give fixed actionable validation feedback and reserve uncertainty for read/write/callback failures. | Before-fix browser test failed; backup browser cases, 60 component/use-case tests including simulated pre/post-write errors, lint/build and independent review passed. | Complete for tested local paths; import error types for ledger/store changed, and cross-tab writes and real screen-reader speech were not tested. |
+
 Independent review initially found DOM reading order inconsistent with the mobile visual order and copy suggesting a live AI service. Both were corrected and rechecked; an existing Dev badge contrast issue was also corrected. No formal approval or production deployment is implied. Screenshots and videos are local artifacts under `/workspace/ux-evidence/`, not production evidence.
 
 The next map shortcut was prototyped and discarded before commit: independent review reproduced duplicate `lesson_started` events on rapid clicks and identified stale progress or overwritten state when navigation, journey switching, reset, review or other writes overlap a pending start. A safe fix needs broader concurrency and reconciliation design and tests; it is not counted as a completed cycle.
@@ -64,3 +66,5 @@ A proposed lesson-intro reorder was also discarded: review found that contextual
 An early fragment-link version was corrected after review showed it left a misleading URL after leaving the map. The shipped control focuses the row without changing the URL.
 
 Independent review reproduced an early review-rescheduling issue during cycle 8; cycle 9 implements and verifies its correction.
+
+Independent local audit also found browser Back can leave the SPA during an activity instead of navigating to its map. The existing intro discloses that unsent answers are transient; history behavior remains unresolved and was not counted as a completed cycle. A safe change requires considering in-flight writes, review/challenge sessions, result data and hosted navigation.
