@@ -646,7 +646,14 @@ export function LessonScreen({
       {hosted ? (
         <p className="muted">Para sair, use a navegação do aplicativo que abriu esta missão.</p>
       ) : (
-        <button type="button" className="btn btn-link" onClick={onExit}>
+        <button
+          type="button"
+          className="btn btn-link"
+          aria-disabled={submitting || hintLoading || retryLoading}
+          onClick={() => {
+            if (!submissionBusy.current && !hintBusy.current && !retryBusy.current) onExit();
+          }}
+        >
           {mode === "review" ? "Sair da revisão" : "Sair da lição"}
         </button>
       )}
