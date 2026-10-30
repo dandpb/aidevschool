@@ -2555,9 +2555,34 @@ a.audience-route-dev .route-badge {
   }
 }
 
-@media (max-width: 360px) {
+@media (max-width: 375px) {
+  .onboarding-step-welcome {
+    gap: 8px;
+  }
+
   .onboarding-step-welcome .onboarding-heading h1 {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
+  }
+
+  .onboarding-step-welcome .onboarding-heading {
+    gap: 16px;
+  }
+
+  .onboarding-step-welcome .welcome-layout {
+    margin-top: 0;
+  }
+
+  .onboarding-step-welcome .welcome-briefing {
+    padding: 12px;
+  }
+
+  .onboarding-step-welcome .welcome-steps {
+    gap: 4px 14px;
+    margin: 8px 0;
+  }
+
+  .onboarding-step-welcome .welcome-start {
+    margin-top: 8px;
   }
 }
 

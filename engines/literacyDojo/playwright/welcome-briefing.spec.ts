@@ -2,6 +2,7 @@ import { expect, test } from "@playwright/test";
 
 for (const viewport of [
   { width: 320, height: 740 },
+  { width: 361, height: 740 },
   { width: 375, height: 812 },
   { width: 1280, height: 800 },
 ]) {
@@ -29,6 +30,12 @@ for (const viewport of [
         .evaluate((node) => Boolean(node.nextElementSibling?.classList.contains("voxel-world"))),
     ).toBe(true);
     if (viewport.width <= 375) {
+      const box = await start.boundingBox();
+      expect(box).not.toBeNull();
+      expect(box!.y + box!.height).toBeLessThanOrEqual(viewport.height);
+    }
+    if (viewport.width === 320) {
+      await page.addStyleTag({ content: 'body { font-family: "DejaVu Sans", sans-serif; }' });
       const box = await start.boundingBox();
       expect(box).not.toBeNull();
       expect(box!.y + box!.height).toBeLessThanOrEqual(viewport.height);

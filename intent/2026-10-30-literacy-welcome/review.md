@@ -17,3 +17,7 @@ Cycle 3 final verification: `npm run test:e2e` passed all 50 browser tests with 
 ## Map wayfinding
 
 Independent browser review at 320/375/1280 verified keyboard focus and Tab to the original launcher, repeated activation with no `lesson_started` event or IndexedDB mutation, resumed IA and fresh Dev destinations, and zero axe WCAG 2/2.1 A/AA violations on the map. Review found that an initial fragment URL persisted misleadingly after navigation; the implementation was changed to focus and scroll without a fragment. A visible 3px focus outline and targeted test were added.
+
+## CI font correction
+
+The GitHub runner exposed a 320×740 failure at y=782.7 on 6b521e3d despite the previous local pass at y=737.1. The layout was compacted without shrinking the consent text or hiding content, and the proof was extended with a wider alternate font. Local CTA bottoms were y=671 (system), 693 (DejaVu Sans) and 714 (monospace); the four targeted browser checks and axe smoke passed. The new head needs CI to confirm the runner result. This is a correction to cycle 2, not another cycle.
