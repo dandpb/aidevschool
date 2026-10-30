@@ -230,7 +230,16 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
             <p className="step-copy">
               Etapa {step + 1} de {STEPS.length} · conheça a Vila Lume
             </p>
-            <div className="option-list" role="radiogroup" aria-label={currentStep.question}>
+            <p className="muted" id="onboarding-required-hint">
+              Escolha uma opção para continuar.
+            </p>
+            <div
+              className="option-list"
+              role="radiogroup"
+              aria-label={currentStep.question}
+              aria-describedby="onboarding-required-hint"
+              aria-required="true"
+            >
               {options.map((option) => {
                 const task = typeof option === "string" ? taskDetails(option) : undefined;
                 const value = typeof option === "string" ? option : option.value;
