@@ -85,6 +85,11 @@ ol {
   gap: 14px;
 }
 
+.task-context > div {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
 .stats-row {
   display: flex;
   gap: 12px;
@@ -753,6 +758,8 @@ textarea.is-invalid {
 .voxel-figure figcaption {
   color: var(--muted);
   font-size: 0.95rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .voxel-scene-skill {
@@ -2014,6 +2021,10 @@ a.audience-route-dev .route-badge {
   color: var(--sun);
   font-size: 1.5rem;
   transform: rotate(12deg);
+}
+
+.village-request > h2 {
+  padding-inline-end: calc(30px + 1.5rem);
 }
 
 .village-loop {
