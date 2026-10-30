@@ -123,8 +123,15 @@ export function TrackMapScreen({
 
       <MentorGuide compact testId="map-guide">
         <p>
-          Comece pelo pedido marcado como Disponível. Os bairros seguintes aparecem conforme você
-          pratica.
+          {queries.pendingCheckpoint
+            ? "Há um desafio aberto no mapa. Você também pode explorar os pedidos já desbloqueados."
+            : queries.mission && progress.lessonStatus[queries.mission.id] === "in_progress"
+              ? "Continue o pedido marcado como Em andamento."
+              : queries.mission
+                ? activeJourney === "dev"
+                  ? "Comece pelo pedido marcado como Disponível e avance pelos módulos."
+                  : "Comece pelo pedido marcado como Disponível. Os bairros seguintes aparecem conforme você pratica."
+                : "Confira o estado dos pedidos e dos desafios no mapa."}
         </p>
       </MentorGuide>
 
