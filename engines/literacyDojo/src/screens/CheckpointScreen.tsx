@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useServices } from "../app/services";
 import { ActivityRenderer, isAnswerComplete } from "../components/ActivityRenderer";
 import { FeedbackPanel } from "../components/FeedbackPanel";
+import { HintList } from "../components/HintList";
 import { MentorGuide } from "../components/MentorGuide";
 import { VoxelSkillArt } from "../components/VoxelSkillArt";
 import { type ModuleCheckpointId, checkpointById } from "../domain/checkpoints";
@@ -66,7 +67,8 @@ export function CheckpointScreen({
   const key = ref ? `${ref.lessonId}:${ref.activityId}` : "";
   const attempt = attempts[key];
   const hints = shownHints[key] ?? [];
-  const hasMoreHints = activity ? services.feedback.hintCount(activity) > hints.length : false;
+  const hintCount = activity ? services.feedback.hintCount(activity) : 0;
+  const hasMoreHints = hintCount > hints.length;
   const isLast = current === activityRefs.length - 1;
   const allPassed = activityRefs.every(
     (item) => attempts[`${item.lessonId}:${item.activityId}`]?.evaluation.pass,
@@ -113,11 +115,14 @@ export function CheckpointScreen({
     }
   };
 
-  const handleHint = async () => {
-    const hint = services.feedback.hintFor(activity, hints.length);
-    if (hint !== null) {
-      setShownHints((previous) => ({ ...previous, [key]: [...hints, hint] }));
-    }
+  const handleHint = () => {
+    if (submitting) return;
+    setShownHints((previous) => {
+      const currentHints = previous[key] ?? [];
+      if (currentHints.length >= hintCount) return previous;
+      const hint = services.feedback.hintFor(activity, currentHints.length);
+      return hint === null ? previous : { ...previous, [key]: [...currentHints, hint] };
+    });
   };
 
   const handleRetry = () => {
@@ -300,6 +305,11 @@ export function CheckpointScreen({
       />
 
       {attempt && <FeedbackPanel feedback={attempt.feedback} hintsShown={hints} />}
+      {!attempt && (
+        <div aria-live="polite" aria-atomic="true">
+          <HintList hints={hints} />
+        </div>
+      )}
 
       <div className="actions">
         {!attempt?.evaluation.pass && (
@@ -323,14 +333,15 @@ export function CheckpointScreen({
             Tentar novamente
           </button>
         )}
-        {hasMoreHints && (
+        {hintCount > 0 && (
           <button
             type="button"
             className="btn btn-secondary"
             data-testid="hint-button"
-            onClick={() => void handleHint()}
+            aria-disabled={!hasMoreHints || submitting}
+            onClick={handleHint}
           >
-            Pedir dica
+            {hasMoreHints ? "Pedir dica" : "Todas as dicas exibidas"}
           </button>
         )}
         {attempt?.evaluation.pass && !isLast && (
