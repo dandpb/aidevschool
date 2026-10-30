@@ -540,6 +540,8 @@ function updateMapInitial(
   progress: LearnerProgress,
   update: (current: MapInitialState) => MapInitialState,
 ): LearnerProgress {
+  // These markers describe the initial route decision, not later practice.
+  if (progress.lessonStatus[MAP_INITIAL_LESSON_ID] === "completed") return progress;
   const current = progress.onboarding.mapInitial ?? emptyMapInitialState();
   return {
     ...progress,
@@ -784,7 +786,7 @@ export function completeLesson(
     ...progress,
     lessonStatus: { ...progress.lessonStatus, [lesson.id]: "completed" },
   };
-  if (lesson.id === MAP_INITIAL_LESSON_ID) {
+  if (lesson.id === MAP_INITIAL_LESSON_ID && progress.lessonStatus[lesson.id] !== "completed") {
     next = {
       ...next,
       onboarding: { ...next.onboarding, route: mapInitialRoute(next.onboarding.mapInitial) },
