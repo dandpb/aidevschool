@@ -19,6 +19,7 @@ import { OnboardingScreen } from "../screens/OnboardingScreen";
 import { ProgressScreen } from "../screens/ProgressScreen";
 import { ResultScreen } from "../screens/ResultScreen";
 import { TrackMapScreen } from "../screens/TrackMapScreen";
+import { bootRecoveryMessage } from "./bootRecoveryMessage";
 import {
   type Services,
   ServicesProvider,
@@ -181,11 +182,7 @@ export function AppShell({
         seeded = (await loadOrActivateState(services)).progress;
       } catch (error) {
         if (cancelled) return;
-        setBootError(
-          error instanceof Error
-            ? error.message
-            : "Não foi possível ler o progresso local deste navegador.",
-        );
+        setBootError(bootRecoveryMessage(error));
         return;
       }
       if (hostAdapter !== null) {
