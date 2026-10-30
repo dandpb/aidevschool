@@ -8,3 +8,4 @@
 ## Continued cycles
 
 - At 320×740 the welcome start action and consent must fit on the first screen without reducing text size for consent or hiding content; retain reflow at 375 and 1280.
+- Task illustrations expose a named image role in lesson and result; the same artwork is decorative inside onboarding radio labels so choices are not announced twice; remove resolved exceptions from the axe baseline without hiding new violations.

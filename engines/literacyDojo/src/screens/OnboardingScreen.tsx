@@ -235,7 +235,7 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
                       data-testid={`onboarding-option-${value}`}
                       onChange={() => handleSelect(value)}
                     />
-                    {task && <VoxelTaskArt category={value as OnboardingTaskCategory} />}
+                    {task && <VoxelTaskArt category={value as OnboardingTaskCategory} decorative />}
                     <span>
                       <strong>{label}</strong>
                       {task && <small>{task.guidance}</small>}
