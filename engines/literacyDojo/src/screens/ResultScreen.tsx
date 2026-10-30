@@ -47,6 +47,13 @@ export function ResultScreen({
   const verificationHeadingRef = useRef<HTMLHeadingElement | null>(null);
   const restoreVerificationFocus = useRef(false);
   const { lesson } = summary;
+  const verifiedActivityIndex =
+    receipt &&
+    summary.evidenceRecord &&
+    receipt.lesson_id === lesson.id &&
+    receipt.activity_id === summary.evidenceRecord.activityId
+      ? lesson.activities.findIndex((activity) => activity.id === receipt.activity_id)
+      : -1;
   const successMessages = summary.activityResults
     .filter(
       (result) =>
@@ -204,7 +211,7 @@ export function ResultScreen({
           de <strong>competência verificada</strong>.{" "}
           {hosted
             ? "A evidência seguirá para verificação independente, mas este fluxo não altera o estado canônico."
-            : "Ela depende de uma verificação independente, que ainda não faz parte deste aplicativo."}
+            : "A comprovação de competência exige verificação independente."}
         </p>
       </div>
 
@@ -215,9 +222,16 @@ export function ResultScreen({
         {verifying && <p>Enviando evidência estruturada para verificação independente…</p>}
         {receipt && (
           <p>
-            <strong>Recibo independente: {receipt.verdict}</strong>. Ele corresponde à tentativa{" "}
-            {receipt.attempt_id}. A lição continua concluída somente neste aparelho; este recibo não
-            altera domínio canônico.
+            <strong>
+              Recibo independente: tentativa{" "}
+              {receipt.verdict === "PASS" ? "aprovada" : "não aprovada"}
+            </strong>
+            . Este resultado se refere somente à tentativa
+            {verifiedActivityIndex >= 0
+              ? ` da atividade ${verifiedActivityIndex + 1} de ${lesson.activities.length}`
+              : " de uma atividade"}
+            . Identificador da tentativa: {receipt.attempt_id}. A lição continua concluída somente
+            neste aparelho; este recibo não altera domínio canônico.
           </p>
         )}
         {verificationError && (
