@@ -57,6 +57,8 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
   const [confidence, setConfidence] = useState<OnboardingConfidence | null>(null);
   const [taskCategory, setTaskCategory] = useState<OnboardingTaskCategory | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const submitBusy = useRef(false);
+  const [saveError, setSaveError] = useState(false);
 
   // AID-1150/AID-1134 T1: a mudança de etapa precisa ser anunciada — foco no h1
   // da nova etapa (padrão do LessonScreen/CheckpointScreen) reposiciona a
@@ -93,6 +95,7 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
           : TASK_OPTIONS;
 
   const handleSelect = (value: string) => {
+    if (submitBusy.current) return;
     if (currentStep.key === "goal") setGoal(value as OnboardingGoal);
     else if (currentStep.key === "context") setContext(value as OnboardingContext);
     else if (currentStep.key === "confidence") setConfidence(value as OnboardingConfidence);
@@ -100,21 +103,31 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
   };
 
   const handleNext = async () => {
+    if (submitBusy.current) return;
     if (step < STEPS.length - 1) {
       setStep(step + 1);
       return;
     }
-    if (!goal || !context || !confidence || !taskCategory || submitting) return;
+    if (!goal || !context || !confidence || !taskCategory) return;
+    submitBusy.current = true;
     setSubmitting(true);
-    const updated = await services.useCases.completeOnboarding({
-      goal,
-      context,
-      confidence,
-      taskCategory,
-      // Standalone app stays IA na Prática. Trilha Dev is a CTA to the public OS.
-      audience: "ia_pratica",
-    });
-    onDone(updated);
+    setSaveError(false);
+    try {
+      const updated = await services.useCases.completeOnboarding({
+        goal,
+        context,
+        confidence,
+        taskCategory,
+        // Standalone app stays IA na Prática. Trilha Dev is a CTA to the public OS.
+        audience: "ia_pratica",
+      });
+      onDone(updated);
+    } catch {
+      setSaveError(true);
+    } finally {
+      submitBusy.current = false;
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -232,6 +245,7 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
                       name={`onboarding-${currentStep.key}`}
                       value={value}
                       checked={currentValue === value}
+                      disabled={submitting}
                       data-testid={`onboarding-option-${value}`}
                       onChange={() => handleSelect(value)}
                     />
@@ -254,13 +268,24 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
         </div>
       )}
 
+      {saveError && (
+        <p role="alert" className="feedback feedback-fail">
+          Não foi possível confirmar suas escolhas. Elas podem já ter sido salvas; nesse caso, as
+          primeiras escolhas serão mantidas. Tente novamente ou recarregue: o aplicativo tenta abrir
+          o progresso salvo, e respostas ainda não salvas serão perdidas.
+        </p>
+      )}
+      <div aria-live="polite">{submitting ? "Salvando suas escolhas…" : ""}</div>
       {step > 0 && (
         <div className="onboarding-actions">
           {step > 0 && (
             <button
               type="button"
               className="btn btn-link btn-back"
-              onClick={() => setStep(step - 1)}
+              aria-disabled={submitting}
+              onClick={() => {
+                if (!submitBusy.current) setStep(step - 1);
+              }}
             >
               Voltar
             </button>
@@ -269,10 +294,16 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
             type="button"
             className="btn btn-primary"
             data-testid="onboarding-next"
-            disabled={(currentStep.key !== "welcome" && currentValue === null) || submitting}
+            disabled={currentStep.key !== "welcome" && currentValue === null}
+            aria-disabled={submitting}
+            aria-busy={submitting}
             onClick={() => void handleNext()}
           >
-            {step < STEPS.length - 1 ? "Continuar jornada" : "Abrir mapa da Vila Lume"}
+            {submitting
+              ? "Salvando…"
+              : step < STEPS.length - 1
+                ? "Continuar jornada"
+                : "Abrir mapa da Vila Lume"}
             <span aria-hidden="true">→</span>
           </button>
         </div>
