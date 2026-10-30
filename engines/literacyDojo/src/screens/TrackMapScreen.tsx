@@ -250,7 +250,7 @@ export function TrackMapScreen({
                     </h3>
                     <p className="muted">
                       {item.completed
-                        ? `Bairro ${module.order} completo! Sua próxima revisão já está agendada.`
+                        ? `Bairro ${module.order} completo! Confira suas revisões em Progresso.`
                         : `Revisão rápida de ${module.title} — menos de 3 minutos.`}
                     </p>
                     {!item.completed && (

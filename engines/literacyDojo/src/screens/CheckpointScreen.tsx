@@ -327,13 +327,16 @@ export function CheckpointScreen({
               <h2>Você completou os três primeiros bairros da Vila Lume! 🎉</h2>
               <p>
                 Você completou os três primeiros bairros da Vila Lume! Continue para{" "}
-                {nextModule?.title ?? "o próximo bairro"} — ou volte amanhã para sua revisão.
+                {nextModule?.title ?? "o próximo bairro"}. Confira suas revisões em Progresso quando
+                voltar.
               </p>
             </div>
           ) : (
             <div className="card" data-testid="checkpoint-celebration">
               <h2>Bairro {module.order} completo!</h2>
-              <p>Bairro {module.order} completo! Sua próxima revisão já está agendada.</p>
+              <p>
+                Bairro {module.order} completo! Confira suas revisões em Progresso quando voltar.
+              </p>
             </div>
           )
         ) : (
