@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useServices } from "../app/services";
 import { MentorGuide } from "../components/MentorGuide";
+import { TabSafetyNotice } from "../components/TabSafetyNotice";
 import { VoxelWorld } from "../components/VoxelWorld";
 import { type JourneyId, activeJourneyOf } from "../domain/journeyProgress";
 import type { LearnerProgress } from "../domain/progress";
@@ -147,6 +148,10 @@ export function HomeScreen({
       <MentorGuide compact>
         <p>Lumi guarda seu caminho: continue um pedido ou explore os bairros da vila.</p>
       </MentorGuide>
+
+      <p className="muted">
+        <TabSafetyNotice />
+      </p>
 
       <div className="card mission-card">
         <p className="card-kicker">PEDIDO DA VILA</p>

@@ -1,5 +1,6 @@
 import { useServices } from "../app/services";
 import { MentorGuide } from "../components/MentorGuide";
+import { TabSafetyNotice } from "../components/TabSafetyNotice";
 import { VoxelWorld } from "../components/VoxelWorld";
 import type { ModuleCheckpointId } from "../domain/checkpoints";
 import { isLessonGateLocked } from "../domain/checkpoints";
@@ -81,6 +82,9 @@ export function TrackMapScreen({
             {activeJourney === "dev"
               ? "Pedidos curtos de engenharia com assistentes de IA — tentar, receber feedback e avançar."
               : "Cada pedido leva de 3 a 5 minutos. Tente primeiro, receba feedback e ilumine o próximo caminho."}
+          </p>
+          <p className="muted">
+            <TabSafetyNotice />
           </p>
           {firstMission && (
             <button

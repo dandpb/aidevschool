@@ -5,6 +5,7 @@ import { ActivityRenderer, isAnswerComplete } from "../components/ActivityRender
 import { FeedbackPanel } from "../components/FeedbackPanel";
 import { HintList } from "../components/HintList";
 import { MentorGuide } from "../components/MentorGuide";
+import { TabSafetyNotice } from "../components/TabSafetyNotice";
 import { VoxelSkillArt } from "../components/VoxelSkillArt";
 import { VoxelTaskArt, taskDetails } from "../components/VoxelTaskArt";
 import type { LessonDefinition } from "../data/generated/lessons";
@@ -546,7 +547,8 @@ export function LessonScreen({
         )}
         <p className="muted" data-testid="session-continuity">
           <strong>Se precisar parar:</strong> ao sair ou recarregar, as respostas da missão e a
-          etapa atual não são recuperadas. O progresso já registrado fica neste navegador.
+          etapa atual não são recuperadas. O progresso já registrado fica neste navegador.{" "}
+          <TabSafetyNotice />
         </p>
         <button
           type="button"

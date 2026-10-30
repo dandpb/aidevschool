@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { downloadTextFile } from "../adapters/downloadText";
 import { useServices } from "../app/services";
 import { BackupImportValidationError } from "../application/backupImportErrors";
+import { TabSafetyNotice } from "../components/TabSafetyNotice";
 import { activeJourneyOf } from "../domain/journeyProgress";
 import type { LearnerProgress } from "../domain/progress";
 import { ACHIEVEMENT_DEFINITIONS, currentStreakForDate, localDateKey } from "../domain/progress";
@@ -350,6 +351,9 @@ export function ProgressScreen({
           perfil. Ao importar, formatos antigos compatíveis são atualizados. O progresso registra
           lições concluídas. Concluir uma lição não comprova competência; essa comprovação exige
           verificação independente.
+        </p>
+        <p className="muted">
+          <TabSafetyNotice />
         </p>
         <div className="backup-actions">
           <button
