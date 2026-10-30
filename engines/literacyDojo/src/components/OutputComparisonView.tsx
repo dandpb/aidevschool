@@ -35,7 +35,9 @@ export function OutputComparisonView({
       {scenario && <p className="scenario">{scenario}</p>}
 
       <fieldset className="fieldset" aria-describedby={`${activity.id}-outputs-legend`}>
-        <legend id={`${activity.id}-outputs-legend`}>Qual resposta é mais confiável?</legend>
+        <legend id={`${activity.id}-outputs-legend`}>
+          Escolha uma opção conforme a instrução da atividade
+        </legend>
         {outputs.map((output, index) => (
           <label
             key={output.id}
@@ -59,7 +61,7 @@ export function OutputComparisonView({
               onChange={() => onChange({ ...answer, outputId: output.id })}
             />
             <span>
-              <strong>Resposta {String.fromCharCode(65 + index)}</strong>
+              <strong>Opção {String.fromCharCode(65 + index)}</strong>
               <br />
               {output.text}
             </span>
