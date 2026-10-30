@@ -129,7 +129,7 @@ export function ResultScreen({
             {lesson.title}
           </h1>
           <p className="result-score">
-            {summary.mode === "review" ? "Revisão registrada" : "XP conquistado"} ·{" "}
+            {summary.mode === "review" ? "Revisão registrada · " : ""}
             {Math.round(summary.lessonScore * 100)}% de pontuação
           </p>
         </div>

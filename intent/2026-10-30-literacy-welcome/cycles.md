@@ -63,6 +63,8 @@ Baseline: local main 12dd8bdf, screenshots at /workspace/ux-evidence/before-loca
 
 | 42 | Failed ordering answers had no visible or programmatic indication on items outside their correct positions. Add text and control descriptions that clear while editing. | Before-fix browser tests failed in normal/forced colors; 4 local challenge/lesson and keyboard tests, lint/build and independent review passed. | Complete for tested failed attempts; actual screen-reader speech and possible future partially approved larger sorts were not tested. |
 
+| 43 | A same-day replay could award no XP while the result claimed “XP conquistado” beside a percentage. Show the score without asserting an unmeasured XP gain. | Before-fix local replay test failed with unchanged XP; corrected final browser test compared XP and ledger after confirmed results, 12 component tests, lint/build and independent review passed. | Complete for tested result paths; score and XP accounting are unchanged. |
+
 Independent review initially found DOM reading order inconsistent with the mobile visual order and copy suggesting a live AI service. Both were corrected and rechecked; an existing Dev badge contrast issue was also corrected. No formal approval or production deployment is implied. Screenshots and videos are local artifacts under `/workspace/ux-evidence/`, not production evidence.
 
 The next map shortcut was prototyped and discarded before commit: independent review reproduced duplicate `lesson_started` events on rapid clicks and identified stale progress or overwritten state when navigation, journey switching, reset, review or other writes overlap a pending start. A safe fix needs broader concurrency and reconciliation design and tests; it is not counted as a completed cycle.
