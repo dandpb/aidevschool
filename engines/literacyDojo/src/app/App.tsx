@@ -521,11 +521,17 @@ export function AppShell({
           </div>
           {route.name !== "onboarding" && (
             <div className="product-stats" aria-label="Resumo do progresso">
-              <span>⚡ {progress.xp} XP</span>
-              <span
-                aria-label={currentStreak === null ? "Sequência atual indisponível" : undefined}
-              >
-                🔥 {currentStreak ?? "—"}
+              <span>
+                <span aria-hidden="true">⚡ </span>
+                {progress.xp} XP
+              </span>
+              <span>
+                <span aria-hidden="true">🔥 {currentStreak ?? "—"}</span>
+                <span className="sr-only">
+                  {currentStreak === null
+                    ? "Sequência atual indisponível"
+                    : `Sequência atual: ${currentStreak} ${currentStreak === 1 ? "dia" : "dias"}`}
+                </span>
               </span>
             </div>
           )}

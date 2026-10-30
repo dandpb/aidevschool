@@ -1023,7 +1023,7 @@ textarea {
   gap: 8px;
 }
 
-.product-stats span,
+.product-stats > span,
 .map-summary span {
   border: 1px solid rgba(102, 87, 232, 0.16);
   border-radius: 999px;
@@ -2464,7 +2464,7 @@ a.audience-route-dev .route-badge {
     display: none;
   }
 
-  .product-stats span {
+  .product-stats > span {
     padding: 7px 9px;
     font-size: 0.78rem;
   }
