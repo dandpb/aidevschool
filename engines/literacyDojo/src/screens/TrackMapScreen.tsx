@@ -179,6 +179,12 @@ export function TrackMapScreen({
 
                 const status = progress.lessonStatus[entry.id] ?? "locked";
                 const unlocked = isLessonUnlocked(progress, entry.id);
+                const action =
+                  status === "completed"
+                    ? "Refazer"
+                    : status === "in_progress"
+                      ? "Continuar"
+                      : "Começar";
                 const gateLocked =
                   status === "locked" && isLessonGateLocked(progress, modules, entry.id);
                 return (
@@ -205,14 +211,11 @@ export function TrackMapScreen({
                         type="button"
                         className="btn btn-small"
                         data-testid={`map-start-${entry.id}`}
+                        aria-label={`${action} ${entry.title}`}
                         aria-disabled={mutationBlocked}
                         onClick={() => onStartLesson(entry.id)}
                       >
-                        {status === "completed"
-                          ? "Refazer"
-                          : status === "in_progress"
-                            ? "Continuar"
-                            : "Começar"}
+                        {action}
                       </button>
                     ) : gateLocked ? (
                       <span className="chip chip-locked" data-testid={`map-gate-${entry.id}`}>

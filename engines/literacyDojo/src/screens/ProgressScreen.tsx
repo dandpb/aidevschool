@@ -307,6 +307,7 @@ export function ProgressScreen({
                     type="button"
                     className="btn btn-small"
                     data-testid={`progress-start-${entry.id}`}
+                    aria-label={`${status === "in_progress" ? "Continuar" : "Começar"} ${entry.title}`}
                     aria-disabled={backupBusy || mutationBlocked}
                     onClick={() => {
                       if (!backupBusyRef.current && canMutate()) onStartLesson(entry.id);
