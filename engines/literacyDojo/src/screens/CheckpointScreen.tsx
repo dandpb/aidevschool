@@ -4,6 +4,7 @@ import { ActivityRenderer, isAnswerComplete } from "../components/ActivityRender
 import { FeedbackPanel } from "../components/FeedbackPanel";
 import { HintList } from "../components/HintList";
 import { MentorGuide } from "../components/MentorGuide";
+import { ReviewPoints } from "../components/ReviewPoints";
 import { VoxelSkillArt } from "../components/VoxelSkillArt";
 import { type ModuleCheckpointId, checkpointById } from "../domain/checkpoints";
 import type { ActivityAnswer, EvaluationResult } from "../domain/evaluation";
@@ -318,6 +319,27 @@ export function CheckpointScreen({
               Não foi dessa vez. Você pode tentar de novo — o que você já concluiu continua valendo.
             </p>
           </div>
+        )}
+        {passed && (
+          <ReviewPoints
+            activities={activityRefs.flatMap((item, index) => {
+              const id = `${item.lessonId}:${item.activityId}`;
+              const recorded = attempts[id];
+              if (!recorded) return [];
+              const instruction = services.content
+                .getLesson(item.lessonId)
+                ?.activities.find((entry) => entry.id === item.activityId)?.instruction;
+              return [
+                {
+                  id,
+                  index,
+                  instruction,
+                  pass: recorded.evaluation.pass,
+                  feedback: recorded.feedback,
+                },
+              ];
+            })}
+          />
         )}
         {passed && unlockedLessonId && nextModule && (
           <button

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { LessonSummary } from "../app/App";
 import { useServices } from "../app/services";
+import { ReviewPoints } from "../components/ReviewPoints";
 import { VoxelSkillArt } from "../components/VoxelSkillArt";
 import { VoxelTaskArt, taskDetails } from "../components/VoxelTaskArt";
 import { VoxelWorld } from "../components/VoxelWorld";
@@ -50,26 +51,16 @@ export function ResultScreen({
         result.feedback.perCheck.every((check) => check.passed),
     )
     .map((result) => result.feedback.summary);
-  const reviewPoints = summary.activityResults
-    .filter((result) => result.pass && result.feedback.perCheck.some((check) => !check.passed))
-    .map((result) => {
-      const index = lesson.activities.findIndex((activity) => activity.id === result.activityId);
-      const failed = result.feedback.perCheck.filter((check) => !check.passed);
-      return {
-        activityId: result.activityId,
-        index,
-        instruction: lesson.activities[index]?.instruction,
-        summary: result.feedback.summary,
-        messages: [
-          ...new Set(
-            failed
-              .map((check) => check.message)
-              .filter((message): message is string => Boolean(message)),
-          ),
-        ],
-        missingDetail: failed.some((check) => !check.message),
-      };
-    });
+  const reviewActivities = summary.activityResults.map((result) => {
+    const index = lesson.activities.findIndex((activity) => activity.id === result.activityId);
+    return {
+      id: result.activityId,
+      index,
+      instruction: lesson.activities[index]?.instruction,
+      pass: result.pass,
+      feedback: result.feedback,
+    };
+  });
 
   useEffect(() => {
     void services.stateStore.readState().then((read) => {
@@ -178,28 +169,7 @@ export function ResultScreen({
         </div>
       )}
 
-      {reviewPoints.length > 0 && (
-        <div className="card" data-testid="result-review-points">
-          <h2>Pontos para revisar</h2>
-          {reviewPoints.map((point) => (
-            <section key={point.activityId}>
-              <h3>{point.index >= 0 ? `Atividade ${point.index + 1}` : "Atividade"}</h3>
-              {point.instruction && <p>{point.instruction}</p>}
-              <p>{point.summary}</p>
-              {point.messages.length > 0 && (
-                <ul>
-                  {point.messages.map((message) => (
-                    <li key={message}>{message}</li>
-                  ))}
-                </ul>
-              )}
-              {point.missingDetail && (
-                <p>Alguns detalhes desta tentativa não estão disponíveis aqui.</p>
-              )}
-            </section>
-          ))}
-        </div>
-      )}
+      <ReviewPoints activities={reviewActivities} />
 
       <div className="card">
         <h2>Para fixar</h2>

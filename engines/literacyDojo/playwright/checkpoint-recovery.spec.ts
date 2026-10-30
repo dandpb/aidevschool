@@ -74,6 +74,7 @@ test("falha ao concluir mantém feedback para tentativa deliberada", async ({ pa
   await expect(page.getByTestId("feedback-panel")).toBeVisible();
   await page.getByTestId("finish-checkpoint").click();
   await expect(page.getByTestId("checkpoint-result")).toContainText("Desafio concluído");
+  await expect(page.getByTestId("result-review-points")).toHaveCount(0);
 });
 
 test("falha após gravação explica que repetir pode contar outra tentativa", async ({ page }) => {

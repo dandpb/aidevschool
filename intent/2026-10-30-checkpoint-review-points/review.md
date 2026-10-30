@@ -1,0 +1,5 @@
+# Independent review
+
+A reviewer used local Chromium at 360×740 with a cp-01 fixture. On a partial pass, a simulated pre-write finish failure kept the feedback visible; an intentional retry completed the challenge, showed the activity 3 explanation and next action, with module completed, next lesson available and 30 XP. A fully correct path showed no review section and reached the same state. The first exploratory run was interrupted by a development-server reload; a new fixture run produced the results above.
+
+The before-fix partial challenge test failed because the result lacked the explanation. Six local browser tests covering challenge, lesson and failure recovery passed, as did the added fully-correct assertion, eight relevant component tests, lint and build. Shared presentation preserves lesson grouping/fallback and reads no answers or evidence. A real unsuccessful challenge outcome was not reached because the UI requires passing each activity before finishing; actual screen-reader speech was not tested. The build retains its large-chunk warning.
