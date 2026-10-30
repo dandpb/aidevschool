@@ -143,17 +143,43 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
 
       {currentStep.key === "welcome" ? (
         <div className="welcome-layout">
-          <VoxelWorld variant="welcome" />
           <div className="welcome-content">
-            <MentorGuide testId="assistant-welcome">
-              <p>
-                Eu sou a Lumi. Os moradores trazem pedidos curtos e você aprende a usar IA ajudando
-                a vila, uma escolha de cada vez.
-              </p>
-              <p className="muted">
-                Aqui não existe pressa nem punição: tente, confira, peça uma dica e ajuste quando
-                precisar.
-              </p>
+            <div className="welcome-briefing">
+              <p className="welcome-briefing-label">Sua jornada começa aqui</p>
+              <h2>Aprenda IA ajudando a vila</h2>
+              <p>Explore situações do dia a dia em exercícios simulados, sem IA ao vivo:</p>
+              <ol className="welcome-steps">
+                <li>
+                  <span>1</span> Escolha uma situação
+                </li>
+                <li>
+                  <span>2</span> Pratique uma resposta
+                </li>
+                <li>
+                  <span>3</span> Receba feedback e ajuste
+                </li>
+              </ol>
+              <div className="privacy-note">
+                <span aria-hidden="true">◆</span>
+                <p>
+                  <strong>Piloto gratuito para maiores de 18 anos.</strong> Seu progresso fica
+                  somente neste navegador, sem conta e sem registrar detalhes das suas tarefas. Ao
+                  continuar, você concorda com os <a href="./termos.html">termos do piloto</a> e leu
+                  o <a href="./privacidade.html">aviso de privacidade</a>.
+                </p>
+              </div>
+              <button
+                type="button"
+                className="btn btn-primary welcome-start"
+                data-testid="onboarding-next"
+                onClick={() => void handleNext()}
+              >
+                Começar na Vila Lume <span aria-hidden="true">→</span>
+              </button>
+            </div>
+
+            <MentorGuide testId="assistant-welcome" compact>
+              <p>Eu sou a Lumi, sua guia. Tente, confira, peça uma dica e ajuste sem pressa.</p>
             </MentorGuide>
 
             <div className="audience-routes" aria-label="Trilhas do AI Dev School">
@@ -182,17 +208,8 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
                 <span className="route-badge">Abrir no OS</span>
               </a>
             </div>
-
-            <div className="privacy-note">
-              <span aria-hidden="true">◆</span>
-              <p>
-                <strong>Piloto gratuito para maiores de 18 anos.</strong> Seu progresso fica somente
-                neste navegador, sem conta e sem registrar detalhes das suas tarefas. Ao continuar,
-                você concorda com os <a href="./termos.html">termos do piloto</a> e leu o{" "}
-                <a href="./privacidade.html">aviso de privacidade</a>.
-              </p>
-            </div>
           </div>
+          <VoxelWorld variant="welcome" />
         </div>
       ) : (
         <div className="onboarding-question-layout">
@@ -237,23 +254,29 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
         </div>
       )}
 
-      <div className="onboarding-actions">
-        {step > 0 && (
-          <button type="button" className="btn btn-link btn-back" onClick={() => setStep(step - 1)}>
-            Voltar
+      {step > 0 && (
+        <div className="onboarding-actions">
+          {step > 0 && (
+            <button
+              type="button"
+              className="btn btn-link btn-back"
+              onClick={() => setStep(step - 1)}
+            >
+              Voltar
+            </button>
+          )}
+          <button
+            type="button"
+            className="btn btn-primary"
+            data-testid="onboarding-next"
+            disabled={(currentStep.key !== "welcome" && currentValue === null) || submitting}
+            onClick={() => void handleNext()}
+          >
+            {step < STEPS.length - 1 ? "Continuar jornada" : "Abrir mapa da Vila Lume"}
+            <span aria-hidden="true">→</span>
           </button>
-        )}
-        <button
-          type="button"
-          className="btn btn-primary"
-          data-testid="onboarding-next"
-          disabled={(currentStep.key !== "welcome" && currentValue === null) || submitting}
-          onClick={() => void handleNext()}
-        >
-          {step < STEPS.length - 1 ? "Continuar jornada" : "Abrir mapa da Vila Lume"}
-          <span aria-hidden="true">→</span>
-        </button>
-      </div>
+        </div>
+      )}
     </section>
   );
 }
