@@ -336,7 +336,11 @@ export function applyStreak(progress: LearnerProgress, now: Date): LearnerProgre
   const today = localDateKey(now);
   const last = progress.streak.lastActivityDate;
   if (last === today) return progress;
-  const yesterday = localDateKey(new Date(now.getTime() - DAY_MS));
+  // Subtraia um dia do calendário local, não 24 horas do instante: dias de
+  // transição de fuso podem ter 23 ou 25 horas.
+  const previousDate = new Date(0);
+  previousDate.setUTCFullYear(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+  const yesterday = `${previousDate.getUTCFullYear()}-${String(previousDate.getUTCMonth() + 1).padStart(2, "0")}-${String(previousDate.getUTCDate()).padStart(2, "0")}`;
   const current = last === yesterday ? progress.streak.current + 1 : 1;
   return {
     ...progress,
