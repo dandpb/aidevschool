@@ -187,7 +187,8 @@ ol {
   box-shadow: none;
 }
 
-.btn-secondary[aria-disabled="true"] {
+.btn-secondary[aria-disabled="true"],
+.btn-small[aria-disabled="true"] {
   background: #ece9f7;
   border-color: var(--border);
   color: var(--muted);

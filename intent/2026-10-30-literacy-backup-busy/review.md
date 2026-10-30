@@ -1,0 +1,5 @@
+# Review and verification
+
+A delayed import test reproduced that a second restore and internal navigation remained actionable while the first write was pending. A synchronous guard now serializes in-screen backup actions in either direction; status and aria-disabled controls keep the busy state visible and keyboard-focusable. Failures warn that a save may already have happened. Three component tests cover repeated changes, failure and export-first interleaving. Browser tests passed for delayed file reading, keyboard focus, blocked internal navigation, and a complete export/wipe/restore drill. Independent review additionally delayed an IndexedDB read during export, observed the download after release, and verified the inverse import attempt was ignored.
+
+This only blocks actions initiated after the backup operation starts. A lesson or review opening already pending, including one started from the same progress screen, can still race. Closing/reloading, other tabs and host navigation are not coordinated. No formal approval or production claim is implied.

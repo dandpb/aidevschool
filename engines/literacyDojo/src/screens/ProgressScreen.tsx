@@ -35,6 +35,9 @@ export function ProgressScreen({
 }) {
   const services = useServices();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const backupBusyRef = useRef(false);
+  const [backupOperation, setBackupOperation] = useState<"import" | "export" | null>(null);
+  const backupBusy = backupOperation !== null;
   // AID-1755/T3 (padrão AID-1150): a tela possui o contrato de foco do seu
   // próprio h1 (tabIndex=-1 + refocus na montagem, padrão do
   // LessonScreen/CheckpointScreen) — a troca de rota SPA reposiciona a
@@ -60,6 +63,10 @@ export function ProgressScreen({
   const practicedSkills = Object.values(progress.skills);
 
   const handleExport = async () => {
+    if (backupBusyRef.current) return;
+    backupBusyRef.current = true;
+    setBackupOperation("export");
+    setBackupStatus(null);
     try {
       const json = await services.useCases.exportProgress();
       downloadTextFile(
@@ -76,10 +83,17 @@ export function ProgressScreen({
         kind: "error",
         text: error instanceof Error ? error.message : "Não foi possível exportar o progresso.",
       });
+    } finally {
+      backupBusyRef.current = false;
+      setBackupOperation(null);
     }
   };
 
   const handleImportFile = async (file: File) => {
+    if (backupBusyRef.current) return;
+    backupBusyRef.current = true;
+    setBackupOperation("import");
+    setBackupStatus(null);
     try {
       const next = await services.useCases.importProgress(await file.text());
       onProgressImported(next);
@@ -87,11 +101,14 @@ export function ProgressScreen({
         kind: "ok",
         text: "Backup restaurado neste navegador. completed não significa mastered.",
       });
-    } catch (error) {
+    } catch {
       setBackupStatus({
         kind: "error",
-        text: error instanceof Error ? error.message : "Backup inválido ou não migrável.",
+        text: "Não foi possível confirmar a restauração. Confira o arquivo; a gravação pode já ter ocorrido. Recarregue para verificar o progresso antes de tentar de novo.",
       });
+    } finally {
+      backupBusyRef.current = false;
+      setBackupOperation(null);
     }
   };
 
@@ -185,7 +202,10 @@ export function ProgressScreen({
                           type="button"
                           className="btn btn-small"
                           data-testid={`progress-review-${lesson.id}`}
-                          onClick={() => onReview(lesson.id)}
+                          aria-disabled={backupBusy}
+                          onClick={() => {
+                            if (!backupBusyRef.current) onReview(lesson.id);
+                          }}
                         >
                           Revisar
                         </button>
@@ -228,7 +248,10 @@ export function ProgressScreen({
                     type="button"
                     className="btn btn-small"
                     data-testid={`progress-start-${entry.id}`}
-                    onClick={() => onStartLesson(entry.id)}
+                    aria-disabled={backupBusy}
+                    onClick={() => {
+                      if (!backupBusyRef.current) onStartLesson(entry.id);
+                    }}
                   >
                     {status === "in_progress" ? "Continuar" : "Começar"}
                   </button>
@@ -252,6 +275,7 @@ export function ProgressScreen({
             type="button"
             className="btn btn-secondary"
             data-testid="export-progress"
+            aria-disabled={backupBusy}
             onClick={() => void handleExport()}
           >
             Baixar backup JSON
@@ -260,7 +284,10 @@ export function ProgressScreen({
             type="button"
             className="btn btn-secondary"
             data-testid="import-progress"
-            onClick={() => fileInputRef.current?.click()}
+            aria-disabled={backupBusy}
+            onClick={() => {
+              if (!backupBusyRef.current) fileInputRef.current?.click();
+            }}
           >
             Restaurar backup
           </button>
@@ -277,6 +304,12 @@ export function ProgressScreen({
             }}
           />
         </div>
+        {backupBusy && (
+          <output>
+            {backupOperation === "import" ? "Restaurando" : "Preparando"} backup… aguarde antes de
+            continuar.
+          </output>
+        )}
         {backupStatus ? (
           <p
             className={backupStatus.kind === "error" ? "backup-status is-error" : "backup-status"}
@@ -292,7 +325,10 @@ export function ProgressScreen({
         type="button"
         className="btn btn-secondary"
         data-testid="progress-back"
-        onClick={onBack}
+        aria-disabled={backupBusy}
+        onClick={() => {
+          if (!backupBusyRef.current) onBack();
+        }}
       >
         Voltar
       </button>
