@@ -190,9 +190,13 @@ export function ProgressScreen({
                 data-testid={`achievement-${definition.id}`}
               >
                 <strong>
-                  {unlocked ? "🏆 " : "🔒 "}
+                  <span aria-hidden="true">{unlocked ? "🏆 " : "🔒 "}</span>
                   {definition.title}
                 </strong>
+                <span className="muted">
+                  {" "}
+                  — {unlocked ? "Conquistada" : "Ainda não conquistada"}
+                </span>
                 <br />
                 <span className="muted">{definition.description}</span>
               </li>
