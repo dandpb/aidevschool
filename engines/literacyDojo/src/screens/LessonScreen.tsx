@@ -120,6 +120,7 @@ export function LessonScreen({
   const submissionBusy = useRef(false);
   const submitButtonRef = useRef<HTMLButtonElement | null>(null);
   const restoreSubmitFocus = useRef(false);
+  const preserveFeedbackFocus = useRef(false);
   const latestPassingEvidence = useRef<LiteracyEvidenceRecord>();
   const headingRef = useRef<HTMLHeadingElement | null>(null);
   useEffect(() => {
@@ -135,6 +136,7 @@ export function LessonScreen({
     if (!submitting) return;
     const cancelFocusRestore = () => {
       restoreSubmitFocus.current = false;
+      if (submissionBusy.current) preserveFeedbackFocus.current = true;
     };
     document.addEventListener("pointerdown", cancelFocusRestore);
     document.addEventListener("focusin", cancelFocusRestore);
@@ -149,8 +151,13 @@ export function LessonScreen({
   // reemitem índices já apresentados (guarda por Set).
   const briefViewedRef = useRef(false);
   const presentedActivityKeysRef = useRef<Set<string>>(new Set());
-  // biome-ignore lint/correctness/useExhaustiveDependencies: o efeito deve re-executar a cada mudança de fase/atividade (phase/currentActivityIndex), embora não leia o valor.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: mudança de atividade também requer foco, mesmo sem ler o índice.
   useEffect(() => {
+    if (session.phase === "feedback" && preserveFeedbackFocus.current) {
+      preserveFeedbackFocus.current = false;
+      return;
+    }
+    preserveFeedbackFocus.current = false;
     headingRef.current?.focus();
   }, [session.phase, session.currentActivityIndex]);
   useEffect(() => {
@@ -252,6 +259,7 @@ export function LessonScreen({
     )
       return;
     restoreSubmitFocus.current = document.activeElement === submitButtonRef.current;
+    preserveFeedbackFocus.current = false;
     submissionBusy.current = true;
     setSubmitting(true);
     setAttemptError(false);
