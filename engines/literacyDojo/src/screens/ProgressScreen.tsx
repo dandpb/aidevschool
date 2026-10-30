@@ -116,7 +116,10 @@ export function ProgressScreen({
     }
   };
 
-  const readyLessons = readyLessonEntries(services.content.listModules(activeJourneyOf(progress)));
+  const activeJourney = activeJourneyOf(progress);
+  const otherJourney = activeJourney === "ia_pratica" ? "dev" : "ia_pratica";
+  const readyLessons = readyLessonEntries(services.content.listModules(activeJourney));
+  const otherReadyLessons = readyLessonEntries(services.content.listModules(otherJourney));
   const lessonBySkillId = new Map<string, (typeof readyLessons)[number]>();
   for (const entry of readyLessons) {
     if (progress.lessonStatus[entry.id] !== "completed") continue;
@@ -196,10 +199,15 @@ export function ProgressScreen({
             <ul data-testid="reviews-due">
               {due.map((skill) => {
                 const lesson = lessonForSkill(skill.skillId);
+                const otherLesson = otherReadyLessons.find(
+                  (entry) =>
+                    progress.lessonStatus[entry.id] === "completed" &&
+                    entry.skillIds.some((id) => id === skill.skillId),
+                );
                 return (
                   <li key={skill.skillId}>
                     {services.content.getSkillTitle(skill.skillId)}
-                    {lesson && (
+                    {lesson ? (
                       <>
                         {" "}
                         <button
@@ -214,6 +222,18 @@ export function ProgressScreen({
                           Revisar
                         </button>
                       </>
+                    ) : otherLesson ? (
+                      <span className="muted">
+                        {" "}
+                        — Volte ao início, escolha{" "}
+                        {otherJourney === "dev" ? "Jornada Dev" : "Vila Lume · IA na Prática"},
+                        depois volte do mapa e abra seu progresso para revisar.
+                      </span>
+                    ) : (
+                      <span className="muted">
+                        {" "}
+                        — Nenhuma lição concluída disponível para revisar esta habilidade.
+                      </span>
                     )}
                   </li>
                 );
