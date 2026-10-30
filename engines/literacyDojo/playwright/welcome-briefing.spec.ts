@@ -28,7 +28,7 @@ for (const viewport of [
         .locator(".welcome-content")
         .evaluate((node) => Boolean(node.nextElementSibling?.classList.contains("voxel-world"))),
     ).toBe(true);
-    if (viewport.width === 375) {
+    if (viewport.width <= 375) {
       const box = await start.boundingBox();
       expect(box).not.toBeNull();
       expect(box!.y + box!.height).toBeLessThanOrEqual(viewport.height);

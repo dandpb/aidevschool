@@ -2413,6 +2413,7 @@ a.audience-route-dev .route-badge {
 
   .welcome-layout {
     gap: 20px;
+    margin-top: 4px;
   }
 
   .product-brand small {
@@ -2540,6 +2541,12 @@ a.audience-route-dev .route-badge {
 
   .lesson-row::before {
     left: 34px;
+  }
+}
+
+@media (max-width: 360px) {
+  .onboarding-step-welcome .onboarding-heading h1 {
+    font-size: 1.75rem;
   }
 }
 
