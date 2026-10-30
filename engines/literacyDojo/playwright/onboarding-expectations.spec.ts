@@ -22,6 +22,7 @@ test("onboarding explica como as escolhas são usadas", async ({ page }) => {
   );
   await page.getByTestId("onboarding-option-scheduling").check();
   await page.getByTestId("onboarding-next").click();
+  await expect(page.getByTestId("map-screen")).toBeVisible();
   const progress = await readProgress(page);
   expect(progress?.onboarding).toMatchObject({
     goal: "save_time",
