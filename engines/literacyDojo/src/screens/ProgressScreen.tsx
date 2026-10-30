@@ -101,7 +101,7 @@ export function ProgressScreen({
       );
       setBackupStatus({
         kind: "ok",
-        text: "Backup baixado. O arquivo registra no máximo lições concluídas — nunca mastery.",
+        text: "Backup baixado. Concluir uma lição não comprova competência.",
       });
     } catch (error) {
       setBackupStatus({
@@ -142,7 +142,7 @@ export function ProgressScreen({
       onProgressImported(next);
       setBackupStatus({
         kind: "ok",
-        text: "Backup restaurado neste navegador. completed não significa mastered.",
+        text: "Backup restaurado neste navegador. Concluir uma lição não comprova competência.",
       });
     } catch {
       if (importStarted) await onUncertainProgress?.();
@@ -347,8 +347,9 @@ export function ProgressScreen({
           O progresso mora só neste navegador: não há conta nem sincronização. Limpar os dados deste
           site pode apagar o histórico; outro aparelho ou perfil não recebe o progresso
           automaticamente. Exporte um JSON para guardar uma cópia e importe-o no outro aparelho ou
-          perfil; ao importar, a migração atualiza o formato antigo e o teto continua{" "}
-          <code>completed</code> — nunca <code>mastered</code>.
+          perfil. Ao importar, formatos antigos compatíveis são atualizados. O progresso registra
+          lições concluídas. Concluir uma lição não comprova competência; essa comprovação exige
+          verificação independente.
         </p>
         <div className="backup-actions">
           <button
