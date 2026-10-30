@@ -552,6 +552,17 @@ textarea.is-invalid {
   margin: 8px 0 0;
 }
 
+.sort-item.is-invalid {
+  border: 2px solid var(--error-text);
+  border-radius: var(--radius);
+  padding: 8px;
+}
+
+.sort-invalid-note {
+  display: block;
+  font-weight: 700;
+}
+
 .classify-text {
   margin: 0 0 10px;
 }
@@ -2698,7 +2709,8 @@ a.audience-route-dev .route-badge {
   }
   .option-card.is-invalid,
   .classify-item.is-invalid,
-  .rubric-criterion.is-invalid {
+  .rubric-criterion.is-invalid,
+  .sort-item.is-invalid {
     border-width: 3px;
     border-style: dashed;
   }

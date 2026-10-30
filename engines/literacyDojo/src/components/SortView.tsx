@@ -54,22 +54,30 @@ export function SortView({
         {orderedIds.map((itemId, index) => {
           const item = itemsById.get(itemId);
           if (!item) return null;
+          const invalid = invalidIds.includes(itemId);
+          const invalidNoteId = `${activity.id}-${itemId}-invalid`;
           return (
             <li
               key={itemId}
-              className={`sort-item${invalidIds.includes(itemId) ? " is-invalid" : ""}`}
+              className={`sort-item${invalid ? " is-invalid" : ""}`}
               data-testid={`sort-item-${itemId}`}
             >
               <span className="sort-position" aria-hidden="true">
                 {index + 1}.
               </span>
               <span className="sort-text">{item.text}</span>
+              {invalid && (
+                <span className="sort-invalid-note" id={invalidNoteId}>
+                  Revise esta posição.
+                </span>
+              )}
               <span className="sort-actions">
                 <button
                   type="button"
                   className="btn btn-small"
                   data-testid={`sort-up-${itemId}`}
                   aria-label={`Mover "${item.text}" para cima`}
+                  aria-describedby={invalid ? invalidNoteId : undefined}
                   disabled={disabled}
                   aria-disabled={disabled || index === 0}
                   onClick={() => move(index, -1)}
@@ -81,6 +89,7 @@ export function SortView({
                   className="btn btn-small"
                   data-testid={`sort-down-${itemId}`}
                   aria-label={`Mover "${item.text}" para baixo`}
+                  aria-describedby={invalid ? invalidNoteId : undefined}
                   disabled={disabled}
                   aria-disabled={disabled || index === orderedIds.length - 1}
                   onClick={() => move(index, 1)}
