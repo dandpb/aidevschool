@@ -120,9 +120,11 @@ export function submitAttempt(
   evaluation: EvaluationResult,
   feedback: AttemptFeedback,
 ): LessonSession {
-  if (session.phase !== "attempting") return session;
+  if (session.phase !== "attempting" && session.phase !== "feedback") return session;
   const activity = currentActivity(session, lesson);
   if (!activity) return session;
+  if (session.phase === "feedback" && session.attempts[activity.id]?.evaluation.pass)
+    return session;
 
   const attempt: AttemptState = { evaluation, feedback };
   const previousBest = session.best[activity.id];

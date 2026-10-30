@@ -1,0 +1,5 @@
+# Review and verification
+
+The browser test reproduced a failed answer followed by a corrected recheck: the second attempt was persisted but the prior feedback remained and progression was blocked. The session now accepts a recheck from failed feedback, updates the latest attempt and best score, and still refuses an unexpected replacement of an already-passed attempt. Rechecks preserve focus at the next action or retry button when appropriate, without overriding a deliberate focus move.
+
+Four local browser tests passed: wrong→correct through lesson completion with XP/evidence, another incorrect recheck, deliberate focus change during a delayed save, and a review recheck that leaves its due date and stage unchanged until completion. Three domain cases cover successful correction, a worse score preserving best and hints, and rejection of a re-submission after passing. The full unit suite passed 443 with one skipped; lint passed. Independent review checked the corrected behavior and an injected pre-write failure. Screen-reader speech and a specific post-commit failure during recheck were not tested. No formal approval was granted.

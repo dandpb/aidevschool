@@ -110,6 +110,7 @@ export function LessonScreen({
   const [completing, setCompleting] = useState(false);
   const [attemptError, setAttemptError] = useState(false);
   const [attemptFailureCount, setAttemptFailureCount] = useState(0);
+  const [recheckFocus, setRecheckFocus] = useState<{ passed: boolean } | null>(null);
   const [completionError, setCompletionError] = useState(false);
   const [hintLoading, setHintLoading] = useState(false);
   const [hintError, setHintError] = useState(false);
@@ -119,6 +120,7 @@ export function LessonScreen({
   const retryBusy = useRef(false);
   const submissionBusy = useRef(false);
   const submitButtonRef = useRef<HTMLButtonElement | null>(null);
+  const nextActionRef = useRef<HTMLButtonElement | null>(null);
   const restoreSubmitFocus = useRef(false);
   const preserveFeedbackFocus = useRef(false);
   const latestPassingEvidence = useRef<LiteracyEvidenceRecord>();
@@ -132,6 +134,16 @@ export function LessonScreen({
       submitButtonRef.current?.focus();
     }
   }, [attemptFailureCount]);
+  useEffect(() => {
+    if (
+      recheckFocus &&
+      restoreSubmitFocus.current &&
+      !preserveFeedbackFocus.current &&
+      document.activeElement === document.body
+    ) {
+      (recheckFocus.passed ? nextActionRef : submitButtonRef).current?.focus();
+    }
+  }, [recheckFocus]);
   useEffect(() => {
     if (!submitting) return;
     const cancelFocusRestore = () => {
@@ -258,6 +270,7 @@ export function LessonScreen({
       !activity
     )
       return;
+    const isRecheck = session.phase === "feedback" && attempt?.evaluation.pass === false;
     restoreSubmitFocus.current = document.activeElement === submitButtonRef.current;
     preserveFeedbackFocus.current = false;
     submissionBusy.current = true;
@@ -276,6 +289,7 @@ export function LessonScreen({
         session: submitAttempt(session, lesson, result.evaluation, result.feedback),
       });
       if (result.evaluation.pass) latestPassingEvidence.current = result.record;
+      if (isRecheck) setRecheckFocus({ passed: result.evaluation.pass });
       onProgressChange(result.progress);
     } catch {
       setAttemptError(true);
@@ -638,6 +652,7 @@ export function LessonScreen({
             type="button"
             className="btn btn-primary"
             data-testid="next-activity"
+            ref={nextActionRef}
             disabled={submitting || hintLoading || retryLoading}
             onClick={handleNextActivity}
           >
@@ -649,6 +664,7 @@ export function LessonScreen({
             type="button"
             className="btn btn-primary"
             data-testid="finish-lesson"
+            ref={nextActionRef}
             aria-disabled={!requiredPassed || submitting || hintLoading || retryLoading}
             aria-busy={submitting}
             onClick={() => {
