@@ -6,6 +6,7 @@ import { type JourneyId, activeJourneyOf } from "../domain/journeyProgress";
 import type { LearnerProgress } from "../domain/progress";
 import { RETROFIT_NOTICE_S1, isRetrofittedLesson } from "../domain/retrofitNotice";
 import { reviewDueInfo } from "../domain/reviewDue";
+import { readyLessonEntries } from "../domain/track";
 import { buildTrackQueries } from "../domain/trackQueries";
 
 /**
@@ -40,6 +41,7 @@ export function HomeScreen({
   const services = useServices();
   const track = services.content.getTrack();
   const activeJourney = activeJourneyOf(progress);
+  const devLessonCount = readyLessonEntries(services.content.listModules("dev")).length;
   const queries = buildTrackQueries(progress, services.content, services.clock, activeJourney);
   const {
     mission,
@@ -217,7 +219,7 @@ export function HomeScreen({
             <span>
               {activeJourney === "dev"
                 ? "Jornada atual"
-                : "9 lições para quem programa com IA (opcional)"}
+                : `${devLessonCount} ${devLessonCount === 1 ? "lição" : "lições"} para quem programa com IA (opcional)`}
             </span>
           </button>
         </fieldset>
