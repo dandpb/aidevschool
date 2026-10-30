@@ -32,6 +32,7 @@ export function CheckpointScreen({
   mutationBlocked = false,
   canMutate = () => true,
   onProgressChange,
+  onUncertainProgress,
   onFinished,
   onExit,
   onStartNextLesson,
@@ -40,6 +41,7 @@ export function CheckpointScreen({
   mutationBlocked?: boolean;
   canMutate?: () => boolean;
   onProgressChange: (progress: LearnerProgress) => void;
+  onUncertainProgress?: () => Promise<void>;
   onFinished: (passed: boolean) => void;
   onExit: () => void;
   onStartNextLesson: (lessonId: string) => void;
@@ -171,6 +173,7 @@ export function CheckpointScreen({
     } catch {
       restoreNextFocus.current = false;
       setOperationError("attempt");
+      await onUncertainProgress?.();
     } finally {
       busyRef.current = false;
       setSubmitting(false);
@@ -178,7 +181,7 @@ export function CheckpointScreen({
   };
 
   const handleHint = () => {
-    if (busyRef.current) return;
+    if (busyRef.current || !canMutate()) return;
     setShownHints((previous) => {
       const currentHints = previous[key] ?? [];
       if (currentHints.length >= hintCount) return previous;
@@ -188,7 +191,7 @@ export function CheckpointScreen({
   };
 
   const handleRetry = () => {
-    if (busyRef.current) return;
+    if (busyRef.current || !canMutate()) return;
     // O botão será removido ao limpar a tentativa. Preserve um destino de
     // teclado sem mover um foco que já esteja em outro controle.
     if (document.activeElement === retryActivityRef.current) headingRef.current?.focus();
@@ -208,7 +211,7 @@ export function CheckpointScreen({
   };
 
   const handleNext = () => {
-    if (busyRef.current) return;
+    if (busyRef.current || !canMutate()) return;
     setOperationError(null);
     setAnswerEdited(false);
     setCurrent((index) => Math.min(index + 1, activityRefs.length - 1));
@@ -423,7 +426,7 @@ export function CheckpointScreen({
         invalidIds={
           attempt && !attempt.evaluation.pass && !answerEdited ? failedCheckIds(attempt) : []
         }
-        disabled={submitting}
+        disabled={submitting || mutationBlocked}
         answerLocked={attempt?.evaluation.pass === true}
         onChange={(next) => {
           if (!busyRef.current && canMutate() && !attempt?.evaluation.pass) {
@@ -485,7 +488,7 @@ export function CheckpointScreen({
             className="btn btn-secondary"
             data-testid="retry-activity"
             ref={retryActivityRef}
-            aria-disabled={submitting}
+            aria-disabled={submitting || mutationBlocked}
             onClick={handleRetry}
           >
             Tentar novamente
@@ -496,7 +499,7 @@ export function CheckpointScreen({
             type="button"
             className="btn btn-secondary"
             data-testid="hint-button"
-            aria-disabled={!hasMoreHints || submitting}
+            aria-disabled={!hasMoreHints || submitting || mutationBlocked}
             onClick={handleHint}
           >
             {hasMoreHints ? "Pedir dica" : "Todas as dicas exibidas"}
@@ -508,7 +511,7 @@ export function CheckpointScreen({
             className="btn btn-primary"
             data-testid="next-activity"
             ref={nextActionRef}
-            aria-disabled={submitting}
+            aria-disabled={submitting || mutationBlocked}
             onClick={handleNext}
           >
             Próxima atividade

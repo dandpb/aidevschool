@@ -348,7 +348,7 @@ export function AppShell({
     }
   }, [blockForRecovery, services]);
 
-  const reconcileLessonProgress = useCallback(
+  const reconcileScreenProgress = useCallback(
     async (originRevision: number) => {
       if (routeRevision.current !== originRevision || !beginOperation("reconcile")) {
         blockForRecovery();
@@ -650,7 +650,7 @@ export function AppShell({
               hosted={hostAdapter !== null}
               mutationBlocked={operation !== null || recoveryBlocked}
               onUncertainProgress={
-                hostAdapter === null ? () => reconcileLessonProgress(renderedRevision) : undefined
+                hostAdapter === null ? () => reconcileScreenProgress(renderedRevision) : undefined
               }
               canMutate={canMutateOnScreen}
               onExit={() => {
@@ -665,6 +665,9 @@ export function AppShell({
               key={route.checkpointId}
               checkpointId={route.checkpointId}
               onProgressChange={setProgress}
+              onUncertainProgress={
+                hostAdapter === null ? () => reconcileScreenProgress(renderedRevision) : undefined
+              }
               onFinished={() => navigateFromScreen({ name: "home" })}
               onExit={() => navigateFromScreen({ name: "map" })}
               onStartNextLesson={(lessonId) => void handleOpenLesson(lessonId, renderedRevision)}
