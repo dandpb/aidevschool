@@ -4,6 +4,7 @@ import type { CatalogLessonEntry, ModuleDefinition, SkillId } from "../data/gene
 import {
   CHECKPOINT_SELECTION,
   type CheckpointDefinition,
+  gateForModule,
   isCheckpointAvailable,
   isCheckpointCompleted,
   isLessonGateLocked,
@@ -120,7 +121,12 @@ export function buildTrackQueries(
   for (const summary of checkpointSummaries) {
     for (const other of moduleSummaries) {
       const first = other.module.lessons.find((lesson) => lesson.hasContent);
-      if (first && isLessonGateLocked(progress, modules, first.id)) {
+      if (
+        first &&
+        gateForModule(other.module.id) === summary.checkpoint.id &&
+        (progress.lessonStatus[first.id] ?? "locked") === "locked" &&
+        isLessonGateLocked(progress, modules, first.id)
+      ) {
         summary.gatesModuleTitle = other.module.title;
       }
     }

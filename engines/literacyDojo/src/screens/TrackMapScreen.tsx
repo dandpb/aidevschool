@@ -269,7 +269,8 @@ export function TrackMapScreen({
                         className="checkpoint-gate-hint"
                         data-testid={`checkpoint-gate-${item.checkpoint.id}`}
                       >
-                        Complete o Desafio do Módulo {module.order} para entrar no próximo bairro.
+                        Complete o Desafio do Módulo {module.order} para desbloquear a primeira
+                        missão do próximo bairro.
                       </p>
                     )}
                   </div>

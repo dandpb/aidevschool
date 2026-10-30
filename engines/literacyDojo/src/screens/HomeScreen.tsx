@@ -157,8 +157,10 @@ export function HomeScreen({
             </h2>
             <p className="muted">
               {pendingCheckpoint.checkpoint.activityRefs.length} atividades rápidas de{" "}
-              {pendingCheckpoint.module.title} — menos de 3 minutos. Complete para entrar no próximo
-              bairro.
+              {pendingCheckpoint.module.title} — menos de 3 minutos.{" "}
+              {pendingCheckpoint.gatesModuleTitle
+                ? "Complete para desbloquear a primeira missão do próximo bairro."
+                : "Conclua quando estiver pronto."}
             </p>
             <p className="muted" data-testid="checkpoint-continuity-home">
               Ao reabrir, o desafio volta à primeira atividade; tentativas já registradas ficam
