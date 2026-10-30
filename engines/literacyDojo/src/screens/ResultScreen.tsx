@@ -26,6 +26,7 @@ export function ResultScreen({
   onHome,
   onMap,
   hosted = false,
+  taskCategory,
 }: {
   summary: LessonSummary;
   mutationBlocked?: boolean;
@@ -33,9 +34,9 @@ export function ResultScreen({
   onHome: () => void;
   onMap: () => void;
   hosted?: boolean;
+  taskCategory?: OnboardingTaskCategory;
 }) {
   const services = useServices();
-  const [taskCategory, setTaskCategory] = useState<OnboardingTaskCategory>();
   const [receipt, setReceipt] = useState<LiteracyVerificationReceipt>();
   const [verificationError, setVerificationError] = useState<{
     message: string;
@@ -72,14 +73,6 @@ export function ResultScreen({
       feedback: result.feedback,
     };
   });
-
-  useEffect(() => {
-    void services.stateStore.readState().then((read) => {
-      if (read.status === "present-valid") {
-        setTaskCategory(read.value.progress.onboarding.taskCategory);
-      }
-    });
-  }, [services]);
 
   useEffect(() => {
     const terminal = receipt || (verificationError && !verificationError.retryable);

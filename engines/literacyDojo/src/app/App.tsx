@@ -61,7 +61,11 @@ export type Route =
       reviewStage?: number;
     }
   | { name: "checkpoint"; checkpointId: ModuleCheckpointId }
-  | { name: "result"; summary: LessonSummary };
+  | {
+      name: "result";
+      summary: LessonSummary;
+      taskCategory?: LearnerProgress["onboarding"]["taskCategory"];
+    };
 
 /**
  * Token `?journey=` da URL (AID-3705/D1): `dev|ia` mapeia para a jornada
@@ -651,7 +655,11 @@ export function AppShell({
               onProgressChange={setProgress}
               onCompleted={(updated, summary) => {
                 setProgress(updated);
-                navigate({ name: "result", summary });
+                navigate({
+                  name: "result",
+                  summary,
+                  taskCategory: updated.onboarding.taskCategory,
+                });
                 hostAdapter?.publishCompleted(summary.nextLessonId);
               }}
               hosted={hostAdapter !== null}
@@ -685,6 +693,7 @@ export function AppShell({
               mutationBlocked={operation !== null || recoveryBlocked}
               summary={route.summary}
               hosted={hostAdapter !== null}
+              taskCategory={route.taskCategory}
               onNextLesson={(lessonId) => void handleOpenLesson(lessonId, renderedRevision)}
               onHome={() => navigateFromScreen({ name: "home" })}
               onMap={() => navigateFromScreen({ name: "map" })}
