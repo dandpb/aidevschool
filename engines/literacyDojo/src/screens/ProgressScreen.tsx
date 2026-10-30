@@ -153,7 +153,9 @@ export function ProgressScreen({
       if (importStarted) await onUncertainProgress?.();
       setBackupStatus({
         kind: "error",
-        text: "Não foi possível confirmar a restauração. Confira o arquivo; a gravação pode já ter ocorrido. Recarregue para verificar o progresso antes de tentar de novo.",
+        text: importStarted
+          ? "Não foi possível confirmar a restauração. Confira o arquivo; a gravação pode já ter ocorrido. Recarregue para verificar o progresso antes de tentar de novo."
+          : "Não foi possível ler o arquivo. Nenhuma restauração foi iniciada nesta tentativa. Escolha o arquivo novamente.",
       });
     } finally {
       backupBusyRef.current = false;

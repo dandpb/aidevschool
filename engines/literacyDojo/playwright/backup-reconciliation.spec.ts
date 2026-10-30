@@ -2,6 +2,48 @@ import { readFile } from "node:fs/promises";
 import { expect, test } from "@playwright/test";
 import { answerRight, completeOnboarding, readProgress } from "./support";
 
+test("falha de leitura do arquivo permite nova tentativa sem iniciar restauração", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 320, height: 740 });
+  await completeOnboarding(page);
+  await page.getByRole("button", { name: "Sair da lição" }).click();
+  await page.getByTestId("map-back").click();
+  await page.getByTestId("open-progress").click();
+  const [download] = await Promise.all([
+    page.waitForEvent("download"),
+    page.getByTestId("export-progress").click(),
+  ]);
+  const path = await download.path();
+  if (!path) throw new Error("backup ausente");
+  const before = await readProgress(page);
+  await page.evaluate(() => {
+    const original = File.prototype.text;
+    Object.assign(window, {
+      restoreFileRead: () => {
+        File.prototype.text = original;
+      },
+    });
+    File.prototype.text = async () => {
+      throw new Error("FALHA_ARQUIVO_SIMULADA");
+    };
+  });
+  const button = page.getByTestId("import-progress");
+  await button.focus();
+  await page.getByTestId("import-progress-file").setInputFiles(path);
+  const status = page.getByTestId("backup-status");
+  await expect(status).toContainText("Nenhuma restauração foi iniciada nesta tentativa");
+  await expect(status).not.toContainText("FALHA_ARQUIVO_SIMULADA");
+  await expect(button).toBeFocused();
+  await expect(button).toHaveAttribute("aria-disabled", "false");
+  expect(await readProgress(page)).toEqual(before);
+  await page.evaluate(() =>
+    (window as unknown as { restoreFileRead: () => void }).restoreFileRead(),
+  );
+  await page.getByTestId("import-progress-file").setInputFiles(path);
+  await expect(status).toContainText("Backup restaurado");
+});
+
 test("erro após restauração atualiza a tela sem afirmar que o arquivo foi aplicado", async ({
   page,
   browser,

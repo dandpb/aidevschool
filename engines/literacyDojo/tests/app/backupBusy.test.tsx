@@ -7,6 +7,36 @@ import { ProgressScreen } from "../../src/screens/ProgressScreen";
 import { makeServices } from "../helpers";
 
 describe("restauração de backup", () => {
+  it("distingue falha ao ler arquivo de uma restauração com resultado incerto", async () => {
+    const { services, initial } = makeServices();
+    const restore = vi.spyOn(services.useCases, "importProgress");
+    const reconcile = vi.fn();
+    render(
+      <ServicesProvider value={services}>
+        <ProgressScreen
+          progress={initial}
+          onBack={() => {}}
+          onStartLesson={() => {}}
+          onReview={() => {}}
+          onProgressImported={() => {}}
+          onUncertainProgress={reconcile}
+        />
+      </ServicesProvider>,
+    );
+    const file = new File(["{}"], "backup.json", { type: "application/json" });
+    Object.defineProperty(file, "text", {
+      value: async () => {
+        throw new Error("read failure");
+      },
+    });
+    fireEvent.change(screen.getByTestId("import-progress-file"), { target: { files: [file] } });
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Não foi possível ler o arquivo. Nenhuma restauração foi iniciada nesta tentativa. Escolha o arquivo novamente.",
+    );
+    expect(restore).not.toHaveBeenCalled();
+    expect(reconcile).not.toHaveBeenCalled();
+    expect(screen.getByTestId("import-progress")).toHaveAttribute("aria-disabled", "false");
+  });
   it("impede nova restauração e saída interna enquanto a gravação está pendente", async () => {
     const { services, initial } = makeServices();
     let release!: () => void;

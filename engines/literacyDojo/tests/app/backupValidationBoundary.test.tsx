@@ -94,8 +94,11 @@ describe("limite de validação de backup", () => {
     display();
     upload(file("", new BackupImportValidationError("corrupt")));
     await waitFor(() =>
-      expect(screen.getByTestId("backup-status")).toHaveTextContent("pode já ter ocorrido"),
+      expect(screen.getByTestId("backup-status")).toHaveTextContent(
+        "Não foi possível ler o arquivo",
+      ),
     );
+    expect(screen.getByTestId("backup-status")).not.toHaveTextContent("arquivo é inválido");
   });
   it("falha no callback após gravação permanece incerta mesmo com classe de validação", async () => {
     const bundle = display(() => {
