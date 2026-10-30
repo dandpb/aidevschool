@@ -178,8 +178,27 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
                 <p>
                   <strong>Piloto gratuito para maiores de 18 anos.</strong> Seu progresso fica neste
                   navegador, sem conta. Respostas podem ser compartilhadas, conforme o{" "}
-                  <a href="./privacidade.html">aviso de privacidade</a>. Ao continuar, você concorda
-                  com os <a href="./termos.html">termos do piloto</a> e leu o aviso.
+                  <a
+                    href="./privacidade.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-describedby="welcome-policy-new-tab"
+                  >
+                    aviso de privacidade <span aria-hidden="true">↗</span>
+                  </a>
+                  . Ao continuar, você concorda com os{" "}
+                  <a
+                    href="./termos.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-describedby="welcome-policy-new-tab"
+                  >
+                    termos do piloto <span aria-hidden="true">↗</span>
+                  </a>{" "}
+                  e leu o aviso.
+                  <span id="welcome-policy-new-tab" className="sr-only">
+                    Abre em nova aba
+                  </span>
                 </p>
               </div>
               <button

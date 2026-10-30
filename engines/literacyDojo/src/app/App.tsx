@@ -697,8 +697,25 @@ export function AppShell({
             somente neste navegador e pode ser perdido ao limpar os dados do site.
           </p>
           <nav aria-label="Informações e suporte">
-            <a href="./termos.html">Termos do piloto</a>
-            <a href="./privacidade.html">Privacidade</a>
+            <span id="policy-new-tab" className="sr-only">
+              Abre em nova aba
+            </span>
+            <a
+              href="./termos.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-describedby="policy-new-tab"
+            >
+              Termos do piloto <span aria-hidden="true">↗</span>
+            </a>
+            <a
+              href="./privacidade.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-describedby="policy-new-tab"
+            >
+              Privacidade <span aria-hidden="true">↗</span>
+            </a>
             <a
               href="https://github.com/dandpb/aidevschool/issues/new"
               target="_blank"
