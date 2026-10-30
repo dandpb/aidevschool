@@ -235,6 +235,7 @@ export function CheckpointScreen({
       setPhase("done");
     } catch {
       setOperationError("finish");
+      await onUncertainProgress?.();
     } finally {
       busyRef.current = false;
       setSubmitting(false);
