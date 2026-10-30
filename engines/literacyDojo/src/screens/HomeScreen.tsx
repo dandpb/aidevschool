@@ -41,7 +41,14 @@ export function HomeScreen({
   const track = services.content.getTrack();
   const activeJourney = activeJourneyOf(progress);
   const queries = buildTrackQueries(progress, services.content, services.clock, activeJourney);
-  const { mission, reviewLesson, dailyGoal: goal, trackSummary: summary, dueReviews } = queries;
+  const {
+    mission,
+    reviewLesson,
+    reviewSkill,
+    dailyGoal: goal,
+    trackSummary: summary,
+    dueReviews,
+  } = queries;
   const pendingCheckpoint = queries.pendingCheckpoint;
 
   // W7 AID-5190 (contrato §7.2 — anúncio de mudança): a live region sr-only
@@ -56,7 +63,7 @@ export function HomeScreen({
       const reviewNote =
         dueReviews.length === 0
           ? ""
-          : ` ${dueReviews.length} ${dueReviews.length === 1 ? "revisão devida" : "revisões devidas"}.`;
+          : ` ${dueReviews.length} ${dueReviews.length === 1 ? "revisão devida" : "revisões devidas"} no total entre jornadas.`;
       setLiveMessage(`Sequência: ${current} ${current === 1 ? "dia" : "dias"}.${reviewNote}`);
     } else if (announcedStreak.current !== current) {
       setLiveMessage(`Sequência agora: ${current} ${current === 1 ? "dia" : "dias"}.`);
@@ -64,10 +71,9 @@ export function HomeScreen({
     announcedStreak.current = current;
   }, [progress.streak.current, dueReviews.length]);
 
-  const reviewDue =
-    dueReviews.length > 0 && dueReviews[0].nextReviewAt !== undefined
-      ? reviewDueInfo(dueReviews[0].nextReviewAt as string, services.clock())
-      : undefined;
+  const reviewDue = reviewSkill?.nextReviewAt
+    ? reviewDueInfo(reviewSkill.nextReviewAt, services.clock())
+    : undefined;
 
   const handleReset = () => {
     if (!canMutate()) return;
@@ -265,16 +271,13 @@ export function HomeScreen({
         </button>
       </div>
 
-      {dueReviews.length > 0 && reviewLesson && (
+      {reviewSkill && reviewLesson && (
         <div className="card card-review">
           <h2>Revisão pendente</h2>
           {/* W7 AID-5190 (contrato §7.2 — papel ReviewDue): reason + dueIn em
               pt-BR legível derivado do nextReviewAt agendado. */}
           {reviewDue ? <p data-testid="hud-review-due">Revisão {reviewDue.dueIn}</p> : null}
-          <p>
-            Hora de revisar:{" "}
-            {dueReviews.map((skill) => services.content.getSkillTitle(skill.skillId)).join(", ")}.
-          </p>
+          <p>Hora de revisar: {services.content.getSkillTitle(reviewSkill.skillId)}.</p>
           {isRetrofittedLesson(reviewLesson.id, services.content.getContentVersion()) &&
             progress.lessonStatus[reviewLesson.id] === "completed" && (
               <p className="muted" data-testid="retrofit-notice-s1">

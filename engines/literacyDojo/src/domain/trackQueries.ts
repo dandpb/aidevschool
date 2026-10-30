@@ -41,6 +41,7 @@ export type TrackQueries = {
   pendingCheckpoint: CheckpointSummary | undefined;
   checkpointSummaries: CheckpointSummary[];
   reviewLesson: CatalogLessonEntry | undefined;
+  reviewSkill: SkillPractice | undefined;
   dailyGoal: DailyGoalStatus;
   trackSummary: { completed: number; total: number };
   dueReviews: SkillPractice[];
@@ -77,14 +78,20 @@ export function buildTrackQueries(
     });
 
   const due = reviewsDue(progress, now);
-  const reviewLesson =
-    due.length > 0
-      ? ready.find(
-          (entry) =>
-            progress.lessonStatus[entry.id] === "completed" &&
-            entry.skillIds.includes(due[0].skillId as SkillId),
-        )
-      : undefined;
+  let reviewLesson: CatalogLessonEntry | undefined;
+  let reviewSkill: SkillPractice | undefined;
+  for (const skill of due) {
+    const lesson = ready.find(
+      (entry) =>
+        progress.lessonStatus[entry.id] === "completed" &&
+        entry.skillIds.includes(skill.skillId as SkillId),
+    );
+    if (lesson) {
+      reviewLesson = lesson;
+      reviewSkill = skill;
+      break;
+    }
+  }
 
   const moduleSummaries: ModuleSummary[] = modules.map((module) => ({
     module,
@@ -126,6 +133,7 @@ export function buildTrackQueries(
     pendingCheckpoint,
     checkpointSummaries,
     reviewLesson,
+    reviewSkill,
     dailyGoal: dailyGoalStatus(progress, now),
     trackSummary: trackSummary(modules, progress),
     dueReviews: due,
