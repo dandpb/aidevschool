@@ -210,7 +210,7 @@ export function ResultScreen({
           <strong>Lição concluída</strong> registra o seu progresso neste aparelho. Isso é diferente
           de <strong>competência verificada</strong>.{" "}
           {hosted
-            ? "A evidência seguirá para verificação independente, mas este fluxo não altera o estado canônico."
+            ? "A comprovação exige verificação independente. Acompanhe o resultado da tentativa abaixo e, se disponível, no aplicativo que abriu esta missão. Este fluxo não altera o estado canônico."
             : "A comprovação de competência exige verificação independente."}
         </p>
       </div>
