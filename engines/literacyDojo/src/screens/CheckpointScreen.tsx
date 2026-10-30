@@ -52,6 +52,8 @@ export function CheckpointScreen({
   const [attempts, setAttempts] = useState<Record<string, AttemptState>>({});
   const [shownHints, setShownHints] = useState<Record<string, string[]>>({});
   const [submitting, setSubmitting] = useState(false);
+  const busyRef = useRef(false);
+  const [operationError, setOperationError] = useState<"start" | "attempt" | "finish" | null>(null);
   const [passed, setPassed] = useState(false);
   const [unlockedLessonId, setUnlockedLessonId] = useState<string | undefined>();
   const headingRef = useRef<HTMLHeadingElement | null>(null);
@@ -88,19 +90,27 @@ export function CheckpointScreen({
   const answer = answers[key] ?? emptyAnswerFor(activity);
 
   const handleStart = async () => {
+    if (busyRef.current) return;
+    busyRef.current = true;
     setSubmitting(true);
+    setOperationError(null);
     try {
       const { progress } = await services.useCases.startCheckpoint(checkpointId);
       onProgressChange(progress);
       setPhase("playing");
+    } catch {
+      setOperationError("start");
     } finally {
+      busyRef.current = false;
       setSubmitting(false);
     }
   };
 
   const handleSubmit = async () => {
-    if (submitting || !answer) return;
+    if (busyRef.current || !answer) return;
+    busyRef.current = true;
     setSubmitting(true);
+    setOperationError(null);
     try {
       const result = await services.useCases.submitActivityAttempt({
         lessonId: lesson.id,
@@ -110,13 +120,16 @@ export function CheckpointScreen({
       });
       setAttempts((previous) => ({ ...previous, [key]: result }));
       onProgressChange(result.progress);
+    } catch {
+      setOperationError("attempt");
     } finally {
+      busyRef.current = false;
       setSubmitting(false);
     }
   };
 
   const handleHint = () => {
-    if (submitting) return;
+    if (busyRef.current) return;
     setShownHints((previous) => {
       const currentHints = previous[key] ?? [];
       if (currentHints.length >= hintCount) return previous;
@@ -126,6 +139,8 @@ export function CheckpointScreen({
   };
 
   const handleRetry = () => {
+    if (busyRef.current) return;
+    setOperationError(null);
     setAttempts((previous) => {
       const next = { ...previous };
       delete next[key];
@@ -140,12 +155,16 @@ export function CheckpointScreen({
   };
 
   const handleNext = () => {
+    if (busyRef.current) return;
+    setOperationError(null);
     setCurrent((index) => Math.min(index + 1, activityRefs.length - 1));
   };
 
   const handleFinish = async () => {
-    if (submitting) return;
+    if (busyRef.current) return;
+    busyRef.current = true;
     setSubmitting(true);
+    setOperationError(null);
     try {
       const bestScores: Record<string, number> = {};
       for (const item of activityRefs) {
@@ -157,7 +176,10 @@ export function CheckpointScreen({
       setPassed(result.outcome.passed);
       setUnlockedLessonId(result.unlockedLessonId);
       setPhase("done");
+    } catch {
+      setOperationError("finish");
     } finally {
+      busyRef.current = false;
       setSubmitting(false);
     }
   };
@@ -199,16 +221,30 @@ export function CheckpointScreen({
             você já sabe — se travar, peça uma dica.
           </p>
         </MentorGuide>
+        {operationError === "start" && (
+          <p role="alert" className="feedback feedback-fail">
+            Não foi possível confirmar o início. Ele pode já ter sido registrado; tentar de novo
+            pode contar outro início.
+          </p>
+        )}
+        {submitting && <output>Iniciando desafio…</output>}
         <button
           type="button"
           className="btn btn-primary"
           data-testid="start-checkpoint"
-          disabled={submitting}
+          aria-disabled={submitting}
           onClick={() => void handleStart()}
         >
           Começar desafio
         </button>
-        <button type="button" className="btn btn-link" onClick={onExit}>
+        <button
+          type="button"
+          className="btn btn-link"
+          aria-disabled={submitting}
+          onClick={() => {
+            if (!busyRef.current) onExit();
+          }}
+        >
           Sair do desafio
         </button>
       </section>
@@ -300,8 +336,10 @@ export function CheckpointScreen({
         activity={activity}
         answer={answer}
         invalidIds={attempt && !attempt.evaluation.pass ? failedCheckIds(attempt) : []}
-        disabled={false}
-        onChange={(next) => setAnswers((previous) => ({ ...previous, [key]: next }))}
+        disabled={submitting}
+        onChange={(next) => {
+          if (!busyRef.current) setAnswers((previous) => ({ ...previous, [key]: next }));
+        }}
       />
 
       {attempt && <FeedbackPanel feedback={attempt.feedback} hintsShown={hints} />}
@@ -311,13 +349,27 @@ export function CheckpointScreen({
         </div>
       )}
 
+      {operationError === "attempt" && (
+        <p role="alert" className="feedback feedback-fail">
+          Não foi possível confirmar o resultado. A tentativa pode já ter sido registrada; ao tentar
+          de novo ela poderá ser contada outra vez.
+        </p>
+      )}
+      {operationError === "finish" && (
+        <p role="alert" className="feedback feedback-fail">
+          Não foi possível confirmar a conclusão. Ela pode já ter sido registrada. Ao recarregar,
+          confira o progresso salvo; as respostas desta sessão serão perdidas.
+        </p>
+      )}
+      {submitting && <output>Registrando progresso…</output>}
       <div className="actions">
         {!attempt?.evaluation.pass && (
           <button
             type="button"
             className="btn btn-primary"
             data-testid="submit-attempt"
-            disabled={!isAnswerComplete(activity, answer) || submitting}
+            disabled={!isAnswerComplete(activity, answer)}
+            aria-disabled={submitting}
             onClick={() => void handleSubmit()}
           >
             {attempt ? "Verificar de novo" : "Verificar resposta"}
@@ -328,6 +380,7 @@ export function CheckpointScreen({
             type="button"
             className="btn btn-secondary"
             data-testid="retry-activity"
+            aria-disabled={submitting}
             onClick={handleRetry}
           >
             Tentar novamente
@@ -349,6 +402,7 @@ export function CheckpointScreen({
             type="button"
             className="btn btn-primary"
             data-testid="next-activity"
+            aria-disabled={submitting}
             onClick={handleNext}
           >
             Próxima atividade
@@ -359,14 +413,22 @@ export function CheckpointScreen({
             type="button"
             className="btn btn-primary"
             data-testid="finish-checkpoint"
-            disabled={!allPassed || submitting}
+            disabled={!allPassed}
+            aria-disabled={submitting}
             onClick={() => void handleFinish()}
           >
             Concluir desafio
           </button>
         )}
       </div>
-      <button type="button" className="btn btn-link" onClick={onExit}>
+      <button
+        type="button"
+        className="btn btn-link"
+        aria-disabled={submitting}
+        onClick={() => {
+          if (!busyRef.current) onExit();
+        }}
+      >
         Sair do desafio
       </button>
     </section>

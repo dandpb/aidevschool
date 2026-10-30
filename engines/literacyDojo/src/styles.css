@@ -195,12 +195,13 @@ ol {
   cursor: not-allowed;
 }
 
-.btn-link:hover:not(:disabled),
-.btn-link:active:not(:disabled) {
+.btn-link:hover:not(:disabled):not([aria-disabled="true"]),
+.btn-link:active:not(:disabled):not([aria-disabled="true"]) {
   color: var(--muted-strong);
 }
 
-.btn-link:disabled {
+.btn-link:disabled,
+.btn-link[aria-disabled="true"] {
   color: var(--muted);
   opacity: 0.6;
   text-decoration: line-through;
