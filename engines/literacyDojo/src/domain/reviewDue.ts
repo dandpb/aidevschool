@@ -10,14 +10,18 @@ export type ReviewDueInfo = {
   dueIn: string;
 };
 
-function startOfDay(date: Date): number {
-  return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+function localCalendarDay(date: Date): number {
+  // Encode the local calendar date at UTC midnight; elapsed local midnights
+  // can be 23 or 25 hours apart during daylight-saving transitions.
+  const day = new Date(0);
+  day.setUTCFullYear(date.getFullYear(), date.getMonth(), date.getDate());
+  return day.getTime();
 }
 
 export function reviewDueInfo(nextReviewAt: string, now: Date): ReviewDueInfo {
   const due = new Date(nextReviewAt);
   if (Number.isNaN(due.getTime())) return { reason: "due", dueIn: "devida hoje" };
-  const days = Math.floor((startOfDay(now) - startOfDay(due)) / 86_400_000);
+  const days = Math.floor((localCalendarDay(now) - localCalendarDay(due)) / 86_400_000);
   if (days >= 1) {
     return { reason: "overdue", dueIn: `atrasada ${days} ${days === 1 ? "dia" : "dias"}` };
   }
