@@ -15,11 +15,17 @@ export class HttpVerificationClient implements VerificationClient {
   constructor(private readonly endpoint: string) {}
 
   async verify(record: LiteracyEvidenceRecord): Promise<LiteracyVerificationReceipt> {
-    const response = await fetch(this.endpoint, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(record),
-    });
+    const body = JSON.stringify(record);
+    let response: Response;
+    try {
+      response = await fetch(this.endpoint, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body,
+      });
+    } catch {
+      throw new Error("Não foi possível conectar ao verificador. Tente novamente.");
+    }
     if (!response.ok) throw new Error("O verificador está indisponível. Tente novamente.");
     return validateReceipt(await response.json(), record);
   }
