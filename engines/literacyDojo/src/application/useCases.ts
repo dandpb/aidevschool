@@ -90,6 +90,16 @@ export type ResumeDestination =
   | { kind: "home" }
   | { kind: "lesson"; lessonId: string };
 
+/** Derive the destination from one confirmed progress snapshot. */
+export function resumeDestinationForProgress(progress: LearnerProgress | null): ResumeDestination {
+  if (!progress || !progress.onboarding.completed) return { kind: "onboarding" };
+  const current = progress.currentLessonId;
+  if (current && progress.lessonStatus[current] === "in_progress") {
+    return { kind: "lesson", lessonId: current };
+  }
+  return { kind: "home" };
+}
+
 /**
  * Lições autorizadas pelo contrato hospedado (missões publicadas pelo OS).
  * Espelha as bindings publicadas em engines/codexdojo-os-prototype/config/
@@ -706,12 +716,7 @@ export class LiteracyUseCases {
       throw new Error("Não foi possível confirmar o estado da retomada.");
     }
     const progress = read.status === "present-valid" ? read.value.progress : null;
-    if (!progress || !progress.onboarding.completed) return { kind: "onboarding" };
-    const current = progress.currentLessonId;
-    if (current && progress.lessonStatus[current] === "in_progress") {
-      return { kind: "lesson", lessonId: current };
-    }
-    return { kind: "home" };
+    return resumeDestinationForProgress(progress);
   }
 
   /**

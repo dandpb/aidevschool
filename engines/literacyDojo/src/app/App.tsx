@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { loadRetrofitAcks, resetRetrofitAcks, saveRetrofitAck } from "../adapters/retrofitAcks";
+import { resumeDestinationForProgress } from "../application/useCases";
 import type { LessonDefinition } from "../data/generated/lessons";
 import { buildEntryViewedEvent } from "../domain/analytics";
 import type { ModuleCheckpointId } from "../domain/checkpoints";
@@ -78,6 +79,11 @@ export function AppShell({
   const [progress, setProgress] = useState<LearnerProgress | null>(null);
   const [route, setRouteState] = useState<Route | null>(null);
   const routeRevision = useRef(0);
+  const bootSwitchRef = useRef<{
+    services: Services;
+    journey: JourneyId;
+    promise: Promise<LearnerProgress>;
+  } | null>(null);
   const navigate = useCallback((next: Route) => {
     routeRevision.current += 1;
     setRouteState(next);
@@ -152,6 +158,9 @@ export function AppShell({
   // biome-ignore lint/correctness/useExhaustiveDependencies: boot único por sessão de host/serviços; o destino usa `seeded` explícito e openLessonRoute não deve re-disparar o boot.
   useEffect(() => {
     let cancelled = false;
+    // Capture an in-flight switch before the async read; it may settle while
+    // that read is pending, leaving the returned snapshot older than the write.
+    const switchAtReadStart = bootSwitchRef.current;
     void (async () => {
       let seeded: LearnerProgress;
       try {
@@ -170,35 +179,76 @@ export function AppShell({
         setProgress(seeded);
         return;
       }
-      // AID-3705 (D1): `?journey=dev|ia` define a jornada inicial no boot,
-      // antes do resume (o cursor espelhado da jornada passa a valer já na
-      // retomada). Só para aprendiz onboarded; falha ao persistir não quebra
-      // o boot — segue com o progresso existente (comportamento atual).
+      // A deep-link switch is shared across StrictMode boot effects; a failure
+      // is reconciled against one authoritative snapshot before rendering.
+      if (cancelled) return;
       let bootProgress = seeded;
+      let reconciled = false;
       const requestedJourney = journeyParamToJourneyId(
         new URLSearchParams(window.location.search).get("journey"),
       );
-      if (
-        requestedJourney !== undefined &&
-        seeded.onboarding.completed &&
-        activeJourneyOf(seeded) !== requestedJourney
-      ) {
-        try {
-          bootProgress = await services.useCases.switchJourney(requestedJourney);
-        } catch {
-          bootProgress = seeded;
+      if (requestedJourney !== undefined && seeded.onboarding.completed) {
+        let operation =
+          [bootSwitchRef.current, switchAtReadStart].find(
+            (candidate) =>
+              candidate?.services === services && candidate.journey === requestedJourney,
+          ) ?? null;
+        if (!operation && activeJourneyOf(seeded) !== requestedJourney) {
+          const started = {
+            services,
+            journey: requestedJourney,
+            promise: services.useCases.switchJourney(requestedJourney),
+          };
+          operation = started;
+          bootSwitchRef.current = started;
+          // A fulfilled snapshot must not be reused on a later boot. Keep a
+          // rejection available to any concurrent effect for reconciliation.
+          void started.promise.then(
+            () => {
+              if (bootSwitchRef.current === started) bootSwitchRef.current = null;
+            },
+            () => {},
+          );
         }
-        if (cancelled) return;
+        if (operation) {
+          let switchFailed = false;
+          try {
+            await operation.promise;
+          } catch {
+            switchFailed = true;
+          }
+          if (cancelled) return;
+          try {
+            bootProgress = await services.useCases.readProgressForRecovery();
+          } catch {
+            if (cancelled) return;
+            setBootError(
+              "Não foi possível confirmar o progresso salvo. A troca de jornada pode já ter ocorrido; recarregue para verificar e tentar novamente.",
+            );
+            return;
+          }
+          if (cancelled) return;
+          reconciled = true;
+          if (switchFailed) {
+            setUncertainNotice(
+              "Não foi possível confirmar a troca de jornada solicitada. Confira a jornada e o progresso salvos antes de continuar.",
+            );
+          }
+        }
       }
       let destination: Awaited<ReturnType<typeof services.useCases.resumeSession>>;
-      try {
-        destination = await services.useCases.resumeSession({ requireExisting: true });
-      } catch {
-        if (cancelled) return;
-        setBootError(
-          "Não foi possível confirmar o progresso salvo. Recarregue para tentar novamente.",
-        );
-        return;
+      if (reconciled) {
+        destination = resumeDestinationForProgress(bootProgress);
+      } else {
+        try {
+          destination = await services.useCases.resumeSession({ requireExisting: true });
+        } catch {
+          if (cancelled) return;
+          setBootError(
+            "Não foi possível confirmar o progresso salvo. Recarregue para tentar novamente.",
+          );
+          return;
+        }
       }
       if (cancelled) return;
       setProgress(bootProgress);
