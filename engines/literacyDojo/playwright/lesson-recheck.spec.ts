@@ -41,7 +41,7 @@ test("corrigir a resposta e verificar de novo atualiza feedback e permite avanç
   expect(completed?.xp).toBe(3 * XP_PER_ACTIVITY_PASS + XP_PER_LESSON_COMPLETE);
 });
 
-test("reverificação ainda incorreta atualiza o feedback e conserva foco", async ({ page }) => {
+test("reverificação ainda incorreta atualiza e foca o feedback", async ({ page }) => {
   await completeOnboarding(page);
   await page.getByTestId(`output-${wrongOutput.id}`).check();
   await page.getByTestId("submit-attempt").click();
@@ -51,7 +51,7 @@ test("reverificação ainda incorreta atualiza o feedback e conserva foco", asyn
   await submit.focus();
   await page.keyboard.press("Enter");
   await expect(page.getByTestId("feedback-panel")).toContainText("0%");
-  await expect(submit).toBeFocused();
+  await expect(page.getByTestId("feedback-panel")).toBeFocused();
   expect((await readProgress(page))?.counters.attempts).toBe(2);
 });
 

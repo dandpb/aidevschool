@@ -143,7 +143,7 @@ export function LessonScreen({
       !preserveFeedbackFocus.current &&
       document.activeElement === document.body
     ) {
-      (recheckFocus.passed ? nextActionRef : submitButtonRef).current?.focus();
+      (recheckFocus.passed ? nextActionRef : feedbackRef).current?.focus();
     }
   }, [recheckFocus]);
   useEffect(() => {
