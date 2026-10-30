@@ -103,7 +103,9 @@ describe("restauração de backup", () => {
     await act(async () => {
       reject();
     });
-    expect(await screen.findByRole("alert")).toHaveTextContent("export failure");
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Não foi possível confirmar o download",
+    );
     expect(screen.getByTestId("import-progress")).toHaveAttribute("aria-disabled", "false");
   });
 });

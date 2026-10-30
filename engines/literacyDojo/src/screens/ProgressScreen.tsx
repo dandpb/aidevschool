@@ -103,10 +103,10 @@ export function ProgressScreen({
         kind: "ok",
         text: "Download solicitado. Confira se o arquivo foi salvo antes de apagar dados. Concluir uma lição não comprova competência.",
       });
-    } catch (error) {
+    } catch {
       setBackupStatus({
         kind: "error",
-        text: error instanceof Error ? error.message : "Não foi possível exportar o progresso.",
+        text: "Não foi possível confirmar o download. Confira os downloads do navegador antes de tentar novamente.",
       });
     } finally {
       backupBusyRef.current = false;
