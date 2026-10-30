@@ -104,7 +104,7 @@ describe("restauração de backup", () => {
       reject();
     });
     expect(await screen.findByRole("alert")).toHaveTextContent(
-      "Não foi possível confirmar o download",
+      "Não foi possível preparar o backup. Nenhum download foi solicitado nesta tentativa. Tente novamente.",
     );
     expect(screen.getByTestId("import-progress")).toHaveAttribute("aria-disabled", "false");
   });

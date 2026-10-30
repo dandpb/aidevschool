@@ -1,6 +1,42 @@
 import { expect, test } from "@playwright/test";
 import { completeOnboarding } from "./support";
 
+test("falha ao preparar backup informa que esta tentativa não iniciou download", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 320, height: 740 });
+  await completeOnboarding(page);
+  await page.getByRole("button", { name: "Sair da lição" }).click();
+  await page.getByTestId("map-back").click();
+  await page.getByTestId("open-progress").click();
+  await page.evaluate(() => {
+    const original = IDBObjectStore.prototype.get;
+    Object.assign(window, {
+      restoreBackupRead: () => {
+        IDBObjectStore.prototype.get = original;
+      },
+    });
+    IDBObjectStore.prototype.get = () => {
+      throw new Error("FALHA_LEITURA_SIMULADA");
+    };
+  });
+  const button = page.getByTestId("export-progress");
+  await button.focus();
+  await page.keyboard.press("Enter");
+  const status = page.getByTestId("backup-status");
+  await expect(status).toContainText("Nenhum download foi solicitado nesta tentativa");
+  await expect(status).not.toContainText("FALHA_LEITURA_SIMULADA");
+  await expect(button).toBeFocused();
+  await expect(button).toHaveAttribute("aria-disabled", "false");
+  await expect(page.locator("a[download]")).toHaveCount(0);
+  await page.evaluate(() =>
+    (window as unknown as { restoreBackupRead: () => void }).restoreBackupRead(),
+  );
+  const [download] = await Promise.all([page.waitForEvent("download"), button.click()]);
+  expect(await download.failure()).toBeNull();
+  await expect(status).toContainText("Download solicitado");
+});
+
 test("falha ao iniciar download limpa recursos e informa resultado incerto", async ({ page }) => {
   await completeOnboarding(page);
   await page.getByRole("button", { name: "Sair da lição" }).click();

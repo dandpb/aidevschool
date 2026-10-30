@@ -93,8 +93,10 @@ export function ProgressScreen({
     backupBusyRef.current = true;
     setBackupOperation("export");
     setBackupStatus(null);
+    let downloadMayHaveStarted = false;
     try {
       const json = await services.useCases.exportProgress();
+      downloadMayHaveStarted = true;
       downloadTextFile(
         `literacydojo-progress-${localDateKey(services.clock())}.json`,
         json,
@@ -107,7 +109,9 @@ export function ProgressScreen({
     } catch {
       setBackupStatus({
         kind: "error",
-        text: "Não foi possível confirmar o download. Confira os downloads do navegador antes de tentar novamente.",
+        text: downloadMayHaveStarted
+          ? "Não foi possível confirmar o download. Confira os downloads do navegador antes de tentar novamente."
+          : "Não foi possível preparar o backup. Nenhum download foi solicitado nesta tentativa. Tente novamente.",
       });
     } finally {
       backupBusyRef.current = false;
