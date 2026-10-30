@@ -1,10 +1,13 @@
 import type { VerificationClient } from "../application/ports";
+import { VerificationNotConfiguredError } from "../application/verificationErrors";
 import type { LiteracyEvidenceRecord } from "../domain/evidence";
 import { type LiteracyVerificationReceipt, validateReceipt } from "../domain/verification";
 
 export class UnavailableVerificationClient implements VerificationClient {
   async verify(): Promise<LiteracyVerificationReceipt> {
-    throw new Error("Verificação independente ainda não está configurada neste ambiente.");
+    throw new VerificationNotConfiguredError(
+      "Verificação independente ainda não está configurada neste ambiente.",
+    );
   }
 }
 

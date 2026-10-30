@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { LessonSummary } from "../app/App";
 import { useServices } from "../app/services";
+import { VerificationNotConfiguredError } from "../application/verificationErrors";
 import { ReviewPoints } from "../components/ReviewPoints";
 import { VoxelSkillArt } from "../components/VoxelSkillArt";
 import { VoxelTaskArt, taskDetails } from "../components/VoxelTaskArt";
@@ -36,7 +37,10 @@ export function ResultScreen({
   const services = useServices();
   const [taskCategory, setTaskCategory] = useState<OnboardingTaskCategory>();
   const [receipt, setReceipt] = useState<LiteracyVerificationReceipt>();
-  const [verificationError, setVerificationError] = useState<string>();
+  const [verificationError, setVerificationError] = useState<{
+    message: string;
+    retryable: boolean;
+  }>();
   const [verifying, setVerifying] = useState(false);
   const verificationBusy = useRef(false);
   const retryRef = useRef<HTMLButtonElement | null>(null);
@@ -71,11 +75,12 @@ export function ResultScreen({
   }, [services]);
 
   useEffect(() => {
-    if (receipt && restoreVerificationFocus.current && document.activeElement === document.body) {
+    const terminal = receipt || (verificationError && !verificationError.retryable);
+    if (terminal && restoreVerificationFocus.current && document.activeElement === document.body) {
       verificationHeadingRef.current?.focus();
     }
-    if (receipt) restoreVerificationFocus.current = false;
-  }, [receipt]);
+    if (terminal) restoreVerificationFocus.current = false;
+  }, [receipt, verificationError]);
 
   useEffect(() => {
     if (!verifying) return;
@@ -84,9 +89,13 @@ export function ResultScreen({
     };
     document.addEventListener("pointerdown", cancelRestore);
     document.addEventListener("focusin", cancelRestore);
+    document.addEventListener("wheel", cancelRestore);
+    document.addEventListener("keydown", cancelRestore);
     return () => {
       document.removeEventListener("pointerdown", cancelRestore);
       document.removeEventListener("focusin", cancelRestore);
+      document.removeEventListener("wheel", cancelRestore);
+      document.removeEventListener("keydown", cancelRestore);
     };
   }, [verifying]);
 
@@ -100,11 +109,14 @@ export function ResultScreen({
       setReceipt(await services.verification.verify(summary.evidenceRecord));
       setVerificationError(undefined);
     } catch (error) {
-      restoreVerificationFocus.current = false;
+      if (!(error instanceof VerificationNotConfiguredError))
+        restoreVerificationFocus.current = false;
       setReceipt(undefined);
-      setVerificationError(
-        error instanceof Error ? error.message : "Não foi possível verificar esta tentativa.",
-      );
+      setVerificationError({
+        message:
+          error instanceof Error ? error.message : "Não foi possível verificar esta tentativa.",
+        retryable: !(error instanceof VerificationNotConfiguredError),
+      });
     } finally {
       verificationBusy.current = false;
       setVerifying(false);
@@ -210,18 +222,20 @@ export function ResultScreen({
         )}
         {verificationError && (
           <>
-            {!verifying && <p role="alert">{verificationError}</p>}
-            <button
-              type="button"
-              className="btn btn-secondary"
-              data-testid="retry-verification"
-              ref={retryRef}
-              aria-disabled={verifying}
-              aria-busy={verifying}
-              onClick={() => void verifyAttempt()}
-            >
-              {verifying ? "Verificando…" : "Tentar verificação novamente"}
-            </button>
+            {!verifying && <p role="alert">{verificationError.message}</p>}
+            {verificationError.retryable && (
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-testid="retry-verification"
+                ref={retryRef}
+                aria-disabled={verifying}
+                aria-busy={verifying}
+                onClick={() => void verifyAttempt()}
+              >
+                {verifying ? "Verificando…" : "Tentar verificação novamente"}
+              </button>
+            )}
           </>
         )}
         {!summary.evidenceRecord && <p>Nenhuma tentativa aprovada disponível para verificação.</p>}
