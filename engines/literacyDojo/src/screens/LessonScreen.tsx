@@ -408,6 +408,10 @@ export function LessonScreen({
             <strong>{FIRST_TOUCH_LEAD_IN}</strong> {firstTouch}
           </p>
         )}
+        <p className="muted" data-testid="session-continuity">
+          <strong>Se precisar parar:</strong> ao sair ou recarregar, as respostas da missão e a
+          etapa atual não são recuperadas. O progresso já registrado fica neste navegador.
+        </p>
         <button
           type="button"
           className="btn btn-primary"
