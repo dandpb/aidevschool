@@ -70,7 +70,9 @@ export function buildTrackQueries(
   const mission =
     ready.find(
       (entry) =>
-        entry.id === progress.currentLessonId && progress.lessonStatus[entry.id] !== "completed",
+        entry.id === progress.currentLessonId &&
+        (progress.lessonStatus[entry.id] === "available" ||
+          progress.lessonStatus[entry.id] === "in_progress"),
     ) ??
     ready.find((entry) => {
       const status = progress.lessonStatus[entry.id];

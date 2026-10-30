@@ -175,10 +175,14 @@ export function HomeScreen({
                 : "Atender pedido"}
             </button>
           </>
-        ) : (
+        ) : summary.completed === summary.total && summary.total > 0 ? (
           <p data-testid="mission-done">
             Você concluiu todas as lições deste piloto. 🎉 Novas lições estão a caminho — enquanto
             isso, revise o que já praticou no mapa da trilha.
+          </p>
+        ) : (
+          <p data-testid="mission-unavailable">
+            Nenhum pedido está disponível agora. Abra o mapa para ver o estado da jornada.
           </p>
         )}
       </div>
