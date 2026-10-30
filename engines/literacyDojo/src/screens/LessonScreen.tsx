@@ -105,6 +105,7 @@ export function LessonScreen({
   const [submitting, setSubmitting] = useState(false);
   const [completing, setCompleting] = useState(false);
   const [attemptError, setAttemptError] = useState(false);
+  const [attemptFailureCount, setAttemptFailureCount] = useState(0);
   const [completionError, setCompletionError] = useState(false);
   const [hintLoading, setHintLoading] = useState(false);
   const [hintError, setHintError] = useState(false);
@@ -113,8 +114,31 @@ export function LessonScreen({
   const hintBusy = useRef(false);
   const retryBusy = useRef(false);
   const submissionBusy = useRef(false);
+  const submitButtonRef = useRef<HTMLButtonElement | null>(null);
+  const restoreSubmitFocus = useRef(false);
   const latestPassingEvidence = useRef<LiteracyEvidenceRecord>();
   const headingRef = useRef<HTMLHeadingElement | null>(null);
+  useEffect(() => {
+    if (
+      attemptFailureCount > 0 &&
+      restoreSubmitFocus.current &&
+      document.activeElement === document.body
+    ) {
+      submitButtonRef.current?.focus();
+    }
+  }, [attemptFailureCount]);
+  useEffect(() => {
+    if (!submitting) return;
+    const cancelFocusRestore = () => {
+      restoreSubmitFocus.current = false;
+    };
+    document.addEventListener("pointerdown", cancelFocusRestore);
+    document.addEventListener("focusin", cancelFocusRestore);
+    return () => {
+      document.removeEventListener("pointerdown", cancelFocusRestore);
+      document.removeEventListener("focusin", cancelFocusRestore);
+    };
+  }, [submitting]);
   // Exposição (F2 R2, emenda ADR-0009): brief 1× por mount (a intro não
   // retorna depois de "Começar missão") e `activity_presented` 1× por
   // (sessão, índice absoluto) — re-render/retry/navegação de volta não
@@ -207,6 +231,7 @@ export function LessonScreen({
 
   const handleSubmit = async () => {
     if (submissionBusy.current || hintBusy.current || retryBusy.current || !activity) return;
+    restoreSubmitFocus.current = document.activeElement === submitButtonRef.current;
     submissionBusy.current = true;
     setSubmitting(true);
     setAttemptError(false);
@@ -226,6 +251,7 @@ export function LessonScreen({
       onProgressChange(result.progress);
     } catch {
       setAttemptError(true);
+      setAttemptFailureCount((count) => count + 1);
     } finally {
       submissionBusy.current = false;
       setSubmitting(false);
@@ -525,6 +551,7 @@ export function LessonScreen({
             type="button"
             className="btn btn-primary"
             data-testid="submit-attempt"
+            ref={submitButtonRef}
             disabled={
               !isAnswerComplete(activity, answer) || submitting || hintLoading || retryLoading
             }
