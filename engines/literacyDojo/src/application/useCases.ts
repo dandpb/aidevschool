@@ -707,7 +707,7 @@ export class LiteracyUseCases {
       scores,
       this.deps.clock(),
     );
-    await this.withState(result.progress);
+    if (result.progress !== progress) await this.withState(result.progress);
     return result;
   }
 
