@@ -190,13 +190,18 @@ describe("/escola/ static entry — mechanical href allowlist (no invented hostn
     }
   });
 
-  it("uses only the same-origin root as CTA destination in the renderer", () => {
+  it("uses only same-origin CTA destinations in the renderer (AID-3704: card Dev → /?journey=dev)", () => {
+    // AID-3704 (decisão AID-3702/D1): o único deep-link permitido é o card
+    // Dev → /?journey=dev (lido no boot pelo App.tsx, AID-3705); todo CTA
+    // literal continua na raiz e nenhum host externo aparece no renderer.
+    expect(escolaJs).toContain('journey.id === "dev" ? "/?journey=dev" : "/"');
     const ctaCalls = [...escolaJs.matchAll(/ctaLink\("([^"]*)"/g)].map((m) => m[1]);
-    expect(ctaCalls.length).toBeGreaterThanOrEqual(2);
+    expect(ctaCalls.length).toBeGreaterThanOrEqual(1);
     for (const href of ctaCalls) {
       expect(href).toBe("/");
     }
     expect(escolaJs).not.toMatch(/https?:\/\//);
+    expect(escolaJs).not.toContain("journey=ia");
   });
 
   it("marks the single cross-origin link as optional labs with rel=noopener", () => {
