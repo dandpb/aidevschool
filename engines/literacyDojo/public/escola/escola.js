@@ -2,7 +2,8 @@
    @ 80c7addc (PR #615 candidate). Deltas (directive 17:14Z, proposal aa5bcb5a):
    no api client, no fetch, no launch endpoint, no recommender; the SCHOOL_ENTRY
    contract is imported inline from ./entry-contract.js; CTAs are direct
-   same-origin links ("/") — no operator gate or Chromium probe exists on this
+   same-origin links ("/", and "/?journey=dev" on the Dev card — AID-3704,
+   decisão AID-3702/D1) — no operator gate or Chromium probe exists on this
    public variant (the Node surface keeps those controls). Canvas map, help
    dialog and focus wiring are verbatim. No storage access of any kind. */
 import { SCHOOL_ENTRY } from "./entry-contract.js";
@@ -83,7 +84,12 @@ function renderJourneys(journeys) {
       details.append(list, element("p", "bridge-note", journey.bridge.note));
       card.append(details);
     }
-    card.append(ctaLink("/", journey.cta, "secondary"));
+    // AID-3704 (decisão AID-3702/D1): deep-link por jornada no CTA do card —
+    // o card Dev entra direto na Jornada Dev do app (?journey=dev, lido no
+    // boot pelo App.tsx/AID-3705); o card IA (cotidiano) mantém a raiz.
+    card.append(
+      ctaLink(journey.id === "dev" ? "/?journey=dev" : "/", journey.cta, "secondary"),
+    );
     section.append(card);
   }
 }
