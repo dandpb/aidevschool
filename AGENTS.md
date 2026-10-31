@@ -103,6 +103,10 @@ Compatibility symlinks at root: `projects -> curriculum`, `.agora -> learner`,
   done; every diff gets the `REVIEW.md` passes; monitoring/incident findings re-enter as new
   `intent.md`. Hook overrides (`SDLC_ALLOW_TEST_EDIT`, `SDLC_ALLOW_DERIVED_EDIT`) require
   explicit owner approval recorded in the task.
+- All project roles apply the task-appropriate practices in
+  `docs/sdlc/agent-methodology.md`: explicit outcomes and evidence, small verifiable
+  steps, and fresh-context design review where design decisions warrant it. This
+  supplements, never bypasses, authorization, independent verification, and gates.
 - Learning progress is file-based and auditable: Markdown, YAML, and NDJSON.
 - A learner attempt plus independently verified evidence appropriate to the declared gate must exist
   before AI work is marked `mastered`. Programming units require executable evidence; Level 0

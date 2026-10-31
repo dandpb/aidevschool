@@ -31,6 +31,10 @@ mantêm plataformas legadas funcionando.
 
 ## Como trabalhar
 
+- **Metodologia para todos os papéis:** consulte [docs/sdlc/agent-methodology.md](docs/sdlc/agent-methodology.md)
+  para aplicar práticas de implementação e revisão de contexto independente conforme a tarefa.
+  Ela complementa os gates existentes; não autoriza instalação ou distribuição de plugins.
+
 - **SDLC loop (toda tarefa de engenharia):** rode a skill `ai-native-sdlc`
   (`.claude/skills/ai-native-sdlc/SKILL.md`) — intent → spec → plan → build →
   verify → review → ship, cada estágio termina com um artefato versionado em
