@@ -228,6 +228,53 @@ def strip_code_fences(text):
     return "\n".join(out)
 
 
+# AID-3056 (follow-up PR #585/AID-3055): RELAXED provenance detector for the
+# fence-swallow diagnostic. PR #585's body had the closing fence glued to the
+# following text ("```Prova de mutação…" on one line) — per CommonMark (and
+# strip_code_fences above) that line is an OPENING fence, so the rest of the
+# body, including the canonical trailer the producer had just edited in, sat
+# inside a never-closed fence. The gate reddened §5 ("countersign agent IS
+# the producer agent") — technically correct (the earliest VISIBLE trailer
+# had flipped), but the message sent the producer chasing agent identity
+# instead of the fence, costing a debug cycle. Diagnostic only: fail-closed
+# behavior is unchanged, the violation message just names the swallow.
+RELAXED_PROVENANCE_LINE_RE = re.compile(r"^ {0,3}Provenance:[ \t]*\S")
+
+
+def fence_swallowed_provenance_lines(text):
+    """Relaxed 'Provenance:' lines present in the raw body but swallowed by
+    code fences (absent from the fence-stripped body).
+
+    A line that also survives outside a fence is not reported: an operative
+    trailer exists, so the fence is not the story.
+    """
+    if not text:
+        return []
+    kept = set(strip_code_fences(text).split("\n"))
+    return [line for line in text.split("\n")
+            if RELAXED_PROVENANCE_LINE_RE.match(line) and line not in kept]
+
+
+def fence_swallow_hint(ctx):
+    """AID-3056: append-ready diagnostic naming where a 'Provenance:' line is
+    being swallowed by a fence (PR body or any comment). None when no
+    swallow exists. Message-only — no acceptance condition changes.
+    """
+    sources = [("PR body", ctx.get("body") or "")]
+    sources += [("comment posted %s" % (c.get("createdAt") or "?")[:19],
+                 c.get("body") or "")
+                for c in (ctx.get("comments") or [])]
+    where = [name for name, raw in sources
+             if fence_swallowed_provenance_lines(raw)]
+    if not where:
+        return None
+    return ("diagnostic (AID-3056): %s carries a 'Provenance:' line that is "
+            "inside a code fence / unbalanced fence — fences swallow trailers "
+            "(AID-2824; PR #585 follow-up). Check for a glued/unclosed ``` "
+            "line before the trailer and re-post it outside any fence."
+            % "; ".join(where[:3]))
+
+
 class Violation(Exception):
     """One failed acceptance condition (message is human-readable)."""
 
@@ -984,7 +1031,16 @@ def run_gate(args):
     try:
         operative, producer, countersigner, session = evaluate(
             ctx, timeline, head, resolver, slug=slug)
-    except Violation as exc:
+    except Violation as raw_exc:
+        # AID-3056 diagnostic (PR #585 follow-up): if a 'Provenance:' line is
+        # being swallowed by an unbalanced/glued fence in the body or any
+        # comment, NAME it — the incident's §5 message pointed at agent
+        # identity while the root cause was the fence. Fail-closed verdict
+        # and exit code are unchanged; only the message gains the hint.
+        exc = raw_exc
+        hint = fence_swallow_hint(ctx)
+        if hint and hint[:40] not in str(exc):
+            exc = Violation("%s | %s" % (exc, hint))
         if args.print_citation:
             print("ERROR: gate fails — no operative citation to print: %s" % exc,
                   file=sys.stderr)
@@ -1178,7 +1234,7 @@ def self_test():
 
     def scenario(name, expected, ctx, timeline=None, head=HEAD, resolver=stub,
                  env_resolver=True, merged_at=None, registry=stub_registry,
-                 pr=4242, prior=None):
+                 pr=4242, prior=None, expect_msg=None, absent_msg=None):
         if merged_at is not None:
             ctx = dict(ctx)
             ctx["mergedAt"] = merged_at
@@ -1212,6 +1268,13 @@ def self_test():
             env["PAPERCLIP_API_TOKEN"] = "stub-token"
         proc = subprocess.run(argv, capture_output=True, text=True, env=env)
         ok = proc.returncode == expected
+        blob = proc.stdout + proc.stderr
+        # AID-3056: expect_msg/absent_msg pin the DIAGNOSTIC text of the
+        # violation (fence-swallow hint) without depending on rc alone.
+        if ok and expect_msg is not None:
+            ok = expect_msg in blob
+        if ok and absent_msg is not None:
+            ok = absent_msg not in blob
         print("%s [%s] rc=%d (expected %d)%s"
               % ("PASS" if ok else "FAIL", name, proc.returncode, expected,
                   "" if ok else "\n    | " + proc.stdout.strip().replace("\n", "\n    | ")))
@@ -1722,6 +1785,38 @@ def self_test():
              [_comment(T, cite_line + "\n" + qa_trailer),
               _comment("2026-09-26T05:05:00Z", addendum)]),
         merged_at="2026-09-26T05:30:00Z",
+    ))
+    # 65–67. AID-3056 (follow-up PR #585/AID-3055): an unbalanced fence —
+    # the PR #585 shape had the closing fence GLUED to the following text
+    # ("```Prova de mutação…" on one line), which strip_code_fences rightly
+    # treats as an opening fence — swallows the canonical trailer. The gate
+    # already reddens (fail-closed), but the §5 message pointed at agent
+    # identity and cost a debug cycle; the violation must now NAME the
+    # fence (diagnostic only, no acceptance change).
+    glued_body = ("producer body\n"
+                  "```\nbuild log\n```Prova de mutação colada no fence\n"
+                  + prod_trailer + "\n")
+    # 65. THE INCIDENT: producer trailer swallowed by the glued fence ->
+    # earliest VISIBLE trailer flips to the QA comment -> misleading §5 red;
+    # the message now carries the fence-swallow hint.
+    cases.append(scenario(
+        "glued fence swallowing trailer names the fence (AID-3056)", 1,
+        _ctx(glued_body, [_comment(T, cite_line + "\n" + qa_trailer)]),
+        expect_msg="fences swallow trailers",
+    ))
+    # 66. same swallow with no other trailer anywhere -> the unattributed
+    # red also names the fence (actionable instead of generic).
+    cases.append(scenario(
+        "swallowed-trailer unattributed red names the fence (AID-3056)", 1,
+        _ctx(glued_body, [_comment(T, "looking good")]),
+        expect_msg="fences swallow trailers",
+    ))
+    # 67. message hygiene: the same red WITHOUT any swallow must not
+    # mention fences (no false pointers to chase).
+    cases.append(scenario(
+        "no-swallow red does not mention fences (AID-3056)", 1,
+        _ctx("producer body\n" + prod_trailer, [_comment(T, "looking good")]),
+        absent_msg="fences swallow trailers",
     ))
 
     passed = sum(cases)
