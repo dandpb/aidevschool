@@ -58,7 +58,7 @@
   <p class="meta">
     Verificado em <strong>2026-09-26 01:29 UTC</strong> · 22 URLs públicas com HTTP 200 ·
     main <code>4461841f</code> · pilot bundle <code>b6a0ea1b</code> · CI verde nos 15 checks por engine ·
-    +1 beta público school-entry (HTTP 200 em 2026-09-26 16:57 UTC)
+    +1 beta público school-entry em manutenção desde 2026-10-18 (domínio estável school-beta aprovado 2026-10-17, AID-3007)
   </p>
 
   <h2>Comece por aqui</h2>
@@ -189,11 +189,11 @@
 
   <h2>Beta público (sem tier)</h2>
   <div class="grid">
-    <a class="card" href="https://reaction-bizrate-soviet-patient.trycloudflare.com">
-      <span class="badge b-live">no ar</span><span class="badge b-notier">sem tier · beta público</span>
+    <a class="card" href="https://school-beta.srv1686959.hstgr.cloud">
+      <span class="badge b-exp">em manutenção</span><span class="badge b-notier">sem tier · beta público</span>
       <span class="name">school-entry — entrada sem login</span>
-      <span class="url">reaction-bizrate-soviet-patient.trycloudflare.com</span>
-      <span class="desc">Descreva seu objetivo e receba uma recomendação de engine. Catálogo inicia 100% locked — o operador libera engines no painel <code>/admin/engines</code>. Recomendação em modo fallback (sem API paga). URL de quick tunnel: muda a cada restart; se não abrir, confirmar a URL vigente com o operador.</span>
+      <span class="url">school-beta.srv1686959.hstgr.cloud</span>
+      <span class="desc">Descreva seu objetivo e receba uma recomendação de engine. Catálogo inicia 100% locked — o operador libera engines no painel <code>/admin/engines</code>. Recomendação em modo fallback (sem API paga). Domínio estável aprovado (AID-3007); serviço em restauração pela Platform — URLs de quick tunnel foram retiradas desta página (down desde 2026-10-18, watchdog AID-2987).</span>
     </a>
   </div>
   <p class="unit">Roda local: <code>cd engines/school-entry &amp;&amp; npm start</code> (Node 22) · server-side na mesma infra do beta público (túnel + edge + supervisor).</p>
@@ -261,6 +261,8 @@
       <td>Sem caso customer na matriz: nenhum compromisso de prontidão foi avaliado ainda.</td></tr>
     <tr><td><span class="badge b-live">no ar</span></td>
       <td>URL pública verificada com HTTP 200 na data/hora do topo desta página.</td></tr>
+    <tr><td><span class="badge b-exp">em manutenção</span></td>
+      <td>URL pública definida, serviço fora do ar em restauração (school-entry, desde 2026-10-18 · AID-6027).</td></tr>
   </table>
 
   <p class="foot">
@@ -268,7 +270,7 @@
     Mastery real já demonstrado: U0 via PixelQuest e U2 via Warehouse (evidência NDJSON).
     Fontes: matriz <code>docs/product-readiness/README.md</code> · pilot-bundle-manifest ao vivo (<code>b6a0ea1b</code>, sha256 por superfície) ·
     check-runs do main <code>4461841f</code> (GitHub Actions, 2026-09-26) · verificação HTTP 200 das 22 URLs em 2026-09-26 01:29 UTC.
-    school-entry: publish receipt AID-2910 (comment 81ab4837) · HTTP 200 em 2026-09-26 16:57 UTC · URL vigente do túnel em <code>school-entry-tunnel/public-url.txt</code> (re-sync 15s).
+    school-entry: publish receipt AID-2910 (comment 81ab4837) · HTTP 200 em 2026-09-26 16:57 UTC · túneis voláteis retirados desta página em 2026-11-01 (down desde 2026-10-18, watchdog AID-2987 → AID-6027) · URL canônica <code>school-beta.srv1686959.hstgr.cloud</code> (aprovada AID-3007 em 2026-10-17; linha Traefik + restore em andamento com a Platform).
     Página mantida pelo Growth Web Engineer (AID-2669 · registro do beta AID-2957); sem indexação em buscadores.
   </p>
 </main>
