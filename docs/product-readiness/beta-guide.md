@@ -1,10 +1,11 @@
 # Guia Beta — Founder: como testar cada engine
 
 > **Proveniência deste arquivo:** espelho em repo do doc `beta-guide` (issue AID-2671, título "Guia Beta Founder — como testar cada engine + loop de feedback (verificado 2026-09-26; +school-entry 16:55Z)"). Publicado no repo pela AID-2960 (DRE) para que toda claim de beta tenha data + fonte verificável no repositório — o doc na thread permanece o espelho de sessão; divergência entre os dois é bug de docs (reportar, não editar à mão na matriz gerada).
-> Fonte vigente da URL do túnel school-entry: `school-entry-tunnel/public-url.txt` no servidor de ops (quick tunnel — muda por restart).
+> URL vigente do school-entry: canônica `https://school-beta.srv1686959.hstgr.cloud` (aprovada AID-3007, 2026-10-17) — túneis quick retirados deste guia em 2026-11-01 (AID-6030, espelho do PR #761); `school-entry-tunnel/public-url.txt` ficou como registro histórico do decaimento.
 
 **Para quem:** você (founder), sem instalar nada e sem criar conta.
 **Quando foi verificado:** 2026-09-26 — cartões 1–5: ~01:28Z (criação) e re-checados ~16:56Z; cartão 6 (school-entry): adicionado e verificado ~16:55Z nesta revisão. Todos os links responderam **HTTP 200** (curl, a partir do servidor; evidências em "Fontes e datas"). Re-check do cartão 6 no repo: 17:01:56Z — `GET /` HTTP 200; `GET /api/engines` → `{"engines":[]}`.
+**Re-check 2026-11-01 (AID-6030):** cartão 6 rebaixado para `em manutenção` — túnel morto desde 2026-10-18; URL canônica `school-beta` definida, linha Traefik pendente de aplicação pela Platform (AID-6028). Cartões 1–5 não foram re-checados nesta data.
 **Base:** doc `engine-reports` (rev `4c2a2724`, 2026-09-26) + matriz de readiness `docs/product-readiness/README.md` (linhas 10–18, todos `pass`, revalidação 2026-10-16/19).
 **Smoke QA da sessão (AID-2670):** matriz publicada — doc `beta-smoke-matrix` rev `db5bd7de` (evidência 25/25 Playwright, 2026-09-26T01:31–01:34Z; 9/9 superfícies customer-tier PASS, 0 blockers de sessão). O card 6 (school-entry) não estava naquela matriz — a evidência dele hoje é a checagem ao vivo desta revisão (Fontes e datas).
 
@@ -50,12 +51,13 @@
 - **Esperado:** o loop completa de forma previsível e gera a prova de execução; os outros jogos abrem pelo mesmo padrão.
 - **Tempo:** ~5 min (+ opcional por jogo extra).
 
-### 6. school-entry — a "porta de entrada" do site (novo)
-- **Onde:** https://reaction-bizrate-soviet-patient.trycloudflare.com
-- **Teste:** abra a página e descreva no campo o que você quer aprender (ex.: "quero usar IA no meu trabalho sem programar") e envie; depois peça para ver o catálogo de experiências.
+### 6. school-entry — a "porta de entrada" do site (em manutenção)
+- **Status:** `em manutenção` desde 2026-10-18 — URL pública definida, serviço fora do ar em restauração pela Platform (AID-6028). Sem claim `no ar` sem HTTP 200 verificado (mesmo padrão do Beta Hub, PR #761).
+- **Onde (URL canônica):** https://school-beta.srv1686959.hstgr.cloud — aprovada AID-3007 (2026-10-17); linha Traefik pendente de aplicação no host.
+- **Teste (quando voltar):** abra a página e descreva no campo o que você quer aprender (ex.: "quero usar IA no meu trabalho sem programar") e envie; depois peça para ver o catálogo de experiências.
 - **Esperado:** a página responde. Enquanto as experiências não forem liberadas pela operação, recomendação e catálogo aparecem vazios com aviso honesto — "Nenhuma engine está disponível agora. Volte mais tarde." O catálogo começa **bloqueado por design**; liberado, cada experiência vira um cartão com botão "Começar" que leva até ela.
 - **Tempo:** ~3 min.
-- **Se o link não abrir:** ele usa um túnel temporário e pode mudar após reinício do servidor — peça a URL vigente num comentário (AID-2660) que a equipe atualiza este guia.
+- **Se o link não abrir:** serviço em restauração — URLs de quick tunnel foram retiradas deste guia (down desde 2026-10-18, watchdog AID-2987 → AID-6027/AID-6030); reporte num comentário (AID-2660), sem esperar URL nova de túnel.
 
 ### 7. miniTown — cidade para explorar (experimental)
 - **Onde:** sem link público hoje — não conta para o beta de agora.
@@ -117,5 +119,6 @@ Não precisa ser formal: screenshot + duas linhas já ajudam; o molde garante qu
 - Smoke QA por engine: AID-2670 (QA Lead, em andamento) — será refletido no log acima quando publicado.
 
 - **school-entry (card 6, adicionado nesta revisão por AID-2958 — ordem CEO AID-2910 passo 3):** verificado ao vivo 2026-09-26 ~16:55Z — `GET /` → HTTP 200; `GET /api/engines` → `{"engines":[]}` (catálogo inicia bloqueado); `POST /api/recommend` (com Origin válido) → `{"mode":"empty","message":"Nenhuma engine está disponível agora. Volte mais tarde."}`; painel do operador `/admin/engines` → HTTP 200 (acesso por senha com CEO/founder — senha fora deste guia). Server-side na mesma infra do beta (padrão AID-2677). URL vigente do túnel gerenciada pela operação (arquivo `school-entry-tunnel/public-url.txt` no servidor de ops; muda por restart do quick tunnel).
+- **school-entry (re-check 2026-11-01, AID-6030 — espelho do decaimento visto no hub, PR #761):** túnel `reaction-bizrate-soviet-patient.trycloudflare.com` → DNS não resolve (curl 000); `public-url.txt` (17/out) = `badge-frontier-ordering-kid…` → 000; `tunnel.log` termina 2026-10-18T10:02:44Z (`Unauthorized: Tunnel not found`); `https://school-beta.srv1686959.hstgr.cloud` → 404 atrás do cert default do Traefik (linha aprovada AID-3007 cmt `f96c5529`, 17/out, ainda não aplicada — child FPE AID-6028). Status do guia → `em manutenção`; volta a `no ar` somente com HTTP 200 verificado no domínio canônico (mesmo padrão do hub, AID-6027).
 
 *Regra de ouro do produto: nenhum "concluído/dominado" sem verificador determinístico e evidência independente — os cartões acima mostram ao founder exatamente isso (progresso registrado, mastery nunca declarado pelo jogo).*
