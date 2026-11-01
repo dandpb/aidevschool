@@ -91,7 +91,7 @@ def render_matrix(domain: ReadinessDomain) -> str:
             "",
             "## Canonical sources",
             "",
-            "- `policy.yaml` owns tiers, severity treatment, outcomes, and freshness rules.",
+            "- `policy.yaml` owns tiers, severity treatment, outcomes, freshness rules, and the publication gate.",
             "- `inventory.yaml` owns intended promises and use-case scope.",
             "- `scenarios/*.yaml` own executable and observed journey contracts.",
             "- `evidence/results.ndjson` owns append-only promoted scenario facts.",

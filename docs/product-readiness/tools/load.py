@@ -17,6 +17,7 @@ from .models import (
     FreshnessPolicy,
     ManualRefs,
     ProgressSemantics,
+    PublicationGatePolicy,
     ReadinessDomain,
     ReadinessPolicy,
     ReadinessTier,
@@ -109,7 +110,27 @@ def _load_yaml(path: Path) -> JsonValue:
 
 def _parse_policy(path: Path) -> ReadinessPolicy:
     raw = _mapping(_load_yaml(path), path.name)
-    _closed(raw, {"schemaVersion", "policyVersion", "tiers", "severities", "outcomes", "freshness"}, path.name)
+    _closed(
+        raw,
+        {"schemaVersion", "policyVersion", "publicationGate", "tiers", "severities", "outcomes", "freshness"},
+        path.name,
+    )
+    publication_gate: PublicationGatePolicy | None = None
+    if "publicationGate" in raw:
+        gate = _mapping(raw["publicationGate"], "policy.publicationGate")
+        _closed(gate, {"introducedBy", "rule", "requirements"}, "policy.publicationGate")
+        publication_gate = PublicationGatePolicy(
+            introduced_by=(
+                _text(gate["introducedBy"], "policy.publicationGate.introducedBy")
+                if "introducedBy" in gate
+                else None
+            ),
+            rule=_text(gate["rule"], "policy.publicationGate.rule"),
+            requirements=_texts(
+                _sequence(gate["requirements"], "policy.publicationGate.requirements"),
+                "policy.publicationGate.requirements",
+            ),
+        )
     tiers: list[TierPolicy] = []
     for tier_name, value in _mapping(raw["tiers"], "policy.tiers").items():
         item = _mapping(value, f"policy.tiers.{tier_name}")
@@ -161,6 +182,7 @@ def _parse_policy(path: Path) -> ReadinessPolicy:
             ),
             invalidating_changes=_texts(freshness["invalidatingChanges"], "policy.freshness.invalidatingChanges"),
         ),
+        publication_gate=publication_gate,
     )
 
 
