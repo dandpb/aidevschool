@@ -1,0 +1,33 @@
+schemaVersion: 1
+assessmentId: 2026-11-01-a489fca5-regrant-v115
+assessorContext: independent-readiness-review
+verifiedAt: '2026-11-01T10:28:00Z'
+revalidateBy: '2026-12-01'
+gitSha: a489fca5d8b4414a2b1afe2cd5aa175d5e6e222b
+decisions:
+- useCaseId: literacy-standalone-first-lesson
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-11-01T10:28:00Z-literacy-happy-path-mixed-a489fca5
+  - 2026-11-01T10:28:00Z-literacy-resume-mixed-a489fca5
+  - 2026-11-01T10:28:00Z-literacy-retry-mixed-a489fca5
+- useCaseId: literacy-standalone-corridor-mod01-03
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-11-01T10:28:00Z-literacy-corridor-gate-retry-mixed-a489fca5
+  - 2026-11-01T10:28:00Z-literacy-corridor-grandfathered-return-mixed-a489fca5
+  - 2026-11-01T10:28:00Z-literacy-corridor-happy-path-mixed-a489fca5
+  - 2026-11-01T10:28:00Z-literacy-corridor-resume-mid-module-mixed-a489fca5
+  - 2026-11-01T10:28:00Z-literacy-corridor-review-window-mixed-a489fca5
+- useCaseId: os-literacy-guided-mission
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-11-01T10:28:00Z-os-literacy-hosted-mission-mixed-a489fca5
+  - 2026-11-01T10:28:00Z-os-literacy-returning-device-mixed-a489fca5
+  - 2026-11-01T10:28:00Z-os-verification-recovery-mixed-a489fca5

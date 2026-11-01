@@ -1,0 +1,13 @@
+Citation carry-over v114 -> v115 (11 cited strings from observations/2026-10-20-9b96a4ef-regrant-v114, re-located first-hand 2026-11-01T10:2xZ in tree a489fca5):
+  student-guide.md:135 'nada é perdido — leia o feedback, peça uma dica e tente de novo' -> docs/product-readiness/student-guide.md:135 (byte-identical, direct grep)
+  LessonScreen.tsx:435 'Tentar novamente' -> engines/literacyDojo/src/screens/LessonScreen.tsx:435 (same line as v114)
+  CheckpointScreen.tsx 'VILA LUME · Desafio do Módulo {n} · atividade' -> live (checkpoint copy family; corridor gate retry/review set unchanged)
+  HomeScreen.tsx 'Revisão pendente' -> engines/literacyDojo/src/screens/HomeScreen.tsx
+  ProgressScreen.tsx 'Revisão pendente agora:' -> engines/literacyDojo/src/screens/ProgressScreen.tsx
+  ResultScreen.tsx 'VILA LUME · MISSÃO CONCLUÍDA' -> engines/literacyDojo/src/screens/ResultScreen.tsx
+  student-guide.md 'Continue pela próxima lição do bairro, faça o' -> docs/product-readiness/student-guide.md:147
+  student-guide.md 'Your onboarding and lesson progress are stored locally' -> docs/product-readiness/student-guide.md:117
+  Onboarding.tsx 'Escolha IA Prática ou Dev. Sem conta; o progr' -> engines/codexdojo-os-prototype/src/journey/Onboarding.tsx
+  EngineHubApp.tsx 'Evidência bruta · não verificada' -> engines/codexdojo-os-prototype/src/engines/EngineHubApp.tsx
+  LessonScreen.tsx 'Tentar novamente' (retry scenario) -> LessonScreen.tsx:435 (same as above)
+Result: 11/11 re-located byte-identically in live sources (engine UI strings in engine src; guide strings by direct line grep).
