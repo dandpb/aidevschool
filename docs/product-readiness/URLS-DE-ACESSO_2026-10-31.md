@@ -6,6 +6,10 @@
 > público + matriz de readiness gerada). Cada claim cita fonte. Este doc **não** concede tier de
 > readiness — tiers vivem só na matriz gerada (`README.md`, fontes canônicas `inventory.yaml` +
 > `assessments/`); URL viva ≠ fluxo pronto.
+> **Atualização 2026-11-01 (triagem AID-6005, merge #760):** `inventory.yaml` retirou
+> pixelquest/voxel-warehouse/minitown do launch set e declarou dojoToday superfície secundária —
+> ajustes pontuais marcados "Atualização 2026-11-01" em §1/§3; o restante é o estado verificado
+> em 2026-10-31.
 
 ---
 
@@ -16,8 +20,8 @@
 | 1 | LiteracyDojo (app de lições) | `https://aidevschool-literacydojo.netlify.app/` | "LiteracyDojo — IA com confiança no trabalho" | Sim — 2 use cases `pass` customer-ready (matriz 2026-10-20) |
 | 2 | Escola (entrada estática) | `https://aidevschool-literacydojo.netlify.app/escola/` | "AI DevSchool — uma escola, duas jornadas" | Coberta pelos guias (`ESCOLA-GUIA-OPERACIONAL_2026-09-30.md` §7); monitors #7–8 seguem desarmados (`docs/serving/UPTIME-MONITOR-SETUP.md:32-33`) |
 | 3 | codexDojo OS (host de missões) | `https://aidevschool-codexdojo-os.netlify.app/` | "codexDojo OS" | Sim — 3 use cases `pass` customer-ready (matriz 2026-10-20) |
-| 4 | dojoToday | `https://aidevschool-dojotoday.netlify.app/` | "dojoToday — sua lição de hoje" | Sim — `pass` customer-ready (matriz 2026-10-20) |
-| 5 | voxelDojo — jogo 02 "Armazém KV" | `https://aidevschool-voxel-warehouse.netlify.app/` | "Armazém KV — voxelDojo jogo 02" | Sim — `voxel-standalone-learning-loop` `pass` customer-ready (matriz 2026-10-20); URL também em `inventory.yaml` (route de `voxel-standalone-learning-loop`) |
+| 4 | dojoToday | `https://aidevschool-dojotoday.netlify.app/` | "dojoToday — sua lição de hoje" | Sim — `pass` customer-ready (matriz 2026-10-20). Atualização 2026-11-01: declarada superfície secundária, fora do lançamento (AID-6005/#760, `inventory.yaml`) |
+| 5 | voxelDojo — jogo 02 "Armazém KV" | `https://aidevschool-voxel-warehouse.netlify.app/` | "Armazém KV — voxelDojo jogo 02" | Sim — `voxel-standalone-learning-loop` `pass` customer-ready (matriz 2026-10-20). Atualização 2026-11-01 (AID-6005/#760): route canônica no `inventory.yaml` voltou a ser o app local (game-02-warehouse pelo catálogo); esta URL pública foi retirada do launch set — segue viva, sem binding deploy↔pin |
 | 6 | miniTown | `https://aidevschool-minitown.netlify.app/` | "MiniTown — Engine Skeleton" | **Sem claim para esta URL**: matriz tem `minitown-explore-only` `pass` **experimental**, mas a route canônica do use case é "miniTown local route" (`inventory.yaml`) — a evidência promovida foi local, não neste deploy |
 | 7 | pixelDojo (PixelQuest) | `https://aidevschool-pixelquest.netlify.app/` | (200; app PixelQuest) | **Sem claim para esta URL**: `pixelquest-evidence-encounter` é `pass` customer-ready, mas a route canônica é "PixelQuest local app" (`inventory.yaml`) — evidência promovida local |
 | 8 | codexDojo (engine contribuidor) | `https://aidevschool-codexdojo.netlify.app/` | "codexDojo" | **Nenhum use case** no `inventory.yaml` cobre esta superfície — URL viva sem claim |
@@ -67,6 +71,9 @@ atrás do main.
    existem; os claims promovidos desses 3 use cases foram verificados em build local — **não há
    evidence binding entre o deploy público e o pin verificado** (mudança de route/inventory é
    decisão do dono da engine + QA, não do docs).
+   Atualização 2026-11-01 (AID-6005/#760): a triagem ratificou as routes locais e retirou
+   pixelquest/voxel-warehouse/minitown do launch set (dojoToday declarada secundária) — a
+   ausência de binding deploy↔pin passa a ser decisão registrada da triagem, não omissão.
 4. **Monitoramento cobre só 2 superfícies:** `UPTIME-MONITOR-SETUP.md` arma checks apenas para
    literacy + codexdojo-os (+`/escola/`); as demais 6 URLs públicas não têm monitor (owner FPE).
 5. **Prod atrás do main no LiteracyDojo:** `l33`–`l35` (W2 dev landing) mergeadas ao `main`
