@@ -28,11 +28,16 @@ Guiding principle: **one learner, one curriculum, many engines.**
 | Operate or evaluate a learner journey | [Facilitator guide](docs/product-readiness/facilitator-guide.md) and [readiness matrix](docs/product-readiness/README.md) | Preparation, recovery, evaluation, and dated readiness claims are owned by the product-readiness documentation domain. |
 | Contribute to the platform | [Documentation map](docs/DOCUMENTATION.md) and [handbook](docs/handbook/README.md) | Engine-local commands and contracts are authoritative. |
 
-The public browser-only learner routes are [LiteracyDojo](https://aidevschool-literacydojo.netlify.app)
+The public launch surfaces are exactly two URLs: [LiteracyDojo](https://aidevschool-literacydojo.netlify.app)
 (14 practical AI missions) and [CodexDojo OS](https://aidevschool-codexdojo-os.netlify.app/?track=dev)
-(Trilha Dev: track choice, 3-mission guided rail, Engine Hub allowlist). Both are local-first: progress
-stays in the browser and no account is required. Product-readiness for the Dev journeys is still
-`stale` until a fresh assessment; this is not a customer-ready claim for curriculum 01–18.
+(Trilha Dev: track choice, 3-mission guided rail, Engine Hub allowlist). [dojoToday](https://aidevschool-dojotoday.netlify.app)
+is a declared secondary companion route, out of launch marketing. The standalone voxel
+warehouse, PixelQuest, miniTown, and the codexDojo contributor dashboard have no launch URL:
+they run locally, per the approved public-surface triage (AID-6005, 2026-11-01) and the
+publication gate recorded in `docs/product-readiness/policy.yaml`. Both launch surfaces are
+local-first: progress stays in the browser and no account is required. Product-readiness for
+the Dev journeys is still `stale` until a fresh assessment; this is not a customer-ready
+claim for curriculum 01–18.
 
 For a customer or learner journey, start with the [student guide](docs/product-readiness/student-guide.md).
 Facilitators should use the [facilitator guide](docs/product-readiness/facilitator-guide.md), and

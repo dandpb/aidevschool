@@ -4,7 +4,7 @@
 | --- | --- |
 | Status | Canônico para intenção de produto (não é estado operacional) |
 | Criado | 2026-07-19 · **Decisor:** Daniel |
-| Última revisão | 2026-08-21 |
+| Última revisão | 2026-11-01 |
 | Relação | Evolui [`docs/PROMPTS/-01_GOAL.md`](PROMPTS/-01_GOAL.md), que permanece como semente histórica |
 | Regra | Intenção não prova implementação, domínio ou mastery; os links abaixo apontam para as fontes operacionais. |
 
@@ -25,7 +25,11 @@ Esta tabela descreve o destino do produto, não o escopo do release candidate.
 O lançamento público entrega **IA na Prática** no LiteracyDojo (23 missões)
 e a **Trilha Dev** no CodexDojo OS público (`https://aidevschool-codexdojo-os.netlify.app/?track=dev`):
 escolha de trilha, trilho guiado WAREHOUSE → WORMHOLE → RELAY STATION, e Engine Hub
-allowlist (voxel 16, PixelQuest, dojoToday local, literacy). Os 18 projetos de
+allowlist (voxel 16, PixelQuest, dojoToday local, literacy). São **exatamente duas URLs
+públicas de lançamento** (triagem AID-6005, aprovada em 2026-11-01): o dojoToday é rota
+secundária declarada (companion, fora do marketing); voxel avulso, PixelQuest, miniTown e o
+dashboard codexDojo ficam sem URL pública — execução local, regida pelo gate de publicação
+em [`product-readiness/policy.yaml`](product-readiness/policy.yaml). Os 18 projetos de
 código continuam fora desta oferta.
 
 O que não muda entre públicos está no
@@ -61,7 +65,11 @@ isso que separa esta escola de um app de trivia.
    as outras simulações voxel ficam no Engine Hub, não no trilho. Conclusão
    local não é `mastered`.
 7. **Lançamento.** LiteracyDojo (IA na Prática) e CodexDojo OS (escolha de
-   trilha + Hub allowlist) são as URLs públicas. Use cases Dev em
+   trilha + Hub allowlist) são as **duas URLs públicas de lançamento**;
+   dojoToday é rota secundária declarada. Nenhuma outra superfície tem URL
+   pública (voxel avulso, PixelQuest, miniTown e o dashboard codexDojo foram
+   retirados do público em 2026-11-01 — AID-6005; gate de publicação em
+   `product-readiness/policy.yaml`). Use cases Dev em
    product-readiness permanecem `stale` até assessment fresco — não são
    customer-ready só porque a URL existe.
 8. **Progresso.** Sem conta, onboarding, conclusão, XP, meta diária, sequência e
@@ -205,8 +213,10 @@ vários motores". Unidades dessa trilha usam o gate no-code (AD-006).
 
 Decisões estruturais ainda abertas (não bloqueiam o primeiro capítulo local):
 
-1. **miniTown público.** Se/when publicar a entrada cozy zero-install (hoje
-   residual local). LiteracyDojo já tem URL de produção.
+1. **miniTown público.** Retirado do público em 2026-11-01 (título em produção
+   era "Engine Skeleton"; tier experimental). Volta somente se um teste A/B
+   provar que melhora onboarding e se passar o gate de publicação
+   (`product-readiness/policy.yaml`, AID-6005).
 2. **Mastery canônico no-code no substrate.** Quando e como um recibo
 `learner.gate.literacy_verifier` promove unidades AI Literacy em
    `learner/learning_state.yaml` sem misturar com o gate de código — o
