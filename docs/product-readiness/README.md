@@ -7,7 +7,7 @@ Readiness is a customer-journey claim; it is not learner completion, evidence, v
 
 | Use case | Surface | Intended tier | Current outcome | Granted tier | Verified at | Revalidate by | Evidence scope | Reasons/gaps | Promise |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `dojotoday-daily-guidance` | dojoToday | `customer-ready` | `pass` | `customer-ready` | `2026-10-20T15:45:31+00:00` | `2026-11-19` | `2026-10-20T15:45:31Z-dojotoday-active-unit-guidance-mixed-8a5c9d25`, `2026-10-20T15:45:31Z-dojotoday-read-only-boundary-observed-8a5c9d25`, `2026-10-20T15:45:31Z-dojotoday-returning-next-day-mixed-8a5c9d25` | - | Read the current schedule, understand due reviews and the active unit, and follow the documented next action. |
+| `dojotoday-daily-guidance` | dojoToday (secondary companion surface, not a launch entry) | `customer-ready` | `pass` | `customer-ready` | `2026-10-20T15:45:31+00:00` | `2026-11-19` | `2026-10-20T15:45:31Z-dojotoday-active-unit-guidance-mixed-8a5c9d25`, `2026-10-20T15:45:31Z-dojotoday-read-only-boundary-observed-8a5c9d25`, `2026-10-20T15:45:31Z-dojotoday-returning-next-day-mixed-8a5c9d25` | - | Read the current schedule, understand due reviews and the active unit, and follow the documented next action. |
 | `literacy-standalone-corridor-mod01-03` | literacyDojo | `customer-ready` | `pass` | `customer-ready` | `2026-10-20T16:26:36+00:00` | `2026-11-19` | `2026-10-20T16:26:36Z-literacy-corridor-gate-retry-mixed-9b96a4ef`, `2026-10-20T16:26:36Z-literacy-corridor-grandfathered-return-mixed-9b96a4ef`, `2026-10-20T16:26:36Z-literacy-corridor-happy-path-mixed-9b96a4ef`, `2026-10-20T16:26:36Z-literacy-corridor-resume-mid-module-mixed-9b96a4ef`, `2026-10-20T16:26:36Z-literacy-corridor-review-window-mixed-9b96a4ef` | - | Progress continuously through modules 1-3 (11 lessons), pass each module challenge, return for spaced reviews on the [1,7,21] schedule, and understand the local result and next action. |
 | `literacy-standalone-first-lesson` | literacyDojo | `customer-ready` | `pass` | `customer-ready` | `2026-10-20T16:26:36+00:00` | `2026-11-19` | `2026-10-20T16:26:36Z-literacy-happy-path-mixed-9b96a4ef`, `2026-10-20T16:26:36Z-literacy-resume-mixed-9b96a4ef`, `2026-10-20T16:26:36Z-literacy-retry-mixed-9b96a4ef` | - | Complete an assigned lesson, recover from an incorrect attempt, and understand the local result. |
 | `minitown-explore-only` | miniTown | `experimental` | `pass` | `experimental` | `2026-10-20T04:31:24+00:00` | `2026-11-19` | `2026-10-20T04:31:24Z-minitown-explore-only-mixed-e22a2daf` | - | Explore the local town simulation without a lesson, persistence, progression, evidence, or mastery promise. |
@@ -25,7 +25,7 @@ A runnable engine or passing producer test does not grant a readiness tier.
 
 ## Canonical sources
 
-- `policy.yaml` owns tiers, severity treatment, outcomes, and freshness rules.
+- `policy.yaml` owns tiers, severity treatment, outcomes, freshness rules, and the publication gate.
 - `inventory.yaml` owns intended promises and use-case scope.
 - `scenarios/*.yaml` own executable and observed journey contracts.
 - `evidence/results.ndjson` owns append-only promoted scenario facts.
