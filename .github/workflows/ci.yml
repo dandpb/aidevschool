@@ -76,6 +76,14 @@ jobs:
       # pending-null and malformed inputs (never "success").
       - name: merge door self-test (§3 extraction vs the real endpoint shape)
         run: bash scripts/merge_pr.sh --self-test
+      # AID-3056 (follow-up PR #585/AID-3055): the AID/GH existence resolver
+      # now retries ONCE on transport failure only (HTTP 000 timeout/connfail
+      # — observed 1/2 runs on PR #585 job 108541465380, clean on the manual
+      # rerun); semantic codes (200/401/403/404) are never retried and a
+      # double-000 still exits 2 (fail-closed). The self-test pins those
+      # semantics hermetically with a stubbed curl — no network, no secrets.
+      - name: aid resolver self-test (transport retry semantics, AID-3056)
+        run: bash scripts/sdlc_aid_resolve.sh --self-test
       # AID-5244 (finding A1/AID-5241): the shared workspace _default carried
       # a pinned [user] qa-lead config, so a rebase by ANOTHER agent silently
       # forged the QA Lead as committer (29c6e087, PR #733). The guard's
