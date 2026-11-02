@@ -1,5 +1,17 @@
 schemaVersion: 1
-policyVersion: 1
+policyVersion: 2
+publicationGate:
+  introducedBy: AID-6005 (triage aprovada pelo founder em 2026-11-01)
+  rule: >-
+    No surface ships a public URL unless every requirement below holds at publication time;
+    without them the surface stays local. The launch set is two public URLs
+    (codexDojo OS and LiteracyDojo); dojoToday is a declared secondary companion route,
+    out of launch marketing; voxelDojo standalone, PixelQuest, and miniTown run locally.
+  requirements:
+    - customer-ready use case in inventory.yaml whose entry route points at the public route
+    - promoted deploy-to-pin binding with receipt
+    - learner-facing title and copy (not engine-facing)
+    - named owner
 tiers:
   customer-ready:
     requiredScenarioKinds: [happy-path, recovery, continuity]
