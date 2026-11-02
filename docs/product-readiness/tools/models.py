@@ -94,6 +94,13 @@ class FreshnessPolicy:
 
 
 @dataclass(frozen=True, slots=True)
+class PublicationGatePolicy:
+    introduced_by: str | None
+    rule: str
+    requirements: tuple[str, ...]
+
+
+@dataclass(frozen=True, slots=True)
 class ReadinessPolicy:
     schema_version: int
     policy_version: int
@@ -101,6 +108,7 @@ class ReadinessPolicy:
     severities: tuple[SeverityPolicy, ...]
     outcomes: tuple[DecisionOutcome, ...]
     freshness: FreshnessPolicy
+    publication_gate: PublicationGatePolicy | None = None
 
 
 @dataclass(frozen=True, slots=True)

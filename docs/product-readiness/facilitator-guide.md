@@ -18,10 +18,10 @@ commands and diagnostics remain in the linked engine READMEs.
 4. **`os-voxel-guided-missions`** — OS trilho **Dev**: três missões 3D hospedadas (**WAREHOUSE**, **WORMHOLE**, **RELAY STATION**)
 5. **`os-returning-learner`** — retorno no mesmo aparelho (literacy ou 3D)
 6. **`pixelquest-evidence-encounter`** — PixelQuest: encontro documentado + handoff de evidência (app local)
-7. **`voxel-standalone-learning-loop`** — voxelDojo avulso: WAREHOUSE de referência com rota estática
-8. **`dojotoday-daily-guidance`** — dojoToday: vista diária somente leitura com rota estática
+7. **`voxel-standalone-learning-loop`** — voxelDojo avulso: WAREHOUSE de referência executado localmente pelo catálogo (rota pública avulsa retirada do lançamento em 2026-11-01)
+8. **`dojotoday-daily-guidance`** — dojoToday: vista diária somente leitura, rota secundária declarada (companion; não é entrada de lançamento)
 
-Superfícies: [LiteracyDojo avulso](https://aidevschool-literacydojo.netlify.app/) (itens 1–2), [codexDojo OS](https://aidevschool-codexdojo-os.netlify.app/) (itens 3–5) e **rotas locais declaradas** (itens 6–8: app local do PixelQuest, rota estática do WAREHOUSE de referência, rota estática do dojoToday). O OS **oferece escolha de trilha IA Prática | Dev** — os dois caminhos CR (itens 3 e 4) são válidos. Os itens 6–8 foram elevados a `customer-ready` pela AID-987/T1 (cenários continuity + rotas estáticas); **miniTown** segue `experimental`. A composição da oferta paga e dos CTAs (Engine Hub, catálogo voxel completo, `?track=dev`) segue decisão do CEO — enquanto isso, no avulso **Trilha Dev** continua **Em breve** e o CTA do literacy não usa `?track=dev`. Sem prometer certificado ou domínio (concluída ≠ domínio).
+Superfícies: [LiteracyDojo avulso](https://aidevschool-literacydojo.netlify.app/) (itens 1–2), [codexDojo OS](https://aidevschool-codexdojo-os.netlify.app/) (itens 3–5) e **execução local/rota secundária** (itens 6–8: app local do PixelQuest, catálogo local do voxelDojo para o WAREHOUSE de referência, rota secundária declarada do dojoToday). Desde a triagem aprovada na AID-6005 (2026-11-01), o **lançamento público tem duas URLs** (LiteracyDojo avulso + codexDojo OS); as URLs avulsas de voxelDojo, PixelQuest, miniTown e do dashboard codexDojo foram **retiradas do público** — nada de orientar aprendizes para elas (o teardown/redirect é tratado pela AID-6009). O OS **oferece escolha de trilha IA Prática | Dev** — os dois caminhos CR (itens 3 e 4) são válidos. Os itens 6–7 foram elevados a `customer-ready` pela AID-987/T1 e seguem válidos **como execução local**; **miniTown** segue `experimental`. A composição da oferta paga e dos CTAs (Engine Hub, catálogo voxel completo, `?track=dev`) segue decisão do CEO — enquanto isso, no avulso **Trilha Dev** continua **Em breve** e o CTA do literacy não usa `?track=dev`. Sem prometer certificado ou domínio (concluída ≠ domínio).
 
 Não venda as demais lições avulsas no OS, sync avulso→OS, certificação/domínio (concluída ≠ domínio), checkout (#143) nem conta entre aparelhos.
 
@@ -39,14 +39,14 @@ Para piloto humano de 1–3 pessoas só no LiteracyDojo, use também o
 | Suporte | WhatsApp [+55 11 98436-3878](https://wa.me/5511984363878) (principal) e [daniel@heropa.com](mailto:daniel@heropa.com) — SLA informal: 1 dia útil. |
 | Fechamento | Pergunte: “O que ficou salvo? O que você faria em seguida?” Registre sintoma visível e contexto (navegador/aparelho). |
 
-**Não inclua na oferta paga:** miniTown (`experimental`), Engine Hub como entrada para os itens 6–8 (eles entram por app local ou rota estática declarada, não pelo Hub), catálogo voxel avulso além do WAREHOUSE de referência, labs de operador (`?operator=1`) nem o Hub além das três missões hospedadas no OS.
+**Não inclua na oferta paga:** miniTown (`experimental`), Engine Hub como entrada para os itens 6–8 (eles entram por app local — PixelQuest e voxelDojo — ou pela rota secundária declarada do dojoToday, não pelo Hub), catálogo voxel avulso além do WAREHOUSE de referência, labs de operador (`?operator=1`) nem o Hub além das três missões hospedadas no OS. Também não use as URLs avulsas retiradas do público em 2026-11-01 (voxelDojo jogo 02, PixelQuest, miniTown, dashboard codexDojo) — o gate de publicação vigente está em `policy.yaml` (AID-6005).
 
 ## Percurso atual no codexDojo OS
 
 A oferta CR no OS inclui **IA Prática** (l01–l03), trilho **Dev** de três missões 3D hospedadas e retorno no mesmo aparelho — `customer-ready` (v35). O OS público **oferece escolha de trilha** entre **IA Prática** e **Dev** e um Engine Hub allowlist
-(voxel, PixelQuest, dojoToday local, literacy) — o Hub **não** é entrada da oferta paga até decisão do CEO; os itens 6–8 (PixelQuest, WAREHOUSE de referência, dojoToday) entram por app local ou rota estática declarada. Labs e miniTown só com `?operator=1`.
+(voxel, PixelQuest, dojoToday local, literacy) — o Hub **não** é entrada da oferta paga até decisão do CEO; os itens 6–8 (PixelQuest, WAREHOUSE de referência, dojoToday) entram por app local (PixelQuest, voxelDojo) ou pela rota secundária declarada do dojoToday. Labs e miniTown só com `?operator=1`.
 O trilho Dev hospedado é **WAREHOUSE → WORMHOLE → RELAY STATION**. Não venda as demais
-lições avulsas como se existirem no OS. PixelQuest, voxelDojo avulso (WAREHOUSE de referência) e dojoToday estão `customer-ready` (AID-987/T1) — venda conforme a matriz v35, sem prometer certificado/domínio. Não
+lições avulsas como se existirem no OS. PixelQuest, voxelDojo avulso (WAREHOUSE de referência, execução local) e dojoToday (rota secundária) estão `customer-ready` (AID-987/T1) — venda conforme a matriz v35, sem prometer certificado/domínio e sem usar as URLs avulsas retiradas do público (AID-6005, 2026-11-01). Não
 prometa sincronização avulso→OS. Oriente a turma assim:
 
 1. Onboarding curto → escolha **IA Prática** ou **Dev** → **Entrar na escola**.
@@ -101,7 +101,7 @@ Mostre **Ver seu progresso → Baixar backup JSON** antes de sessão longa. Supo
 **O que não prometer**
 
 - Engine Hub, Central de Apps ou laboratório no caminho do estudante (`?operator=1` é só operador — ver abaixo).
-- Catálogo voxel avulso além do WAREHOUSE de referência, ou o Engine Hub como entrada para PixelQuest/dojoToday (itens 6–8 são CR por app local ou rota estática declarada, não por este caminho).
+- Catálogo voxel avulso além do WAREHOUSE de referência, ou o Engine Hub como entrada para PixelQuest/dojoToday (itens 6–8 são CR por app local — PixelQuest e voxelDojo — ou pela rota secundária declarada do dojoToday, não por este caminho).
 - Domínio, sync entre dispositivos ou avulso→OS.
 - As demais lições do avulso no OS.
 - CTA `?track=dev` no avulso como oferta de literacy (Trilha Dev no avulso continua **Em breve**).

@@ -17,6 +17,10 @@ test("entrada /escola/ serve a página, os assets diretos e o fallback SPA do bu
   await expect(page.locator("#jornada-dev")).toContainText("faz parte do percurso do app");
   await expect(page.locator("#world")).toBeVisible();
   await expect(page.locator("#start-fundamentals")).toHaveAttribute("href", "/");
+  // AID-3704 (decisão AID-3702/D1): deep-link por jornada — o card Dev entra
+  // direto na Jornada Dev do app; o card IA (cotidiano) mantém a raiz.
+  await expect(page.locator("#jornada-cotidiano a.secondary")).toHaveAttribute("href", "/");
+  await expect(page.locator("#jornada-dev a.secondary")).toHaveAttribute("href", "/?journey=dev");
   // Sem overflow horizontal nos dois extremos de viewport (mobile default 360 e desktop).
   for (const viewport of [
     { width: 320, height: 640 },
@@ -74,6 +78,29 @@ test("jornada real: /escola/ → fundamentos → onboarding → lição concluí
   const after = await readProgress(page);
   expect(after?.lessonStatus?.[mapInitial.id]).toBe("completed");
   expect(after?.currentLessonId).toBe(before?.currentLessonId);
+});
+
+test("AID-3704 deep-link real: /escola/ card Dev → /?journey=dev → boot na Jornada Dev", async ({
+  page,
+}) => {
+  // O clique no card Dev navega com o token. Para o perfil fresco o boot
+  // segue onboarding normal (o switch do token vale para aprendiz onboarded,
+  // AID-3705/D1) — o que a entrada prova aqui é o href vivo do build.
+  await page.goto("/escola/");
+  await page.locator("#jornada-dev a.secondary").click();
+  await expect(page.getByTestId("assistant-welcome")).toBeVisible();
+  const landed = new URL(page.url());
+  expect(landed.pathname).toBe("/");
+  expect(landed.searchParams.get("journey")).toBe("dev");
+
+  // Onboarding real concluído (jornada ativa default ia_pratica): o MESMO
+  // token no boot do retornante entrega a Jornada Dev (App.tsx AID-3705).
+  await completeOnboarding(page);
+  await answerRight(page);
+  await expect(page.getByTestId("result-screen")).toContainText("Lição concluída");
+  await page.goto("/?journey=dev");
+  await expect(page.getByTestId("home-screen")).toBeVisible();
+  await expect(page.getByTestId("journey-switch-dev")).toHaveAttribute("aria-pressed", "true");
 });
 
 test("F1 regressão real: retornante SW-controlado raiz → /escola/ → offline → shell da raiz e progresso preservados", async ({

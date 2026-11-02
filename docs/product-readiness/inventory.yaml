@@ -107,12 +107,12 @@ useCases:
     sourcePaths: [engines/codexdojo-os-prototype/src/, engines/codexdojo-os-prototype/tests/]
     owner: codexdojo-os-prototype
   - id: dojotoday-daily-guidance
-    surface: dojoToday
+    surface: dojoToday (secondary companion surface, not a launch entry)
     audience: programmer-learner
     intendedTier: customer-ready
     promise: Read the current schedule, understand due reviews and the active unit, and follow the documented next action.
     entry:
-      route: https://aidevschool-dojotoday.netlify.app/
+      route: https://aidevschool-dojotoday.netlify.app/ (declared secondary route; out of launch marketing since AID-6005, 2026-11-01)
       prerequisites: [supported-modern-browser, declared-demo-projection]
     progressSemantics: read-only
     recovery: Regenerate the learner projection when the view is stale; stop if the canonical learner state cannot be read.
@@ -129,7 +129,7 @@ useCases:
     intendedTier: customer-ready
     promise: Complete a documented encounter, locate its raw evidence, and hand it to the independent verifier.
     entry:
-      route: PixelQuest local app
+      route: PixelQuest local app via the engine launch instructions (public deploy withdrawn from the launch set by AID-6005 on 2026-11-01; use case verified against the local app)
       prerequisites: [supported-desktop-browser, keyboard-input]
     progressSemantics: raw-evidence
     recovery: Replay the encounter when evidence is missing; stop if a valid evidence record is not emitted.
@@ -146,7 +146,7 @@ useCases:
     intendedTier: customer-ready
     promise: Complete the deterministic loop in each declared standalone game and locate raw evidence for independent verification.
     entry:
-      route: https://aidevschool-voxel-warehouse.netlify.app/
+      route: voxelDojo local app — game-02-warehouse via the voxelDojo catalog launch instructions (public standalone route withdrawn from the launch set by AID-6005 on 2026-11-01)
       prerequisites: [supported-desktop-browser, keyboard-input, webgl-or-accessible-renderer]
     progressSemantics: raw-evidence
     recovery: Use the accessible renderer when supported or stop when the declared core interaction cannot run.
@@ -163,7 +163,7 @@ useCases:
     intendedTier: experimental
     promise: Explore the local town simulation without a lesson, persistence, progression, evidence, or mastery promise.
     entry:
-      route: miniTown local route
+      route: miniTown local route (public deploy withdrawn from the launch set by AID-6005 on 2026-11-01)
       prerequisites:
         - local-engine-setup
         - supported-modern-browser

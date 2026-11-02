@@ -10,7 +10,7 @@ organized by learner goal rather than repository component.
 ## Oferta paga
 
 
-A oferta **pronta para cliente** hoje inclui **oito caminhos customer-ready** (assessment v35, 2026-09-07 — os três últimos elevados pela AID-987/T1 com cenários continuity e rotas estáticas):
+A oferta **pronta para cliente** hoje inclui **oito caminhos customer-ready** (assessment v35, 2026-09-07 — os três últimos elevados pela AID-987/T1 com cenários continuity e rotas estáticas). Desde a triagem aprovada na AID-6005 (2026-11-01), o **lançamento público tem duas URLs**: o [LiteracyDojo avulso](https://aidevschool-literacydojo.netlify.app/) e o [codexDojo OS](https://aidevschool-codexdojo-os.netlify.app/). O [dojoToday](https://aidevschool-dojotoday.netlify.app/) é uma **rota secundária declarada** (companion, fora do marketing de lançamento). As demais superfícies — voxel avulso, PixelQuest e miniTown — **não têm URL pública de lançamento**: rodam por execução local (as URLs avulsas que existiram foram retiradas do público em 2026-11-01; o gate de publicação vigente está em `policy.yaml`).
 
 1. **Primeira lição avulsa** — **Mapa Inicial — l02** ([LiteracyDojo avulso](https://aidevschool-literacydojo.netlify.app/))
 2. **Corredor avulso mod 01–03** — 11 lições, desafios de módulo e revisões espaçadas no mesmo aparelho — detalhes na seção [Standalone LiteracyDojo corridor](#standalone-literacydojo-corridor)
@@ -18,16 +18,16 @@ A oferta **pronta para cliente** hoje inclui **oito caminhos customer-ready** (a
 4. **OS — trilho Dev** — três missões 3D hospedadas (**WAREHOUSE**, **WORMHOLE**, **RELAY STATION**); escolha **Dev** no onboarding ou siga depois de IA Prática
 5. **OS — retomar no mesmo aparelho** — literacy ou 3D, conforme progresso local
 6. **PixelQuest — encontro com evidência** — app local (encounters + handoff de evidência para o verificador independente)
-7. **voxelDojo avulso — WAREHOUSE de referência** — loop determinístico com rota estática declarada
-8. **dojoToday — lição de hoje** — vista diária somente leitura com rota estática declarada
+7. **voxelDojo avulso — WAREHOUSE de referência** — loop determinístico executado localmente pelo catálogo voxelDojo (a rota pública avulsa foi retirada do lançamento em 2026-11-01)
+8. **dojoToday — lição de hoje** — vista diária somente leitura, rota secundária declarada (companion; não é entrada de lançamento)
 
-O OS **oferece escolha de trilha** (**IA Prática | Dev**) no onboarding e no hub — os dois caminhos acima (itens 3 e 4) são CR. Os itens 6–8 fazem parte da oferta paga como **CR local** (app local ou rota estática declarada). A oferta paga **não** inclui o Engine Hub como entrada, o catálogo voxel avulso além do WAREHOUSE de referência, labs de operador (`?operator=1`) nem miniTown (`experimental`). A composição da oferta paga e dos CTAs (incl. Engine Hub e `?track=dev`) segue decisão do CEO; o CTA do avulso continua sem `?track=dev`. No avulso, **Trilha Dev** continua **Em breve** — não use `?track=dev` como CTA de literacy.
+O OS **oferece escolha de trilha** (**IA Prática | Dev**) no onboarding e no hub — os dois caminhos acima (itens 3 e 4) são CR. Os itens 6–8 permanecem na oferta como **CR local/secondária**: PixelQuest e voxelDojo avulso por **app local**; dojoToday como rota secundária declarada. A oferta paga **não** inclui o Engine Hub como entrada, o catálogo voxel avulso além do WAREHOUSE de referência, labs de operador (`?operator=1`) nem miniTown (`experimental`). A composição da oferta paga e dos CTAs (incl. Engine Hub e `?track=dev`) segue decisão do CEO; o CTA do avulso continua sem `?track=dev`. No avulso, **Trilha Dev** continua **Em breve** — não use `?track=dev` como CTA de literacy.
 
 Não há conta nem cópia entre aparelhos. Quem muda de superfície recomeça. **Concluída não é domínio** — não é certificado.
 
 ## Percurso atual no codexDojo OS
 
-Use esta seção para o piloto no site do OS (`https://aidevschool-codexdojo-os.netlify.app/`). A oferta CR inclui **IA Prática** (l01–l03), o trilho **Dev** de três missões 3D hospedadas e retomar no mesmo aparelho — `customer-ready` (v33 @ `e41b9b9`). O onboarding **oferece escolha de trilha**: **IA Prática** ou **Dev**. Quem escolhe **Dev** completa **WAREHOUSE → WORMHOLE → RELAY STATION** sem refazer l01–l03. O Engine Hub do OS lista voxelDojo, PixelQuest, dojoToday e literacy, mas **não** é a entrada da oferta paga — os itens 6–8 entram por app local ou rota estática declarada, não pelo Hub nem por este trilho; labs e miniTown só com `?operator=1`. As outras lições do LiteracyDojo avulso não estão no OS. O status do host é progresso local — nunca domínio.
+Use esta seção para o piloto no site do OS (`https://aidevschool-codexdojo-os.netlify.app/`). A oferta CR inclui **IA Prática** (l01–l03), o trilho **Dev** de três missões 3D hospedadas e retomar no mesmo aparelho — `customer-ready` (v33 @ `e41b9b9`). O onboarding **oferece escolha de trilha**: **IA Prática** ou **Dev**. Quem escolhe **Dev** completa **WAREHOUSE → WORMHOLE → RELAY STATION** sem refazer l01–l03. O Engine Hub do OS lista voxelDojo, PixelQuest, dojoToday e literacy, mas **não** é a entrada da oferta paga — os itens 6–8 entram por app local (PixelQuest, voxelDojo) ou pela rota secundária declarada do dojoToday, não pelo Hub nem por este trilho; labs e miniTown só com `?operator=1`. As outras lições do LiteracyDojo avulso não estão no OS. O status do host é progresso local — nunca domínio.
 
 1. Abra o endereço do OS que o facilitador passou, em um navegador atual com armazenamento local habilitado.
 2. Responda ao onboarding curto (objetivo, contexto, confiança) e escolha **IA Prática** ou **Dev**.
@@ -232,6 +232,10 @@ unassessed until that proof is recorded.
 
 ### Read today's guidance in dojoToday
 
+dojoToday is a **declared secondary companion route** since the AID-6005 launch triage
+(2026-11-01): it is readable at its own URL, but it is not a launch entry and it is not
+part of launch marketing. It does not teach a lesson by itself.
+
 When embedded in the public OS, dojoToday shows a **sugestão neste dispositivo**
 from local OS progress (active / next guided Dev mission). It is not canonical
 FSRS and does not write `learner/learning_state.yaml`. The standalone generated
@@ -262,9 +266,12 @@ the replay itself as validated until a facilitator observes it.
 
 ### Complete a standalone voxelDojo loop
 
-Choose a package from the [voxelDojo catalog](../../engines/voxelDojo/README.md),
-follow that package's launch instructions, and complete its deterministic
-learning loop. Locate the emitted raw evidence before you leave the game. A
+The standalone voxelDojo loop runs **locally**: choose a package from the
+[voxelDojo catalog](../../engines/voxelDojo/README.md), follow that package's launch
+instructions, and complete its deterministic learning loop. The standalone public
+route that existed for game 02 was withdrawn from the launch set on 2026-11-01
+(AID-6005); there is no standalone public URL for voxelDojo. Locate the emitted raw
+evidence before you leave the game. A
 passing game validates only that declared package; it says nothing about its
 siblings and does not grant mastery.
 
