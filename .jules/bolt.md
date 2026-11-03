@@ -63,3 +63,7 @@
 ## 2026-10-13 - Prevent Set Allocations in Continuous Sync Loops
 **Learning:** In 60-FPS environments like `miniTown`, using `new Set()` inside the `sync()` loop on every frame to identify removed items causes excessive garbage collection pressure. This can be mitigated by guarding the cleanup with a size check (e.g. `map.size > source.length`) so the set is only allocated when items are actually removed, which is rare.
 **Action:** Use an indexed loop instead of `for...of` for the main sync, and wrap the cleanup block (including the `seen` Set allocation) inside an `if (currentSize > targetLength)` condition.
+
+## 2026-11-03 - Avoid array allocations in HTML template rendering
+**Learning:** Chained array methods like `.map().join('')` in HTML string templates allocate multiple intermediate arrays per render, leading to unnecessary GC pressure in vanilla JS frontend paths like dojoToday.
+**Action:** Replace chained `.map().join('')` operations with standard indexed `for` loops and string concatenation (`+=`) when generating HTML string templates.
