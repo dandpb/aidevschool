@@ -145,7 +145,7 @@ function missionCard(a: TodaySnapshot["activeUnit"]): string {
             : ""
         }
         <div class="socrates" data-socrates>
-          <div class="socrates-talk">
+          <form id="soc-ask-form" class="socrates-talk">
             <input
               id="soc-q"
               type="text"
@@ -153,8 +153,8 @@ function missionCard(a: TodaySnapshot["activeUnit"]): string {
               placeholder="Pergunte ao Sócrates sobre esta missão…"
               aria-label="Pergunta para o Sócrates"
             />
-            <button id="soc-send" type="button" class="btn btn-primary socrates-send" data-testid="submit-attempt">Perguntar</button>
-          </div>
+            <button id="soc-send" type="submit" class="btn btn-primary socrates-send" data-testid="submit-attempt">Perguntar</button>
+          </form>
           <button id="soc-config-btn" type="button" class="link-btn" aria-expanded="false" aria-controls="soc-config" aria-label="Configurar assistente (opcional)"><span aria-hidden="true">⚙️</span> Configurar assistente (opcional)</button>
           <form id="soc-config" class="socrates-config" hidden>
             <p class="muted socrates-privacy">
@@ -436,12 +436,10 @@ function wireInteractions(a: TodaySnapshot["activeUnit"]): void {
       send.innerHTML = originalText;
     }
   };
-  send.addEventListener("click", () => void ask());
-  q.addEventListener("keydown", (event) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      void ask();
-    }
+  const askForm = document.getElementById("soc-ask-form") as HTMLFormElement | null;
+  askForm?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    void ask();
   });
 }
 
