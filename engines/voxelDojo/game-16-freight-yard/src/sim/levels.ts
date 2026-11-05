@@ -296,7 +296,8 @@ export function evaluateReplay(args: {
   // Optimization: avoid array allocation from .filter().length
   let correctCount = 0
   for (let i = 0; i < predicted.length; i++) {
-    if (truthSet.has(predicted[i])) correctCount++
+    const p = predicted[i]
+    if (p !== undefined && truthSet.has(p)) correctCount++
   }
   const accuracy = truth.length === 0 ? 1 : correctCount / truth.length
   const exact = predicted.length === truth.length && predicted.every((o, i) => o === truth[i])
