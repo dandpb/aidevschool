@@ -63,3 +63,6 @@
 ## 2026-10-13 - Prevent Set Allocations in Continuous Sync Loops
 **Learning:** In 60-FPS environments like `miniTown`, using `new Set()` inside the `sync()` loop on every frame to identify removed items causes excessive garbage collection pressure. This can be mitigated by guarding the cleanup with a size check (e.g. `map.size > source.length`) so the set is only allocated when items are actually removed, which is rare.
 **Action:** Use an indexed loop instead of `for...of` for the main sync, and wrap the cleanup block (including the `seen` Set allocation) inside an `if (currentSize > targetLength)` condition.
+## 2024-11-05 - Optimize algorithm bounds before micro-optimizing GC
+**Learning:** When looking for performance improvements, micro-optimizing garbage collection (like removing `.filter(...).length`) should not overshadow algorithmic bottlenecks. In `engines/voxelDojo/game-16-freight-yard`, an `O(N * M)` array `.includes()` search within a loop was the primary bottleneck and substituting it with an `O(1)` `Set.has()` check yields significantly more measurable performance impact.
+**Action:** Always verify if functional array derivatives contain higher-complexity O(N) operations inside loops before solely optimizing for GC pressure.
