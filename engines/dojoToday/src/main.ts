@@ -268,9 +268,16 @@ function demoNotice(): string {
 }
 
 function render(s: TodaySnapshot): string {
-  const overdue = [...s.reviews].sort((a, b) =>
-    a.reason === "overdue" ? -1 : b.reason === "overdue" ? 1 : 0,
-  );
+  const overdue = [];
+  const others = [];
+  for (let i = 0; i < s.reviews.length; i++) {
+    if (s.reviews[i].reason === "overdue") {
+      overdue.push(s.reviews[i]);
+    } else {
+      others.push(s.reviews[i]);
+    }
+  }
+  overdue.push(...others);
   const dateLabel = new Date(s.asOf).toLocaleDateString("pt-BR", {
     weekday: "long",
     day: "numeric",

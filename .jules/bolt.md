@@ -63,3 +63,6 @@
 ## 2026-10-13 - Prevent Set Allocations in Continuous Sync Loops
 **Learning:** In 60-FPS environments like `miniTown`, using `new Set()` inside the `sync()` loop on every frame to identify removed items causes excessive garbage collection pressure. This can be mitigated by guarding the cleanup with a size check (e.g. `map.size > source.length`) so the set is only allocated when items are actually removed, which is rare.
 **Action:** Use an indexed loop instead of `for...of` for the main sync, and wrap the cleanup block (including the `seen` Set allocation) inside an `if (currentSize > targetLength)` condition.
+## 2026-11-06 - Replace O(N log N) sort with O(N) linear scan for binary partitioning
+**Learning:** Using .sort() to simply separate overdue from non-overdue items introduces unnecessary algorithmic overhead (O(N log N)) and array allocations.
+**Action:** Use a single-pass O(N) linear scan with two buckets to categorize and recombine items.
