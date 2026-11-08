@@ -1,0 +1,10 @@
+[WebServer] - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+Running 4 tests using 1 worker
+
+  ✓  1 [pwa] › playwright/escola-entry.spec.ts:10:1 › entrada /escola/ serve a página, os assets diretos e o fallback SPA do build (431ms)
+  ✓  2 [pwa] › playwright/escola-entry.spec.ts:50:1 › jornada real: /escola/ → fundamentos → onboarding → lição concluída com progresso persistido (2.1s)
+  ✓  3 [pwa] › playwright/escola-entry.spec.ts:79:1 › F1 regressão real: retornante SW-controlado raiz → /escola/ → offline → shell da raiz e progresso preservados (2.5s)
+  ✓  4 [pwa] › playwright/escola-entry.spec.ts:113:1 › F2 update real: URL fixa atualiza da rede (network-first) e /assets/ permanece cache-first (316ms)
+
+  4 passed (11.1s)

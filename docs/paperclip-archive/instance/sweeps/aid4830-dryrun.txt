@@ -1,0 +1,4 @@
+retention(AID-4830): DRY-RUN — window 48h kept 25 files (15.26G) + 2 daily anchors (1.19G); purged 0 files (0.00G); dir spans 4 UTC days; rule = AID-4789 card 210313d0 (a-rolling-48h-3anchors), mtime-only per AID-4546
+  anchors kept:
+    + paperclip-20261012-194710.sql.gz (2026-10-12T23:48:34Z mtime-UTC, 0.59G)
+    + paperclip-20261013-090552.sql.gz (2026-10-13T13:07:23Z mtime-UTC, 0.60G)

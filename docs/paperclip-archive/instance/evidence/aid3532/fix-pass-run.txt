@@ -1,0 +1,8 @@
+Running 4 tests using 1 worker
+
+  ✓  1 [pwa] › playwright/escola-map-focus.pwa.spec.ts:43:3 › AID-3532 mapa em texto: Enter no link foca #jornada-cotidiano e o foco persiste (611ms)
+  ✓  2 [pwa] › playwright/escola-map-focus.pwa.spec.ts:43:3 › AID-3532 mapa em texto: Enter no link foca #jornada-dev e o foco persiste (421ms)
+  ✓  3 [pwa] › playwright/escola-map-focus.pwa.spec.ts:54:1 › AID-3532 mapa em texto: click no link foca #jornada-dev e o foco persiste (409ms)
+  ✓  4 [pwa] › playwright/escola-map-focus.pwa.spec.ts:62:1 › AID-3532 mapa em texto: ativações repetidas continuam focando o cartão (483ms)
+
+  4 passed (9.3s)

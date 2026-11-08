@@ -1,0 +1,208 @@
+﻿2026-09-28T22:26:20.2963737Z Current runner version: '2.337.0'
+2026-09-28T22:26:20.2998566Z ##[group]Runner Image Provisioner
+2026-09-28T22:26:20.3000067Z Hosted Compute Agent
+2026-09-28T22:26:20.3001146Z Version: 20260828.587
+2026-09-28T22:26:20.3002246Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29
+2026-09-28T22:26:20.3003912Z Build Date: 2026-08-28T16:44:25Z
+2026-09-28T22:26:20.3005095Z Worker ID: {9d5cfb1a-8e29-4aac-a4d2-482c0df46f1e}
+2026-09-28T22:26:20.3006474Z Azure Region: eastus
+2026-09-28T22:26:20.3007534Z ##[endgroup]
+2026-09-28T22:26:20.3009809Z ##[group]Operating System
+2026-09-28T22:26:20.3010982Z Ubuntu
+2026-09-28T22:26:20.3012071Z 24.04.5
+2026-09-28T22:26:20.3012958Z LTS
+2026-09-28T22:26:20.3014114Z ##[endgroup]
+2026-09-28T22:26:20.3015177Z ##[group]Runner Image
+2026-09-28T22:26:20.3016280Z Image: ubuntu-24.04
+2026-09-28T22:26:20.3017309Z Version: 20260920.314.1
+2026-09-28T22:26:20.3019470Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260920.314/images/ubuntu/Ubuntu2404-Readme.md
+2026-09-28T22:26:20.3022409Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260920.314
+2026-09-28T22:26:20.3024376Z ##[endgroup]
+2026-09-28T22:26:20.3026703Z ##[group]GITHUB_TOKEN Permissions
+2026-09-28T22:26:20.3029786Z Contents: read
+2026-09-28T22:26:20.3030792Z Issues: read
+2026-09-28T22:26:20.3031702Z Metadata: read
+2026-09-28T22:26:20.3032736Z PullRequests: read
+2026-09-28T22:26:20.3034048Z ##[endgroup]
+2026-09-28T22:26:20.3037177Z Secret source: Actions
+2026-09-28T22:26:20.3038681Z Cache mode: read
+2026-09-28T22:26:20.3039891Z Prepare workflow directory
+2026-09-28T22:26:20.3510871Z Prepare all required actions
+2026-09-28T22:26:20.3582284Z Getting action download info
+2026-09-28T22:26:20.5782568Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-09-28T22:26:20.7867398Z Complete job name: countersign-gate
+2026-09-28T22:26:20.8671610Z ##[group]Run actions/checkout@v4
+2026-09-28T22:26:20.8672609Z with:
+2026-09-28T22:26:20.8673075Z   fetch-depth: 1
+2026-09-28T22:26:20.8673764Z   repository: dandpb/aidevschool
+2026-09-28T22:26:20.8677802Z   token: ***
+2026-09-28T22:26:20.8678251Z   ssh-strict: true
+2026-09-28T22:26:20.8678714Z   ssh-user: git
+2026-09-28T22:26:20.8679188Z   persist-credentials: true
+2026-09-28T22:26:20.8679693Z   clean: true
+2026-09-28T22:26:20.8680151Z   sparse-checkout-cone-mode: true
+2026-09-28T22:26:20.8680685Z   fetch-tags: false
+2026-09-28T22:26:20.8681137Z   show-progress: true
+2026-09-28T22:26:20.8681606Z   lfs: false
+2026-09-28T22:26:20.8682198Z   submodules: false
+2026-09-28T22:26:20.8682856Z   set-safe-directory: true
+2026-09-28T22:26:20.8683650Z   allow-unsafe-pr-checkout: false
+2026-09-28T22:26:20.8684666Z ##[endgroup]
+2026-09-28T22:26:20.9696415Z Syncing repository: dandpb/aidevschool
+2026-09-28T22:26:20.9698978Z ##[group]Getting Git version info
+2026-09-28T22:26:20.9700274Z Working directory is '/home/runner/work/aidevschool/aidevschool'
+2026-09-28T22:26:20.9702033Z [command]/usr/bin/git version
+2026-09-28T22:26:20.9761456Z git version 2.55.0
+2026-09-28T22:26:20.9784477Z ##[endgroup]
+2026-09-28T22:26:20.9799817Z Temporarily overriding HOME='/home/runner/work/_temp/a6042446-6dc9-4948-9554-1417a8915c7b' before making global git config changes
+2026-09-28T22:26:20.9802299Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-28T22:26:20.9805748Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/aidevschool/aidevschool
+2026-09-28T22:26:20.9863631Z Deleting the contents of '/home/runner/work/aidevschool/aidevschool'
+2026-09-28T22:26:20.9873950Z ##[group]Initializing the repository
+2026-09-28T22:26:20.9881763Z [command]/usr/bin/git init /home/runner/work/aidevschool/aidevschool
+2026-09-28T22:26:20.9987030Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-09-28T22:26:20.9988853Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-09-28T22:26:20.9991331Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-09-28T22:26:20.9993336Z hint: call:
+2026-09-28T22:26:20.9994354Z hint:
+2026-09-28T22:26:20.9995239Z hint: 	git config --global init.defaultBranch <name>
+2026-09-28T22:26:20.9996273Z hint:
+2026-09-28T22:26:20.9997226Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-09-28T22:26:20.9998840Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-09-28T22:26:21.0000146Z hint:
+2026-09-28T22:26:21.0001018Z hint: 	git branch -m <name>
+2026-09-28T22:26:21.0001885Z hint:
+2026-09-28T22:26:21.0002992Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-09-28T22:26:21.0005257Z Initialized empty Git repository in /home/runner/work/aidevschool/aidevschool/.git/
+2026-09-28T22:26:21.0008587Z [command]/usr/bin/git remote add origin https://github.com/dandpb/aidevschool
+2026-09-28T22:26:21.0061573Z ##[endgroup]
+2026-09-28T22:26:21.0062916Z ##[group]Disabling automatic garbage collection
+2026-09-28T22:26:21.0065630Z [command]/usr/bin/git config --local gc.auto 0
+2026-09-28T22:26:21.0100328Z ##[endgroup]
+2026-09-28T22:26:21.0101738Z ##[group]Setting up auth
+2026-09-28T22:26:21.0108116Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-28T22:26:21.0142465Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-28T22:26:21.0536799Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-28T22:26:21.0586667Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-28T22:26:21.0839018Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-28T22:26:21.0878631Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-28T22:26:21.1114065Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-09-28T22:26:21.1156667Z ##[endgroup]
+2026-09-28T22:26:21.1157639Z ##[group]Fetching the repository
+2026-09-28T22:26:21.1166704Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +a02b18334fda0336ceccfd4f9d2529fb3351752a:refs/remotes/origin/main
+2026-09-28T22:26:25.0940343Z From https://github.com/dandpb/aidevschool
+2026-09-28T22:26:25.0942235Z  * [new ref]         a02b18334fda0336ceccfd4f9d2529fb3351752a -> origin/main
+2026-09-28T22:26:25.0947172Z ##[endgroup]
+2026-09-28T22:26:25.0950590Z ##[group]Determining the checkout info
+2026-09-28T22:26:25.0952612Z ##[endgroup]
+2026-09-28T22:26:25.0956459Z [command]/usr/bin/git sparse-checkout disable
+2026-09-28T22:26:25.1020363Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-09-28T22:26:25.1065600Z ##[group]Checking out the ref
+2026-09-28T22:26:25.1069562Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-09-28T22:26:26.0416651Z Switched to a new branch 'main'
+2026-09-28T22:26:26.0434728Z branch 'main' set up to track 'origin/main'.
+2026-09-28T22:26:26.0459964Z ##[endgroup]
+2026-09-28T22:26:26.0508862Z [command]/usr/bin/git log -1 --format=%H
+2026-09-28T22:26:26.0536401Z a02b18334fda0336ceccfd4f9d2529fb3351752a
+2026-09-28T22:26:26.0772715Z ##[group]Run case "issue_comment" in
+2026-09-28T22:26:26.0773224Z [36;1mcase "issue_comment" in[0m
+2026-09-28T22:26:26.0773890Z [36;1m  pull_request)   echo "PR=" >> "$GITHUB_ENV" ;;[0m
+2026-09-28T22:26:26.0774343Z [36;1m  issue_comment)  echo "PR=547" >> "$GITHUB_ENV" ;;[0m
+2026-09-28T22:26:26.0774781Z [36;1m  workflow_dispatch) echo "PR=" >> "$GITHUB_ENV" ;;[0m
+2026-09-28T22:26:26.0775251Z [36;1m  *) echo "unsupported event issue_comment" >&2; exit 2 ;;[0m
+2026-09-28T22:26:26.0775875Z [36;1mesac[0m
+2026-09-28T22:26:26.1045824Z shell: /usr/bin/bash -e {0}
+2026-09-28T22:26:26.1046283Z ##[endgroup]
+2026-09-28T22:26:26.1202870Z ##[group]Run python3 scripts/countersign_gate_check.py --self-test
+2026-09-28T22:26:26.1203836Z [36;1mpython3 scripts/countersign_gate_check.py --self-test[0m
+2026-09-28T22:26:26.1265740Z shell: /usr/bin/bash -e {0}
+2026-09-28T22:26:26.1266054Z env:
+2026-09-28T22:26:26.1266309Z   PR: 547
+2026-09-28T22:26:26.1266566Z ##[endgroup]
+2026-09-28T22:26:27.5881047Z PASS [no citation fails] rc=1 (expected 1)
+2026-09-28T22:26:27.5882114Z PASS [body-only citation fails] rc=1 (expected 1)
+2026-09-28T22:26:27.5895234Z PASS [citation without provenance fails] rc=1 (expected 1)
+2026-09-28T22:26:27.5896191Z PASS [producer self-countersign fails (F3)] rc=1 (expected 1)
+2026-09-28T22:26:27.5897543Z PASS [valid distinct-agent countersign passes] rc=0 (expected 0)
+2026-09-28T22:26:27.5898620Z PASS [stale head pin fails after new push] rc=1 (expected 1)
+2026-09-28T22:26:27.5899599Z PASS [short-sha head pin fails] rc=1 (expected 1)
+2026-09-28T22:26:27.5900478Z PASS [producer unattributed fails (F1/F2)] rc=1 (expected 1)
+2026-09-28T22:26:27.5901442Z PASS [VOID after citation fails (F3 hold)] rc=1 (expected 1)
+2026-09-28T22:26:27.5902257Z PASS [HELD after citation fails] rc=1 (expected 1)
+2026-09-28T22:26:27.5902949Z PASS [VOID before citation does not block] rc=0 (expected 0)
+2026-09-28T22:26:27.5904091Z PASS [later producer self-cite supersedes (F3 pattern)] rc=1 (expected 1)
+2026-09-28T22:26:27.5905024Z PASS [reopened after citation fails (#535)] rc=1 (expected 1)
+2026-09-28T22:26:27.5905953Z PASS [reopened before citation passes] rc=0 (expected 0)
+2026-09-28T22:26:27.5906711Z PASS [unresolvable AID fails] rc=1 (expected 1)
+2026-09-28T22:26:27.5907530Z PASS [resolver not configured fails closed] rc=1 (expected 1)
+2026-09-28T22:26:27.5908376Z PASS [post-merge citation fails (audit mode)] rc=1 (expected 1)
+2026-09-28T22:26:27.5909253Z PASS [pre-merge citation passes in audit mode] rc=0 (expected 0)
+2026-09-28T22:26:27.5910092Z PASS [re-countersign on new head passes] rc=0 (expected 0)
+2026-09-28T22:26:27.5910889Z PASS [head pinned in comment body passes] rc=0 (expected 0)
+2026-09-28T22:26:27.5911832Z PASS [post-merge duplicate citation ignored (audit, AID-2840)] rc=0 (expected 0)
+2026-09-28T22:26:27.5912839Z PASS [post-merge-only citation fails (audit, AID-2840)] rc=1 (expected 1)
+2026-09-28T22:26:27.5914048Z PASS [post-merge VOID still reddens audit (AID-2840)] rc=1 (expected 1)
+2026-09-28T22:26:27.5915052Z PASS [pre-merge self-cite stays operative despite post-merge fix] rc=1 (expected 1)
+2026-09-28T22:26:27.5916178Z PASS [fenced template after countersign does not supersede (AID-2818)] rc=0 (expected 0)
+2026-09-28T22:26:27.5917250Z PASS [fenced template before countersign stays inert] rc=0 (expected 0)
+2026-09-28T22:26:27.5918130Z PASS [citation only inside a fence fails] rc=1 (expected 1)
+2026-09-28T22:26:27.5918998Z PASS [head pinned only inside a fence fails] rc=1 (expected 1)
+2026-09-28T22:26:27.5920015Z PASS [fenced provenance trailer does not attribute producer] rc=1 (expected 1)
+2026-09-28T22:26:27.5921156Z PASS [citation after an unclosed fence fails (fail-closed)] rc=1 (expected 1)
+2026-09-28T22:26:27.5922287Z PASS [CRLF-pasted citation and provenance pass (AID-3050)] rc=0 (expected 0)
+2026-09-28T22:26:27.5924714Z PASS [provenance ending in bare CR at EOF passes (AID-3050)] rc=0 (expected 0)
+2026-09-28T22:26:27.5925606Z PASS [CR inside verdict token fails (anchor intact)] rc=1 (expected 1)
+2026-09-28T22:26:27.5926487Z PASS [CR before head= pin fails (pin anchor intact)] rc=1 (expected 1)
+2026-09-28T22:26:27.5927373Z PASS [CR inside producer trailer fails (producer unattributed)] rc=1 (expected 1)
+2026-09-28T22:26:27.5928157Z countersign-gate self-test: 35/35 passed
+2026-09-28T22:26:27.6075008Z ##[group]Run bash scripts/merge_pr.sh --self-test
+2026-09-28T22:26:27.6075777Z [36;1mbash scripts/merge_pr.sh --self-test[0m
+2026-09-28T22:26:27.6144096Z shell: /usr/bin/bash -e {0}
+2026-09-28T22:26:27.6144635Z env:
+2026-09-28T22:26:27.6144842Z   PR: 547
+2026-09-28T22:26:27.6145049Z ##[endgroup]
+2026-09-28T22:26:27.6303872Z PASS [object shape extracts countersign-gate] 'success'
+2026-09-28T22:26:27.6336477Z PASS [object shape extracts guardrails] 'success'
+2026-09-28T22:26:27.6368151Z PASS [missing check reads absent] 'absent'
+2026-09-28T22:26:27.6399753Z PASS [empty check_runs reads absent] 'absent'
+2026-09-28T22:26:27.6436308Z PASS [red conclusion survives extraction] 'failure'
+2026-09-28T22:26:27.6468174Z PASS [pending (conclusion null) reads absent] 'absent'
+2026-09-28T22:26:27.6500039Z PASS [malformed JSON reads empty, never success] ''
+2026-09-28T22:26:27.6532151Z PASS [legacy array shape reads empty, never success] ''
+2026-09-28T22:26:27.6572400Z PASS [check in the SECOND page is still extracted] 'success'
+2026-09-28T22:26:27.6593751Z PASS [slug https remote with .git] 'dandpb/aidevschool'
+2026-09-28T22:26:27.6613707Z PASS [slug https remote bare] 'dandpb/aidevschool'
+2026-09-28T22:26:27.6634241Z PASS [slug scp remote with .git] 'dandpb/aidevschool'
+2026-09-28T22:26:27.6654612Z PASS [slug scp remote bare] 'dandpb/aidevschool'
+2026-09-28T22:26:27.6675018Z PASS [slug ssh remote with .git] 'dandpb/aidevschool'
+2026-09-28T22:26:27.6695313Z PASS [slug trailing slash tolerated] 'dandpb/aidevschool'
+2026-09-28T22:26:27.6696660Z merge_pr self-test (§3 extraction): 15 passed, 0 failed
+2026-09-28T22:26:27.6744665Z ##[group]Run python3 scripts/countersign_gate_check.py --pr "$PR"
+2026-09-28T22:26:27.6745191Z [36;1mpython3 scripts/countersign_gate_check.py --pr "$PR"[0m
+2026-09-28T22:26:27.6808127Z shell: /usr/bin/bash -e {0}
+2026-09-28T22:26:27.6808410Z env:
+2026-09-28T22:26:27.6808616Z   PR: 547
+2026-09-28T22:26:27.6811634Z   GH_TOKEN: ***
+2026-09-28T22:26:27.6811917Z   SDLC_GUARD_AID_RESOLVER: scripts/sdlc_aid_resolve.sh
+2026-09-28T22:26:27.6812397Z   PAPERCLIP_API_URL: ***
+2026-09-28T22:26:27.6815914Z   PAPERCLIP_API_TOKEN: ***
+2026-09-28T22:26:27.6816175Z ##[endgroup]
+2026-09-28T22:26:28.7395962Z ##[error]countersign-gate FAIL (AID-2768): a comment posted AFTER the operative citation contains a VOID/HELD marker (at 2026-09-28T22:26:13Z) — the hold supersedes the countersign; a fresh independent countersign is required (AID-2768 §7)
+2026-09-28T22:26:28.7409452Z countersign-gate: FAIL — a comment posted AFTER the operative citation contains a VOID/HELD marker (at 2026-09-28T22:26:13Z) — the hold supersedes the countersign; a fresh independent countersign is required (AID-2768 §7)
+2026-09-28T22:26:28.7441100Z ##[error]Process completed with exit code 1.
+2026-09-28T22:26:28.7572324Z Post job cleanup.
+2026-09-28T22:26:28.8461712Z [command]/usr/bin/git version
+2026-09-28T22:26:28.8509947Z git version 2.55.0
+2026-09-28T22:26:28.8560480Z Temporarily overriding HOME='/home/runner/work/_temp/a58af850-9591-48cd-b28a-5be8d4726bd3' before making global git config changes
+2026-09-28T22:26:28.8561608Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-28T22:26:28.8567361Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/aidevschool/aidevschool
+2026-09-28T22:26:28.8625036Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-28T22:26:28.8665714Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-28T22:26:28.9009521Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-28T22:26:28.9032912Z http.https://github.com/.extraheader
+2026-09-28T22:26:28.9074648Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-09-28T22:26:28.9096617Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-28T22:26:28.9434417Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-28T22:26:28.9471219Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-28T22:26:28.9874836Z Cleaning up orphan processes
+2026-09-28T22:26:29.0150564Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
