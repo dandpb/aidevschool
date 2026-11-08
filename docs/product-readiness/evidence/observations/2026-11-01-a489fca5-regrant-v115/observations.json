@@ -1,0 +1,137 @@
+{
+ "schemaVersion": 1,
+ "gitSha": "a489fca5d8b4414a2b1afe2cd5aa175d5e6e222b",
+ "observedAt": "2026-11-01T10:28:00Z",
+ "observerContext": "independent-readiness-observer",
+ "scenarios": [
+  {
+   "scenarioId": "literacy-corridor-gate-retry",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "learner-understands-retry-without-internal-language",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "student-guide.md:135 — 'nada é perdido — leia o feedback, peça uma dica e tente de novo' (byte-idêntico, mesma linha da v114); LessonScreen.tsx:435 'Tentar novamente' (linha idêntica à v114) [Re-anchor v115 (AID-6004, PATH A passo 2-4, execução ao vivo por Storage Engineer 92d055bc — executor ≠ countersigner QA Lead ca6a3f95, executor ≠ producer (fábrica AID-1357)): observação re-ancorada first-hand na árvore `a489fca5` (branch regrant/auto-20261026-12dd8bdf = main parada 12dd8bdf + snapshot de fábrica @12dd8bdf; PR #744 sobre a main corrente, sem update-branch). Causa do drift desde o anchor v114 (9b96a4ef): ondas de conteúdo — PR #743 (1b99f57d, AID-5216) l27-a2 contentBump v3→v4 + retrofitNotice.ts (O3-C1, UI-only) + missions.ts regenerado (AUTO-GENERATED, read-only) — dentro dos sourcePaths dos 3 grupos; sem mudança de lógica de gate/verificador (logs/branch-delta-v115.txt). Producer desta árvore: CI re-open run 41295103515 @a489fca5 (2026-11-01T09:54:08Z, 42✓/1s/1✗ by-design claims); identidade tripla 11/11 regen=CI=snapshot (logs/regen-identity.log, logs/ci-receipts-identity.log). Suítes first-hand: substrate 1016p/2s + dojoToday selfcheck OK; docs 59p pre-pin; factory 183p; carry-over v114 11/11 byte-idêntico (logs/). Proveniência: agent=92d055bc-e965-4f92-8ef6-06a775fa900e task=AID-6004 run=1c842375-b588-4410-9d9b-477b6c46eb50]"
+    }
+   ],
+   "gaps": []
+  },
+  {
+   "scenarioId": "literacy-corridor-grandfathered-return",
+   "outcome": "pass",
+   "assertions": [],
+   "gaps": []
+  },
+  {
+   "scenarioId": "literacy-corridor-happy-path",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "learner-names-next-action-after-cp-03",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "student-guide.md:135 'passar no desafio (média das notas ≥ 75%) para entrar no próximo bairro' + :147 'Continue pela próxima lição do bairro, faça o Desafio do Módulo quando ele abrir' — próxima ação nomeável pós-CP-03; carry-over v114 byte-idêntico [Re-anchor v115 (AID-6004, PATH A passo 2-4, execução ao vivo por Storage Engineer 92d055bc — executor ≠ countersigner QA Lead ca6a3f95, executor ≠ producer (fábrica AID-1357)): observação re-ancorada first-hand na árvore `a489fca5` (branch regrant/auto-20261026-12dd8bdf = main parada 12dd8bdf + snapshot de fábrica @12dd8bdf; PR #744 sobre a main corrente, sem update-branch). Causa do drift desde o anchor v114 (9b96a4ef): ondas de conteúdo — PR #743 (1b99f57d, AID-5216) l27-a2 contentBump v3→v4 + retrofitNotice.ts (O3-C1, UI-only) + missions.ts regenerado (AUTO-GENERATED, read-only) — dentro dos sourcePaths dos 3 grupos; sem mudança de lógica de gate/verificador (logs/branch-delta-v115.txt). Producer desta árvore: CI re-open run 41295103515 @a489fca5 (2026-11-01T09:54:08Z, 42✓/1s/1✗ by-design claims); identidade tripla 11/11 regen=CI=snapshot (logs/regen-identity.log, logs/ci-receipts-identity.log). Suítes first-hand: substrate 1016p/2s + dojoToday selfcheck OK; docs 59p pre-pin; factory 183p; carry-over v114 11/11 byte-idêntico (logs/). Proveniência: agent=92d055bc-e965-4f92-8ef6-06a775fa900e task=AID-6004 run=1c842375-b588-4410-9d9b-477b6c46eb50]"
+    }
+   ],
+   "gaps": []
+  },
+  {
+   "scenarioId": "literacy-corridor-resume-mid-module",
+   "outcome": "pass",
+   "assertions": [],
+   "gaps": []
+  },
+  {
+   "scenarioId": "literacy-corridor-review-window",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "learner-distinguishes-review-from-new-content",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "HomeScreen.tsx 'Revisão pendente' + ProgressScreen.tsx 'Revisão pendente agora:' (re-localizados byte-idênticos em engines/literacyDojo/src/screens/); 'É revisão, não conteúdo novo' (student-guide.md:135) [Re-anchor v115 (AID-6004, PATH A passo 2-4, execução ao vivo por Storage Engineer 92d055bc — executor ≠ countersigner QA Lead ca6a3f95, executor ≠ producer (fábrica AID-1357)): observação re-ancorada first-hand na árvore `a489fca5` (branch regrant/auto-20261026-12dd8bdf = main parada 12dd8bdf + snapshot de fábrica @12dd8bdf; PR #744 sobre a main corrente, sem update-branch). Causa do drift desde o anchor v114 (9b96a4ef): ondas de conteúdo — PR #743 (1b99f57d, AID-5216) l27-a2 contentBump v3→v4 + retrofitNotice.ts (O3-C1, UI-only) + missions.ts regenerado (AUTO-GENERATED, read-only) — dentro dos sourcePaths dos 3 grupos; sem mudança de lógica de gate/verificador (logs/branch-delta-v115.txt). Producer desta árvore: CI re-open run 41295103515 @a489fca5 (2026-11-01T09:54:08Z, 42✓/1s/1✗ by-design claims); identidade tripla 11/11 regen=CI=snapshot (logs/regen-identity.log, logs/ci-receipts-identity.log). Suítes first-hand: substrate 1016p/2s + dojoToday selfcheck OK; docs 59p pre-pin; factory 183p; carry-over v114 11/11 byte-idêntico (logs/). Proveniência: agent=92d055bc-e965-4f92-8ef6-06a775fa900e task=AID-6004 run=1c842375-b588-4410-9d9b-477b6c46eb50]"
+    }
+   ],
+   "gaps": []
+  },
+  {
+   "scenarioId": "literacy-happy-path",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "learner-can-name-next-action",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "ResultScreen.tsx 'VILA LUME · MISSÃO CONCLUÍDA' byte-idêntico; student-guide.md:54 'Tentar novamente' → próxima lição 'Sua primeira conversa com uma IA' [Re-anchor v115 (AID-6004, PATH A passo 2-4, execução ao vivo por Storage Engineer 92d055bc — executor ≠ countersigner QA Lead ca6a3f95, executor ≠ producer (fábrica AID-1357)): observação re-ancorada first-hand na árvore `a489fca5` (branch regrant/auto-20261026-12dd8bdf = main parada 12dd8bdf + snapshot de fábrica @12dd8bdf; PR #744 sobre a main corrente, sem update-branch). Causa do drift desde o anchor v114 (9b96a4ef): ondas de conteúdo — PR #743 (1b99f57d, AID-5216) l27-a2 contentBump v3→v4 + retrofitNotice.ts (O3-C1, UI-only) + missions.ts regenerado (AUTO-GENERATED, read-only) — dentro dos sourcePaths dos 3 grupos; sem mudança de lógica de gate/verificador (logs/branch-delta-v115.txt). Producer desta árvore: CI re-open run 41295103515 @a489fca5 (2026-11-01T09:54:08Z, 42✓/1s/1✗ by-design claims); identidade tripla 11/11 regen=CI=snapshot (logs/regen-identity.log, logs/ci-receipts-identity.log). Suítes first-hand: substrate 1016p/2s + dojoToday selfcheck OK; docs 59p pre-pin; factory 183p; carry-over v114 11/11 byte-idêntico (logs/). Proveniência: agent=92d055bc-e965-4f92-8ef6-06a775fa900e task=AID-6004 run=1c842375-b588-4410-9d9b-477b6c46eb50]"
+    }
+   ],
+   "gaps": []
+  },
+  {
+   "scenarioId": "literacy-resume",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "learner-understands-device-boundary",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "student-guide.md:117 'Your onboarding and lesson progress are stored locally in this browser… There is no account or cross-device synchronization' — byte-idêntico [Re-anchor v115 (AID-6004, PATH A passo 2-4, execução ao vivo por Storage Engineer 92d055bc — executor ≠ countersigner QA Lead ca6a3f95, executor ≠ producer (fábrica AID-1357)): observação re-ancorada first-hand na árvore `a489fca5` (branch regrant/auto-20261026-12dd8bdf = main parada 12dd8bdf + snapshot de fábrica @12dd8bdf; PR #744 sobre a main corrente, sem update-branch). Causa do drift desde o anchor v114 (9b96a4ef): ondas de conteúdo — PR #743 (1b99f57d, AID-5216) l27-a2 contentBump v3→v4 + retrofitNotice.ts (O3-C1, UI-only) + missions.ts regenerado (AUTO-GENERATED, read-only) — dentro dos sourcePaths dos 3 grupos; sem mudança de lógica de gate/verificador (logs/branch-delta-v115.txt). Producer desta árvore: CI re-open run 41295103515 @a489fca5 (2026-11-01T09:54:08Z, 42✓/1s/1✗ by-design claims); identidade tripla 11/11 regen=CI=snapshot (logs/regen-identity.log, logs/ci-receipts-identity.log). Suítes first-hand: substrate 1016p/2s + dojoToday selfcheck OK; docs 59p pre-pin; factory 183p; carry-over v114 11/11 byte-idêntico (logs/). Proveniência: agent=92d055bc-e965-4f92-8ef6-06a775fa900e task=AID-6004 run=1c842375-b588-4410-9d9b-477b6c46eb50]"
+    }
+   ],
+   "gaps": []
+  },
+  {
+   "scenarioId": "literacy-retry",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "learner-understands-retry",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "LessonScreen.tsx:435 'Tentar novamente' (linha idêntica à v114); student-guide.md:54 'leia o feedback, use a dica se quiser e escolha Tentar novamente' [Re-anchor v115 (AID-6004, PATH A passo 2-4, execução ao vivo por Storage Engineer 92d055bc — executor ≠ countersigner QA Lead ca6a3f95, executor ≠ producer (fábrica AID-1357)): observação re-ancorada first-hand na árvore `a489fca5` (branch regrant/auto-20261026-12dd8bdf = main parada 12dd8bdf + snapshot de fábrica @12dd8bdf; PR #744 sobre a main corrente, sem update-branch). Causa do drift desde o anchor v114 (9b96a4ef): ondas de conteúdo — PR #743 (1b99f57d, AID-5216) l27-a2 contentBump v3→v4 + retrofitNotice.ts (O3-C1, UI-only) + missions.ts regenerado (AUTO-GENERATED, read-only) — dentro dos sourcePaths dos 3 grupos; sem mudança de lógica de gate/verificador (logs/branch-delta-v115.txt). Producer desta árvore: CI re-open run 41295103515 @a489fca5 (2026-11-01T09:54:08Z, 42✓/1s/1✗ by-design claims); identidade tripla 11/11 regen=CI=snapshot (logs/regen-identity.log, logs/ci-receipts-identity.log). Suítes first-hand: substrate 1016p/2s + dojoToday selfcheck OK; docs 59p pre-pin; factory 183p; carry-over v114 11/11 byte-idêntico (logs/). Proveniência: agent=92d055bc-e965-4f92-8ef6-06a775fa900e task=AID-6004 run=1c842375-b588-4410-9d9b-477b6c46eb50]"
+    }
+   ],
+   "gaps": []
+  },
+  {
+   "scenarioId": "os-literacy-hosted-mission",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "learner-can-state-result-and-next-action",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "Onboarding.tsx 'Escolha IA Prática ou Dev. Sem conta; o progr…' byte-idêntico em engines/codexdojo-os-prototype/src/journey/Onboarding.tsx; missions.ts = catálogo AUTO-GENERATED (read-only, sem API de mastery) — conteúdo regenerado, contrato inalterado [Re-anchor v115 (AID-6004, PATH A passo 2-4, execução ao vivo por Storage Engineer 92d055bc — executor ≠ countersigner QA Lead ca6a3f95, executor ≠ producer (fábrica AID-1357)): observação re-ancorada first-hand na árvore `a489fca5` (branch regrant/auto-20261026-12dd8bdf = main parada 12dd8bdf + snapshot de fábrica @12dd8bdf; PR #744 sobre a main corrente, sem update-branch). Causa do drift desde o anchor v114 (9b96a4ef): ondas de conteúdo — PR #743 (1b99f57d, AID-5216) l27-a2 contentBump v3→v4 + retrofitNotice.ts (O3-C1, UI-only) + missions.ts regenerado (AUTO-GENERATED, read-only) — dentro dos sourcePaths dos 3 grupos; sem mudança de lógica de gate/verificador (logs/branch-delta-v115.txt). Producer desta árvore: CI re-open run 41295103515 @a489fca5 (2026-11-01T09:54:08Z, 42✓/1s/1✗ by-design claims); identidade tripla 11/11 regen=CI=snapshot (logs/regen-identity.log, logs/ci-receipts-identity.log). Suítes first-hand: substrate 1016p/2s + dojoToday selfcheck OK; docs 59p pre-pin; factory 183p; carry-over v114 11/11 byte-idêntico (logs/). Proveniência: agent=92d055bc-e965-4f92-8ef6-06a775fa900e task=AID-6004 run=1c842375-b588-4410-9d9b-477b6c46eb50]"
+    }
+   ],
+   "gaps": []
+  },
+  {
+   "scenarioId": "os-literacy-returning-device",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "learner-understands-literacy-continuity-boundary",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "EngineHubApp.tsx 'Evidência bruta · não verificada' byte-idêntico; boundary producer ≠ verifier preservada — nenhuma edição de gate no intervalo (branch-delta) [Re-anchor v115 (AID-6004, PATH A passo 2-4, execução ao vivo por Storage Engineer 92d055bc — executor ≠ countersigner QA Lead ca6a3f95, executor ≠ producer (fábrica AID-1357)): observação re-ancorada first-hand na árvore `a489fca5` (branch regrant/auto-20261026-12dd8bdf = main parada 12dd8bdf + snapshot de fábrica @12dd8bdf; PR #744 sobre a main corrente, sem update-branch). Causa do drift desde o anchor v114 (9b96a4ef): ondas de conteúdo — PR #743 (1b99f57d, AID-5216) l27-a2 contentBump v3→v4 + retrofitNotice.ts (O3-C1, UI-only) + missions.ts regenerado (AUTO-GENERATED, read-only) — dentro dos sourcePaths dos 3 grupos; sem mudança de lógica de gate/verificador (logs/branch-delta-v115.txt). Producer desta árvore: CI re-open run 41295103515 @a489fca5 (2026-11-01T09:54:08Z, 42✓/1s/1✗ by-design claims); identidade tripla 11/11 regen=CI=snapshot (logs/regen-identity.log, logs/ci-receipts-identity.log). Suítes first-hand: substrate 1016p/2s + dojoToday selfcheck OK; docs 59p pre-pin; factory 183p; carry-over v114 11/11 byte-idêntico (logs/). Proveniência: agent=92d055bc-e965-4f92-8ef6-06a775fa900e task=AID-6004 run=1c842375-b588-4410-9d9b-477b6c46eb50]"
+    }
+   ],
+   "gaps": []
+  },
+  {
+   "scenarioId": "os-verification-recovery",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "facilitator-can-recover-without-repository-intervention",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "facilitator-guide.md vigente na árvore; retrofitNotice.ts é UI idempotente por contentVersion (first-hand: 'exatamente 1× por learner/lição/bump') — recuperação sem intervenção de repositório [Re-anchor v115 (AID-6004, PATH A passo 2-4, execução ao vivo por Storage Engineer 92d055bc — executor ≠ countersigner QA Lead ca6a3f95, executor ≠ producer (fábrica AID-1357)): observação re-ancorada first-hand na árvore `a489fca5` (branch regrant/auto-20261026-12dd8bdf = main parada 12dd8bdf + snapshot de fábrica @12dd8bdf; PR #744 sobre a main corrente, sem update-branch). Causa do drift desde o anchor v114 (9b96a4ef): ondas de conteúdo — PR #743 (1b99f57d, AID-5216) l27-a2 contentBump v3→v4 + retrofitNotice.ts (O3-C1, UI-only) + missions.ts regenerado (AUTO-GENERATED, read-only) — dentro dos sourcePaths dos 3 grupos; sem mudança de lógica de gate/verificador (logs/branch-delta-v115.txt). Producer desta árvore: CI re-open run 41295103515 @a489fca5 (2026-11-01T09:54:08Z, 42✓/1s/1✗ by-design claims); identidade tripla 11/11 regen=CI=snapshot (logs/regen-identity.log, logs/ci-receipts-identity.log). Suítes first-hand: substrate 1016p/2s + dojoToday selfcheck OK; docs 59p pre-pin; factory 183p; carry-over v114 11/11 byte-idêntico (logs/). Proveniência: agent=92d055bc-e965-4f92-8ef6-06a775fa900e task=AID-6004 run=1c842375-b588-4410-9d9b-477b6c46eb50]"
+    }
+   ],
+   "gaps": []
+  }
+ ]
+}

@@ -1,0 +1,9 @@
+{
+  "assessmentId": "2026-11-01-a489fca5-regrant-v115",
+  "branch": "regrant-v115-exec",
+  "generatedAt": "2026-11-01T10:28:32.458126+00:00",
+  "gitSha": "a489fca5d8b4414a2b1afe2cd5aa175d5e6e222b",
+  "schemaVersion": 1,
+  "status": "written",
+  "useCases": []
+}
