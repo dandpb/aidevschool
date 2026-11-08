@@ -1,0 +1,6 @@
+DRIFT dojotoday-active-unit-guidance (use case dojotoday-daily-guidance)
+DRIFT dojotoday-read-only-boundary (use case dojotoday-daily-guidance)
+DRIFT dojotoday-returning-next-day (use case dojotoday-daily-guidance)
+
+Total drifted scenarios v103->v105: 3 -> ['dojotoday-active-unit-guidance', 'dojotoday-read-only-boundary', 'dojotoday-returning-next-day']
+Expected: the 3 scenarios of dojotoday-daily-guidance (sourcePaths include engines/dojoToday/src/, PR #606 role=group).
