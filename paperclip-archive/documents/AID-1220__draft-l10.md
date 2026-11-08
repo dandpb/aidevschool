@@ -1,0 +1,149 @@
+<!-- issue: AID-1220 | key: draft-l10 | doc_id: b98bd4d1-3f32-4453-8db7-9042c3a8ce85 | updated: 2026-09-10 08:11:10.829+00 -->
+
+# AID-1220 — draft YAML l10 "Quando procurar fontes externas" (mod-03, O3-C2)
+
+(AID-1220)
+
+# AID-1220 — Draft YAML l10 "Quando procurar fontes externas" (O3-C2 — retrofit mod-03)
+
+**Status:** DRAFT de autoria CD pronto para landing FPE (autoria completa; landing é gate do FPE, **após T0 de B2/AID-1219** — decisão AID-1216 §dispatch). **Mecânica:** v1→v2 · 3→4 min · +`l10-a2` (`choice`: regra de decisão — conferir fato checável com consequência, não conselho geral) e +`l10-a3` (`missing_context`: "preciso conferir?" — faltam destino-do-texto / consequência-do-erro; kebab sem `ctx-`) · rubrica 2→3 (+`r-peso-da-consequencia`) · a1 **intacta** (R1.1). 131 linhas.
+
+**Especificação:** AID-1220 (dispatch CEO AID-1216/B3) · padrão O3-C1 provado (spec AID-644 rev 2 §§1.4–1.5, template AID-525 §2, checklist §3.1) · ruling de migração AID-640 (append-only; E1–E4; aviso S1/S2 já mecanizado em `retrofitNotice.ts` — landing só registra a entrada nova de `contentVersion`).
+
+**Pré-validação first-hand (read-only):** cópia descartável da trilha @ `origin/main` `e839d0fc` com os 6 YAMLs do O3-C2 + catálogo da cópia (l08 3→4, l10 3→4) → `tools/validate.py --track <cópia>` **VERDE** ("OK: 29 lição(ões) ready validadas: 20 IA na Prática, 9 Dev; 0 planned") + `--compile` verde. Diff vs. main puramente aditivo (0 linhas removidas; a1 dict-identical; rubricas existentes verbatim).
+
+**Destino canônico (landing FPE):** `curriculum/ai-literacy/modules/{ rel.split('/')[0] }/{ rel.split('/')[1] }` (substituição integral, PR único da onda) + `catalog.yaml`: `estimatedMinutes` (quando bumped) + bump único de `contentVersion`.
+
+```yaml
+# Lição l10 — Fase 2; retrofit O3-C2 (AID-1220, padrão AID-644/648): +l10-a2/+l10-a3, v1→v2, 3→4 min.
+# Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l10
+version: 2
+moduleId: mod-03
+title: "Quando procurar fontes externas"
+objective: "Decidir quando uma afirmação da IA exige verificação em fonte externa antes do uso."
+estimatedMinutes: 4
+skillIds: [avaliar]
+prerequisites: [l09]
+
+activities:
+  - id: l10-a1
+    type: choice
+    skillId: avaliar
+    instruction: "A IA escreveu estas frases para o seu relatório mensal. Marque todas as que você precisa conferir em uma fonte externa antes de usar."
+    data:
+      multiSelect: true
+      options:
+        - id: s-inflacao
+          text: "\"A inflação no Brasil ficou em 4,2% no último ano.\""
+        - id: s-paragrafo
+          text: "\"Parágrafos curtos costumam facilitar a leitura de relatórios.\""
+        - id: s-lei
+          text: "\"A lei determina prazo de 30 dias para esse tipo de reembolso.\""
+        - id: s-estrutura
+          text: "\"Uma estrutura de problema-solução funciona bem em propostas comerciais.\""
+        - id: s-concorrente
+          text: "\"Seu concorrente lançou um produto parecido em março deste ano.\""
+    evaluation:
+      strategy: deterministic
+      correctOptionIds: [s-inflacao, s-lei, s-concorrente]
+    feedback:
+      onFailure: "Confira sempre: números e estatísticas, afirmações sobre leis e prazos, e fatos específicos sobre empresas e datas. Conselhos gerais de escrita não precisam de fonte."
+      perCheck:
+        s-inflacao: "Estatística com número exato: confira no IBGE ou no Banco Central antes de publicar."
+        s-paragrafo: "Conselho geral de escrita — é opinião razoável, não um fato checável."
+        s-lei: "Afirmação sobre lei e prazo: erro aqui tem consequência real — confira no texto oficial da lei."
+        s-estrutura: "Sugestão de estrutura é conselho de escrita, não fato que exija fonte."
+        s-concorrente: "Fato específico com empresa e data: a IA pode ter inventado — confira em notícia ou no site do concorrente."
+      onSuccess: "Isso! Fato checável (número, lei, data, empresa) pede fonte externa; conselho geral não."
+    storage:
+      policy: structured_only
+    hints:
+      - "Pergunte de cada frase: se estiver errada, causa problema real? Ela afirma um fato com número, lei ou data?"
+      - "Duas frases são conselhos de escrita — essas não precisam de fonte."
+
+  - id: l10-a2
+    type: choice
+    skillId: avaliar
+    instruction: "Duas rotinas na equipe. Marina confere tudo o que a IA escreve — inclusive conselho de redação — e nunca entrega no prazo. Rafael não confere nada e já passou número errado para frente. Qual regra equilibra?"
+    data:
+      options:
+        - id: opt-fato-com-consequencia
+          text: "Conferir em fonte externa o fato checável com consequência — número, lei, prazo, afirmação sobre empresa — e seguir adiante com conselho geral de escrita."
+        - id: opt-conferir-tudo
+          text: "Conferir tudo, sempre: segurança total vale o atraso."
+        - id: opt-nao-conferir
+          text: "Não conferir nada: a IA acerta na maioria das vezes."
+    evaluation:
+      strategy: deterministic
+      correctOptionIds: [opt-fato-com-consequencia]
+    feedback:
+      onFailure: "Nem tudo, nem nada: a verificação se justifica quando o erro tem consequência e o fato é checável (número, lei, prazo, empresa). Conselho geral de escrita não tem o que conferir — nele, o atraso de Marina é desperdício."
+      perCheck:
+        opt-fato-com-consequencia: "Isso: o gasto de conferir se paga onde o erro custa caro — fato checável com consequência real."
+        opt-conferir-tudo: "Conferir opinião geral não reduz risco: é atraso sem ganho, como Marina descobriu."
+        opt-nao-conferir: "O risco de Rafael é real: um número errado em relatório tem consequência — e a IA não avisa quando erra."
+      onSuccess: "Exato: conferir o que tem consequência e é checável; seguir adiante no resto. Verificação é investimento com retorno, não taxão geral."
+    storage:
+      policy: structured_only
+    hints:
+      - "Para cada frase da IA: se ela estiver errada, alguém percebe tarde? Então confira."
+      - "O que Marina confere além dos fatos — e por que isso não reduz o risco?"
+
+  - id: l10-a3
+    type: missing_context
+    skillId: avaliar
+    instruction: "Um colega te mandou a mensagem abaixo com um parágrafo que a IA escreveu para o relatório dele. O que você precisa saber antes de dizer se ele precisa conferir?"
+    data:
+      prompt: "A IA escreveu este parágrafo para o meu relatório. Preciso conferir?"
+      contextOptions:
+        - id: destino-do-texto
+          text: "Para onde vai o texto — relatório interno, cliente, site público"
+        - id: consequencia-do-erro
+          text: "O que acontece se a informação estiver errada"
+        - id: tom-do-paragrafo
+          text: "O tom do parágrafo — se está formal ou informal"
+        - id: imagens-do-relatorio
+          text: "Se o relatório vai ter imagens ou só texto"
+    evaluation:
+      strategy: deterministic
+      requiredContextIds: [destino-do-texto, consequencia-do-erro]
+    feedback:
+      onFailure: "A decisão de conferir depende de duas coisas que a mensagem não diz: para onde o texto vai (chefe, cliente, site público) e o que acontece se estiver errado. Tom e imagens mudam a forma, não o risco da informação."
+      perCheck:
+        destino-do-texto: "Faltou isto: o destino decide o padrão — texto para cliente pede mais rigor que anotação interna."
+        consequencia-do-erro: "Faltou isto: a consequência do erro é o que transforma conferência em prioridade — ou em perda de tempo."
+        tom-do-paragrafo: "Tom é forma, não fato: formal ou informal não muda se o conteúdo está certo."
+        imagens-do-relatorio: "Imagens não mudam o risco da informação escrita — não entram nessa decisão."
+      onSuccess: "Exato: destino do texto e consequência do erro — com esses dois, a resposta para 'preciso conferir?' sai sozinha."
+    storage:
+      policy: structured_only
+    hints:
+      - "Pense nas perguntas que você faria de volta antes de responder ao colega."
+      - "Uma coisa é sobre o conteúdo, outra sobre a apresentação — só uma das duas importa aqui."
+
+rubric:
+  id: l10-rubric
+  criteria:
+    - id: r-fato-checavel
+      text: "Marca para verificação as afirmações factuais (números, leis, datas, empresas)."
+      weight: 1
+    - id: r-conselho-geral
+      text: "Reconhece que conselhos gerais de escrita não exigem fonte externa."
+      weight: 1
+    - id: r-peso-da-consequencia
+      text: "Pesa o destino do texto e a consequência do erro ao decidir o que conferir."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: lesson_completed
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l10-a1, l10-a2, l10-a3]
+```

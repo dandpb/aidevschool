@@ -1,0 +1,178 @@
+<!-- issue: AID-1220 | key: draft-l12 | doc_id: 00b88c83-4ca9-4f36-9e7a-8b998a23ed3f | updated: 2026-09-10 08:11:10.971+00 -->
+
+# AID-1220 — draft YAML l12 "Proteja suas informações" (mod-04, O3-C2)
+
+(AID-1220)
+
+# AID-1220 — Draft YAML l12 "Proteja suas informações" (O3-C2 — retrofit mod-04)
+
+**Status:** DRAFT de autoria CD pronto para landing FPE (autoria completa; landing é gate do FPE, **após T0 de B2/AID-1219** — decisão AID-1216 §dispatch). **Mecânica:** v2→v3 · 4 min · +`l12-a2` (`safety_classification`: casos-limite — relato anonimizado é seguro; print com @, protocolo+nome e assinatura identificam) e +`l12-a3` (`choice`: quando só há material sensível — reduzir e anonimizar antes de colar; distrator-myth "pede para ignorar depois") · **rubrica mantida verbatim** · a1 **intacta** (R1.1). 160 linhas (acima do orçamento 130–150: append-only na lição mais longa da trilha; feedback preservado por regra do checklist §3.1-8).
+
+**Especificação:** AID-1220 (dispatch CEO AID-1216/B3) · padrão O3-C1 provado (spec AID-644 rev 2 §§1.4–1.5, template AID-525 §2, checklist §3.1) · ruling de migração AID-640 (append-only; E1–E4; aviso S1/S2 já mecanizado em `retrofitNotice.ts` — landing só registra a entrada nova de `contentVersion`).
+
+**Pré-validação first-hand (read-only):** cópia descartável da trilha @ `origin/main` `e839d0fc` com os 6 YAMLs do O3-C2 + catálogo da cópia (l08 3→4, l10 3→4) → `tools/validate.py --track <cópia>` **VERDE** ("OK: 29 lição(ões) ready validadas: 20 IA na Prática, 9 Dev; 0 planned") + `--compile` verde. Diff vs. main puramente aditivo (0 linhas removidas; a1 dict-identical; rubricas existentes verbatim).
+
+**Destino canônico (landing FPE):** `curriculum/ai-literacy/modules/{ rel.split('/')[0] }/{ rel.split('/')[1] }` (substituição integral, PR único da onda) + `catalog.yaml`: `estimatedMinutes` (quando bumped) + bump único de `contentVersion`.
+
+```yaml
+# Lição l12 — piloto da vertical slice (seção 17 do plano); retrofit O3-C2 (AID-1220, padrão AID-644/648): +l12-a2/+l12-a3, v2→v3.
+# Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l12
+version: 3
+moduleId: mod-04
+title: "Proteja suas informações"
+objective: "Classificar informações do dia a dia de trabalho como seguras ou sensíveis antes de colá-las em uma IA."
+estimatedMinutes: 4
+skillIds: [proteger]
+prerequisites: [l11]
+
+activities:
+  - id: l12-a1
+    type: safety_classification
+    skillId: proteger
+    instruction: "Para cada informação abaixo, decida: é segura para colar em uma ferramenta de IA ou é sensível e deve ficar de fora?"
+    data:
+      labels:
+        safe: "Seguro para compartilhar"
+        sensitive: "Sensível — não compartilhar"
+      items:
+        - id: i-senha
+          text: "A senha do sistema de vendas da empresa"
+        - id: i-site
+          text: "O texto público da página 'Sobre nós' do site da empresa, que você quer resumir"
+        - id: i-planilha
+          text: "Uma planilha com nome, CPF e salário dos funcionários"
+        - id: i-vaga
+          text: "O anúncio de uma vaga que a empresa publicou no LinkedIn"
+        - id: i-cartao
+          text: "O número do cartão corporativo usado nas viagens"
+        - id: i-ata
+          text: "A ata de uma reunião interna com valores de contrato e nomes de clientes"
+        - id: i-legenda
+          text: "Uma ideia de legenda para o post comemorativo de fim de ano, sem dados internos"
+    evaluation:
+      strategy: deterministic
+      classification:
+        i-senha: sensitive
+        i-site: safe
+        i-planilha: sensitive
+        i-vaga: safe
+        i-cartao: sensitive
+        i-ata: sensitive
+        i-legenda: safe
+    feedback:
+      onFailure: "Regra prática: se a informação identifica uma pessoa, abre porta para sistemas ou dinheiro, ou é interna da empresa, trate como sensível. Na dúvida, não cole — ou remova os dados que identificam antes."
+      perCheck:
+        i-senha: "Senhas e credenciais nunca entram em uma IA: com elas, qualquer pessoa acessa os sistemas da empresa."
+        i-site: "Conteúdo já público no site pode ser usado — todo mundo já tem acesso a ele."
+        i-planilha: "Nome, CPF e salário são dados pessoais: colá-los em uma IA expõe pessoas e pode violar a lei de proteção de dados."
+        i-vaga: "Um anúncio público de vaga já foi divulgado pela própria empresa — não há segredo a proteger."
+        i-cartao: "Número de cartão é informação financeira: fora da IA, sempre."
+        i-ata: "Valores de contrato e nomes de clientes são informação interna e confidencial, mesmo sem senhas."
+        i-legenda: "Uma ideia de texto sem dados internos nem pessoais é segura para pedir ajuda à IA."
+      onSuccess: "Muito bem! Credenciais, dados pessoais e informações internas ficam de fora da IA; conteúdo já público pode ser usado."
+    storage:
+      policy: structured_only
+    hints:
+      - "Para cada item, pergunte: se isso vazar, alguém é identificado, prejudicado, ou expõe dinheiro e sistemas da empresa?"
+      - "Conteúdo que já é público (site, vaga anunciada) não precisa de proteção; o que é interno ou pessoal, precisa."
+      - "Senha, cartão, planilha com CPF e ata com valores de contrato são sensíveis; os demais itens são seguros."
+
+  - id: l12-a2
+    type: safety_classification
+    skillId: proteger
+    instruction: "Agora casos menos óbvios do dia a dia: para cada informação, decida se pode ir para a IA ou se fica de fora."
+    data:
+      labels:
+        safe: "Seguro para compartilhar"
+        sensitive: "Sensível — não compartilhar"
+      items:
+        - id: i-relato
+          text: "O relato 'um cliente espera há 12 dias um reembolso' — sem nome, sem valor, sem protocolo"
+        - id: i-pergunta
+          text: "A pergunta 'como escrever um pedido de desculpas por um atraso?'"
+        - id: i-print
+          text: "Um print da conversa mostrando foto, nome e @ do cliente"
+        - id: i-protocolo
+          text: "O número de protocolo do atendimento junto com o nome do cliente"
+        - id: i-assinatura
+          text: "O trecho do e-mail do cliente com a assinatura dele — nome e cargo"
+    evaluation:
+      strategy: deterministic
+      classification:
+        i-relato: safe
+        i-pergunta: safe
+        i-print: sensitive
+        i-protocolo: sensitive
+        i-assinatura: sensitive
+    feedback:
+      onFailure: "A regra continua a mesma, agora em casos-limite: se o trecho identifica uma pessoa (print com foto e @, protocolo com nome, assinatura), fica de fora. Se o problema está descrito sem identificá-lo, pode ir — é isso que torna a ajuda da IA possível sem expor ninguém."
+      perCheck:
+        i-relato: "Seguro: o problema chega sem identificadores — nenhum nome, valor ou protocolo. A IA ajuda no caso sem saber de quem ele é."
+        i-pergunta: "Seguro: é uma dúvida de escrita, sem qualquer dado do cliente ou da empresa."
+        i-print: "Sensível: foto, nome e @ identificam a pessoa — a imagem precisa ser tratada antes de qualquer envio."
+        i-protocolo: "Sensível: protocolo mais nome localiza a pessoa no sistema da empresa — junto, identificam."
+        i-assinatura: "Sensível: nome e cargo na assinatura identificam o cliente — corte a assinatura antes de usar o e-mail."
+      onSuccess: "Muito bem: descrever o problema sem identificar a pessoa abre caminho para usar a IA — e é exatamente essa a prática recomendada."
+    storage:
+      policy: structured_only
+    hints:
+      - "A pergunta de sempre: este trecho permite identificar alguém? Se sim, fica de fora."
+      - "Dois itens descrevem situações sem identificá-las — esses podem ir."
+
+  - id: l12-a3
+    type: choice
+    skillId: proteger
+    instruction: "O colega precisa da IA para responder um cliente, mas o material que ele tem — o e-mail completo do cliente, com dados pessoais — é o único disponível. O que você aconselha?"
+    data:
+      options:
+        - id: opt-reduz-e-anonimiza
+          text: "Reduzir e anonimizar antes de colar: trocar o nome por 'o cliente', cortar o que identifica e enviar só o trecho necessário para a dúvida"
+        - id: opt-cola-tudo
+          text: "Colar o e-mail inteiro: sem o caso completo, a IA não ajuda direito"
+        - id: opt-desiste
+          text: "Desistir da IA: assunto que envolve cliente não pode passar por IA nunca"
+        - id: opt-ignorar-depois
+          text: "Colar tudo e pedir para a IA 'ignorar' os dados pessoais depois"
+    evaluation:
+      strategy: deterministic
+      correctOptionIds: [opt-reduz-e-anonimiza]
+    feedback:
+      onFailure: "Entre colar tudo e desistir da IA existe o caminho do meio: reduzir e anonimizar. O que identifica sai antes de colar — não depois, com um pedido de 'ignore'. E a maioria das dúvidas não precisa do e-mail inteiro."
+      perCheck:
+        opt-reduz-e-anonimiza: "Isso: menos dados, nenhum identificador, só o trecho da dúvida — a IA ajuda e ninguém é exposto."
+        opt-cola-tudo: "O caso completo quase nunca é necessário: a dúvida cabe no trecho — e o resto é exposição sem ganho."
+        opt-desiste: "Não é proibição: com redução e anonimização, assunto de cliente pode passar pela IA com segurança."
+        opt-ignorar-depois: "Instrução não desfaz exposição: uma vez colado, o dado saiu — 'ignorar depois' não protege ninguém."
+      onSuccess: "Exato: reduzir, anonimizar, colar o essencial. Proteção e ajuda da IA caminham juntas."
+    storage:
+      policy: structured_only
+    hints:
+      - "O que a IA realmente precisa para ajudar na dúvida — o e-mail todo ou o parágrafo do problema?"
+      - "Uma das opções assume que dá para 'desfazer' o envio depois. Dá?"
+
+rubric:
+  id: l12-rubric
+  criteria:
+    - id: r-dados-pessoais
+      text: "Classifica dados que identificam pessoas (nome, CPF, salário) como sensíveis."
+      weight: 1
+    - id: r-credenciais-financeiro
+      text: "Classifica credenciais e dados financeiros (senha, cartão) como sensíveis."
+      weight: 1
+    - id: r-conteudo-publico
+      text: "Reconhece que conteúdo já público e ideias sem dados internos são seguros."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: lesson_completed
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l12-a1, l12-a2, l12-a3]
+```

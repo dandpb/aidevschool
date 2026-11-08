@@ -1,0 +1,167 @@
+<!-- issue: AID-649 | key: draft-l04 | doc_id: bdbc75fc-5251-4842-a632-4d0eb6a641a7 | updated: 2026-09-02 14:46:55.665+00 -->
+
+# AID-649 — Draft YAML l04 (Dê um objetivo claro) — T2 Onda O3-C1 (spec rev 2 §2.4)
+
+(AID-649)
+
+# AID-649 — Draft YAML l04 "Dê um objetivo claro" (T2, Onda O3-C1)
+
+**Status:** DRAFT de autoria CD pronto para landing FPE (autoria SOMENTE — landing é gate separado; recomendado **PR único da onda** quando T1+T2 prontos, spec rev 2 §5.5, bump único de `contentVersion` no primeiro landing). Especificação literal: **spec rev 2 (AID-647 doc `spec-rev2` = rev 2 do doc `spec` da AID-644) §2.4** + advisory CD AID-645 comentário `2ed06cf2` (notas 1–7); template AID-525 §2; checklist §3.1 em comentário nesta issue.
+
+**Mecânica:** v1→v2 · 3→4 min · +l04-a2 `prompt_builder` (eco `opt-melhora`) · +l04-a3 `missing_context` (kebab sem `ctx-`) · rubrica +`r-tarefa-material-resultado` · `requiredActivityIds` = conjunto completo · a1 pré-existente **byte-identical/append-only (R1.1)** · feedback 3 vias com `perCheck` · hints 1–3 · `storage: structured_only` · evidência `literacy-evidence v1 / verifierRequired: true` herdada.
+
+**Pré-validação executada** (leitura only, sem escrita canônica): `validate.py` verde em cópia da trilha com os 4 drafts + bump espelho do catálogo (l04 `estimatedMinutes: 3→4`, o que o FPE landa por §4.1). Anexo YAML verbatim: `/api/attachments/5f1360f4-279c-4d60-8b35-316c0dbef856/content`.
+
+**Nota de autoria (desvio divulgado):** instruções das novas atividades em sentence case (estilo das lições hospedeiras l04–l07), não CAIXA ALTA (convenção das ondas novas l24+); marcador de multiSelect mantido no texto ("Marque todas"). Vocabulário `ctx-` preservado na l06-a1 existente; ids kebab sem prefixo nas novas `missing_context` (nota 2 do advisory).
+
+```yaml
+# Lição l04 — Fase 2; retrofit Onda O3-C1 (spec AID-644 rev 2 §2.4; advisory AID-645 `2ed06cf2`): +l04-a2/a3, v2, 3→4 min.
+# Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l04
+version: 2
+moduleId: mod-02
+title: "Dê um objetivo claro"
+objective: "Reescrever um pedido vago como um objetivo concreto e verificável."
+estimatedMinutes: 4
+skillIds: [pedir]
+prerequisites: [l03]
+
+activities:
+  - id: l04-a1
+    type: choice
+    skillId: pedir
+    instruction: "Quatro pessoas pediram ajuda à IA para o mesmo e-mail de cobrança. Qual pedido tem o objetivo mais claro?"
+    data:
+      options:
+        - id: opt-melhora
+          text: "\"Melhora esse texto pra mim.\""
+        - id: opt-claro
+          text: "\"Reescreva este e-mail de cobrança deixando o tom mais cordial, mantendo o valor e a data de vencimento.\""
+        - id: opt-negocio
+          text: "\"Faz um negócio de cobrança aí.\""
+        - id: opt-algo
+          text: "\"Escreve algo sobre pagamento atrasado.\""
+    evaluation:
+      strategy: deterministic
+      correctOptionIds: [opt-claro]
+    feedback:
+      onFailure: "Um objetivo claro diz o que fazer, com qual material e com quais limites — dá para conferir se a resposta cumpriu ou não."
+      perCheck:
+        opt-melhora: "\"Melhora\" não diz o que mudar: qualquer resposta serve, e nenhuma resolve de verdade."
+        opt-claro: "Esse pedido diz a tarefa (reescrever), o material (e-mail de cobrança), o ajuste (tom cordial) e o que manter (valor e data)."
+        opt-negocio: "Sem tarefa nem material definidos, a IA precisa adivinhar — e vai adivinhar errado."
+        opt-algo: "\"Algo sobre\" é tema, não objetivo: o que a IA deve produzir com esse tema?"
+      onSuccess: "Isso! Objetivo claro = tarefa + material + limites. Dá para verificar a resposta na hora."
+    storage:
+      policy: structured_only
+    hints:
+      - "Teste cada pedido: depois da resposta da IA, você conseguiria dizer se ela cumpriu ou não cumpriu?"
+      - "O melhor pedido diz o que fazer, com qual texto, e o que não pode mudar."
+
+  - id: l04-a2
+    type: prompt_builder
+    skillId: pedir
+    instruction: "Agora é a sua vez: transforme o pedido \"Melhora esse e-mail.\" (o pior da atividade anterior) em um pedido com objetivo claro, preenchendo os três campos."
+    data:
+      scenario: "Você trabalha no atendimento e um cliente ainda não pagou a fatura de junho. Você já escreveu o rascunho do e-mail de cobrança e quer a ajuda da IA para melhorá-lo antes de enviar. O pedido \"Melhora esse e-mail.\" deixa a IA adivinhando: qualquer resposta serve, e nenhuma resolve de verdade."
+      genericPrompt: "Melhora esse e-mail."
+      fields:
+        - id: tarefa
+          label: "Tarefa"
+          hint: "O que a IA deve fazer. Ex.: reescrever o e-mail deixando o tom mais cordial."
+        - id: material
+          label: "Material"
+          hint: "Com o que a IA vai trabalhar. Ex.: o e-mail de cobrança que você já escreveu."
+        - id: resultado
+          label: "Resultado esperado"
+          hint: "Como conferir se a resposta cumpriu. Ex.: um e-mail cordial que mantém o valor e a data de vencimento."
+    evaluation:
+      strategy: deterministic
+      fields:
+        tarefa:
+          minLength: 10
+          mustIncludeAny: ["reescrever", "reescreva", "revisar", "melhorar", "tom", "cordial"]
+        material:
+          minLength: 8
+          mustIncludeAny: ["e-mail", "email", "rascunho", "cobrança", "cobranca"]
+        resultado:
+          minLength: 10
+          mustIncludeAny: ["cordial", "tom", "mantendo", "mantém", "mantem", "vencimento", "verificar", "conferir"]
+    feedback:
+      onFailure: "O pedido ainda está vago. Um objetivo claro tem as três partes: a tarefa (o que fazer), o material (com o quê) e o resultado esperado (como conferir que a resposta cumpriu)."
+      perCheck:
+        tarefa: "Diga o que a IA deve fazer com o texto: reescrever ou revisar, e o ajuste principal (por exemplo, o tom mais cordial)."
+        material: "Nomeie o material: o e-mail de cobrança que você já escreveu — é com ele que a IA vai trabalhar."
+        resultado: "Declare como vai conferir o resultado: cordial, mantendo o valor e a data de vencimento."
+      onSuccess: "Isso! Tarefa + material + resultado esperado: agora dá para conferir se a resposta da IA cumpriu o objetivo — e qualquer um que lesse o pedido entenderia o que você quer."
+    storage:
+      policy: structured_only
+    hints:
+      - "Volte ao pedido que venceu a atividade anterior: ele dizia a tarefa (reescrever), o material (o e-mail de cobrança) e o que não podia mudar."
+      - "Preencha cada campo com uma informação da situação: o que fazer, com qual texto, e como conferir o resultado."
+      - "Palavras que ajudam: reescrever na Tarefa; e-mail ou cobrança no Material; cordial, vencimento ou conferir no Resultado esperado."
+
+  - id: l04-a3
+    type: missing_context
+    skillId: pedir
+    instruction: "Um colega que não sabe usar IA mandou a mensagem abaixo para você repassar. O que está faltando no pedido dele?"
+    data:
+      prompt: "COLEGA (mensagem): \"Melhora esse e-mail pra mim, por favor? Preciso enviar hoje.\" — e mais nada: o e-mail não veio junto e não há instruções do que melhorar."
+      contextOptions:
+        - id: tarefa-definida
+          text: "A tarefa: que melhoria ele quer (reescrever o tom? resumir? revisar?) — \"melhora\" não diz o que mudar"
+        - id: material-do-pedido
+          text: "O material: o próprio e-mail, colado ou anexado ao pedido — a IA não tem como adivinhá-lo"
+        - id: resultado-esperado
+          text: "O resultado esperado: como conferir se a resposta serve (por exemplo, cordial e mantendo o valor e a data de vencimento)"
+        - id: quem-recebe
+          text: "Para quem é o e-mail (um cliente, um fornecedor): ajuda a escolher o tom, mas não completa o pedido"
+        - id: nome-do-modelo-de-ia
+          text: "O nome do modelo de IA que ele pretende usar"
+        - id: melhor-horario-para-enviar
+          text: "O melhor horário do dia para enviar e-mails de cobrança"
+    evaluation:
+      strategy: deterministic
+      requiredContextIds: [tarefa-definida, material-do-pedido, resultado-esperado]
+      optionalContextIds: [quem-recebe]
+    feedback:
+      onFailure: "O pedido dele quebra nas três partes do objetivo claro: não diz a tarefa (que melhoria), não traz o material (o e-mail) e não define o resultado esperado (como conferir). Sem isso, a IA adivinha — e devolve qualquer coisa."
+      perCheck:
+        tarefa-definida: "Faltou isto: dizer que melhoria ele quer. \"Melhora\" é convite genérico — o ajuste precisa ser nomeado."
+        material-do-pedido: "Faltou isto: o próprio e-mail. A IA só trabalha com o material que recebe no pedido."
+        resultado-esperado: "Faltou isto: o resultado esperado — o teste que a resposta precisa passar (por exemplo, cordial e mantendo valor e vencimento)."
+        quem-recebe: "Isto é opcional: saber o destinatário ajuda no tom, mas não substitui tarefa, material e resultado."
+        nome-do-modelo-de-ia: "Isto não muda nada: o nome do modelo não aparece no pedido e não completa objetivo algum."
+        melhor-horario-para-enviar: "Isto não muda a resposta da IA: horário de envio é decisão sua, depois que o e-mail estiver pronto."
+      onSuccess: "Exato! \"Melhora esse e-mail\" vira pedido com objetivo claro quando diz a tarefa, traz o material e define o resultado esperado — o resto é detalhe."
+    storage:
+      policy: structured_only
+    hints:
+      - "Aplique o teste da lição: depois da resposta da IA, como o seu colega ia conferir se ela cumpriu o pedido?"
+      - "Faltam as três partes do objetivo claro: o que fazer, com qual material e como conferir o resultado."
+
+rubric:
+  id: l04-rubric
+  criteria:
+    - id: r-objetivo-verificavel
+      text: "Escolhe o objetivo que pode ser verificado (tarefa, material e limites explícitos)."
+      weight: 1
+    - id: r-reconhece-vago
+      text: "Reconhece por que pedidos vagos produzem respostas genéricas."
+      weight: 1
+    - id: r-tarefa-material-resultado
+      text: "Completa e diagnostica pedidos com tarefa, material e resultado esperado verificável."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: lesson_completed
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l04-a1, l04-a2, l04-a3]
+```

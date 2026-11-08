@@ -1,0 +1,149 @@
+<!-- issue: AID-1220 | key: draft-l11 | doc_id: cf0f5362-defc-4dd4-b76a-d6e3ab49bdcd | updated: 2026-09-10 08:11:10.899+00 -->
+
+# AID-1220 — draft YAML l11 "Como comparar alternativas e explicitar critérios" (mod-03, O3-C2)
+
+(AID-1220)
+
+# AID-1220 — Draft YAML l11 "Como comparar alternativas e explicitar critérios" (O3-C2 — retrofit mod-03)
+
+**Status:** DRAFT de autoria CD pronto para landing FPE (autoria completa; landing é gate do FPE, **após T0 de B2/AID-1219** — decisão AID-1216 §dispatch). **Mecânica:** v1→v2 · 4 min · +`l11-a2` (`missing_context`: "compare e me diga a melhor" — faltam critérios-que-importam / restrições-da-situacao; kebab sem `ctx-`) e +`l11-a3` (`rubric_review`: avaliar o registro de decisão de um colega — critérios do contexto, lado a lado, motivo próprio) · rubrica 2→3 (+`r-pedidos-de-comparacao`) · a1 **intacta** (R1.1). 131 linhas.
+
+**Especificação:** AID-1220 (dispatch CEO AID-1216/B3) · padrão O3-C1 provado (spec AID-644 rev 2 §§1.4–1.5, template AID-525 §2, checklist §3.1) · ruling de migração AID-640 (append-only; E1–E4; aviso S1/S2 já mecanizado em `retrofitNotice.ts` — landing só registra a entrada nova de `contentVersion`).
+
+**Pré-validação first-hand (read-only):** cópia descartável da trilha @ `origin/main` `e839d0fc` com os 6 YAMLs do O3-C2 + catálogo da cópia (l08 3→4, l10 3→4) → `tools/validate.py --track <cópia>` **VERDE** ("OK: 29 lição(ões) ready validadas: 20 IA na Prática, 9 Dev; 0 planned") + `--compile` verde. Diff vs. main puramente aditivo (0 linhas removidas; a1 dict-identical; rubricas existentes verbatim).
+
+**Destino canônico (landing FPE):** `curriculum/ai-literacy/modules/{ rel.split('/')[0] }/{ rel.split('/')[1] }` (substituição integral, PR único da onda) + `catalog.yaml`: `estimatedMinutes` (quando bumped) + bump único de `contentVersion`.
+
+```yaml
+# Lição l11 — Fase 2; retrofit O3-C2 (AID-1220, padrão AID-644/648): +l11-a2/+l11-a3, v1→v2.
+# Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l11
+version: 2
+moduleId: mod-03
+title: "Como comparar alternativas e explicitar critérios"
+objective: "Explicitar critérios de comparação antes de escolher entre alternativas propostas pela IA."
+estimatedMinutes: 4
+skillIds: [avaliar]
+prerequisites: [l10]
+
+activities:
+  - id: l11-a1
+    type: sort
+    skillId: avaliar
+    instruction: "Você vai usar a IA para escolher entre três ferramentas de agendamento. Ordene o processo que leva a uma decisão bem fundamentada."
+    data:
+      items:
+        - id: step-compara
+          text: "Compare as alternativas critério por critério, lado a lado."
+        - id: step-criterios
+          text: "Liste os critérios que importam para você (ex.: preço, facilidade, suporte em português)."
+        - id: step-decide
+          text: "Decida você mesmo, registrando o motivo principal da escolha."
+        - id: step-pede
+          text: "Peça à IA as alternativas e peça que avalie cada uma nos seus critérios."
+    evaluation:
+      strategy: deterministic
+      expectedOrder: [step-criterios, step-pede, step-compara, step-decide]
+    feedback:
+      onFailure: "Critérios vêm antes das alternativas: sem eles, a comparação vira questão de impressão. E a decisão final — com o motivo registrado — é sua, não da IA."
+      perCheck:
+        step-criterios: "Primeiro defina o que importa: sem critérios explícitos, qualquer alternativa parece boa."
+        step-pede: "Só depois dos critérios definidos é que você pede as alternativas e a avaliação de cada uma."
+        step-compara: "A comparação vem depois de ter alternativas avaliadas nos mesmos critérios."
+        step-decide: "A decisão é o último passo — e é humana, com o motivo registrado."
+      onSuccess: "Perfeito! Critérios primeiro, alternativas depois, comparação lado a lado e decisão sua, registrada."
+    storage:
+      policy: structured_only
+    hints:
+      - "O que precisa existir antes mesmo de pedir as alternativas à IA?"
+      - "A decisão final nunca é da IA — ela fecha o processo, com o motivo anotado."
+
+  - id: l11-a2
+    type: missing_context
+    skillId: avaliar
+    instruction: "Um colega mostra o pedido que vai fazer à IA: 'Compare as três opções de ferramenta e me diga qual é a melhor.' O que está faltando no pedido?"
+    data:
+      prompt: "Compare as três opções de ferramenta e me diga qual é a melhor."
+      contextOptions:
+        - id: criterios-que-importam
+          text: "Os critérios que importam para a equipe — preço, facilidade, suporte em português"
+        - id: restricoes-da-situacao
+          text: "As restrições reais — orçamento máximo, prazo de decisão, quem vai usar"
+        - id: todas-as-ferramentas-do-mercado
+          text: "A lista completa de todas as ferramentas do mercado, para a comparação ser exaustiva"
+        - id: paginas-dos-sites
+          text: "O número de páginas do site de cada ferramenta"
+    evaluation:
+      strategy: deterministic
+      requiredContextIds: [criterios-que-importam, restricoes-da-situacao]
+    feedback:
+      onFailure: "'A melhor' para quem? Sem os critérios da equipe e as restrições reais (orçamento, prazo, quem usa), a IA decide por você com critérios genéricos. Exaustividade de mercado e número de páginas não substituem o que a decisão precisa."
+      perCheck:
+        criterios-que-importam: "Faltou isto: os critérios da equipe são a balança — sem eles, 'a melhor' é a melhor para a média do mercado, não para vocês."
+        restricoes-da-situacao: "Faltou isto: orçamento, prazo e quem vai usar cortam alternativas antes de qualquer comparação."
+        todas-as-ferramentas-do-mercado: "Exaustividade não é decisão: três opções bem avaliadas nos seus critérios valem mais que um catálogo."
+        paginas-dos-sites: "Número de páginas não mede nada da escolha — é detalhe sem peso."
+      onSuccess: "Exato: critérios e restrições primeiro — aí a comparação da IA serve para decidir, não para impressionar."
+    storage:
+      policy: structured_only
+    hints:
+      - "Se a IA responder 'a melhor é X', você conseguiria dizer melhor para quê? Essa é a peça que falta."
+      - "O que a equipe tem de limite real — dinheiro, tempo, gente — que a comparação precisa respeitar?"
+
+  - id: l11-a3
+    type: rubric_review
+    skillId: avaliar
+    instruction: "Outra pessoa da equipe pediu à IA para comparar dois formatos de treinamento e anotou o resultado abaixo. Avalie cada critério: foi atendido, parcialmente atendido ou não atendido?"
+    data:
+      responseText: "\"Pedi para a IA comparar treinamento ao vivo online com treinamento gravado. Ela recomendou o gravado, que é mais moderno e está na moda. Vou de gravado.\""
+      criteria:
+        - id: c-criterios-do-contexto
+          text: "A escolha usou critérios explícitos do próprio contexto (custo, agenda da equipe, necessidade de tirar dúvidas ao vivo)"
+        - id: c-lado-a-lado
+          text: "As duas opções foram comparadas nas mesmas dimensões, lado a lado"
+        - id: c-motivo-registrado
+          text: "O motivo final da escolha é dele e ficou registrado de forma verificável"
+    evaluation:
+      strategy: deterministic
+      expectedVerdicts:
+        c-criterios-do-contexto: not_met
+        c-lado-a-lado: not_met
+        c-motivo-registrado: partial
+    feedback:
+      onFailure: "O registro delegou a decisão: 'mais moderno e na moda' é critério de aparência, nenhuma dimensão foi comparada lado a lado e o motivo anotado é a recomendação da IA — não um critério da equipe."
+      perCheck:
+        c-criterios-do-contexto: "Não atendido: 'moderno' e 'na moda' dizem o que o mercado aplaude, não o que a equipe precisa (custo, agenda, dúvidas ao vivo)."
+        c-lado-a-lado: "Não atendido: nenhuma dimensão aparece comparando as duas opções — só a recomendação final."
+        c-motivo-registrado: "Parcial: a decisão ficou anotada, mas o motivo é a opinião da IA — falta o critério dele para o registro valer como decisão própria."
+      onSuccess: "Isso! Comparação de verdade tem critério próprio, dimensões lado a lado e motivo registrado por quem decide — aqui faltou quase tudo."
+    storage:
+      policy: structured_only
+    hints:
+      - "Procure no registro os critérios da equipe: quanto custa, quando acontece, como tira dúvida."
+      - "Ele anotou a decisão — mas o motivo anotado é dele ou da IA?"
+
+rubric:
+  id: l11-rubric
+  criteria:
+    - id: r-criterios-primeiro
+      text: "Coloca a definição de critérios antes do pedido de alternativas."
+      weight: 1
+    - id: r-decisao-humana
+      text: "Reserva a decisão final, com motivo registrado, para a pessoa."
+      weight: 1
+    - id: r-pedidos-de-comparacao
+      text: "Diagnostica pedidos de comparação sem critérios e restrições explícitos."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: lesson_completed
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l11-a1, l11-a2, l11-a3]
+```

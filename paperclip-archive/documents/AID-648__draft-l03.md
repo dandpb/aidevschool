@@ -1,0 +1,154 @@
+<!-- issue: AID-648 | key: draft-l03 | doc_id: 375c0a8b-2001-407c-88a3-a83a4142e755 | updated: 2026-09-02 14:55:30.313+00 -->
+
+# AID-648 — draft YAML l03 "O que a IA faz bem e onde costuma falhar" (mod-01, O3-C1 T1)
+
+(AID-648)
+
+# AID-648 — Draft YAML l03 "O que a IA faz bem e onde costuma falhar" (T1, Onda O3-C1 — retrofit mod-01)
+
+**Status:** DRAFT de autoria CD pronto para landing FPE (autoria completa; landing em PR único da onda é gate do FPE — spec rev 2 §5.5). **Mecânica:** v1→v2 · 4 min mantidos · **+`l03-a3` apenas** (`output_comparison`, critérios `c-fiel-ao-material` + `c-sem-dado-inventado`; +1 distrator de critério `c-mais-completa`, padrão l02-a1) · rubrica 2→3 (+`r-evidencia-na-saida` verbatim do spec) · `requiredActivityIds` = conjunto completo. 138 linhas.
+**Especificação:** AID-644 spec rev 2 (doc `spec-rev2` na AID-647) §2.3 + advisory CD AID-645 comentário `2ed06cf2` (decisões vinculantes A1/A2, notas de autoria 1–7) · Template: AID-525 §2 · Checklist: §3.1 (8 itens, preenchido no comentário desta issue).
+**Pré-validação first-hand (read-only):** cópia descartável da trilha com os 3 YAMLs trocados e `estimatedMinutes` l01 3→4 no catálogo da cópia → `tools/validate.py --track <cópia>` **VERDE** — "OK: 17 lição(ões) ready validadas, 0 planned" (baseline do workspace CD está 1 onda atrás do main; l18–l29 não fazem parte da cópia e o FPE revalida no main). Diff vs. baseline puramente aditivo (R1.1: a1 intacta; nenhum trecho existente editado/reordenado).
+
+**Destino canônico (landing FPE):** `curriculum/ai-literacy/modules/01-ai-sem-misterio/*.yaml` (substituição integral por estes arquivos, PR único da onda com T2) + `catalog.yaml`: bump `version` por lição e `estimatedMinutes` l01 3→4 + **bump único de `contentVersion` no primeiro landing** (spec §4.1–4.2).
+
+```yaml
+# Lição l03 — Fase 2; retrofit O3-C1 (spec AID-644 rev 2 §2.3): +l03-a3 (apenas), v1→v2, 4 min.
+# Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l03
+version: 2
+moduleId: mod-01
+title: "O que a IA faz bem e onde costuma falhar"
+objective: "Distinguir tarefas em que a IA costuma ajudar (rascunhos, resumos, ideias) de tarefas em que ela costuma falhar (dados recentes, cálculos exatos, fatos específicos)."
+estimatedMinutes: 4
+skillIds: [entender]
+prerequisites: [l02]
+
+activities:
+  - id: l03-a1
+    type: choice
+    skillId: entender
+    instruction: "Marque todas as tarefas em que a IA costuma ajudar bem no dia a dia de trabalho."
+    data:
+      multiSelect: true
+      options:
+        - id: t-rascunho
+          text: "Rascunhar e-mails e textos que você vai revisar depois"
+        - id: t-resumo
+          text: "Resumir um documento longo que você mesmo forneceu"
+        - id: t-faturamento
+          text: "Informar o faturamento de ontem da sua empresa"
+        - id: t-ideias
+          text: "Sugerir ideias de nomes para um projeto novo"
+        - id: t-imposto
+          text: "Calcular o valor exato do imposto que você deve este ano"
+    evaluation:
+      strategy: deterministic
+      correctOptionIds: [t-rascunho, t-resumo, t-ideias]
+    feedback:
+      onFailure: "Regra prática: a IA é forte em texto — rascunhar, resumir, dar ideias. Ela não tem acesso aos dados da sua empresa nem garante cálculos exatos."
+      perCheck:
+        t-rascunho: "Rascunhos de texto são o ponto forte da IA — desde que você revise."
+        t-resumo: "Resumir um texto que você forneceu é seguro: o conteúdo está todo ali, na conversa."
+        t-faturamento: "A IA não tem acesso aos sistemas da sua empresa — um número desses seria inventado."
+        t-ideias: "Brainstorm e ideias iniciais são um ótimo uso: quantidade e variedade ajudam."
+        t-imposto: "Cálculo exato com regras que mudam todo ano é terreno clássico de erro — confira com fonte oficial."
+      onSuccess: "Exato! Texto e ideias, com revisão, são o forte. Dados específicos e cálculos exatos pedem outra fonte."
+    storage:
+      policy: structured_only
+    hints:
+      - "Pergunte de cada item: a resposta depende de um dado que só existe dentro da minha empresa ou que muda com o tempo?"
+      - "Tudo que é produção de texto genérico (rascunho, resumo, ideias) costuma funcionar; número exato e dado interno, não."
+  - id: l03-a2
+    type: choice
+    skillId: entender
+    instruction: "Agora o contrário: marque as situações em que a IA costuma falhar."
+    data:
+      multiSelect: true
+      options:
+        - id: f-noticia
+          text: "Resumir as notícias desta semana sobre o seu setor"
+        - id: f-planilha
+          text: "Somar uma coluna de 200 valores da sua planilha com precisão total"
+        - id: f-email
+          text: "Melhorar o tom de um e-mail que você escreveu"
+        - id: f-lei
+          text: "Citar o artigo exato de uma lei trabalhista com o texto atualizado"
+    evaluation:
+      strategy: deterministic
+      correctOptionIds: [f-noticia, f-planilha, f-lei]
+    feedback:
+      onFailure: "A IA falha em três terrenos: fatos recentes, cálculos exatos e citações precisas. Melhorar texto que você escreveu continua sendo ponto forte."
+      perCheck:
+        f-noticia: "Notícias recentes podem estar fora do conhecimento da IA — ela pode preencher lacunas com invenções."
+        f-planilha: "Somas longas e exatas são um erro clássico: use a própria planilha ou calculadora."
+        f-email: "Melhorar tom de texto é trabalho de texto — a IA vai bem aqui."
+        f-lei: "Artigos de lei com número e texto exato são frequentemente inventados — confira na fonte oficial."
+      onSuccess: "Muito bem! Recentes, exatos e citáveis: os três terrenos onde a conferência é obrigatória."
+    storage:
+      policy: structured_only
+    hints:
+      - "Procure os itens que exigem precisão absoluta: número exato, texto de lei, fato de hoje."
+      - "São três as situações de falha; a que sobra é trabalho de texto, ponto forte da IA."
+
+  - id: l03-a3
+    type: output_comparison
+    skillId: entender
+    instruction: "Você anexou o mesmo relatório em duas conversas e fez o mesmo pedido: 'Resuma o relatório de vendas do trimestre em 5 tópicos para a reunião de segunda.' Escolha a resposta que você usaria e marque os motivos."
+    data:
+      scenario: "O relatório anexado (documento interno da empresa) mostra: vendas cresceram 6% no trimestre, o produto A puxou o crescimento e a região Sul teve queda leve. O documento não traz projeção para o próximo trimestre nem cita estudo externo nenhum."
+      outputs:
+        - id: out-a
+          text: "1) Vendas cresceram 6% no trimestre. 2) O produto A puxou o crescimento. 3) A região Sul teve queda leve. 4) O relatório não traz projeção para o próximo trimestre. 5) Recomendação do relatório: revisar as metas por região."
+        - id: out-b
+          text: "1) Vendas cresceram 6% no trimestre. 2) O produto A puxou o crescimento. 3) A região Sul teve queda leve. 4) A projeção é de crescimento de 12% no próximo trimestre, segundo a Pesquisa Nacional de Vendas (2025), p. 34. 5) O setor deve bater recorde histórico."
+      criteria:
+        - id: c-fiel-ao-material
+          text: "Usa apenas informações que estão no relatório fornecido"
+        - id: c-sem-dado-inventado
+          text: "Não apresenta como fato número ou citação que não está no material"
+        - id: c-mais-completa
+          text: "Traz mais números e citações do que o próprio relatório"
+    evaluation:
+      strategy: deterministic
+      betterOutputId: out-a
+      requiredCriterionIds: [c-fiel-ao-material, c-sem-dado-inventado]
+    feedback:
+      onFailure: "Resumir um material que você forneceu é ponto forte da IA — quando a saída fica fiel ao material. A resposta B parece mais completa, mas a projeção de 12% e a citação com página não estão no relatório: são invenção."
+      perCheck:
+        betterOutputId: "A resposta B acrescenta um dado e uma citação que o relatório não tem — completude aparente é invenção. A resposta A usa só o que o documento traz e diz o que ele não traz."
+        c-fiel-ao-material: "Faltou este motivo: a resposta a usar é a que se limita ao que está no relatório."
+        c-sem-dado-inventado: "Faltou este motivo: número e citação que não estão no material são o sinal clássico de dado inventado."
+      onSuccess: "Isso! A evidência está na saída: fiel ao material = ponto forte confirmado; dado inventado = o ponto fraco clássico, agora visto na prática."
+    storage:
+      policy: structured_only
+    hints:
+      - "Para cada tópico, pergunte: essa informação está no relatório anexado?"
+      - "Uma das respostas cita fonte e página para um dado que o relatório não menciona."
+      - "Escolha a resposta que só usa o que está no documento e marque os dois critérios de fidelidade."
+
+rubric:
+  id: l03-rubric
+  criteria:
+    - id: r-pontos-fortes
+      text: "Identifica rascunhos, resumos e ideias como pontos fortes da IA."
+      weight: 1
+    - id: r-pontos-fracos
+      text: "Identifica dados recentes, cálculos exatos e citações precisas como pontos fracos."
+      weight: 1
+    - id: r-evidencia-na-saida
+      text: "Prefere a saída fiel ao material fornecido e justifica pela evidência da saída, não só pela categoria da tarefa."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: lesson_completed
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l03-a1, l03-a2, l03-a3]
+```
