@@ -1,0 +1,150 @@
+<!-- issue: AID-648 | key: draft-l02 | doc_id: 1435a2c7-6c81-41b2-800d-f63fe566d285 | updated: 2026-09-02 14:55:30.266+00 -->
+
+# AID-648 — draft YAML l02 "IA não é uma fonte de verdade" (mod-01, O3-C1 T1)
+
+(AID-648)
+
+# AID-648 — Draft YAML l02 "IA não é uma fonte de verdade" (T1, Onda O3-C1 — retrofit mod-01)
+
+**Status:** DRAFT de autoria CD pronto para landing FPE (autoria completa; landing em PR único da onda é gate do FPE — spec rev 2 §5.5). **Mecânica:** v3→v4 · 4 min mantidos · +`l02-a2` (`choice`, juízo no nível **decisão** — ajuste A2 aplicado) e +`l02-a3` (`sort`, fluxo verificar-antes-de-usar em 5 passos) · **rubrica MANTIDA: as 3 existentes verbatim, sem realinhamento (Q2)** · `requiredActivityIds` = conjunto completo. **A6: lição de entrada (Mapa Inicial) — copy de simplicidade máxima.** 134 linhas.
+**Especificação:** AID-644 spec rev 2 (doc `spec-rev2` na AID-647) §2.2 + advisory CD AID-645 comentário `2ed06cf2` (decisões vinculantes A1/A2, notas de autoria 1–7) · Template: AID-525 §2 · Checklist: §3.1 (8 itens, preenchido no comentário desta issue).
+**Pré-validação first-hand (read-only):** cópia descartável da trilha com os 3 YAMLs trocados e `estimatedMinutes` l01 3→4 no catálogo da cópia → `tools/validate.py --track <cópia>` **VERDE** — "OK: 17 lição(ões) ready validadas, 0 planned" (baseline do workspace CD está 1 onda atrás do main; l18–l29 não fazem parte da cópia e o FPE revalida no main). Diff vs. baseline puramente aditivo (R1.1: a1 intacta; nenhum trecho existente editado/reordenado).
+
+**Destino canônico (landing FPE):** `curriculum/ai-literacy/modules/01-ai-sem-misterio/*.yaml` (substituição integral por estes arquivos, PR único da onda com T2) + `catalog.yaml`: bump `version` por lição e `estimatedMinutes` l01 3→4 + **bump único de `contentVersion` no primeiro landing** (spec §4.1–4.2).
+
+```yaml
+# Lição l02 — piloto da vertical slice (seção 17 do plano); retrofit O3-C1 (spec AID-644 rev 2 §2.2): +l02-a2/+l02-a3, v3→v4, 4 min. ATENÇÃO: lição de entrada (Mapa Inicial) — simplicidade máxima de copy.
+# Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l02
+version: 4
+moduleId: mod-01
+title: "IA não é uma fonte de verdade"
+objective: "Diante de uma resposta convincente sem evidência, reconhecer que ela precisa ser verificada antes de ser usada no trabalho."
+estimatedMinutes: 4
+skillIds: [entender, avaliar]
+prerequisites: []
+
+activities:
+  - id: l02-a1
+    type: output_comparison
+    skillId: avaliar
+    instruction: "Duas respostas de IA para o mesmo pedido estão abaixo. Escolha qual delas é mais confiável para usar no trabalho e marque os motivos que justificam a sua escolha."
+    data:
+      scenario: "Você pediu à IA: 'Quais são os números do mercado de delivery de comida no Brasil?' para embasar uma apresentação para a diretoria."
+      outputs:
+        - id: out-a
+          text: "O mercado de delivery no Brasil movimentou R$ 48,7 bilhões no último ano, crescendo 23,4% em relação ao ano anterior. São 112 milhões de usuários ativos, com ticket médio de R$ 42,50. A previsão para o próximo ano é de R$ 61,2 bilhões. Pode usar esses números direto na sua apresentação."
+        - id: out-b
+          text: "Não tenho acesso a dados oficiais auditados desse mercado e qualquer número exato que eu der pode estar desatualizado ou inventado. O caminho seguro é checar relatórios de associações do setor (como a ABRASEL) ou de consultorias antes de apresentar. Se quiser, eu monto a estrutura da sua análise com espaços para você preencher com os números verificados."
+      criteria:
+        - id: c-fontes
+          text: "Diz de onde vêm os números ou onde verificá-los"
+        - id: c-limites
+          text: "Deixa claro o que a IA não sabe ou o que é estimativa"
+        - id: c-confianca
+          text: "Apresenta números bem detalhados com total confiança"
+    evaluation:
+      strategy: deterministic
+      betterOutputId: out-b
+      requiredCriterionIds: [c-fontes, c-limites]
+    feedback:
+      onFailure: "Quase lá. Uma resposta confiante não é necessariamente confiável: antes de usar, procure dois sinais — a resposta diz de onde vêm os dados e admite o que não sabe?"
+      perCheck:
+        betterOutputId: "A resposta A parece ótima, mas nenhum número tem fonte — a IA pode ter inventado valores que só parecem precisos. A resposta B diz o que não sabe e indica onde confirmar."
+        c-fontes: "Faltou este motivo: uma resposta confiável indica a origem dos dados ou onde verificá-los."
+        c-limites: "Faltou este motivo: uma resposta confiável deixa claro o que é estimativa ou desconhecido."
+      onSuccess: "Isso! Resposta útil é a que diz de onde vem a informação e o que precisa ser verificado — não a que soa mais confiante."
+    storage:
+      policy: structured_only
+    hints:
+      - "Compare as duas respostas procurando uma coisa só: de onde saíram os números?"
+      - "Uma resposta que admite o que não sabe costuma ser mais confiável do que uma cheia de números exatos."
+      - "A resposta B diz o que não sabe e indica onde confirmar; marque os motivos ligados a fonte e a limites."
+
+  - id: l02-a2
+    type: choice
+    skillId: avaliar
+    instruction: "Para abrir a apresentação de amanhã, você pediu a uma IA um dado sobre o mercado em que a empresa atua. Ela respondeu: 'O mercado brasileiro de cursos online cresceu 34% no último ano.' O número é específico, mas a resposta não traz nenhuma fonte. O que você faz antes de usar esse número?"
+    data:
+      options:
+        - id: opt-verifica-na-fonte
+          text: "Confirmo o número em uma fonte de confiança — relatório do setor ou site oficial — e só uso depois de confirmar."
+        - id: opt-confia-no-especifico
+          text: "Uso direto: um número tão específico assim dificilmente está errado."
+        - id: opt-descarta-tudo
+          text: "Descarto a resposta inteira — se a IA inventa um número, não dá para aproveitar nada dela."
+    evaluation:
+      strategy: deterministic
+      correctOptionIds: [opt-verifica-na-fonte]
+    feedback:
+      onFailure: "Antes de usar: verificar. Específico não é o mesmo que verdadeiro — e um número sem fonte não condena a resposta inteira, só pede confirmação."
+      perCheck:
+        opt-verifica-na-fonte: "Isso: o número só entra na apresentação depois de confirmado em uma fonte de confiança."
+        opt-confia-no-especifico: "Cuidado: especificidade não é evidência — a IA pode inventar números que só parecem precisos."
+        opt-descarta-tudo: "Exagero: o problema é um número sem fonte — verificar resolve, sem jogar a resposta inteira fora."
+      onSuccess: "Certo! Verificar antes de usar: o número fica confirmado e a apresentação fica segura."
+    storage:
+      policy: structured_only
+    hints:
+      - "O que a resposta não diz sobre o número 34%?"
+      - "Entre confiar sem prova e jogar tudo fora existe um caminho do meio."
+
+  - id: l02-a3
+    type: sort
+    skillId: avaliar
+    instruction: "Agora o passo a passo completo: ordene o fluxo de verificar uma resposta da IA antes de usar no trabalho."
+    data:
+      items:
+        - id: fluxo-resposta
+          text: "Receber a resposta da IA e ler até o fim."
+        - id: fluxo-afirmacoes
+          text: "Marcar as afirmações que vão virar decisão — números, datas, nomes."
+        - id: fluxo-fonte
+          text: "Localizar a fonte original de cada afirmação marcada."
+        - id: fluxo-conferencia
+          text: "Conferir se o que a fonte diz bate com o que a resposta disse."
+        - id: fluxo-uso
+          text: "Usar a informação com a anotação de onde ela veio."
+    evaluation:
+      strategy: deterministic
+      expectedOrder: [fluxo-resposta, fluxo-afirmacoes, fluxo-fonte, fluxo-conferencia, fluxo-uso]
+    feedback:
+      onFailure: "O fluxo é: ler a resposta → marcar o que vira decisão → localizar a fonte → conferir se bate → usar com anotação. Sem a marcação o esforço se espalha; sem a anotação a informação perde a origem."
+      perCheck:
+        fluxo-resposta: "Tudo começa com a leitura completa — sem ela, você não sabe o que precisa ser verificado."
+        fluxo-afirmacoes: "Marcar o que vai virar decisão (números, datas, nomes) foca a verificação no que importa."
+        fluxo-fonte: "Com as afirmações marcadas, vem a busca: localizar a fonte original de cada uma."
+        fluxo-conferencia: "A fonte aberta, a conferência: o que ela diz bate com o que a resposta afirmou?"
+        fluxo-uso: "O uso é o fim da fila — e a anotação de origem viaja junto com a informação."
+      onSuccess: "Esse é o fluxo verificar-antes-de-usar: ler, marcar, localizar, conferir e usar com anotação."
+    storage:
+      policy: structured_only
+    hints:
+      - "Primeiro você precisa saber o que a resposta disse — e o que dela vira decisão."
+      - "A conferência vem entre localizar a fonte e usar: comparar os dois lados."
+
+rubric:
+  id: l02-rubric
+  criteria:
+    - id: r-identifica-risco
+      text: "Reconhece que uma resposta convincente sem fonte pode estar inventada."
+      weight: 1
+    - id: r-escolhe-verificavel
+      text: "Prefere a resposta que declara limites e indica como verificar."
+      weight: 1
+    - id: r-justifica-criterios
+      text: "Justifica a escolha com critérios de verificação, não com a aparência da resposta."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: lesson_completed
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l02-a1, l02-a2, l02-a3]
+```

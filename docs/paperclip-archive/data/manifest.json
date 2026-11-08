@@ -1,0 +1,120 @@
+{
+ "finishedAt": "2026-11-08T14:49:52Z",
+ "tables": {
+  "document_revisions_meta": {
+   "rows": 23200,
+   "bytes_gz": 2165315,
+   "sha256": "5c73cd6804bbf596aa9e29aedd1b691737aaf839fb588e752a77b21f84fb12c4"
+  },
+  "issue_watchdogs": {
+   "rows": 93,
+   "bytes_gz": 61322,
+   "sha256": "517e4899f2e1fab8af70dd3c3c24fe7f590529ad467ba64b4c1bdcbe6cc91e85"
+  },
+  "external_objects": {
+   "rows": 588,
+   "bytes_gz": 63830,
+   "sha256": "9046b66b2d6e714b931d4a65d265f9ca375b8b87309000d3628340f9dfa4900a"
+  },
+  "issue_recovery_actions": {
+   "rows": 528,
+   "bytes_gz": 75977,
+   "sha256": "92ea99e2f3a3c547c0170d58fdcec8cb1dcf5c950866e3149ee056ac7fb1e10a"
+  },
+  "issue_thread_interactions": {
+   "rows": 550,
+   "bytes_gz": 411455,
+   "sha256": "111ec493947d50e569f58df08111a3b9d3ea27c48a0c4a3691e95879e1780897"
+  },
+  "issue_documents": {
+   "rows": 5850,
+   "bytes_gz": 493436,
+   "sha256": "e40a562ed63bc83a240e202f5daf40e2c5554a4ea7939466cd37c64f624bbdbd"
+  },
+  "routines": {
+   "rows": 4,
+   "bytes_gz": 5516,
+   "sha256": "de986d6c81b1f7d039a147f58b5554b3c22d556b08aa12d9992e849cc35942fe"
+  },
+  "issues": {
+   "rows": 5785,
+   "bytes_gz": 4100893,
+   "sha256": "02928abe1b3a65796b9704ccc9e3ba9a53cf0e32579dcd60efad3345e6dc2fae"
+  },
+  "issue_labels": {
+   "rows": 0,
+   "bytes_gz": 44,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "cost_events": {
+   "rows": 19762,
+   "bytes_gz": 1752504,
+   "sha256": "f366b7f349be82850875f05a1d1526cd4d279cfaacb777d59315285d962ec806"
+  },
+  "documents": {
+   "rows": 5854,
+   "bytes_gz": 6223226,
+   "sha256": "89c4cdc7709fb80f0b3de1afba1bd3ea400489d5e1b3b97cb354db17f3ff95ac"
+  },
+  "routine_runs": {
+   "rows": 3534,
+   "bytes_gz": 261689,
+   "sha256": "81d71a834a6a71bd59a6add12ad954ecbc51500eb92a81230f8c9aca17d9d15b"
+  },
+  "issue_work_products": {
+   "rows": 107,
+   "bytes_gz": 33954,
+   "sha256": "b08573926bbf77710912f332f2471fe46427520c68067c923b1af52d22c03494"
+  },
+  "agents": {
+   "rows": 25,
+   "bytes_gz": 2282,
+   "sha256": "a9ea0747f8b2ec89fe6c289cf850802582115b2000ead4cb25ecb722a2b00b26"
+  },
+  "projects": {
+   "rows": 1,
+   "bytes_gz": 316,
+   "sha256": "281f48aea6bec5fce9ddc052e6fd48148cad3d192d2d106c4d6e84e90d3301d9"
+  },
+  "companies": {
+   "rows": 1,
+   "bytes_gz": 430,
+   "sha256": "e76c40ea220d9f995be274a20768b6acb5caa49116b934c2bc7cc2c7afec6bba"
+  },
+  "goals": {
+   "rows": 1,
+   "bytes_gz": 435,
+   "sha256": "161367f6358d6734fa25e8a9f8f76cac38f64e7b7d7a7f863138774f180cd551"
+  },
+  "issue_attachments": {
+   "rows": 303,
+   "bytes_gz": 20080,
+   "sha256": "6462820610c708bbf10cc786acda5dee72ac130c0e584863f7de7ab4cbb11643"
+  },
+  "routine_triggers": {
+   "rows": 4,
+   "bytes_gz": 881,
+   "sha256": "0297d3ef07313cbb2c43672e0fd37d1c83c4bf16a397a9eea910c2230e4210d3"
+  },
+  "issue_relations": {
+   "rows": 225,
+   "bytes_gz": 17663,
+   "sha256": "287473bf9e3c9b7417b0e2c427c1696c5f82050dcad098b7bc636ba190c2155c"
+  },
+  "company_skills": {
+   "rows": 14,
+   "bytes_gz": 60012,
+   "sha256": "fc9ae1eda9a23ee3643242e01b664a6d2a10c4adbb9e9a07ad8d7285272c717b"
+  },
+  "issue_comments": {
+   "rows": 62678,
+   "bytes_gz": 17320222,
+   "sha256": "7f3feabc56356a5d0011210ecc63202e591677f69bcd408adcbf11048b11fb35"
+  },
+  "labels": {
+   "rows": 0,
+   "bytes_gz": 38,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+ }
+}

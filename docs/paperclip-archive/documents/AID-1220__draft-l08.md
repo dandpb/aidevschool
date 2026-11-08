@@ -1,0 +1,156 @@
+<!-- issue: AID-1220 | key: draft-l08 | doc_id: 6267039d-b538-4ea0-b0b7-d4348efbbc12 | updated: 2026-09-10 08:11:10.656+00 -->
+
+# AID-1220 — draft YAML l08 "A primeira resposta não é necessariamente a melhor" (mod-03, O3-C2)
+
+(AID-1220)
+
+# AID-1220 — Draft YAML l08 "A primeira resposta não é necessariamente a melhor" (O3-C2 — retrofit mod-03)
+
+**Status:** DRAFT de autoria CD pronto para landing FPE (autoria completa; landing é gate do FPE, **após T0 de B2/AID-1219** — decisão AID-1216 §dispatch). **Mecânica:** v1→v2 · 3→4 min · +`l08-a2` (`choice`: escolher entre primeira e alternativa com critérios da tarefa, não com aparência) e +`l08-a3` (`missing_context`: "Pode fazer outra versão?" — faltam o-que-não-serviu / direção-diferente / o-que-manter; contextOptions kebab **sem** `ctx-`) · rubrica 2→3 (+`r-segunda-opcao`) · `requiredActivityIds` = conjunto completo · a1 **intacta** (R1.1) · objetivo/título/prereqs/skills inalterados (constraint AID-1220). 138 linhas.
+
+**Especificação:** AID-1220 (dispatch CEO AID-1216/B3) · padrão O3-C1 provado (spec AID-644 rev 2 §§1.4–1.5, template AID-525 §2, checklist §3.1) · ruling de migração AID-640 (append-only; E1–E4; aviso S1/S2 já mecanizado em `retrofitNotice.ts` — landing só registra a entrada nova de `contentVersion`).
+
+**Pré-validação first-hand (read-only):** cópia descartável da trilha @ `origin/main` `e839d0fc` com os 6 YAMLs do O3-C2 + catálogo da cópia (l08 3→4, l10 3→4) → `tools/validate.py --track <cópia>` **VERDE** ("OK: 29 lição(ões) ready validadas: 20 IA na Prática, 9 Dev; 0 planned") + `--compile` verde. Diff vs. main puramente aditivo (0 linhas removidas; a1 dict-identical; rubricas existentes verbatim).
+
+**Destino canônico (landing FPE):** `curriculum/ai-literacy/modules/{ rel.split('/')[0] }/{ rel.split('/')[1] }` (substituição integral, PR único da onda) + `catalog.yaml`: `estimatedMinutes` (quando bumped) + bump único de `contentVersion`.
+
+```yaml
+# Lição l08 — Fase 2; retrofit O3-C2 (AID-1220, padrão AID-644/648): +l08-a2/+l08-a3, v1→v2, 3→4 min.
+# Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l08
+version: 2
+moduleId: mod-03
+title: "A primeira resposta não é necessariamente a melhor"
+objective: "Comparar a primeira resposta da IA com uma alternativa e escolher com critério explícito."
+estimatedMinutes: 4
+skillIds: [avaliar]
+prerequisites: [l07]
+
+activities:
+  - id: l08-a1
+    type: output_comparison
+    skillId: avaliar
+    instruction: "Você pediu à IA ideias para reduzir as faltas dos clientes nas consultas da clínica. Ela deu duas respostas. Escolha a mais útil para agir esta semana e marque os motivos."
+    data:
+      scenario: "A clínica tem 20% de faltas nas consultas. Você precisa de ações práticas para testar já nesta semana, sem contratar nada."
+      outputs:
+        - id: out-a
+          text: "Reduzir faltas é essencial para clínicas modernas. Recomenda-se melhorar a experiência do paciente, investir em relacionamento, otimizar processos internos, valorizar a equipe, criar uma cultura de pontualidade, acompanhar indicadores e inovar constantemente. Com dedicação e foco no cliente, os resultados aparecem a médio prazo."
+        - id: out-b
+          text: "Três ações para testar esta semana: 1) Enviar lembrete por mensagem 24h antes da consulta com pedido de confirmação. 2) Oferecer encaixe para a lista de espera quando alguém desmarcar. 3) Ligar para quem faltou duas vezes seguidas para entender o motivo. Comece pelo lembrete: é o mais barato e você já mede o resultado na sexta-feira."
+      criteria:
+        - id: c-acoes
+          text: "Traz ações concretas que dá para começar esta semana"
+        - id: c-comeco
+          text: "Indica por onde começar e como medir o resultado"
+        - id: c-extenso
+          text: "É longo e cobre muitos temas de uma vez"
+    evaluation:
+      strategy: deterministic
+      betterOutputId: out-b
+      requiredCriterionIds: [c-acoes, c-comeco]
+    feedback:
+      onFailure: "Quase lá. Para agir esta semana, o que vale é: ações concretas e um ponto de partida claro. Resposta longa e abrangente parece completa, mas não vira tarefa."
+      perCheck:
+        betterOutputId: "A resposta A soa profissional, mas não diz o que fazer na segunda-feira. A B lista três ações testáveis e por onde começar."
+        c-acoes: "Faltou este motivo: a resposta B traz ações específicas (lembrete, lista de espera, ligação)."
+        c-comeco: "Faltou este motivo: a resposta B diz por onde começar e quando medir o resultado."
+        c-extenso: "Ser longo e cobrir muitos temas não é qualidade aqui — é justamente o que impede a ação."
+      onSuccess: "Isso! Primeira resposta não é sinônimo de melhor resposta: comparar com critério (ação concreta, começo claro) mostra a diferença."
+    storage:
+      policy: structured_only
+    hints:
+      - "Releia o cenário: você precisa agir esta semana, sem contratar nada. Qual resposta vira tarefa na segunda-feira?"
+      - "Marque os motivos ligados a ação concreta e ponto de partida — não à aparência da resposta."
+
+  - id: l08-a2
+    type: choice
+    skillId: avaliar
+    instruction: "Você pediu outra versão e agora tem duas respostas para o mesmo pedido: a primeira e a alternativa. Como decide qual usar?"
+    data:
+      options:
+        - id: opt-criterios-da-tarefa
+          text: "Defino dois ou três critérios da tarefa — resolve o problema, dá para agir nesta semana, serve para o prazo — e comparo as duas respostas neles."
+        - id: opt-mais-longa
+          text: "Escolho a mais longa: texto maior é sinal de trabalho mais completo."
+        - id: opt-mais-confiante
+          text: "Escolho a que soa mais confiante: quem tem certeza escreve assim."
+        - id: opt-primeira-mesmo
+          text: "Fico com a primeira: comparar as duas é perder tempo."
+    evaluation:
+      strategy: deterministic
+      correctOptionIds: [opt-criterios-da-tarefa]
+    feedback:
+      onFailure: "Quase lá. Tamanho e tom de voz não medem qualidade: o que decide é o critério da tarefa — a resposta resolve o problema e dá para agir? Compare as duas neles."
+      perCheck:
+        opt-criterios-da-tarefa: "Isso: critérios explícitos da tarefa são a única balança comum entre duas respostas — o resto é aparência."
+        opt-mais-longa: "Comprimento não é qualidade: a resposta longa pode ser a que menos vira ação (lembre da primeira atividade)."
+        opt-mais-confiante: "Tom confiante não prova nada: a IA escreve com a mesma segurança o que acerta e o que inventa."
+        opt-primeira-mesmo: "Ficar com a primeira sem comparar joga fora a vantagem de ter uma alternativa: a comparação leva minutos e muda a decisão."
+      onSuccess: "Exato: duas respostas, os mesmos critérios — a escolha vira decisão com motivo, não impressão."
+    storage:
+      policy: structured_only
+    hints:
+      - "Se você tivesse que explicar a escolha em uma frase para o seu gestor, o que diria? Isso é o seu critério."
+      - "Desconfie de sinais de aparência: tamanho e confiança no texto."
+
+  - id: l08-a3
+    type: missing_context
+    skillId: avaliar
+    instruction: "Um colega quer uma alternativa e mostra o pedido que vai mandar: só 'Pode fazer outra versão dessa resposta?'. O que está faltando no pedido dele?"
+    data:
+      prompt: "Pode fazer outra versão dessa resposta?"
+      contextOptions:
+        - id: o-que-nao-serviu
+          text: "O que não serviu na primeira resposta — para a nova versão não repetir"
+        - id: direcao-diferente
+          text: "A direção diferente que a nova versão deve tentar (outra abordagem, outro formato)"
+        - id: o-que-manter
+          text: "O que deve continuar igual na nova versão"
+        - id: tom-educado
+          text: "Pedir com mais educação — um 'por favor' bem colocado"
+        - id: numero-da-versao
+          text: "O número da versão anterior, para a IA não se repetir"
+    evaluation:
+      strategy: deterministic
+      requiredContextIds: [o-que-nao-serviu, direcao-diferente, o-que-manter]
+    feedback:
+      onFailure: "'Outra versão' sem direção vem parecida ou pior: a alternativa útil nasce de um pedido que diz o que não serviu, que direção nova tentar e o que deve continuar igual. Educação e numeração de versão não mudam o conteúdo."
+      perCheck:
+        o-que-nao-serviu: "Faltou isto: dizer o que não funcionou — sem isso, a IA não sabe o que evitar na nova versão."
+        direcao-diferente: "Faltou isto: a direção nova (outra abordagem, outro formato) é o que transforma 'de novo' em 'diferente'."
+        o-que-manter: "Faltou isto: dizer o que deve continuar igual evita que a nova versão perca o que já estava bom."
+        tom-educado: "Educação não muda o resultado: 'por favor' não diz à IA o que fazer de diferente."
+        numero-da-versao: "A IA não numera versões: o que evita repetição é o pedido com direção, não um número."
+      onSuccess: "Exato! Alternativa de verdade nasce de pedido completo: o que evitar, a direção nova e o que preservar."
+    storage:
+      policy: structured_only
+    hints:
+      - "Leia o pedido como se você fosse a IA: com 'pode fazer outra versão', o que dá para fazer de diferente?"
+      - "Três coisas faltam: o que evitar, para onde ir e o que não pode se perder."
+
+rubric:
+  id: l08-rubric
+  criteria:
+    - id: r-criterio-explicito
+      text: "Compara respostas com critérios explícitos, não com a aparência."
+      weight: 1
+    - id: r-primeira-nao-melhor
+      text: "Reconhece que a primeira resposta mais confiante pode ser a menos útil."
+      weight: 1
+    - id: r-segunda-opcao
+      text: "Escolhe entre duas respostas com critérios explícitos da tarefa e pede a alternativa dizendo o que mudar e o que manter."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: lesson_completed
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l08-a1, l08-a2, l08-a3]
+```
