@@ -1,0 +1,40 @@
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  locator('#jornada-dev')
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" with timeout 5000ms
+      - waiting for locator('#jornada-dev')
+        14 × locator resolved to <article id="jornada-dev" class="journey-card">…</article>
+           - unexpected value "inactive"
+
+
+      35 |   id: string,
+      36 | ) {
+    > 37 |   await expect(page.locator(`#${id}`)).toBeFocused();
+         |                                        ^
+      38 |   await expect(page.locator(`#${id}`)).toHaveAttribute("tabindex", "-1");
+      39 |   // Um frame depois o foco continua no cartão: a perda do bug original era
+      40 |   // síncrona no handler, e uma limpeza adiada do atributo a reintroduziria.
+        at expectFocusPersisted (/paperclip/tmp/aid3532-wt/engines/literacyDojo/playwright/escola-map-focus.pwa.spec.ts:37:40)
+        at /paperclip/tmp/aid3532-wt/engines/literacyDojo/playwright/escola-map-focus.pwa.spec.ts:71:9
+
+    Error Context: test-results/escola-map-focus.pwa-AID-3-127fc--continuam-focando-o-cartão-pwa/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/escola-map-focus.pwa-AID-3-127fc--continuam-focando-o-cartão-pwa/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/escola-map-focus.pwa-AID-3-127fc--continuam-focando-o-cartão-pwa/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4 failed
+    [pwa] › playwright/escola-map-focus.pwa.spec.ts:46:3 › AID-3532 mapa em texto: Enter no link foca #jornada-cotidiano e o foco persiste 
+    [pwa] › playwright/escola-map-focus.pwa.spec.ts:46:3 › AID-3532 mapa em texto: Enter no link foca #jornada-dev e o foco persiste 
+    [pwa] › playwright/escola-map-focus.pwa.spec.ts:57:1 › AID-3532 mapa em texto: click no link foca #jornada-dev e o foco persiste 
+    [pwa] › playwright/escola-map-focus.pwa.spec.ts:65:1 › AID-3532 mapa em texto: ativações repetidas continuam focando o cartão 
