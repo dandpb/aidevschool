@@ -145,7 +145,7 @@ function missionCard(a: TodaySnapshot["activeUnit"]): string {
             : ""
         }
         <div class="socrates" data-socrates>
-          <div class="socrates-talk">
+          <form id="soc-ask-form" class="socrates-talk">
             <input
               id="soc-q"
               type="text"
@@ -153,8 +153,8 @@ function missionCard(a: TodaySnapshot["activeUnit"]): string {
               placeholder="Pergunte ao Sócrates sobre esta missão…"
               aria-label="Pergunta para o Sócrates"
             />
-            <button id="soc-send" type="button" class="btn btn-primary socrates-send" data-testid="submit-attempt">Perguntar</button>
-          </div>
+            <button id="soc-send" type="submit" class="btn btn-primary socrates-send" data-testid="submit-attempt">Perguntar</button>
+          </form>
           <button id="soc-config-btn" type="button" class="link-btn" aria-expanded="false" aria-controls="soc-config" aria-label="Configurar assistente (opcional)"><span aria-hidden="true">⚙️</span> Configurar assistente (opcional)</button>
           <form id="soc-config" class="socrates-config" hidden>
             <p class="muted socrates-privacy">
@@ -316,6 +316,7 @@ function wireInteractions(a: TodaySnapshot["activeUnit"]): void {
   const mission = { title: a.title, project: a.project, state: a.state };
   const q = document.getElementById("soc-q") as HTMLInputElement | null;
   const send = document.getElementById("soc-send") as HTMLButtonElement | null;
+  const askForm = document.getElementById("soc-ask-form") as HTMLFormElement | null;
   const configBtn = document.getElementById("soc-config-btn") as HTMLButtonElement | null;
   const configPanel = document.getElementById("soc-config") as HTMLElement | null;
   const baseInput = document.getElementById("soc-baseurl") as HTMLInputElement | null;
@@ -323,7 +324,7 @@ function wireInteractions(a: TodaySnapshot["activeUnit"]): void {
   const modelInput = document.getElementById("soc-model") as HTMLInputElement | null;
   const clearBtn = document.getElementById("soc-clear") as HTMLButtonElement | null;
   const reply = document.getElementById("soc-reply") as HTMLElement | null;
-  if (!q || !send || !configBtn || !configPanel || !reply) return;
+  if (!q || !send || !askForm || !configBtn || !configPanel || !reply) return;
 
   const fill = () => {
     const cfg = loadConfig();
@@ -436,12 +437,9 @@ function wireInteractions(a: TodaySnapshot["activeUnit"]): void {
       send.innerHTML = originalText;
     }
   };
-  send.addEventListener("click", () => void ask());
-  q.addEventListener("keydown", (event) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      void ask();
-    }
+  askForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    void ask();
   });
 }
 
