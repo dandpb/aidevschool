@@ -208,30 +208,30 @@ function statusGlyph(status: TrackNode["status"]): string {
 }
 
 function trackSection(nodes: readonly TrackNode[], nextNum: string | null): string {
-  const rows = nodes
-    .map((n) => {
-      const isNext = n.num === nextNum && n.status === "active";
-      const cls = `track-node is-${n.status}${isNext ? " is-next" : ""}`;
-      // W7 AID-5190 (contrato §7.2 — vocabulário canônico do MasteryBadge):
-      // a trilha do dojoToday é a projeção canônica do substrate, então o
-      // estado verificado lê "dominada" — "concluída" fica reservado ao
-      // progresso local das engines (completed ≠ mastered).
-      const stateText =
-        n.status === "mastered" ? "dominada" : n.status === "active" ? "ativa" : "disponível";
-      const ariaLabel = `Lição ${n.num}: ${n.title} (${stateText})`;
-      const play =
-        isNext && n.gameDir
-          ? `<details class="play-how track-play"><summary>Jogar agora</summary><code>cd ${escapeHtml(n.gameDir)} &amp;&amp; pnpm install &amp;&amp; pnpm run dev</code></details>`
-          : "";
-      return `
+  let rows = "";
+  for (let i = 0; i < nodes.length; i++) {
+    const n = nodes[i];
+    const isNext = n.num === nextNum && n.status === "active";
+    const cls = `track-node is-${n.status}${isNext ? " is-next" : ""}`;
+    // W7 AID-5190 (contrato §7.2 — vocabulário canônico do MasteryBadge):
+    // a trilha do dojoToday é a projeção canônica do substrate, então o
+    // estado verificado lê "dominada" — "concluída" fica reservado ao
+    // progresso local das engines (completed ≠ mastered).
+    const stateText =
+      n.status === "mastered" ? "dominada" : n.status === "active" ? "ativa" : "disponível";
+    const ariaLabel = `Lição ${n.num}: ${n.title} (${stateText})`;
+    const play =
+      isNext && n.gameDir
+        ? `<details class="play-how track-play"><summary>Jogar agora</summary><code>cd ${escapeHtml(n.gameDir)} &amp;&amp; pnpm install &amp;&amp; pnpm run dev</code></details>`
+        : "";
+    rows += `
         <li class="${cls}" aria-label="${escapeHtml(ariaLabel)}">
           <span class="track-glyph" aria-hidden="true">${statusGlyph(n.status)}</span>
           <span class="track-num" aria-hidden="true">${escapeHtml(n.num)}</span>
           <span class="track-title" aria-hidden="true">${escapeHtml(n.title)}</span>
           ${play}
         </li>`;
-    })
-    .join("");
+  }
   return `
     <section class="card track-card" aria-labelledby="track-h">
       <h2 id="track-h">Sua trilha</h2>
@@ -276,6 +276,15 @@ function render(s: TodaySnapshot): string {
     day: "numeric",
     month: "long",
   });
+
+  let overdueHtml = '<p class="muted">Nenhuma revisão vencida. Bom trabalho.</p>';
+  if (overdue.length > 0) {
+    overdueHtml = "";
+    for (let i = 0; i < overdue.length; i++) {
+      overdueHtml += reviewCard(overdue[i], i);
+    }
+  }
+
   return `
     <header class="hero">
       ${voxelCore()}
@@ -294,7 +303,15 @@ function render(s: TodaySnapshot): string {
 
     <section class="lessons" aria-labelledby="lessons-h">
       <h2 id="lessons-h">${overdue.length > 0 ? "Retome por aqui" : "Tudo em dia"}</h2>
-      ${overdue.length > 0 ? overdue.map((r, i) => reviewCard(r, i)).join("") : '<p class="muted">Nenhuma revisão vencida. Bom trabalho.</p>'}
+      ${(() => {
+        if (overdue.length === 0)
+          return '<p class="muted">Nenhuma revisão vencida. Bom trabalho.</p>';
+        let html = "";
+        for (let i = 0; i < overdue.length; i++) {
+          html += reviewCard(overdue[i], i);
+        }
+        return html;
+      })()}
     </section>
 
     ${missionCard(s.activeUnit)}
