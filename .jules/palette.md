@@ -46,3 +46,6 @@
 ## 2024-11-01 - Accessible Configuration Panels with Native Forms
 **Learning:** Relying on custom `click` handlers on buttons within `<div>` structures to simulate form submission breaks native accessibility and keyboard UX (e.g., submitting via the `Enter` key).
 **Action:** When building configuration panels or inputs that logically group together for a single action, wrap them in a semantic `<form>` element. Change the primary action button to `type="submit"`, and listen to the `submit` event on the form (using `e.preventDefault()`) rather than `click` on the button. Additionally, enhance input fields with context-aware attributes like `type="url"` for endpoints and `spellcheck="false"` for technical strings (like API keys) to prevent distracting native squiggles.
+## 2024-05-24 - Implicit Form Submission
+**Learning:** Using `<div>` tags for input groups requires custom keydown listeners which can be flaky and lack native semantics.
+**Action:** Wrap input groups in semantic `<form>` tags and rely on the native `submit` event to implicitly handle the `Enter` key.
